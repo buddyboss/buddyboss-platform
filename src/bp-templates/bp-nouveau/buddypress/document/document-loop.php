@@ -16,10 +16,18 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 		$activeGroupClass = '';
 		if( isset( $_POST['order_by'] ) && isset( $_POST['sort'] ) && 'title' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
 			$activeTitleClass = 'asce';
+		} else if( isset( $_POST['extras']['orderby'] ) && isset( $_POST['extras']['sort'] ) && 'title' === $_POST['extras']['orderby'] && 'DESC' === $_POST['extras']['sort'] ) {
+			$activeTitleClass = 'asce';
+		} else if( isset( $_POST['extras']['orderby'] ) && isset( $_POST['extras']['sort'] ) && 'date_modified' === $_POST['extras']['orderby'] && 'DESC' === $_POST['extras']['sort'] ) {
+			$activeDateClass = 'asce';
 		} else if( isset( $_POST['order_by'] ) && isset( $_POST['sort'] ) && 'date_modified' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
 			$activeDateClass = 'asce';
 		} else if( isset( $_POST['order_by'] ) && isset( $_POST['sort'] ) && 'privacy' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
 			$activePrivacyClass = 'asce';
+		} else if( isset( $_POST['extras']['orderby'] ) && isset( $_POST['extras']['sort'] ) && 'privacy' === $_POST['extras']['orderby'] && 'DESC' === $_POST['extras']['sort'] ) {
+			$activePrivacyClass = 'asce';
+		} else if( isset( $_POST['extras']['orderby'] ) && isset( $_POST['extras']['sort'] ) && 'group_id' === $_POST['extras']['orderby'] && 'DESC' === $_POST['extras']['sort'] ) {
+			$activeGroupClass = 'asce';
 		} else if( isset( $_POST['order_by'] ) && isset( $_POST['sort'] ) && 'group_id' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
 			$activeGroupClass = 'asce';
 		}
