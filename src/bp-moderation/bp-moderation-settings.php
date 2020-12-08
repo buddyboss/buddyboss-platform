@@ -296,7 +296,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 		if ( in_array( $slug, array( BP_Moderation_Members::$moderation_type ), true ) ) {
 			continue;
 		} ?>
-		<label for="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>">
+		<label for="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>" class="bpm_reporting_content_content_label">
 			<input name="bpm_reporting_content_reporting[<?php echo esc_attr( $slug ); ?>]"
 				   id="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>" type="checkbox" value="1"
 					<?php checked( bp_is_moderation_content_reporting_enable( false, $slug ) ); ?> />
