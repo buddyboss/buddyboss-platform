@@ -280,31 +280,32 @@ function bp_core_admin_components_options() {
 									<span class="required">
 										<?php _e( 'Required', 'buddyboss' ); ?>
 									</span>
-								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-									<?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>
-										<span class="deactivate">
+								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?><?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) :
+									$deactiavte_confirm = ( isset( $labels['deactivation_confirm'] ) && true === $labels['deactivation_confirm'] ) ? true : false;
+									$class = ( true === $deactiavte_confirm ) ? 'check-deactivate' : '';
+									?>
+									<span class="deactivate <?php echo esc_attr( $class ); ?>" data-confirm="<?php echo esc_attr( $deactiavte_confirm ); ?>">
 											<a href="
 											<?php
-											echo wp_nonce_url(
-												bp_get_admin_url(
-													add_query_arg(
-														array(
-															'page' => 'bp-components',
-															'action' => $action,
+											echo wp_nonce_url( bp_get_admin_url( add_query_arg( array(
+															'page'         => 'bp-components',
+															'action'       => $action,
 															'bp_component' => $name,
-															'do_action' => 'deactivate',
+															'do_action'    => 'deactivate',
 														),
-														$page
-													)
-												),
-												'bp-admin-component-activation'
-											);
+															$page ) ),
+													'bp-admin-component-activation' );
 											?>
 														">
 												<?php _e( 'Deactivate', 'buddyboss' ); ?>
 											</a>
 										</span>
-									<?php else : ?>
+									<div class="component-deactivate-msg" style="display: none;">
+										<?php
+										echo esc_html( $labels['deactivation_message'] );
+										?>
+									</div>
+								<?php else : ?>
 										<span class="activate">
 											<a href="
 											<?php

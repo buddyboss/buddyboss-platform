@@ -1102,16 +1102,30 @@
 				$('#bp-hello-container').show();
 			});
 
+			$(document).on('click', '.check-deactivate a', function (event) {
+				event.preventDefault();
+				$('#bp-hello-backdrop').show();
+				$('#bp-hello-container').show();
+				$('#bp-hello-container').find('.component-deactivate').attr('data-redirect', $(this).attr('href'));
+				$('#bp-hello-container').find('.bp-hello-content').append($(this).parent().closest('.row-actions').find('.component-deactivate-msg').text());
+			});
+
 			$(document).on('click', '.close-modal', function () {
 				$('#bp-hello-backdrop').hide();
 				$('#bp-hello-container').hide();
 			});
+
+			$(document).on('click', '.component-deactivate', function (event) {
+				event.preventDefault();
+				window.location = $(this).attr('data-redirect');
+			});
+
 			//Moderation Reporting Block
-			$( document ).on('change', '#bp_moderation_settings_reporting .bpm_reporting_content_content_label > input', function() {
-				if( $(this).prop('checked') ) {
-					$(this).parent().next('label').removeClass('is_disabled').find('input[type="checkbox"]').prop('checked','checked').removeProp('disabled');
+			$(document).on('change', '#bp_moderation_settings_reporting .bpm_reporting_content_content_label > input', function () {
+				if ($(this).prop('checked')) {
+					$(this).parent().next('label').removeClass('is_disabled').find('input[type="checkbox"]').prop('checked', 'checked').removeProp('disabled');
 				} else {
-					$(this).parent().next('label').addClass('is_disabled').find('input[type="checkbox"]').removeProp('checked').prop('disabled','disabled');
+					$(this).parent().next('label').addClass('is_disabled').find('input[type="checkbox"]').removeProp('checked').prop('disabled', 'disabled');
 				}
 			});
 		}

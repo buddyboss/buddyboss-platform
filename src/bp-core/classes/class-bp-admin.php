@@ -772,17 +772,19 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyPress 1.6.0
 		 * @since BuddyBoss 1.0.0 Added support for Hello BuddyBoss App
 		 */
-		public function enqueue_scripts() {
+		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
 			// Hello BuddyBoss
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
+			if ( 0 === strpos( get_current_screen()->id,
+							'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
 			// Hello BuddyBoss App
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
+			if ( 0 === strpos( get_current_screen()->id,
+							'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
@@ -792,7 +794,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-			if ( 0 === strpos( get_current_screen()->id, 'users' ) ) {
+			if ( 0 === strpos( get_current_screen()->id, 'users' ) || 'buddyboss_page_bp-components' === $hook ) {
 				wp_enqueue_style( 'bp-hello-css' );
 			}
 
@@ -801,8 +803,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			wp_enqueue_script( 'bp-wp-api-js' );
 			wp_enqueue_script( 'bp-help-js' );
 
-			$bp_help_base_url = bp_get_admin_url(
-				add_query_arg(
+			$bp_help_base_url = bp_get_admin_url( add_query_arg(
 					array(
 						'page' => 'bp-help',
 					),

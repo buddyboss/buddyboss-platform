@@ -4,8 +4,8 @@
  *
  * This file contains information about BuddyBoss.
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss
- * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
