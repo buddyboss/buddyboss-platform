@@ -273,7 +273,30 @@ function bp_nouveau_ajax_media_save() {
 		ob_end_clean();
 	}
 
-	wp_send_json_success( array( 'media' => $media ) );
+	$media_personal_count = 0;
+	$media_group_count    = 0;
+	if ( bp_is_user_media() ) {
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'media' ) );
+		$media_personal_count = $GLOBALS['media_template']->total_media_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+    }
+
+    if ( bp_is_group_media() ) {
+	    add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+	    bp_has_media( bp_ajax_querystring( 'groups' ) );
+	    $media_group_count = $GLOBALS['media_template']->total_media_count;
+	    remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+    }
+
+	wp_send_json_success(
+		array(
+			'media'                => $media,
+			'media_personal_count' => $media_personal_count,
+			'media_group_count'    => $media_group_count,
+		)
+	);
+
 }
 
 /**
@@ -370,15 +393,33 @@ function bp_nouveau_ajax_media_delete() {
 		}
     }
 
+	$media_personal_count = 0;
+	$media_group_count    = 0;
+	if( bp_is_user_media() ) {
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'media' ) );
+		$media_personal_count = $GLOBALS['media_template']->total_media_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+	}
+	if( bp_is_group_media() ) {
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'groups' ) );
+		$media_group_count = $GLOBALS['media_template']->total_media_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+	}
+
 	wp_send_json_success(
 		array(
-			'media'            => $media,
-			'media_ids'        => ( isset( $response['media_activity_ids'] ) ) ? $response['media_activity_ids'] : '',
-			'media_content'    => ( isset( $response['content'] ) ) ? $response['content'] : '',
-			'delete_activity'  => $delete_box,
-			'activity_content' => $activity_content,
+			'media'                => $media,
+			'media_ids'            => ( isset( $response['media_activity_ids'] ) ) ? $response['media_activity_ids'] : '',
+			'media_content'        => ( isset( $response['content'] ) ) ? $response['content'] : '',
+			'delete_activity'      => $delete_box,
+			'activity_content'     => $activity_content,
+			'media_personal_count' => $media_personal_count,
+			'media_group_count'    => $media_group_count,
 		)
 	);
+
 }
 
 /**
