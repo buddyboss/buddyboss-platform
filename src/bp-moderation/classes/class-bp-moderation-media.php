@@ -48,6 +48,12 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return;
 		}
 
+		// Remove hidden/blocked users content
+		add_filter( 'bp_suspend_document_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
+
 	}
 
 	/**
@@ -143,5 +149,47 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Photo', 'buddyboss' );
 
 		return $content_types;
+	}
+
+	/**
+	 * Remove hidden/blocked user's medias
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $where   medias Where sql
+	 * @param object $suspend suspend object
+	 *
+	 * @return array
+	 */
+	public function update_where_sql( $where, $suspend ) {
+		$this->alias               = $suspend->alias;
+		$where['moderation_where'] = $this->exclude_where_query();
+
+		return $where;
+	}
+
+	/**
+	 * Function to modify button sub item
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int   $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_args( $item_id ) {
+		$media = new BP_Media( $item_id );
+
+		if ( empty( $media->id ) ) {
+			return array();
+		}
+
+		$sub_items = [];
+		if ( bp_is_active( 'activity' ) && ! empty( $media->activity_id ) ) {
+			$sub_items['id']   = $media->activity_id;
+			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
+		}
+
+		return $sub_items;
 	}
 }

@@ -63,7 +63,37 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	public static function get_member_media_ids( $member_id ) {
 		$media_ids = array();
 
-		//add query
+		$medias = bp_media_get( array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
+		) );
+
+		if ( ! empty( $medias['medias'] ) ) {
+			$media_ids = $medias['medias'];
+		}
+
+		return $media_ids;
+	}
+
+	/**
+	 * Get Media ids of blocked item [ Forums/topics/replies/activity etc ] from meta
+	 *
+	 * @param int    $item_id  item id.
+	 * @param string $function Function Name to get meta.
+	 *
+	 * @return array Media IDs
+	 */
+	public static function get_media_ids_meta( $item_id, $function = 'get_post_meta' ) {
+		$media_ids = array();
+
+		if ( function_exists( $function ) ) {
+			if ( ! empty( $item_id ) ) {
+				$post_media = $function( $item_id, 'bp_media_ids', true );
+				$media_ids  = wp_parse_id_list( $post_media );
+			}
+		}
 
 		return $media_ids;
 	}
@@ -92,7 +122,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $join_sql Join sql query
-		 * @param array $class current class object.
+		 * @param array $class    current class object.
 		 */
 		$join_sql = apply_filters( 'bp_suspend_media_get_join', $join_sql, $this );
 
@@ -139,7 +169,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $media_id media id
+	 * @param int      $media_id      media id
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific
 	 * @param array    $args          parent args
 	 */
@@ -162,7 +192,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $media_id media id
+	 * @param int      $media_id      media id
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific
 	 * @param int      $force_all     un-hide for all users
 	 * @param array    $args          parent args
@@ -191,14 +221,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $media_id ) {
-
-		$related_contents = array();
-		$media            = new BP_Media( $media_id );
-
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = array( $media->activity_id );
-		}
-
-		return $related_contents;
+		return array();
 	}
 }

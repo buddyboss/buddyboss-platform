@@ -213,10 +213,20 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		return false;
 	}
 
-	$item_id   = $args['button_attr']['data-bp-content-id'];
-	$item_type = $args['button_attr']['data-bp-content-type'];
+	$item_id       = isset( $args['button_attr']['data-bp-content-id'] ) ? $args['button_attr']['data-bp-content-id'] : false;
+	$item_type     = isset( $args['button_attr']['data-bp-content-type'] ) ? $args['button_attr']['data-bp-content-type'] : false;
 
-	if ( empty( $item_id ) || empty( $item_type ) ) {
+	/**
+	 * Filter to update report link args
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $button  Button args.
+	 * @param string $item_id item id.
+	 */
+	$args = apply_filters( "bp_moderation_{$item_type}_button_args", $args, $item_id );
+
+	if ( empty( $item_id ) || empty( $item_type ) || empty( $args ) ) {
 		return array();
 	}
 
@@ -235,8 +245,16 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		}
 	}
 
+	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
+	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
+
+	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
+		return array();
+	}
+
 	// Hide if content is created by current user.
-	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_id, $item_type ) ) {
+	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type ) ) {
 		return ! empty( $html ) ? '' : array();
 	}
 
@@ -259,7 +277,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
-	$is_reported = bp_moderation_report_exist( $item_id, $item_type );
+	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
 		$button['link_text']            = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
@@ -276,10 +294,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array  $button      Button args.
-	 * @param string $item_type   Content type.
 	 * @param string $is_reported Item reported.
 	 */
-	$button = apply_filters( 'bp_moderation_get_report_button_args', $button, $item_type, $is_reported );
+	$button = apply_filters( "bp_moderation_{$item_type}_button", $button, $is_reported );
 
 	if ( ! empty( $html ) ) {
 		if ( $is_reported ) {
@@ -350,6 +367,39 @@ function bp_moderation_is_user_blocked( $user_id ) {
  */
 function bp_moderation_is_user_suspended( $user_id ) {
 	return BP_Core_Suspend::check_user_suspend( $user_id );
+}
+
+/**
+ * Function to get sub items.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $item_id   Item id.
+ * @param string $item_type Item type.
+ *
+ * @return array
+ */
+function bp_moderation_get_sub_items( $item_id, $item_type ) {
+
+	/**
+	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
+	 * Like For Forum create activity, When reporting Activity it'll report actual forum
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $button      Button args.
+	 * @param string $is_reported Item reported.
+	 */
+	$sub_items = apply_filters( "bp_moderation_{$item_type}_button_sub_items", $item_id );
+
+	if ( empty( $sub_items ) ) {
+		$sub_items = array(
+			'id'   => $item_id,
+			'type' => $item_type,
+		);
+	}
+
+	return $sub_items;
 }
 
 /** Moderation actions *******************************************************/
@@ -664,6 +714,37 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 				'content.link'          => $tokens['content_link'],
 				'content.reportlink'    => $tokens['content_reportlink'],
 			),
-		)
+		) );
+}
+
+/**
+ * Function to get the moderation item count based on status.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param array $args arguments array.
+ *
+ * @return mixed|void
+ */
+function bp_moderation_item_count( $args = array() ) {
+	$moderation_request_args = array(
+		'per_page'    => - 1,
+		'count_total' => true,
 	);
+
+	if ( 'content' === $args['type'] ) {
+		$moderation_request_args['exclude_types'] = array( BP_Moderation_Members::$moderation_type );
+	} else {
+		$moderation_request_args['in_types'] = array( BP_Moderation_Members::$moderation_type );
+	}
+
+	if ( 'unsuspended' === $args['status'] || 'active' === $args['status'] ) {
+		$moderation_request_args['hidden'] = 0;
+	} elseif ( 'suspended' === $args['status'] || 'hidden' === $args['status'] ) {
+		$moderation_request_args['hidden'] = 1;
+	}
+
+	$result = BP_Moderation::get( $moderation_request_args );
+
+	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
 }

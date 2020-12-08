@@ -263,45 +263,47 @@ function bp_media_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,        // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,        // results per page
-			'sort'         => 'DESC',       // sort ASC or DESC
-			'order_by'     => false,       // order by
+			'max'              => false,        // Maximum number of results to return.
+			'fields'           => 'all',
+			'page'             => 1,            // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,        // results per page
+			'sort'             => 'DESC',       // sort ASC or DESC
+			'order_by'         => false,       // order by
 
-			'scope'        => false,
+			'scope'            => false,
 
 			// want to limit the query.
-			'user_id'      => false,
-			'activity_id'  => false,
-			'album_id'     => false,
-			'group_id'     => false,
-			'search_terms' => false,        // Pass search terms as a string
-			'privacy'      => false,        // privacy of media
-			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'  => false,
+			'user_id'          => false,
+			'activity_id'      => false,
+			'album_id'         => false,
+			'group_id'         => false,
+			'search_terms'     => false,        // Pass search terms as a string
+			'privacy'          => false,        // privacy of media
+			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
+			'count_total'      => false,
+			'moderation_query' => false,         // Filter for exclude moderation query
 		),
 		'media_get'
 	);
 
 	$media = BP_Media::get(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'activity_id'  => $r['activity_id'],
-			'album_id'     => $r['album_id'],
-			'group_id'     => $r['group_id'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'order_by'     => $r['order_by'],
-			'search_terms' => $r['search_terms'],
-			'scope'        => $r['scope'],
-			'privacy'      => $r['privacy'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
+			'page'             => $r['page'],
+			'per_page'         => $r['per_page'],
+			'user_id'          => $r['user_id'],
+			'activity_id'      => $r['activity_id'],
+			'album_id'         => $r['album_id'],
+			'group_id'         => $r['group_id'],
+			'max'              => $r['max'],
+			'sort'             => $r['sort'],
+			'order_by'         => $r['order_by'],
+			'search_terms'     => $r['search_terms'],
+			'scope'            => $r['scope'],
+			'privacy'          => $r['privacy'],
+			'exclude'          => $r['exclude'],
+			'count_total'      => $r['count_total'],
+			'fields'           => $r['fields'],
+			'moderation_query' => $r['moderation_query'],
 		)
 	);
 

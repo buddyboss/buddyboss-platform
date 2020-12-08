@@ -216,11 +216,11 @@ abstract class BP_Moderation_Abstract {
 	protected function exclude_where_query() {
 		$blocked_query = $this->blocked_user_query();
 
-		$where = "( ( ( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL ) AND {$this->alias}.id IS NULL )";
+		$where = "( ( ( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
 		if ( ! empty( $blocked_query ) ) {
-			$where .= "OR ( {$this->alias}.id NOT IN ( $blocked_query ) )";
+			$where .= " AND {$this->alias}.id IS NULL ) OR ( {$this->alias}.id NOT IN ( $blocked_query )";
 		}
-		$where .= ')';
+		$where .= ' ) )';
 
 		return $where;
 	}

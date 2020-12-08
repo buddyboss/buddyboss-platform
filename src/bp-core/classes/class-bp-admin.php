@@ -792,6 +792,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
+			if ( 0 === strpos( get_current_screen()->id, 'users' ) ) {
+				wp_enqueue_style( 'bp-hello-css' );
+			}
+
 			wp_enqueue_script( 'bp-fitvids-js' );
 
 			wp_enqueue_script( 'bp-wp-api-js' );

@@ -254,6 +254,7 @@ class BP_Moderation {
 	 * @type bool        $update_meta_cache Whether to pre-fetch metadata for queried moderation items. Default: true.
 	 * @type string|bool $count_total       If true, an additional DB query is run to count the total moderation items
 	 *                                           for the query. Default: false.
+	 * @type int         $hidden            whether to get hidden items or not. Default: false
 	 * }
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located moderations
@@ -290,8 +291,8 @@ class BP_Moderation {
 				'display_reporters' => false,           // Whether or not to fetch user data.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
-			)
-		);
+				'hidden'            => false,           // Get the moderation item base on it's hide status.
+			) );
 
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT ms.id';
@@ -368,7 +369,8 @@ class BP_Moderation {
 
 		// Exclude specified items type.
 		if ( ! empty( $r['exclude_types'] ) ) {
-			$not_in_types                      = "'" . implode( "', '", wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
+			$not_in_types                      = "'" . implode( "', '",
+					wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
 			$where_conditions['exclude_types'] = "ms.item_type NOT IN ({$not_in_types})";
 		}
 
@@ -376,6 +378,13 @@ class BP_Moderation {
 		if ( ! empty( $r['in_types'] ) ) {
 			$in_types                     = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
 			$where_conditions['in_types'] = "ms.item_type IN ({$in_types})";
+		}
+
+		// The specified items type to which you want to limit the query..
+		if ( 1 === $r['hidden'] ) {
+			$where_conditions['hidden'] = "ms.hide_sitewide=1";
+		} elseif ( 0 === $r['hidden'] ) {
+			$where_conditions['hidden'] = "ms.hide_sitewide=0";
 		}
 
 		// Process meta_query into SQL.
@@ -976,8 +985,8 @@ class BP_Moderation {
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
 			$threshold          = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
-		} elseif ( bp_is_moderation_auto_hide_enable() ) {
-			$threshold          = bp_moderation_get_setting( 'bpm_reporting_auto_hide_threshold', '5' );
+		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
+			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
 			$email_notification = bp_is_moderation_reporting_email_notification_enable();
 		}
 
@@ -1161,7 +1170,7 @@ class BP_Moderation {
 
 					return bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
 
-				} elseif ( bp_is_moderation_auto_hide_enable() ) {
+				} elseif ( bp_is_moderation_auto_hide_enable( $this->item_type ) ) {
 
 					$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
 

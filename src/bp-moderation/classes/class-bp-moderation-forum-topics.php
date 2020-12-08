@@ -53,32 +53,22 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		// Remove hidden/blocked users content
 		add_filter( 'bp_suspend_forum_topic_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// button class.
-		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
 
 	}
 
 	/**
-	 * Get Content.
+	 * Get Content owner id.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $topic_id  Topic id.
-	 * @param bool    $view_link add view link.
+	 * @param integer $topic_id Topic id.
 	 *
-	 * @return string
+	 * @return int
 	 */
-	public static function get_content_excerpt( $topic_id, $view_link = false ) {
-		$topic_content = get_post_field( 'post_content', $topic_id );
-
-		if ( true === $view_link ) {
-			$link = '<a href="' . esc_url( self::get_permalink( (int) $topic_id ) ) . '">' . esc_html__( 'View',
-					'buddyboss' ) . '</a>';;
-
-			$topic_content = ( ! empty( $topic_content ) ) ? $topic_content . ' ' . $link : $link;
-		}
-
-		return ( ! empty( $topic_content ) ) ? $topic_content : '';
+	public static function get_content_owner_id( $topic_id ) {
+		return get_post_field( 'post_author', $topic_id );
 	}
 
 	/**
@@ -203,19 +193,16 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array  $button      Button args.
-	 * @param string $item_type   Content type.
 	 * @param string $is_reported Item reported.
 	 *
 	 * @return string
 	 */
-	public function update_button_args( $button, $item_type, $is_reported ) {
+	public function update_button( $button, $is_reported ) {
 
-		if ( self::$moderation_type === $item_type ) {
-			if ( $is_reported ) {
-				$button['button_attr']['class'] = 'button item-button bp-secondary-action outline reported-content';
-			} else {
-				$button['button_attr']['class'] = 'button item-button bp-secondary-action outline report-content';
-			}
+		if ( $is_reported ) {
+			$button['button_attr']['class'] = 'button item-button bp-secondary-action outline reported-content';
+		} else {
+			$button['button_attr']['class'] = 'button item-button bp-secondary-action outline report-content';
 		}
 
 		return $button;

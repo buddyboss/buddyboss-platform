@@ -164,7 +164,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $join_sql Join sql query
-		 * @param array $class current class object.
+		 * @param array $class    current class object.
 		 */
 		$join_sql = apply_filters( 'bp_suspend_activity_get_join', $join_sql, $this );
 
@@ -211,7 +211,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_id activity id
+	 * @param int      $activity_id   activity id
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific
 	 * @param array    $args          parent args
 	 */
@@ -234,7 +234,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_id activity id
+	 * @param int      $activity_id   activity id
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific
 	 * @param int      $force_all     un-hide for all users
 	 * @param array    $args          parent args
@@ -272,6 +272,14 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		$related_contents = array(
 			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),
 		);
+
+		if ( bp_is_active( 'document' ) ) {
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $activity_id, 'bp_activity_get_meta' );
+		}
+
+		if ( bp_is_active( 'media' ) ) {
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta' );
+		}
 
 		return $related_contents;
 	}

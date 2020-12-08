@@ -82,13 +82,12 @@ function bp_moderation_get_settings_fields() {
 
 		'bpm_reporting_auto_hide' => array(
 			'title'             => __( 'Auto Hide', 'buddyboss' ),
-			'callback'          => 'bpm_reporting_settings_callback_auto_hide',
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => '',
 			'args'              => array(),
 		),
 
 		'bpm_reporting_auto_hide_threshold' => array(
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => '',
 			'args'              => array(),
 		),
 
@@ -297,11 +296,21 @@ function bpm_reporting_settings_callback_content_reporting() {
 		if ( in_array( $slug, array( BP_Moderation_Members::$moderation_type ), true ) ) {
 			continue;
 		} ?>
-		<label for="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>">
+		<label for="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>" class="bpm_reporting_content_content_label">
 			<input name="bpm_reporting_content_reporting[<?php echo esc_attr( $slug ); ?>]"
 				   id="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>" type="checkbox" value="1"
 					<?php checked( bp_is_moderation_content_reporting_enable( false, $slug ) ); ?> />
 			<?php echo esc_html( $type ); ?>
+		</label>
+		<?php
+		ob_start();
+		bpm_reporting_settings_callback_auto_hide_threshold( $slug );
+		$threshold = ob_get_clean();
+		?>
+		<label for="bpm_reporting_auto_hide-<?php echo esc_attr( $slug ); ?>">
+			<input name="bpm_reporting_auto_hide[<?php echo esc_attr( $slug ); ?>]" id="bpm_reporting_auto_hide-<?php echo esc_attr( $slug ); ?>" type="checkbox" value="1"
+					<?php checked( bp_is_moderation_auto_hide_enable( false, $slug ) ); ?> />
+			<?php printf( esc_html__( 'Automatically hide content after it has been reported more than %s times.', 'buddyboss' ), $threshold ); ?>
 		</label>
 		<br/>
 	<?php } ?>
@@ -330,22 +339,34 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 }
 
 /**
- * Moderation reporting auto suspend setting field
+ * Checks if Moderation Member auto suspend feature is enabled.
  *
  * @since BuddyBoss 2.0.0
  *
+ * @param int $default bool Optional.Default value true.
+ * @param string $content_type content type.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
+	return (bool) apply_filters( 'bp_is_moderation_auto_hide_enable', (bool) get_option( 'bpm_reporting_auto_hide', $default ) );
+}
+
+/**
+ * Moderation reporting auto suspend threshold setting field
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param string $content_type content type.
+ *
  * @uses  checked() To display the checked attribute
  */
-function bpm_reporting_settings_callback_auto_hide() {
-	ob_start();
-	bpm_reporting_settings_callback_auto_hide_threshold();
-	$threshold = ob_get_clean(); ?>
-
-	<label for="bpm_reporting_auto_hide">
-		<input name="bpm_reporting_auto_hide" id="bpm_reporting_auto_hide" type="checkbox" value="1"
-				<?php checked( bp_is_moderation_auto_hide_enable( false ) ); ?> />
-		<?php printf( esc_html__( 'Automatically hide content after it has been reported more than %s times.', 'buddyboss' ), $threshold ); ?>
-	</label>
+function bpm_reporting_settings_callback_auto_hide_threshold( $content_type = '' ) {
+	?>
+    <input name="bpm_reporting_auto_hide_threshold[<?php echo esc_attr( $content_type ); ?>]" id="bpm_reporting_auto_hide_threshold-<?php echo esc_attr( $content_type ); ?>" type="number" min="1"
+           step="1" max="99"
+           value="<?php echo bp_moderation_reporting_auto_hide_threshold( '5', $content_type ); ?>" class="small-text"/>
 	<?php
 }
 
@@ -355,27 +376,20 @@ function bpm_reporting_settings_callback_auto_hide() {
  * @since BuddyBoss 2.0.0
  *
  * @param int $default bool Optional.Default value true.
+ * @param string $content_type content type.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_is_moderation_auto_hide_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_moderation_auto_hide_enable', (bool) get_option( 'bpm_reporting_auto_hide', $default ) );
-}
+function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
 
-/**
- * Moderation reporting auto suspend threshold setting field
- *
- * @since BuddyBoss 2.0.0
- *
- * @uses  checked() To display the checked attribute
- */
-function bpm_reporting_settings_callback_auto_hide_threshold() {
-	?>
-    <input name="bpm_reporting_auto_hide_threshold" id="bpm_reporting_auto_hide_threshold" type="number" min="1"
-           step="1"
-           value="<?php bp_moderation_setting( 'bpm_reporting_auto_hide_threshold', '5' ); ?>" class="small-text"/>
-	<?php
+	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
+
+	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		$settings[ $content_type ] = $default;
+	}
+
+	return apply_filters( 'bp_moderation_reporting_auto_hide_threshold', (int) $settings[ $content_type ], $content_type );
 }
 
 /**

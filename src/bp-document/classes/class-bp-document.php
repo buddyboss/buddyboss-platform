@@ -976,7 +976,7 @@ class BP_Document {
 			                      ( ! empty( $where_conditions_document ) ? '( ' . join( ' AND ', $where_conditions_document ) . ' ) AND ' : '' ) .
 			                      ' ( ' . $scope_query_document['sql'] . ' )';
 		} else {
-			$where_sql_document = 'WHERE ' . ( ! empty( $where_conditions_document ) ? 'AND ' . join( ' AND ', $where_conditions_document ) : '' );
+			$where_sql_document = 'WHERE ' . ( ! empty( $where_conditions_document ) ? join( ' AND ', $where_conditions_document ) : '' );
 		}
 
 		// Join the where conditions together for folder.
@@ -984,7 +984,7 @@ class BP_Document {
 			$where_sql_folder = 'WHERE ' . ( ! empty( $where_conditions_folder ) ? '( ' . join( ' AND ', $where_conditions_folder ) . ' ) AND ' : '' ) .
 			                    ' ( ' . $scope_query_folder['sql'] . ' )';
 		} else {
-			$where_sql_folder = 'WHERE ' . ( ! empty( $where_conditions_folder ) ? 'AND ' . join( ' AND ', $where_conditions_folder ) : '' );
+			$where_sql_folder = 'WHERE ' . ( ! empty( $where_conditions_folder ) ? join( ' AND ', $where_conditions_folder ) : '' );
 		}
 
 		/**
