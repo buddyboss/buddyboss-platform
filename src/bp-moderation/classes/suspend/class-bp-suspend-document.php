@@ -63,7 +63,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public static function get_member_document_ids( $member_id ) {
 		$document_ids = array();
 
-		$documents = bp_document_get( array(
+		$documents = BP_Document::get( array(
 			'moderation_query' => false,
 			'per_page'         => 0,
 			'fields'           => 'ids',
@@ -71,7 +71,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		) );
 
 		if ( ! empty( $documents['documents'] ) ) {
-			$document_ids = wp_list_pluck( $documents['documents'], 'scalar' );
+			$document_ids = $documents['documents'];
 		}
 
 		return $document_ids;

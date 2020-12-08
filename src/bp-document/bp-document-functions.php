@@ -359,6 +359,7 @@ function bp_document_get( $args = '' ) {
 
 			'meta_query_document' => false,         // Filter by activity meta. See WP_Meta_Query for format
 			'meta_query_folder'   => false,          // Filter by activity meta. See WP_Meta_Query for format
+			'moderation_query'    => false,         // Filter for exclude moderation query
 		),
 		'document_get'
 	);

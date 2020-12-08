@@ -263,24 +263,25 @@ function bp_media_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,        // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,        // results per page
-			'sort'         => 'DESC',       // sort ASC or DESC
-			'order_by'     => false,       // order by
+			'max'              => false,        // Maximum number of results to return.
+			'fields'           => 'all',
+			'page'             => 1,            // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,        // results per page
+			'sort'             => 'DESC',       // sort ASC or DESC
+			'order_by'         => false,       // order by
 
-			'scope'        => false,
+			'scope'            => false,
 
 			// want to limit the query.
-			'user_id'      => false,
-			'activity_id'  => false,
-			'album_id'     => false,
-			'group_id'     => false,
-			'search_terms' => false,        // Pass search terms as a string
-			'privacy'      => false,        // privacy of media
-			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'  => false,
+			'user_id'          => false,
+			'activity_id'      => false,
+			'album_id'         => false,
+			'group_id'         => false,
+			'search_terms'     => false,        // Pass search terms as a string
+			'privacy'          => false,        // privacy of media
+			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
+			'count_total'      => false,
+			'moderation_query' => false,         // Filter for exclude moderation query
 		),
 		'media_get'
 	);
