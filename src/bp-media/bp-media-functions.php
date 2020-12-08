@@ -2996,7 +2996,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	$media->album_id     = $album_id;
 	$media->group_id     = $group_id;
 	$media->date_created = bp_core_current_time();
-	$media->privacy      = $destination_privacy;
+	$media->privacy      = ( $group_id > 0 ) ? 'grouponly' : $destination_privacy;
 	$media->save();
 
 	// Update media activity privacy.
