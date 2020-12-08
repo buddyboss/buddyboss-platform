@@ -157,7 +157,7 @@
 					<div class="modal-container">
 						<header class="bb-model-header">
 							<h4><?php esc_html_e( 'Select Users', 'buddyboss' ); ?></h4>
-							<button title="Close (Esc)" type="button" class="mfp-close"></button>
+							<button title="Close (Esc)" type="button" class="mfp-close"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7"></path></svg></button>
 						</header>
 						<div class="bb-report-type-wrp">
 							<# _.reject(other_recipients, function(item) { if( true === item.is_reported || true == item.is_user_blocked || false == item.can_be_blocked ) { return false; } #>
@@ -169,7 +169,7 @@
 									{{item.user_name}}
 								</div>
 								<div class="user-actions">
-									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
 										<?php esc_html_e( 'Block', 'buddyboss' ); ?>
 									</a>
 								</div>
