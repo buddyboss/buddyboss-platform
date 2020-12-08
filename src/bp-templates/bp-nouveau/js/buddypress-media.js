@@ -1170,7 +1170,7 @@ window.bp = window.bp || {};
 									}
 
 									if (response.data.media_group_count) {
-										$('#buddypress').find('.bp-wrap .users-nav ul li#photos-groups-li a span.count').text( response.data.media_group_count );
+										$('#buddypress').find('.bp-wrap .groups-nav ul li#photos-groups-li a span.count').text( response.data.media_group_count );
 									}
 									$.each(media, function (index, value) {
 										if ($('#media-stream ul.media-list li[data-id="' + value + '"]').length) {
@@ -4115,7 +4115,7 @@ window.bp = window.bp || {};
 								}
 
 								if (response.data.media_group_count) {
-									$('#buddypress').find('.bp-wrap .users-nav ul li#photos-groups-li a span.count').text( response.data.media_group_count );
+									$('#buddypress').find('.bp-wrap .groups-nav ul li#photos-groups-li a span.count').text( response.data.media_group_count );
 								}
 
 								for (var i = 0; i < self.dropzone_media.length; i++) {
