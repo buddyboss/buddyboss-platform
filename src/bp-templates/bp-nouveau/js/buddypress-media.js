@@ -4272,7 +4272,7 @@ window.bp = window.bp || {};
 										}
 									} else {
 										// Prepend the activity.
-										hasNotAlbum ? bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend') : '';
+										!hasNotAlbum ? bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend') : '';
 									}
 								} else {
 									location.reload(true);
@@ -4878,6 +4878,18 @@ window.bp = window.bp || {};
 				if (Number($(currentPopup).find('.bb-folder-selected-id')) !== 0 && $(currentPopup).find('.location-folder-list li.is_active').length) {
 					$(currentPopup).find('.location-folder-list').scrollTop($(currentPopup).find('.location-folder-list li.is_active').offset().top - $(currentPopup).find('.location-folder-list').offset().top);
 				}
+				$(currentPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span:not(.hidden)').each(function (i) {
+					if (i > 0) {
+						if ($(currentPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item').width() > $(currentPopup).find('.breadcrumbs-append-ul-li .breadcrumb').width()) {
+							$(currentPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span.hidden').append($(currentPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span').eq(2));
+
+							if (!$(currentPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item .more_options').length) {
+								$('<span class="more_options">...</span>').insertAfter($(currentPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span').eq(0));
+							}
+
+						}
+					}
+				});
 			} else {
 				$(target).hide();
 				currentPopup.find('#bp-media-document-prev, .bp-document-open-create-popup-folder').hide();
