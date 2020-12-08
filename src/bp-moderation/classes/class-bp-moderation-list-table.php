@@ -134,20 +134,20 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		if ( 'reported-content' === $current_tab ) {
 			if ( 'active' === $moderation_status ) {
 				$this->view                        = 'active';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
+				$moderation_request_args['hidden'] = 0;
 			} elseif ( 'hidden' === $moderation_status ) {
 				$this->view                        = 'hidden';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+				$moderation_request_args['hidden'] = 1;
 			} else {
 				$this->view = 'all';
 			}
 		} else {
 			if ( 'suspended' === $moderation_status ) {
 				$this->view                        = 'suspended';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+				$moderation_request_args['hidden'] = 1;
 			} elseif ( 'unsuspended' === $moderation_status ) {
 				$this->view                        = 'unsuspended';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
+				$moderation_request_args['hidden'] = 0;
 			} else {
 				$this->view = 'all';
 			}

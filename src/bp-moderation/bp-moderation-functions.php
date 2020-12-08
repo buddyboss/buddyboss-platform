@@ -711,9 +711,9 @@ function bp_moderation_item_count( $args = array() ) {
 	}
 
 	if ( 'unsuspended' === $args['status'] || 'active' === $args['status'] ) {
-		$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
+		$moderation_request_args['hidden'] = 0;
 	} elseif ( 'suspended' === $args['status'] || 'hidden' === $args['status'] ) {
-		$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+		$moderation_request_args['hidden'] = 1;
 	}
 
 	$result = BP_Moderation::get( $moderation_request_args );
