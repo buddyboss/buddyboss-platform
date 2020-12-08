@@ -52,7 +52,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_document_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button.
-		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
+		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 	}
 
 	/**
@@ -168,23 +168,28 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to modify the button args
+	 * Function to modify button sub item
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array $args    Button args.
-	 * @param int   $item_id Item id.
+	 * @param int $item_id Item id.
 	 *
 	 * @return array
 	 */
-	public function update_button_args( $args, $item_id ) {
+	public function update_button_sub_items( $item_id ) {
 		$document = new BP_Document( $item_id );
-		if ( bp_is_active('activity') && ! empty( $document->activity_id ) ) {
-			$args['button_attr']['data-bp-content-sub-id']   = $document->activity_id;
-			$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Activity::$moderation_type;
+
+		if ( empty( $document->id ) ) {
+			return array();
 		}
 
-		return $args;
+		$sub_items = [];
+		if ( bp_is_active( 'activity' ) && ! empty( $document->activity_id ) ) {
+			$sub_items['id']   = $document->activity_id;
+			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
+		}
+
+		return $sub_items;
 	}
 
 }

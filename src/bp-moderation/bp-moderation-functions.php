@@ -215,8 +215,6 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 
 	$item_id       = isset( $args['button_attr']['data-bp-content-id'] ) ? $args['button_attr']['data-bp-content-id'] : false;
 	$item_type     = isset( $args['button_attr']['data-bp-content-type'] ) ? $args['button_attr']['data-bp-content-type'] : false;
-	$item_sub_id   = isset( $args['button_attr']['data-bp-content-sub-id'] ) ? $args['button_attr']['data-bp-content-sub-id'] : false;
-	$item_sub_type = isset( $args['button_attr']['data-bp-content-sub-type'] ) ? $args['button_attr']['data-bp-content-sub-type'] : false;
 
 	/**
 	 * Filter to update report link args
@@ -247,14 +245,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		}
 	}
 
-	/**
-	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
-	 * Like For Forum create activity, When reporting Activity it'll report actual forum
-	 */
-	if ( empty( $item_sub_id ) && empty( $item_sub_type ) ) {
-		$item_sub_id = $item_id;
-		$item_sub_type = $item_type;
-	}
+	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
+	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
 	// Hide if content is created by current user.
 	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type ) ) {
@@ -269,8 +262,6 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 			'class'                => 'button item-button bp-secondary-action report-content',
 			'data-bp-content-id'   => '',
 			'data-bp-content-type' => '',
-			'data-bp-content-sub-id'   => '',
-			'data-bp-content-sub-type' => '',
 			'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
 		)
 	);
@@ -307,7 +298,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		if ( $is_reported ) {
 			$button = sprintf( '<a id="%s" class="%s" >%s</a>', esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), wp_kses_post( $button['link_text'] ) );
 		} else {
-			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s"  data-bp-content-sub-id="%s" data-bp-content-sub-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-content-sub-id'] ), esc_attr( $button['button_attr']['data-bp-content-sub-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), wp_kses_post( $button['link_text'] ) );
+			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), wp_kses_post( $button['link_text'] ) );
 		}
 	}
 
@@ -372,6 +363,39 @@ function bp_moderation_is_user_blocked( $user_id ) {
  */
 function bp_moderation_is_user_suspended( $user_id ) {
 	return BP_Core_Suspend::check_user_suspend( $user_id );
+}
+
+/**
+ * Function to get sub items.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $item_id   Item id.
+ * @param string $item_type Item type.
+ *
+ * @return array
+ */
+function bp_moderation_get_sub_items( $item_id, $item_type ) {
+
+	/**
+	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
+	 * Like For Forum create activity, When reporting Activity it'll report actual forum
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $button      Button args.
+	 * @param string $is_reported Item reported.
+	 */
+	$sub_items = apply_filters( "bp_moderation_{$item_type}_button_sub_items", $item_id );
+
+	if ( empty( $sub_items ) || empty( $sub_items['id'] ) || empty( $sub_items['type'] ) ) {
+		$sub_items = array(
+			'id'   => $item_id,
+			'type' => $item_type,
+		);
+	}
+
+	return $sub_items;
 }
 
 /** Moderation actions *******************************************************/

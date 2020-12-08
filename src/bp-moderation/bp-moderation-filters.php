@@ -50,8 +50,6 @@ function bp_moderation_content_report() {
 	$nonce         = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$item_id       = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 	$item_type     = filter_input( INPUT_POST, 'content_type', FILTER_SANITIZE_STRING );
-	$item_sub_id   = filter_input( INPUT_POST, 'content_sub_id', FILTER_SANITIZE_NUMBER_INT );
-	$item_sub_type = filter_input( INPUT_POST, 'content_sub_type', FILTER_SANITIZE_STRING );
 	$category      = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
 	if ( 'other' !== $category ) {
 		$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_NUMBER_INT );
@@ -76,10 +74,9 @@ function bp_moderation_content_report() {
 	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
 	 * Like For Forum create activity, When reporting Activity it'll report actual forum
 	 */
-	if ( empty( $item_sub_id ) && empty( $item_sub_type ) ) {
-		$item_sub_id   = $item_id;
-		$item_sub_type = $item_type;
-	}
+	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
+	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 		$response['message'] = new WP_Error(
@@ -108,10 +105,6 @@ function bp_moderation_content_report() {
 					'data-bp-content-type' => $item_type,
 				),
 			);
-			if ( $item_id !== $item_sub_id && $item_type !== $item_sub_type ) {
-				$button_args['button_attr']['data-bp-content-sub-id']   = $item_sub_id;
-				$button_args['button_attr']['data-bp-content-sub-type'] = $item_sub_type;
-			}
 
 			$response['button'] = bp_moderation_get_report_button( $button_args, false );
 		}

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-08 06:27:15+00:00\n"
+"POT-Creation-Date: 2020-12-08 09:58:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3375,8 +3375,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:784
 #: bp-document/bp-document-filters.php:71
-#: bp-document/bp-document-functions.php:2123
-#: bp-document/bp-document-functions.php:2126
+#: bp-document/bp-document-functions.php:2125
+#: bp-document/bp-document-functions.php:2128
 #: bp-document/classes/class-bp-document-component.php:69
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -6831,31 +6831,31 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1416
+#: bp-document/bp-document-functions.php:1418
 #: bp-media/bp-media-functions.php:116
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1417
+#: bp-document/bp-document-functions.php:1419
 #: bp-media/bp-media-functions.php:117
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1419
+#: bp-document/bp-document-functions.php:1421
 #: bp-media/bp-media-functions.php:119
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1420
+#: bp-document/bp-document-functions.php:1422
 #: bp-media/bp-media-functions.php:120
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1421
+#: bp-document/bp-document-functions.php:1423
 #: bp-media/bp-media-functions.php:121
 msgid "File upload stopped by extension."
 msgstr ""
@@ -8722,81 +8722,81 @@ msgstr[1] ""
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1360
+#: bp-document/bp-document-functions.php:1362
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1415
+#: bp-document/bp-document-functions.php:1417
 #: bp-media/bp-media-functions.php:115
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1440
+#: bp-document/bp-document-functions.php:1442
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1951
+#: bp-document/bp-document-functions.php:1953
 msgid "Default"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1956
+#: bp-document/bp-document-functions.php:1958
 msgid "Archive"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1961
+#: bp-document/bp-document-functions.php:1963
 msgid "Audio"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1966
+#: bp-document/bp-document-functions.php:1968
 msgid "Code"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1971
+#: bp-document/bp-document-functions.php:1973
 msgid "Design"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1976
+#: bp-document/bp-document-functions.php:1978
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
 msgid "Image"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1981
+#: bp-document/bp-document-functions.php:1983
 msgid "Presentation"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1986
+#: bp-document/bp-document-functions.php:1988
 msgid "Spreadsheet"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1991
+#: bp-document/bp-document-functions.php:1993
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1996
+#: bp-document/bp-document-functions.php:1998
 msgid "Video"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2130
+#: bp-document/bp-document-functions.php:2132
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2390
+#: bp-document/bp-document-functions.php:2392
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2393
+#: bp-document/bp-document-functions.php:2395
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2396
+#: bp-document/bp-document-functions.php:2398
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2399
+#: bp-document/bp-document-functions.php:2401
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2429
+#: bp-document/bp-document-functions.php:2431
 msgid "File renaming error!"
 msgstr ""
 
@@ -12856,7 +12856,7 @@ msgstr ""
 msgid "Spectator"
 msgstr ""
 
-#: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:238
+#: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:236
 #: bp-moderation/classes/class-bp-moderation-list-table.php:279
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:20
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:27
@@ -18518,7 +18518,7 @@ msgstr ""
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1314 bp-media/bp-media-functions.php:2162
+#: bp-media/bp-media-filters.php:1314 bp-media/bp-media-functions.php:2164
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
@@ -18592,7 +18592,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2163
+#: bp-media/bp-media-functions.php:2165
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
@@ -19229,7 +19229,7 @@ msgid "That username is not allowed"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:1709
-#: bp-xprofile/bp-xprofile-filters.php:781
+#: bp-xprofile/bp-xprofile-filters.php:787
 msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
 msgstr ""
 
@@ -21258,63 +21258,63 @@ msgid_plural "%s users have been unsuspended."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-moderation/bp-moderation-filters.php:64
-#: bp-moderation/bp-moderation-filters.php:149
-#: bp-moderation/bp-moderation-filters.php:232
-#: bp-moderation/bp-moderation-filters.php:281
+#: bp-moderation/bp-moderation-filters.php:62
+#: bp-moderation/bp-moderation-filters.php:142
+#: bp-moderation/bp-moderation-filters.php:225
+#: bp-moderation/bp-moderation-filters.php:274
 msgid "Required field missing."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:71
+#: bp-moderation/bp-moderation-filters.php:69
 msgid "Please specify reason to report this content."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:87
-#: bp-moderation/bp-moderation-filters.php:153
+#: bp-moderation/bp-moderation-filters.php:84
+#: bp-moderation/bp-moderation-filters.php:146
 msgid "Already reported this item."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:123
-#: bp-moderation/bp-moderation-filters.php:206
-#: bp-moderation/bp-moderation-filters.php:254
-#: bp-moderation/bp-moderation-filters.php:311
+#: bp-moderation/bp-moderation-filters.php:116
+#: bp-moderation/bp-moderation-filters.php:199
+#: bp-moderation/bp-moderation-filters.php:247
+#: bp-moderation/bp-moderation-filters.php:304
 msgid "Sorry, Something happened wrong"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:157
+#: bp-moderation/bp-moderation-filters.php:150
 msgid "Sorry, you can not able to block him self."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:165
+#: bp-moderation/bp-moderation-filters.php:158
 msgid "Member block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:236
+#: bp-moderation/bp-moderation-filters.php:229
 msgid "Moderation reported not found."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:249
+#: bp-moderation/bp-moderation-filters.php:242
 msgid "User unblocked successfully"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:294
+#: bp-moderation/bp-moderation-filters.php:287
 msgid "Member has been successfully suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:294
+#: bp-moderation/bp-moderation-filters.php:287
 msgid "Content has been successfully hidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:305
+#: bp-moderation/bp-moderation-filters.php:298
 msgid "Member has been successfully unsuspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:305
+#: bp-moderation/bp-moderation-filters.php:298
 msgid "Content has been successfully unhidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:345
-#: bp-moderation/bp-moderation-functions.php:237
+#: bp-moderation/bp-moderation-filters.php:338
+#: bp-moderation/bp-moderation-functions.php:235
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:53
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:59
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:109
@@ -21323,11 +21323,11 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:243
+#: bp-moderation/bp-moderation-functions.php:241
 msgid "Report"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:244
+#: bp-moderation/bp-moderation-functions.php:242
 #: bp-moderation/classes/class-bp-moderation-list-table.php:293
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:71
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:127
@@ -25261,34 +25261,34 @@ msgid ""
 "fields?"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:776
-#: bp-xprofile/bp-xprofile-filters.php:871
-#: bp-xprofile/bp-xprofile-filters.php:984
+#: bp-xprofile/bp-xprofile-filters.php:782
+#: bp-xprofile/bp-xprofile-filters.php:877
+#: bp-xprofile/bp-xprofile-filters.php:990
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:484
 #: bp-xprofile/screens/edit.php:140
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:787
+#: bp-xprofile/bp-xprofile-filters.php:793
 msgid "%1$s must be shorter than %2$d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:792
+#: bp-xprofile/bp-xprofile-filters.php:798
 msgid "%s must be at least 3 characters"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:801
-#: bp-xprofile/bp-xprofile-filters.php:821
+#: bp-xprofile/bp-xprofile-filters.php:807
+#: bp-xprofile/bp-xprofile-filters.php:827
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:880
-#: bp-xprofile/bp-xprofile-filters.php:890
+#: bp-xprofile/bp-xprofile-filters.php:886
+#: bp-xprofile/bp-xprofile-filters.php:896
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:995
+#: bp-xprofile/bp-xprofile-filters.php:1001
 msgid "Please enter valid %s profile url."
 msgstr ""
 
@@ -26436,32 +26436,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3505
+#: bp-document/bp-document-functions.php:3507
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3507
+#: bp-document/bp-document-functions.php:3509
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3509
+#: bp-document/bp-document-functions.php:3511
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3511
+#: bp-document/bp-document-functions.php:3513
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3513
-#: bp-document/bp-document-functions.php:3518
+#: bp-document/bp-document-functions.php:3515
+#: bp-document/bp-document-functions.php:3520
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"
