@@ -394,6 +394,63 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
 	return $sub_items;
 }
 
+/**
+ * Check the user can report the current Item or Not.
+ *
+ * @param int    $item_id   Item ID.
+ * @param string $item_type Item Type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @return bool
+ */
+function bp_moderation_user_can( $item_id, $item_type ) {
+
+	if ( empty( $item_id ) || empty( $item_type ) ) {
+		return false;
+	}
+
+	// Check moderation setting enabled or not.
+	if ( BP_Moderation_Members::$moderation_type === $item_type && ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		return false;
+	} else if ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+		return false;
+	}
+
+	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
+	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
+
+	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
+		return false;
+	}
+
+	// Hide if content is created by current user.
+	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Check the current content is hidden or not.
+ *
+ * @param int    $item_id   Item ID.
+ * @param string $item_type Item Type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @return bool
+ */
+function bp_moderation_is_content_hidden( $item_id, $item_type ) {
+	if ( empty( $item_id ) || empty( $item_type ) ) {
+		return false;
+	}
+
+	return (bool) BP_Core_Suspend::check_hidden_content( $item_id, $item_type );
+}
+
 /** Moderation actions *******************************************************/
 
 /**
@@ -739,43 +796,4 @@ function bp_moderation_item_count( $args = array() ) {
 	$result = BP_Moderation::get( $moderation_request_args );
 
 	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
-}
-
-/**
- * Check the user can report the current Item or Not.
- *
- * @param int    $item_id   Item ID.
- * @param string $item_type Item Type.
- *
- * @since BuddyBoss 2.0.0
- *
- * @return bool
- */
-function bp_moderation_user_can( $item_id, $item_type ) {
-
-	if ( empty( $item_id ) || empty( $item_type ) ) {
-		return false;
-	}
-
-	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type && ! bp_is_moderation_member_blocking_enable( 0 ) ) {
-		return false;
-	} else if ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
-		return false;
-	}
-
-	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
-	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
-	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
-
-	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
-		return false;
-	}
-
-	// Hide if content is created by current user.
-	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type ) ) {
-		return false;
-	}
-
-	return true;
 }
