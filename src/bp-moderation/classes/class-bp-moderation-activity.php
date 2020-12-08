@@ -233,11 +233,11 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 				break;
 			case 'bbp_topic_create';
-				$sub_items['id']   = $activity->item_id;
+				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
 				$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
 				break;
 			case 'bbp_reply_create';
-				$sub_items['id']   = $activity->item_id;
+				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
 				$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
 				break;
 		}
