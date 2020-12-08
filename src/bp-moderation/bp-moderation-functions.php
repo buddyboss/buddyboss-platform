@@ -6,7 +6,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- *
  */
 
 // Exit if accessed directly.
@@ -184,14 +183,14 @@ function bp_moderation_get_hidden_user_ids() {
 			array(
 				'column' => 'user_id',
 				'value'  => get_current_user_id(),
-			)
+			),
 		),
 	);
 	$hidden_users = bp_moderation_get( $args );
 
 	$hidden_users_ids = array();
 	if ( ! empty( $hidden_users['moderations'] ) ) {
-		$hidden_users_ids = wp_list_pluck( $hidden_users['moderations'], 'item_id'  );
+		$hidden_users_ids = wp_list_pluck( $hidden_users['moderations'], 'item_id' );
 	}
 
 	return $hidden_users_ids;
@@ -213,8 +212,8 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		return ! empty( $html ) ? '' : array();
 	}
 
-	$item_id       = isset( $args['button_attr']['data-bp-content-id'] ) ? $args['button_attr']['data-bp-content-id'] : false;
-	$item_type     = isset( $args['button_attr']['data-bp-content-type'] ) ? $args['button_attr']['data-bp-content-type'] : false;
+	$item_id   = isset( $args['button_attr']['data-bp-content-id'] ) ? $args['button_attr']['data-bp-content-id'] : false;
+	$item_type = isset( $args['button_attr']['data-bp-content-type'] ) ? $args['button_attr']['data-bp-content-type'] : false;
 
 	/**
 	 * Filter to update report link args
@@ -413,7 +412,7 @@ function bp_moderation_user_can( $item_id, $item_type ) {
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type && ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 		return false;
-	} else if ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
 
@@ -704,8 +703,8 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  */
 function bp_moderation_get_Permalink( $moderation_item_id, $moderation_item_type ) {
 
-	$link = '';
-	$class           = BP_Moderation_Abstract::get_class( $moderation_item_type );
+	$link  = '';
+	$class = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_excerpt' ) ) {
 		$link = $class::get_permalink( $moderation_item_id );
@@ -763,7 +762,8 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 				'content.link'          => $tokens['content_link'],
 				'content.reportlink'    => $tokens['content_reportlink'],
 			),
-		) );
+		)
+	);
 }
 
 /**

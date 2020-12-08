@@ -47,24 +47,24 @@ function bp_moderation_content_report() {
 		'message' => '',
 	);
 
-	$nonce         = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
-	$item_id       = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
-	$item_type     = filter_input( INPUT_POST, 'content_type', FILTER_SANITIZE_STRING );
-	$category      = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
+	$nonce     = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$item_id   = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
+	$item_type = filter_input( INPUT_POST, 'content_type', FILTER_SANITIZE_STRING );
+	$category  = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
 	if ( 'other' !== $category ) {
 		$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_NUMBER_INT );
 	}
 	$item_note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
-		$response['message'] = new WP_Error(
+		return new WP_Error(
 			'bp_moderation_missing_data',
 			esc_html__( 'Required field missing.', 'buddyboss' )
 		);
 	}
 
 	if ( 'other' === $category && empty( $item_note ) ) {
-		$response['message'] = new WP_Error(
+		return new WP_Error(
 			'bp_moderation_missing_data',
 			esc_html__( 'Please specify reason to report this content.', 'buddyboss' )
 		);
@@ -73,7 +73,7 @@ function bp_moderation_content_report() {
 	// Check the current has access to report the item ot not.
 	$user_can = bp_moderation_user_can( $item_id, $item_type );
 	if ( false === (bool) $user_can ) {
-		$response['message'] = new WP_Error(
+		return new WP_Error(
 			'bp_moderation_invalid_access',
 			esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' )
 		);
@@ -88,7 +88,7 @@ function bp_moderation_content_report() {
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
-		$response['message'] = new WP_Error(
+		return new WP_Error(
 			'bp_moderation_already_reported',
 			esc_html__( 'Already reported this item.', 'buddyboss' )
 		);
@@ -148,15 +148,24 @@ function bp_moderation_block_member() {
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
+		return new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
 	}
 
 	if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
+		return new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
 	}
 
 	if ( (int) bp_loggedin_user_id() === (int) $item_id ) {
-		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not able to block him self.', 'buddyboss' ) );
+		return new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not able to block him self.', 'buddyboss' ) );
+	}
+
+	// Check the current has access to report the item ot not.
+	$user_can = bp_moderation_user_can( $item_id, BP_Moderation_Members::$moderation_type );
+	if ( false === (bool) $user_can ) {
+		return new WP_Error(
+			'bp_moderation_invalid_access',
+			esc_html__( 'Sorry, you can not able to block this member.', 'buddyboss' )
+		);
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
