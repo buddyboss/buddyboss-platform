@@ -192,14 +192,6 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $document_id ) {
-
-		$related_contents = array();
-		$document         = new BP_Document( $document_id );
-
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = array( $document->activity_id );
-		}
-
-		return $related_contents;
+		return array();
 	}
 }

@@ -976,8 +976,8 @@ class BP_Moderation {
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
 			$threshold          = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
-		} elseif ( bp_is_moderation_auto_hide_enable() ) {
-			$threshold          = bp_moderation_get_setting( 'bpm_reporting_auto_hide_threshold', '5' );
+		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
+			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
 			$email_notification = bp_is_moderation_reporting_email_notification_enable();
 		}
 
@@ -1161,7 +1161,7 @@ class BP_Moderation {
 
 					return bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
 
-				} elseif ( bp_is_moderation_auto_hide_enable() ) {
+				} elseif ( bp_is_moderation_auto_hide_enable( $this->item_type ) ) {
 
 					$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
 

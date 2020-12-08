@@ -38,7 +38,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		// Check Component is active
-		if ( ! bp_is_active( 'activity' ) ){
+		if ( ! bp_is_active( 'activity' ) ) {
 			return;
 		}
 
@@ -54,6 +54,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Remove hidden/blocked users content
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
 	}
 
 	/**
@@ -177,7 +180,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $where Activity Where sql
+	 * @param string $where   Activity Where sql
 	 * @param object $suspend suspend object
 	 *
 	 * @return array
@@ -188,4 +191,51 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		return $where;
 	}
+
+	/**
+	 * Function to modify the button args
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_args( $args, $item_id ) {
+
+		$activity_type = bp_get_activity_type();
+
+		/**
+		 * Restricted Report link for Auto-created activity. Like Group create, Group join, Reply create etc.
+		 */
+		if ( in_array( $activity_type, array( 'new_member', 'new_avatar', 'updated_profile', 'created_group', 'joined_group', 'group_details_updated', 'friendship_created', 'friendship_accepted', 'friends_register_activity_action', 'new_blog_post', 'new_blog' ), true ) ) {
+			return array();
+		}
+
+		switch ( $activity_type ) {
+			case 'bbp_forum_create';
+				$forum_id = bp_get_activity_item_id();
+				if ( function_exists( 'bbp_is_forum_group_forum' )
+				     && bbp_is_forum_group_forum( $forum_id ) ) {
+					$args['button_attr']['data-bp-content-sub-id']   = current( bbp_get_forum_group_ids( $forum_id ) );
+					$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Groups::$moderation_type;
+				} else {
+					$args['button_attr']['data-bp-content-sub-id']   = bp_get_activity_item_id();
+					$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Forums::$moderation_type;
+				}
+				break;
+			case 'bbp_topic_create';
+				$args['button_attr']['data-bp-content-sub-id']   = bp_get_activity_item_id();
+				$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Forum_Topics::$moderation_type;
+				break;
+			case 'bbp_reply_create';
+				$args['button_attr']['data-bp-content-sub-id']   = bp_get_activity_item_id();
+				$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Forum_Replies::$moderation_type;
+				break;
+		}
+
+		return $args;
+	}
+
 }

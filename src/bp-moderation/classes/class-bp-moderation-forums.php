@@ -52,6 +52,9 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		// Remove hidden/blocked users content
 		add_filter( 'bp_suspend_forum_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
 	}
 
 	/**
@@ -181,5 +184,26 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		$where['moderation_where'] = $this->exclude_where_query();
 
 		return $where;
+	}
+
+	/**
+	 * Function to modify the button args
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_args( $args, $item_id ) {
+
+		// Remove report button if forum is group forums
+		if ( function_exists( 'bbp_is_forum_group_forum' )
+		     && bbp_is_forum_group_forum( $item_id ) ) {
+			return array();
+		}
+
+		return $args;
 	}
 }

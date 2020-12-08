@@ -50,8 +50,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// button class.
-		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
 
 		// Delete message moderation data when message thread is deleted.
 		add_action( 'bp_messages_message_delete_thread', array( $this, 'delete_moderation_data' ) );
@@ -295,19 +295,16 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array  $button      Button args.
-	 * @param string $item_type   Content type.
 	 * @param string $is_reported Item reported.
 	 *
 	 * @return string
 	 */
-	public function update_button_args( $button, $item_type, $is_reported ) {
+	public function update_button( $button, $is_reported ) {
 
-		if ( self::$moderation_type === $item_type ) {
-			if ( $is_reported ) {
-				$button['button_attr']['class'] = 'reported-content';
-			} else {
-				$button['button_attr']['class'] = 'report-content';
-			}
+		if ( $is_reported ) {
+			$button['button_attr']['class'] = 'reported-content';
+		} else {
+			$button['button_attr']['class'] = 'report-content';
 		}
 
 		return $button;

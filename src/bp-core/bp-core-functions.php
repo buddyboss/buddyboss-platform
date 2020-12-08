@@ -4089,7 +4089,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$bbp_new_forum_reply = array(
-		'description' => __( 'A member has replied to a forum discussion that the participant is following.', 'buddyboss' ),
+		'description' => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_bbp_new_forum_reply',
 			'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
