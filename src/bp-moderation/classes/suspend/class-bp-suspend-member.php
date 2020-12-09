@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -33,7 +32,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		//Manage hidden list
+		// Manage hidden list
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_member' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_member' ), 10, 4 );
 
@@ -57,11 +56,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	}
 
 	public static function suspend_user( $user_id ) {
-		BP_Core_Suspend::add_suspend( array(
-			'item_id'        => $user_id,
-			'item_type'      => BP_Suspend_Member::$type,
-			'user_suspended' => 1,
-		) );
+		BP_Core_Suspend::add_suspend(
+			array(
+				'item_id'        => $user_id,
+				'item_type'      => self::$type,
+				'user_suspended' => 1,
+			)
+		);
 
 		/**
 		 * Add related content of reported item into hidden list
@@ -71,15 +72,17 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
 		 */
-		do_action( "bp_suspend_hide_" . self::$type, $user_id, 1, array( 'action' => 'suspended' ) );
+		do_action( 'bp_suspend_hide_' . self::$type, $user_id, 1, array( 'action' => 'suspended' ) );
 	}
 
 	public static function unsuspend_user( $user_id ) {
-		BP_Core_Suspend::add_suspend( array(
-			'item_id'        => $user_id,
-			'item_type'      => BP_Suspend_Member::$type,
-			'user_suspended' => 0,
-		) );
+		BP_Core_Suspend::add_suspend(
+			array(
+				'item_id'        => $user_id,
+				'item_type'      => self::$type,
+				'user_suspended' => 0,
+			)
+		);
 
 		/**
 		 * remove related content of reported item from hidden list
@@ -90,7 +93,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param int $hide_sitewide item hidden sitewide or user specific
 		 * @param int $force_all     un-hide for all users
 		 */
-		do_action( "bp_suspend_unhide_" . self::$type, $user_id, 0, 0, array( 'action' => 'unsuspended' ) );
+		do_action( 'bp_suspend_unhide_' . self::$type, $user_id, 0, 0, array( 'action' => 'unsuspended' ) );
 	}
 
 	/**
@@ -163,11 +166,14 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function manage_hidden_member( $member_id, $hide_sitewide, $args = array() ) {
 
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'      => $member_id,
-			'item_type'    => BP_Suspend_Member::$type,
-			'blocked_user' => $member_id,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'      => $member_id,
+				'item_type'    => self::$type,
+				'blocked_user' => $member_id,
+			)
+		);
 
 		if ( ! empty( $args['action'] ) && in_array( $args['action'], array( 'suspended', 'unsuspended' ), true ) ) {
 			$suspend_args['action_suspend'] = true;
@@ -194,11 +200,14 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_member( $member_id, $hide_sitewide, $force_all, $args = array() ) {
 
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'      => $member_id,
-			'item_type'    => BP_Suspend_Member::$type,
-			'blocked_user' => $member_id,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'      => $member_id,
+				'item_type'    => self::$type,
+				'blocked_user' => $member_id,
+			)
+		);
 
 		if ( ! empty( $args['action'] ) && in_array( $args['action'], array( 'suspended', 'unsuspended' ), true ) ) {
 			$suspend_args['action_suspend'] = true;
@@ -375,6 +384,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $member_id ) {
 		$related_contents = array();
+
+		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id );
 
 		if ( bp_is_active( 'activity' ) ) {
 			$related_contents[ BP_Suspend_Activity::$type ]         = BP_Suspend_Activity::get_member_activity_ids( $member_id );

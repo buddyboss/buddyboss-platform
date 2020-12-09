@@ -27,6 +27,7 @@ class BP_Core_Suspend {
 	 */
 	function load_on_bp_dependency() {
 		new BP_Suspend_Member();
+		new BP_Suspend_Comment();
 
 		if ( bp_is_active( 'activity' ) ) {
 			new BP_Suspend_Activity();

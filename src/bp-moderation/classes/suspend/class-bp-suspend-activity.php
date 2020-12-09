@@ -250,10 +250,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
-		if ( ! is_null( $hide_sitewide ) ) {
-			$suspend_args['hide_sitewide'] = $hide_sitewide;
-		}
-
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 		$this->unhide_related_content( $activity_id, $hide_sitewide, $force_all, $args );
 	}

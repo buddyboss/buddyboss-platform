@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- *
  */
 
 // Exit if accessed directly.
@@ -41,7 +40,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_action( 'bp_activity_deleted_activities', array( $this, 'sync_comment_moderation_data_on_delete' ), 10 );
 
 		// Check Component is disabled
-		if ( ! bp_is_active( 'activity' ) ){
+		if ( ! bp_is_active( 'activity' ) ) {
 			return;
 		}
 
@@ -56,6 +55,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
+
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 	}
 
 	/**
@@ -231,5 +233,38 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $template_names;
+	}
+
+	/**
+	 * Function to modify button sub item
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_sub_items( $comment_id ) {
+		$comment = new BP_Activity_Activity( $comment_id );
+
+		if ( empty( $comment->id ) ) {
+			return array();
+		}
+
+		$sub_items = array();
+		$activity  = new BP_Activity_Activity( $comment->item_id );
+		if ( ! empty( $activity->id ) && 'blogs' === $activity->component ) {
+			$post_type = get_post_type( $activity->secondary_item_id );
+			if ( ! empty( $post_type ) && 'post' === $post_type ) {
+				$post_comment_id = bp_activity_get_meta( $comment->id, "bp_blogs_{$post_type}_comment_id", true );
+
+				if ( ! empty( $post_comment_id ) ) {
+					$sub_items['id']   = $post_comment_id;
+					$sub_items['type'] = BP_Moderation_Comment::$moderation_type;
+				}
+			}
+		}
+
+		return $sub_items;
 	}
 }
