@@ -940,14 +940,39 @@ class BP_Moderation {
 	 * @return WP_Error|bool True on success.
 	 */
 	public function save() {
-		$this->id           = apply_filters_ref_array( 'bp_moderation_id_before_save', array( $this->id, &$this ) );
-		$this->user_id      = apply_filters_ref_array( 'bp_moderation_user_id_before_save', array( $this->user_id, &$this ) );
-		$this->item_id      = apply_filters_ref_array( 'bp_moderation_item_id_before_save', array( $this->item_id, &$this ) );
-		$this->content      = apply_filters_ref_array( 'bp_moderation_content_before_save', array( $this->content, &$this ) );
-		$this->item_type    = apply_filters_ref_array( 'bp_moderation_item_type_before_save', array( $this->item_type, &$this ) );
-		$this->date_created = apply_filters_ref_array( 'bp_moderation_date_created_before_save', array( $this->date_created, &$this ) );
-		$this->category_id  = apply_filters_ref_array( 'bp_moderation_category_id_before_save', array( $this->category_id, &$this ) );
-		$this->blog_id      = apply_filters_ref_array( 'bp_moderation_blog_id_before_save', array( $this->blog_id, &$this ) );
+		$this->id            = apply_filters_ref_array( 'bp_moderation_id_before_save', array( $this->id, &$this ) );
+		$this->user_id       = apply_filters_ref_array( 'bp_moderation_user_id_before_save', array(
+			$this->user_id,
+			&$this
+		) );
+		$this->item_id       = apply_filters_ref_array( 'bp_moderation_item_id_before_save', array(
+			$this->item_id,
+			&$this
+		) );
+		$this->content       = apply_filters_ref_array( 'bp_moderation_content_before_save', array(
+			$this->content,
+			&$this
+		) );
+		$this->item_type     = apply_filters_ref_array( 'bp_moderation_item_type_before_save', array(
+			$this->item_type,
+			&$this
+		) );
+		$this->date_created  = apply_filters_ref_array( 'bp_moderation_date_created_before_save', array(
+			$this->date_created,
+			&$this
+		) );
+		$this->category_id   = apply_filters_ref_array( 'bp_moderation_category_id_before_save', array(
+			$this->category_id,
+			&$this
+		) );
+		$this->blog_id       = apply_filters_ref_array( 'bp_moderation_blog_id_before_save', array(
+			$this->blog_id,
+			&$this
+		) );
+		$this->hide_sitewide = apply_filters_ref_array( 'bp_moderation_hide_sitewide_before_save', array(
+			$this->hide_sitewide,
+			&$this
+		) );
 
 		$this->date_created = empty( $this->date_created ) ? current_time( 'mysql' ) : $this->date_created;
 		$this->last_updated = empty( $this->last_updated ) ? current_time( 'mysql' ) : $this->last_updated;
@@ -1089,20 +1114,22 @@ class BP_Moderation {
 		if ( ! empty( $this->id ) ) {
 			$q = BP_Core_Suspend::add_suspend(
 				array(
-					'item_id'      => $this->item_id,
-					'item_type'    => $this->item_type,
-					'reported'     => 1,
-					'last_updated' => $this->last_updated,
+					'item_id'       => $this->item_id,
+					'item_type'     => $this->item_type,
+					'reported'      => 1,
+					'last_updated'  => $this->last_updated,
+					'hide_sitewide' => $this->hide_sitewide,
 				)
 			);
 		} else {
 			$q = BP_Core_Suspend::add_suspend(
 				array(
-					'item_id'      => $this->item_id,
-					'item_type'    => $this->item_type,
-					'reported'     => 1,
-					'last_updated' => $this->last_updated,
-					'blog_id'      => $this->blog_id,
+					'item_id'       => $this->item_id,
+					'item_type'     => $this->item_type,
+					'reported'      => 1,
+					'last_updated'  => $this->last_updated,
+					'hide_sitewide' => $this->hide_sitewide,
+					'blog_id'       => $this->blog_id,
 				)
 			);
 		}
