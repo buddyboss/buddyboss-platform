@@ -203,7 +203,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_forum_reply_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			if ( 'bp_forum_reply_search_join_sql' === $action_name ) {
+			if ( 'bp_forum_reply_search_where_sql' === $action_name ) {
 				$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 			} else {
 				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';

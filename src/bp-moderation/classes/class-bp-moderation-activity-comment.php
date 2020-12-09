@@ -192,20 +192,20 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Update join query to Remove hidden/blocked Activity's Comments
+	 * Update where query Remove hidden/blocked user's Activities
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $join_sql Activity's Comment Join sql.
-	 * @param object $suspend  suspend object
+	 * @param string $where   Activity Where sql.
+	 * @param object $suspend suspend object.
 	 *
-	 * @return string Join sql
+	 * @return array
 	 */
-	public function update_join_sql( $join_sql, $suspend ) {
-		$this->alias = $suspend->alias;
-		$join_sql    .= $this->exclude_joint_query();
+	public function update_where_sql( $where, $suspend ) {
+		$this->alias               = $suspend->alias;
+		$where['moderation_where'] = $this->exclude_where_query();
 
-		return $join_sql;
+		return $where;
 	}
 
 	/**

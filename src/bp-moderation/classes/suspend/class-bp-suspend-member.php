@@ -47,7 +47,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'authenticate', array( $this, 'boot_suspended_user' ), 30 );
