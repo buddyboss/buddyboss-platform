@@ -1445,39 +1445,7 @@ function add_active_moderation_popup() {
 	}
 
 	if ( 'admin.php' === $pagenow && 0 === strpos( get_current_screen()->id, 'buddyboss_page_bp-components' ) ) {
-		?>
-		<div id="bp-hello-backdrop" style="display: none;"></div>
-		<div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
-			<div class="bp-hello-header" role="document">
-				<div class="bp-hello-close">
-					<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up',
-							'buddyboss' ); ?>">
-						<?php esc_html_e( 'Close', 'buddyboss' ); ?>
-					</button>
-				</div>
-
-				<div class="bp-hello-title">
-					<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Notice', 'buddyboss' ); ?></h1>
-				</div>
-			</div>
-			<div class="bp-hello-content">
-
-			</div>
-
-			<div class="bp-hello-footer">
-				<button class="close-modal">
-					<?php
-					esc_html_e( 'Cancel', 'buddyboss' );
-					?>
-				</button>
-				<button class="component-deactivate">
-					<?php
-					esc_html_e( 'I understand deactivate', 'buddyboss' );
-					?>
-				</button>
-			</div>
-		</div>
-		<?php
+		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/moderation-deactivate.php';
 	}
 }
 
