@@ -222,9 +222,8 @@ function bp_moderation_admin_load() {
 			$doaction = substr( $doaction, 5 );
 		}
 
-		$moderation_action = ( 'hide' === $doaction ) ? 1 : 0;
-		$content_count     = 0;
-		$user_count        = 0;
+		$content_count = 0;
+		$user_count    = 0;
 
 		foreach ( $moderation_ids as $moderation_id ) {
 			$moderation_obj     = new BP_Moderation();
@@ -400,10 +399,10 @@ function bp_moderation_admin_index() {
 
 	// If the user has just made a change to an Reported item, build status messages.
 	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
-		$hidden         = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
-		$unhide         = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
-		$suspended      = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
-		$unsuspended    = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
+		$hidden      = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
+		$unhide      = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
+		$suspended   = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
+		$unsuspended = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
 
 		if ( $hidden > 0 ) {
 			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
@@ -493,10 +492,10 @@ function bp_moderation_admin_view() {
 
 	// If the user has just made a change to an moderation item, build status messages.
 	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
-		$hidden         = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
-		$unhide         = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
-		$suspended      = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
-		$unsuspended    = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
+		$hidden      = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
+		$unhide      = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
+		$suspended   = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
+		$unsuspended = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
 
 		if ( $hidden > 0 ) {
 			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );

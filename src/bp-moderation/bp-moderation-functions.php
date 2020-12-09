@@ -708,7 +708,7 @@ function bp_moderation_get_Permalink( $moderation_item_id, $moderation_item_type
 	$link  = '';
 	$class = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
-	if ( method_exists( $class, 'get_content_excerpt' ) ) {
+	if ( method_exists( $class, 'get_permalink' ) ) {
 		$link = $class::get_permalink( $moderation_item_id );
 	}
 
