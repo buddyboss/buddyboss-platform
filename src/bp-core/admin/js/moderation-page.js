@@ -56,7 +56,7 @@ jQuery(document).ready(function ($) {
 						if ('user' === type) {
 							curObj.text(Bp_Moderation.strings.suspend_label);
 						} else {
-							curObj.text(Bp_Moderation.strings.unhide_label);
+							curObj.text(Bp_Moderation.strings.hide_label);
 						}
 					}
 					hideArg = ('user' === type) ? 'unsuspended' : 'unhide';
