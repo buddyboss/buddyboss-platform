@@ -99,6 +99,10 @@ $group_members = groups_get_group_members( $args );
 								<div class="dropzone closed" id="bp-group-messages-post-document-uploader"></div>
 								<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 							<?php endif; ?>
+							<?php if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) : ?>
+								<div class="dropzone closed" id="bp-group-messages-post-video-uploader"></div>
+								<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
+							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) ) : ?>
 								<div class="bp-group-messages-attached-gif-container closed">
 									<div class="gif-image-container">
@@ -138,6 +142,18 @@ $group_members = groups_get_group_members( $args );
 									</a>
 								</div>
 							<?php endif; ?>
+
+							<?php
+							$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
+							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bp_is_messages_video_support_enabled() ) :
+								?>
+								<div class="post-elements-buttons-item post-video video-support">
+									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">
+										<i class="bb-icon bb-icon-video"></i>
+									</a>
+								</div>
+							<?php endif; ?>
+
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
