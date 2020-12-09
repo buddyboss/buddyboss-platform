@@ -1537,7 +1537,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 
 				// If not already spammed, create spam link.
 			} else {
-				$actions['spam'] = sprintf( '<a class="submitdelete bp-active-moderation" href="javascript:void(0)">%1$s</a>', esc_html__( 'Spam', 'buddyboss' ) );
+				$actions['spam'] = sprintf( '<a class="submitdelete bp-show-moderation-alert" href="javascript:void(0)">%1$s</a>', esc_html__( 'Spam', 'buddyboss' ) );
 			}
 		} else {
 			if ( bp_moderation_is_user_suspended( $user_id ) ) {

@@ -1098,13 +1098,13 @@
 			);
 
 			// Show the moderation activate popup when admin click spam user link.
-			$( document ).on( 'click', '.bp-active-moderation', function () {
+			$( document ).on( 'click', '.bp-show-moderation-alert', function () {
 				$( '#bp-hello-backdrop' ).show();
 				$( '#bp-hello-container' ).show();
 			} );
 
 			// Show the confirmation popup when user clicks single BB component disable link.
-			$( document ).on( 'click', '.check-deactivate a', function ( event ) {
+			$( document ).on( 'click', '.bp-show-deactivate-popup a', function ( event ) {
 				event.preventDefault();
 				$( '#bp-hello-backdrop' ).show();
 				$( '#bp-hello-container' ).show();
@@ -1129,7 +1129,7 @@
 				}
 			} );
 
-			// Halt form submission till popup showing.
+			// Show the confirmation popup when bulk component disabled
 			$( "form#bp-admin-component-form" ).submit( function ( e ) {
 				var action1 = $( '#bulk-action-selector-top[name="action"]' ).find( ":selected" ).val();
 				var action2 = $( '#bulk-action-selector-top[name="action2"]' ).find( ":selected" ).val();
@@ -1145,7 +1145,7 @@
 						e.preventDefault();
 						$( '#bp-hello-backdrop' ).show();
 						$( '#bp-hello-container' ).show();
-						$( '#bp-hello-container' ).find( '.bp-hello-content' ).append( msg );
+						$( '#bp-hello-container' ).find( '.bp-hello-content' ).html( msg );
 						$( '#bp-hello-container' ).find( '.component-deactivate' ).addClass( 'form-submit' );
 					}
 				}

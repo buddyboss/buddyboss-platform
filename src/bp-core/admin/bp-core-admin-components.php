@@ -302,7 +302,7 @@ function bp_core_admin_components_options() {
 									</span>
 								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 									<?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>
-                                        <span class="deactivate <?php echo esc_attr( ( true === $deactivate_confirm ) ? 'check-deactivate' : '' ); ?>"
+                                        <span class="deactivate <?php echo esc_attr( ( true === $deactivate_confirm ) ? 'bp-show-deactivate-popup' : '' ); ?>"
                                               data-confirm="<?php echo esc_attr( $deactivate_confirm ); ?>">
 											<a href="
 											<?php
