@@ -213,7 +213,7 @@ function bp_moderation_admin_load() {
 		$moderation_ids = apply_filters( 'bp_moderation_admin_action_moderation_ids', $moderation_ids );
 
 		// Is this a bulk request?
-		if ( 'bulk_' == substr( $doaction, 0, 5 ) && ! empty( $_REQUEST['mid'] ) ) {
+		if ( 'bulk_' === substr( $doaction, 0, 5 ) && ! empty( $_REQUEST['mid'] ) ) {
 
 			// Check this is a valid form submission.
 			check_admin_referer( 'bulk-moderations' );
@@ -230,12 +230,25 @@ function bp_moderation_admin_load() {
 			$moderation_obj     = new BP_Moderation();
 			$moderation_obj->id = $moderation_id;
 			$moderation_obj->populate();
-			$moderation_obj->hide_sitewide = $moderation_action;
-			$update_moderation             = $moderation_obj->save();
-			if ( true === $update_moderation ) {
-				if ( BP_Moderation_Members::$moderation_type === $moderation_obj->item_type ) {
-					$user_count ++;
-				} else {
+
+			if ( 'hide' === $doaction ) {
+				$moderation = bp_moderation_hide(
+					array(
+						'content_id'   => $moderation_obj->item_id,
+						'content_type' => $moderation_obj->item_type,
+					)
+				);
+				if ( $moderation->hide_sitewide === 1 ) {
+					$content_count ++;
+				}
+			} else {
+				$moderation = bp_moderation_unhide(
+					array(
+						'content_id'   => $moderation_obj->item_id,
+						'content_type' => $moderation_obj->item_type,
+					)
+				);
+				if ( $moderation->hide_sitewide === 0 ) {
 					$content_count ++;
 				}
 			}
