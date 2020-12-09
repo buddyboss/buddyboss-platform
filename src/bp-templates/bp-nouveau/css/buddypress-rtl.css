@@ -2525,6 +2525,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .active #activity-document-button .bb-icon,
 .active#messages-document-button .bb-icon,
 .active#messages-media-button .bb-icon,
+.active#messages-video-button .bb-icon,
 .active#forums-media-button .bb-icon,
 .active#forums-document-button .bb-icon,
 .active#bp-group-messages-media-button .bb-icon,
