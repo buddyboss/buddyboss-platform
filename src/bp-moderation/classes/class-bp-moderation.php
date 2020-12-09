@@ -230,8 +230,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array      $args              {
-	 *                                      An array of arguments. All items are optional.
+	 * @param array $args              {
+	 *                                 An array of arguments. All items are optional.
 	 *
 	 * @type int         $page              Which page of results to fetch. Using page=1 without per_page will result
 	 *                                           in no pagination. Default: 1.
@@ -292,7 +292,8 @@ class BP_Moderation {
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
 				'hidden'            => false,           // Get the moderation item base on it's hide status.
-			) );
+			)
+		);
 
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT ms.id';
@@ -369,8 +370,10 @@ class BP_Moderation {
 
 		// Exclude specified items type.
 		if ( ! empty( $r['exclude_types'] ) ) {
-			$not_in_types                      = "'" . implode( "', '",
-					wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
+			$not_in_types                      = "'" . implode(
+				"', '",
+				wp_parse_slug_list( $r['exclude_types'] )
+			) . "'";
 			$where_conditions['exclude_types'] = "ms.item_type NOT IN ({$not_in_types})";
 		}
 
@@ -382,9 +385,9 @@ class BP_Moderation {
 
 		// The specified items type to which you want to limit the query..
 		if ( 1 === $r['hidden'] ) {
-			$where_conditions['hidden'] = "ms.hide_sitewide=1";
+			$where_conditions['hidden'] = 'ms.hide_sitewide=1';
 		} elseif ( 0 === $r['hidden'] ) {
-			$where_conditions['hidden'] = "ms.hide_sitewide=0";
+			$where_conditions['hidden'] = 'ms.hide_sitewide=0';
 		}
 
 		// Process meta_query into SQL.
@@ -547,8 +550,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array           $filter_array  {
-	 *                                       Fields and values to filter by.
+	 * @param array $filter_array  {
+	 *                             Fields and values to filter by.
 	 *
 	 * @type array|string|int $user_id       User ID(s).
 	 * @type array|string|int $item_id       Item ID(s).
@@ -938,13 +941,13 @@ class BP_Moderation {
 	 */
 	public function save() {
 		$this->id           = apply_filters_ref_array( 'bp_moderation_id_before_save', array( $this->id, &$this ) );
-		$this->user_id      = apply_filters_ref_array( 'bp_moderation_user_id_before_save', array( $this->user_id, &$this, ) );
-		$this->item_id      = apply_filters_ref_array( 'bp_moderation_item_id_before_save', array( $this->item_id, &$this, ) );
-		$this->content      = apply_filters_ref_array( 'bp_moderation_content_before_save', array( $this->content, &$this, ) );
-		$this->item_type    = apply_filters_ref_array( 'bp_moderation_item_type_before_save', array( $this->item_type, &$this, ) );
-		$this->date_created = apply_filters_ref_array( 'bp_moderation_date_created_before_save', array( $this->date_created, &$this, ) );
-		$this->category_id  = apply_filters_ref_array( 'bp_moderation_category_id_before_save', array( $this->category_id, &$this, ) );
-		$this->blog_id      = apply_filters_ref_array( 'bp_moderation_blog_id_before_save', array( $this->blog_id, &$this, ) );
+		$this->user_id      = apply_filters_ref_array( 'bp_moderation_user_id_before_save', array( $this->user_id, &$this ) );
+		$this->item_id      = apply_filters_ref_array( 'bp_moderation_item_id_before_save', array( $this->item_id, &$this ) );
+		$this->content      = apply_filters_ref_array( 'bp_moderation_content_before_save', array( $this->content, &$this ) );
+		$this->item_type    = apply_filters_ref_array( 'bp_moderation_item_type_before_save', array( $this->item_type, &$this ) );
+		$this->date_created = apply_filters_ref_array( 'bp_moderation_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->category_id  = apply_filters_ref_array( 'bp_moderation_category_id_before_save', array( $this->category_id, &$this ) );
+		$this->blog_id      = apply_filters_ref_array( 'bp_moderation_blog_id_before_save', array( $this->blog_id, &$this ) );
 
 		$this->date_created = empty( $this->date_created ) ? current_time( 'mysql' ) : $this->date_created;
 		$this->last_updated = empty( $this->last_updated ) ? current_time( 'mysql' ) : $this->last_updated;
@@ -1005,10 +1008,10 @@ class BP_Moderation {
 			$this->last_updated = current_time( 'mysql' );
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
-			$this->count = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
+			$this->count  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
 			$this->count += 1;
 			if ( ! empty( $threshold ) ) {
-				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
+				if ( $this->count > $threshold && empty( $this->hide_sitewide ) ) {
 					$this->hide_sitewide = 1;
 					$auto_hide           = true;
 				}
@@ -1037,7 +1040,7 @@ class BP_Moderation {
 			if ( ! empty( $email_notification ) ) {
 				$this->send_emails();
 			}
-		} else if ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
+		} elseif ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
 			// Content will be hide when user blocked for reported
 			$this->hide_related_content();
 		}
@@ -1084,20 +1087,24 @@ class BP_Moderation {
 
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = BP_Core_Suspend::add_suspend( array(
-				'item_id'      => $this->item_id,
-				'item_type'    => $this->item_type,
-				'reported'     => 1,
-				'last_updated' => $this->last_updated,
-			) );
+			$q = BP_Core_Suspend::add_suspend(
+				array(
+					'item_id'      => $this->item_id,
+					'item_type'    => $this->item_type,
+					'reported'     => 1,
+					'last_updated' => $this->last_updated,
+				)
+			);
 		} else {
-			$q = BP_Core_Suspend::add_suspend( array(
-				'item_id'      => $this->item_id,
-				'item_type'    => $this->item_type,
-				'reported'     => 1,
-				'last_updated' => $this->last_updated,
-				'blog_id'      => $this->blog_id,
-			) );
+			$q = BP_Core_Suspend::add_suspend(
+				array(
+					'item_id'      => $this->item_id,
+					'item_type'    => $this->item_type,
+					'reported'     => 1,
+					'last_updated' => $this->last_updated,
+					'blog_id'      => $this->blog_id,
+				)
+			);
 		}
 
 		if ( false === $q ) { // phpcs:ignore
@@ -1151,7 +1158,12 @@ class BP_Moderation {
 	 */
 	public function send_emails() {
 
-		$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
+		$admins = get_users(
+			array(
+				'role'   => 'Administrator',
+				'fields' => 'ID',
+			)
+		);
 		if ( ! empty( $admins ) ) {
 			foreach ( $admins as $admin ) {
 				if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
@@ -1160,12 +1172,15 @@ class BP_Moderation {
 						'user_name'     => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
 						'times_blocked' => $this->count,
 						'member_link'   => '',
-						'report_link'   => add_query_arg( array(
-							'page'         => 'bp-moderation',
-							'mid'          => $this->id,
-							'content_type' => $this->item_type,
-							'action'       => 'view',
-						), bp_get_admin_url( 'admin.php' ) )
+						'report_link'   => add_query_arg(
+							array(
+								'page'         => 'bp-moderation',
+								'mid'          => $this->id,
+								'content_type' => $this->item_type,
+								'action'       => 'view',
+							),
+							bp_get_admin_url( 'admin.php' )
+						),
 					);
 
 					return bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
@@ -1180,12 +1195,15 @@ class BP_Moderation {
 						'content_owner'         => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
 						'content_timesreported' => $this->count,
 						'content_link'          => '',
-						'content_reportlink'    => add_query_arg( array(
-							'page'         => 'bp-moderation',
-							'mid'          => $this->id,
-							'content_type' => $this->item_type,
-							'action'       => 'view'
-						), $content_report_link ),
+						'content_reportlink'    => add_query_arg(
+							array(
+								'page'         => 'bp-moderation',
+								'mid'          => $this->id,
+								'content_type' => $this->item_type,
+								'action'       => 'view',
+							),
+							$content_report_link
+						),
 					);
 
 					return bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
@@ -1298,7 +1316,7 @@ class BP_Moderation {
 
 		if ( ! empty( $updated_row ) ) {
 			$this->report_id = null;
-			$this->count     -= 1;
+			$this->count    -= 1;
 
 			if ( 1 <= $this->count ) {
 				bp_moderation_update_meta( $this->id, '_count', $this->count );
