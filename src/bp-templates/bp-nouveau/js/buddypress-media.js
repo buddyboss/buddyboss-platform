@@ -351,6 +351,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var targetPopup = $(event.currentTarget).closest('.open-popup');
+			var currentAction = $(targetPopup).find('.bp-document-create-popup-folder-submit');
 			var hiddenValue = targetPopup.find('.bb-folder-selected-id').val();
 			// if ( 0 === this.currentTargetParent && hiddenValue > 0 ) {
 			// 	this.currentTargetParent = hiddenValue;
@@ -381,7 +382,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 			
-			$(event.currentTarget).addClass('loading');
+			currentAction.addClass('loading');
 
 			//Defer this code to run at last
 			setTimeout( function() {
@@ -459,7 +460,22 @@ window.bp = window.bp || {};
 										}
 									}
 								});
-								$(event.currentTarget).removeClass('loading');
+								currentAction.removeClass('loading');
+								setTimeout( function() {
+									var currentSelectedFolder = targetPopup.find('ul.location-folder-list span#' + newParent);
+									currentSelectedFolder.trigger('click');
+									var mediaPrivacy = $(targetPopup).find('#bb-document-privacy');
+
+									if ( Number(currentSelectedFolder.data('id')) !== 0) {
+										mediaPrivacy.find('option').removeAttr('selected');
+										mediaPrivacy.val(currentSelectedFolder.parent().data('privacy'));
+										mediaPrivacy.prop('disabled', true);
+									} else {
+										mediaPrivacy.find('option').removeAttr('selected');
+										mediaPrivacy.val('public');
+										mediaPrivacy.prop('disabled', false);
+									}
+								},200);
 							}
 						}
 					}
