@@ -210,7 +210,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 	<label for="bpm_blocking_auto_suspend">
 		<input name="bpm_blocking_auto_suspend" id="bpm_blocking_auto_suspend" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_suspend_enable( false ) ); ?> />
-		<?php printf( esc_html__( 'Automatically suspend members after they have been blocked more than %s times.', 'buddyboss' ), $threshold ); ?>
+		<?php printf( esc_html__( 'Automatically suspend members after they have been blocked at least %s times.', 'buddyboss' ), $threshold ); ?>
 	</label>
 	<?php
 }
@@ -310,7 +310,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 		<label for="bpm_reporting_auto_hide-<?php echo esc_attr( $slug ); ?>">
 			<input name="bpm_reporting_auto_hide[<?php echo esc_attr( $slug ); ?>]" id="bpm_reporting_auto_hide-<?php echo esc_attr( $slug ); ?>" type="checkbox" value="1"
 					<?php checked( bp_is_moderation_auto_hide_enable( false, $slug ) ); ?> />
-			<?php printf( esc_html__( 'Automatically hide content after it has been reported more than %s times.', 'buddyboss' ), $threshold ); ?>
+			<?php printf( esc_html__( 'Automatically hide content after it has been reported at least %s times.', 'buddyboss' ), $threshold ); ?>
 		</label>
 		<br/>
 	<?php } ?>

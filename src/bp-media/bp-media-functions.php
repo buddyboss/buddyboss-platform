@@ -281,7 +281,7 @@ function bp_media_get( $args = '' ) {
 			'privacy'          => false,        // privacy of media
 			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'      => false,
-			'moderation_query' => false,         // Filter for exclude moderation query
+			'moderation_query' => true,         // Filter for exclude moderation query
 		),
 		'media_get'
 	);

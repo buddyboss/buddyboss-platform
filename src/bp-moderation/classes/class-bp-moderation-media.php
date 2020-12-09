@@ -49,7 +49,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		}
 
 		// Remove hidden/blocked users content
-		add_filter( 'bp_suspend_document_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_suspend_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button.
 		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );

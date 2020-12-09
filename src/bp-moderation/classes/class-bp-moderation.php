@@ -1011,7 +1011,7 @@ class BP_Moderation {
 			$this->count  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
 			$this->count += 1;
 			if ( ! empty( $threshold ) ) {
-				if ( $this->count > $threshold && empty( $this->hide_sitewide ) ) {
+				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
 					$this->hide_sitewide = 1;
 					$auto_hide           = true;
 				}
