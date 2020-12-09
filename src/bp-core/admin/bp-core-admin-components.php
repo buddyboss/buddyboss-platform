@@ -243,32 +243,47 @@ function bp_core_admin_components_options() {
 
 			<?php if ( ! empty( $current_components ) ) : ?>
 
-				<?php foreach ( $current_components as $name => $labels ) : ?>
+				<?php foreach ( $current_components as $name => $labels ) :
+					$deactivate_confirm = ( isset( $labels['deactivation_confirm'] ) && true === $labels['deactivation_confirm'] ) ? true : false;
+					$dct_class = ( true === $deactivate_confirm ) ? 'check-deactivate' : '';
+					$chk_cls = ( true === $deactivate_confirm ) ? 'mass-check-deactivate' : '';
+					?>
 
 					<?php
 					if ( in_array( $name, array( 'blogs' ) ) ) :
 						$class = isset( $active_components[ esc_attr( $name ) ] ) ? 'active hidden' : 'inactive hidden';
-						elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
-							$class = isset( $active_components[ esc_attr( $name ) ] ) ? 'active' : 'inactive';
-						else :
-							$class = 'active';
-						endif;
-						?>
+					elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
+						$class = isset( $active_components[ esc_attr( $name ) ] ) ? 'active' : 'inactive';
+					else :
+						$class = 'active';
+					endif;
+					?>
 
 					<tr id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
 						<th scope="row" class="check-column">
+							<?php if ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
 
-							<?php if ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-
-								<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text">
-																	  <?php
-																		/* translators: accessibility text */
-																		printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) );
-																		?>
-									</label>
-
+								if ( isset( $active_components[ esc_attr( $name ) ] ) ) {
+									?>
+									<input class="<?php echo esc_attr( $chk_cls ); ?>" type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
+									<?php
+								} else {
+									?>
+									<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
+									<?php
+								}
+								?>
+								<label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text">
+									<?php
+									/* translators: accessibility text */
+									printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) ); ?>
+								</label>
+								<div class="component-deactivate-msg" style="display: none;">
+									<?php
+									echo esc_html( $labels['deactivation_message'] );
+									?>
+								</div>
 							<?php endif; ?>
-
 						</th>
 						<td class="plugin-title column-primary">
 							<label for="<?php echo esc_attr( "bp_components[$name]" ); ?>">
@@ -280,20 +295,22 @@ function bp_core_admin_components_options() {
 									<span class="required">
 										<?php _e( 'Required', 'buddyboss' ); ?>
 									</span>
-								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?><?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) :
-									$deactiavte_confirm = ( isset( $labels['deactivation_confirm'] ) && true === $labels['deactivation_confirm'] ) ? true : false;
-									$class = ( true === $deactiavte_confirm ) ? 'check-deactivate' : '';
-									?>
-									<span class="deactivate <?php echo esc_attr( $class ); ?>" data-confirm="<?php echo esc_attr( $deactiavte_confirm ); ?>">
+								<?php elseif ( ! in_array( $name,
+										array(
+												'core',
+												'members',
+												'xprofile',
+										) ) ) : ?><?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>
+									<span class="deactivate <?php echo esc_attr( $dct_class ); ?>" data-confirm="<?php echo esc_attr( $deactivate_confirm ); ?>">
 											<a href="
 											<?php
 											echo wp_nonce_url( bp_get_admin_url( add_query_arg( array(
-															'page'         => 'bp-components',
-															'action'       => $action,
-															'bp_component' => $name,
-															'do_action'    => 'deactivate',
-														),
-															$page ) ),
+													'page'         => 'bp-components',
+													'action'       => $action,
+													'bp_component' => $name,
+													'do_action'    => 'deactivate',
+											),
+													$page ) ),
 													'bp-admin-component-activation' );
 											?>
 														">

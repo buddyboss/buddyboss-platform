@@ -1472,7 +1472,7 @@ function add_active_moderation_popup() {
 				</button>
 				<button class="component-deactivate">
 					<?php
-					esc_html_e( 'Deactivate', 'buddyboss' );
+					esc_html_e( 'I understand deactivate', 'buddyboss' );
 					?>
 				</button>
 			</div>

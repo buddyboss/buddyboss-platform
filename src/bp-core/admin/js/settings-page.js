@@ -1113,11 +1113,36 @@
 			$(document).on('click', '.close-modal', function () {
 				$('#bp-hello-backdrop').hide();
 				$('#bp-hello-container').hide();
+				$('#bp-hello-container').find('.component-deactivate').removeClass('form-submit');
 			});
 
 			$(document).on('click', '.component-deactivate', function (event) {
 				event.preventDefault();
-				window.location = $(this).attr('data-redirect');
+				if ($(this).hasClass('form-submit')) {
+					$("form#bp-admin-component-form").find("input[name='bp-admin-component-submit']").trigger("click");
+				} else {
+					window.location = $(this).attr('data-redirect');
+				}
+			});
+
+			$("form#bp-admin-component-form").submit(function (e) {
+				var action1 = $('#bulk-action-selector-top[name="action"]').find(":selected").val();
+				var action2 = $('#bulk-action-selector-top[name="action2"]').find(":selected").val();
+
+				if (!$('#bp-hello-container').find('.component-deactivate').hasClass('form-submit') && ('inactive' === action1 || 'inactive' === action2)) {
+					$('#bp-hello-container').find('.bp-hello-content').empty();
+					var msg = '';
+					$('.mass-check-deactivate').each(function () {
+						msg = msg + $(this).parent().find('.component-deactivate-msg').text();
+					});
+					if (msg) {
+						e.preventDefault();
+						$('#bp-hello-backdrop').show();
+						$('#bp-hello-container').show();
+						$('#bp-hello-container').find('.bp-hello-content').append(msg);
+						$('#bp-hello-container').find('.component-deactivate').addClass('form-submit');
+					}
+				}
 			});
 
 			//Moderation Reporting Block
