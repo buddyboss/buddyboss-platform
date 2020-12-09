@@ -2638,10 +2638,10 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'moderation'         => array(
-			'title'       => __( 'Moderation', 'buddyboss' ),
-			'description' => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
+		'moderation'    => array(
+			'title'                => __( 'Moderation', 'buddyboss' ),
+			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
+			'settings'             => bp_get_admin_url(
 				add_query_arg(
 					array(
 						'page' => 'bp-settings',
@@ -2650,7 +2650,9 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'default'     => false,
+			'default'              => false,
+			'deactivation_confirm' => true,
+			'deactivation_message' => __( 'Moderation deactivation message', 'buddyboss' ),
 		),
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
