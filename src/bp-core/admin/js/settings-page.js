@@ -1131,9 +1131,11 @@
 
 			// Show the confirmation popup when bulk component disabled
 			$( "form#bp-admin-component-form" ).submit( function ( e ) {
-				var action1 = $( '#bulk-action-selector-top[name="action"]' ).find( ":selected" ).val();
-				var action2 = $( '#bulk-action-selector-top[name="action2"]' ).find( ":selected" ).val();
-				var action = ( action1 ) ? action1 : action2;
+
+				var action = $( '#bulk-action-selector-top[name="action2"]' ).find( ":selected" ).val();
+				if ( $( '#bulk-action-selector-top[name="action"]' ).find( ":selected" ).val() ) {
+					action = $( '#bulk-action-selector-top[name="action"]' ).find( ":selected" ).val();
+				}
 
 				if ( !$( '#bp-hello-container' ).find( '.component-deactivate' ).hasClass( 'form-submit' ) && 'inactive' === action ) {
 					$( '#bp-hello-container' ).find( '.bp-hello-content' ).empty();
