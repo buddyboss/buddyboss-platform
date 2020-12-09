@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-17 12:09:22+00:00\n"
+"POT-Creation-Date: 2020-12-09 09:42:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -579,27 +579,29 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:567
+#: bp-activity/bp-activity-filters.php:571
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:571
-#: bp-activity/bp-activity-filters.php:585
+#: bp-activity/bp-activity-filters.php:575
+#: bp-activity/bp-activity-filters.php:589
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:632
+#: bp-activity/bp-activity-filters.php:636
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:890
+#: bp-activity/bp-activity-filters.php:894
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1670
-#: bp-activity/bp-activity-filters.php:1843
-#: bp-activity/bp-activity-filters.php:1992
-#: bp-activity/bp-activity-filters.php:2165
+#: bp-activity/bp-activity-filters.php:1679
+#: bp-activity/bp-activity-filters.php:1852
+#: bp-activity/bp-activity-filters.php:2001
+#: bp-activity/bp-activity-filters.php:2174
+#: bp-activity/bp-activity-filters.php:2311
+#: bp-activity/bp-activity-filters.php:2484
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1669
 #: cli/components/activity.php:763
 msgid "%1$s posted an update in the group %2$s"
@@ -685,10 +687,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:222
 #: bp-core/admin/bp-core-admin-tools.php:863
-#: bp-core/classes/class-bp-admin.php:512
 #: bp-core/classes/class-bp-admin.php:513
-#: bp-core/classes/class-bp-admin.php:535
-#: bp-core/classes/class-bp-admin.php:536 bp-forums/admin/settings.php:1464
+#: bp-core/classes/class-bp-admin.php:514
+#: bp-core/classes/class-bp-admin.php:536
+#: bp-core/classes/class-bp-admin.php:537 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1754
 #: bp-media/bp-media-filters.php:1227 bp-video/bp-video-filters.php:1184
 msgid "Tools"
@@ -2271,8 +2273,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:27
 #: bp-core/admin/bp-core-admin-functions.php:661
-#: bp-core/classes/class-bp-admin.php:315
-#: bp-core/classes/class-bp-admin.php:463
+#: bp-core/classes/class-bp-admin.php:316
+#: bp-core/classes/class-bp-admin.php:464
 msgid "Components"
 msgstr ""
 
@@ -2387,9 +2389,9 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-components.php:341
 #: bp-core/admin/bp-core-admin-functions.php:671
 #: bp-core/admin/bp-core-admin-settings.php:658
-#: bp-core/classes/class-bp-admin.php:333
-#: bp-core/classes/class-bp-admin.php:481
-#: bp-core/classes/class-bp-admin.php:745
+#: bp-core/classes/class-bp-admin.php:334
+#: bp-core/classes/class-bp-admin.php:482
+#: bp-core/classes/class-bp-admin.php:746
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:427
 #: bp-groups/bp-groups-admin.php:166
@@ -2463,36 +2465,36 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:666
 #: bp-core/admin/bp-core-admin-pages.php:25
-#: bp-core/classes/class-bp-admin.php:323
 #: bp-core/classes/class-bp-admin.php:324
-#: bp-core/classes/class-bp-admin.php:471
-#: bp-core/classes/class-bp-admin.php:472 bp-forums/admin/settings.php:1670
+#: bp-core/classes/class-bp-admin.php:325
+#: bp-core/classes/class-bp-admin.php:472
+#: bp-core/classes/class-bp-admin.php:473 bp-forums/admin/settings.php:1670
 #: bp-search/bp-search-functions.php:362
 msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:676
 #: bp-core/admin/bp-core-admin-settings.php:683
-#: bp-core/classes/class-bp-admin.php:342
-#: bp-core/classes/class-bp-admin.php:490
+#: bp-core/classes/class-bp-admin.php:343
+#: bp-core/classes/class-bp-admin.php:491
 msgid "Integrations"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:686
 #: bp-core/admin/bp-core-admin-help.php:56
-#: bp-core/classes/class-bp-admin.php:434
-#: bp-core/classes/class-bp-admin.php:544
+#: bp-core/classes/class-bp-admin.php:435
 #: bp-core/classes/class-bp-admin.php:545
+#: bp-core/classes/class-bp-admin.php:546
 msgid "Help"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:691
 #: bp-core/admin/settings/bp-admin-setting-credit.php:21
-#: bp-core/classes/class-bp-admin.php:351
 #: bp-core/classes/class-bp-admin.php:352
-#: bp-core/classes/class-bp-admin.php:499
+#: bp-core/classes/class-bp-admin.php:353
 #: bp-core/classes/class-bp-admin.php:500
-#: bp-core/classes/class-bp-admin.php:593
+#: bp-core/classes/class-bp-admin.php:501
+#: bp-core/classes/class-bp-admin.php:594
 msgid "Credits"
 msgstr ""
 
@@ -2803,12 +2805,12 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2578
 #: bp-core/admin/bp-core-admin-functions.php:2749
-#: bp-core/bp-core-functions.php:3209 bp-core/classes/class-bp-admin.php:645
-#: bp-core/classes/class-bp-admin.php:646
-#: bp-core/classes/class-bp-admin.php:656
+#: bp-core/bp-core-functions.php:3209 bp-core/classes/class-bp-admin.php:646
+#: bp-core/classes/class-bp-admin.php:647
 #: bp-core/classes/class-bp-admin.php:657
-#: bp-core/classes/class-bp-admin.php:675
+#: bp-core/classes/class-bp-admin.php:658
 #: bp-core/classes/class-bp-admin.php:676
+#: bp-core/classes/class-bp-admin.php:677
 msgid "Emails"
 msgstr ""
 
@@ -4186,12 +4188,14 @@ msgstr ""
 #: bp-core/admin/templates/about-buddyboss-app.php:20
 #: bp-core/admin/templates/about-buddyboss.php:20
 #: bp-core/admin/templates/check-document-mime-type.php:18
+#: bp-core/admin/templates/check-video-mime-type.php:18
 msgid "Close pop-up"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss-app.php:21
 #: bp-core/admin/templates/about-buddyboss.php:21
 #: bp-core/admin/templates/check-document-mime-type.php:19
+#: bp-core/admin/templates/check-video-mime-type.php:19
 #: bp-forums/admin/topics.php:847 bp-forums/topics/template.php:2820
 #: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:15
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:12
@@ -4295,14 +4299,17 @@ msgid "Built by <a href=\"%s\">BuddyBoss</a>."
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:24
+#: bp-core/admin/templates/check-video-mime-type.php:24
 msgid "Upload a file"
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:29
+#: bp-core/admin/templates/check-video-mime-type.php:29
 msgid "What is a MIME type?"
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:30
+#: bp-core/admin/templates/check-video-mime-type.php:30
 msgid ""
 "A MIME type is a way of identifying files on the Internet according to "
 "their nature and format. Your server needs this information to determine "
@@ -4310,10 +4317,12 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:31
+#: bp-core/admin/templates/check-video-mime-type.php:31
 msgid "Upload a file to check its MIME type"
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:32
+#: bp-core/admin/templates/check-video-mime-type.php:32
 msgid ""
 "We've made it easy to figure out your file's MIME type. Upload any sample "
 "file below and click \"Get MIME Type\" and we will display the MIME type "
@@ -4324,29 +4333,36 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:34
+#: bp-core/admin/templates/check-video-mime-type.php:34
 msgid "Choose a file to upload:"
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:35
+#: bp-core/admin/templates/check-video-mime-type.php:35
 msgid "Add file to check MIME Type"
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:37
 #: bp-core/admin/templates/check-document-mime-type.php:38
+#: bp-core/admin/templates/check-video-mime-type.php:37
+#: bp-core/admin/templates/check-video-mime-type.php:38
 msgid "Get MIME Type"
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:43
+#: bp-core/admin/templates/check-video-mime-type.php:43
 msgid "Your uploaded file's MIME type is: "
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:44
+#: bp-core/admin/templates/check-video-mime-type.php:44
 #: bp-media/bp-media-settings.php:1183 bp-media/bp-media-settings.php:1241
 #: bp-media/bp-media-settings.php:1625 bp-media/bp-media-settings.php:1683
 msgid "MIME Type"
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:46
+#: bp-core/admin/templates/check-video-mime-type.php:46
 msgid "Use this MIME type"
 msgstr ""
 
@@ -5281,7 +5297,7 @@ msgstr ""
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3304 bp-core/classes/class-bp-admin.php:869
+#: bp-core/bp-core-functions.php:3304 bp-core/classes/class-bp-admin.php:883
 msgid "Situations"
 msgstr ""
 
@@ -6656,48 +6672,48 @@ msgstr ""
 msgid "Select site to repair the forums"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:314
-#: bp-core/classes/class-bp-admin.php:462
+#: bp-core/classes/class-bp-admin.php:315
+#: bp-core/classes/class-bp-admin.php:463
 msgid "BuddyBoss Components"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:332
-#: bp-core/classes/class-bp-admin.php:480
+#: bp-core/classes/class-bp-admin.php:333
+#: bp-core/classes/class-bp-admin.php:481
 msgid "BuddyBoss Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:341
-#: bp-core/classes/class-bp-admin.php:489
+#: bp-core/classes/class-bp-admin.php:342
+#: bp-core/classes/class-bp-admin.php:490
 msgid "Plugin Integrations"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:433
+#: bp-core/classes/class-bp-admin.php:434
 msgid "BuddyBoss Help"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:453
+#: bp-core/classes/class-bp-admin.php:454
 msgid "BuddyPress Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:454
+#: bp-core/classes/class-bp-admin.php:455
 #: bp-integrations/compatibility/bp-compatibility-integration.php:21
 msgid "BuddyPress"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:523
 #: bp-core/classes/class-bp-admin.php:524
+#: bp-core/classes/class-bp-admin.php:525
 msgid "Available Tools"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:746 bp-forums/admin/admin.php:432
+#: bp-core/classes/class-bp-admin.php:747 bp-forums/admin/admin.php:432
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:814
+#: bp-core/classes/class-bp-admin.php:820
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:815
+#: bp-core/classes/class-bp-admin.php:821
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -13765,14 +13781,14 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-attachments.php:54
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:121
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:125
 msgid "Show formatting"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:54
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:121
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:125
 msgid "Hide formatting"
 msgstr ""
 
@@ -13780,7 +13796,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:46
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:17
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:129
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:133
 msgid "Attach a photo"
 msgstr ""
 
@@ -13788,7 +13804,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:52
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:28
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:136
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:140
 msgid "Attach a document"
 msgstr ""
 
@@ -13796,6 +13812,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:58
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:32
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:39
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:151
 msgid "Attach a video"
 msgstr ""
 
@@ -13803,14 +13820,14 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:65
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:40
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:48
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:144
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:160
 msgid "Post a GIF"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:103
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:151
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:167
 msgid "Search GIFs"
 msgstr ""
 
@@ -13818,7 +13835,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:72
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:46
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:57
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:165
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:181
 msgid "Insert an emoji"
 msgstr ""
 
@@ -22422,15 +22439,15 @@ msgstr ""
 msgid "All Group Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:169
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:185
 msgid "Group Thread"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:170
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:186
 msgid "Private Reply (BCC)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:188
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:204
 msgid "Send Message"
 msgstr ""
 
