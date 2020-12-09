@@ -410,8 +410,10 @@ function bp_moderation_user_can( $item_id, $item_type ) {
 	}
 
 	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type && ! bp_is_moderation_member_blocking_enable( 0 ) ) {
-		return false;
+	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return false;
+		}
 	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
