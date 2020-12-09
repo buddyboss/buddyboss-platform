@@ -1944,6 +1944,13 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Document Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
             "allowedValues": [
               "public",
               "loggedin",
