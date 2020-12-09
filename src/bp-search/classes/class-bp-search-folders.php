@@ -3,7 +3,6 @@
  * @package BuddyBoss\Search
  * @since   BuddyBoss 1.4.0
  * @todo    add description
- *
  */
 
 // Exit if accessed directly.
@@ -50,7 +49,6 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
 			global $wpdb, $bp;
-			$query_placeholder = array();
 
 			$user_groups = array();
 			if ( bp_is_active( 'groups' ) ) {
@@ -126,8 +124,8 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( f.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND f.privacy = 'grouponly' )" : '' ) .
 				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( f.user_id IN ( '" . implode( "','", $friends ) . "' ) AND f.privacy = 'friends' )" : '' ) .
 				( is_user_logged_in() ? " OR ( f.user_id = '" . bp_loggedin_user_id() . "' AND f.privacy = 'onlyme' )" : '' ) .
-				")
-				)",
+				')
+				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
 
@@ -145,9 +143,6 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
 
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
-
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
 				'bp_search_folders_sql',

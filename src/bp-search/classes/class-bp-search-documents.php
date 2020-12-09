@@ -3,7 +3,6 @@
  * @package BuddyBoss\Search
  * @since   BuddyBoss 1.4.0
  * @todo    add description
- *
  */
 
 // Exit if accessed directly.
@@ -50,7 +49,6 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
 			global $wpdb, $bp;
-			$query_placeholder = array();
 
 			$user_groups = array();
 			if ( bp_is_active( 'groups' ) ) {
@@ -107,7 +105,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the document Search query.
 			 *
-             * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 2.0.0
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -134,8 +132,8 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' )" : '' ) .
 				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( d.user_id IN ( '" . implode( "','", $friends ) . "' ) AND d.privacy = 'friends' )" : '' ) .
 				( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) .
-				")
-				)",
+				')
+				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
@@ -144,7 +142,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the document Search query.
 			 *
-             * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 2.0.0
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
@@ -155,9 +153,6 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
 
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
-
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
 				'bp_search_documents_sql',

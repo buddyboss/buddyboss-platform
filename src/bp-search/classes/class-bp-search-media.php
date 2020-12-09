@@ -64,7 +64,6 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
 			global $wpdb, $bp;
-			$query_placeholder = array();
 
 			$user_groups = array();
 			if ( bp_is_active( 'groups' ) ) {
@@ -121,7 +120,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the media Search query.
 			 *
-             * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 2.0.0
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -152,7 +151,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the media Search query.
 			 *
-             * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 2.0.0
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
@@ -163,9 +162,6 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
 
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
-
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
 				'bp_search_photos_sql',
