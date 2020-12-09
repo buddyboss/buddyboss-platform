@@ -63,6 +63,8 @@ add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
 
 add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email_content' );
 
+add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
+
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
@@ -1683,4 +1685,24 @@ function bp_document_get_edit_activity_data( $activity ) {
 	}
 
 	return $activity;
+}
+
+/**
+ * Added activity entry class for media.
+ *
+ * @param string $class class.
+ *
+ * @return string
+ */
+function bp_document_activity_entry_css_class( $class ) {
+
+	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
+		$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+		if ( ! empty( $document_ids ) ) {
+			$class .= ' documemt-activity';
+		}
+	}
+
+	return $class;
+
 }
