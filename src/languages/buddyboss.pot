@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-08 14:57:29+00:00\n"
+"POT-Creation-Date: 2020-12-09 12:54:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7978,6 +7978,7 @@ msgid "Group Update"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-activity-export.php:70
+#: bp-moderation/classes/class-bp-moderation-comment.php:98
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:22
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:280
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:477
@@ -14231,18 +14232,21 @@ msgid "User Blocked"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:83
+#: bp-moderation/classes/suspend/class-bp-suspend-comment.php:149
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:57
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-list.php:57
 msgid "Content from suspended user."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:85
+#: bp-moderation/classes/class-bp-moderation-comment.php:122
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:59
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-list.php:59
 msgid "Content from blocked user."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:87
+#: bp-moderation/classes/class-bp-moderation-comment.php:124
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:61
 msgid "Blocked Content."
 msgstr ""
@@ -21257,70 +21261,70 @@ msgid_plural "%s users have been unsuspended."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-moderation/bp-moderation-filters.php:61
-#: bp-moderation/bp-moderation-filters.php:150
-#: bp-moderation/bp-moderation-filters.php:242
-#: bp-moderation/bp-moderation-filters.php:291
+#: bp-moderation/bp-moderation-filters.php:62
+#: bp-moderation/bp-moderation-filters.php:151
+#: bp-moderation/bp-moderation-filters.php:243
+#: bp-moderation/bp-moderation-filters.php:292
 msgid "Required field missing."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:68
+#: bp-moderation/bp-moderation-filters.php:69
 msgid "Please specify reason to report this content."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:77
+#: bp-moderation/bp-moderation-filters.php:78
 msgid "Sorry, you can not able to report this item."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:92
-#: bp-moderation/bp-moderation-filters.php:154
+#: bp-moderation/bp-moderation-filters.php:93
+#: bp-moderation/bp-moderation-filters.php:155
 msgid "Already reported this item."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:124
-#: bp-moderation/bp-moderation-filters.php:216
-#: bp-moderation/bp-moderation-filters.php:264
-#: bp-moderation/bp-moderation-filters.php:321
+#: bp-moderation/bp-moderation-filters.php:125
+#: bp-moderation/bp-moderation-filters.php:217
+#: bp-moderation/bp-moderation-filters.php:265
+#: bp-moderation/bp-moderation-filters.php:322
 msgid "Sorry, Something happened wrong"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:158
+#: bp-moderation/bp-moderation-filters.php:159
 msgid "Sorry, you can not able to block him self."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:166
+#: bp-moderation/bp-moderation-filters.php:167
 msgid "Sorry, you can not able to block this member."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:175
+#: bp-moderation/bp-moderation-filters.php:176
 msgid "Member block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:246
+#: bp-moderation/bp-moderation-filters.php:247
 msgid "Moderation reported not found."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:259
+#: bp-moderation/bp-moderation-filters.php:260
 msgid "User unblocked successfully"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:304
+#: bp-moderation/bp-moderation-filters.php:305
 msgid "Member has been successfully suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:304
+#: bp-moderation/bp-moderation-filters.php:305
 msgid "Content has been successfully hidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:315
+#: bp-moderation/bp-moderation-filters.php:316
 msgid "Member has been successfully unsuspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:315
+#: bp-moderation/bp-moderation-filters.php:316
 msgid "Content has been successfully unhidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:355
+#: bp-moderation/bp-moderation-filters.php:356
 #: bp-moderation/bp-moderation-functions.php:241
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:53
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:59
@@ -21380,25 +21384,25 @@ msgid ""
 "from the member who blocked them."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:213
+#: bp-moderation/bp-moderation-settings.php:214
 msgid ""
-"Automatically suspend members after they have been blocked more than %s "
+"Automatically suspend members after they have been blocked at least %s "
 "times."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:259
+#: bp-moderation/bp-moderation-settings.php:260
 msgid "Notify administrators when members have been auto-suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:293
+#: bp-moderation/bp-moderation-settings.php:294
 msgid "Allow the following content types to be reported:"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:313
-msgid "Automatically hide content after it has been reported more than %s times."
+#: bp-moderation/bp-moderation-settings.php:317
+msgid "Automatically hide content after it has been reported at least %s times."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:407
+#: bp-moderation/bp-moderation-settings.php:415
 msgid "Notify administrators when content has been auto-hidden."
 msgstr ""
 
@@ -21406,8 +21410,15 @@ msgstr ""
 msgid "Moderation not enabled."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity-comment.php:153
+#: bp-moderation/classes/class-bp-moderation-activity-comment.php:155
 msgid "Activity Comment"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-comment.php:149
+#: bp-moderation/classes/class-bp-moderation-comment.php:172
+#: bp-moderation/classes/suspend/class-bp-suspend-comment.php:170
+#: bp-moderation/classes/suspend/class-bp-suspend-comment.php:189
+msgid "User Blocked."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:141
@@ -21605,19 +21616,19 @@ msgstr ""
 msgid "Blocking Member"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation.php:969
+#: bp-moderation/classes/class-bp-moderation.php:972
 msgid "Item ID field missing."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation.php:971
+#: bp-moderation/classes/class-bp-moderation.php:974
 msgid "Item type field missing."
 msgstr ""
 
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:238
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:247
 msgid "<strong>ERROR</strong>: Your account has been Suspended."
 msgstr ""
 
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:318
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:327
 msgid "<strong>ERROR</strong>: Your account has been suspended."
 msgstr ""
 
@@ -26302,7 +26313,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:886
+#: class-buddypress.php:887
 msgid "BuddyPress Nouveau"
 msgstr ""
 

@@ -4125,15 +4125,16 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 		.mfp-close {
 			top: 7px;
+			right: 25px;
 			box-shadow: none;
 
-			svg {
-				pointer-events: none;
-
-				path {
-					stroke: #000;
-				}
-
+			&:before {
+				content: "\e828";
+				color: #939597;
+				letter-spacing: -0.24px;
+				line-height: 24px;
+				font-family: 'bb-icons'; /* stylelint-disable-line */
+				font-size: 22px;
 			}
 
 		}

@@ -16032,15 +16032,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .mass-user-block-list.moderation-popup .bb-model-header .mfp-close {
   top: 7px;
+  left: 25px;
   box-shadow: none;
 }
 
-.mass-user-block-list.moderation-popup .bb-model-header .mfp-close svg {
-  pointer-events: none;
-}
-
-.mass-user-block-list.moderation-popup .bb-model-header .mfp-close svg path {
-  stroke: #000;
+.mass-user-block-list.moderation-popup .bb-model-header .mfp-close:before {
+  content: "\e828";
+  color: #939597;
+  letter-spacing: -0.24px;
+  line-height: 24px;
+  font-family: 'bb-icons';
+  /* stylelint-disable-line */
+  font-size: 22px;
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp {

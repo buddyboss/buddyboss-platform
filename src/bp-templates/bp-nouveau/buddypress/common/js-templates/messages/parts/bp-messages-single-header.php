@@ -157,7 +157,7 @@
 					<div class="modal-container">
 						<header class="bb-model-header">
 							<h4><?php esc_html_e( 'Select Users', 'buddyboss' ); ?></h4>
-							<button title="Close (Esc)" type="button" class="mfp-close"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7"></path></svg></button>
+							<button title="Close (Esc)" type="button" class="mfp-close"></button>
 						</header>
 						<div class="bb-report-type-wrp">
 							<# _.reject(other_recipients, function(item) { if( true === item.is_reported || true == item.is_user_blocked || false == item.can_be_blocked ) { return false; } #>
