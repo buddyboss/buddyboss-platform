@@ -3178,7 +3178,7 @@ window.bp = window.bp || {};
 			this.closeUploader( event );
 			$( '#bp-media-create-album' ).hide();
 			$( '#bb-album-title' ).val( '' );
-			
+
 		},
 
 		closeCreateFolderModal: function (event) {
@@ -3186,7 +3186,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-create-folder, #bp-media-create-child-folder' ).hide();
 			$( '#bp-media-create-child-folder-submit' ).removeClass( 'loading' );
 			$( '#bb-album-title, #bb-album-child-title' ).val( '' );
-			
+
 		},
 
 		closeEditFolderModal: function (event) {
@@ -3425,8 +3425,8 @@ window.bp = window.bp || {};
 			if( target.hasClass('saving') ) {
 				return false;
 			}
-			
-			event.preventDefault();		
+
+			event.preventDefault();
 
 			if ($.trim( title.val() ) === '') {
 				title.addClass( 'error' );
