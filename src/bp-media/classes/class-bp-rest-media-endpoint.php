@@ -703,7 +703,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$args['privacy']  = $album->privacy;
 		}
 
-		if ( isset( $request['content'] ) && ! empty( $request['content'] ) ) {
+		if ( isset( $request['content'] ) ) {
 			$args['content'] = $request['content'];
 		}
 
@@ -1309,6 +1309,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id'   => $media->attachment_id,
 			'user_id'         => $media->user_id,
 			'title'           => $media->title,
+			'description'     => get_post_field( 'post_content', $media->attachment_id ),
 			'album_id'        => $media->album_id,
 			'group_id'        => $media->group_id,
 			'activity_id'     => $media->activity_id,
@@ -1425,6 +1426,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'title'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The Media title.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
+				'description'     => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'The Media description.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1669,7 +1676,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$media_privacy = ( ! empty( $args['privacy'] ) ? $args['privacy'] : 'public' );
 		$upload_ids    = ( ! empty( $args['upload_ids'] ) ? $args['upload_ids'] : '' );
 		$activity_id   = ( ! empty( $args['activity_id'] ) ? $args['activity_id'] : false );
-		$content       = ( ! empty( $args['content'] ) ? $args['content'] : false );
+		$content       = ( isset( $args['content'] ) ? $args['content'] : false );
 		$user_id       = ( ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id() );
 		$id            = ( ! empty( $args['id'] ) ? $args['id'] : '' );
 
@@ -1723,6 +1730,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				// save media meta for activity.
 				if ( ! empty( $media_activity_id ) ) {
 					update_post_meta( $wp_attachment_id, 'bp_media_activity_id', $media_activity_id );
+				}
+
+				// save media description while update.
+				if ( false !== $content ) {
+					$media_post['ID']           = $wp_attachment_id;
+					$media_post['post_content'] = wp_filter_nohtml_kses( $content );
+					wp_update_post( $media_post );
 				}
 
 				$created_media_ids[] = $media_id;
