@@ -32,12 +32,12 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<div class="bp-hello-footer">
-		<button class="close-modal">
+		<button class="close-modal button">
 			<?php
 			esc_html_e( 'Cancel', 'buddyboss' );
 			?>
 		</button>
-		<button class="component-deactivate">
+		<button class="component-deactivate button">
 			<?php
 			esc_html_e( 'I understand deactivate', 'buddyboss' );
 			?>

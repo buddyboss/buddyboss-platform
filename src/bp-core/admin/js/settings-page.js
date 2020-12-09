@@ -1128,8 +1128,9 @@
 			$("form#bp-admin-component-form").submit(function (e) {
 				var action1 = $('#bulk-action-selector-top[name="action"]').find(":selected").val();
 				var action2 = $('#bulk-action-selector-top[name="action2"]').find(":selected").val();
+				var action = (action1) ? action1 : action2;
 
-				if (!$('#bp-hello-container').find('.component-deactivate').hasClass('form-submit') && ('inactive' === action1 || 'inactive' === action2)) {
+				if (!$('#bp-hello-container').find('.component-deactivate').hasClass('form-submit') && 'inactive' === action) {
 					$('#bp-hello-container').find('.bp-hello-content').empty();
 					var msg = '';
 					$('.mass-check-deactivate').each(function () {
