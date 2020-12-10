@@ -97,9 +97,20 @@ if ( ! class_exists( 'BP_Background_Updater' ) ) {
 		protected function task( $callback ) {
 			$result = false;
 
+			$args = array();
+			if ( ! is_callable( $callback ) ) {
+				$args     = ( ! empty( $callback['args'] ) ) ? $callback['args'] : array();
+				$callback = ( ! empty( $callback['callback'] ) ) ? $callback['callback'] : '';
+			}
+
 			if ( is_callable( $callback ) ) {
 				error_log( sprintf( 'Running %s callback', $callback ) );
-				$result = (bool) call_user_func( $callback, $this );
+
+				if ( empty( $args ) ) {
+					$result = (bool) call_user_func( $callback, $this );
+				} else {
+					$result = (bool) call_user_func_array( $callback, $args );
+				}
 
 				if ( $result ) {
 					error_log( sprintf( '%s callback needs to run again', $callback ) );

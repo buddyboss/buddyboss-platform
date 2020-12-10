@@ -189,6 +189,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
+		global $bp_background_updater;
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -202,7 +204,14 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
-		$this->hide_related_content( $forum_id, $hide_sitewide, $args );
+
+		$bp_background_updater->push_to_queue(
+			array(
+				'callback' => array( $this, 'hide_related_content' ),
+				'args'     => array( $forum_id, $hide_sitewide, $args ),
+			)
+		);
+		$bp_background_updater->save()->dispatch();
 	}
 
 	/**
@@ -216,6 +225,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_forum( $forum_id, $hide_sitewide, $force_all, $args = array() ) {
+		global $bp_background_updater;
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -229,7 +240,14 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
-		$this->unhide_related_content( $forum_id, $hide_sitewide, $force_all, $args );
+
+		$bp_background_updater->push_to_queue(
+			array(
+				'callback' => array( $this, 'unhide_related_content' ),
+				'args'     => array( $forum_id, $hide_sitewide, $force_all, $args ),
+			)
+		);
+		$bp_background_updater->save()->dispatch();
 	}
 
 	/**

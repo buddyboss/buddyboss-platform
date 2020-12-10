@@ -95,7 +95,7 @@ abstract class BP_Suspend_Abstract {
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
 	 * @param array    $args          parent args.
 	 */
-	protected function hide_related_content( $item_id, $hide_sitewide, $args = array() ) {
+	public function hide_related_content( $item_id, $hide_sitewide, $args = array() ) {
 		$related_contents = $this->get_related_contents( $item_id );
 		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 		foreach ( $related_contents as $content_type => $content_ids ) {
@@ -157,7 +157,7 @@ abstract class BP_Suspend_Abstract {
 	 * @param int      $force_all     un-hide for all users.
 	 * @param array    $args          parent args.
 	 */
-	protected function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
+	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
 		$related_contents = $this->get_related_contents( $item_id, $args );
 		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 		foreach ( $related_contents as $content_type => $content_ids ) {
