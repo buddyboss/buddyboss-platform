@@ -332,13 +332,14 @@
 			margin-bottom: 20px;
 		}
 
-		.popup-on-fly-create-folder-title.error + .error-box {
-			display: block;
-			font-size: 13px;
-		}
-
 	}
 
+}
+
+#bp-media-uploader .popup-on-fly-create-folder-title.error + .error-box,
+#boss-media-create-album-popup .popup-on-fly-create-folder-title.error + .error-box {
+	display: block;
+	font-size: 13px;
 }
 
 .bbm-model-wrap {
