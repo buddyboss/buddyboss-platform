@@ -984,7 +984,7 @@ class BP_Moderation {
 		$auto_hide          = false;
 
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
-			$threshold          = bp_moderation_auto_suspend_threshold(5);
+			$threshold          = bp_moderation_auto_suspend_threshold( 5 );
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
 		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
