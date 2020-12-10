@@ -1123,19 +1123,19 @@
 			$( document ).on( 'click', '.component-deactivate', function ( event ) {
 				event.preventDefault();
 				if ( $( this ).hasClass( 'form-submit' ) ) {
-					$( "form#bp-admin-component-form" ).find( "input[name='bp-admin-component-submit']" ).trigger( "click" );
+					$( 'form#bp-admin-component-form' ).find( 'input[name="bp-admin-component-submit"]' ).trigger( 'click' );
 				} else {
 					window.location = $( this ).attr( 'data-redirect' );
 				}
 			} );
 
 			// Show the confirmation popup when bulk component disabled
-			$( "form#bp-admin-component-form" ).submit( function ( e ) {
+			$( 'form#bp-admin-component-form' ).submit( function ( e ) {
 
-				var action = $( '#bulk-action-selector-top[name="action"]' ).find( ":selected" ).val();
+				var action = $( '#bulk-action-selector-top[name="action"]' ).find( ':selected' ).val();
 
-				if ( !action ) {
-					action = $( '#bulk-action-selector-top[name="action2"]' ).find( ":selected" ).val();
+				if ( ! action ) {
+					action = $( '#bulk-action-selector-top[name="action2"]' ).find( ':selected' ).val();
 				}
 
 				if ( !$( '#bp-hello-container' ).find( '.component-deactivate' ).hasClass( 'form-submit' ) && 'inactive' === action ) {

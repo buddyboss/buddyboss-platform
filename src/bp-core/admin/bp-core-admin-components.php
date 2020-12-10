@@ -288,7 +288,9 @@ function bp_core_admin_components_options() {
 								</label>
 								<div class="component-deactivate-msg" style="display: none;">
 									<?php
-									echo esc_html( $labels['deactivation_message'] );
+									if ( ! empty( $labels['deactivation_message'] ) ) {
+										echo esc_html( $labels['deactivation_message'] );
+									}
 									?>
 								</div>
 							<?php endif; ?>
@@ -330,7 +332,9 @@ function bp_core_admin_components_options() {
 										</span>
 										<div class="component-deactivate-msg" style="display: none;">
 											<?php
-											echo esc_html( $labels['deactivation_message'] );
+											if ( ! empty( $labels['deactivation_message'] ) ) {
+												echo esc_html( $labels['deactivation_message'] );
+											}
 											?>
 										</div>
 									<?php else : ?>
