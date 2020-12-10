@@ -56,6 +56,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		// button.
 		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
 
+		add_filter( 'bbp_forums_topic_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
+
 	}
 
 	/**
@@ -154,5 +156,24 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		}
 
 		return $button;
+	}
+
+	/**
+	 * Validate the topic is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $post     Current topic object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $post ) {
+
+		if ( bp_moderation_is_content_hidden( (int) $post->ID, self::$moderation_type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 }
