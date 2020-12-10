@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- *
  */
 
 // Exit if accessed directly.
@@ -36,8 +35,8 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Check Component is disabled
-		if ( ! bp_is_active( 'media' ) ){
+		// Check Component is disabled.
+		if ( ! bp_is_active( 'media' ) ) {
 			return;
 		}
 
@@ -48,7 +47,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content
+		// Remove hidden/blocked users content.
 		add_filter( 'bp_suspend_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button.
@@ -57,68 +56,16 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
-	}
-
-	/**
-	 * Hide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function hide( $args ) {
-		return parent::hide( $args );
-	}
-
-	/**
-	 * Unhide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function unhide( $args ) {
-		return parent::unhide( $args );
-	}
-
-	/**
-	 * Delete Moderated report
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function delete( $args ) {
-		return parent::delete( $args );
-	}
-
-	/**
 	 * Get permalink
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $item_id
+	 * @param int $item_id Item id.
 	 *
 	 * @return string|void
 	 */
 	public static function get_permalink( $item_id ) {
-		// TODO: Implement get_permalink() method.
+		return '';
 	}
 
 	/**
@@ -156,8 +103,8 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $where   medias Where sql
-	 * @param object $suspend suspend object
+	 * @param string $where   medias Where sql.
+	 * @param object $suspend suspend object.
 	 *
 	 * @return array
 	 */
@@ -173,7 +120,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int   $item_id Item id.
+	 * @param int $item_id Item id.
 	 *
 	 * @return array
 	 */
@@ -184,7 +131,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return array();
 		}
 
-		$sub_items = [];
+		$sub_items = array();
 		if ( bp_is_active( 'activity' ) && ! empty( $media->activity_id ) ) {
 			$sub_items['id']   = $media->activity_id;
 			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;

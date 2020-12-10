@@ -211,7 +211,10 @@ function bpm_blocking_settings_callback_auto_suspend() {
 	<label for="bpm_blocking_auto_suspend">
 		<input name="bpm_blocking_auto_suspend" id="bpm_blocking_auto_suspend" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_suspend_enable( false ) ); ?> />
-		<?php printf( esc_html__( 'Automatically suspend members after they have been blocked at least %s times.', 'buddyboss' ), $threshold ); ?>
+		<?php
+		// translators: html for threshold fields.
+		printf( esc_html__( 'Automatically suspend members after they have been blocked at least %s times.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
 	</label>
 	<?php
 }
@@ -239,9 +242,7 @@ function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
  */
 function bpm_blocking_settings_callback_auto_suspend_threshold() {
 	?>
-	<input name="bpm_blocking_auto_suspend_threshold" id="bpm_blocking_auto_suspend_threshold" type="number" min="1"
-		   step="1"
-		   value="<?php bp_moderation_setting( 'bpm_blocking_auto_suspend_threshold', '5' ); ?>" class="small-text"/>
+	<input name="bpm_blocking_auto_suspend_threshold" id="bpm_blocking_auto_suspend_threshold" type="number" min="1" step="1" value="<?php bp_moderation_setting( 'bpm_blocking_auto_suspend_threshold', '5' ); ?>" class="small-text"/>
 	<?php
 }
 
@@ -314,7 +315,10 @@ function bpm_reporting_settings_callback_content_reporting() {
 		<label for="bpm_reporting_auto_hide-<?php echo esc_attr( $slug ); ?>" class="<?php echo esc_attr( empty( $is_enabled ) ? 'is_disabled' : '' ); ?>">
 			<input name="bpm_reporting_auto_hide[<?php echo esc_attr( $slug ); ?>]" id="bpm_reporting_auto_hide-<?php echo esc_attr( $slug ); ?>" type="checkbox" value="1"
 					<?php checked( bp_is_moderation_auto_hide_enable( false, $slug ) ); ?> />
-			<?php printf( esc_html__( 'Automatically hide content after it has been reported at least %s times.', 'buddyboss' ), $threshold ); ?>
+			<?php
+			// translators: html for threshold fields.
+			printf( esc_html__( 'Automatically hide content after they have been reported at least %s times.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
 		</label>
 		<br/>
 	<?php } ?>
@@ -373,8 +377,8 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 function bpm_reporting_settings_callback_auto_hide_threshold( $content_type = '' ) {
 	?>
 	<input name="bpm_reporting_auto_hide_threshold[<?php echo esc_attr( $content_type ); ?>]" id="bpm_reporting_auto_hide_threshold-<?php echo esc_attr( $content_type ); ?>" type="number" min="1"
-		   step="1" max="99"
-		   value="<?php echo bp_moderation_reporting_auto_hide_threshold( '5', $content_type ); ?>" class="small-text"/>
+	step="1" max="99"
+	value="<?php echo esc_attr( bp_moderation_reporting_auto_hide_threshold( '5', $content_type ) ); ?>" class="small-text"/>
 	<?php
 }
 

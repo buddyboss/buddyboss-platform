@@ -39,7 +39,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_action( 'bp_activity_delete_comment', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
 		add_action( 'bp_activity_deleted_activities', array( $this, 'sync_comment_moderation_data_on_delete' ), 10 );
 
-		// Check Component is disabled
+		// Check Component is disabled.
 		if ( ! bp_is_active( 'activity' ) ) {
 			return;
 		}
@@ -51,7 +51,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content
+		// Remove hidden/blocked users content.
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
@@ -73,58 +73,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$url = bp_activity_get_permalink( $activity_id );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
-	}
-
-	/**
-	 * Hide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function hide( $args ) {
-		return parent::hide( $args );
-	}
-
-	/**
-	 * Unhide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function unhide( $args ) {
-		return parent::unhide( $args );
-	}
-
-	/**
-	 * Delete Moderated report
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function delete( $args ) {
-		return parent::delete( $args );
 	}
 
 	/**
@@ -240,7 +188,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $item_id Item id.
+	 * @param int $comment_id Comment id.
 	 *
 	 * @return array
 	 */

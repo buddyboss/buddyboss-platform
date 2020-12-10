@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -33,7 +32,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		//Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_forum' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_forum' ), 10, 4 );
 
@@ -58,7 +57,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $member_id Member id
+	 * @param int $member_id Member id.
 	 *
 	 * @return array
 	 */
@@ -185,15 +184,18 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $forum_id forum id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $forum_id      forum id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $forum_id,
-			'item_type' => BP_Suspend_Forum::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $forum_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -208,16 +210,19 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $forum_id forum id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $forum_id forum id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_forum( $forum_id, $hide_sitewide, $force_all, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $forum_id,
-			'item_type' => BP_Suspend_Forum::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $forum_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -232,7 +237,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $forum_id forum id
+	 * @param int $forum_id forum id.
 	 *
 	 * @return array
 	 */

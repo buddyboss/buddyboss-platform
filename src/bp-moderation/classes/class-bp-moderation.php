@@ -907,8 +907,6 @@ class BP_Moderation {
 
 	/**
 	 * Hide Moderation entry
-	 *
-	 * @return bool
 	 */
 	public function hide() {
 
@@ -1041,7 +1039,7 @@ class BP_Moderation {
 				$this->send_emails();
 			}
 		} elseif ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
-			// Content will be hide when user blocked for reported
+			// Content will be hide when user blocked for reported.
 			$this->hide_related_content();
 		}
 
@@ -1229,8 +1227,6 @@ class BP_Moderation {
 
 	/**
 	 * Unhide Moderation entry
-	 *
-	 * @return bool
 	 */
 	public function unhide() {
 		$this->hide_sitewide = 0;
@@ -1327,7 +1323,7 @@ class BP_Moderation {
 	}
 
 	/**
-	 * unction to delete Moderation meta.
+	 * Unction to delete Moderation meta.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
@@ -1351,7 +1347,7 @@ class BP_Moderation {
 	public function unhide_related_content( $force_all = false ) {
 
 		/**
-		 * remove related content of reported item from hidden list
+		 * Remove related content of reported item from hidden list.
 		 *
 		 * @since BuddyBoss 2.0.0
 		 *

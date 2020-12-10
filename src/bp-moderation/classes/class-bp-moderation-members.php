@@ -45,7 +45,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content
+		// Remove hidden/blocked users content.
 		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button.
@@ -65,58 +65,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public static function get_permalink( $member_id ) {
 		return '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
-	}
-
-	/**
-	 * Hide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function hide( $args ) {
-		return parent::hide( $args );
-	}
-
-	/**
-	 * Unhide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function unhide( $args ) {
-		return parent::unhide( $args );
-	}
-
-	/**
-	 * Delete Moderated report
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function delete( $args ) {
-		return parent::delete( $args );
 	}
 
 	/**
@@ -169,8 +117,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $where   blocked users Where sql
-	 * @param object $suspend suspend object
+	 * @param string $where   blocked users Where sql.
+	 * @param object $suspend suspend object.
 	 *
 	 * @return array
 	 */

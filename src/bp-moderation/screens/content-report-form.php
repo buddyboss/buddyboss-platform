@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss
- *
  */
 
 ?>
@@ -18,10 +17,12 @@
 					<button title="Close (Esc)" type="button" class="mfp-close"></button>
 				</header>
 				<?php
-				$reports_terms = get_terms( 'bpm_category',
-						array(
-								'hide_empty' => false,
-						) );
+				$reports_terms = get_terms(
+					'bpm_category',
+					array(
+						'hide_empty' => false,
+					)
+				);
 				?>
 				<div class="bb-report-type-wrp">
 					<form id="bb-report-content" action="javascript:void(0);">

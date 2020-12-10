@@ -16,6 +16,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class BP_Core_Suspend {
 
+	/**
+	 * BP_Core_Suspend constructor.
+	 */
 	public function __construct() {
 		$this->load_on_bp_dependency();
 	}
@@ -25,7 +28,7 @@ class BP_Core_Suspend {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
-	function load_on_bp_dependency() {
+	public function load_on_bp_dependency() {
 		new BP_Suspend_Member();
 		new BP_Suspend_Comment();
 
@@ -54,7 +57,9 @@ class BP_Core_Suspend {
 	}
 
 	/**
-	 * @param $args
+	 * Function to add suspend entry
+	 *
+	 * @param array $args suspend arguments.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
@@ -89,26 +94,30 @@ class BP_Core_Suspend {
 			unset( $args['item_id'] );
 			unset( $args['item_type'] );
 
-			$flag = $wpdb->update( $table_name, $args, $where );
+			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {
-			$flag = $wpdb->insert( $table_name, $args );
+			$flag = $wpdb->insert( $table_name, $args ); // phpcs:ignore
 		}
 
 		if ( ! empty( $member ) && empty( $action_suspend ) ) {
-			self::add_suspend_details( array(
-				'suspend_id' => ! empty( $recode ) ? $recode->id : $wpdb->insert_id,
-				'user_id'    => $member,
-			) );
+			self::add_suspend_details(
+				array(
+					'suspend_id' => ! empty( $recode ) ? $recode->id : $wpdb->insert_id,
+					'user_id'    => $member,
+				)
+			);
 		}
 
 		return $flag;
 	}
 
 	/**
+	 * Function to get suspend entry
+	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param $item_id
-	 * @param $item_type
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
 	 *
 	 * @return array|false|object|void
 	 */
@@ -122,7 +131,11 @@ class BP_Core_Suspend {
 	}
 
 	/**
-	 * @param $args
+	 * Function to add suspend details entry.
+	 *
+	 * @param array $args suspend arguments.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return bool|int
 	 */
@@ -132,14 +145,15 @@ class BP_Core_Suspend {
 
 		$table_name = "{$bp->table_prefix}bp_suspend_details";
 
-
-		return $wpdb->insert( $table_name, $args );
+		return $wpdb->insert( $table_name, $args ); // phpcs:ignore
 	}
 
 	/**
+	 * Remove Suspend user/content entry.
+	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param $args
+	 * @param array $args suspend arguments.
 	 *
 	 * @return bool|int
 	 */
@@ -172,22 +186,26 @@ class BP_Core_Suspend {
 			unset( $args['item_type'] );
 
 			if ( ! empty( $member ) && empty( $action_suspend ) ) {
-				self::remove_suspend_details( array(
-					'suspend_id' => $recode->id,
-					'user_id'    => $member,
-				) );
+				self::remove_suspend_details(
+					array(
+						'suspend_id' => $recode->id,
+						'user_id'    => $member,
+					)
+				);
 			}
 
-			return $wpdb->update( $table_name, $args, $where );
+			return $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		}
 
 		return 1;
 	}
 
 	/**
+	 * Remove Suspend details entry
+	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param $where
+	 * @param array $where arguments.
 	 *
 	 * @return bool|int
 	 */
@@ -197,14 +215,16 @@ class BP_Core_Suspend {
 
 		$table_name = "{$bp->table_prefix}bp_suspend_details";
 
-		return $wpdb->delete( $table_name, $where );
+		return $wpdb->delete( $table_name, $where ); // phpcs:ignore
 	}
 
 	/**
+	 * Function to check whether content is hide or not.
+	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param $item_id
-	 * @param $item_type
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
 	 *
 	 * @return bool
 	 */
@@ -218,10 +238,12 @@ class BP_Core_Suspend {
 	}
 
 	/**
+	 * Function to check whether content is hide as suspend user's content or not.
+	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param $item_id
-	 * @param $item_type
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
 	 *
 	 * @return bool
 	 */
@@ -235,9 +257,11 @@ class BP_Core_Suspend {
 	}
 
 	/**
+	 * Function to check whether user is suspend or not.
+	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param $user_id
+	 * @param int $user_id user id.
 	 *
 	 * @return bool
 	 */

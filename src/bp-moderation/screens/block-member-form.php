@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss
- *
  */
 
 ?>
@@ -20,7 +19,7 @@
 
 					<div class="bb-report-type-wrp">
 						<p>
-							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' );  ?>
+							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
 						</p>
 						<ul>
 							<li>

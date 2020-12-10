@@ -31,7 +31,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function __construct() {
 		$this->item_type = self::$type;
 
-		// Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_comment' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_comment' ), 10, 4 );
 

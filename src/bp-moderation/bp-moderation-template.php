@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- *
  */
 
 // Exit if accessed directly.
@@ -329,9 +328,13 @@ function bp_get_moderation_last_updated() {
 		$moderation_reported_date = $moderation_template->moderation->last_updated;
 	}
 
-	return apply_filters( 'bp_get_moderation_last_updated',
-		date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			strtotime( $moderation_reported_date ) ) );
+	return apply_filters(
+		'bp_get_moderation_last_updated',
+		date_i18n(
+			get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			strtotime( $moderation_reported_date )
+		)
+	);
 }
 
 /**

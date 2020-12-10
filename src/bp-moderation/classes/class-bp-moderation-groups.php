@@ -34,8 +34,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Check Component is disabled
-		if ( ! bp_is_active( 'groups' ) ){
+		// Check Component is disabled.
+		if ( ! bp_is_active( 'groups' ) ) {
 			return;
 		}
 
@@ -49,7 +49,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content
+		// Remove hidden/blocked users content.
 		add_filter( 'bp_suspend_group_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
@@ -68,58 +68,6 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		$url = trailingslashit( bp_get_root_domain() . '/' . bp_get_groups_root_slug() . '/' . $group->slug . '/' );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
-	}
-
-	/**
-	 * Hide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function hide( $args ) {
-		return parent::hide( $args );
-	}
-
-	/**
-	 * Unhide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function unhide( $args ) {
-		return parent::unhide( $args );
-	}
-
-	/**
-	 * Delete Moderated report
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function delete( $args ) {
-		return parent::delete( $args );
 	}
 
 	/**
@@ -157,7 +105,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $group_id group if
+	 * @param int $group_id group if.
 	 */
 	public function sync_moderation_data_on_delete( $group_id ) {
 		if ( ! empty( $group_id ) ) {
@@ -173,8 +121,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $where groups Where sql
-	 * @param object $suspend suspend object
+	 * @param string $where groups Where sql.
+	 * @param object $suspend suspend object.
 	 *
 	 * @return array
 	 */

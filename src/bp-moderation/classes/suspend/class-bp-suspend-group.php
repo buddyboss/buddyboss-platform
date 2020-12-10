@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -33,7 +32,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		//Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_group' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_group' ), 10, 4 );
 
@@ -56,23 +55,25 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $member_id member id
+	 * @param int $member_id member id.
 	 *
 	 * @return array
 	 */
 	public static function get_member_group_ids( $member_id ) {
 		$group_ids = array();
 
-		$groups = groups_get_groups( array(
-			'moderation_query'   => false,
-			'type'               => 'alphabetical',
-			'creator_id'         => $member_id,
-			'fields'             => 'ids',
-			'show_hidden'        => true,
-			'per_page'           => 0,
-			'update_meta_cache'  => false,
-			'update_admin_cache' => false,
-		) );
+		$groups = groups_get_groups(
+			array(
+				'moderation_query'   => false,
+				'type'               => 'alphabetical',
+				'creator_id'         => $member_id,
+				'fields'             => 'ids',
+				'show_hidden'        => true,
+				'per_page'           => 0,
+				'update_meta_cache'  => false,
+				'update_admin_cache' => false,
+			)
+		);
 
 		if ( ! empty( $groups['groups'] ) ) {
 			$group_ids = $groups['groups'];
@@ -153,16 +154,19 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $group_id      group id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $group_id      group id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_group( $group_id, $hide_sitewide, $args = array() ) {
 
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $group_id,
-			'item_type' => BP_Suspend_Group::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $group_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -177,16 +181,19 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $group_id      group id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $group_id      group id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_group( $group_id, $hide_sitewide, $force_all, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $group_id,
-			'item_type' => BP_Suspend_Group::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $group_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -201,7 +208,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $group_id group id
+	 * @param int $group_id group id.
 	 *
 	 * @return array
 	 */

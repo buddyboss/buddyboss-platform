@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -33,7 +32,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		//Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_activity' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_activity' ), 10, 4 );
 
@@ -63,15 +62,17 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public static function get_member_activity_ids( $member_id ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get( array(
-			'moderation_query' => false,
-			'per_page'         => 0,
-			'fields'           => 'ids',
-			'show_hidden'      => true,
-			'filter'           => array(
-				'user_id' => $member_id,
-			),
-		) );
+		$activities = BP_Activity_Activity::get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'show_hidden'      => true,
+				'filter'           => array(
+					'user_id' => $member_id,
+				),
+			)
+		);
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -92,16 +93,18 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public static function get_group_activity_ids( $group_id ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get( array(
-			'moderation_query' => false,
-			'per_page'         => 0,
-			'fields'           => 'ids',
-			'show_hidden'      => true,
-			'filter'           => array(
-				'primary_id' => $group_id,
-				'object'     => 'groups',
-			),
-		) );
+		$activities = BP_Activity_Activity::get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'show_hidden'      => true,
+				'filter'           => array(
+					'primary_id' => $group_id,
+					'object'     => 'groups',
+				),
+			)
+		);
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -115,23 +118,25 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $post_id post id
+	 * @param int $post_id post id.
 	 *
 	 * @return array
 	 */
 	public static function get_bbpress_activity_ids( $post_id ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get( array(
-			'moderation_query' => false,
-			'per_page'         => 0,
-			'fields'           => 'ids',
-			'show_hidden'      => true,
-			'filter'           => array(
-				'primary_id' => $post_id,
-				'object'     => 'bbpress',
-			),
-		) );
+		$activities = BP_Activity_Activity::get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'show_hidden'      => true,
+				'filter'           => array(
+					'primary_id' => $post_id,
+					'object'     => 'bbpress',
+				),
+			)
+		);
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -211,15 +216,18 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $activity_id   activity id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $activity_id   activity id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_activity( $activity_id, $hide_sitewide, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $activity_id,
-			'item_type' => BP_Suspend_Activity::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $activity_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -234,17 +242,20 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $activity_id   activity id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $activity_id   activity id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_activity( $activity_id, $hide_sitewide, $force_all, $args = array() ) {
 
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $activity_id,
-			'item_type' => BP_Suspend_Activity::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $activity_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -259,7 +270,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_id activity id
+	 * @param int $activity_id activity id.
 	 *
 	 * @return array
 	 */

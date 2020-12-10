@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -46,8 +45,13 @@ abstract class BP_Suspend_Abstract {
 		}
 
 		if ( ! empty( $admin_exclude ) ) {
-			$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
-			if ( in_array( get_current_user_id(), $admins ) ) {
+			$admins = get_users(
+				array(
+					'role'   => 'administrator',
+					'fields' => 'ID',
+				)
+			);
+			if ( in_array( get_current_user_id(), $admins, true ) ) {
 				return true;
 			}
 		}
@@ -87,9 +91,9 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $item_id       item id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $item_id       item id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	protected function hide_related_content( $item_id, $hide_sitewide, $args = array() ) {
 		$related_contents = $this->get_related_contents( $item_id );
@@ -105,7 +109,7 @@ abstract class BP_Suspend_Abstract {
 					 * @param int $content_id    item id
 					 * @param int $hide_sitewide item hidden sitewide or user specific
 					 */
-					do_action( "bp_suspend_hide_" . $content_type, $content_id, null, $args );
+					do_action( 'bp_suspend_hide_' . $content_type, $content_id, null, $args );
 				}
 			}
 		}
@@ -116,7 +120,7 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $item_id item id
+	 * @param int $item_id item id.
 	 *
 	 * @return array
 	 */
@@ -127,9 +131,9 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $item_id item id
-	 * @param int   $hide_sitewide item hidden sitewide or user specific
-	 * @param array $args          parent args
+	 * @param int   $item_id       item id.
+	 * @param int   $hide_sitewide item hidden sitewide or user specific.
+	 * @param array $args          parent args.
 	 */
 	protected function prepare_suspend_args( $item_id, $hide_sitewide, $args ) {
 		if ( empty( $args ) ) {
@@ -147,10 +151,10 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $item_id item id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $item_id       item id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	protected function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
 		$related_contents = $this->get_related_contents( $item_id );
@@ -159,14 +163,14 @@ abstract class BP_Suspend_Abstract {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
 					/**
-					 * remove related content of reported item from hidden list
+					 * Remove related content of reported item from hidden list.
 					 *
 					 * @since BuddyBoss 2.0.0
 					 *
 					 * @param int $content_id    item id
 					 * @param int $hide_sitewide item hidden sitewide or user specific
 					 */
-					do_action( "bp_suspend_unhide_" . $content_type, $content_id, null, $force_all, $args );
+					do_action( 'bp_suspend_unhide_' . $content_type, $content_id, null, $force_all, $args );
 				}
 			}
 		}

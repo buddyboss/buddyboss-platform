@@ -15,7 +15,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 // Per_page screen option. Has to be hooked in extremely early.
-if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST['page'] ) {
+if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	add_filter( 'set-screen-option', 'bp_moderation_admin_screen_options', 10, 3 );
 }
 
@@ -114,14 +114,17 @@ function bp_moderation_admin_load() {
 	$doaction                = bp_admin_list_table_current_bulk_action();
 	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
 	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
-	$_SERVER['REQUEST_URI']  = remove_query_arg( 'hidden', $_SERVER['REQUEST_URI'] );
-	$referer                 = remove_query_arg( 'hidden', wp_get_referer() );
-	$_SERVER['REQUEST_URI']  = remove_query_arg( 'unhide', $_SERVER['REQUEST_URI'] );
-	$referer                 = remove_query_arg( 'unhide', wp_get_referer() );
-	$_SERVER['REQUEST_URI']  = remove_query_arg( 'suspended', $_SERVER['REQUEST_URI'] );
-	$referer                 = remove_query_arg( 'suspended', wp_get_referer() );
-	$_SERVER['REQUEST_URI']  = remove_query_arg( 'unsuspended', $_SERVER['REQUEST_URI'] );
-	$referer                 = remove_query_arg( 'unsuspended', wp_get_referer() );
+
+	$request_url            = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
+	$_SERVER['REQUEST_URI'] = remove_query_arg(
+		array(
+			'unhide',
+			'hidden',
+			'suspended',
+			'unsuspended',
+		),
+		$request_url
+	);
 
 	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
 
@@ -182,7 +185,7 @@ function bp_moderation_admin_load() {
 		);
 	}
 
-	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save', 'view' ) ) ) {
+	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save', 'view' ), true ) ) {
 
 		// Build redirection URL.
 		$redirect_to = remove_query_arg(
@@ -201,7 +204,8 @@ function bp_moderation_admin_load() {
 		$redirect_to = add_query_arg( 'paged', $bp_moderation_list_table->get_pagenum(), $redirect_to );
 
 		// Get moderation IDs.
-		$moderation_ids = array_map( 'absint', (array) $_REQUEST['mid'] );
+		$moderation_ids = isset( $_REQUEST['mid'] ) ? $_REQUEST['mid'] : array(); // phpcs:ignore
+		$moderation_ids = array_map( 'absint', (array) $moderation_ids );
 
 		/**
 		 * Filters list of IDs being hide/unhide.
@@ -237,7 +241,7 @@ function bp_moderation_admin_load() {
 						'content_type' => $moderation_obj->item_type,
 					)
 				);
-				if ( $moderation->hide_sitewide === 1 ) {
+				if ( 1 === $moderation->hide_sitewide ) {
 					$content_count ++;
 				}
 			} else {
@@ -247,7 +251,7 @@ function bp_moderation_admin_load() {
 						'content_type' => $moderation_obj->item_type,
 					)
 				);
-				if ( $moderation->hide_sitewide === 0 ) {
+				if ( 0 === $moderation->hide_sitewide ) {
 					$content_count ++;
 				}
 			}
@@ -398,25 +402,29 @@ function bp_moderation_admin_index() {
 	$messages = array();
 
 	// If the user has just made a change to an Reported item, build status messages.
-	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
-		$hidden      = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
-		$unhide      = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
-		$suspended   = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
-		$unsuspended = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
+	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$hidden      = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$unhide      = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$suspended   = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$unsuspended = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( $hidden > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
 		}
 
 		if ( $unhide > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
 		}
 
 		if ( $suspended > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
 		}
 
 		if ( $unsuspended > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
 		}
 	}
@@ -438,8 +446,8 @@ function bp_moderation_admin_index() {
 			?>
 		</h1>
 		<?php if ( ! empty( $messages ) ) : ?>
-			<div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>">
-				<p><?php echo implode( "<br/>\n", $messages ); ?></p>
+			<div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>"> <?php //phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+				<p><?php echo wp_kses_post( implode( "<br/>\n", $messages ) ); ?></p>
 			</div>
 		<?php endif; ?>
 		<div class="bp-moderation-ajax-msg hidden notice notice-success">
@@ -491,25 +499,29 @@ function bp_moderation_admin_view() {
 	$messages = array();
 
 	// If the user has just made a change to an moderation item, build status messages.
-	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
-		$hidden      = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
-		$unhide      = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
-		$suspended   = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
-		$unsuspended = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
+	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$hidden      = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$unhide      = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$suspended   = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$unsuspended = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( $hidden > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
 		}
 
 		if ( $unhide > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
 		}
 
 		if ( $suspended > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
 		}
 
 		if ( $unsuspended > 0 ) {
+			// translators:  number of items.
 			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
 		}
 	}

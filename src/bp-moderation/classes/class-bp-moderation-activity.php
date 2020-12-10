@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- *
  */
 
 // Exit if accessed directly.
@@ -34,10 +33,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
-		// Register moderation data
+		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Check Component is active
+		// Check Component is active.
 		if ( ! bp_is_active( 'activity' ) ) {
 			return;
 		}
@@ -52,7 +51,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content
+		// Remove hidden/blocked users content.
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button.
@@ -72,58 +71,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		$url = bp_activity_get_permalink( $activity_id );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
-	}
-
-	/**
-	 * Hide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function hide( $args ) {
-		return parent::hide( $args );
-	}
-
-	/**
-	 * Unhide Moderated content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function unhide( $args ) {
-		return parent::unhide( $args );
-	}
-
-	/**
-	 * Delete Moderated report
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return BP_Moderation|WP_Error
-	 */
-	public static function delete( $args ) {
-		return parent::delete( $args );
 	}
 
 	/**
@@ -180,8 +127,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $where   Activity Where sql
-	 * @param object $suspend suspend object
+	 * @param string $where   Activity Where sql.
+	 * @param object $suspend Suspend object.
 	 *
 	 * @return array
 	 */
@@ -214,17 +161,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		 */
 		if ( in_array( $activity->type, array( 'new_member', 'new_avatar', 'updated_profile', 'created_group', 'joined_group', 'group_details_updated', 'friendship_created', 'friendship_accepted', 'friends_register_activity_action', 'new_blog_post', 'new_blog' ), true ) ) {
 			return array(
-				'id' => false,
+				'id'   => false,
 				'type' => false,
 			);
 		}
 
-		$sub_items = [];
+		$sub_items = array();
 		switch ( $activity->type ) {
-			case 'bbp_forum_create';
+			case 'bbp_forum_create':
 				$forum_id = $activity->item_id;
-				if ( function_exists( 'bbp_is_forum_group_forum' )
-				     && bbp_is_forum_group_forum( $forum_id ) ) {
+				if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
 					$sub_items['id']   = current( bbp_get_forum_group_ids( $forum_id ) );
 					$sub_items['type'] = BP_Moderation_Groups::$moderation_type;
 				} else {
@@ -232,11 +178,11 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 					$sub_items['type'] = BP_Moderation_Forums::$moderation_type;
 				}
 				break;
-			case 'bbp_topic_create';
+			case 'bbp_topic_create':
 				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
 				$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
 				break;
-			case 'bbp_reply_create';
+			case 'bbp_reply_create':
 				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
 				$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
 				break;

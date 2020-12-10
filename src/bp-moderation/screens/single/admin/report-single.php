@@ -5,8 +5,10 @@
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss
  */
+
 $current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
+$error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore
 ?>
 <div class="wrap">
 	<h1>
@@ -22,16 +24,15 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 
 	<?php if ( ! empty( $moderation_request_data ) ) : ?>
 		<div id="poststuff">
-			<div id="post-body"
-				 class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
+			<div id="post-body" class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
 				<div id="post-body-content">
 					<div id="postdiv">
 						<div id="bp_moderation_action" class="postbox">
 							<div class="inside">
 
 								<?php if ( ! empty( $messages ) ) : ?>
-									<div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>">
-										<p><?php echo implode( "<br/>\n", $messages ); ?></p>
+									<div id="moderation" class="<?php echo ( ! empty( $error ) ) ? 'error' : 'updated'; ?>">
+										<p><?php echo wp_kses_post( implode( "<br/>\n", $messages ) ); ?></p>
 									</div>
 								<?php endif; ?>
 
@@ -45,10 +46,12 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 										<tr>
 											<td scope="row" style="width: 20%;">
 												<label>
-													<strong><?php
+													<strong>
+													<?php
 													/* translators: accessibility text */
 													esc_html_e( 'Content Type', 'buddyboss' );
-													?></strong>
+													?>
+													</strong>
 												</label>
 											</td>
 											<td>
@@ -99,10 +102,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											</td>
 											<td>
 												<?php
-												echo wp_kses_post( sprintf( '<a href="%s" title="%s"> %s </a>',
-														esc_url( bp_moderation_get_Permalink( $moderation_request_data->item_id, $moderation_request_data->item_type ) ),
+												echo wp_kses_post(
+													sprintf(
+														'<a href="%s" title="%s"> %s </a>',
+														esc_url( bp_moderation_get_permalink( $moderation_request_data->item_id, $moderation_request_data->item_type ) ),
 														esc_attr__( 'View', 'buddyboss' ),
-														esc_html__( 'View Content', 'buddyboss' ) ) );
+														esc_html__( 'View Content', 'buddyboss' )
+													)
+												);
 												?>
 											</td>
 										</tr>
@@ -118,7 +125,7 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											<td>
 												<?php
 												/* translators: accessibility text */
-												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												printf( esc_html( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ) ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>
@@ -151,7 +158,7 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											<td>
 												<?php
 												/* translators: accessibility text */
-												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												printf( esc_html( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ) ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>
@@ -183,22 +190,22 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 										}
 										?>
 										<a href="javascript:void(0);"
-										   class="button button-primary bp-hide-request single-report-btn"
-										   data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-										   data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>"
-										   data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-										   data-action="<?php echo esc_attr( $action_type ); ?>"
-										   title="<?php echo esc_html( $action_label ); ?>">
+										class="button button-primary bp-hide-request single-report-btn"
+										data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
+										data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>"
+										data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
+										data-action="<?php echo esc_attr( $action_type ); ?>"
+										title="<?php echo esc_html( $action_label ); ?>">
 											<?php
 											echo esc_html( $action_label );
 											?>
 										</a>
 										<a href="javascript:void(0);"
-										   class="button button-primary bp-block-user single-report-btn content-author"
-										   data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user"
-										   data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-										   data-action="<?php echo esc_attr( $user_action_type ); ?>"
-										   title="<?php echo esc_attr( $user_action_text ); ?>">
+										class="button button-primary bp-block-user single-report-btn content-author"
+										data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user"
+										data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
+										data-action="<?php echo esc_attr( $user_action_type ); ?>"
+										title="<?php echo esc_attr( $user_action_text ); ?>">
 											<?php
 											echo esc_html( $user_action_text );
 											?>
@@ -208,12 +215,12 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 										$member_action_text = ( 'unhide' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
 										?>
 										<a href="javascript:void(0);"
-										   class="button button-primary bp-block-user single-report-btn"
-										   data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-										   data-type="user"
-										   data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-										   data-action="<?php echo esc_attr( $action_type ); ?>"
-										   title="<?php echo esc_attr( $action_label ); ?>">
+										class="button button-primary bp-block-user single-report-btn"
+										data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
+										data-type="user"
+										data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
+										data-action="<?php echo esc_attr( $action_type ); ?>"
+										title="<?php echo esc_attr( $action_label ); ?>">
 											<?php
 											echo esc_html( $member_action_text );
 											?>

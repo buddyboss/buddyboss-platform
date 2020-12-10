@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -33,7 +32,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		//Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_media' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_media' ), 10, 4 );
 
@@ -56,19 +55,21 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $member_id member id
+	 * @param int $member_id member id.
 	 *
 	 * @return array
 	 */
 	public static function get_member_media_ids( $member_id ) {
 		$media_ids = array();
 
-		$medias = bp_media_get( array(
-			'moderation_query' => false,
-			'per_page'         => 0,
-			'fields'           => 'ids',
-			'user_id'          => $member_id,
-		) );
+		$medias = bp_media_get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'user_id'          => $member_id,
+			)
+		);
 
 		if ( ! empty( $medias['medias'] ) ) {
 			$media_ids = $medias['medias'];
@@ -169,15 +170,18 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $media_id      media id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $media_id      media id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_media( $media_id, $hide_sitewide, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $media_id,
-			'item_type' => BP_Suspend_Media::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $media_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -192,16 +196,19 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $media_id      media id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $media_id      media id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_media( $media_id, $hide_sitewide, $force_all, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $media_id,
-			'item_type' => BP_Suspend_Media::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $media_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -216,7 +223,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $media_id Media id
+	 * @param int $media_id Media id.
 	 *
 	 * @return array
 	 */

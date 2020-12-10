@@ -76,7 +76,8 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 2.0.0
 	 */
 	public function no_items() {
-		if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
+		$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			esc_html_e( 'Sorry, no reported content report was found.', 'buddyboss' );
 		} else {
 			esc_html_e( 'Sorry, no blocked members report were found.', 'buddyboss' );
@@ -134,30 +135,30 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	public function display() {
 		$this->display_tablenav( 'top' ); ?>
 
-        <h2 class="screen-reader-text">
+		<h2 class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
 			esc_html_e( 'Moderation Request list', 'buddyboss' );
 			?>
-        </h2>
+		</h2>
 
-        <table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
-            <thead>
-            <tr>
+		<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
+			<thead>
+			<tr>
 				<?php $this->print_column_headers(); ?>
-            </tr>
-            </thead>
+			</tr>
+			</thead>
 
-            <tbody id="the-moderation-report-list">
+			<tbody id="the-moderation-report-list">
 			<?php $this->display_rows_or_placeholder(); ?>
-            </tbody>
+			</tbody>
 
-            <tfoot>
-            <tr>
+			<tfoot>
+			<tr>
 				<?php $this->print_column_headers( false ); ?>
-            </tr>
-            </tfoot>
-        </table>
+			</tr>
+			</tfoot>
+		</table>
 		<?php
 
 		$this->display_tablenav( 'bottom' );
@@ -173,7 +174,8 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 
-		if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
+		$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			$columns = array(
 				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
 				'category' => esc_html__( 'Report/Category', 'buddyboss' ),
@@ -242,8 +244,12 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @param array $item item data.
 	 */
 	public function column_date( $item = array() ) {
-		echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-				strtotime( $item['date_created'] ) ) );
+		echo esc_html(
+			date_i18n(
+				get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+				strtotime( $item['date_created'] )
+			)
+		);
 	}
 
 	/**

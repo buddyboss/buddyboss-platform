@@ -42,7 +42,6 @@ class BP_Moderation_Component extends BP_Component {
 	 * @param array $includes See BP_Component::includes() for a description.
 	 *
 	 * @see   BP_Component::includes() for a description of arguments.
-	 *
 	 */
 	public function includes( $includes = array() ) {
 		// Files to include.
@@ -87,7 +86,6 @@ class BP_Moderation_Component extends BP_Component {
 	 * @param array $args See BP_Component::setup_globals() for a description.
 	 *
 	 * @see   BP_Component::setup_globals() for a description of arguments.
-	 *
 	 */
 	public function setup_globals( $args = array() ) {
 		$bp = buddypress();
@@ -193,10 +191,22 @@ class BP_Moderation_Component extends BP_Component {
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'spam'        => array( 'name' => __( 'Spam', 'buddyboss' ), 'description' => __( 'Unwanted commercial content or spam', 'buddyboss' ) ),
-				'adult'       => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => __( 'Pornography or sexually explicit material', 'buddyboss' ) ),
-				'hate-speech' => array( 'name' => __( 'Hate Speech', 'buddyboss' ), 'description' => __( 'Hate speech or graphic violence', 'buddyboss' ) ),
-				'harassment'  => array( 'name' => __( 'Harassment', 'buddyboss' ), 'description' => __( 'Harassment or bullying', 'buddyboss' ) ),
+				'spam'        => array(
+					'name'        => __( 'Spam', 'buddyboss' ),
+					'description' => __( 'Unwanted commercial content or spam', 'buddyboss' ),
+				),
+				'adult'       => array(
+					'name'        => __( 'Adult', 'buddyboss' ),
+					'description' => __( 'Pornography or sexually explicit material', 'buddyboss' ),
+				),
+				'hate-speech' => array(
+					'name'        => __( 'Hate Speech', 'buddyboss' ),
+					'description' => __( 'Hate speech or graphic violence', 'buddyboss' ),
+				),
+				'harassment'  => array(
+					'name'        => __( 'Harassment', 'buddyboss' ),
+					'description' => __( 'Harassment or bullying', 'buddyboss' ),
+				),
 			);
 
 			foreach ( $moderation_terms as $moderation_term ) {
@@ -207,7 +217,7 @@ class BP_Moderation_Component extends BP_Component {
 			}
 
 			update_option( 'moderation_default_category_added', true, false );
-		 }
+		}
 	}
 
 	/**
@@ -216,7 +226,6 @@ class BP_Moderation_Component extends BP_Component {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
-	 *
 	 */
 	public function rest_api_init( $controllers = array() ) {
 	}

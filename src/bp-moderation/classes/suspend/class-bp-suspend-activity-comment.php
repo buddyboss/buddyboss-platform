@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -33,7 +32,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		//Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_activity_comment' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_activity_comment' ), 10, 4 );
 
@@ -62,17 +61,19 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	public static function get_member_activity_comment_ids( $member_id ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get( array(
-			'moderation_query' => false,
-			'per_page'         => 0,
-			'fields'           => 'ids',
-			'show_hidden'      => true,
-			'display_comments' => true,
-			'filter'           => array(
-				'user_id' => $member_id,
-				'action'  => 'activity_comment',
-			),
-		) );
+		$activities = BP_Activity_Activity::get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'show_hidden'      => true,
+				'display_comments' => true,
+				'filter'           => array(
+					'user_id' => $member_id,
+					'action'  => 'activity_comment',
+				),
+			)
+		);
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -152,15 +153,18 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $acomment_id   activity comment id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $acomment_id   activity comment id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_activity_comment( $acomment_id, $hide_sitewide, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $acomment_id,
-			'item_type' => BP_Suspend_Activity_Comment::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $acomment_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -175,16 +179,19 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $acomment_id   activity comment id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $acomment_id   activity comment id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_activity_comment( $acomment_id, $hide_sitewide, $force_all, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $acomment_id,
-			'item_type' => BP_Suspend_Activity_Comment::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $acomment_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -224,7 +231,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $acomment_id activity comment id
+	 * @param int $acomment_id activity comment id.
 	 *
 	 * @return array
 	 */

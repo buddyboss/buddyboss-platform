@@ -165,8 +165,6 @@ function bp_moderation_get( $args = '' ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param string $type Moderation items type.
- *
  * @return array $moderation See BP_Moderation::get() for description.
  */
 function bp_moderation_get_hidden_user_ids() {
@@ -352,7 +350,7 @@ function bp_moderation_is_user_blocked( $user_id ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $user_id
+ * @param int $user_id user id.
  *
  * @return bool
  */
@@ -669,7 +667,7 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
 	return $retval;
 }
 
-/** other *********************************************************************/
+/** Other *********************************************************************/
 
 /**
  * Function get content owner id.
@@ -703,7 +701,7 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  *
  * @return string
  */
-function bp_moderation_get_Permalink( $moderation_item_id, $moderation_item_type ) {
+function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type ) {
 
 	$link  = '';
 	$class = BP_Moderation_Abstract::get_class( $moderation_item_type );

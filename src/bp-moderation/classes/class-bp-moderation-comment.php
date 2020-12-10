@@ -32,7 +32,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
-		// Register moderation data
+		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**

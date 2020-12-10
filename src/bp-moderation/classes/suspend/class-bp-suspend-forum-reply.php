@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
- *
  */
 
 // Exit if accessed directly.
@@ -33,7 +32,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		//Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_reply' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_reply' ), 10, 4 );
 
@@ -52,7 +51,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		add_filter( 'bp_forum_reply_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_reply_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// Blocked template
+		// Blocked template.
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
@@ -60,6 +59,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * Get Blocked member's reply ids
 	 *
 	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $member_id member id.
 	 *
 	 * @return array
 	 */
@@ -91,6 +92,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * Get forum topics ids
 	 *
 	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $topic_id topic id.
 	 *
 	 * @return array
 	 */
@@ -218,15 +221,18 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $reply_id      forum reply id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $reply_id      forum reply id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_reply( $reply_id, $hide_sitewide, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $reply_id,
-			'item_type' => BP_Suspend_Forum_Reply::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $reply_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -241,16 +247,19 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $reply_id      reply id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $reply_id      reply id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_reply( $reply_id, $hide_sitewide, $force_all, $args = array() ) {
-		$suspend_args = wp_parse_args( $args, array(
-			'item_id'   => $reply_id,
-			'item_type' => BP_Suspend_Forum_Reply::$type,
-		) );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $reply_id,
+				'item_type' => self::$type,
+			)
+		);
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
@@ -291,7 +300,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $reply_id reply id
+	 * @param int $reply_id reply id.
 	 *
 	 * @return array
 	 */

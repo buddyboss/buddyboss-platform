@@ -113,13 +113,13 @@ class BP_Moderation_Template {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array     $args     {
-	 *                            Array of arguments. Supports all arguments from
-	 *                            BP_Moderation::get(), as well as 'page_arg' and
-	 *                            'include'. Default values for 'per_page'
-	 *                            differ from the originating function, and are described below.
+	 * @param array $args     {
+	 *                        Array of arguments. Supports all arguments from
+	 *                        BP_Moderation::get(), as well as 'page_arg' and
+	 *                        'include'. Default values for 'per_page'
+	 *                        differ from the originating function, and are described below.
 	 *
-	 *                                         pagination links. Default: 'acpage'.
+	 *                                     pagination links. Default: 'acpage'.
 	 *
 	 * @type array|bool $in       Pass an array of moderation IDs to
 	 *                                         retrieve only those items, or false to noop the 'include'

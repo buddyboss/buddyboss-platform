@@ -4,7 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- *
  */
 
 // Exit if accessed directly.
@@ -53,8 +52,13 @@ abstract class BP_Moderation_Abstract {
 		}
 
 		if ( ! empty( $admin_exclude ) ) {
-			$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
-			if ( in_array( get_current_user_id(), $admins ) ) {
+			$admins = get_users(
+				array(
+					'role'   => 'administrator',
+					'fields' => 'ID',
+				)
+			);
+			if ( in_array( get_current_user_id(), $admins, true ) ) {
 				return true;
 			}
 		}
@@ -157,7 +161,7 @@ abstract class BP_Moderation_Abstract {
 	}
 
 	/**
-	 * unhide Moderated content
+	 * Unhide Moderated content
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
@@ -225,12 +229,17 @@ abstract class BP_Moderation_Abstract {
 		return $where;
 	}
 
+	/**
+	 * Blocked User filter query
+	 *
+	 * @return false|string
+	 */
 	protected function blocked_user_query() {
 		$bp = buddypress();
 
 		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_users_ids ) ) {
-			return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ")";
+			return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
 		}
 
 		return false;

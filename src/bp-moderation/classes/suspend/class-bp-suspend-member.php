@@ -32,7 +32,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$this->item_type = self::$type;
 
-		// Manage hidden list
+		// Manage hidden list.
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_member' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_member' ), 10, 4 );
 
@@ -55,6 +55,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 	}
 
+	/**
+	 * Suspend User
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 */
 	public static function suspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
 			array(
@@ -75,6 +82,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		do_action( 'bp_suspend_hide_' . self::$type, $user_id, 1, array( 'action' => 'suspended' ) );
 	}
 
+	/**
+	 * Un-suspend User
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 */
 	public static function unsuspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
 			array(
@@ -85,7 +99,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		);
 
 		/**
-		 * remove related content of reported item from hidden list
+		 * Remove related content of reported item from hidden list.
 		 *
 		 * @since BuddyBoss 2.0.0
 		 *
@@ -160,9 +174,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $member_id     member id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param array    $args          parent args
+	 * @param int      $member_id     member id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_member( $member_id, $hide_sitewide, $args = array() ) {
 
@@ -193,10 +207,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $member_id     member id
-	 * @param int|null $hide_sitewide item hidden sitewide or user specific
-	 * @param int      $force_all     un-hide for all users
-	 * @param array    $args          parent args
+	 * @param int      $member_id     member id.
+	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
+	 * @param int      $force_all     un-hide for all users.
+	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_member( $member_id, $hide_sitewide, $force_all, $args = array() ) {
 
@@ -350,9 +364,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int   $member_id     member id
-	 * @param int   $hide_sitewide item hidden sitewide or user specific
-	 * @param array $args          parent args
+	 * @param int   $member_id     member id.
+	 * @param int   $hide_sitewide item hidden sitewide or user specific.
+	 * @param array $args          parent args.
 	 */
 	protected function prepare_suspend_args( $member_id, $hide_sitewide, $args ) {
 
@@ -378,7 +392,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $member_id member id
+	 * @param int $member_id member id.
 	 *
 	 * @return array
 	 */
