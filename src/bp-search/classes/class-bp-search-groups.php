@@ -68,15 +68,11 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			global $wpdb, $bp;
 			$query_placeholder = array();
 
-			// $sql = ' SELECT ';
 			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				// $sql .= ' COUNT( DISTINCT g.id ) ';
 				$sql['select'] .= ' COUNT( DISTINCT g.id ) ';
 			} else {
-				// $sql                .= " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm2.meta_value as entry_date ";
-				// $query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 				$sql['select'] .= $wpdb->prepare( " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm2.meta_value as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
@@ -102,20 +98,6 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 
-			/*
-			$sql                .= " FROM
-						{$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name} g
-					WHERE
-						1=1
-						AND g.id = gm1.group_id
-						AND g.id = gm2.group_id
-						AND gm2.meta_key = 'last_activity'
-						AND gm1.meta_key = 'total_member_count'
-						AND ( g.name LIKE %s OR g.description LIKE %s )
-				";
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';*/
-
 			/** LOCATION AUTOCOMPLETE SEARCH */
 
 			if ( function_exists( 'bp_bpla' ) && 'yes' == bp_bpla()->option( 'enable-for-groups' ) ) {
@@ -127,10 +109,10 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 				foreach ( $split_search_term as $k => $sterm ) {
 
 					if ( $k == 0 ) {
-						$where_conditions['search_query'] .= 'meta_value LIKE %s';
+						$where_conditions['search_query'] .= 'AND meta_value LIKE %s';
 						$query_placeholder[]               = '%' . $wpdb->esc_like( $sterm ) . '%';
 					} else {
-						$where_conditions['search_query'] .= 'meta_value LIKE %s';
+						$where_conditions['search_query'] .= 'AND meta_value LIKE %s';
 						$query_placeholder[]               = '%' . $wpdb->esc_like( $sterm ) . '%';
 					}
 				}
@@ -159,12 +141,10 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 					// either gruops which are not hidden,
 					// or if hidden, only those where i am a member.
-					// $sql .= " AND ( g.status != 'hidden' OR g.id IN ( {$hidden_groups_ids_csv} ) ) ";
-					$where_conditions['search_query'] .= " ( g.status != 'hidden' OR g.id IN ( {$hidden_groups_ids_csv} ) ) ";
+					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' OR g.id IN ( {$hidden_groups_ids_csv} ) ) ";
 				}
 			} else {
-				// $sql .= " AND g.status != 'hidden' ";
-				$where_conditions['search_query'] .= " g.status != 'hidden' ";
+				$where_conditions['search_query'] .= "AND g.status != 'hidden' ";
 			}
 
 			/**
