@@ -197,6 +197,21 @@ class BP_Activity_Activity {
 			return;
 		}
 
+		/**
+		 * Pre validate the activity before fetch.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param boolean $validate Whether to check the activity is valid or not.
+		 * @param object  $row      Activity object.
+		 */
+		$validate = apply_filters( 'bp_activity_activity_pre_validate', true, $row );
+
+		if ( empty( $validate ) ) {
+			$this->id = 0;
+			return;
+		}
+
 		$this->id                = (int) $row->id;
 		$this->item_id           = (int) $row->item_id;
 		$this->secondary_item_id = (int) $row->secondary_item_id;

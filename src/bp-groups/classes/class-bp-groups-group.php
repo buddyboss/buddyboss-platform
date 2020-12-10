@@ -229,6 +229,21 @@ class BP_Groups_Group {
 			return;
 		}
 
+		/**
+		 * Pre validate the group before fetch.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param boolean $validate Whether to check the group is valid or not.
+		 * @param object  $group    Group object.
+		 */
+		$validate = apply_filters( 'bp_groups_group_pre_validate', true, $group );
+
+		if ( empty( $validate ) ) {
+			$this->id = 0;
+			return;
+		}
+
 		// Group found so setup the object variables.
 		$this->id           = (int) $group->id;
 		$this->creator_id   = (int) $group->creator_id;

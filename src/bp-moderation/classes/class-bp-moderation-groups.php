@@ -51,6 +51,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		// Remove hidden/blocked users content.
 		add_filter( 'bp_suspend_group_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
 	}
 
 	/**
@@ -131,5 +133,22 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		$where['moderation_where'] = $this->exclude_where_query();
 
 		return $where;
+	}
+
+	/**
+	 * Validate the group is valid or not.
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $group    Current group object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $group ) {
+
+		if ( bp_moderation_is_content_hidden( (int) $group->id, self::$moderation_type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 }

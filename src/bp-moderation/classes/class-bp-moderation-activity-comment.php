@@ -58,6 +58,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// button.
 		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
+
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
 	}
 
 	/**
@@ -214,5 +216,24 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $sub_items;
+	}
+
+	/**
+	 * Validate the activity is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $activity Current activity object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $activity ) {
+
+		if ( 'activity_comment' === $activity->type && bp_moderation_is_content_hidden( (int) $activity->id, self::$moderation_type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 }
