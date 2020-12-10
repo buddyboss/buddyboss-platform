@@ -12628,6 +12628,11 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 20px;
 }
 
+.modal-container#boss-media-create-album-popup .popup-on-fly-create-folder-title.error + .error-box {
+  display: block;
+  font-size: 13px;
+}
+
 .bbm-model-wrap input,
 .bbm-model-wrap textarea {
   width: 100%;

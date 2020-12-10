@@ -353,9 +353,23 @@ window.bp = window.bp || {};
 			var targetPopup = $(event.currentTarget).closest('.open-popup');
 			var currentAction = $(targetPopup).find('.bp-document-create-popup-folder-submit');
 			var hiddenValue = targetPopup.find('.bb-folder-selected-id').val();
+			var title = $.trim($(event.currentTarget).closest('.modal-container').find('.popup-on-fly-create-folder-title').val());
+			var titleSelector = $(event.currentTarget).closest('.modal-container').find('.popup-on-fly-create-folder-title');
+			
 			// if ( 0 === this.currentTargetParent && hiddenValue > 0 ) {
 			// 	this.currentTargetParent = hiddenValue;
 			// }
+
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches = pattern.exec(titleSelector.val());
+			var matchStatus = Boolean(matches);
+
+			if ($.trim(titleSelector.val()) === '' || matchStatus) {
+				titleSelector.addClass('error');
+				return false;
+			} else {
+				titleSelector.removeClass('error');
+			}
 
 			if ('' === hiddenValue) {
 				hiddenValue = 0;
@@ -365,8 +379,7 @@ window.bp = window.bp || {};
 
 			var currentFolder = this.currentTargetParent;
 			var groupId = 0;
-			var title = $.trim($(event.currentTarget).closest('.modal-container').find('.popup-on-fly-create-folder-title').val());
-			var titleSelector = $(event.currentTarget).closest('.modal-container').find('.popup-on-fly-create-folder-title');
+			
 			var privacy = '';
 			var privacySelector = '';
 			var newParent = 0;
