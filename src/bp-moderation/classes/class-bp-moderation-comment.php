@@ -38,7 +38,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() || ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 

@@ -47,10 +47,10 @@ class BP_Moderation_Component extends BP_Component {
 		// Files to include.
 		$includes = array(
 			'cssjs',
+			'settings',
+			'functions',
 			'filters',
 			'template',
-			'functions',
-			'settings',
 		);
 
 		if ( is_admin() ) {

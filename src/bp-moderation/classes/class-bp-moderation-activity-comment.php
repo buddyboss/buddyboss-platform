@@ -35,19 +35,19 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Delete comment moderation data when actual comment is deleted.
-		add_action( 'bp_activity_delete_comment', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
-		add_action( 'bp_activity_deleted_activities', array( $this, 'sync_comment_moderation_data_on_delete' ), 10 );
-
 		// Check Component is disabled.
 		if ( ! bp_is_active( 'activity' ) ) {
 			return;
 		}
 
+		// Delete comment moderation data when actual comment is deleted.
+		add_action( 'bp_activity_delete_comment', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
+		add_action( 'bp_activity_deleted_activities', array( $this, 'sync_comment_moderation_data_on_delete' ), 10 );
+
 		/**
 		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() || ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 

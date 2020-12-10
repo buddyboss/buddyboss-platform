@@ -182,20 +182,6 @@ function bpm_blocking_settings_callback_member_blocking() {
 }
 
 /**
- * Checks if Moderation Member blocking feature is enabled.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int $default bool Optional.Default value true.
- *
- * @return bool Is search autocomplete enabled or not
- * @uses  get_option() To get the bp_search_autocomplete option
- */
-function bp_is_moderation_member_blocking_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_moderation_member_blocking_enable', (bool) get_option( 'bpm_blocking_member_blocking', $default ) );
-}
-
-/**
  * Moderation blocking auto suspend setting field
  *
  * @since BuddyBoss 2.0.0
@@ -220,20 +206,6 @@ function bpm_blocking_settings_callback_auto_suspend() {
 }
 
 /**
- * Checks if Moderation Member auto suspend feature is enabled.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int $default bool Optional.Default value true.
- *
- * @return bool Is search autocomplete enabled or not
- * @uses  get_option() To get the bp_search_autocomplete option
- */
-function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_moderation_auto_suspend_enable', (bool) get_option( 'bpm_blocking_auto_suspend', $default ) );
-}
-
-/**
  * Moderation blocking auto suspend threshold setting field
  *
  * @since BuddyBoss 2.0.0
@@ -242,7 +214,7 @@ function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
  */
 function bpm_blocking_settings_callback_auto_suspend_threshold() {
 	?>
-	<input name="bpm_blocking_auto_suspend_threshold" id="bpm_blocking_auto_suspend_threshold" type="number" min="1" step="1" value="<?php bp_moderation_setting( 'bpm_blocking_auto_suspend_threshold', '5' ); ?>" class="small-text"/>
+	<input name="bpm_blocking_auto_suspend_threshold" id="bpm_blocking_auto_suspend_threshold" type="number" min="1" step="1" value="<?php echo esc_attr( bp_moderation_auto_suspend_threshold( 5 ) ); ?>" class="small-text"/>
 	<?php
 }
 
@@ -261,20 +233,6 @@ function bpm_blocking_settings_callback_email_notification() {
 		<?php esc_html_e( 'Notify administrators when members have been auto-suspended.', 'buddyboss' ); ?>
 	</label>
 	<?php
-}
-
-/**
- * Checks if Moderation blocking email notification feature is enabled.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int $default bool Optional.Default value true.
- *
- * @return bool Is search autocomplete enabled or not
- * @uses  get_option() To get the bp_search_autocomplete option
- */
-function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_moderation_blocking_email_notification_enable', (bool) get_option( 'bpm_blocking_email_notification', $default ) );
 }
 
 /***************************
@@ -326,46 +284,6 @@ function bpm_reporting_settings_callback_content_reporting() {
 }
 
 /**
- * Checks if Moderation Member reporting feature is enabled.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int    $default      bool Optional.Default value true.
- * @param string $content_type content type.
- *
- * @return bool Is search autocomplete enabled or not
- * @uses  get_option() To get the bp_search_autocomplete option
- */
-function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
-	$settings = get_option( 'bpm_reporting_content_reporting', array() );
-
-	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		$settings[ $content_type ] = $default;
-	}
-
-	return (bool) apply_filters( 'bp_is_moderation_content_reporting_enable', (bool) $settings[ $content_type ], $content_type );
-}
-
-/**
- * Checks if Moderation Member auto suspend feature is enabled.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int    $default bool Optional.Default value true.
- * @param string $content_type content type.
- *
- * @return bool Is search autocomplete enabled or not
- * @uses  get_option() To get the bp_search_autocomplete option
- */
-function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
-	$is_enabled = bp_is_moderation_content_reporting_enable( false, $content_type );
-	if ( ! empty( $is_enabled ) ) {
-		$is_enabled = get_option( 'bpm_reporting_auto_hide', $default );
-	}
-	return (bool) apply_filters( 'bp_is_moderation_auto_hide_enable', (bool) $is_enabled );
-}
-
-/**
  * Moderation reporting auto suspend threshold setting field
  *
  * @since BuddyBoss 2.0.0
@@ -383,28 +301,6 @@ function bpm_reporting_settings_callback_auto_hide_threshold( $content_type = ''
 }
 
 /**
- * Checks if Moderation Member auto suspend feature is enabled.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int    $default bool Optional.Default value true.
- * @param string $content_type content type.
- *
- * @return bool Is search autocomplete enabled or not
- * @uses  get_option() To get the bp_search_autocomplete option
- */
-function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
-
-	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
-
-	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		$settings[ $content_type ] = $default;
-	}
-
-	return apply_filters( 'bp_moderation_reporting_auto_hide_threshold', (int) $settings[ $content_type ], $content_type );
-}
-
-/**
  * Moderation reporting auto suspend setting field
  *
  * @since BuddyBoss 2.0.0
@@ -419,18 +315,4 @@ function bpm_reporting_settings_callback_email_notification() {
 		<?php esc_html_e( 'Notify administrators when content has been auto-hidden.', 'buddyboss' ); ?>
 	</label>
 	<?php
-}
-
-/**
- * Checks if Moderation reporting email notification feature is enabled.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int $default bool Optional.Default value true.
- *
- * @return bool Is search autocomplete enabled or not
- * @uses  get_option() To get the bp_search_autocomplete option
- */
-function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_moderation_reporting_email_notification_enable', (bool) get_option( 'bpm_reporting_email_notification', $default ) );
 }

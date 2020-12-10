@@ -41,9 +41,9 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		/**
-		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
+		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin or Reporting setting disabled
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() || ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -131,7 +131,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		$sub_items = array();
-		if ( bp_is_active( 'activity' ) && ! empty( $document->activity_id ) ) {
+		if ( bp_is_active( 'activity' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) && ! empty( $document->activity_id ) ) {
 			$sub_items['id']   = $document->activity_id;
 			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
 		}

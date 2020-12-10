@@ -257,7 +257,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		// The user exists; now do a check to see if the user is a suspended.
-		if ( is_a( $user, 'WP_User' ) && bp_moderation_is_user_suspended( $user->id ) ) {
+		if ( is_a( $user, 'WP_User' ) && bp_moderation_is_user_suspended( $user->ID ) ) {
 			return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been Suspended.', 'buddyboss' ) );
 		}
 

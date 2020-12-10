@@ -420,6 +420,11 @@ function bp_moderation_user_can( $item_id, $item_type ) {
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
+	// If Sub type moderation disabled then reporting option should not show.
+	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
+		return false;
+	}
+
 	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
@@ -665,6 +670,141 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
+}
+
+/** Setting *********************************************************************/
+
+/**
+ * Checks if Moderation Member blocking feature is enabled.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_is_moderation_member_blocking_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_moderation_member_blocking_enable', (bool) get_option( 'bpm_blocking_member_blocking', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend feature is enabled.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_moderation_auto_suspend_enable', (bool) get_option( 'bpm_blocking_auto_suspend', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend feature is enabled.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_moderation_auto_suspend_threshold( $default = 5 ) {
+
+	return apply_filters( 'bp_moderation_auto_suspend_threshold', (int) bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend email notification feature is enabled.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_moderation_blocking_email_notification_enable', (bool) get_option( 'bpm_blocking_email_notification', $default ) );
+}
+
+/**
+ * Checks if Moderation content reporting feature is enabled.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $default      bool Optional.Default value true.
+ * @param string $content_type content type.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
+	$settings = get_option( 'bpm_reporting_content_reporting', array() );
+
+	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		$settings[ $content_type ] = $default;
+	}
+
+	return (bool) apply_filters( 'bp_is_moderation_content_reporting_enable', (bool) $settings[ $content_type ], $content_type );
+}
+
+/**
+ * Checks if Moderation content auto hide feature is enabled.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $default bool Optional.Default value true.
+ * @param string $content_type content type.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
+	$is_enabled = bp_is_moderation_content_reporting_enable( false, $content_type );
+	if ( ! empty( $is_enabled ) ) {
+		$is_enabled = get_option( 'bpm_reporting_auto_hide', $default );
+	}
+	return (bool) apply_filters( 'bp_is_moderation_auto_hide_enable', (bool) $is_enabled );
+}
+
+/**
+ * Get threshold velue for content reporting.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $default bool Optional.Default value true.
+ * @param string $content_type content type.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
+
+	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
+
+	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		$settings[ $content_type ] = $default;
+	}
+
+	return apply_filters( 'bp_moderation_reporting_auto_hide_threshold', (int) $settings[ $content_type ], $content_type );
+}
+
+/**
+ * Checks if Moderation content auto hide email notification feature is enabled.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
+ */
+function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_moderation_reporting_email_notification_enable', (bool) get_option( 'bpm_reporting_email_notification', $default ) );
 }
 
 /** Other *********************************************************************/
