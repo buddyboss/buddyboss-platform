@@ -1479,6 +1479,26 @@ function bp_admin_wp_nav_menu_restrict_items() {
 }
 
 /**
+ * Add activate moderation when admin tries to spam the user.
+ *
+ * @since BuddyPress 2.0.0
+ */
+function add_active_moderation_popup() {
+	global $pagenow;
+	$bp = buddypress();
+
+	if ( 'users.php' === $pagenow && 0 === strpos( get_current_screen()->id, 'users' ) ) {
+		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/moderation-activate-alert-popup.php';
+	}
+
+	if ( 'admin.php' === $pagenow && 0 === strpos( get_current_screen()->id, 'buddyboss_page_bp-components' ) ) {
+		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/moderation-deactivate-confirmation-popup.php';
+	}
+}
+
+add_action( 'admin_footer', 'add_active_moderation_popup' );
+
+/**
  * Add "Mark as Spam/Ham" button to user row actions.
  *
  * @since BuddyPress 2.0.0
@@ -1517,15 +1537,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 
 				// If not already spammed, create spam link.
 			} else {
-				$url             = add_query_arg( array(
-						'action' => 'spam',
-						'user'   => $user_id,
-				),
-						$url );
-				$spam_link       = wp_nonce_url( $url, 'bp-spam-user' );
-				$actions['spam'] = sprintf( '<a class="submitdelete" href="%1$s">%2$s</a>',
-						esc_url( $spam_link ),
-						esc_html__( 'Spam', 'buddyboss' ) );
+				$actions['spam'] = sprintf( '<a class="submitdelete bp-show-moderation-alert" href="javascript:void(0)">%1$s</a>', esc_html__( 'Spam', 'buddyboss' ) );
 			}
 		} else {
 			if ( bp_moderation_is_user_suspended( $user_id ) ) {

@@ -772,7 +772,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyPress 1.6.0
 		 * @since BuddyBoss 1.0.0 Added support for Hello BuddyBoss App
 		 */
-		public function enqueue_scripts() {
+		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
 			// Hello BuddyBoss
@@ -790,6 +790,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
+			}
+
+			if ( 0 === strpos( get_current_screen()->id, 'users' ) || 'buddyboss_page_bp-components' === $hook ) {
+				wp_enqueue_style( 'bp-hello-css' );
 			}
 
 			wp_enqueue_script( 'bp-fitvids-js' );

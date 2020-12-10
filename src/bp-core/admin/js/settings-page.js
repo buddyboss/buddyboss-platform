@@ -1086,28 +1086,82 @@
 					var backdrop_click = backdrop.contains( event.target ),
 						modal_close_click  = event.target.classList.contains( 'close-modal' );
 
-					if ( ! modal_close_click && ! backdrop_click ) {
+					if ( !modal_close_click && !backdrop_click ) {
 						return;
 					}
 
-					$( document ).find ( '#bp-document-file-input' ).val( '' );
-					$( document ).find ( '.show-document-mime-type' ).hide();
-					$( document ).find ( '.show-document-mime-type input#mime-type' ).val( '' );
+					$( document ).find( '#bp-document-file-input' ).val( '' );
+					$( document ).find( '.show-document-mime-type' ).hide();
+					$( document ).find( '.show-document-mime-type input#mime-type' ).val( '' );
 				},
 				false
 			);
 
-			//Moderation Reporting Block
-			$( document ).on('change', '#bp_moderation_settings_reporting .bpm_reporting_content_content_label > input', function() {
-				if( $(this).prop('checked') ) {
-					$(this).parent().next('label').removeClass('is_disabled').find('input[type="checkbox"]').prop('checked','checked').removeProp('disabled');
+			// Show the moderation activate popup when admin click spam user link.
+			$( document ).on( 'click', '.bp-show-moderation-alert', function () {
+				$( '#bp-hello-backdrop' ).show();
+				$( '#bp-hello-container' ).show();
+			} );
+
+			// Show the confirmation popup when user clicks single BB component disable link.
+			$( document ).on( 'click', '.bp-show-deactivate-popup a', function ( event ) {
+				event.preventDefault();
+				$( '#bp-hello-backdrop' ).show();
+				$( '#bp-hello-container' ).show();
+				$( '#bp-hello-container' ).find( '.component-deactivate' ).attr( 'data-redirect', $( this ).attr( 'href' ) );
+				$( '#bp-hello-container' ).find( '.bp-hello-content' ).append( $( this ).parent().closest( '.row-actions' ).find( '.component-deactivate-msg' ).text() );
+			} );
+
+			// Close popup.
+			$( document ).on( 'click', '.close-modal', function () {
+				$( '#bp-hello-backdrop' ).hide();
+				$( '#bp-hello-container' ).hide();
+				$( '#bp-hello-container' ).find( '.component-deactivate' ).removeClass( 'form-submit' );
+			} );
+
+			// Disable the component when click appropriate button in popup.
+			$( document ).on( 'click', '.component-deactivate', function ( event ) {
+				event.preventDefault();
+				if ( $( this ).hasClass( 'form-submit' ) ) {
+					$( "form#bp-admin-component-form" ).find( "input[name='bp-admin-component-submit']" ).trigger( "click" );
 				} else {
-					$(this).parent().next('label').addClass('is_disabled').find('input[type="checkbox"]').removeProp('checked').prop('disabled','disabled');
+					window.location = $( this ).attr( 'data-redirect' );
 				}
-			});
+			} );
 
+			// Show the confirmation popup when bulk component disabled
+			$( "form#bp-admin-component-form" ).submit( function ( e ) {
 
+				var action = $( '#bulk-action-selector-top[name="action"]' ).find( ":selected" ).val();
 
+				if ( !action ) {
+					action = $( '#bulk-action-selector-top[name="action2"]' ).find( ":selected" ).val();
+				}
+
+				if ( !$( '#bp-hello-container' ).find( '.component-deactivate' ).hasClass( 'form-submit' ) && 'inactive' === action ) {
+					$( '#bp-hello-container' ).find( '.bp-hello-content' ).empty();
+					var msg = '';
+					$( '.mass-check-deactivate' ).each( function () {
+						msg = msg + $( this ).parent().find( '.component-deactivate-msg' ).text();
+					} );
+					if ( msg ) {
+						e.preventDefault();
+						$( '#bp-hello-backdrop' ).show();
+						$( '#bp-hello-container' ).show();
+						$( '#bp-hello-container' ).find( '.bp-hello-content' ).html( msg );
+						$( '#bp-hello-container' ).find( '.component-deactivate' ).addClass( 'form-submit' );
+					}
+				}
+			} );
+
+			//Moderation Reporting Block
+			$( document ).on( 'change', '#bp_moderation_settings_reporting .bpm_reporting_content_content_label > input', function () {
+				if ( $( this ).prop( 'checked' ) ) {
+					$( this ).parent().next( 'label' ).removeClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).prop( 'checked', 'checked' ).removeProp( 'disabled' );
+				} else {
+					$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).prop( 'disabled', 'disabled' );
+				}
+			} );
 		}
 	);
 
