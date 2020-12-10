@@ -270,11 +270,12 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_id activity id.
+	 * @param int   $activity_id activity id.
+	 * @param array $args        parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $activity_id ) {
+	protected function get_related_contents( $activity_id, $args = array() ) {
 
 		$related_contents = array(
 			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),

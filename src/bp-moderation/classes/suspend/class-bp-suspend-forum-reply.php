@@ -89,15 +89,15 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	}
 
 	/**
-	 * Get forum topics ids
+	 * Get forum topic/reply's child replies ids
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $topic_id topic id.
+	 * @param int $parent_id topic/reply id.
 	 *
 	 * @return array
 	 */
-	public static function get_topic_replies( $topic_id ) {
+	public static function get_topic_reply_replies( $parent_id ) {
 		$reply_ids = array();
 
 		$reply_query = new WP_Query(
@@ -105,7 +105,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 				'fields'                 => 'ids',
 				'post_type'              => bbp_get_reply_post_type(),
 				'post_status'            => 'publish',
-				'post_parent'            => $topic_id,
+				'post_parent'            => $parent_id,
 				'posts_per_page'         => - 1,
 				// Need to get all topics id of hidden forums.
 				'update_post_meta_cache' => false,
@@ -300,12 +300,18 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $reply_id reply id.
+	 * @param int   $reply_id reply id.
+	 * @param array $args     parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $reply_id ) {
+	protected function get_related_contents( $reply_id, $args = array() ) {
 		$related_contents = array();
+
+		// related activity comment only hide if parent activity hide or comment's/parent activity's author blocked or suspended.
+		if ( ! empty( $args ) && ( isset( $args['blocked_user'] ) || isset( $args['user_suspended'] ) || isset( $args['hide_parent'] ) ) ) {
+			$related_contents[ self::$type ] = self::get_topic_reply_replies( $reply_id );
+		}
 
 		if ( bp_is_active( 'activity' ) ) {
 			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $reply_id );

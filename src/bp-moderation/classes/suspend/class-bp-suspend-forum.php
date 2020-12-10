@@ -237,11 +237,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $forum_id forum id.
+	 * @param int   $forum_id forum id.
+	 * @param array $args     parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $forum_id ) {
+	protected function get_related_contents( $forum_id, $args = array() ) {
 		$related_contents = array();
 
 		if ( bp_is_active( 'activity' ) ) {

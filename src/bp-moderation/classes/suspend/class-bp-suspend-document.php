@@ -224,11 +224,12 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $document_id Document id.
+	 * @param int   $document_id Document id.
+	 * @param array $args        parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $document_id ) {
+	protected function get_related_contents( $document_id, $args = array() ) {
 		return array();
 	}
 }

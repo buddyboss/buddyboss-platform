@@ -223,11 +223,12 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $media_id Media id.
+	 * @param int   $media_id Media id.
+	 * @param array $args     parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $media_id ) {
+	protected function get_related_contents( $media_id, $args = array() ) {
 		return array();
 	}
 }

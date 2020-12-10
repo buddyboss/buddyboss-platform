@@ -313,11 +313,12 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $comment_id Comment ID.
+	 * @param int   $comment_id Comment ID.
+	 * @param array $args       parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $comment_id ) {
+	protected function get_related_contents( $comment_id, $args = array() ) {
 
 		$related_contents = array();
 

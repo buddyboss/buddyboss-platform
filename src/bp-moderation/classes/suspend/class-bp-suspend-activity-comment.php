@@ -171,7 +171,10 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
-		$this->hide_related_content( $acomment_id, $hide_sitewide, $args );
+
+		if ( ! empty( $args ) ) {
+			$this->hide_related_content( $acomment_id, $hide_sitewide, $args );
+		}
 	}
 
 	/**
@@ -231,15 +234,19 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $acomment_id activity comment id.
+	 * @param int   $acomment_id activity comment id.
+	 * @param array $args        parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $acomment_id ) {
+	protected function get_related_contents( $acomment_id, $args = array() ) {
 
-		$related_contents = array(
-			self::$type => self::get_activity_comment_ids( $acomment_id ),
-		);
+		$related_contents = array();
+
+		// related activity comment only hide if parent activity hide or comment's/parent activity's author blocked or suspended.
+		if ( ! empty( $args ) && ( isset( $args['blocked_user'] ) || isset( $args['user_suspended'] ) || isset( $args['hide_parent'] ) ) ) {
+			$related_contents[ self::$type ] = self::get_activity_comment_ids( $acomment_id );
+		}
 
 		if ( bp_is_active( 'document' ) ) {
 			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $acomment_id, 'bp_activity_get_meta' );

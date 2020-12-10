@@ -392,11 +392,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $member_id member id.
+	 * @param int   $member_id member id.
+	 * @param array $args      parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $member_id ) {
+	protected function get_related_contents( $member_id, $args = array() ) {
 		$related_contents = array();
 
 		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id );

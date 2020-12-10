@@ -271,11 +271,12 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $topic_id topic id.
+	 * @param int   $topic_id topic id.
+	 * @param array $args     parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $topic_id ) {
+	protected function get_related_contents( $topic_id, $args = array() ) {
 		$related_contents = array();
 
 		if ( bp_is_active( 'activity' ) ) {
@@ -283,7 +284,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_topic_replies( $topic_id );
+			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_topic_reply_replies( $topic_id );
 		}
 
 		if ( bp_is_active( 'document' ) ) {

@@ -208,11 +208,12 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $group_id group id.
+	 * @param int   $group_id group id.
+	 * @param array $args     parent args.
 	 *
 	 * @return array
 	 */
-	protected function get_related_contents( $group_id ) {
+	protected function get_related_contents( $group_id, $args = array() ) {
 		$related_contents = array();
 
 		if ( bp_is_active( 'activity' ) ) {
