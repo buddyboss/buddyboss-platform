@@ -1190,6 +1190,23 @@ function bp_core_install_moderation() {
 }
 
 /**
+ * Function to migrate spam users
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bp_core_migrate_spam_users() {
+	global $wpdb;
+	$spam_users = $wpdb->get_results( "SELECT ID FROM {$wpdb->users} WHERE user_status = 1" ); //phpcs:ignore.
+
+	if ( ! empty( $spam_users ) ) {
+		foreach ( $spam_users as $spam_user ) {
+			BP_Suspend_Member::suspend_user( $spam_user->ID );
+			$wpdb->update( $wpdb->users, array( 'user_status' => 0 ), array( 'ID' => $spam_user->ID ) ); //phpcs:ignore.
+		}
+	}
+}
+
+/**
  * Add moderation emails.
  *
  * @since BuddyBoss 2.0.0

@@ -1136,4 +1136,5 @@ function bp_update_to_1_5_5() {
  */
 function bb_update_to_1_5_6() {
 	bp_core_install_moderation_emails();
+	bp_core_migrate_spam_users();
 }
