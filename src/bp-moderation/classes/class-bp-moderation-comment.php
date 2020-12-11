@@ -266,10 +266,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
-			$link = '';
-		}
-
 		$link .= bp_moderation_get_report_button(
 			array(
 				'id'                => 'comment_report',
@@ -281,6 +277,10 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 				),
 			)
 		);
+
+		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
+			$link = '';
+		}
 
 		return $link;
 	}
