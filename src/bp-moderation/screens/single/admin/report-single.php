@@ -9,7 +9,12 @@
 $current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 $error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore
-$admins = get_users( array( 'role' => 'administrator', 'fields' => 'ID', ) );
+$admins = get_users(
+	array(
+		'role'   => 'administrator',
+		'fields' => 'ID',
+	)
+);
 ?>
 <div class="wrap">
 	<h1>
@@ -190,7 +195,7 @@ $admins = get_users( array( 'role' => 'administrator', 'fields' => 'ID', ) );
 											$user_action_text = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
 										}
 										?>
-										<a href="javascript:void(0);"
+                                        <a href="javascript:void(0);"
                                            class="button button-primary bp-hide-request single-report-btn"
                                            data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
                                            data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>"
