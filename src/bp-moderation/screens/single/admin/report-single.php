@@ -9,12 +9,12 @@
 $current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 $error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore
-$admins            = get_users(
+$admins            = array_map( 'intval', get_users(
 	array(
 		'role'   => 'administrator',
 		'fields' => 'ID',
 	)
-);
+) );
 ?>
 <div class="wrap">
 	<h1>
@@ -201,7 +201,7 @@ $admins            = get_users(
 											?>
 										</a>
 										<?php
-										if ( ! in_array( $user_id, $admins ) ) {
+										if ( ! in_array( $user_id, $admins, true ) ) {
 											?>
 											<a href="javascript:void(0);" class="button button-primary bp-block-user single-report-btn content-author" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
 												<?php
@@ -211,7 +211,7 @@ $admins            = get_users(
 											<?php
 										}
 									} else {
-										if ( ! in_array( $user_id, $admins ) ) {
+										if ( ! in_array( $user_id, $admins, true ) ) {
 											$member_action_text = ( 'unhide' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
 											?>
 											<a href="javascript:void(0);" class="button button-primary bp-block-user single-report-btn" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_attr( $action_label ); ?>">

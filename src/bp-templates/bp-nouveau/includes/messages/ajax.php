@@ -916,7 +916,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			$count  = 1;
-			$admins = get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) );
+			$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][] = array(
@@ -941,8 +941,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					if ( bp_is_active( 'moderation' ) ) {
 						$threads->threads[ $i ]['recipients'][ $count ]['is_user_suspended'] = bp_moderation_is_user_suspended( $recipient->user_id );
 						$threads->threads[ $i ]['recipients'][ $count ]['is_user_blocked']   = bp_moderation_is_user_blocked( $recipient->user_id );
-						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( $recipient->user_id,
-								$admins ) ) ? true : false;
+						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( $recipient->user_id, $admins, true ) ) ? true : false;
 					}
 
 					$count ++;
@@ -1804,7 +1803,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
 		$count  = 1;
-		$admins = get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) );
+		$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 		foreach ( $thread_template->thread->recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients'][ $count ] = array(
@@ -1830,8 +1829,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				if ( bp_is_active( 'moderation' ) ) {
 					$thread->thread['recipients'][ $count ]['is_user_suspended'] = bp_moderation_is_user_suspended( $recipient->user_id );
 					$thread->thread['recipients'][ $count ]['is_user_blocked']   = bp_moderation_is_user_blocked( $recipient->user_id );
-					$thread->thread['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( $recipient->user_id,
-							$admins ) ) ? true : false;
+					$thread->thread['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( (int) $recipient->user_id, $admins, true ) ) ? true : false;
 				}
 
 				$count ++;

@@ -471,7 +471,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
-		$admins      = get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) );
+		$admins      = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 
 		$actions = array(
 			'view_report'  => '',
@@ -528,7 +528,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			esc_html( $action_label )
 		);
 
-		if ( ! in_array( $user_id, $admins ) ) {
+		if ( ! in_array( $user_id, $admins, true ) ) {
 			$actions['suspend'] = sprintf(
 				'<a href="javascript:void(0);" class="bp-block-user delete" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>',
 				esc_attr( $user_id ),

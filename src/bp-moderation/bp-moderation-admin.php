@@ -228,12 +228,12 @@ function bp_moderation_admin_load() {
 
 		$content_count = 0;
 		$user_count    = 0;
-		$admins        = get_users( array( 'role' => 'administrator', 'fields' => 'ID', ) );
+		$admins        = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID', ) ) );
 
 		foreach ( $moderation_ids as $moderation_id ) {
 			$moderation_obj = new BP_Moderation();
 
-			if ( BP_Moderation_Members::$moderation_type === $moderation_obj->item_type && in_array( $moderation_obj->item_id, $admins ) ) {
+			if ( BP_Moderation_Members::$moderation_type === $moderation_obj->item_type && in_array( $moderation_obj->item_id, $admins, true ) ) {
 				continue;
 			}
 
