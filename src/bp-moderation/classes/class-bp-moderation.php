@@ -1158,7 +1158,7 @@ class BP_Moderation {
 
 		$admins = get_users(
 			array(
-				'role'   => 'Administrator',
+				'role'   => 'administrator',
 				'fields' => 'ID',
 			)
 		);
