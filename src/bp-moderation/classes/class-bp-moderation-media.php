@@ -140,7 +140,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		}
 
 		$sub_items = array();
-		if ( bp_is_active( 'activity' ) && ! empty( $media->activity_id ) ) {
+		if ( bp_is_active( 'activity' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) && ! empty( $media->activity_id ) ) {
 			$sub_items['id']   = $media->activity_id;
 			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
 		}

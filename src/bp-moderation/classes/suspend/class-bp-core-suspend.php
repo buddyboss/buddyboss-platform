@@ -48,10 +48,12 @@ class BP_Core_Suspend {
 		}
 
 		if ( bp_is_active( 'document' ) ) {
+			new BP_Suspend_Folder();
 			new BP_Suspend_Document();
 		}
 
 		if ( bp_is_active( 'media' ) ) {
+			new BP_Suspend_Album();
 			new BP_Suspend_Media();
 		}
 	}

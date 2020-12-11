@@ -179,16 +179,16 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		 * @param string $template_type Template type.
 		 */
 		protected function generate_html( $template_type = '' ) {
-			$document_ids = array();
+			$media_ids = array();
 			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
-				$document_ids[] = $item_id;
+				$media_ids[] = $item_id;
 			}
 
 			// now we have all the posts.
 			// lets do a media loop.
 			$args = array(
-				'include'      => implode( ',', $document_ids ),
-				'per_page'     => count( $document_ids ),
+				'include'      => implode( ',', $media_ids ),
+				'per_page'     => count( $media_ids ),
 				'search_terms' => false,
 			);
 

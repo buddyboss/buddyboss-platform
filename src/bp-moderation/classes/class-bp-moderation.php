@@ -348,7 +348,7 @@ class BP_Moderation {
 		if ( ! empty( $r['user_id'] ) ) {
 
 			// we added Report table user_id field support in BP_Moderation_Query so we need to take case care if table already added in joined query.
-			if ( ! strpos( "{$bp->moderation->table_name_reports} mr", $join_sql ) ) {
+			if ( empty( $join_sql ) || ! strpos( "{$bp->moderation->table_name_reports} mr", $join_sql ) ) {
 				$join_sql .= "INNER JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id ";
 			}
 

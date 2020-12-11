@@ -52,12 +52,15 @@ abstract class BP_Moderation_Abstract {
 		}
 
 		if ( ! empty( $admin_exclude ) ) {
-			$admins = array_map( 'intval', get_users(
-				array(
-					'role'   => 'administrator',
-					'fields' => 'ID',
+			$admins = array_map(
+				'intval',
+				get_users(
+					array(
+						'role'   => 'administrator',
+						'fields' => 'ID',
+					)
 				)
-			) );
+			);
 			if ( in_array( get_current_user_id(), $admins, true ) ) {
 				return true;
 			}
@@ -223,31 +226,17 @@ abstract class BP_Moderation_Abstract {
 
 		if ( ( BP_Moderation_Members::$moderation_type !== $this->item_type && bp_is_moderation_member_blocking_enable( 0 ) )
 			|| bp_is_moderation_content_reporting_enable( 0, $this->item_type ) ) {
-			$where .= '(';
+			$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
+		    AND 
+		    ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
+		}
 
-			$where .= "( 
-				( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
-				AND 
-				( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL ) 
-			)";
-
-			$blocked_query = $this->blocked_user_query();
-			if ( ! empty( $blocked_query ) ) {
-				$where .= " OR ( 
-					    ( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
-					    AND 
-					    ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )
-					    AND
-					    ( {$this->alias}.id NOT IN ( $blocked_query ) )
-					 )";
+		$blocked_query = $this->blocked_user_query();
+		if ( ! empty( $blocked_query ) ) {
+			if ( ! empty( $where ) ) {
+				$where .= ' AND ';
 			}
-
-			$where .= ' )';
-		} else {
-			$blocked_query = $this->blocked_user_query();
-			if ( ! empty( $blocked_query ) ) {
-				$where .= "( {$this->alias}.id NOT IN ( $blocked_query ) )";
-			}
+			$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
 		}
 
 		return $where;
