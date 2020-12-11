@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Suspend Activity Classes
+ * BuddyBoss Suspend Activity Comment Classes
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
@@ -24,7 +24,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	public static $type = 'activity_comment';
 
 	/**
-	 * BP_Moderation_Activity constructor.
+	 * BP_Suspend_Activity_Comment constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

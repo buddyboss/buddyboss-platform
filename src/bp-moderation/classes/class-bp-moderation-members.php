@@ -123,8 +123,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_where_sql( $where, $suspend ) {
-		$this->alias               = $suspend->alias;
-		$where['moderation_where'] = $this->exclude_where_query();
+		$this->alias = $suspend->alias;
+
+		$sql = $this->exclude_where_query();
+		if ( ! empty( $sql ) ) {
+			$where['moderation_where'] = $sql;
+		}
 
 		return $where;
 	}

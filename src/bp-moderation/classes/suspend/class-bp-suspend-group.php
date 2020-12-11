@@ -24,7 +24,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public static $type = 'groups';
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Suspend_Group constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

@@ -45,12 +45,16 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		/**
 		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() || ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
 			return;
 		}
 
 		// Remove hidden/blocked users content.
 		add_filter( 'bp_suspend_group_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+			return;
+		}
 
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
 	}
@@ -129,8 +133,12 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_where_sql( $where, $suspend ) {
-		$this->alias               = $suspend->alias;
-		$where['moderation_where'] = $this->exclude_where_query();
+		$this->alias = $suspend->alias;
+
+		$sql = $this->exclude_where_query();
+		if ( ! empty( $sql ) ) {
+			$where['moderation_where'] = $sql;
+		}
 
 		return $where;
 	}

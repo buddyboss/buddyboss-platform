@@ -219,13 +219,36 @@ abstract class BP_Moderation_Abstract {
 	 * @return string|void
 	 */
 	protected function exclude_where_query() {
-		$blocked_query = $this->blocked_user_query();
+		$where = '';
 
-		$where = "( ( ( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
-		if ( ! empty( $blocked_query ) ) {
-			$where .= " AND {$this->alias}.id IS NULL ) OR ( {$this->alias}.id NOT IN ( $blocked_query )";
+		if ( ( BP_Moderation_Members::$moderation_type !== $this->item_type && bp_is_moderation_member_blocking_enable( 0 ) )
+			|| bp_is_moderation_content_reporting_enable( 0, $this->item_type ) ) {
+			$where .= '(';
+
+			$where .= "( 
+				( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
+				AND 
+				( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL ) 
+			)";
+
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				$where .= " OR ( 
+					    ( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
+					    AND 
+					    ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )
+					    AND
+					    ( {$this->alias}.id NOT IN ( $blocked_query ) )
+					 )";
+			}
+
+			$where .= ' )';
+		} else {
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				$where .= "( {$this->alias}.id NOT IN ( $blocked_query ) )";
+			}
 		}
-		$where .= ' ) )';
 
 		return $where;
 	}
@@ -238,9 +261,12 @@ abstract class BP_Moderation_Abstract {
 	protected function blocked_user_query() {
 		$bp = buddypress();
 
-		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
-		if ( ! empty( $hidden_users_ids ) ) {
-			return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
+		if ( BP_Moderation_Members::$moderation_type !== $this->item_type && bp_is_moderation_member_blocking_enable( 0 ) ) {
+
+			$hidden_users_ids = bp_moderation_get_hidden_user_ids();
+			if ( ! empty( $hidden_users_ids ) ) {
+				return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
+			}
 		}
 
 		return false;

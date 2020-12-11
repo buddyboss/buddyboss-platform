@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Suspend Activity Classes
+ * BuddyBoss Suspend Media Classes
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
@@ -24,7 +24,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	public static $type = 'media';
 
 	/**
-	 * BP_Moderation_Media constructor.
+	 * BP_Suspend_Media constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

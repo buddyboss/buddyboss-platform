@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Suspend Activity Classes
+ * BuddyBoss Suspend Document Classes
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
@@ -24,7 +24,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public static $type = 'document';
 
 	/**
-	 * BP_Moderation_Document constructor.
+	 * BP_Suspend_Document constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

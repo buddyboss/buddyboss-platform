@@ -24,7 +24,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	public static $type = 'user';
 
 	/**
-	 * BP_Moderation_Member constructor.
+	 * BP_Suspend_Member constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

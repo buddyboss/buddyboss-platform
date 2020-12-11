@@ -24,7 +24,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public static $type = 'comment';
 
 	/**
-	 * BP_Moderation_Comment constructor.
+	 * BP_Suspend_Comment constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

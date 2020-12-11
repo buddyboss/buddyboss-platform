@@ -24,7 +24,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public static $type = 'forum';
 
 	/**
-	 * BP_Moderation_Forum constructor.
+	 * BP_Suspend_Forum constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

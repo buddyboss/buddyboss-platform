@@ -920,36 +920,37 @@ function bp_album_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,                    // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,                    // results per page
-			'sort'         => 'DESC',                   // sort ASC or DESC
-
-			'search_terms' => false,           // Pass search terms as a string
-			'exclude'      => false,           // Comma-separated list of activity IDs to exclude.
-		// want to limit the query.
-			'user_id'      => false,
-			'group_id'     => false,
-			'privacy'      => false,                    // privacy of album
-			'count_total'  => false,
+			'max'              => false,            // Maximum number of results to return.
+			'fields'           => 'all',
+			'page'             => 1,                // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,            // results per page.
+			'sort'             => 'DESC',           // sort ASC or DESC.
+			'search_terms'     => false,            // Pass search terms as a string.
+			'exclude'          => false,            // Comma-separated list of activity IDs to exclude.
+													// want to limit the query.
+			'user_id'          => false,
+			'group_id'         => false,
+			'privacy'          => false,            // privacy of album.
+			'count_total'      => false,
+			'moderation_query' => true,             // Filter for exclude moderation query.
 		),
 		'album_get'
 	);
 
 	$album = BP_Media_Album::get(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'group_id'     => $r['group_id'],
-			'privacy'      => $r['privacy'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'search_terms' => $r['search_terms'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
+			'page'             => $r['page'],
+			'per_page'         => $r['per_page'],
+			'user_id'          => $r['user_id'],
+			'group_id'         => $r['group_id'],
+			'privacy'          => $r['privacy'],
+			'max'              => $r['max'],
+			'sort'             => $r['sort'],
+			'search_terms'     => $r['search_terms'],
+			'exclude'          => $r['exclude'],
+			'count_total'      => $r['count_total'],
+			'fields'           => $r['fields'],
+			'moderation_query' => $r['moderation_query'],
 		)
 	);
 

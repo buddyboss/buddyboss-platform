@@ -24,7 +24,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public static $type = 'activity';
 
 	/**
-	 * BP_Moderation_Activity constructor.
+	 * BP_Suspend_Activity constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
