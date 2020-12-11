@@ -9,7 +9,7 @@
 $current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 $error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore
-$admins = get_users(
+$admins            = get_users(
 	array(
 		'role'   => 'administrator',
 		'fields' => 'ID',
@@ -195,47 +195,30 @@ $admins = get_users(
 											$user_action_text = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
 										}
 										?>
-                                        <a href="javascript:void(0);"
-                                           class="button button-primary bp-hide-request single-report-btn"
-                                           data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-                                           data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>"
-                                           data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-                                           data-action="<?php echo esc_attr( $action_type ); ?>"
-                                           title="<?php echo esc_html( $action_label ); ?>">
+										<a href="javascript:void(0);" class="button button-primary bp-hide-request single-report-btn" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_html( $action_label ); ?>">
 											<?php
 											echo esc_html( $action_label );
 											?>
-                                        </a>
+										</a>
 										<?php
 										if ( ! in_array( $user_id, $admins ) ) {
 											?>
-                                            <a href="javascript:void(0);"
-                                               class="button button-primary bp-block-user single-report-btn content-author"
-                                               data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user"
-                                               data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-                                               data-action="<?php echo esc_attr( $user_action_type ); ?>"
-                                               title="<?php echo esc_attr( $user_action_text ); ?>">
+											<a href="javascript:void(0);" class="button button-primary bp-block-user single-report-btn content-author" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
 												<?php
 												echo esc_html( $user_action_text );
 												?>
-                                            </a>
+											</a>
 											<?php
 										}
 									} else {
 										if ( ! in_array( $user_id, $admins ) ) {
 											$member_action_text = ( 'unhide' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
 											?>
-                                            <a href="javascript:void(0);"
-                                               class="button button-primary bp-block-user single-report-btn"
-                                               data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-                                               data-type="user"
-                                               data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-                                               data-action="<?php echo esc_attr( $action_type ); ?>"
-                                               title="<?php echo esc_attr( $action_label ); ?>">
+											<a href="javascript:void(0);" class="button button-primary bp-block-user single-report-btn" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_attr( $action_label ); ?>">
 												<?php
 												echo esc_html( $member_action_text );
 												?>
-                                            </a>
+											</a>
 											<?php
 										}
 									}
