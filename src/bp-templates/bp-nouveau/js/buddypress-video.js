@@ -736,4 +736,63 @@ window.bp = window.bp || {};
 	// Launch BP Nouveau Video Theatre.
 	bp.Nouveau.Video.Theatre.start();
 
+	/**
+	 * [Video Player description]
+	 *
+	 * @type {Object}
+	 */
+	bp.Nouveau.Video.Player = {
+
+		/**
+		 * [start description]
+		 *
+		 * @return {[type]} [description]
+		 */
+		start: function () {
+			this.setupGlobals();
+
+			// Listen to events ("Add hooks!").
+			this.addListeners();
+
+		},
+
+		/**
+		 * [setupGlobals description]
+		 *
+		 * @return {[type]} [description]
+		 */
+		setupGlobals: function () {
+		},
+
+		/**
+		 * [addListeners description]
+		 */
+		addListeners: function () {
+
+			$(document).on('click', '.video-js', this.openPlayer.bind(this));
+
+		},
+
+		openPlayer: function (event) {
+			event.preventDefault();
+			var self = this;
+			var options = {};
+			
+			// console.log("Original SRC" + this.find('source').attr("src"));
+			// let blob = await fetch(this.find('source').attr("src")).then(r => r.blob());
+			// var videoUrl= (window.URL) ? window.URL.createObjectURL(blob) : window.webkitURL.createObjectURL(blob);
+			// console.log("Blob SRC" + videoUrl);
+			// this.find('source').attr("src") = videoUrl;
+
+			videojs(self, options, function onPlayerReady() {
+				this.play();
+				this.on('ended', function () {
+				});
+			});
+		},
+	};
+
+	// Launch BP Nouveau Video Player.
+	bp.Nouveau.Video.Player.start();
+
 } )( bp, jQuery );

@@ -54,6 +54,8 @@ function bp_nouveau_video_enqueue_scripts() {
 
 		if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_video_support_enabled() || bp_is_group_messages() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
+			wp_enqueue_style( 'bp-media-videojs-css' );
+			wp_enqueue_script( 'bp-media-videojs' );
 			wp_enqueue_script( 'bp-nouveau-video' );
 			wp_enqueue_script( 'bp-exif' );
 		}

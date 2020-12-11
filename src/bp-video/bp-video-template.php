@@ -570,6 +570,66 @@ function bp_get_video_attachment_id() {
 }
 
 /**
+ * Output the video attachment ID.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_link() {
+	echo bp_get_video_link();
+}
+
+/**
+ * Return the video attachment ID.
+ *
+ * @return int The video attachment ID.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_video_link() {
+	global $video_template;
+
+	$video_link = wp_get_attachment_url( $video_template->video->attachment_id );
+	/**
+	 * Filters the video ID being displayed.
+	 *
+	 * @param int $id The video attachment ID.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_video_link', $video_link );
+}
+
+/**
+ * Output the video attachment ID.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_type() {
+	echo bp_get_video_type();
+}
+
+/**
+ * Return the video attachment ID.
+ *
+ * @return int The video attachment ID.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_video_type() {
+	global $video_template;
+	/**
+	 * Filters the video ID being displayed.
+	 *
+	 * @param int $id The video attachment ID.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_video_type', $video_template->video->attachment_data->meta->mime_type );
+}
+
+/**
  * Output the video title.
  *
  * @since BuddyBoss 1.6.0
