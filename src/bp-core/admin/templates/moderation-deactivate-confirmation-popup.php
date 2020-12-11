@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 style="display: none;">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
-			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down"
+			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="left"
 					data-bp-tooltip="
 					<?php
 					esc_attr_e(

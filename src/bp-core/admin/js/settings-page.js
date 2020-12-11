@@ -1107,7 +1107,7 @@
 			$( document ).on( 'click', '.bp-show-deactivate-popup a', function ( event ) {
 				event.preventDefault();
 				$( '#bp-hello-backdrop' ).show();
-				$( '#bp-hello-container' ).show();
+				$( '#bp-hello-container' ).show().addClass('deactivation-popup');
 				$( '#bp-hello-container' ).find( '.component-deactivate' ).attr( 'data-redirect', $( this ).attr( 'href' ) );
 				$( '#bp-hello-container' ).find( '.bp-hello-content' ).append( $( this ).parent().closest( '.row-actions' ).find( '.component-deactivate-msg' ).text() );
 			} );
@@ -1115,7 +1115,7 @@
 			// Close popup.
 			$( document ).on( 'click', '.close-modal', function () {
 				$( '#bp-hello-backdrop' ).hide();
-				$( '#bp-hello-container' ).hide();
+				$( '#bp-hello-container' ).hide().removeClass('deactivation-popup');
 				$( '#bp-hello-container' ).find( '.component-deactivate' ).removeClass( 'form-submit' );
 			} );
 

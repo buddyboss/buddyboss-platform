@@ -2233,3 +2233,29 @@ body .section-repair_community .settings fieldset .checkbox label code {
 	pointer-events: none;
 	opacity: 0.7;
 }
+
+
+/*Deactivation Popup*/
+#bp-hello-container.deactivation-popup {
+	top: 50%;
+	bottom: initial;
+	transform: translateY(-50%);
+	overflow: auto;
+	max-height: 90%;
+
+	.bp-hello-footer {
+		position: static;
+		padding: 10px 23px;
+
+		button + button {
+			margin-left: 10px;
+		}
+
+	}
+
+	.bp-hello-content {
+		height: auto;
+		padding: 20px 23px;
+	}
+
+}
