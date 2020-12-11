@@ -916,7 +916,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			$count  = 1;
-			$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
+			$admins = get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) );
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][] = array(
@@ -1804,7 +1804,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
 		$count  = 1;
-		$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
+		$admins = get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) );
 		foreach ( $thread_template->thread->recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients'][ $count ] = array(

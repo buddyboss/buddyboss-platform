@@ -4675,7 +4675,7 @@ function bp_member_get_report_link( $args = array() ) {
 	/**
 	 * Restricted Report link for admin user.
 	 */
-	$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
+	$admins = get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) );
 	if ( in_array( $args['button_attr']['data-bp-content-id'], $admins ) ) {
 		return array();
 	}
