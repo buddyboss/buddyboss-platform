@@ -340,7 +340,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $reply_id );
+			$activity_id                                    = get_post_meta( $reply_id, '_bbp_activity_id', true );
+			$related_contents[ BP_Suspend_Activity::$type ] = array( $activity_id );
 		}
 
 		if ( bp_is_active( 'document' ) ) {

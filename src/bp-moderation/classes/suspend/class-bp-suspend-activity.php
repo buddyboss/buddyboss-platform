@@ -131,9 +131,28 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				'per_page'         => 0,
 				'fields'           => 'ids',
 				'show_hidden'      => true,
-				'filter'           => array(
-					'primary_id' => $post_id,
-					'object'     => 'bbpress',
+				'filter_query'     => array(
+					'relation' => 'or',
+					'bbpress'  => array(
+						array(
+							'column' => 'item_id',
+							'value'  => $post_id,
+						),
+						array(
+							'column' => 'component',
+							'value'  => 'bbpress',
+						),
+					),
+					'group'    => array(
+						array(
+							'column' => 'secondary_item_id',
+							'value'  => $post_id,
+						),
+						array(
+							'column' => 'component',
+							'value'  => 'groups',
+						),
+					),
 				),
 			)
 		);
