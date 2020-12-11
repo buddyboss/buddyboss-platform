@@ -471,12 +471,12 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
+		$admins      = get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) );
 
 		$actions = array(
 			'view_report'  => '',
 			'view_content' => '',
 			'hide'         => '',
-			'suspend'      => '',
 		);
 
 		$moderation_args = array(
@@ -528,14 +528,16 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			esc_html( $action_label )
 		);
 
-		$actions['suspend'] = sprintf(
-			'<a href="javascript:void(0);" class="bp-block-user delete" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>',
-			esc_attr( $user_id ),
-			esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
-			esc_attr( $user_action_type ),
-			esc_attr( $user_action_label ),
-			esc_html( $user_action_label )
-		);
+		if ( ! in_array( $user_id, $admins ) ) {
+			$actions['suspend'] = sprintf(
+				'<a href="javascript:void(0);" class="bp-block-user delete" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+				esc_attr( $user_id ),
+				esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
+				esc_attr( $user_action_type ),
+				esc_attr( $user_action_label ),
+				esc_html( $user_action_label )
+			);
+		}
 
 		printf( '<strong>%s</strong> %s', esc_html( bp_moderation_get_content_type( $item['item_type'] ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 
