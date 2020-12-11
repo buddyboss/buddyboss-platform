@@ -52,7 +52,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
 
 		// button class.
-		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
 	}
 
 	/**
@@ -68,21 +68,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$url = get_comment_link( $comment_id );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $comment_id Comment id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $comment_id ) {
-		$comment = get_comment( $comment_id );
-
-		return ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 	}
 
 	/**
@@ -151,6 +136,21 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $comment_id Comment id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $comment_id ) {
+		$comment = get_comment( $comment_id );
+
+		return ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 	}
 
 	/**
@@ -266,6 +266,18 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
+		$link .= bp_moderation_get_report_button(
+			array(
+				'id'                => 'comment_report',
+				'component'         => 'moderation',
+				'must_be_logged_in' => true,
+				'button_attr'       => array(
+					'data-bp-content-id'   => $comment->comment_ID,
+					'data-bp-content-type' => self::$moderation_type,
+				),
+			)
+		);
+
 		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
 			$link = '';
 		}
@@ -293,26 +305,18 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to modify the button class
+	 * Function to modify the button args
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array  $button      Button args.
-	 * @param string $item_type   Content type.
-	 * @param string $is_reported Item reported.
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
 	 *
 	 * @return array
 	 */
-	public function update_button_args( $button, $item_type, $is_reported ) {
+	public function update_button_args( $args, $item_id ) {
+		$args['button_attr']['class'] = 'report-content';
 
-		if ( self::$moderation_type === $item_type ) {
-			if ( $is_reported ) {
-				$button['button_attr']['class'] = 'reported-content';
-			} else {
-				$button['button_attr']['class'] = 'report-content';
-			}
-		}
-
-		return $button;
+		return $args;
 	}
 }

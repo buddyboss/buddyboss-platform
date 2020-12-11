@@ -155,6 +155,7 @@ abstract class BP_Moderation_Abstract {
 	 */
 	public static function hide( $args ) {
 		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+
 		$moderation->hide();
 
 		return $moderation;

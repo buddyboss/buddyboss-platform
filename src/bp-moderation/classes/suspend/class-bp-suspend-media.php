@@ -191,13 +191,17 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		$bp_background_updater->push_to_queue(
-			array(
-				'callback' => array( $this, 'hide_related_content' ),
-				'args'     => array( $media_id, $hide_sitewide, $args ),
-			)
-		);
-		$bp_background_updater->save()->dispatch();
+		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+			$this->hide_related_content( $media_id, $hide_sitewide, $args );
+		} else {
+			$bp_background_updater->push_to_queue(
+				array(
+					'callback' => array( $this, 'hide_related_content' ),
+					'args'     => array( $media_id, $hide_sitewide, $args ),
+				)
+			);
+			$bp_background_updater->save()->dispatch();
+		}
 	}
 
 	/**
@@ -227,13 +231,17 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		$bp_background_updater->push_to_queue(
-			array(
-				'callback' => array( $this, 'unhide_related_content' ),
-				'args'     => array( $media_id, $hide_sitewide, $force_all, $args ),
-			)
-		);
-		$bp_background_updater->save()->dispatch();
+		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+			$this->unhide_related_content( $media_id, $hide_sitewide, $force_all, $args );
+		} else {
+			$bp_background_updater->push_to_queue(
+				array(
+					'callback' => array( $this, 'unhide_related_content' ),
+					'args'     => array( $media_id, $hide_sitewide, $force_all, $args ),
+				)
+			);
+			$bp_background_updater->save()->dispatch();
+		}
 	}
 
 	/**
