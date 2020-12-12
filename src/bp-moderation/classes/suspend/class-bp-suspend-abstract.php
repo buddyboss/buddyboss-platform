@@ -52,12 +52,15 @@ abstract class BP_Suspend_Abstract {
 		}
 
 		if ( ! empty( $admin_exclude ) ) {
-			$admins = array_map( 'intval', get_users(
-				array(
-					'role'   => 'administrator',
-					'fields' => 'ID',
+			$admins = array_map(
+				'intval',
+				get_users(
+					array(
+						'role'   => 'administrator',
+						'fields' => 'ID',
+					)
 				)
-			) );
+			);
 			if ( in_array( get_current_user_id(), $admins, true ) ) {
 				return true;
 			}

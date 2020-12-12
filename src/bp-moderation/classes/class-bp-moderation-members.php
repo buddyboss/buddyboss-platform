@@ -41,7 +41,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( is_admin() && ! wp_doing_ajax() && self::admin_bypass_check() ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
 			return;
 		}
 

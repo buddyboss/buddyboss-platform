@@ -35,9 +35,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-
 		// delete reply moderation data when actual reply deleted.
-		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
+		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
 
 		/**
 		 * Moderation code should not add for WordPress backend oror Bypass argument passed for admin
