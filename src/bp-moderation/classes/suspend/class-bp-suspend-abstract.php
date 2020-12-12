@@ -184,4 +184,66 @@ abstract class BP_Suspend_Abstract {
 		}
 	}
 
+	/**
+	 * Handle new suspend entry.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param object $suspended_record Suspended Item Record.
+	 * @param int    $item_id          New item ID.
+	 * @param int    $user_id          New item User ID.
+	 */
+	public function handle_new_suspend_entry( $suspended_record, $item_id, $user_id ) {
+
+		if ( empty( $suspended_record ) || empty( $item_id ) || empty( $user_id ) ) {
+			return;
+		}
+
+		$hide_sitewide  = $suspended_record->hide_sitewide;
+		$hide_parent    = $suspended_record->hide_parent;
+		$user_suspended = $suspended_record->user_suspended;
+
+		$suspended_id   = $suspended_record->id;
+		$reported_users = BP_Core_Suspend::get_suspend_detail( $suspended_id );
+		if (
+			! empty( $reported_users )
+			|| ! empty( $hide_sitewide )
+			|| ! empty( $hide_parent )
+			|| ! empty( $user_suspended )
+		) {
+			$suspend_args = array(
+				'item_id'        => $item_id,
+				'item_type'      => $this->item_type,
+				'user_suspended' => $user_suspended,
+				'hide_parent'    => false,
+				'hide_sitewide'  => false,
+			);
+
+			if ( true === $hide_sitewide && BP_Moderation_Members::$moderation_type !== $reported_users->item_type ) {
+				$suspend_args['hide_parent'] = $hide_sitewide;
+			}
+
+			if ( BP_Moderation_Members::$moderation_type === $reported_users->item_type ) {
+				$suspend_args['hide_parent']    = false;
+				$suspend_args['user_suspended'] = $hide_sitewide;
+			} elseif ( true === $hide_sitewide ) {
+				$suspend_args['hide_parent'] = $hide_sitewide;
+			}
+
+			$current_suspended_id = BP_Core_Suspend::add_suspend( $suspend_args );
+
+			if ( ! empty( $reported_users ) ) {
+				$reported_users[] = $user_id;
+				foreach ( $reported_users as $user_id ) {
+					BP_Core_Suspend::add_suspend_details(
+						array(
+							'suspend_id' => $current_suspended_id,
+							'user_id'    => $user_id,
+						)
+					);
+				}
+			}
+		}
+	}
+
 }

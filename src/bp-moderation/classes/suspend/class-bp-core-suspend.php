@@ -96,9 +96,9 @@ class BP_Core_Suspend {
 			unset( $args['item_id'] );
 			unset( $args['item_type'] );
 
-			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
+			$wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {
-			$flag = $wpdb->insert( $table_name, $args ); // phpcs:ignore
+			$wpdb->insert( $table_name, $args ); // phpcs:ignore
 		}
 
 		if ( ! empty( $member ) && empty( $action_suspend ) ) {
@@ -110,7 +110,7 @@ class BP_Core_Suspend {
 			);
 		}
 
-		return $flag;
+		return ! empty( $recode ) ? $recode->id : $wpdb->insert_id;
 	}
 
 	/**
@@ -130,6 +130,25 @@ class BP_Core_Suspend {
 		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
 
 		return ! empty( $result ) ? $result : false;
+	}
+
+	/**
+	 * Get Suspend details entry
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $suspend_id suspend id.
+	 *
+	 * @return array
+	 */
+	public static function get_suspend_detail( $suspend_id ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		$table_name = "{$bp->table_prefix}bp_suspend_details";
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql        = $wpdb->prepare( "SELECT user_id FROM  {$table_name} WHERE suspend_id = %d", $suspend_id );
+		return $wpdb->get_col( $sql ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
