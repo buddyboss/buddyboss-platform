@@ -353,9 +353,14 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$sub_items = bp_moderation_get_sub_items( $activity->id, BP_Moderation_Activity::$moderation_type );
+		$sub_items     = bp_moderation_get_sub_items( $activity->id, BP_Moderation_Activity::$moderation_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $activity->id;
 		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Activity::$moderation_type;
+
+		if ( 'groups' === $activity->component ) {
+			$item_sub_id   = $activity->item_id;
+			$item_sub_type = BP_Moderation_Groups::$moderation_type;
+		}
 
 		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 

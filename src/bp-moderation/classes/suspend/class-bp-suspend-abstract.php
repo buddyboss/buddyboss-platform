@@ -219,11 +219,11 @@ abstract class BP_Suspend_Abstract {
 				'hide_sitewide'  => false,
 			);
 
-			if ( true === $hide_sitewide && BP_Moderation_Members::$moderation_type !== $reported_users->item_type ) {
+			if ( true === $hide_sitewide && BP_Moderation_Members::$moderation_type !== $suspended_record->item_type ) {
 				$suspend_args['hide_parent'] = $hide_sitewide;
 			}
 
-			if ( BP_Moderation_Members::$moderation_type === $reported_users->item_type ) {
+			if ( BP_Moderation_Members::$moderation_type === $suspended_record->item_type ) {
 				$suspend_args['hide_parent']    = false;
 				$suspend_args['user_suspended'] = $hide_sitewide;
 			} elseif ( true === $hide_sitewide ) {
