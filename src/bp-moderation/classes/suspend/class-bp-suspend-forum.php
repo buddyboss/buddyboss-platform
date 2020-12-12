@@ -50,6 +50,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_forums_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forums_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bbp_forums_forum_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -177,6 +179,25 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Restrict Single item
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $post     Current forum object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $post ) {
+
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post->id, self::$type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 
 	/**

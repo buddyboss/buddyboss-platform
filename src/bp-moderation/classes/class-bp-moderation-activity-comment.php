@@ -35,11 +35,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Check Component is disabled.
-		if ( ! bp_is_active( 'activity' ) ) {
-			return;
-		}
-
 		// Delete comment moderation data when actual comment is deleted.
 		add_action( 'bp_activity_delete_comment', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
 		add_action( 'bp_activity_deleted_activities', array( $this, 'sync_comment_moderation_data_on_delete' ), 10 );
@@ -47,19 +42,24 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		/**
 		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() || ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
 			return;
 		}
 
-		// Remove hidden/blocked users content.
+		/**
+		 * If moderation setting enabled for this content then it'll filter hidden content.
+		 * And IF moderation setting enabled for member then it'll filter blocked user content.
+		 */
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
-
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
-		// button.
-		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
+		// Code after below condition should not execute if moderation setting for this content disabled.
+		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+			return;
+		}
 
-		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
+		// Update report button.
+		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 	}
 
 	/**
@@ -182,7 +182,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( BP_Core_Suspend::check_hidden_content( $activities_template->activity->current_comment->id, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $activities_template->activity->current_comment->id ) ) {
 			return 'activity/blocked-comment.php';
 		}
 
@@ -220,24 +220,5 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $sub_items;
-	}
-
-	/**
-	 * Validate the activity is valid or not.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param boolean $restrict Check the item is valid or not.
-	 * @param object  $activity Current activity object.
-	 *
-	 * @return false
-	 */
-	public function restrict_single_item( $restrict, $activity ) {
-
-		if ( 'activity_comment' === $activity->type && bp_moderation_is_content_hidden( (int) $activity->id, self::$moderation_type ) ) {
-			return false;
-		}
-
-		return $restrict;
 	}
 }

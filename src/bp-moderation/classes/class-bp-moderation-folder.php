@@ -33,11 +33,6 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
-		// Check Component is disabled.
-		if ( ! bp_is_active( 'document' ) ) {
-			return;
-		}
-
 		/**
 		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin or Reporting setting disabled
 		 */
@@ -45,7 +40,10 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content.
+		/**
+		 * If moderation setting enabled for this content then it'll filter hidden content.
+		 * And IF moderation setting enabled for member then it'll filter blocked user content.
+		 */
 		add_filter( 'bp_suspend_document_folder_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 

@@ -10,18 +10,33 @@
 defined( 'ABSPATH' ) || exit;
 
 new BP_Core_Suspend();
-new BP_Moderation_Activity();
-new BP_Moderation_Activity_Comment();
-new BP_Moderation_Groups();
 new BP_Moderation_Members();
-new BP_Moderation_Forums();
-new BP_Moderation_Forum_Topics();
-new BP_Moderation_Forum_Replies();
-new BP_Moderation_Folder();
-new BP_Moderation_Document();
-new BP_Moderation_Album();
-new BP_Moderation_Media();
 new BP_Moderation_Comment();
+
+if ( bp_is_active( 'activity' ) ) {
+	new BP_Moderation_Activity();
+	new BP_Moderation_Activity_Comment();
+}
+
+if ( bp_is_active( 'groups' ) ) {
+	new BP_Moderation_Groups();
+}
+
+if ( bp_is_active( 'forums' ) ) {
+	new BP_Moderation_Forums();
+	new BP_Moderation_Forum_Topics();
+	new BP_Moderation_Forum_Replies();
+}
+
+if ( bp_is_active( 'document' ) ) {
+	new BP_Moderation_Folder();
+	new BP_Moderation_Document();
+}
+
+if ( bp_is_active( 'media' ) ) {
+	new BP_Moderation_Album();
+	new BP_Moderation_Media();
+}
 
 /**
  * Update modebypass Param

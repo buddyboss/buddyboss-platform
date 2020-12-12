@@ -245,6 +245,8 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Blocked User filter query
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return false|string
 	 */
 	protected function blocked_user_query() {
@@ -258,6 +260,43 @@ abstract class BP_Moderation_Abstract {
 			}
 		}
 
+		return false;
+	}
+
+	/**
+	 * Reporting Setting enabled for current content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return bool
+	 */
+	protected function is_reporting_enabled() {
+		return bp_is_moderation_content_reporting_enable( 0, $this->item_type );
+	}
+
+	/**
+	 * Member blocking content enabled
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return bool
+	 */
+	protected function is_member_blocking_enabled() {
+		return bp_is_moderation_member_blocking_enable( 0 );
+	}
+
+	/**
+	 * Check content is hidden or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return bool
+	 */
+	protected function is_content_hidden( $item_id ) {
+		if ( ( $this->is_member_blocking_enabled() && BP_Core_Suspend::check_blocked_content( $item_id, $this->item_type ) ) ||
+			( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+			return true;
+		}
 		return false;
 	}
 }

@@ -17,6 +17,10 @@ defined( 'ABSPATH' ) || exit;
 class BP_Core_Suspend {
 
 	/**
+	 * Core function
+	 */
+
+	/**
 	 * BP_Core_Suspend constructor.
 	 */
 	public function __construct() {
@@ -127,7 +131,7 @@ class BP_Core_Suspend {
 		global $wpdb;
 		$bp = buddypress();
 
-		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s limit 1", $item_id, $item_type ) ); // phpcs:ignore
 
 		return ! empty( $result ) ? $result : false;
 	}
@@ -166,7 +170,34 @@ class BP_Core_Suspend {
 
 		$table_name = "{$bp->table_prefix}bp_suspend_details";
 
-		return $wpdb->insert( $table_name, $args ); // phpcs:ignore
+		if ( ! empty( $args['suspend_id'] ) || ! empty( $args['user_id'] ) ) {
+			if ( ! self::get_recode_details( $args['suspend_id'], $args['user_id'] ) ) {
+				return $wpdb->insert( $table_name, $args ); // phpcs:ignore
+			}
+		}
+	}
+
+	/**
+	 * Suspend Details Funcations
+	 */
+
+	/**
+	 * Function to get suspend entry
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $suspend_id Suspend id.
+	 * @param int $user_id    User id.
+	 *
+	 * @return array|false|object|void
+	 */
+	public static function get_recode_details( $suspend_id, $user_id ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id = %d AND sd.user_id = %d limit 1", (int) $suspend_id, (int) $user_id ) ); // phpcs:ignore
+
+		return ! empty( $result );
 	}
 
 	/**
@@ -240,6 +271,10 @@ class BP_Core_Suspend {
 	}
 
 	/**
+	 * Conditional function
+	 */
+
+	/**
 	 * Function to check whether content is hide or not.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -256,6 +291,30 @@ class BP_Core_Suspend {
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
 
 		return ! empty( $result );
+	}
+
+	/**
+	 * Function to check whether content is related to blocked member.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
+	 *
+	 * @return bool
+	 */
+	public static function check_blocked_content( $item_id, $item_type ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
+		if ( ! empty( $hidden_users_ids ) ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend s INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s  ) WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type ) ); // phpcs:ignore
+
+			return ! empty( $result );
+		}
+
+		return false;
 	}
 
 	/**

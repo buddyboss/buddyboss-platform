@@ -50,6 +50,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_activity_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -230,6 +232,25 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Restrict Single item.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $activity Current activity object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $activity ) {
+
+		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 
 	/**

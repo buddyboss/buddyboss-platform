@@ -50,6 +50,8 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -149,6 +151,23 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Restrict Single item.
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $group    Current group object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $group ) {
+
+		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 
 	/**
