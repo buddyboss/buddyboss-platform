@@ -21,7 +21,7 @@
            href="#">
            <img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php bp_video_title(); ?>" class="lazy"/>
         </a>-->
-        <video id="video-<?php bp_video_id(); ?>" class="video-js" controls preload="auto" poster="<?php bp_video_attachment_image(); ?>" data-setup='{}'>
+        <video id="video-<?php bp_video_id(); ?>" class="video-js" controls preload="auto" poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true}'>
             <source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
         </video>
         <?php
