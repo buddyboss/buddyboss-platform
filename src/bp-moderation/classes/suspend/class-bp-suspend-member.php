@@ -36,6 +36,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_member' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_member' ), 10, 4 );
 
+		// Delete user moderation data when actual user is deleted.
+		add_action( 'deleted_user', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -464,5 +467,21 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		return $related_contents;
+	}
+
+	/**
+	 * Delete moderation data when actual user is deleted
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $user_id user id of the user that is being deleted.
+	 */
+	public function sync_moderation_data_on_delete( $user_id ) {
+
+		if ( empty( $user_id ) ) {
+			return;
+		}
+
+		BP_Core_Suspend::delete_suspend( $user_id, $this->item_type );
 	}
 }
