@@ -1147,7 +1147,7 @@
 					if ( msg ) {
 						e.preventDefault();
 						$( '#bp-hello-backdrop' ).show();
-						$( '#bp-hello-container' ).show();
+						$( '#bp-hello-container' ).show().addClass('deactivation-popup');
 						$( '#bp-hello-container' ).find( '.bp-hello-content' ).html( msg );
 						$( '#bp-hello-container' ).find( '.component-deactivate' ).addClass( 'form-submit' );
 					}
