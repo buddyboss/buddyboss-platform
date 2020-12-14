@@ -273,6 +273,16 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			}
 		}
 
+		if ( bp_is_active( 'document' ) ) {
+			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_group_folder_ids( $group_id );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_group_document_ids( $group_id );
+		}
+
+		if ( bp_is_active( 'media' ) ) {
+			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id );
+		}
+
 		return $related_contents;
 	}
 

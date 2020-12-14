@@ -81,6 +81,34 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Get Blocked group's media ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $group_id group id.
+	 *
+	 * @return array
+	 */
+	public static function get_group_media_ids( $group_id ) {
+		$media_ids = array();
+
+		$medias = bp_media_get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'group_id'         => $group_id,
+			)
+		);
+
+		if ( ! empty( $medias['medias'] ) ) {
+			$media_ids = $medias['medias'];
+		}
+
+		return $media_ids;
+	}
+
+	/**
 	 * Get Media ids of blocked item [ Forums/topics/replies/activity etc ] from meta
 	 *
 	 * @param int    $item_id  item id.

@@ -81,6 +81,34 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Get Blocked group's album ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $group_id group id.
+	 *
+	 * @return array
+	 */
+	public static function get_group_album_ids( $group_id ) {
+		$album_ids = array();
+
+		$albums = bp_album_get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'group_id'         => $group_id,
+			)
+		);
+
+		if ( ! empty( $albums['albums'] ) ) {
+			$album_ids = $albums['albums'];
+		}
+
+		return $album_ids;
+	}
+
+	/**
 	 * Prepare album Join SQL query to filter blocked album
 	 *
 	 * @since BuddyBoss 2.0.0

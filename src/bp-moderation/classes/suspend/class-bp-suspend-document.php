@@ -81,6 +81,34 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Get Blocked group's document ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $group_id group id.
+	 *
+	 * @return array
+	 */
+	public static function get_group_document_ids( $group_id ) {
+		$document_ids = array();
+
+		$documents = BP_Document::get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'group_id'         => $group_id,
+			)
+		);
+
+		if ( ! empty( $documents['documents'] ) ) {
+			$document_ids = $documents['documents'];
+		}
+
+		return $document_ids;
+	}
+
+	/**
 	 * Get Document ids of blocked item [ Forums/topics/replies/activity etc ] from meta
 	 *
 	 * @param int    $item_id  item id.

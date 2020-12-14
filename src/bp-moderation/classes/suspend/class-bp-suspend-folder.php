@@ -81,6 +81,34 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Get Blocked group's  folder ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $group_id Group id.
+	 *
+	 * @return array
+	 */
+	public static function get_group_folder_ids( $group_id ) {
+		$folder_ids = array();
+
+		$folders = BP_Document_Folder::get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'group_id'         => $group_id,
+			)
+		);
+
+		if ( ! empty( $folders['folders'] ) ) {
+			$folder_ids = $folders['folders'];
+		}
+
+		return $folder_ids;
+	}
+
+	/**
 	 * Prepare folder Join SQL query to filter blocked folder
 	 *
 	 * @since BuddyBoss 2.0.0
