@@ -38,6 +38,9 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 		add_action( 'bp_document_folder_after_save', array( $this, 'update_document_folder_after_save' ), 10, 1 );
 
+		// Delete moderation data when document folder is deleted.
+		add_action( 'bp_document_folder_after_delete', array( $this, 'update_document_folder_after_delete' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -293,5 +296,21 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		}
 
 		self::handle_new_suspend_entry( $suspended_record, $document_folder->id, $document_folder->user_id );
+	}
+
+	/**
+	 * Update the suspend table to delete the folder.
+	 *
+	 * @param array $folders Array of document folders.
+	 */
+	public function update_document_folder_after_delete( $folders ) {
+
+		if ( empty( $folders ) ) {
+			return;
+		}
+
+		foreach ( $folders as $folder ) {
+			BP_Core_Suspend::delete_suspend( $folder->id, $this->item_type );
+		}
 	}
 }
