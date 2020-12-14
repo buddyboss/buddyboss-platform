@@ -39,6 +39,9 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		$topic_post_type = bbp_get_topic_post_type();
 		add_action( "save_post_{$topic_post_type}", array( $this, 'update_topic_after_save' ), 10, 2 );
 
+		// Delete moderation data when actual topic deleted.
+		add_action( 'after_delete_post', array( $this, 'update_topic_after_delete' ), 10, 2 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -376,5 +379,20 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		}
 
 		self::handle_new_suspend_entry( $suspended_record, $post_id, $post->post_author );
+	}
+
+	/**
+	 * Update the suspend table to delete a topic.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 */
+	public function update_topic_after_delete( $post_id, $post ) {
+
+		if ( empty( $post_id ) || bbp_get_topic_post_type() !== $post->post_type ) {
+			return;
+		}
+
+		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
 	}
 }

@@ -35,9 +35,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// delete topic moderation data when actual topic deleted.
-		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
-
 		/**
 		 * Moderation code should not add for WordPress backend oror Bypass argument passed for admin
 		 */
@@ -102,23 +99,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Discussion', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Function to delete topic moderation data when actual topic is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int    $topic_id topic id being deleted.
-	 * @param object $topic    topic data.
-	 */
-	public function sync_moderation_data_on_delete( $topic_id, $topic ) {
-		if ( ! empty( $topic_id ) && ! empty( $topic ) && bbp_get_topic_post_type() === $topic->post_type ) {
-			$moderation_obj = new BP_Moderation( $topic_id, self::$moderation_type );
-			if ( ! empty( $moderation_obj->id ) ) {
-				$moderation_obj->delete( true );
-			}
-		}
 	}
 
 	/**

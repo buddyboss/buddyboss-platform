@@ -35,9 +35,6 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// delete reply moderation data when actual reply deleted.
-		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
-
 		/**
 		 * Moderation code should not add for WordPress backend oror Bypass argument passed for admin
 		 */
@@ -102,23 +99,6 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Reply', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Function to delete reply moderation data when actual reply is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int    $reply_id reply id being deleted.
-	 * @param object $reply    reply data.
-	 */
-	public function sync_moderation_data_on_delete( $reply_id, $reply ) {
-		if ( ! empty( $reply_id ) && ! empty( $reply ) && bbp_get_reply_post_type() === $reply->post_type ) {
-			$moderation_obj = new BP_Moderation( $reply_id, self::$moderation_type );
-			if ( ! empty( $moderation_obj->id ) ) {
-				$moderation_obj->delete( true );
-			}
-		}
 	}
 
 	/**
