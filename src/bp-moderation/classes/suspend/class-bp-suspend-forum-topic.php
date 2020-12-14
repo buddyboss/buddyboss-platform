@@ -37,10 +37,10 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_topic' ), 10, 4 );
 
 		$topic_post_type = bbp_get_topic_post_type();
-		add_action( "save_post_{$topic_post_type}", array( $this, 'update_topic_after_save' ), 10, 2 );
+		add_action( "save_post_{$topic_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
 		// Delete moderation data when actual topic deleted.
-		add_action( 'after_delete_post', array( $this, 'update_topic_after_delete' ), 10, 2 );
+		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -355,10 +355,12 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
 	 */
-	public function update_topic_after_save( $post_id, $post ) {
+	public function sync_moderation_data_on_save( $post_id, $post ) {
 
 		if ( empty( $post_id ) || empty( $post->ID ) ) {
 			return;
@@ -384,10 +386,12 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete a topic.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
 	 */
-	public function update_topic_after_delete( $post_id, $post ) {
+	public function sync_moderation_data_on_delete( $post_id, $post ) {
 
 		if ( empty( $post_id ) || bbp_get_topic_post_type() !== $post->post_type ) {
 			return;

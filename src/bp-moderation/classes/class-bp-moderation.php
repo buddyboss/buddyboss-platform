@@ -381,6 +381,10 @@ class BP_Moderation {
 		if ( ! empty( $r['in_types'] ) ) {
 			$in_types                     = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
 			$where_conditions['in_types'] = "ms.item_type IN ({$in_types})";
+		} else {
+			$content_type                 = bp_moderation_content_types();
+			$in_types                     = "'" . implode( "', '", wp_parse_slug_list( array_keys( $content_type ) ) ) . "'";
+			$where_conditions['in_types'] = "ms.item_type IN ({$in_types})";
 		}
 
 		// The specified items type to which you want to limit the query..
