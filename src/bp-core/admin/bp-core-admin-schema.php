@@ -1201,7 +1201,7 @@ function bp_core_migrate_spam_users() {
 	if ( ! empty( $spam_users ) ) {
 		foreach ( $spam_users as $spam_user ) {
 			BP_Suspend_Member::suspend_user( $spam_user->ID );
-			$wpdb->update( $wpdb->users, array( 'user_status' => 0 ), array( 'ID' => $spam_user->ID ) ); //phpcs:ignore.
+			bp_core_process_spammer_status( $spam_user->ID, 'ham' );
 		}
 	}
 }
