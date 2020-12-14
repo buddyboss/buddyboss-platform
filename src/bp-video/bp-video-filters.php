@@ -63,6 +63,9 @@ add_action( 'init', 'bp_video_download_url_file' );
 
 add_action( 'bp_activity_after_email_content', 'bp_video_activity_after_email_content' );
 
+add_image_size( 'bp-video-thumbnail', 400, 400 );
+add_image_size( 'bp-activity-video-thumbnail', 1600, 1600 );
+
 /**
  * Add video theatre template for activity pages
  */
