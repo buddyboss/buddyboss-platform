@@ -13,7 +13,7 @@
 			<div class="modal-wrapper">
 				<div class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 						<a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
 							<span class="bb-icon bb-icon-close"></span>
@@ -21,7 +21,7 @@
 					</header>
 
 					<div class="bb-field-wrap">
-						<div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
+						<div class="bb-dropzone-wrap bp-media-upload-tab bp-upload-tab-content" id="bp-dropzone-content">
 							<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
 							<div class="media-uploader-post-content">
 								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
