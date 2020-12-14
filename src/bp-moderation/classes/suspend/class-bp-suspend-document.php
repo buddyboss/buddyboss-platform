@@ -36,7 +36,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_document' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_document' ), 10, 4 );
 
-		add_action( 'bp_document_after_save', array( $this, 'update_document_after_save' ), 10, 1 );
+		add_action( 'bp_document_after_save', array( $this, 'sync_moderation_data_on_save' ), 10, 1 );
 
 		// Delete moderation data when document is deleted.
 		add_action( 'bp_document_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
@@ -294,9 +294,11 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param BP_Document $document Current instance of document item being saved. Passed by reference.
 	 */
-	public function update_document_after_save( $document ) {
+	public function sync_moderation_data_on_save( $document ) {
 
 		if ( empty( $document ) || empty( $document->id ) ) {
 			return;

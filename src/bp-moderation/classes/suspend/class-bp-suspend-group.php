@@ -36,7 +36,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_group' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_group' ), 10, 4 );
 
-		add_action( 'groups_group_after_save', array( $this, 'update_group_after_save' ), 10, 1 );
+		add_action( 'groups_group_after_save', array( $this, 'sync_moderation_data_on_save' ), 10, 1 );
 
 		// Delete moderation data when group is deleted.
 		add_action( 'bp_groups_delete_group', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
@@ -292,9 +292,11 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new group created.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param BP_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
 	 */
-	public function update_group_after_save( $group ) {
+	public function sync_moderation_data_on_save( $group ) {
 
 		if ( empty( $group ) || empty( $group->id ) ) {
 			return;

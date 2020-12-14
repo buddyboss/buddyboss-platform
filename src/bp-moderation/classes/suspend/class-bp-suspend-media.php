@@ -36,7 +36,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_media' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_media' ), 10, 4 );
 
-		add_action( 'bp_media_after_save', array( $this, 'update_media_after_save' ), 10, 1 );
+		add_action( 'bp_media_after_save', array( $this, 'sync_moderation_data_on_save' ), 10, 1 );
 
 		// Delete moderation data when media is deleted.
 		add_action( 'bp_media_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
@@ -294,9 +294,11 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param BP_Media $media Current instance of media item being saved. Passed by reference.
 	 */
-	public function update_media_after_save( $media ) {
+	public function sync_moderation_data_on_save( $media ) {
 
 		if ( empty( $media ) || empty( $media->id ) ) {
 			return;
