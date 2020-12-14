@@ -38,6 +38,9 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		add_action( 'bp_media_after_save', array( $this, 'update_media_after_save' ), 10, 1 );
 
+		// Delete moderation data when media is deleted.
+		add_action( 'bp_media_after_delete', array( $this, 'update_media_after_delete' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -314,5 +317,21 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		}
 
 		self::handle_new_suspend_entry( $suspended_record, $media->id, $media->user_id );
+	}
+
+	/**
+	 * Update the suspend table to delete the group.
+	 *
+	 * @param array $medias Array of media.
+	 */
+	public function update_media_after_delete( $medias ) {
+
+		if ( empty( $medias ) ) {
+			return;
+		}
+
+		foreach ( $medias as $media ) {
+			BP_Core_Suspend::delete_suspend( $media->id, $this->item_type );
+		}
 	}
 }

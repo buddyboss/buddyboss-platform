@@ -38,6 +38,9 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 
 		add_action( 'update_media_album_after_save', array( $this, 'update_media_album_after_save' ), 10, 1 );
 
+		// Delete moderation data when album is deleted.
+		add_action( 'update_media_album_after_save', array( $this, 'update_album_after_delete' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -293,5 +296,21 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		}
 
 		self::handle_new_suspend_entry( $suspended_record, $album->id, $album->user_id );
+	}
+
+	/**
+	 * Update the suspend table to delete the album.
+	 *
+	 * @param array $albums Array of media albums.
+	 */
+	public function update_album_after_delete( $albums ) {
+
+		if ( empty( $albums ) ) {
+			return;
+		}
+
+		foreach ( $albums as $album ) {
+			BP_Core_Suspend::delete_suspend( $album->id, $this->item_type );
+		}
 	}
 }
