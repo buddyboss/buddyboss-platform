@@ -36,6 +36,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_album' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_album' ), 10, 4 );
 
+		// Add moderation data when album is added.
 		add_action( 'update_media_album_after_save', array( $this, 'sync_moderation_data_on_save' ), 10, 1 );
 
 		// Delete moderation data when album is deleted.

@@ -37,6 +37,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_forum' ), 10, 4 );
 
 		$forum_post_type = bbp_get_forum_post_type();
+		// Add moderation data when forum is added.
 		add_action( "save_post_{$forum_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
 		// Delete moderation data when actual forum deleted.

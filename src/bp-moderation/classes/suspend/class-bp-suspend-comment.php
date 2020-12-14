@@ -35,10 +35,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_comment' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_comment' ), 10, 4 );
 
-		/**
-		 * Fires immediately after a comment is inserted into the database.
-		 */
+		// Add moderation data when actual post comment is added.
 		add_action( 'comment_post', array( $this, 'sync_moderation_data_on_save' ), 10, 3 );
+
+		// Delete moderation data when post comment is deleted.
+		add_action( 'delete_comment', array( $this, 'sync_moderation_data_on_delete' ), 10, 3 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -371,7 +372,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function sync_moderation_data_on_save( $comment_id, $comment_approved, $commentdata ) {
 
-		if ( empty( $comment_id ) ) {
+		if ( empty( $comment_id ) || empty( $commentdata ) ) {
 			return;
 		}
 
@@ -390,5 +391,21 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		self::handle_new_suspend_entry( $suspended_record, $comment_id, $commentdata->user_id );
+	}
+
+	/**
+	 * Update the suspend table to delete the post comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $comment_id The comment ID.
+	 */
+	public function sync_moderation_data_on_delete( $comment_id ) {
+
+		if ( empty( $comment_id ) ) {
+			return;
+		}
+
+		BP_Core_Suspend::delete_suspend( $comment_id, $this->item_type );
 	}
 }

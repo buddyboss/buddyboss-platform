@@ -37,6 +37,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_reply' ), 10, 4 );
 
 		$reply_post_type = bbp_get_reply_post_type();
+		// Add moderation data when reply is added.
 		add_action( "save_post_{$reply_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
 		// Delete moderation data when actual reply deleted.

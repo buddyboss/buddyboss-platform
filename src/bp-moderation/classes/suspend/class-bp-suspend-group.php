@@ -36,6 +36,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_group' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_group' ), 10, 4 );
 
+		// Add moderation data when group is added.
 		add_action( 'groups_group_after_save', array( $this, 'sync_moderation_data_on_save' ), 10, 1 );
 
 		// Delete moderation data when group is deleted.
