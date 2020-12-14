@@ -74,6 +74,21 @@ window.bp = window.bp || {};
 				dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
 			};
 
+			this.videoOptions = {
+				url                  : BP_Nouveau.ajaxurl,
+				timeout              : 3 * 60 * 60 * 1000,
+				dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
+				acceptedFiles        : BP_Nouveau.video.video_type,
+				createImageThumbnails: false,
+				dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
+				autoProcessQueue     : true,
+				addRemoveLinks       : true,
+				uploadMultiple       : false,
+				maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+				maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+				dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
+			};
+
 			if ($( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' )) {
 				this.options = {
 					url						: BP_Nouveau.ajaxurl,
@@ -207,6 +222,7 @@ window.bp = window.bp || {};
 			// forums.
 			$( document ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
 			$( document ).on( 'click', '#forums-document-button', this.openForumsDocumentUploader.bind( this ) );
+			$( document ).on( 'click', '#forums-video-button', this.openForumsVideoUploader.bind( this ) );
 			$( document ).on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
 			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keyup', '.search-query-input', this.searchGif.bind( this ) );
 			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
@@ -262,6 +278,7 @@ window.bp = window.bp || {};
 
 			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-media-button', this.openGroupMessagesUploader.bind( this ) );
 			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-document-button', this.openGroupMessagesDocumentUploader.bind( this ) );
+			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-video-button', this.openGroupMessagesVideoUploader.bind( this ) );
 			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-gif-button', this.toggleGroupMessagesGifSelector.bind( this ) );
 			groupMessagesToolbarSelector.on( 'keyup', '.search-query-input', this.searchGroupMessagesGif.bind( this ) );
 			groupMessagesToolbarSelector.on( 'click', '.found-media-item', this.selectGroupMessagesGif.bind( this ) );
@@ -286,17 +303,17 @@ window.bp = window.bp || {};
 			}
 
 			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-				(this.bbp_reply_edit_media.length || this.bbp_topic_edit_media.length || this.bbp_forum_edit_media.length)) {
+			    (this.bbp_reply_edit_media.length || this.bbp_topic_edit_media.length || this.bbp_forum_edit_media.length)) {
 				$( '#forums-media-button' ).trigger( 'click' );
 			}
 
 			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-				(this.bbp_reply_edit_document.length || this.bbp_topic_edit_document.length || this.bbp_forum_edit_document.length)) {
+			    (this.bbp_reply_edit_document.length || this.bbp_topic_edit_document.length || this.bbp_forum_edit_document.length)) {
 				$( '#forums-document-button' ).trigger( 'click' );
 			}
 
 			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-				(Object.keys( this.bbp_reply_edit_gif_data ).length || Object.keys( this.bbp_topic_edit_gif_data ).length || Object.keys( this.bbp_forum_edit_gif_data ).length)) {
+			    (Object.keys( this.bbp_reply_edit_gif_data ).length || Object.keys( this.bbp_topic_edit_gif_data ).length || Object.keys( this.bbp_forum_edit_gif_data ).length)) {
 				this.editGifPreview();
 			}
 
@@ -607,11 +624,11 @@ window.bp = window.bp || {};
 				if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
 					var store = bp.Nouveau.getStorage( 'bp-document' ),
 						scope = store.scope;
-						if ( '' === scope ) {
-							data.scope = 'all';
-						} else {
-							data.scope = scope;
-						}
+					if ( '' === scope ) {
+						data.scope = 'all';
+					} else {
+						data.scope = scope;
+					}
 
 				}
 
@@ -807,9 +824,9 @@ window.bp = window.bp || {};
 							if ($( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ).find( 'li:not(.load-more)' ).length == 0) {
 								$( '.bb-photos-actions' ).hide();
 								var feedback = '<aside class="bp-feedback bp-messages info">\n' +
-									'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
-									'\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
-									'\t</aside>';
+								               '\t<span class="bp-icon" aria-hidden="true"></span>\n' +
+								               '\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
+								               '\t</aside>';
 								$( '#buddypress [data-bp-list="media"]' ).html( feedback );
 							}
 						} else {
@@ -1005,10 +1022,10 @@ window.bp = window.bp || {};
 				for ( i = 0; i < response.data.length; i++ ) {
 					var bgNo               = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
 					li_html               += '<li class="bg' + bgNo + '" style="height: ' + response.data[i].images.fixed_width.height + 'px;">\n' +
-						'\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
-						'\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
-						'\t</a>\n' +
-						'</li>';
+					                         '\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
+					                         '\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
+					                         '\t</a>\n' +
+					                         '</li>';
 					response.data[i].saved = false;
 					self.gif_data.push( response.data[i] );
 				}
@@ -1029,10 +1046,10 @@ window.bp = window.bp || {};
 				for (i = 0; i < response.data.length; i++) {
 					var bgNo               = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
 					li_html               += '<li class="bg' + bgNo + '" style="height: ' + response.data[i].images.fixed_width.height + 'px;">\n' +
-						'\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
-						'\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
-						'\t</a>\n' +
-						'</li>';
+					                         '\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
+					                         '\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
+					                         '\t</a>\n' +
+					                         '</li>';
 					response.data[i].saved = false;
 					self.gif_data[self.gif_container_key].data.push( response.data[i] );
 				}
@@ -1224,8 +1241,8 @@ window.bp = window.bp || {};
 
 			self.gif_timeout = setTimeout(
 				function() {
-						self.gif_timeout = null;
-						self.searchGroupMessagesGifRequest( e, e.target.value );
+					self.gif_timeout = null;
+					self.searchGroupMessagesGifRequest( e, e.target.value );
 				},
 				1000
 			);
@@ -1253,10 +1270,10 @@ window.bp = window.bp || {};
 						for ( i = 0; i < response.data.length; i++ ) {
 							var bgNo               = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
 							li_html               += '<li class="bg' + bgNo + '" style="height: ' + response.data[i].images.fixed_width.height + 'px;">\n' +
-								'\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
-								'\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
-								'\t</a>\n' +
-								'</li>';
+							                         '\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
+							                         '\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
+							                         '\t</a>\n' +
+							                         '</li>';
 							response.data[i].saved = false;
 							self.gif_data.push( response.data[i] );
 						}
@@ -1300,10 +1317,10 @@ window.bp = window.bp || {};
 						for (i = 0; i < response.data.length; i++) {
 							var bgNo               = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
 							li_html               += '<li class="bg' + bgNo + '" style="height: ' + response.data[i].images.fixed_width.height + 'px;">\n' +
-								'\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
-								'\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
-								'\t</a>\n' +
-								'</li>';
+							                         '\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
+							                         '\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
+							                         '\t</a>\n' +
+							                         '</li>';
 							response.data[i].saved = false;
 							self.gif_data[gif_container_key].data.push( response.data[i] );
 						}
@@ -1374,10 +1391,10 @@ window.bp = window.bp || {};
 							for (i = 0; i < response.data.length; i++) {
 								var bgNo               = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
 								li_html               += '<li class="bg' + bgNo + '" style="height: ' + response.data[i].images.fixed_width.height + 'px;">\n' +
-								'\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
-								'\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
-								'\t</a>\n' +
-								'</li>';
+								                         '\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
+								                         '\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
+								                         '\t</a>\n' +
+								                         '</li>';
 								response.data[i].saved = false;
 								self.gif_data[gif_container_key].data.push( response.data[i] );
 							}
@@ -1460,7 +1477,7 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 
 			if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key ) &&
-				! $targetEl.closest( '.post-gif' ).length) {
+			     ! $targetEl.closest( '.post-gif' ).length) {
 				target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 				target.find( '#bbpress-forums form' ).each( function() {
 					var $this = jQuery( this );
@@ -1521,10 +1538,10 @@ window.bp = window.bp || {};
 							for ( i = 0; i < response.data.length; i++ ) {
 								var bgNo               = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
 								li_html               += '<li class="bg' + bgNo + '" style="height: ' + response.data[i].images.fixed_width.height + 'px;">\n' +
-								'\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
-								'\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
-								'\t</a>\n' +
-								'</li>';
+								                         '\t<a class="found-media-item" href="' + response.data[i].images.original.url + '" data-id="' + response.data[i].id + '">\n' +
+								                         '\t\t<img src="' + response.data[i].images.fixed_width.url + '">\n' +
+								                         '\t</a>\n' +
+								                         '</li>';
 								response.data[i].saved = false;
 								self.gif_data.push( response.data[i] );
 							}
@@ -1554,11 +1571,13 @@ window.bp = window.bp || {};
 			gif_search_dropdown.toggleClass( 'open' );
 			self.resetGroupMessagesMediaComponent();
 			self.resetGroupMessagesDocumentComponent();
+			self.resetGroupMessagesVideoComponent();
 		},
 
 		resetGroupMessagesMediaComponent: function() {
 			var self = this;
-			if ( self.dropzone_obj.length && typeof self.dropzone_obj !== 'undefined' ) {
+
+			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined', self.dropzone_obj.length ) {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];
@@ -1580,6 +1599,18 @@ window.bp = window.bp || {};
 			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val( '' );
 		},
 
+		resetGroupMessagesVideoComponent: function() {
+			var self = this;
+			if ( self.video_dropzone_obj && typeof self.video_dropzone_obj !== 'undefined' ) {
+				self.video_dropzone_obj.destroy();
+			}
+			self.dropzone_media = [];
+			$( 'div#bp-group-messages-post-video-uploader' ).html( '' );
+			$( 'div#bp-group-messages-post-video-uploader' ).addClass( 'closed' ).removeClass( 'open' );
+			$( '#bp-group-messages-video-button' ).removeClass( 'active' );
+			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_video' ).val( '' );
+		},
+
 		resetForumsMediaComponent: function( dropzone_container_key ) {
 			var self = this;
 			$( '#forums-media-button' ).removeClass( 'active' );
@@ -1592,7 +1623,7 @@ window.bp = window.bp || {};
 					self.dropzone_media.splice( dropzone_container_key, 1 );
 				}
 
-				var keySelector = $( 'div#forums-post-media-uploader[data-key="' + dropzone_container_key + '"]' );
+				var keySelector = $( 'div#forums-post-media-uploader' );
 				keySelector.html( '' );
 				keySelector.addClass( 'closed' ).removeClass( 'open' );
 			}
@@ -1611,7 +1642,26 @@ window.bp = window.bp || {};
 					self.dropzone_media.splice( dropzone_container_key, 1 );
 				}
 
-				var keySelector = $( 'div#forums-post-document-uploader[data-key="' + dropzone_container_key + '"]' );
+				var keySelector = $( 'div#forums-post-document-uploader' );
+				keySelector.html( '' );
+				keySelector.addClass( 'closed' ).removeClass( 'open' );
+			}
+		},
+
+		resetForumsVideoComponent: function (dropzone_container_key) {
+			var self = this;
+
+			$( '#forums-video-button' ).removeClass( 'active' );
+
+			if (typeof dropzone_container_key !== 'undefined') {
+
+				if (typeof self.dropzone_obj[dropzone_container_key] !== 'undefined') {
+					self.dropzone_obj[dropzone_container_key].destroy();
+					self.dropzone_obj.splice( dropzone_container_key, 1 );
+					self.dropzone_media.splice( dropzone_container_key, 1 );
+				}
+
+				var keySelector = $( 'div#forums-post-video-uploader' );
 				keySelector.html( '' );
 				keySelector.addClass( 'closed' ).removeClass( 'open' );
 			}
@@ -1626,6 +1676,7 @@ window.bp = window.bp || {};
 
 			var forum_dropzone_obj_key = forum_dropzone_container.data( 'key' );
 			self.resetForumsDocumentComponent( forum_dropzone_obj_key );
+			self.resetForumsVideoComponent( forum_dropzone_obj_key );
 
 			if (typeof window.Dropzone !== 'undefined' && dropzone_container.length) {
 
@@ -1722,7 +1773,7 @@ window.bp = window.bp || {};
 					);
 
 					if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-						(this.bbp_reply_edit_media.length || this.bbp_topic_edit_media.length || this.bbp_forum_edit_media.length)) {
+					    (this.bbp_reply_edit_media.length || this.bbp_topic_edit_media.length || this.bbp_forum_edit_media.length)) {
 
 						if (this.bbp_reply_edit_media.length) {
 							edit_medias = this.bbp_reply_edit_media;
@@ -1886,8 +1937,8 @@ window.bp = window.bp || {};
 
 					// reset gif component.
 					self.resetGroupMessagesGifComponent();
-
 					self.resetGroupMessagesDocumentComponent();
+					self.resetGroupMessagesVideoComponent();
 
 				} else {
 					self.resetGroupMessagesMediaComponent();
@@ -2016,8 +2067,8 @@ window.bp = window.bp || {};
 
 					// reset gif component.
 					self.resetGroupMessagesGifComponent();
-
 					self.resetGroupMessagesMediaComponent();
+					self.resetGroupMessagesVideoComponent();
 
 				} else {
 					self.resetGroupMessagesDocumentComponent();
@@ -2027,15 +2078,132 @@ window.bp = window.bp || {};
 
 		},
 
+
+
+		openGroupMessagesVideoUploader: function(event) {
+			var self = this, video_dropzone_container = $( 'div#bp-group-messages-post-video-uploader' ), target = $( event.currentTarget );
+			event.preventDefault();
+
+			target.toggleClass( 'active' );
+
+			if ( typeof window.Dropzone !== 'undefined' && video_dropzone_container.length ) {
+
+				if ( video_dropzone_container.hasClass( 'closed' ) ) {
+
+					// init dropzone.
+					self.video_dropzone_obj = new Dropzone( 'div#bp-group-messages-post-video-uploader', self.videoOptions );
+
+					self.video_dropzone_obj.on(
+						'sending',
+						function(file, xhr, formData) {
+							formData.append( 'action', 'video_upload' );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+							var tool_box = $( '#send_group_message_form' );
+							if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
+								tool_box.find( '#bp-group-messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#bp-group-messages-gif-button' ) ) {
+								tool_box.find( '#bp-group-messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#bp-group-messages-media-button' ) ) {
+								tool_box.find( '#bp-group-messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							}
+						}
+					);
+
+					self.video_dropzone_obj.on(
+						'error',
+						function(file,response) {
+							if ( file.accepted ) {
+								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								}
+							} else {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								this.removeFile(file);
+							}
+						}
+					);
+
+					self.video_dropzone_obj.on(
+						'success',
+						function(file, response) {
+							if ( response.data.id ) {
+								file.id 				 = response.id;
+								response.data.uuid 		 = file.upload.uuid;
+								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								response.data.album_id 	 = self.album_id;
+								response.data.group_id 	 = self.group_id;
+								response.data.saved    	 = false;
+								self.dropzone_media.push( response.data );
+								self.addMediaIdsToGroupMessagesForm();
+							} else {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								this.removeFile(file);
+							}
+						}
+					);
+
+					self.video_dropzone_obj.on(
+						'removedfile',
+						function(file) {
+							if ( self.dropzone_media.length ) {
+								for ( var i in self.dropzone_media ) {
+									if ( file.upload.uuid == self.dropzone_media[i].uuid  ) {
+
+										if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
+											self.removeAttachment( self.dropzone_media[i].id );
+										}
+
+										self.dropzone_media.splice( i, 1 );
+										self.addMediaIdsToGroupMessagesForm();
+										break;
+									}
+								}
+							}
+
+							if ( ! _.isNull( self.video_dropzone_obj.files ) && self.video_dropzone_obj.files.length === 0 ) {
+								var tool_box = $( '#send_group_message_form' );
+								if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
+									tool_box.find( '#bp-group-messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#bp-group-messages-gif-button' ) ) {
+									tool_box.find( '#bp-group-messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#bp-group-messages-media-button' ) ) {
+									tool_box.find( '#bp-group-messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								}
+							}
+						}
+					);
+
+					// container class to open close.
+					video_dropzone_container.removeClass( 'closed' ).addClass( 'open' );
+
+					// reset gif component.
+					self.resetGroupMessagesMediaComponent();
+					self.resetGroupMessagesGifComponent();
+					self.resetGroupMessagesDocumentComponent();
+
+				} else {
+					self.resetGroupMessagesVideoComponent();
+				}
+
+			}
+
+		},
+
 		openForumsDocumentUploader: function (event) {
 			var self               = this, target = $( event.currentTarget ),
-				dropzone_container = target.closest( 'form' ).find( '#forums-post-document-uploader' ), media_dropzone_container = target.closest( 'form' ).find( '#forums-post-media-uploader' ), edit_documents = [];
+				dropzone_container = target.closest( 'form' ).find( '#forums-post-document-uploader' ), media_dropzone_container = target.closest( 'form' ).find( '#forums-post-document-uploader' ), edit_documents = [];
 			event.preventDefault();
 
 			target.toggleClass( 'active' );
 
 			var media_dropzone_obj_key = media_dropzone_container.data( 'key' );
 			self.resetForumsMediaComponent( media_dropzone_obj_key );
+			self.resetForumsVideoComponent( media_dropzone_obj_key );
 
 			if (typeof window.Dropzone !== 'undefined' && dropzone_container.length) {
 
@@ -2152,7 +2320,7 @@ window.bp = window.bp || {};
 					);
 
 					if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-						(this.bbp_reply_edit_document.length || this.bbp_topic_edit_document.length || this.bbp_forum_edit_document.length)) {
+					    (this.bbp_reply_edit_document.length || this.bbp_topic_edit_document.length || this.bbp_forum_edit_document.length)) {
 
 						if (this.bbp_reply_edit_document.length) {
 							edit_documents = this.bbp_reply_edit_document;
@@ -2211,6 +2379,133 @@ window.bp = window.bp || {};
 
 				} else {
 					self.resetForumsDocumentComponent( dropzone_obj_key );
+				}
+
+			}
+
+		},
+
+
+		openForumsVideoUploader: function (event) {
+			var self               = this, target = $( event.currentTarget ),
+				dropzone_container = target.closest( 'form' ).find( '#forums-post-video-uploader' ), forum_dropzone_container = target.closest( 'form' ).find( '#forums-post-video-uploader' );
+			event.preventDefault();
+
+			target.toggleClass( 'active' );
+
+			var forum_dropzone_obj_key = forum_dropzone_container.data( 'key' );
+
+			self.resetForumsMediaComponent( forum_dropzone_obj_key );
+			self.resetForumsDocumentComponent( forum_dropzone_obj_key );
+
+			if (typeof window.Dropzone !== 'undefined' && dropzone_container.length) {
+
+				var dropzone_obj_key = dropzone_container.data( 'key' );
+
+				if (dropzone_container.hasClass( 'closed' )) {
+
+
+
+					// init dropzone.
+					self.dropzone_obj[dropzone_obj_key] = new Dropzone( 'div#forums-post-video-uploader', self.videoOptions );
+
+					self.dropzone_obj[dropzone_obj_key].on(
+						'sending',
+						function(file, xhr, formData) {
+							formData.append( 'action', 'video_upload' );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+							var tool_box = target.closest( 'form' );
+							if ( tool_box.find( '#forums-media-button' ) ) {
+								tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#forums-gif-button' ) ) {
+								tool_box.find( '#forums-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#forums-document-button' ) ) {
+								tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#forums-video-button' ) ) {
+								tool_box.find( '#forums-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							}
+						}
+					);
+
+					self.dropzone_obj[dropzone_obj_key].on(
+						'error',
+						function(file,response) {
+							if ( file.accepted ) {
+								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								}
+							} else {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								this.removeFile(file);
+							}
+						}
+					);
+
+					self.dropzone_obj[dropzone_obj_key].on(
+						'success',
+						function(file, response) {
+							if ( response.data.id ) {
+								file.id 				 = response.id;
+								response.data.uuid 		 = file.upload.uuid;
+								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								response.data.album_id 	 = self.album_id;
+								response.data.group_id 	 = self.group_id;
+								response.data.saved    	 = false;
+								self.dropzone_media.push( response.data );
+								self.addMediaIdsToGroupMessagesForm();
+							} else {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								this.removeFile(file);
+							}
+						}
+					);
+
+					self.dropzone_obj[dropzone_obj_key].on(
+						'removedfile',
+						function(file) {
+							if ( self.dropzone_media.length ) {
+								for ( var i in self.dropzone_media ) {
+									if ( file.upload.uuid == self.dropzone_media[i].uuid  ) {
+
+										if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
+											self.removeAttachment( self.dropzone_media[i].id );
+										}
+
+										self.dropzone_media.splice( i, 1 );
+										self.addMediaIdsToGroupMessagesForm();
+										break;
+									}
+								}
+							}
+
+							if ( ! _.isNull( self.dropzone_obj[dropzone_obj_key].files ) && self.dropzone_obj[dropzone_obj_key].files.length === 0 ) {
+								var tool_box = $( '#send_group_message_form' );
+								if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
+									tool_box.find( '#bp-group-messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#bp-group-messages-gif-button' ) ) {
+									tool_box.find( '#bp-group-messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#bp-group-messages-media-button' ) ) {
+									tool_box.find( '#bp-group-messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								}
+							}
+						}
+					);
+
+					// container class to open close.
+					forum_dropzone_container.removeClass( 'closed' ).addClass( 'open' );
+
+
+					// reset gif component.
+					self.resetForumsGifComponent( event );
+
+				} else {
+					self.resetForumsVideoComponent( dropzone_obj_key );
 				}
 
 			}
@@ -3003,9 +3298,9 @@ window.bp = window.bp || {};
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).parents( '.has-ul' ).show().children( 'ul' ).show().siblings( 'span,i' ).hide();
 
 							if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length && !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') ) {
-									setTimeout( function(){
-										$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
-									},100);
+								setTimeout( function(){
+									$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
+								},100);
 							} else {
 
 								if( $( targetPopup ).find( '.location-folder-list li.is_active' ).hasClass( 'has-ul' ).length ){
@@ -3095,9 +3390,9 @@ window.bp = window.bp || {};
 					$( targetPopup ).find( '.location-folder-list li.is_active' ).parents( '.has-ul' ).show().children( 'ul' ).show().siblings( 'span,i' ).hide();
 
 					if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length && !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') )   {
-							setTimeout( function(){
-								$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
-							},100);
+						setTimeout( function(){
+							$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
+						},100);
 					} else {
 
 						if( $( targetPopup ).find( '.location-folder-list li.is_active' ).hasClass( 'has-ul' ).length ){
@@ -3140,7 +3435,7 @@ window.bp = window.bp || {};
 				},100);
 
 				var $this = $( targetPopup ).find( '.location-folder-list .is_active > span' ),
-				$bc = $('<div class="item"></div>');
+					$bc = $('<div class="item"></div>');
 
 				$this.parents('li').each(function(n, li) {
 					var $a = $(li).children('span').clone();
@@ -3617,11 +3912,11 @@ window.bp = window.bp || {};
 						if (response.success) {
 							self.closeChildFolderUploader( event );
 							//if ( $( '.document-data-table-head' ).length ) {
-									// Prepend the activity if no parent.
-									//bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
-									//jQuery( window ).scroll();
+							// Prepend the activity if no parent.
+							//bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+							//jQuery( window ).scroll();
 							//} else {
-								location.reload( true );
+							location.reload( true );
 							//}
 						} else {
 							/* jshint ignore:start */
@@ -4831,13 +5126,13 @@ window.bp = window.bp || {};
 
 				// hide privacy setting of media if activity is present.
 				if ((typeof BP_Nouveau.activity !== 'undefined' &&
-					typeof self.current_media.activity_id !== 'undefined' &&
-					self.current_media.activity_id != 0) ||
-					self.group_id ||
-					self.current_media.is_forum ||
-					self.current_media.group_id ||
-					self.current_media.album_id ||
-					self.current_media.is_message
+				     typeof self.current_media.activity_id !== 'undefined' &&
+				     self.current_media.activity_id != 0) ||
+				    self.group_id ||
+				    self.current_media.is_forum ||
+				    self.current_media.group_id ||
+				    self.current_media.album_id ||
+				    self.current_media.is_message
 				) {
 					media_privacy_wrap.hide();
 				}
@@ -4900,13 +5195,13 @@ window.bp = window.bp || {};
 
 				// hide privacy setting of media if activity is present.
 				if ((typeof BP_Nouveau.activity !== 'undefined' &&
-					typeof self.current_document.activity_id !== 'undefined' &&
-					self.current_document.activity_id != 0) ||
-					self.group_id ||
-					self.current_document.is_forum ||
-					self.current_document.group_id ||
-					self.current_document.album_id ||
-					self.current_document.is_message
+				     typeof self.current_document.activity_id !== 'undefined' &&
+				     self.current_document.activity_id != 0) ||
+				    self.group_id ||
+				    self.current_document.is_forum ||
+				    self.current_document.group_id ||
+				    self.current_document.album_id ||
+				    self.current_document.is_message
 				) {
 					document_privacy_wrap.hide();
 				}
@@ -5033,10 +5328,10 @@ window.bp = window.bp || {};
 			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 
 			if (typeof BP_Nouveau.activity !== 'undefined' &&
-				self.current_media &&
-				typeof self.current_media.activity_id !== 'undefined' &&
-				self.current_media.activity_id != 0 &&
-				! self.current_media.is_forum
+			    self.current_media &&
+			    typeof self.current_media.activity_id !== 'undefined' &&
+			    self.current_media.activity_id != 0 &&
+			    ! self.current_media.is_forum
 			) {
 
 				if (self.activity_ajax != false) {
@@ -5080,10 +5375,10 @@ window.bp = window.bp || {};
 			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 
 			if (typeof BP_Nouveau.activity !== 'undefined' &&
-				self.current_document &&
-				typeof self.current_document.activity_id !== 'undefined' &&
-				self.current_document.activity_id != 0 &&
-				! self.current_document.is_forum
+			    self.current_document &&
+			    typeof self.current_document.activity_id !== 'undefined' &&
+			    self.current_document.activity_id != 0 &&
+			    ! self.current_document.is_forum
 			) {
 
 				if (self.activity_ajax != false) {
