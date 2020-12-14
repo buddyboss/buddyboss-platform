@@ -183,7 +183,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
-			$force_bg_process =  (bool) $args['force_bg_process'] ;
+			$force_bg_process = (bool) $args['force_bg_process'];
 			unset( $args['force_bg_process'] );
 		}
 
