@@ -2775,11 +2775,11 @@ span.dashicons.dashicons-admin-file:before {
   content: "\e96a";
 }
 
-.activity-list .activity-item .activity-content.documemt-activity {
+.activity-list .activity-item .activity-content.document-activity {
   position: relative;
 }
 
-.activity-list .activity-item .activity-content.documemt-activity .activity-inner {
+.activity-list .activity-item .activity-content.document-activity .activity-inner {
   overflow: visible;
 }
 

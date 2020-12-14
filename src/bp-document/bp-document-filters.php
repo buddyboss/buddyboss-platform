@@ -1699,7 +1699,7 @@ function bp_document_activity_entry_css_class( $class ) {
 	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
 		$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
 		if ( ! empty( $document_ids ) ) {
-			$class .= ' documemt-activity';
+			$class .= ' document-activity';
 		}
 	}
 
