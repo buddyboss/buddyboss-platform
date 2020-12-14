@@ -36,7 +36,11 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_activity' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_activity' ), 10, 4 );
 
+		// Add moderation data when actual activity added.
 		add_action( 'bp_activity_after_save', array( $this, 'update_activity_after_save' ), 10, 1 );
+
+		// Delete moderation data when actual activity deleted.
+		add_action( 'bp_activity_after_delete', array( $this, 'update_activity_after_delete' ), 10, 1 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -394,5 +398,28 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		}
 
 		self::handle_new_suspend_entry( $suspended_record, $activity->id, $activity->user_id );
+	}
+
+	/**
+	 * Update the suspend table to delete an activity.
+	 *
+	 * @param array $activities Array of activities.
+	 */
+	public function update_activity_after_delete( $activities ) {
+
+		if ( empty( $activities ) ) {
+			return;
+		}
+
+		if ( is_array( $activities ) ) {
+			foreach ( $activities as $activity ) {
+
+				if ( 'activity_comment' === $activity->type ) {
+					continue;
+				}
+
+				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
+			}
+		}
 	}
 }
