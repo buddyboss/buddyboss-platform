@@ -39,7 +39,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		add_action( 'bp_media_after_save', array( $this, 'update_media_after_save' ), 10, 1 );
 
 		// Delete moderation data when media is deleted.
-		add_action( 'bp_media_after_delete', array( $this, 'update_media_after_delete' ), 10, 1 );
+		add_action( 'bp_media_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -322,9 +322,11 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the group.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param array $medias Array of media.
 	 */
-	public function update_media_after_delete( $medias ) {
+	public function sync_moderation_data_on_delete( $medias ) {
 
 		if ( empty( $medias ) ) {
 			return;

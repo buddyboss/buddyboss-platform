@@ -39,7 +39,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		add_action( 'update_media_album_after_save', array( $this, 'update_media_album_after_save' ), 10, 1 );
 
 		// Delete moderation data when album is deleted.
-		add_action( 'update_media_album_after_save', array( $this, 'update_album_after_delete' ), 10, 1 );
+		add_action( 'bp_media_album_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -301,9 +301,11 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the album.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param array $albums Array of media albums.
 	 */
-	public function update_album_after_delete( $albums ) {
+	public function sync_moderation_data_on_delete( $albums ) {
 
 		if ( empty( $albums ) ) {
 			return;

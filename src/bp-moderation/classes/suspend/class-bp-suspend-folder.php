@@ -39,7 +39,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		add_action( 'bp_document_folder_after_save', array( $this, 'update_document_folder_after_save' ), 10, 1 );
 
 		// Delete moderation data when document folder is deleted.
-		add_action( 'bp_document_folder_after_delete', array( $this, 'update_document_folder_after_delete' ), 10, 1 );
+		add_action( 'bp_document_folder_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -301,9 +301,11 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the folder.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param array $folders Array of document folders.
 	 */
-	public function update_document_folder_after_delete( $folders ) {
+	public function sync_moderation_data_on_delete( $folders ) {
 
 		if ( empty( $folders ) ) {
 			return;

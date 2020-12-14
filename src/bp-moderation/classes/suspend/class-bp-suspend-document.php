@@ -39,7 +39,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		add_action( 'bp_document_after_save', array( $this, 'update_document_after_save' ), 10, 1 );
 
 		// Delete moderation data when document is deleted.
-		add_action( 'bp_document_after_delete', array( $this, 'update_document_after_delete' ), 10, 1 );
+		add_action( 'bp_document_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -322,9 +322,11 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the document.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param array $documents Array of document.
 	 */
-	public function update_document_after_delete( $documents ) {
+	public function sync_moderation_data_on_delete( $documents ) {
 
 		if ( empty( $documents ) ) {
 			return;

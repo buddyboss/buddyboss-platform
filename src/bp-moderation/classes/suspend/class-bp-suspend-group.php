@@ -39,7 +39,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_action( 'groups_group_after_save', array( $this, 'update_group_after_save' ), 10, 1 );
 
 		// Delete moderation data when group is deleted.
-		add_action( 'bp_groups_delete_group', array( $this, 'update_group_after_delete' ), 10, 1 );
+		add_action( 'bp_groups_delete_group', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -320,9 +320,11 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the group.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param BP_Groups_Group $group Current instance of the group item being deleted. Passed by reference.
 	 */
-	public function update_group_after_delete( $group ) {
+	public function sync_moderation_data_on_delete( $group ) {
 
 		if ( empty( $group ) ) {
 			return;

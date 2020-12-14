@@ -40,7 +40,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		add_action( 'bp_activity_after_save', array( $this, 'update_activity_after_save' ), 10, 1 );
 
 		// Delete moderation data when actual activity deleted.
-		add_action( 'bp_activity_after_delete', array( $this, 'update_activity_after_delete' ), 10, 1 );
+		add_action( 'bp_activity_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -403,9 +403,11 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete an activity.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param array $activities Array of activities.
 	 */
-	public function update_activity_after_delete( $activities ) {
+	public function sync_moderation_data_on_delete( $activities ) {
 
 		if ( empty( $activities ) ) {
 			return;
