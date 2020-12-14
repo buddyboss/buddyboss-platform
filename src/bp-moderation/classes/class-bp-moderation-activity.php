@@ -36,9 +36,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Delete activity moderation data when actual activity get deleted.
-		add_action( 'bp_activity_deleted_activities', array( $this, 'sync_moderation_data_on_delete' ), 10 );
-
 		/**
 		 * Moderation code should not add for WordPress backend and if Bypass argument passed for admin
 		 */
@@ -105,25 +102,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Activity', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Function to delete activity moderation data when actual activity is getting deleted.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $activity_deleted_ids activity ids array.
-	 */
-	public function sync_moderation_data_on_delete( $activity_deleted_ids ) {
-
-		if ( ! empty( $activity_deleted_ids ) && is_array( $activity_deleted_ids ) ) {
-			foreach ( $activity_deleted_ids as $activity_deleted_id ) {
-				$moderation_obj = new BP_Moderation( $activity_deleted_id, self::$moderation_type );
-				if ( ! empty( $moderation_obj->id ) ) {
-					$moderation_obj->delete( true );
-				}
-			}
-		}
 	}
 
 	/**

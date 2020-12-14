@@ -1275,7 +1275,7 @@ class BP_Moderation {
 
 		if ( $delete_parent ) {
 			$updated_row = $wpdb->update( $bp->moderation->table_name, array( 'reported' => 0 ), array( 'id' => $this->id ) ); // phpcs:ignore
-			$this->delete_meta();
+			self::delete_meta( $this->id );
 
 			if ( ! empty( $updated_row ) ) {
 				$this->id = null;
@@ -1327,13 +1327,19 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
+	 * @param int $moderation_id Moderation Report ID.
+	 *
 	 * @return bool
 	 */
-	public function delete_meta() {
+	public static function delete_meta( $moderation_id = 0 ) {
 		global $wpdb;
 		$bp = buddypress();
 
-		$args        = array( 'moderation_id' => $this->id );
+		if ( empty( $moderation_id ) ) {
+			return;
+		}
+
+		$args        = array( 'moderation_id' => $moderation_id );
 		$updated_row = $wpdb->delete( $bp->moderation->table_name_meta, $args ); // phpcs:ignore
 
 		return ! empty( $updated_row );
@@ -1356,5 +1362,19 @@ class BP_Moderation {
 		 * @param int $force_all     un-hide for all users
 		 */
 		do_action( "bp_suspend_unhide_{$this->item_type}", $this->item_id, $this->hide_sitewide, $force_all );
+	}
+
+	/**
+	 * Delete record by moderation_id.
+	 *
+	 * @param int $moderation_id Moderation moderation_id.
+	 */
+	public static function delete_moderation_by_id( $moderation_id = 0 ) {
+		global $wpdb, $bp;
+
+		$args        = array( 'moderation_id' => $moderation_id );
+		$wpdb->delete( $bp->moderation->table_name_reports, $args ); // phpcs:ignore
+
+		self::delete_meta( $moderation_id );
 	}
 }
