@@ -3644,14 +3644,16 @@ function bp_get_attachment_document_id( $attachment_id = 0 ) {
 /**
  * Check given document is activity comment document.
  *
- * @param $document
+ * @since BuddyBoss 1.5.6
+ *
+ * @param object|int $document document object or id of the document.
  *
  * @return bool
  */
 function bp_document_is_activity_comment_document( $document ) {
 
 	$is_comment_document = false;
-	if( is_object( $document ) ) {
+	if ( is_object( $document ) ) {
 		$document_activity_id = $document->activity_id;
 	} else {
 		$document             = new BP_Document( $document );
@@ -3661,19 +3663,20 @@ function bp_document_is_activity_comment_document( $document ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$activity = new BP_Activity_Activity( $document_activity_id );
 
-		if( $activity ) {
-			if( $activity->secondary_item_id ) {
+		if ( $activity ) {
+			if ( $activity->secondary_item_id ) {
 				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-				if( $load_parent_activity ) {
-					if( 'activity_comment' === $load_parent_activity->type ) {
+				if ( $load_parent_activity ) {
+					if ( 'activity_comment' === $load_parent_activity->type ) {
 						$is_comment_document = true;
 					}
 				}
 			}
 		}
-	} elseif( $document_activity_id ) {
+	} elseif ( $document_activity_id ) {
 		$is_comment_document = true;
 	}
+
 	return $is_comment_document;
 
 }

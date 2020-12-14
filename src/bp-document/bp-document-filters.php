@@ -1690,6 +1690,8 @@ function bp_document_get_edit_activity_data( $activity ) {
 /**
  * Added activity entry class for media.
  *
+ * @since BuddyBoss 1.5.6
+ *
  * @param string $class class.
  *
  * @return string
