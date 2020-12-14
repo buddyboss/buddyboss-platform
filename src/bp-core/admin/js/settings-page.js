@@ -1138,12 +1138,17 @@
 					action = $( '#bulk-action-selector-top[name="action2"]' ).find( ':selected' ).val();
 				}
 
-				if ( !$( '#bp-hello-container' ).find( '.component-deactivate' ).hasClass( 'form-submit' ) && 'inactive' === action ) {
+				var confirmChecked = false;
+				var msg = '';
+				$( '.mass-check-deactivate' ).each( function () {
+					if ( $( this ).prop( "checked" ) == true ) {
+						confirmChecked = true;
+					}
+					msg = msg + $( this ).parent().find( '.component-deactivate-msg' ).text();
+				} );
+
+				if ( !$( '#bp-hello-container' ).find( '.component-deactivate' ).hasClass( 'form-submit' ) && 'inactive' === action && true === confirmChecked ) {
 					$( '#bp-hello-container' ).find( '.bp-hello-content' ).empty();
-					var msg = '';
-					$( '.mass-check-deactivate' ).each( function () {
-						msg = msg + $( this ).parent().find( '.component-deactivate-msg' ).text();
-					} );
 					if ( msg ) {
 						e.preventDefault();
 						$( '#bp-hello-backdrop' ).show();
