@@ -36,6 +36,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_comment' ), 10, 4 );
 
 		/**
+		 * Fires immediately after a comment is inserted into the database.
+		 */
+		add_action( 'comment_post', array( $this, 'update_comment_after_save' ), 10, 3 );
+
+		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
 		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
@@ -353,5 +358,35 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		return $related_contents;
+	}
+
+	/**
+	 * Fires immediately after a comment is inserted into the database.
+	 *
+	 * @param int        $comment_id       The comment ID.
+	 * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
+	 * @param array      $commentdata      Comment data.
+	 */
+	public function update_comment_after_save( $comment_id, $comment_approved, $commentdata ) {
+
+		if ( empty( $comment_id ) ) {
+			return;
+		}
+
+		$sub_items     = bp_moderation_get_sub_items( $comment_id, BP_Moderation_Comment::$moderation_type );
+		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $comment_id;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Comment::$moderation_type;
+
+		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+
+		if ( empty( $suspended_record ) ) {
+			$suspended_record = BP_Core_Suspend::get_recode( $commentdata->user_id, BP_Moderation_Members::$moderation_type );
+		}
+
+		if ( empty( $suspended_record ) ) {
+			return;
+		}
+
+		self::handle_new_suspend_entry( $suspended_record, $comment_id, $commentdata->user_id );
 	}
 }
