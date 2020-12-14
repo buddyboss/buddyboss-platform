@@ -36,6 +36,8 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_document' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_document' ), 10, 4 );
 
+		add_action( 'bp_document_after_save', array( $this, 'update_document_after_save' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -68,6 +70,34 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 				'per_page'         => 0,
 				'fields'           => 'ids',
 				'user_id'          => $member_id,
+			)
+		);
+
+		if ( ! empty( $documents['documents'] ) ) {
+			$document_ids = $documents['documents'];
+		}
+
+		return $document_ids;
+	}
+
+	/**
+	 * Get Blocked group's document ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $group_id group id.
+	 *
+	 * @return array
+	 */
+	public static function get_group_document_ids( $group_id ) {
+		$document_ids = array();
+
+		$documents = BP_Document::get(
+			array(
+				'moderation_query' => false,
+				'per_page'         => 0,
+				'fields'           => 'ids',
+				'group_id'         => $group_id,
 			)
 		);
 
@@ -256,5 +286,33 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $document_id, $args = array() ) {
 		return array();
+	}
+
+	/**
+	 * Update the suspend table to add new entries.
+	 *
+	 * @param BP_Document $document Current instance of document item being saved. Passed by reference.
+	 */
+	public function update_document_after_save( $document ) {
+
+		if ( empty( $document ) || empty( $document->id ) ) {
+			return;
+		}
+
+		$sub_items     = bp_moderation_get_sub_items( $document->id, BP_Moderation_Document::$moderation_type );
+		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $document->id;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Document::$moderation_type;
+
+		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+
+		if ( empty( $suspended_record ) ) {
+			$suspended_record = BP_Core_Suspend::get_recode( $document->user_id, BP_Moderation_Members::$moderation_type );
+		}
+
+		if ( empty( $suspended_record ) ) {
+			return;
+		}
+
+		self::handle_new_suspend_entry( $suspended_record, $document->id, $document->user_id );
 	}
 }

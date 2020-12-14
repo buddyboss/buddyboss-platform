@@ -36,11 +36,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Check Component is active.
-		if ( ! bp_is_active( 'activity' ) ) {
-			return;
-		}
-
 		// Delete activity moderation data when actual activity get deleted.
 		add_action( 'bp_activity_deleted_activities', array( $this, 'sync_moderation_data_on_delete' ), 10 );
 
@@ -51,17 +46,20 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content.
+		/**
+		 * If moderation setting enabled for this content then it'll filter hidden content.
+		 * And IF moderation setting enabled for member then it'll filter blocked user content.
+		 */
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
-		// button.
+		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
-
-		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
 	}
 
 	/**
@@ -150,6 +148,25 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Validate the activity is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $activity Current activity object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $activity ) {
+
+		if ( 'activity_comment' !== $activity->type && $this->is_content_hidden( (int) $activity->id ) ) {
+			return false;
+		}
+
+		return $restrict;
+	}
+
+	/**
 	 * Function to modify button sub item
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -200,24 +217,4 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		return $sub_items;
 	}
-
-	/**
-	 * Validate the activity is valid or not.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param boolean $restrict Check the item is valid or not.
-	 * @param object  $activity Current activity object.
-	 *
-	 * @return false
-	 */
-	public function restrict_single_item( $restrict, $activity ) {
-
-		if ( 'activity_comment' !== $activity->type && bp_moderation_is_content_hidden( (int) $activity->id, self::$moderation_type ) ) {
-			return false;
-		}
-
-		return $restrict;
-	}
-
 }

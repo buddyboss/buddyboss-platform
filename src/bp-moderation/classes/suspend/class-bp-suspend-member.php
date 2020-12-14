@@ -79,7 +79,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
 		 */
-		do_action( 'bp_suspend_hide_' . self::$type, $user_id, 1, array( 'action' => 'suspended' ) );
+		do_action( 'bp_suspend_hide_' . self::$type, $user_id, 1, array( 'action' => 'suspended', 'force_bg_process' => true ) );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param int $hide_sitewide item hidden sitewide or user specific
 		 * @param int $force_all     un-hide for all users
 		 */
-		do_action( 'bp_suspend_unhide_' . self::$type, $user_id, 0, 0, array( 'action' => 'unsuspended' ) );
+		do_action( 'bp_suspend_unhide_' . self::$type, $user_id, 0, 0, array( 'action' => 'unsuspended', 'force_bg_process' => true ) );
 	}
 
 	/**
@@ -181,6 +181,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	public function manage_hidden_member( $member_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		$force_bg_process = false;
+		if ( isset( $args['force_bg_process'] ) ) {
+			$force_bg_process =  (bool) $args['force_bg_process'] ;
+			unset( $args['force_bg_process'] );
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -201,7 +207,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->backgroup_diabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
@@ -227,6 +233,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	public function manage_unhidden_member( $member_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
+		$force_bg_process = false;
+		if ( isset( $args['force_bg_process'] ) ) {
+			$force_bg_process =  (bool) $args['force_bg_process'] ;
+			unset( $args['force_bg_process'] );
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -247,7 +259,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->backgroup_diabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
 			$this->unhide_related_content( $member_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
@@ -442,10 +454,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'document' ) ) {
+			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_member_folder_ids( $member_id );
 			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_member_document_ids( $member_id );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
+			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_member_album_ids( $member_id );
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id );
 		}
 

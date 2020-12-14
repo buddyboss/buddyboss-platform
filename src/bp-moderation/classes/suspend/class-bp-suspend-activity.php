@@ -36,6 +36,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_activity' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_activity' ), 10, 4 );
 
+		add_action( 'bp_activity_after_save', array( $this, 'update_activity_after_save' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -48,6 +50,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_activity_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -131,9 +135,28 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				'per_page'         => 0,
 				'fields'           => 'ids',
 				'show_hidden'      => true,
-				'filter'           => array(
-					'primary_id' => $post_id,
-					'object'     => 'bbpress',
+				'filter_query'     => array(
+					'relation' => 'or',
+					'bbpress'  => array(
+						array(
+							'column' => 'item_id',
+							'value'  => $post_id,
+						),
+						array(
+							'column' => 'component',
+							'value'  => 'bbpress',
+						),
+					),
+					'group'    => array(
+						array(
+							'column' => 'secondary_item_id',
+							'value'  => $post_id,
+						),
+						array(
+							'column' => 'component',
+							'value'  => 'groups',
+						),
+					),
 				),
 			)
 		);
@@ -209,6 +232,25 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Restrict Single item.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $activity Current activity object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $activity ) {
+
+		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 
 	/**
@@ -315,5 +357,42 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		}
 
 		return $related_contents;
+	}
+
+	/**
+	 * Update the suspend table to add new entries.
+	 *
+	 * @param BP_Activity_Activity $activity Current instance of activity item being saved. Passed by reference.
+	 */
+	public function update_activity_after_save( $activity ) {
+
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return;
+		}
+
+		if ( 'activity_comment' === $activity->type ) {
+			return;
+		}
+
+		$sub_items     = bp_moderation_get_sub_items( $activity->id, BP_Moderation_Activity::$moderation_type );
+		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $activity->id;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Activity::$moderation_type;
+
+		if ( 'groups' === $activity->component ) {
+			$item_sub_id   = $activity->item_id;
+			$item_sub_type = BP_Moderation_Groups::$moderation_type;
+		}
+
+		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+
+		if ( empty( $suspended_record ) ) {
+			$suspended_record = BP_Core_Suspend::get_recode( $activity->user_id, BP_Moderation_Members::$moderation_type );
+		}
+
+		if ( empty( $suspended_record ) ) {
+			return;
+		}
+
+		self::handle_new_suspend_entry( $suspended_record, $activity->id, $activity->user_id );
 	}
 }

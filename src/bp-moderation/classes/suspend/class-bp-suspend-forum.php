@@ -36,6 +36,9 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_forum' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_forum' ), 10, 4 );
 
+		$forum_post_type = bbp_get_forum_post_type();
+		add_action( "save_post_{$forum_post_type}", array( $this, 'update_forum_after_save' ), 10, 2 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -50,6 +53,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_forums_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forums_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bbp_forums_forum_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -180,6 +185,25 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Restrict Single item
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $post     Current forum object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $post ) {
+
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post->id, self::$type ) ) {
+			return false;
+		}
+
+		return $restrict;
+	}
+
+	/**
 	 * Hide related content of forum
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -280,5 +304,34 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		return $related_contents;
+	}
+
+	/**
+	 * Update the suspend table to add new entries.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 */
+	public function update_forum_after_save( $post_id, $post ) {
+
+		if ( empty( $post_id ) || empty( $post->ID ) ) {
+			return;
+		}
+
+		$sub_items     = bp_moderation_get_sub_items( $post_id, BP_Moderation_Forums::$moderation_type );
+		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $post_id;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Forums::$moderation_type;
+
+		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+
+		if ( empty( $suspended_record ) ) {
+			$suspended_record = BP_Core_Suspend::get_recode( $post->post_author, BP_Moderation_Members::$moderation_type );
+		}
+
+		if ( empty( $suspended_record ) ) {
+			return;
+		}
+
+		self::handle_new_suspend_entry( $suspended_record, $post_id, $post->post_author );
 	}
 }

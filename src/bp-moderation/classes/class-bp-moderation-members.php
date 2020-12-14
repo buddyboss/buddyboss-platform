@@ -41,16 +41,22 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( is_admin() && ! wp_doing_ajax() && self::admin_bypass_check() || ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
 			return;
 		}
 
-		// Remove hidden/blocked users content.
+		/**
+		 * If moderation setting enabled for this content then it'll filter hidden content.
+		 */
 		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// button.
-		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
+		// Code after below condition should not execute if moderation setting for this content disabled.
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return;
+		}
 
+		// Update report button.
+		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 	}
 

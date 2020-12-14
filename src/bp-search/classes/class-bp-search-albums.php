@@ -110,12 +110,12 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql['select'] .= ' COUNT( DISTINCT ma.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT m.id ) ';
 			} else {
-				$sql['select'] .= $wpdb->prepare( " DISTINCT ma.id, 'albums' as type, ma.title LIKE %s AS relevance, ma.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT m.id, 'albums' as type, m.title LIKE %s AS relevance, m.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql['from'] = " FROM {$bp->media->table_name_albums} ma";
+			$sql['from'] = " FROM {$bp->media->table_name_albums} m";
 
 			/**
 			 * Filter the MySQL JOIN clause for the albums Search query.
@@ -135,14 +135,14 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 			$where_conditions[] = $wpdb->prepare(
 				" (
 					(
-						ma.title LIKE %s
+						m.title LIKE %s
 					)
 					AND
 					(
-							( ma.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ma.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ma.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ma.user_id IN ( '" . implode( "','", $friends ) . "' ) AND ma.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( is_user_logged_in() ? " OR ( ma.user_id = '" . bp_loggedin_user_id() . "' AND ma.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( m.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( m.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND m.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( m.user_id IN ( '" . implode( "','", $friends ) . "' ) AND m.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( is_user_logged_in() ? " OR ( m.user_id = '" . bp_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					')
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
@@ -156,7 +156,7 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
 			 */
-			$where_conditions = apply_filters( 'bp_document_search_where_conditions_album', $where_conditions, $search_term );
+			$where_conditions = apply_filters( 'bp_media_search_where_conditions_album', $where_conditions, $search_term );
 
 			// Join the where conditions together.
 			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
@@ -179,16 +179,16 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 		 * @param string $template_type Template type.
 		 */
 		protected function generate_html( $template_type = '' ) {
-			$document_ids = array();
+			$album_ids = array();
 			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
-				$document_ids[] = $item_id;
+				$album_ids[] = $item_id;
 			}
 
 			// now we have all the posts.
 			// lets do a albums loop.
 			$args = array(
-				'include'      => implode( ',', $document_ids ),
-				'per_page'     => count( $document_ids ),
+				'include'      => implode( ',', $album_ids ),
+				'per_page'     => count( $album_ids ),
 				'search_terms' => false,
 			);
 

@@ -829,7 +829,7 @@ class BP_Document {
 
 		// Where conditions.
 		$where_conditions_document = array( '1=1' );
-		$where_conditions_folder   = array( "id != '0'" );
+		$where_conditions_folder   = array( "f.id != '0'" );
 
 		if ( ! empty( $r['scope'] ) ) {
 			$scope_query_document = self::get_scope_document_query_sql( $r['scope'], $r );

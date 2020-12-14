@@ -35,11 +35,6 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Check Component is disabled.
-		if ( ! bp_is_active( 'document' ) ) {
-			return;
-		}
-
 		// delete forum moderation data when actual forum deleted.
 		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
 
@@ -50,17 +45,20 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Remove hidden/blocked users content.
+		/**
+		 * If moderation setting enabled for this content then it'll filter hidden content.
+		 * And IF moderation setting enabled for member then it'll filter blocked user content.
+		 */
 		add_filter( 'bp_suspend_forum_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bbp_forums_forum_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
-		// button.
+		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
-
-		add_filter( 'bbp_forums_forum_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
 	}
 
 	/**
@@ -145,6 +143,25 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Validate the forum is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $post     Current forum object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $post ) {
+
+		if ( $this->is_content_hidden( (int) $post->id ) ) {
+			return false;
+		}
+
+		return $restrict;
+	}
+
+	/**
 	 * Function to modify the button args
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -162,24 +179,5 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		}
 
 		return $args;
-	}
-
-	/**
-	 * Validate the forum is valid or not.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param boolean $restrict Check the item is valid or not.
-	 * @param object  $post     Current forum object.
-	 *
-	 * @return false
-	 */
-	public function restrict_single_item( $restrict, $post ) {
-
-		if ( bp_moderation_is_content_hidden( (int) $post->ID, self::$moderation_type ) ) {
-			return false;
-		}
-
-		return $restrict;
 	}
 }

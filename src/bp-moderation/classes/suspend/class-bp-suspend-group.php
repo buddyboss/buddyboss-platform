@@ -36,6 +36,8 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_group' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_group' ), 10, 4 );
 
+		add_action( 'groups_group_after_save', array( $this, 'update_group_after_save' ), 10, 1 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -48,6 +50,8 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -147,6 +151,23 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Restrict Single item.
+	 *
+	 * @param boolean $restrict Check the item is valid or not.
+	 * @param object  $group    Current group object.
+	 *
+	 * @return false
+	 */
+	public function restrict_single_item( $restrict, $group ) {
+
+		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
+			return false;
+		}
+
+		return $restrict;
 	}
 
 	/**
@@ -252,6 +273,44 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			}
 		}
 
+		if ( bp_is_active( 'document' ) ) {
+			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_group_folder_ids( $group_id );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_group_document_ids( $group_id );
+		}
+
+		if ( bp_is_active( 'media' ) ) {
+			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id );
+		}
+
 		return $related_contents;
+	}
+
+	/**
+	 * Update the suspend table to add new group created.
+	 *
+	 * @param BP_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
+	 */
+	public function update_group_after_save( $group ) {
+
+		if ( empty( $group ) || empty( $group->id ) ) {
+			return;
+		}
+
+		$sub_items     = bp_moderation_get_sub_items( $group->id, BP_Moderation_Groups::$moderation_type );
+		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $group->id;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Groups::$moderation_type;
+
+		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+
+		if ( empty( $suspended_record ) ) {
+			$suspended_record = BP_Core_Suspend::get_recode( $group->creator_id, BP_Moderation_Members::$moderation_type );
+		}
+
+		if ( empty( $suspended_record ) ) {
+			return;
+		}
+
+		self::handle_new_suspend_entry( $suspended_record, $group->id, $group->creator_id );
 	}
 }

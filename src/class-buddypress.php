@@ -690,7 +690,9 @@ class BuddyPress {
 			'BP_Suspend_Forum_Topic'                       => 'suspend',
 			'BP_Suspend_Forum_Reply'                       => 'suspend',
 			'BP_Suspend_Document'                          => 'suspend',
+			'BP_Suspend_Folder'                            => 'suspend',
 			'BP_Suspend_Media'                             => 'suspend',
+			'BP_Suspend_Album'                             => 'suspend',
 			'BP_Suspend_Comment'                           => 'suspend',
 
 			// BuddyBoss Platform Rest API classes.
