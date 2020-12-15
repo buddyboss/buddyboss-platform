@@ -56,7 +56,7 @@
 			<div class="bb-activity-media-wrap bb-media-length-{{data.media.length}}">
 				<# for ( i in data.media ) { #>
 				<div class="bb-activity-media-elem">
-					<a class="bb-open-media-theatre bb-photo-cover-wrap"
+					<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.media[i].id}}"
 					   data-attachment-id="{{data.media[i].attachment_id}}"
 					   data-attachment-full="{{data.media[i].full}}"

@@ -206,26 +206,6 @@ window.bp = window.bp || {};
 
 		},
 
-		closeUploader: function ( event ) {
-			event.preventDefault();
-			$( '#bp-video-uploader' ).hide();
-			$( '#bp-video-add-more' ).hide();
-			$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload );
-			$( '#bp-video-uploader-modal-status-text' ).text( '' );
-			this.video_dropzone_obj.destroy();
-			this.dropzone_video = [];
-
-			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
-
-			if ( currentPopup.find( '.bb-field-steps' ).length ) {
-				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
-			}
-
-			this.clearFolderLocationUI( event );
-
-		},
-
 		clearFolderLocationUI: function ( event ) {
 
 			var closest_parent = jQuery( event.currentTarget ).closest( '.has-folderlocationUI' );
