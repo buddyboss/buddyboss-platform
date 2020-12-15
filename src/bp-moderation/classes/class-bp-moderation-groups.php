@@ -34,9 +34,6 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Delete group moderation data when group is deleted.
-		add_action( 'groups_delete_group', array( $this, 'sync_moderation_data_on_delete' ), 10 );
-
 		/**
 		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
 		 */
@@ -102,22 +99,6 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Group', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Function to delete group moderation data when actual group is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int $group_id group if.
-	 */
-	public function sync_moderation_data_on_delete( $group_id ) {
-		if ( ! empty( $group_id ) ) {
-			$moderation_obj = new BP_Moderation( $group_id, self::$moderation_type );
-			if ( ! empty( $moderation_obj->id ) ) {
-				$moderation_obj->delete( true );
-			}
-		}
 	}
 
 	/**

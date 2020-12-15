@@ -155,7 +155,7 @@ class BP_Core_Suspend {
 
 		$table_name = "{$bp->table_prefix}bp_suspend_details";
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql        = $wpdb->prepare( "SELECT user_id FROM  {$table_name} WHERE suspend_id = %d", $suspend_id );
+		$sql = $wpdb->prepare( "SELECT user_id FROM  {$table_name} WHERE suspend_id = %d", $suspend_id );
 		return $wpdb->get_col( $sql ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
@@ -360,5 +360,49 @@ class BP_Core_Suspend {
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
 
 		return ! empty( $result );
+	}
+
+	/**
+	 * Delete Suspend user/content entry.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
+	 */
+	public static function delete_suspend( $item_id, $item_type ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		$table_name = "{$bp->table_prefix}bp_suspend";
+
+		$recode = self::get_recode( $item_id, $item_type );
+
+		if ( ! empty( $recode ) ) {
+
+			self::remove_suspend_details(
+				array(
+					'suspend_id' => $recode->id,
+				)
+			);
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->delete(
+				$table_name,
+				array(
+					'item_id'   => $item_id,
+					'item_type' => $item_type,
+				)
+			);
+
+			/**
+			 * Hook to fire after the suspend record delete.
+			 *
+			 * @since BuddyBoss 2.0.0
+			 *
+			 * @param object $recode Suspended record object.
+			 */
+			do_action( 'suspend_after_delete', $recode );
+		}
 	}
 }

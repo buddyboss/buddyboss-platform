@@ -37,7 +37,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_forum' ), 10, 4 );
 
 		$forum_post_type = bbp_get_forum_post_type();
-		add_action( "save_post_{$forum_post_type}", array( $this, 'update_forum_after_save' ), 10, 2 );
+		// Add moderation data when forum is added.
+		add_action( "save_post_{$forum_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
+
+		// Delete moderation data when actual forum deleted.
+		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -196,7 +200,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $post ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post->id, self::$type ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post->ID, self::$type ) ) {
 			return false;
 		}
 
@@ -309,10 +313,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
 	 */
-	public function update_forum_after_save( $post_id, $post ) {
+	public function sync_moderation_data_on_save( $post_id, $post ) {
 
 		if ( empty( $post_id ) || empty( $post->ID ) ) {
 			return;
@@ -333,5 +339,22 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		self::handle_new_suspend_entry( $suspended_record, $post_id, $post->post_author );
+	}
+
+	/**
+	 * Update the suspend table to delete a forum.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 */
+	public function sync_moderation_data_on_delete( $post_id, $post ) {
+
+		if ( empty( $post_id ) || bbp_get_forum_post_type() !== $post->post_type ) {
+			return;
+		}
+
+		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
 	}
 }

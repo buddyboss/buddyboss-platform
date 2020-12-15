@@ -35,9 +35,6 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// delete forum moderation data when actual forum deleted.
-		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
-
 		/**
 		 * Moderation code should not add for WordPress backend oror Bypass argument passed for admin
 		 */
@@ -105,23 +102,6 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to delete forum moderation data when actual forum is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int    $forum_id Forum id being deleted.
-	 * @param object $forum    Forum post data.
-	 */
-	public function sync_moderation_data_on_delete( $forum_id, $forum ) {
-		if ( ! empty( $forum_id ) && ! empty( $forum ) && bbp_get_forum_post_type() === $forum->post_type ) {
-			$moderation_obj = new BP_Moderation( $forum_id, self::$moderation_type );
-			if ( ! empty( $moderation_obj->id ) ) {
-				$moderation_obj->delete( true );
-			}
-		}
-	}
-
-	/**
 	 * Update where query remove hidden/blocked user's forums
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -154,7 +134,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $post ) {
 
-		if ( $this->is_content_hidden( (int) $post->id ) ) {
+		if ( $this->is_content_hidden( (int) $post->ID ) ) {
 			return false;
 		}
 

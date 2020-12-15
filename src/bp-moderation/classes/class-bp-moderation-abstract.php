@@ -224,8 +224,13 @@ abstract class BP_Moderation_Abstract {
 	protected function exclude_where_query() {
 		$where = '';
 
-		if ( ( BP_Moderation_Members::$moderation_type !== $this->item_type && bp_is_moderation_member_blocking_enable( 0 ) )
-			|| bp_is_moderation_content_reporting_enable( 0, $this->item_type ) ) {
+		if (
+			(
+				BP_Moderation_Members::$moderation_type === $this->item_type &&
+				bp_is_moderation_member_blocking_enable( 0 )
+			)
+			|| bp_is_moderation_content_reporting_enable( 0, $this->item_type )
+		) {
 			$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
 		    AND 
 		    ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
@@ -252,7 +257,7 @@ abstract class BP_Moderation_Abstract {
 	protected function blocked_user_query() {
 		$bp = buddypress();
 
-		if ( BP_Moderation_Members::$moderation_type !== $this->item_type && bp_is_moderation_member_blocking_enable( 0 ) ) {
+		if ( bp_is_moderation_member_blocking_enable( 0 ) ) {
 
 			$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 			if ( ! empty( $hidden_users_ids ) ) {

@@ -35,9 +35,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		// Delete user moderation data when actual user is deleted.
-		add_action( 'deleted_user', array( $this, 'sync_moderation_data_on_delete' ), 10, 3 );
-
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -99,23 +96,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Delete moderation data when actual user is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int    $user_id  user id of the user that is being deleted.
-	 * @param int    $reassign user id of the user that all content is going to assign.
-	 * @param object $user     user data.
-	 */
-	public function sync_moderation_data_on_delete( $user_id, $reassign, $user ) {
-
-		$moderation_obj = new BP_Moderation( $user_id, self::$moderation_type );
-		if ( ! empty( $moderation_obj->id ) ) {
-			$moderation_obj->delete( true );
-		}
 	}
 
 	/**

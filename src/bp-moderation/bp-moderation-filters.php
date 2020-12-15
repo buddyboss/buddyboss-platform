@@ -377,3 +377,21 @@ function bp_moderation_block_user_profile_button( $buttons ) {
 }
 
 add_filter( 'bp_nouveau_customizer_user_profile_actions', 'bp_moderation_block_user_profile_button' );
+
+/**
+ * Removed Moderation report entries after the suspend record delete.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param object $recode Suspended record object.
+ */
+function bb_moderation_suspend_after_delete( $recode ) {
+
+	if ( empty( $recode ) ) {
+		return;
+	}
+
+	BP_Moderation::delete_moderation_by_id( $recode->id );
+
+}
+add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
