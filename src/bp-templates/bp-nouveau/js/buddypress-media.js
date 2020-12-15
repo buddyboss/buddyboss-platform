@@ -2097,7 +2097,7 @@ window.bp = window.bp || {};
 						'sending',
 						function(file, xhr, formData) {
 							formData.append( 'action', 'video_upload' );
-							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
 							var tool_box = $( '#send_group_message_form' );
 							if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
@@ -2404,8 +2404,6 @@ window.bp = window.bp || {};
 
 				if (dropzone_container.hasClass( 'closed' )) {
 
-
-
 					// init dropzone.
 					self.dropzone_obj[dropzone_obj_key] = new Dropzone( 'div#forums-post-video-uploader', self.videoOptions );
 
@@ -2413,7 +2411,7 @@ window.bp = window.bp || {};
 						'sending',
 						function(file, xhr, formData) {
 							formData.append( 'action', 'video_upload' );
-							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
 							var tool_box = target.closest( 'form' );
 							if ( tool_box.find( '#forums-media-button' ) ) {
