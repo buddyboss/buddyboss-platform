@@ -36,6 +36,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_member' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_member' ), 10, 4 );
 
+		// Migrate existing spammer as suspended user
+		add_action( 'bp_init', array( $this, 'migrate_spam_users' ), 99 );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -464,5 +467,25 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		return $related_contents;
+	}
+
+	/**
+	 * Migrate existing spammer as suspended user
+	 *
+	 * @since BuddyBoss 2.0.0
+	 */
+	function migrate_spam_users() {
+		global $wpdb;
+		$is_migrated = bp_get_option( 'bpm_migrate_spam_user' );
+		if ( empty( $is_migrated ) ) {
+			$spam_users = $wpdb->get_results( "SELECT ID FROM {$wpdb->users} WHERE user_status = 1" ); //phpcs:ignore.
+			if ( ! empty( $spam_users ) ) {
+				foreach ( $spam_users as $spam_user ) {
+					BP_Suspend_Member::suspend_user( $spam_user->ID );
+					bp_core_process_spammer_status( $spam_user->ID, 'ham' );
+				}
+			}
+			bp_update_option( 'bpm_migrate_spam_user', true );
+		}
 	}
 }
