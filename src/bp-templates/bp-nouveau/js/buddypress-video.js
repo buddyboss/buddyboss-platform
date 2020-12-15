@@ -43,10 +43,10 @@ window.bp = window.bp || {};
 			var bodySelector = $( 'body' );
 
 			this.video_dropzone_obj = [];
-			this.dropzone_video     = [];
-			this.video_album_id     = typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
-			this.video_group_id     = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
-			this.current_tab        = bodySelector.hasClass( 'single-topic' ) || bodySelector.hasClass( 'single-forum' ) ? false : 'bp-video-dropzone-content';
+			this.dropzone_video = [];
+			this.video_album_id = typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
+			this.video_group_id = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
+			this.current_tab = bodySelector.hasClass( 'single-topic' ) || bodySelector.hasClass( 'single-forum' ) ? false : 'bp-video-dropzone-content';
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			if ( typeof window.Dropzone !== 'undefined' ) {
@@ -97,7 +97,7 @@ window.bp = window.bp || {};
 			if ( self.current_tab === 'bp-video-dropzone-content' ) {
 
 				var post_content = $( '#bp-video-post-content' ).val();
-				data             = {
+				data = {
 					'action': 'video_save',
 					'_wpnonce': BP_Nouveau.nonces.video,
 					'videos': self.dropzone_video,
@@ -118,7 +118,7 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 
 								// It's the very first media, let's make sure the container can welcome it!
-								if ( ! $( '#video-stream ul.video-list' ).length ) {
+								if ( !$( '#video-stream ul.video-list' ).length ) {
 									$( '#video-stream' ).html( $( '<ul></ul>' ).addClass( 'video-list item-list bp-list bb-video-list grid' ) );
 									$( '.bb-videos-actions' ).show();
 								}
@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 
 								// It's the very first media, let's make sure the container can welcome it!
-								if ( ! $( '#video-stream ul.media-list' ).length ) {
+								if ( !$( '#video-stream ul.media-list' ).length ) {
 									$( '#video-stream' ).html( $( '<ul></ul>' ).addClass( 'video-list item-list bp-list bb-video-list grid' ) );
 									$( '.bb-video-actions' ).show();
 								}
@@ -198,7 +198,7 @@ window.bp = window.bp || {};
 						}
 					}
 				);
-			} else if ( ! self.current_tab ) {
+			} else if ( !self.current_tab ) {
 				self.closeUploader( event );
 				target.removeClass( 'saving' );
 			}
@@ -309,12 +309,12 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id                  = response.id;
-							response.data.uuid       = file.upload.uuid;
+							file.id = response.id;
+							response.data.uuid = file.upload.uuid;
 							response.data.menu_order = self.dropzone_video.length;
-							response.data.album_id   = self.video_album_id;
-							response.data.group_id   = self.video_group_id;
-							response.data.saved      = false;
+							response.data.album_id = self.video_album_id;
+							response.data.group_id = self.video_group_id;
+							response.data.saved = false;
 							self.dropzone_video.push( response.data );
 						} else {
 							this.removeFile( file );
@@ -332,7 +332,7 @@ window.bp = window.bp || {};
 							for ( var i in self.dropzone_video ) {
 								if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
 
-									if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && ! self.dropzone_video[ i ].saved ) {
+									if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && !self.dropzone_video[ i ].saved ) {
 										self.removeAttachment( self.dropzone_video[ i ].id );
 									}
 
@@ -341,7 +341,7 @@ window.bp = window.bp || {};
 								}
 							}
 						}
-						if ( ! self.video_dropzone_obj.getAcceptedFiles().length ) {
+						if ( !self.video_dropzone_obj.getAcceptedFiles().length ) {
 							$( '#bp-video-uploader-modal-status-text' ).text( '' );
 							$( '#bp-video-submit' ).hide();
 						} else {
@@ -399,14 +399,14 @@ window.bp = window.bp || {};
 		 */
 		setupGlobals: function () {
 
-			this.videos              = [];
-			this.current_video       = false;
+			this.videos = [];
+			this.current_video = false;
 			this.current_video_index = 0;
-			this.is_open_video       = false;
-			this.nextVideoLink       = $( '.bb-next-video' );
-			this.previousVideoLink   = $( '.bb-prev-video' );
-			this.activity_ajax       = false;
-			this.group_id            = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
+			this.is_open_video = false;
+			this.nextVideoLink = $( '.bb-next-video' );
+			this.previousVideoLink = $( '.bb-prev-video' );
+			this.activity_ajax = false;
+			this.group_id = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 
 		},
 
@@ -434,7 +434,7 @@ window.bp = window.bp || {};
 			self.showMedia();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && ! self.current_media.is_forum ) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
 				self.getActivity();
 			} else {
 				self.getMediasDescription();
@@ -477,6 +477,18 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
+
+			// Video File Activity Preview.
+			bp.Nouveau.Video.Player.openPlayer();
+
+			$( window ).on(
+				'scroll resize',
+				function () {
+					bp.Nouveau.Video.Player.openPlayer();
+				}
+			);
+
+
 		},
 
 		/**
@@ -484,26 +496,28 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function () {
 
-			$(document).on('click', '.video-js', this.openPlayer.bind(this));
+			$( document ).on( 'click', '.video-js', this.openPlayer.bind( this ) );
 
 		},
 
-		openPlayer: function (event) {
-			event.preventDefault();
-			var self = this;
-			var options = {};
-			
-			// console.log("Original SRC" + this.find('source').attr("src"));
-			// let blob = await fetch(this.find('source').attr("src")).then(r => r.blob());
-			// var videoUrl= (window.URL) ? window.URL.createObjectURL(blob) : window.webkitURL.createObjectURL(blob);
-			// console.log("Blob SRC" + videoUrl);
-			// this.find('source').attr("src") = videoUrl;
+		openPlayer: function () {
 
-			videojs(self, options, function onPlayerReady() {
-				this.play();
-				this.on('ended', function () {
-				});
-			});
+			$( '.video-js:not(.loaded)' ).each(
+				function () {
+
+					var self    = this;
+					var options = {};
+
+					videojs( self, options, function onPlayerReady() {
+						this.play();
+						this.on( 'ended', function () {
+						} );
+					} );
+
+					$(this).addClass( 'loaded' );
+				} );
+
+
 		},
 	};
 

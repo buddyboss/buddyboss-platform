@@ -715,9 +715,10 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 								update_post_meta( $video['id'], 'video_preview_thumbnails', implode( ',', $thumbnail_list ) );
 							}
 
-							$transcode_dir  = $upload['basedir'];
-							$original_video = get_attached_file( $video['id'] );
-							$file_type      = wp_check_filetype( wp_get_attachment_url( $video['id'] ) );
+							$transcode_dir       = $upload['basedir'];
+							$original_video      = get_attached_file( $video['id'] );
+							$file_type           = wp_check_filetype( wp_get_attachment_url( $video['id'] ) );
+							$video_attachment_id = $video['id'];
 
 							// Create temp folder.
 							$upload_dir = $transcode_dir . '/' . $video['id'] . '-video-transcoder-' . time();
@@ -731,16 +732,39 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 
 							}
 
-							// Convert to 720P 2500K.
-							// $seven_twenty = $upload_dir . '/' . $video['id'] . '-720.' . $file_type['ext'];
-							// $_720p        = ( new FFMpeg\Format\Video\X264( 'libmp3lame' ) )->setKiloBitrate( 1500 );
-							// $_720pvideo   = $ffmpeg->open( $original_video )->addFormat( $_720p )->save( $seven_twenty );
+							$transcode = false;
 
 							if ( $bitrate && ! empty( $resolutions ) ) {
+								foreach ( $resolutions as $key => $value ) {
+									// Checks if the resolution is supported, if it is not passed to the next.
+									if ( ! $value['support'] ) {
+										continue;
+									}
+
+									$file_path = $upload_dir;
+
+									// Creates quality folder in question.
+									if ( ! is_dir( $file_path . DIRECTORY_SEPARATOR . $key ) ) {
+
+										// Create temp folder.
+										wp_mkdir_p( $file_path . DIRECTORY_SEPARATOR . $key );
+										chmod( $file_path . DIRECTORY_SEPARATOR . $key, 0777 );
+
+									}
+
+									$format = new \FFMpeg\Format\Video\X264();
+									$format->setAudioCodec( 'libmp3lame' );
+									// Checks if the original bitrate of the video is less than that of quality, if it is less it is used less, otherwise the resolution.
+									$format->setKiloBitrate( ( $bitrate < $value['kilo_bitrate'] ) ? $bitrate : $value['kilo_bitrate'] );
+
+									$video = $ffmpeg->open( get_attached_file( $video_attachment_id ) );
+									$video->save( $format, $file_path . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . $key . '.' . $file_type['ext'] );
+								}
+							}
+
+							if ( $bitrate && ! empty( $resolutions ) && $transcode ) {
 
 								$format = new \FFMpeg\Format\Video\X264();
-
-								$video_attachment_id = $video['id'];
 
 								// Parameters to generate the HLS list every 10 seconds of video.
 								$format->setAdditionalParameters(

@@ -934,7 +934,7 @@ function bp_get_video_attachment_image() {
 	 *
 	 * @since BuddyBoss 1.6.0
 	 */
-	return apply_filters( 'bp_get_video_attachment_image', $video_template->video->attachment_data->full );
+	return apply_filters( 'bp_get_video_attachment_image', $video_template->video->attachment_data->thumb );
 }
 
 /**
