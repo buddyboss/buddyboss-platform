@@ -452,6 +452,15 @@ function bp_moderation_is_content_hidden( $item_id, $item_type ) {
 		return false;
 	}
 
+	// Check moderation setting enabled or not.
+	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return false;
+		}
+	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+		return false;
+	}
+
 	return (bool) BP_Core_Suspend::check_hidden_content( $item_id, $item_type );
 }
 
