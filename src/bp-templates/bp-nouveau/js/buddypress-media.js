@@ -4671,6 +4671,10 @@ window.bp = window.bp || {};
 				}
 				activity.remove();
 			}
+
+			// Report content popup
+			bp.Nouveau.reportPopUp();
+			bp.Nouveau.reportActions();
 		},
 
 		closeTheatre: function ( event ) {
