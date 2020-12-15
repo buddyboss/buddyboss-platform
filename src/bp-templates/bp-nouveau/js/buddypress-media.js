@@ -74,6 +74,21 @@ window.bp = window.bp || {};
 				dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
 			};
 
+			this.videoOptions = {
+				url                  : BP_Nouveau.ajaxurl,
+				timeout              : 3 * 60 * 60 * 1000,
+				dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
+				acceptedFiles        : BP_Nouveau.video.video_type,
+				createImageThumbnails: false,
+				dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
+				autoProcessQueue     : true,
+				addRemoveLinks       : true,
+				uploadMultiple       : false,
+				maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+				maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+				dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
+			};
+
 			if ($( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' )) {
 				this.options = {
 					url						: BP_Nouveau.ajaxurl,
@@ -262,6 +277,7 @@ window.bp = window.bp || {};
 
 			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-media-button', this.openGroupMessagesUploader.bind( this ) );
 			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-document-button', this.openGroupMessagesDocumentUploader.bind( this ) );
+			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-video-button', this.openGroupMessagesVideoUploader.bind( this ) );
 			groupMessagesButtonSelector.on( 'click', '#bp-group-messages-gif-button', this.toggleGroupMessagesGifSelector.bind( this ) );
 			groupMessagesToolbarSelector.on( 'keyup', '.search-query-input', this.searchGroupMessagesGif.bind( this ) );
 			groupMessagesToolbarSelector.on( 'click', '.found-media-item', this.selectGroupMessagesGif.bind( this ) );
@@ -1554,11 +1570,13 @@ window.bp = window.bp || {};
 			gif_search_dropdown.toggleClass( 'open' );
 			self.resetGroupMessagesMediaComponent();
 			self.resetGroupMessagesDocumentComponent();
+			self.resetGroupMessagesVideoComponent();
 		},
 
 		resetGroupMessagesMediaComponent: function() {
 			var self = this;
-			if ( self.dropzone_obj.length && typeof self.dropzone_obj !== 'undefined' ) {
+
+			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined', self.dropzone_obj.length ) {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];
@@ -1578,6 +1596,18 @@ window.bp = window.bp || {};
 			$( 'div#bp-group-messages-post-document-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 			$( '#bp-group-messages-document-button' ).removeClass( 'active' );
 			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val( '' );
+		},
+
+		resetGroupMessagesVideoComponent: function() {
+			var self = this;
+			if ( self.video_dropzone_obj && typeof self.video_dropzone_obj !== 'undefined' ) {
+				self.video_dropzone_obj.destroy();
+			}
+			self.dropzone_media = [];
+			$( 'div#bp-group-messages-post-video-uploader' ).html( '' );
+			$( 'div#bp-group-messages-post-video-uploader' ).addClass( 'closed' ).removeClass( 'open' );
+			$( '#bp-group-messages-video-button' ).removeClass( 'active' );
+			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_video' ).val( '' );
 		},
 
 		resetForumsMediaComponent: function( dropzone_container_key ) {
@@ -1886,8 +1916,8 @@ window.bp = window.bp || {};
 
 					// reset gif component.
 					self.resetGroupMessagesGifComponent();
-
 					self.resetGroupMessagesDocumentComponent();
+					self.resetGroupMessagesVideoComponent();
 
 				} else {
 					self.resetGroupMessagesMediaComponent();
@@ -2016,11 +2046,125 @@ window.bp = window.bp || {};
 
 					// reset gif component.
 					self.resetGroupMessagesGifComponent();
-
 					self.resetGroupMessagesMediaComponent();
+					self.resetGroupMessagesVideoComponent();
 
 				} else {
 					self.resetGroupMessagesDocumentComponent();
+				}
+
+			}
+
+		},
+
+		openGroupMessagesVideoUploader: function(event) {
+			var self = this, video_dropzone_container = $( 'div#bp-group-messages-post-video-uploader' ), target = $( event.currentTarget );
+			event.preventDefault();
+
+			target.toggleClass( 'active' );
+
+			if ( typeof window.Dropzone !== 'undefined' && video_dropzone_container.length ) {
+
+				if ( video_dropzone_container.hasClass( 'closed' ) ) {
+
+					// init dropzone.
+					self.video_dropzone_obj = new Dropzone( 'div#bp-group-messages-post-video-uploader', self.videoOptions );
+
+					self.video_dropzone_obj.on(
+						'sending',
+						function(file, xhr, formData) {
+							formData.append( 'action', 'video_upload' );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+							var tool_box = $( '#send_group_message_form' );
+							if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
+								tool_box.find( '#bp-group-messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#bp-group-messages-gif-button' ) ) {
+								tool_box.find( '#bp-group-messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#bp-group-messages-media-button' ) ) {
+								tool_box.find( '#bp-group-messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							}
+						}
+					);
+
+					self.video_dropzone_obj.on(
+						'error',
+						function(file,response) {
+							if ( file.accepted ) {
+								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								}
+							} else {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								this.removeFile(file);
+							}
+						}
+					);
+
+					self.video_dropzone_obj.on(
+						'success',
+						function(file, response) {
+							if ( response.data.id ) {
+								file.id 				 = response.id;
+								response.data.uuid 		 = file.upload.uuid;
+								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								response.data.album_id 	 = self.album_id;
+								response.data.group_id 	 = self.group_id;
+								response.data.saved    	 = false;
+								self.dropzone_media.push( response.data );
+								self.addMediaIdsToGroupMessagesForm();
+							} else {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								this.removeFile(file);
+							}
+						}
+					);
+
+					self.video_dropzone_obj.on(
+						'removedfile',
+						function(file) {
+							if ( self.dropzone_media.length ) {
+								for ( var i in self.dropzone_media ) {
+									if ( file.upload.uuid == self.dropzone_media[i].uuid  ) {
+
+										if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
+											self.removeAttachment( self.dropzone_media[i].id );
+										}
+
+										self.dropzone_media.splice( i, 1 );
+										self.addMediaIdsToGroupMessagesForm();
+										break;
+									}
+								}
+							}
+
+							if ( ! _.isNull( self.video_dropzone_obj.files ) && self.video_dropzone_obj.files.length === 0 ) {
+								var tool_box = $( '#send_group_message_form' );
+								if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
+									tool_box.find( '#bp-group-messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#bp-group-messages-gif-button' ) ) {
+									tool_box.find( '#bp-group-messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#bp-group-messages-media-button' ) ) {
+									tool_box.find( '#bp-group-messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								}
+							}
+						}
+					);
+
+					// container class to open close.
+					video_dropzone_container.removeClass( 'closed' ).addClass( 'open' );
+
+					// reset gif component.
+					self.resetGroupMessagesMediaComponent();
+					self.resetGroupMessagesGifComponent();
+					self.resetGroupMessagesDocumentComponent();
+
+				} else {
+					self.resetGroupMessagesVideoComponent();
 				}
 
 			}
