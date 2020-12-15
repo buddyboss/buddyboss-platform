@@ -134,7 +134,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $post ) {
 
-		if ( $this->is_content_hidden( (int) $post->id ) ) {
+		if ( $this->is_content_hidden( (int) $post->ID ) ) {
 			return false;
 		}
 

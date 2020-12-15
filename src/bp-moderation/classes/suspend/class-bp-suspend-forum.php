@@ -200,7 +200,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $post ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post->id, self::$type ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post->ID, self::$type ) ) {
 			return false;
 		}
 
