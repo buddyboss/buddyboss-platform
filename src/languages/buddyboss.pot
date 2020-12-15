@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-14 11:21:52+00:00\n"
+"POT-Creation-Date: 2020-12-15 16:20:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -692,7 +692,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:536
 #: bp-core/classes/class-bp-admin.php:537 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1754
-#: bp-media/bp-media-filters.php:1227 bp-video/bp-video-filters.php:1184
+#: bp-media/bp-media-filters.php:1227 bp-video/bp-video-filters.php:1187
 msgid "Tools"
 msgstr ""
 
@@ -1283,7 +1283,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1122
 #: bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:202
-#: bp-video/bp-video-filters.php:1235
+#: bp-video/bp-video-filters.php:1238
 msgid "Forums"
 msgstr ""
 
@@ -2787,7 +2787,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2372
-#: bp-media/bp-media-filters.php:1327 bp-video/bp-video-filters.php:1276
+#: bp-media/bp-media-filters.php:1327 bp-video/bp-video-filters.php:1279
 msgid "Run Migration"
 msgstr ""
 
@@ -3490,7 +3490,7 @@ msgstr ""
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
 #: bp-media/bp-media-filters.php:1285
 #: bp-templates/bp-nouveau/includes/groups/classes.php:300
-#: bp-video/bp-video-filters.php:1241
+#: bp-video/bp-video-filters.php:1244
 msgid "Discussions"
 msgstr ""
 
@@ -3506,7 +3506,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:1291 bp-video/bp-video-filters.php:1247
+#: bp-media/bp-media-filters.php:1291 bp-video/bp-video-filters.php:1250
 msgid "Replies"
 msgstr ""
 
@@ -3645,7 +3645,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1659 bp-forums/admin/tools.php:1661
 #: bp-forums/admin/tools.php:1733 bp-forums/admin/tools.php:1735
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1737
-#: bp-video/bp-video-filters.php:1612
+#: bp-video/bp-video-filters.php:1615
 msgid "Complete!"
 msgstr ""
 
@@ -4035,7 +4035,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:22
 #: bp-document/bp-document-functions.php:1995
-#: bp-video/bp-video-filters.php:1229 bp-video/bp-video-functions.php:3096
+#: bp-video/bp-video-filters.php:1232 bp-video/bp-video-functions.php:3338
 msgid "Video"
 msgstr ""
 
@@ -6810,31 +6810,31 @@ msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
 #: bp-document/bp-document-functions.php:1415
-#: bp-media/bp-media-functions.php:116 bp-video/bp-video-functions.php:117
+#: bp-media/bp-media-functions.php:116 bp-video/bp-video-functions.php:114
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
 #: bp-document/bp-document-functions.php:1416
-#: bp-media/bp-media-functions.php:117 bp-video/bp-video-functions.php:118
+#: bp-media/bp-media-functions.php:117 bp-video/bp-video-functions.php:115
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
 #: bp-document/bp-document-functions.php:1418
-#: bp-media/bp-media-functions.php:119 bp-video/bp-video-functions.php:120
+#: bp-media/bp-media-functions.php:119 bp-video/bp-video-functions.php:117
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
 #: bp-document/bp-document-functions.php:1419
-#: bp-media/bp-media-functions.php:120 bp-video/bp-video-functions.php:121
+#: bp-media/bp-media-functions.php:120 bp-video/bp-video-functions.php:118
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
 #: bp-document/bp-document-functions.php:1420
-#: bp-media/bp-media-functions.php:121 bp-video/bp-video-functions.php:122
+#: bp-media/bp-media-functions.php:121 bp-video/bp-video-functions.php:119
 msgid "File upload stopped by extension."
 msgstr ""
 
@@ -8665,7 +8665,7 @@ msgid "Download"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:1047 bp-media/bp-media-filters.php:1832
-#: bp-video/bp-video-filters.php:1704
+#: bp-video/bp-video-filters.php:1707
 msgid "File not found"
 msgstr ""
 
@@ -8692,7 +8692,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-document/bp-document-filters.php:1625 bp-media/bp-media-filters.php:2245
-#: bp-video/bp-video-filters.php:2099
+#: bp-video/bp-video-filters.php:2102
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -8701,7 +8701,7 @@ msgid "Please login in order to upload file document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1414
-#: bp-media/bp-media-functions.php:115 bp-video/bp-video-functions.php:116
+#: bp-media/bp-media-functions.php:115 bp-video/bp-video-functions.php:113
 msgid "The uploaded file exceeds "
 msgstr ""
 
@@ -8710,48 +8710,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1950
-#: bp-video/bp-video-functions.php:3051
+#: bp-video/bp-video-functions.php:3293
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1955
-#: bp-video/bp-video-functions.php:3056
+#: bp-video/bp-video-functions.php:3298
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1960
-#: bp-video/bp-video-functions.php:3061
+#: bp-video/bp-video-functions.php:3303
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1965
-#: bp-video/bp-video-functions.php:3066
+#: bp-video/bp-video-functions.php:3308
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1970
-#: bp-video/bp-video-functions.php:3071
+#: bp-video/bp-video-functions.php:3313
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1975
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:3076
+#: bp-video/bp-video-functions.php:3318
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1980
-#: bp-video/bp-video-functions.php:3081
+#: bp-video/bp-video-functions.php:3323
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1985
-#: bp-video/bp-video-functions.php:3086
+#: bp-video/bp-video-functions.php:3328
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1990
-#: bp-video/bp-video-functions.php:3091
+#: bp-video/bp-video-functions.php:3333
 msgid "Text"
 msgstr ""
 
@@ -16166,7 +16166,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
 #: bp-templates/bp-nouveau/includes/groups/classes.php:368
 #: bp-templates/bp-nouveau/includes/groups/functions.php:859
-#: bp-video/bp-video-filters.php:1223
+#: bp-video/bp-video-filters.php:1226
 msgid "Albums"
 msgstr ""
 
@@ -18454,24 +18454,24 @@ msgid ""
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1261 bp-video/bp-video-filters.php:1218
+#: bp-media/bp-media-filters.php:1261 bp-video/bp-video-filters.php:1221
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1264 bp-video/bp-video-filters.php:1220
+#: bp-media/bp-media-filters.php:1264 bp-video/bp-video-filters.php:1223
 msgid "Migration in progress"
 msgstr ""
 
 #: bp-media/bp-media-filters.php:1269 bp-media/bp-media-filters.php:1275
 #: bp-media/bp-media-filters.php:1281 bp-media/bp-media-filters.php:1287
-#: bp-media/bp-media-filters.php:1293 bp-video/bp-video-filters.php:1225
-#: bp-video/bp-video-filters.php:1231 bp-video/bp-video-filters.php:1237
-#: bp-video/bp-video-filters.php:1243 bp-video/bp-video-filters.php:1249
+#: bp-media/bp-media-filters.php:1293 bp-video/bp-video-filters.php:1228
+#: bp-video/bp-video-filters.php:1234 bp-video/bp-video-filters.php:1240
+#: bp-video/bp-video-filters.php:1246 bp-video/bp-video-filters.php:1252
 msgid "out of"
 msgstr ""
 
 #: bp-media/bp-media-filters.php:1305 bp-media/bp-media-filters.php:1319
-#: bp-video/bp-video-filters.php:1259 bp-video/bp-video-filters.php:1270
+#: bp-video/bp-video-filters.php:1262 bp-video/bp-video-filters.php:1273
 msgid "Re-Run Migration"
 msgstr ""
 
@@ -22915,7 +22915,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:20
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:33
-#: bp-video/bp-video-filters.php:2094
+#: bp-video/bp-video-filters.php:2097
 msgid "%s video"
 msgid_plural "%s videos"
 msgstr[0] ""
@@ -24770,25 +24770,25 @@ msgstr ""
 msgid "Matroska"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1126 bp-video/bp-video-filters.php:1142
-#: bp-video/bp-video-filters.php:1143 bp-video/bp-video-filters.php:1196
-#: bp-video/bp-video-filters.php:1323
+#: bp-video/bp-video-filters.php:1129 bp-video/bp-video-filters.php:1145
+#: bp-video/bp-video-filters.php:1146 bp-video/bp-video-filters.php:1199
+#: bp-video/bp-video-filters.php:1326
 msgid "Import Video"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1201
+#: bp-video/bp-video-filters.php:1204
 msgid ""
 "BuddyBoss Video plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1266 bp-video/bp-video-functions.php:2224
+#: bp-video/bp-video-filters.php:1269 bp-video/bp-video-functions.php:2466
 msgid ""
 "BuddyBoss Video data update is complete! Any previously uploaded member "
 "videos should display in their profiles now."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1275
+#: bp-video/bp-video-filters.php:1278
 msgid ""
 "Import your existing members video uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -24796,7 +24796,7 @@ msgid ""
 "old videos into the new Video component."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1321
+#: bp-video/bp-video-filters.php:1324
 msgid ""
 "We have found some video uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -24805,31 +24805,31 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1503
+#: bp-video/bp-video-filters.php:1506
 msgid "Repair video on the site."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1508
+#: bp-video/bp-video-filters.php:1511
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1562
+#: bp-video/bp-video-filters.php:1565
 msgid "%s video updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1572
+#: bp-video/bp-video-filters.php:1575
 msgid "Video update complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1600
+#: bp-video/bp-video-filters.php:1603
 msgid "%s Forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1608
+#: bp-video/bp-video-filters.php:1611
 msgid "Forums video privacy updated %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1721
+#: bp-video/bp-video-filters.php:1724
 msgid "Go to video"
 msgstr ""
 
@@ -24837,11 +24837,11 @@ msgstr ""
 msgid "Please login in order to upload file video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:147
+#: bp-video/bp-video-functions.php:144
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:2225
+#: bp-video/bp-video-functions.php:2467
 msgid "BuddyBoss Video data update is failing!"
 msgstr ""
 

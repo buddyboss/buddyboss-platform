@@ -1127,7 +1127,7 @@ window.bp = window.bp || {};
 			prepareEditVideoActivity: function () {
 				var self = this;
 
-				if ( _.isUndefined( self.editActivityData ) ) {
+				if ( _.isUndefined( self.editActivityData ) || self.editActivityData === null ) {
 					return false;
 				}
 
