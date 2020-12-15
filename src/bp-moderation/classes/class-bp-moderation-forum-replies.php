@@ -160,7 +160,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		$reply_id = bbp_get_reply_id();
 
-		if ( BP_Core_Suspend::check_hidden_content( $reply_id, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $reply_id ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 

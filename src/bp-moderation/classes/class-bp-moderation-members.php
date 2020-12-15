@@ -55,6 +55,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
+
+		add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 10, 2 );
+		add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 10, 2 );
+		add_filter( 'get_the_author_user_login', array( $this, 'get_the_author_name' ), 10, 2 );
+		add_filter( 'get_the_author_user_email', array( $this, 'get_the_author_name' ), 10, 2 );
+		add_filter( 'get_the_author_display_name', array( $this, 'get_the_author_name' ), 10, 2 );
+		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_meta' ), 10, 2 );
 	}
 
 	/**
@@ -152,5 +159,60 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 			return;
 		}
+	}
+
+	/**
+	 * Restrict User domain of blocked member.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $domain  User domain link
+	 * @param int    $user_id User id
+	 *
+	 * @return string
+	 */
+	public function bp_core_get_user_domain( $domain, $user_id ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			return '';
+		}
+
+		return $domain;
+	}
+
+	/**
+	 * Restrict User meta of blocked member.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $value   User meta
+	 * @param int    $user_id User id
+	 *
+	 * @return string
+	 */
+	public function get_the_author_meta( $value, $user_id ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			return '';
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Restrict User meta name of blocked member.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $value   User meta
+	 * @param int    $user_id User id
+	 *
+	 * @return string
+	 */
+	public function get_the_author_name( $value, $user_id ) {
+
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			return esc_html__( 'Blocked User', 'buddyboss' );
+		}
+
+		return $value;
 	}
 }

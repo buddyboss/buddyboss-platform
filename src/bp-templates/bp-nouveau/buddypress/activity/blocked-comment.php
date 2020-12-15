@@ -45,7 +45,7 @@ if ( bp_is_active( 'moderation' ) ) {
 	<div class="acomment-meta">
 
 		<?php if ( $is_user_suspended || $is_user_blocked ) { ?>
-			<span class="author-name"><?php esc_html_e( 'User Blocked', 'buddyboss' ); ?></span>
+			<span class="author-name"><?php esc_html_e( 'Blocked User', 'buddyboss' ); ?></span>
 		<?php } else {
 			bp_nouveau_activity_comment_action();
 		} ?>

@@ -1043,7 +1043,7 @@ class BP_Moderation {
 				$this->send_emails();
 			}
 		} elseif ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
-			// Content will be hide when user blocked for reported.
+			// Content will be hide when Blocked User for reported.
 			$this->hide_related_content();
 		}
 

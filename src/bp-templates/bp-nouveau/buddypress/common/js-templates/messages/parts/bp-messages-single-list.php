@@ -31,7 +31,7 @@
 					<strong class="bp-user-deleted">{{data.sender_name}}</strong>
 					<# } #>
 				<# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
-					<strong class="bp-user-blocked"><?php _e( 'User Blocked', 'buddyboss' ); ?></strong>
+					<strong class="bp-user-blocked"><?php _e( 'Blocked User', 'buddyboss' ); ?></strong>
 				<# } else { #>
 					<a href="{{data.sender_link}}" class="bp-user-link">
 						<# if ( data.sender_is_you ) { #>

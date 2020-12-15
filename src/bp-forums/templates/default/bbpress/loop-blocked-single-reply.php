@@ -60,7 +60,7 @@ if ( bp_is_active( 'moderation' ) ) {
 				<?php echo get_avatar( 0 ); ?>
 			</span>
 			<br>
-			<span class="bbp-author-name"><?php esc_html_e( 'User Blocked', 'buddyboss' ); ?></span>
+			<span class="bbp-author-name"><?php esc_html_e( 'Blocked User', 'buddyboss' ); ?></span>
 		<?php } else {
 			bbp_reply_author_link(
 					array(

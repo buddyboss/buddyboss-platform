@@ -52,10 +52,10 @@
 
 				<# if ( data.group_name && data.group_name.length && data.is_group_thread ) { #>
 				<span class="user-name">{{data.group_name}}</span> <# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
-				<span class="user-name"><?php _e( 'User Blocked', 'buddyboss' ); ?></span> <# } else { #>
+				<span class="user-name"><?php _e( 'Blocked User', 'buddyboss' ); ?></span> <# } else { #>
 
 				<# for ( i in first_three ) { if( other_recipients[i].is_user_blocked || other_recipients[i].is_user_suspended ){ #><span class="user-name">
-							<?php esc_html_e( 'User Blocked', 'buddyboss' ); ?></span> <# } else { #>
+							<?php esc_html_e( 'Blocked User', 'buddyboss' ); ?></span> <# } else { #>
 				<span class="user-name">
 								{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #><?php _e( ',',
 							'buddyboss' ); ?><# } #>
@@ -70,7 +70,7 @@
 				  <# if ( data.sender_is_you ) { #>
 					<?php _e( 'You', 'buddyboss' ); ?>:
 				  <# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
-					<?php _e( 'User Blocked', 'buddyboss' ); ?>:
+					<?php _e( 'Blocked User', 'buddyboss' ); ?>:
 				  <# } else if ( other_recipients && other_recipients.length ) { #>
 					{{ data.sender_name }}:
 				  <# } #>

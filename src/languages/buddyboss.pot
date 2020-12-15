@@ -14248,7 +14248,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:55
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:58
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:73
-msgid "User Blocked"
+msgid "Blocked User"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:83
@@ -21444,7 +21444,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-comment.php:172
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:187
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:206
-msgid "User Blocked."
+msgid "Blocked User."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:139

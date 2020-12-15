@@ -131,7 +131,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			$comment_author_id = self::get_content_owner_id( $comment_id );
 			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
 			if ( $is_user_blocked ) {
-				$return = esc_html__( 'User Blocked.', 'buddyboss' );
+				$return = esc_html__( 'Blocked User', 'buddyboss' );
 			}
 		}
 
@@ -169,7 +169,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			$comment_author_id = self::get_content_owner_id( $comment_id );
 			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
 			if ( $is_user_blocked ) {
-				$author = esc_html__( 'User Blocked.', 'buddyboss' );
+				$author = esc_html__( 'Blocked User', 'buddyboss' );
 			}
 		}
 
