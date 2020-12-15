@@ -1483,7 +1483,7 @@ function bp_media_settings_callback_media_allowed_per_batch() {
 	/> <?php esc_html_e( 'per batch', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
-		_e( 'Set a maximum photos upload limit per batch at the time of activity update, personal and group photos upload.', 'buddyboss' )
+		_e( 'Set a maximum number of images that can be added to one activity post or photo upload.', 'buddyboss' )
 		?>
 	</p>
 	<?php
@@ -1517,7 +1517,7 @@ function bp_media_settings_callback_document_allowed_per_batch() {
 	/> <?php esc_html_e( 'per batch', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
-		_e( 'Set a maximum documents upload limit per batch at the time of activity update, personal and group documents upload.', 'buddyboss' )
+		_e( 'Set a maximum number of files that can be added to one activity post or document upload.', 'buddyboss' )
 		?>
 	</p>
 	<?php

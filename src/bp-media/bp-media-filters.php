@@ -65,6 +65,8 @@ add_action( 'init', 'bp_media_download_url_file' );
 add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
+add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
+
 /**
  * Add Media items for search
  */
@@ -158,7 +160,7 @@ function bp_media_activity_entry() {
 	}
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) { ?>
-		<div class="bb-activity-media-wrap 
+		<div class="bb-activity-media-wrap
 		<?php
 		echo esc_attr( 'bb-media-length-' . $media_template->media_count );
 		echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
@@ -245,7 +247,7 @@ function bp_media_activity_append_media( $content, $activity ) {
 		if ( bp_has_media( $args ) ) {
 			?>
 			<?php ob_start(); ?>
-			<div class="bb-activity-media-wrap 
+			<div class="bb-activity-media-wrap
 			<?php
 			echo 'bb-media-length-' . $media_template->media_count;
 			echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
@@ -2337,3 +2339,25 @@ function bp_media_get_edit_activity_data( $activity ) {
 	return $activity;
 }
 
+/**
+ * Added activity entry class for media.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param string $class class.
+ *
+ * @return string
+ */
+function bp_media_activity_entry_css_class( $class ) {
+
+	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
+
+		$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+		if ( ! empty( $media_ids ) ) {
+			$class .= ' media-activity-wrap';
+		}
+	}
+
+	return $class;
+
+}

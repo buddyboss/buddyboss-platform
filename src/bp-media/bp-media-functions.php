@@ -3238,6 +3238,8 @@ function bp_media_get_activity_media( $activity_id ) {
 /**
  * Check given photo is activity comment photo.
  *
+ * @since BuddyBoss 1.5.6
+ *
  * @param $photo
  *
  * @return bool

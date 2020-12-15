@@ -4149,7 +4149,7 @@ function bp_is_group_messages() {
 function bp_is_user_albums() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_media_component' ) && bp_is_media_component() && bp_is_current_action( 'albums' ) ) {
+	if ( bp_is_active( 'media' ) && bp_is_media_component() && bp_is_current_action( 'albums' ) ) {
 		$retval = true;
 	}
 

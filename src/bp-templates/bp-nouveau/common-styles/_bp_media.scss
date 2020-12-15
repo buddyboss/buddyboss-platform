@@ -326,10 +326,20 @@
 		overflow: auto;
 	}
 
-	&#boss-media-create-album-popup .bb-model-header {
-		margin-bottom: 20px;
+	&#boss-media-create-album-popup {
+
+		.bb-model-header {
+			margin-bottom: 20px;
+		}
+
 	}
 
+}
+
+#bp-media-uploader .popup-on-fly-create-folder-title.error + .error-box,
+#boss-media-create-album-popup .popup-on-fly-create-folder-title.error + .error-box {
+	display: block;
+	font-size: 13px;
 }
 
 .bbm-model-wrap {

@@ -482,4 +482,5 @@
 .bb-icon-rounded-pinterest:before { content: '\ede3'; }
 .bb-icon-attach:before { content: '\e980'; }
 .bb-icon-media:before { content: '\e963'; }
- /* stylelint-enable */
+.bb-icon-sync:before { content: '\e964'; }
+/* stylelint-enable */

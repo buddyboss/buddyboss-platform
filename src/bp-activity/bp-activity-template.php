@@ -4151,31 +4151,19 @@ function bp_activity_entry_css_class() {
 	echo bp_get_activity_entry_css_class();
 }
 
-	/**
-	 * Return the current activity entry item's CSS class.
-	 *
-	 * @since BuddyBoss 1.5.0
-	 *
-	 * @global object $activities_template {@link BP_Activity_Template}
-	 *
-	 * @return string The activity entry item's CSS class.
-	 */
+/**
+ * Return the current activity entry item's CSS class.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity entry item's CSS class.
+ */
 function bp_get_activity_entry_css_class() {
 	global $activities_template;
 
 	$class = '';
-
-	if ( bp_is_active( 'media' ) ) {
-		$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
-		if ( ! empty( $document_ids ) ) {
-			$class .= ' documemt-activity';
-		}
-
-		$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
-		if ( ! empty( $media_ids ) ) {
-			$class .= ' media-activity-wrap';
-		}
-	}
 
 	/**
 	 * Filters the determined classes to add to the HTML element.

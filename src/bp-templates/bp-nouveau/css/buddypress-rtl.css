@@ -2775,11 +2775,11 @@ span.dashicons.dashicons-admin-file:before {
   content: "\e96a";
 }
 
-.activity-list .activity-item .activity-content.documemt-activity {
+.activity-list .activity-item .activity-content.document-activity {
   position: relative;
 }
 
-.activity-list .activity-item .activity-content.documemt-activity .activity-inner {
+.activity-list .activity-item .activity-content.document-activity .activity-inner {
   overflow: visible;
 }
 
@@ -12626,6 +12626,12 @@ body.login .login-popup .mfp-close:hover {
 
 .modal-container#boss-media-create-album-popup .bb-model-header {
   margin-bottom: 20px;
+}
+
+#bp-media-uploader .popup-on-fly-create-folder-title.error + .error-box,
+#boss-media-create-album-popup .popup-on-fly-create-folder-title.error + .error-box {
+  display: block;
+  font-size: 13px;
 }
 
 .bbm-model-wrap input,

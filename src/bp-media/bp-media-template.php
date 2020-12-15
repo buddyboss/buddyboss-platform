@@ -1882,5 +1882,5 @@ function bp_album_user_can_edit( $album = false ) {
 	 * @param bool   $can_edit Whether the user can edit the item.
 	 * @param object $album   Current album item object.
 	 */
-	return (bool) apply_filters( 'bp_folder_user_can_delete', $can_edit, $album );
+	return (bool) apply_filters( 'bp_album_user_can_delete', $can_edit, $album );
 }
