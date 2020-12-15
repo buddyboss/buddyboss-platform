@@ -6,10 +6,12 @@
  * @package BuddyBoss\Core
  */
 
+global $document_template;
+
 $attachment_id       = bp_get_document_attachment_id();
 $extension           = '';
-$can_download    = false;
-$can_manage      = false;
+$can_download    	 = false;
+$can_manage      	 = false;
 $can_view            = false;
 $attachment_url      = '';
 $text_attachment_url = '';
@@ -20,6 +22,9 @@ $document_id         = bp_get_document_id();
 $filename             = basename( get_attached_file( $attachment_id ) );
 $mirror_text         = '';
 $audio_url           = '';
+$can_add			 = false;
+$data_action		 = '';
+$is_comment_doc      = false;
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension, $attachment_id );
@@ -29,15 +34,16 @@ if ( $attachment_id ) {
 	$listing_class       = 'ac-document-list';
 	$document_type       = 'document';
 	$document_privacy    = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
-	$can_download    = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-	$can_manage      = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
+	$can_download    	 = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	$can_manage      	 = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 	$can_view            = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 	$can_add             = ( true === (bool) $document_privacy['can_add'] ) ? true : false;
 	$group_id            = bp_get_document_group_id();
 	// $document_title   = basename( get_attached_file( $attachment_id ) );
-	$document_title = bp_get_document_title();
-	$data_action    = 'document';
-	$mirror_text    = bp_document_mirror_text( $attachment_id );
+	$document_title 	 = bp_get_document_title();
+	$data_action    	 = 'document';
+	$mirror_text    	 = bp_document_mirror_text( $attachment_id );
+	$is_comment_doc      = bp_document_is_activity_comment_document( $document_template->document );
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -59,9 +65,9 @@ if ( $attachment_id ) {
 	$listing_class    = 'ac-folder-list';
 	$document_type    = 'folder';
 	$folder_privacy   = bp_document_user_can_manage_folder( bp_get_document_folder_id(), bp_loggedin_user_id() );
-	$can_manage   = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+	$can_manage   	  = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
 	$can_view         = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
-	$can_download = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
+	$can_download 	  = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 	$can_add          = ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
 	$group_id         = bp_get_document_folder_group_id();
 	$document_title   = bp_get_folder_title();
@@ -241,13 +247,12 @@ if ( $attachment_id ) {
 								}
 							}
 
-							if ( $can_manage ) {
-								?>
-								<li class="privacy_file <?php echo esc_attr( $li_class ); ?>" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
-									<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $text ); ?></a>
-								</li>
-								<?php
-							}
+                            ?>
+                            <li class="privacy_file <?php echo esc_attr( $li_class ); ?>" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
+                                <a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $text ); ?></a>
+                            </li>
+                            <?php
+
 						}
 						?>
 						<li class="rename_file">
@@ -255,11 +260,19 @@ if ( $attachment_id ) {
 						</li>
 						<?php
 						if ( $can_add ) {
-							?>
-							<li class="move_file">
-								<a href="#" data-action="<?php echo esc_attr( $data_action ); ?>" data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-							</li>
-							<?php
+						    if ( $is_comment_doc ) {
+							    ?>
+                                <li class="move_file disabled-move" data-balloon-pos="down" data-balloon="Documents added in comment cannot be moved">
+                                    <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                                </li>
+							    <?php
+						    } else {
+							    ?>
+                                <li class="move_file">
+                                    <a href="#" data-action="<?php echo esc_attr( $data_action ); ?>" data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                                </li>
+							    <?php
+						    }
 						}
 						?>
 						<li class="delete_file">
