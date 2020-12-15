@@ -509,7 +509,6 @@ window.bp = window.bp || {};
 					var options = {};
 
 					videojs( self, options, function onPlayerReady() {
-						this.play();
 						this.on( 'ended', function () {
 						} );
 					} );

@@ -1223,16 +1223,19 @@ body.vjs-full-window {
 
 .video-js .vjs-current-time,
 .vjs-no-flex .vjs-current-time {
-  display: none;
+  display: block;
 }
 
+.vjs-remaining-time {
+  display: none;
+}
 .video-js .vjs-duration,
 .vjs-no-flex .vjs-duration {
-  display: none;
+  display: block;
 }
 
 .vjs-time-divider {
-  display: none;
+  display: block;
   line-height: 3em;
 }
 
