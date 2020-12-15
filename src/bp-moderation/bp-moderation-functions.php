@@ -752,6 +752,15 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
  * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
+	// Check for folder type and content type as document.
+	if ( BP_Moderation_Folder::$moderation_type === $content_type ) {
+		$content_type = BP_Moderation_Document::$moderation_type;
+
+		// Check for album type and content type as media.
+	} elseif ( BP_Moderation_Album::$moderation_type === $content_type ) {
+		$content_type = BP_Moderation_Media::$moderation_type;
+	}
+
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
