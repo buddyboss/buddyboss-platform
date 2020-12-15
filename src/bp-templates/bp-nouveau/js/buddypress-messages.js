@@ -1065,6 +1065,158 @@ window.bp = window.bp || {};
 		}
 	);
 
+	//Message Video Selector
+	bp.Views.MessagesVideo = bp.Nouveau.Messages.View.extend(
+		{
+			tagName: 'div',
+			className: 'messages-video-container',
+			template: bp.template( 'messages-video' ),
+			video : [],
+
+			videoOptions : {
+				url                  : BP_Nouveau.ajaxurl,
+				timeout              : 3 * 60 * 60 * 1000,
+				dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
+				acceptedFiles        : BP_Nouveau.video.video_type,
+				createImageThumbnails: false,
+				dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
+				autoProcessQueue     : true,
+				addRemoveLinks       : true,
+				uploadMultiple       : false,
+				maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+				maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+				dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
+			},
+
+			initialize: function () {
+				this.model.set( 'video', this.video );
+				document.addEventListener( 'messages_video_toggle', this.toggle_video_uploader.bind( this ) );
+				document.addEventListener( 'messages_video_close', this.destroy.bind( this ) );
+			},
+
+			toggle_video_uploader: function() {
+				var self = this;
+				if ( self.$el.find( '#messages-post-video-uploader' ).hasClass( 'open' ) ) {
+					self.destroy();
+				} else {
+					self.open_video_uploader();
+				}
+			},
+
+			destroy: function() {
+				var self = this;
+				if ( ! _.isNull( bp.Nouveau.Messages.dropzone ) ) {
+					bp.Nouveau.Messages.dropzone.destroy();
+					self.$el.find( '#messages-post-video-uploader' ).html( '' );
+				}
+				self.video = [];
+				self.model.set( 'video', self.video );
+				self.$el.find( '#messages-post-video-uploader' ).removeClass( 'open' ).addClass( 'closed' );
+
+				document.removeEventListener( 'messages_video_toggle', this.toggle_video_uploader.bind( this ) );
+				document.removeEventListener( 'messages_video_close', this.destroy.bind( this ) );
+
+				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+			},
+
+			open_video_uploader: function() {
+				var self = this;
+
+				if ( self.$el.find( '#messages-post-video-uploader' ).hasClass( 'open' ) ) {
+					return false;
+				}
+				self.destroy();
+
+				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-video-uploader', self.videoOptions );
+
+				bp.Nouveau.Messages.dropzone.on(
+					'sending',
+					function(file, xhr, formData) {
+						formData.append( 'action', 'video_upload' );
+						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+
+						var tool_box = self.$el.parents( '#bp-message-content' );
+						if ( tool_box.find( '#messages-document-button' ) ) {
+							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-gif-button' ) ) {
+							tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-media-button' ) ) {
+							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'success',
+					function(file, response) {
+						if ( response.data.id ) {
+							file.id 				 = response.data.id;
+							response.data.uuid 		 = file.upload.uuid;
+							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+							response.data.saved 	 = false;
+							response.data.privacy 	 = 'message';
+							self.video.push( response.data );
+							self.model.set( 'video', self.media );
+						} else {
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'error',
+					function(file,response) {
+						if ( file.accepted ) {
+							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							}
+						} else {
+							$('body').append('<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-video-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'removedfile',
+					function(file) {
+						if ( self.video.length ) {
+							for ( var i in self.video ) {
+								if ( file.id === self.video[i].id ) {
+									if ( typeof self.video[i].saved !== 'undefined' && ! self.video[i].saved ) {
+										bp.Nouveau.Media.removeAttachment( file.id );
+									}
+									self.video.splice( i, 1 );
+									self.model.set( 'video', self.video );
+								}
+							}
+						}
+
+						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
+							var tool_box = self.$el.parents( '#bp-message-content' );
+							if ( tool_box.find( '#messages-document-button' ) ) {
+								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-gif-button' ) ) {
+								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-media-button' ) ) {
+								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+							}
+						}
+					}
+				);
+
+				self.$el.find( '#messages-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
+				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+			}
+
+		}
+	);
+
 	// Activity gif selector.
 	bp.Views.MessagesAttachedGifPreview = bp.Nouveau.Messages.View.extend(
 		{
@@ -1325,6 +1477,7 @@ window.bp = window.bp || {};
 			events: {
 				'click #messages-media-button': 'toggleMediaSelector',
 				'click #messages-document-button': 'toggleDocumentSelector',
+				'click #messages-video-button': 'toggleVideoSelector',
 				'click #messages-gif-button': 'toggleGifSelector',
 				'click #show-toolbar-button': 'toggleToolbarSelector',
 				'click .medium-editor-toolbar-actions': 'focusEditor'
@@ -1357,6 +1510,16 @@ window.bp = window.bp || {};
 				this.closeGifSelector();
 				var documentEvent = new Event( 'messages_document_toggle' );
 				document.dispatchEvent( documentEvent );
+				$( e.currentTarget ).toggleClass( 'active' );
+			},
+
+			toggleVideoSelector: function( e ) {
+				e.preventDefault();
+				this.closeGifSelector();
+				this.closeMediaSelector();
+				this.closeDocumentSelector();
+				var event = new Event( 'messages_video_toggle' );
+				document.dispatchEvent( event );
 				$( e.currentTarget ).toggleClass( 'active' );
 			},
 
@@ -1477,6 +1640,12 @@ window.bp = window.bp || {};
 					this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
 					this.views.add( this.messagesDocument );
 				}
+
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media ) {
+					this.MessagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
+					this.views.add( this.MessagesVideo );
+				}
+				//bp.Views.MessagesVideo
 
 				this.messagesAttachedGifPreview = new bp.Views.MessagesAttachedGifPreview( { model: this.model } );
 				this.views.add( this.messagesAttachedGifPreview );
