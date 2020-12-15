@@ -81,6 +81,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '#bp-add-video', this.openUploader.bind( this ) );
+			$( document ).on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 		},
 
@@ -350,6 +351,15 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+		
+		closeUploader: function (event) {
+			event.preventDefault();
+			$( '#bp-video-uploader' ).hide();
+			$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload );
+			$( '#bp-video-uploader-modal-status-text' ).text( '' );
+			this.video_dropzone_obj.destroy();
+			this.dropzone_video = [];
 		},
 
 		toggle_video_uploader: function () {
