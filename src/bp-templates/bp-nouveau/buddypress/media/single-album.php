@@ -49,6 +49,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
                         </a>
                         <?php } ?>
 
+                        <a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php _e( 'Add Videos', 'buddyboss' ); ?></a>
+
 	                    <?php if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() ) : ?>
                             <select id="bb-album-privacy">
                                 <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
@@ -63,7 +65,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php
 					if ( $can_manage ) {
 						bp_get_template_part( 'media/uploader' );
-					}
+                    }
+                    bp_get_template_part( 'video/uploader' );
 				endif;
 
 				if ( $can_manage ) {

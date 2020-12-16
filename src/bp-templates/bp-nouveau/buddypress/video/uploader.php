@@ -12,10 +12,10 @@
 				<div class="modal-container">
 
 					<header class="bb-model-header">
-						<a href="#" class="bp-video-upload-tab selected" data-content="bp-video-dropzone-content" id="bp-video-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-video-upload-tab bp-upload-tab selected" data-content="bp-video-dropzone-content" id="bp-video-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 
 						<?php if ( bp_is_single_album() ) : ?>
-							<a href="#" class="bp-video-upload-tab" data-content="bp-existing-video-content" id="bp-video-select-from-existing"><?php esc_html_e( 'Select Videos', 'buddyboss' ); ?></a>
+							<a href="#" class="bp-video-upload-tab bp-upload-tab" data-content="bp-existing-video-content" id="bp-video-select-from-existing"><?php esc_html_e( 'Select Videos', 'buddyboss' ); ?></a>
 						<?php endif; ?>
 
 						<span id="bp-video-uploader-modal-status-text" style="display: none;"></span>
@@ -25,7 +25,7 @@
 						</a>
 					</header>
 
-					<div class="bb-dropzone-wrap bp-video-upload-tab-content" id="bp-video-dropzone-content">
+					<div class="bb-dropzone-wrap bp-video-upload-tab-content bp-upload-tab-content" id="bp-video-dropzone-content">
 						<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() && bp_is_active( 'activity' ) ) : ?>
 							<div class="video-uploader-post-content">
 								<textarea name="bp-video-post-content" id="bp-video-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your videos, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your videos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
@@ -40,7 +40,7 @@
 					</div>
 
 					<?php if ( bp_is_single_album() ) : ?>
-						<div class="bp-existing-video-wrap bp-video-upload-tab-content" id="bp-existing-video-content" style="display: none;">
+						<div class="bp-existing-video-wrap bp-video-upload-tab-content bp-upload-tab-content" id="bp-existing-video-content" style="display: none;">
 
 							<?php if ( bp_has_video( array( 'album_id' => 'existing-video' ) ) ) : ?>
 

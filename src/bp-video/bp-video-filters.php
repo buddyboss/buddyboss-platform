@@ -2133,32 +2133,19 @@ function bp_video_get_edit_activity_data( $activity ) {
 				$video = new BP_Video( $video_id );
 
 				$activity['video'][] = array(
-					'id'            => $video_id,
-					'attachment_id' => $video->attachment_id,
-					'thumb'         => wp_get_attachment_image_url( $video->attachment_id, 'bp-video-thumbnail' ),
-					'url'           => wp_get_attachment_image_url( $video->attachment_id, 'full' ),
-					'name'          => $video->title,
-					'group_id'      => $video->group_id,
-					'album_id'      => $video->album_id,
-					'activity_id'   => $video->activity_id,
-					'saved'         => true,
-					'menu_order'    => $video->menu_order,
-
-					//Placeholder until video thumb generator
-					'placeholder_thumb'    => buddypress()->plugin_url . "bp-templates/bp-nouveau/images/placeholder.png",
-					'placeholder_url'    => buddypress()->plugin_url . "bp-templates/bp-nouveau/images/placeholder.png",
+					'id'          => $video_id,
+					'vid_id'      => $video->attachment_id,
+					'name'        => $video->title,
+					'group_id'    => $video->group_id,
+					'album_id'    => $video->album_id,
+					'activity_id' => $video->activity_id,
+					'type'        => 'video',
+					'url'         => wp_get_attachment_url( $video->attachment_id ),
+					'size'        => filesize( get_attached_file( ( $video->attachment_id ) ) ),
+					'saved'       => true,
+					'menu_order'  => $video->menu_order,
 				);
 			}
-		}
-
-		// Fetch gif data for the activity.
-		$gif_data = bp_activity_get_meta( $activity['id'], '_gif_data', true );
-
-		if ( ! empty( $gif_data ) ) {
-			$gif_raw_data                        = (array) bp_activity_get_meta( $activity['id'], '_gif_raw_data', true );
-			$gif_raw_data['bp_gif_current_data'] = '1';
-
-			$activity['gif'] = $gif_raw_data;
 		}
 	}
 
@@ -2190,8 +2177,8 @@ add_filter( 'mod_rewrite_rules', 'bp_video_protect_download_rewite_rules' );
 
 function bp_video_check_download_album_protection() {
 
-	$upload_dir     = wp_get_upload_dir();
-	$files = array(
+	$upload_dir = wp_get_upload_dir();
+	$files      = array(
 		array(
 			'base'    => $upload_dir['basedir'] . '/bb_medias',
 			'file'    => 'index.html',
