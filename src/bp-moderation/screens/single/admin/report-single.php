@@ -10,11 +10,11 @@ $current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 $error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore
 $admins            = array_map( 'intval', get_users(
-	array(
-		'role'   => 'administrator',
-		'fields' => 'ID',
-	)
-) );
+		array(
+			'role'   => 'administrator',
+			'fields' => 'ID',
+		)
+	) );
 ?>
 <div class="wrap">
 	<h1>
@@ -190,11 +190,11 @@ $admins            = array_map( 'intval', get_users(
 
 										$user_id          = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 										$user_action_type = 'hide';
-										$user_data        = BP_Moderation::get_specific_moderation( $user_id, 'user' );
+										$user_data        = BP_Moderation::get_specific_moderation( $user_id, BP_Moderation_Members::$moderation_type );
 										$user_action_text = esc_html__( 'Suspend Content Author', 'buddyboss' );
 										if ( ! empty( $user_data ) ) {
-											$user_action_type = ( 1 === (int) $user_data->hide_sitewide ) ? 'unhide' : 'hide';
-											$user_action_text = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
+											$user_action_type = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
+											$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
 										}
 										?>
 										<a href="javascript:void(0);"
@@ -225,7 +225,8 @@ $admins            = array_map( 'intval', get_users(
 										}
 									} else {
 										if ( ! in_array( $user_id, $admins, true ) ) {
-											$member_action_text = ( 'unhide' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
+											$action_type        = ( 'unhide' === $action_type ) ? 'unsuspend' : 'suspend';
+											$member_action_text = ( 'unsuspend' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
 											?>
 											<a href="javascript:void(0);"
 												class="button button-primary bp-block-user single-report-btn"

@@ -368,11 +368,11 @@ function bp_moderation_user_actions_request() {
 
 	if ( wp_verify_nonce( $nonce, 'bp-hide-unhide-moderation' ) && ! is_wp_error( $response['message'] ) ) {
 
-		if ( 'hide' === $sub_action ) {
+		if ( 'suspend' === $sub_action ) {
 			BP_Suspend_Member::suspend_user( $item_id );
 			$response['success'] = true;
 			$response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss' );
-		} else {
+		} elseif ( 'unsuspend' === $sub_action ) {
 			BP_Suspend_Member::unsuspend_user( $item_id );
 			$response['success'] = true;
 			$response['message'] = esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' );
