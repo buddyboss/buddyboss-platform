@@ -804,6 +804,7 @@ span.dashicons.dashicons-admin-file:before {
 	content: "\e96a";
 }
 
+.activity-list .activity-item .activity-content.video-activity-wrap,
 .activity-list .activity-item .activity-content.document-activity {
 	position: relative;
 
@@ -1275,9 +1276,13 @@ span.dashicons.dashicons-admin-file:before {
 						}
 					}
 
-					&.delete_file a:before {
+					&.delete_video a:before {
 						content: "\e937";
 						font-size: 15px;
+					}
+
+					&.edit_video a:before {
+						content: "\e80c";
 					}
 
 				}

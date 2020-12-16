@@ -160,7 +160,7 @@
 		opacity: 0;
 		visibility: visible;
 	}
-	
+
 	&.is-visible .entry-video:before,
 	&:hover .entry-video:before {
 		opacity: 1;
@@ -168,8 +168,6 @@
 	}
 
 }
-
-
 
 .bb-media-length-4 {
 
@@ -594,6 +592,7 @@
 	}
 
 	&.selected,
+	&.is-visible,
 	&:hover {
 
 		.bb-item-cover-wrap:after,

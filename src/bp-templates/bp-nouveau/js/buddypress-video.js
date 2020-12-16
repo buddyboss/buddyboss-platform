@@ -83,6 +83,26 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bp-add-video', this.openUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
+			$(document).on('click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a', this.videoActivityActionButton.bind(this));
+		},
+
+		
+		/**
+		 * Video Activity action Button
+		 */
+		videoActivityActionButton: function (event) {
+			event.preventDefault();
+
+			$(event.currentTarget).closest('.bb-activity-video-elem').toggleClass('is-visible').siblings().removeClass('is-visible').closest('.activity-item').siblings().find('.bb-activity-video-elem').removeClass('is-visible');
+
+			if ($(event.currentTarget).closest('.bb-activity-video-elem').length < 1) {
+				$(event.currentTarget).closest('.bb-item-thumb').toggleClass('is-visible').parent().siblings().find('.bb-item-thumb').removeClass('is-visible').removeClass('is-visible');
+			}
+
+			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( !$(event.currentTarget).hasClass('video-action_more') ) ) {
+				$(event.currentTarget).closest('.bb-activity-video-elem').removeClass('is-visible');
+				$(event.currentTarget).closest('.bb-item-thumb').removeClass('is-visible');
+			}
 		},
 
 		submitVideo: function ( event ) {

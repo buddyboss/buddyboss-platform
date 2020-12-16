@@ -5494,13 +5494,15 @@ window.bp = window.bp || {};
 				return event;
 			}
 
-			if ($(element).hasClass('document-action_more') || $(element).parent().hasClass('document-action_more') || $(element).hasClass('media-folder_action__anchor') || $(element).parent().hasClass('media-folder_action__anchor') || $(element).hasClass('media-action_more') || $(element).parent().hasClass('media-action_more')) {
+			if ($(element).hasClass('document-action_more') || $(element).parent().hasClass('document-action_more') || $(element).hasClass('media-folder_action__anchor') || $(element).parent().hasClass('media-folder_action__anchor') || $(element).hasClass('media-action_more') || $(element).parent().hasClass('media-action_more') || $(element).hasClass('video-action_more') || $(element).parent().hasClass('video-action_more') ) {
 				return event;
 			}
 
 			$('.bb-activity-media-elem.is-visible').removeClass('is-visible');
 			$('.media-folder_items.is-visible').removeClass('is-visible');
 			$('.bb-photo-thumb.is-visible').removeClass('is-visible');
+			$('.bb-item-thumb.is-visible').removeClass('is-visible');
+			$('.bb-activity-video-elem.is-visible').removeClass('is-visible');
 
 		},
 

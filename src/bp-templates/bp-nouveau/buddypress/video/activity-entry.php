@@ -27,7 +27,7 @@ $height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $v
 				<li class="move_video">
 					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-move">Move</a>
 				</li>
-				<li class="delete_file">
+				<li class="delete_video">
 					<a class="video-file-delete" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-item-from="media" data-item-id="567" data-type="video" href="#">Delete</a>
 				</li>
 			</ul>
