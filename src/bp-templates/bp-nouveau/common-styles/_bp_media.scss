@@ -1833,7 +1833,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 .bp-media-document-uploader.has-folderlocationUI,
 .ac-reply-content .ac-reply-attachments,
 .modal-container.has-folderlocationUI,
-#activity-post-video-uploader {
+#activity-post-video-uploader,
+#bp-video-dropzone-content,
+#forums-post-video-uploader,
+#messages-post-video-uploader,
+#bp-group-messages-post-video-uploader {
 
 	.dz-preview.dz-file-preview .dz-image {
 		padding-top: 0;
@@ -2109,7 +2113,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 #messages-post-document-uploader,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader,
 .activity_update .activity-comments .ac-reply-content .dropzone,
-#activity-post-video-uploader {
+#activity-post-video-uploader,
+#bp-video-dropzone-content {
 
 	.dz-success-mark,
 	.dz-progress,

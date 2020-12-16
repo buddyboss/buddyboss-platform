@@ -13996,7 +13996,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-image,
 .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-image,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-image,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-image {
+#activity-post-video-uploader .dz-preview.dz-file-preview .dz-image,
+#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-image,
+#forums-post-video-uploader .dz-preview.dz-file-preview .dz-image,
+#messages-post-video-uploader .dz-preview.dz-file-preview .dz-image,
+#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-image {
   padding-top: 0;
 }
 
@@ -14014,7 +14018,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
 .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details {
+#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
+#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details,
+#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details,
+#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
+#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details {
   display: block !important;
 }
 
@@ -14032,7 +14040,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
 .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details {
+#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
+#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details,
+#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details,
+#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
+#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -14062,7 +14074,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size,
 .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-size,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size {
+#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
+#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-size,
+#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
+#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
+#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size {
   margin-bottom: 0;
   font-size: 14px;
 }
@@ -14081,7 +14097,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename,
 .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-filename,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename {
+#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
+#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-filename,
+#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
+#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
+#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename {
   display: block;
   width: 100%;
 }
@@ -14100,7 +14120,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span,
 .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-filename span,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span {
+#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
+#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-filename span,
+#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
+#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
+#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span {
   margin-top: 0;
 }
 
@@ -14298,7 +14322,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .activity_update .activity-comments .ac-reply-content .dropzone .dz-error-mark,
 #activity-post-video-uploader .dz-success-mark,
 #activity-post-video-uploader .dz-progress,
-#activity-post-video-uploader .dz-error-mark {
+#activity-post-video-uploader .dz-error-mark,
+#bp-video-dropzone-content .dz-success-mark,
+#bp-video-dropzone-content .dz-progress,
+#bp-video-dropzone-content .dz-error-mark {
   top: 70%;
 }
 
@@ -14308,7 +14335,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #messages-post-document-uploader .dz-filename,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-filename,
 .activity_update .activity-comments .ac-reply-content .dropzone .dz-filename,
-#activity-post-video-uploader .dz-filename {
+#activity-post-video-uploader .dz-filename,
+#bp-video-dropzone-content .dz-filename {
   font-size: 14px;
 }
 
