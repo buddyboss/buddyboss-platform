@@ -29,7 +29,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
 	<div class="bb-photo-thumb bb-item-thumb">
-		<div class="media-action-wrap bb-item-cover-wrap">
+		<div class="media-action-wrap">
 			<?php if ( $can_manage ) { ?>
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
@@ -59,7 +59,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 				</div>
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
-		<a class="bb-open-media-theatre bb-photo-cover-wrap"
+		<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 			data-id="<?php bp_media_id(); ?>"
 			data-attachment-full="<?php bp_media_attachment_image(); ?>"
 			data-activity-id="<?php bp_media_activity_id(); ?>"
@@ -74,7 +74,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 		<?php
 		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) && !bp_is_media_directory() ) :
 			?>
-			<div class="bb-media-check-wrap">
+			<div class="bb-media-check-wrap bb-action-check-wrap">
 				<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
 				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
 			</div>
