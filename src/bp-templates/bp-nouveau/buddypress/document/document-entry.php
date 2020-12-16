@@ -309,7 +309,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 						}
 
 						$report_btn = bp_document_get_report_link( array( 'id' => bp_get_document_id() ) );
-						if ( $report_btn ) {
+						if ( $report_btn && 'document' === $document_type ) {
 							?>
 	                        <li class="report_file">
 								<?php echo $report_btn; ?>
