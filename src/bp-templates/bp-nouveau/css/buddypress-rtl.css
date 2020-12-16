@@ -6982,6 +6982,25 @@ input#send-to-input {
   transform: rotate(-137deg);
 }
 
+.bp-single-message-content .bb-activity-video-wrap .bb-activity-media-elem.video-activity .video-action-wrap .video-action_list li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.bp-single-message-content .bb-activity-video-wrap .bb-activity-media-elem.video-activity:last-child .video-action-wrap .video-action_list {
+  top: initial;
+  bottom: 36px;
+}
+
+.bp-single-message-content .bb-activity-video-wrap .bb-activity-media-elem.video-activity:last-child .video-action-wrap .video-action_list:after {
+  top: inherit;
+  bottom: -12px;
+  left: -3px;
+  -webkit-transform: rotate(-137deg);
+  -ms-transform: rotate(-137deg);
+  transform: rotate(-137deg);
+}
+
 .bp-messages-content-wrapper {
   position: relative;
   display: flex;
@@ -6991,6 +7010,7 @@ input#send-to-input {
 }
 
 .bp-messages-content-wrapper #messages-post-document-uploader.open,
+.bp-messages-content-wrapper #messages-post-video-uploader.open,
 .bp-messages-content-wrapper #messages-post-media-uploader.open {
   height: calc(100% - 145px);
   right: 0;
@@ -6998,6 +7018,7 @@ input#send-to-input {
 }
 
 .bp-messages-content-wrapper #messages-post-document-uploader.open,
+.bp-messages-content-wrapper #messages-post-video-uploader.open,
 .bp-messages-content-wrapper #messages-post-media-uploader.open {
   position: absolute;
   top: 0;

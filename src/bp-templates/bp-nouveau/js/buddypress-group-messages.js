@@ -5,7 +5,7 @@ window.bp = window.bp || {};
 
 ( function( exports, $ ) {
 
-	// Bail if not set
+	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
@@ -47,7 +47,7 @@ window.bp = window.bp || {};
 			var $group_messages_select = $( 'body' ).find( '#group-messages-send-to-input' );
 			var page 				   = 1;
 
-			// Activate bp_mentions
+			// Activate bp_mentions.
 			this.addSelect2( $group_messages_select );
 			this.activateTinyMce();
 
@@ -102,7 +102,6 @@ window.bp = window.bp || {};
 					data: data,
 					success: function (response) {
 						if ( response.success && 'no_member' !== response.data.results ) {
-							// memberListUl.html('');
 							memberListUl.html( response.data.results );
 							$( '.group-messages-members-listing #members-list li .action' ).hide();
 							memberListUlLast.html( '' );
@@ -132,11 +131,9 @@ window.bp = window.bp || {};
 				'change',
 				function () {
 
-					// $( '#group-messages-container .bb-groups-messages-left .bb-groups-messages-left-inner .bb-panel-head #bp-message-dropdown-options' ).removeClass( 'bp-message-dropdown-options-hide' );
-
 					page = 1;
 					var valueSelected;
-					// Reset select2
+					// Reset select2.
 					$group_messages_select.val( '' ).trigger( 'change' );
 					if ( $( this ).is( ':checked' ) ) {
 						valueSelected = 'all';
@@ -146,7 +143,6 @@ window.bp = window.bp || {};
 
 					if ( valueSelected ) {
 						if ( 'all' === valueSelected ) {
-							// $('.bb-groups-messages-left').removeClass('bb-select-member-view');
 							$( '#group-messages-send-to-input option' ).each(
 								function() {
 									$( this ).remove();
@@ -244,9 +240,6 @@ window.bp = window.bp || {};
 				'click',
 				'#item-body #group-messages-container .bb-groups-messages-left .last #bp-group-messages-next-page',
 				function() {
-					// $( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback').show();
-					// $( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback').addClass( 'info' );
-					// feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.loading );
 					page 	 = page + 1;
 					var type = '';
 					if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
@@ -272,7 +265,6 @@ window.bp = window.bp || {};
 									memberListUl.append( response.data.results );
 									memberListUlLast.html( '' );
 									memberListUlLast.html( response.data.pagination );
-									// page = response.data.page;
 									$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
 									if ( 'all' === type ) {
 										$( '.group-messages-members-listing #members-list li .action' ).hide();
@@ -325,7 +317,6 @@ window.bp = window.bp || {};
 									memberListUlLast.html( '' );
 									memberListUlLast.html( response.data.pagination );
 									$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
-									// page = response.data.page;
 								} else {
 									memberListUl.html( '' );
 									memberListUlLast.html( '' );
@@ -377,7 +368,6 @@ window.bp = window.bp || {};
 									memberListUlLast.html( '' );
 									memberListUlLast.html( response.data.pagination );
 									$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
-									// page = response.data.page;
 								} else {
 									memberListUl.html( '' );
 									memberListUlLast.html( '' );
@@ -420,7 +410,7 @@ window.bp = window.bp || {};
 				function( e ) {
 					e.preventDefault();
 					var user, type;
-					var target = $( e.currentTarget );
+					var target     = $( e.currentTarget );
 					var users_list = [];
 					var checkbox   = $( '#bp-group-message-switch-checkbox' ).is( ':checked' );
 					if ( checkbox ) {
@@ -452,12 +442,14 @@ window.bp = window.bp || {};
 					var editor  = '';
 					if ( typeof window.group_messages_editor !== 'undefined' ) {
 						editor = window.group_messages_editor;
-						$( '#group_message_content' ).find( 'img.emoji' ).each(function( index, Obj) {
-							$( Obj ).addClass( 'emojioneemoji' );
-							var emojis = $( Obj ).attr( 'alt' );
-							$( Obj ).attr( 'data-emoji-char', emojis );
-							$( Obj ).removeClass( 'emoji' );
-						});
+						$( '#group_message_content' ).find( 'img.emoji' ).each(
+							function( index, Obj) {
+								$( Obj ).addClass( 'emojioneemoji' );
+								var emojis = $( Obj ).attr( 'alt' );
+								$( Obj ).attr( 'data-emoji-char', emojis );
+								$( Obj ).removeClass( 'emoji' );
+							}
+						);
 						$( '#group_message_content' ).find( 'img.emojioneemoji' ).replaceWith(
 							function () {
 								return this.dataset.emojiChar;
@@ -472,11 +464,12 @@ window.bp = window.bp || {};
 
 					var media   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val();
 					var document   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val();
+					var video   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_video' ).val();
 					var gif     	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_gif' ).val();
 					var contentError   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-content-no-error' );
 					var recipientError = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-recipient-no-error' );
 
-					if ( $( $.parseHTML( content ) ).text().trim() === '' && '' === media && '' === document && '' === gif ) {
+					if ( $( $.parseHTML( content ) ).text().trim() === '' && '' === media && '' === document && '' === video && '' === gif ) {
 						if ( ! contentError.length ) {
 							var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + BP_Nouveau.group_messages.no_content + ' </p></div>';
 							$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback' ).append( feedbackHtml );
@@ -507,6 +500,7 @@ window.bp = window.bp || {};
 						'content' 	 	: content,
 						'media'   	 	: media,
 						'document'   	: document,
+						'video'   	    : video,
 						'users'   		: user,
 						'users_list'    : users_list,
 						'type'    		: type,
@@ -541,7 +535,7 @@ window.bp = window.bp || {};
 									feedbackSelector.hide();
 									feedbackSelector.after( feedbackHtmlSuccess );
 
-									// Reset formatting of editor
+									// Reset formatting of editor.
 									window.group_messages_editor.resetContent();
 
 									if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
@@ -569,22 +563,16 @@ window.bp = window.bp || {};
 
 										$( 'div#bp-group-messages-post-document-uploader' ).html( '' );
 										$( 'div#bp-group-messages-post-document-uploader' ).addClass( 'closed' ).removeClass( 'open' );
+
+										$( 'div#bp-group-messages-post-video-uploader' ).html( '' );
+										$( 'div#bp-group-messages-post-video-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 									}
 
 									setTimeout(
 										function() {
-											// $( '#item-body #group-messages-container .bb-groups-messages-right .remove-after-few-seconds' ).remove();
-											// $( '#item-body .bb-groups-messages-right-top .bp-messages-feedback' ).show();
-											// $( '#item-body #group-messages-container .bb-groups-messages-right .select2-container' ).show();
-											// $( '#item-body #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-bottom' ).show();
-
 											if ( ! $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
 												$( '#bp-group-message-switch-checkbox' ).trigger( 'click' );
 											}
-
-											// if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
-											// $('.bb-groups-messages-right .bp-messages-feedback .bp-feedback p').html( BP_Nouveau.group_messages.feedback_select_all );
-											// }
 
 											$( '#item-body #group-messages-container .bb-groups-messages-right .select2-container' ).hide();
 										},
@@ -704,16 +692,16 @@ window.bp = window.bp || {};
 					$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 					if ( jQuery( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
-						if( window.group_messages_editor.exportSelection() != null ){
-							medium_editor.addClass('medium-editor-toolbar-active');
+						if ( window.group_messages_editor.exportSelection() != null ) {
+							medium_editor.addClass( 'medium-editor-toolbar-active' );
 						}
 					} else {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
-						if( window.group_messages_editor.exportSelection() === null ) {
-							medium_editor.removeClass('medium-editor-toolbar-active');
+						if ( window.group_messages_editor.exportSelection() === null ) {
+							medium_editor.removeClass( 'medium-editor-toolbar-active' );
 						}
 					}
-					$(window.group_messages_editor.elements[0]).focus();
+					$( window.group_messages_editor.elements[0] ).focus();
 					medium_editor.toggleClass( 'active' );
 				}
 			);
@@ -721,7 +709,7 @@ window.bp = window.bp || {};
 				'click',
 				'#group-messages-container .medium-editor-toolbar-actions',
 				function(e) {
-					if( window.group_messages_editor.exportSelection() === null ) {
+					if ( window.group_messages_editor.exportSelection() === null ) {
 						$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
 					}
 				}
@@ -729,12 +717,15 @@ window.bp = window.bp || {};
 			$( document ).on(
 				'input',
 				'#group_message_content',
-				function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+				function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
 					var medium_editor = $( e.currentTarget ).closest( '#bp-group-message-content' ).find( '.medium-editor-toolbar' );
-					setTimeout(function(){
-						medium_editor.addClass('medium-editor-toolbar-active');
-						$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
-					},0);
+					setTimeout(
+						function(){
+							medium_editor.addClass( 'medium-editor-toolbar-active' );
+							$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+						},
+						0
+					);
 				}
 			);
 		},
@@ -750,32 +741,35 @@ window.bp = window.bp || {};
 		activateTinyMce: function() {
 			if ( ! _.isUndefined( window.MediumEditor ) ) {
 
-				window.group_messages_editor = new window.MediumEditor('#group_message_content',{
-					placeholder: {
-						text: BP_Nouveau.group_messages.type_message,
-						hideOnClick: true
-					},
-					toolbar: {
-						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-						relativeContainer: document.getElementById('whats-new-toolbar'),
-						static: true,
-						updateOnEmptySelection: true
-					},
-					paste: {
-						forcePlainText: false,
-						cleanPastedHTML: true,
-						cleanReplacements: [
-							[new RegExp(/<div/gi), '<p'],
-							[new RegExp(/<\/div/gi), '</p'],
-							[new RegExp(/<h[1-6]/gi), '<b'],
-							[new RegExp(/<\/h[1-6]/gi), '</b'],
-						],
-						cleanAttrs: ['class', 'style', 'dir', 'id'],
-						cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-						unwrapTags: [ 'ul', 'ol', 'li' ]
-					},
-					imageDragging: false
-				});
+				window.group_messages_editor = new window.MediumEditor(
+					'#group_message_content',
+					{
+						placeholder: {
+							text: BP_Nouveau.group_messages.type_message,
+							hideOnClick: true
+						},
+						toolbar: {
+							buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+							relativeContainer: document.getElementById( 'whats-new-toolbar' ),
+							static: true,
+							updateOnEmptySelection: true
+						},
+						paste: {
+							forcePlainText: false,
+							cleanPastedHTML: true,
+							cleanReplacements: [
+							[new RegExp( /<div/gi ), '<p'],
+							[new RegExp( /<\/div/gi ), '</p'],
+							[new RegExp( /<h[1-6]/gi ), '<b'],
+							[new RegExp( /<\/h[1-6]/gi ), '</b'],
+							],
+							cleanAttrs: ['class', 'style', 'dir', 'id'],
+							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+							unwrapTags: [ 'ul', 'ol', 'li' ]
+						},
+						imageDragging: false
+					}
+				);
 
 				window.group_messages_editor.subscribe(
 					'editableInput',
@@ -804,10 +798,10 @@ window.bp = window.bp || {};
 					);
 				}
 
-				// check for mentions in the url, if set any then focus to editor
+				// check for mentions in the url, if set any then focus to editor.
 				var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
 
-				// Check for mention
+				// Check for mention.
 				if ( ! _.isNull( mention ) ) {
 					$( '#message_content' ).focus();
 				}
@@ -818,7 +812,7 @@ window.bp = window.bp || {};
 		},
 
 		addMentions: function() {
-			// Add autocomplete to send_to field
+			// Add autocomplete to send_to field.
 			$( this.el ).find( '#group-messages-send-to-input' ).bp_mentions(
 				{
 					data: [],
@@ -868,7 +862,7 @@ window.bp = window.bp || {};
 			$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback p' ).html( '' );
 		},
 
-		// members autoload
+		// members autoload.
 		loadMoreMessageMembers: function ( event ) {
 
 			var target = $( event.currentTarget );
@@ -882,7 +876,7 @@ window.bp = window.bp || {};
 
 	};
 
-	// Launch BP Nouveau Groups
+	// Launch BP Nouveau Groups.
 	bp.Nouveau.GroupMessages.start();
 
 } )( bp, jQuery );
