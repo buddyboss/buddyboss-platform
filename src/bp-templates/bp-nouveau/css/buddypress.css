@@ -3114,6 +3114,10 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+#video-stream.video .video-list li:hover {
+  z-index: 11;
+}
+
 #video-stream.video .bb-item-thumb,
 .bb-activity-video-wrap .bb-activity-video-elem {
   position: relative;
@@ -16062,11 +16066,15 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   display: block;
 }
 
-.modal-container.has-folderlocationUI .bb-model-footer a.saving, .modal-container.has-folderlocationUI .bb-model-footer a.loading {
+#bp-video-uploader .modal-container .bb-model-footer a.saving, #bp-video-uploader .modal-container .bb-model-footer a.loading,
+.modal-container.has-folderlocationUI .bb-model-footer a.saving,
+.modal-container.has-folderlocationUI .bb-model-footer a.loading {
   pointer-events: none;
 }
 
-.modal-container.has-folderlocationUI .bb-model-footer a.saving:after, .modal-container.has-folderlocationUI .bb-model-footer a.loading:after {
+#bp-video-uploader .modal-container .bb-model-footer a.saving:after, #bp-video-uploader .modal-container .bb-model-footer a.loading:after,
+.modal-container.has-folderlocationUI .bb-model-footer a.saving:after,
+.modal-container.has-folderlocationUI .bb-model-footer a.loading:after {
   content: "\e838";
   font-family: "bb-icons";
   /* stylelint-disable-line */
@@ -16079,6 +16087,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   animation: spin 3s infinite linear;
 }
 
+#bp-video-uploader .modal-container .bb-model-footer a.is-disabled,
 .modal-container.has-folderlocationUI .bb-model-footer a.is-disabled {
   pointer-events: none;
   opacity: 0.5;

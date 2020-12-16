@@ -1137,6 +1137,10 @@ span.dashicons.dashicons-admin-file:before {
 
 }
 
+#video-stream.video .video-list li:hover {
+	z-index: 11;
+}
+
 #video-stream.video .bb-item-thumb,
 .bb-activity-video-wrap .bb-activity-video-elem {
 	position: relative;

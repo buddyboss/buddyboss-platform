@@ -84,6 +84,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 			$(document).on('click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a', this.videoActivityActionButton.bind(this));
+			$(document).on('change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind(this));
+			$(document).on('click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind(this));
 		},
 
 		
@@ -102,6 +104,60 @@ window.bp = window.bp || {};
 			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( !$(event.currentTarget).hasClass('video-action_more') ) ) {
 				$(event.currentTarget).closest('.bb-activity-video-elem').removeClass('is-visible');
 				$(event.currentTarget).closest('.bb-item-thumb').removeClass('is-visible');
+			}
+		},
+
+		toggleSelectAllVideo: function (event) {
+			event.preventDefault();
+
+			if ($(event.currentTarget).hasClass('selected')) {
+				$(event.currentTarget).data('bp-tooltip', BP_Nouveau.media.i18n_strings.selectall);
+				this.deselectAllVideo(event);
+			} else {
+				$(event.currentTarget).data('bp-tooltip', BP_Nouveau.media.i18n_strings.unselectall);
+				this.selectAllVideo(event);
+			}
+
+			$(event.currentTarget).toggleClass('selected');
+		},
+
+		selectAllVideo: function (event) {
+			event.preventDefault();
+
+			$('#buddypress').find('.video-list:not(.existing-video-list)').find('.bb-video-check-wrap [name="bb-video-select"]').each(
+				function () {
+					$(this).prop('checked', true);
+					$(this).closest('.bb-item-thumb').addClass('selected');
+					$(this).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.unselect);
+				}
+			);
+		},
+
+		deselectAllVideo: function (event) {
+			event.preventDefault();
+
+			$('#buddypress').find('.video-list:not(.existing-video-list)').find('.bb-video-check-wrap [name="bb-video-select"]').each(
+				function () {
+					$(this).prop('checked', false);
+					$(this).closest('.bb-item-thumb').removeClass('selected');
+					$(this).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.select);
+				}
+			);
+		},
+
+		addSelectedClassToWrapper: function (event) {
+			var target = event.currentTarget;
+			if ($(target).is(':checked')) {
+				$(target).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.unselect);
+				$(target).closest('.bb-item-thumb').addClass('selected');
+			} else {
+				$(target).closest('.bb-item-thumb').removeClass('selected');
+				$(target).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.select);
+
+				var selectAllVideo = $('.bp-nouveau #bb-select-deselect-all-video');
+				if (selectAllVideo.hasClass('selected')) {
+					selectAllVideo.removeClass('selected');
+				}
 			}
 		},
 
