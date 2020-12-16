@@ -2581,7 +2581,7 @@ function bp_is_user_groups() {
  *
  * @return bool True if the current page is a user's Groups invite page.
  */
-function bp_is_user_groups_invites(){
+function bp_is_user_groups_invites() {
 	return (bool) ( bp_is_user_groups() && bp_is_current_action( 'invites' ) );
 }
 
@@ -3202,7 +3202,7 @@ function bp_is_group_albums() {
 function bp_is_group_document() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled' ) && ! bp_is_group_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -3223,7 +3223,7 @@ function bp_is_group_document() {
 function bp_is_group_folders() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled' ) && ! bp_is_group_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -3244,7 +3244,7 @@ function bp_is_group_folders() {
 function bp_is_user_folders() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component') && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component' ) && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
 		$retval = true;
 	}
 
@@ -4157,6 +4157,23 @@ function bp_is_group_messages() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a user's album page?
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @return bool True if the current page is a album page.
+ */
+function bp_is_user_albums() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && bp_is_media_component() && bp_is_current_action( 'albums' ) ) {
 		$retval = true;
 	}
 
