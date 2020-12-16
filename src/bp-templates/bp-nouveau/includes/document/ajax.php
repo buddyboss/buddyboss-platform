@@ -308,10 +308,6 @@ function bp_nouveau_ajax_document_get_activity() {
 	if ( bp_has_activities( $args ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
-
-			// Update document id for document activity in meta.
-			bp_document_activity_update_document_id_meta( bp_get_activity_id() );
-
 			bp_get_template_part( 'activity/entry' );
 		}
 	}

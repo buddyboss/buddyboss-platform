@@ -66,7 +66,6 @@ add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
-add_action( 'bp_activity_screen_single_activity_permalink', 'bp_media_single_activity_screen_update_media_id_meta', 0 );
 
 /**
  * Add Media items for search
@@ -2361,14 +2360,4 @@ function bp_media_activity_entry_css_class( $class ) {
 
 	return $class;
 
-}
-
-/**
- * Update media id in activity meta for media activity on single screen.
- *
- * @since BuddyBoss 1.5.6
- * @param object $activity Activity Object.
- */
-function bp_media_single_activity_screen_update_media_id_meta( $activity ) {
-	bp_media_activity_update_media_id_meta( $activity->id );
 }
