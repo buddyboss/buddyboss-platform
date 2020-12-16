@@ -490,9 +490,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$moderation_args['tab'] = 'reported-content';
 		}
 
-		$action_type  = ( 1 === (int) $item['hide_sitewide'] ) ? 'unhide' : 'hide';
-		$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
-		$user_id      = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
+		$action_type   = ( 1 === (int) $item['hide_sitewide'] ) ? 'unhide' : 'hide';
+		$action_label  = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
+		$user_id       = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
+		$content_label = ( BP_Moderation_Members::$moderation_type === $item['item_type'] ) ? 'bp-hide-user' : 'bp-hide-request';
 
 		$user_action_type  = 'hide';
 		$user_action_label = esc_html__( 'Suspend', 'buddyboss' );
@@ -519,7 +520,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		);
 
 		$actions['hide'] = sprintf(
-			'<a href="javascript:void(0);" class="bp-hide-request" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+			'<a href="javascript:void(0);" class="%s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+			esc_attr( $content_label ),
 			esc_attr( $item['item_id'] ),
 			esc_attr( $item['item_type'] ),
 			esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
