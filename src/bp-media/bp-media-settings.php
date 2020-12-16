@@ -98,7 +98,7 @@ function bp_media_get_settings_fields() {
 
 	$fields['bp_media_settings_gifs'] = array(
 
-		'bp_media_gif_api_key'          => array(
+		'bp_media_gif_api_key' => array(
 			'title'             => __( 'GIPHY API Key', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_gif_key',
 			'sanitize_callback' => 'string',
@@ -273,9 +273,23 @@ function bp_media_get_settings_fields() {
 		'args'              => array(),
 	);
 
+	$fields['bp_media_settings_photos']['bp_media_allowed_per_batch'] = array(
+		'title'             => __( 'Upload Limit', 'buddyboss' ),
+		'callback'          => 'bp_media_settings_callback_media_allowed_per_batch',
+		'sanitize_callback' => 'absint',
+		'args'              => array(),
+	);
+
 	$fields['bp_media_settings_documents']['bp_document_allowed_size'] = array(
 		'title'             => __( 'Upload Size', 'buddyboss' ),
 		'callback'          => 'bp_media_settings_callback_document_allowed_size',
+		'sanitize_callback' => 'absint',
+		'args'              => array(),
+	);
+
+	$fields['bp_media_settings_documents']['bp_document_allowed_per_batch'] = array(
+		'title'             => __( 'Upload Limit', 'buddyboss' ),
+		'callback'          => 'bp_media_settings_callback_document_allowed_per_batch',
 		'sanitize_callback' => 'absint',
 		'args'              => array(),
 	);
@@ -305,8 +319,8 @@ function bp_media_get_settings_fields() {
 	);
 
 	$fields['bp_media_settings_documents']['bp_document_uploading_tutorial'] = array(
-			'title'    => __( '&#160;', 'buddyboss' ),
-			'callback' => 'bp_document_uploading_tutorial',
+		'title'    => __( '&#160;', 'buddyboss' ),
+		'callback' => 'bp_document_uploading_tutorial',
 	);
 
 	$fields['bp_media_settings_videos']['bp_video_uploading_tutorial'] = array(
@@ -420,7 +434,7 @@ function bp_media_settings_callback_profile_media_support() {
 	/>
 	<label for="bp_media_profile_media_support">
 		<?php
-		if( bp_is_active('activity') ) {
+		if ( bp_is_active( 'activity' ) ) {
 			_e( 'Allow members to upload photos in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload photos in <strong>profiles</strong>', 'buddyboss' );
@@ -480,7 +494,7 @@ function bp_media_settings_callback_group_media_support() {
 	/>
 	<label for="bp_media_group_media_support">
 		<?php
-		if( bp_is_active('activity') ) {
+		if ( bp_is_active( 'activity' ) ) {
 			_e( 'Allow members to upload photos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload photos in <strong>groups</strong>', 'buddyboss' );
@@ -732,7 +746,7 @@ function bp_media_settings_callback_forums_emoji_support() {
 /**
  * Checks if media emoji support is enabled in profiles.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is media emoji support enabled or not in profiles
  * @since BuddyBoss 1.0.0
@@ -744,7 +758,7 @@ function bp_is_profiles_emoji_support_enabled( $default = 0 ) {
 /**
  * Checks if media emoji support is enabled in groups.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is media emoji support enabled or not in groups
  * @since BuddyBoss 1.0.0
@@ -756,7 +770,7 @@ function bp_is_groups_emoji_support_enabled( $default = 0 ) {
 /**
  * Checks if media emoji support is enabled in messages.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is media emoji support enabled or not in messages
  * @since BuddyBoss 1.0.0
@@ -768,7 +782,7 @@ function bp_is_messages_emoji_support_enabled( $default = 0 ) {
 /**
  * Checks if media emoji support is enabled in forums.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is media emoji support enabled or not in forums
  * @since BuddyBoss 1.0.0
@@ -1063,7 +1077,7 @@ function bp_media_settings_callback_group_document_support() {
 	/>
 	<label for="bp_media_group_document_support">
 		<?php
-		if( bp_is_active('activity') ) {
+		if ( bp_is_active( 'activity' ) ) {
 			_e( 'Allow members to upload documents in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload documents in <strong>groups</strong>', 'buddyboss' );
@@ -1131,7 +1145,7 @@ function bp_media_settings_callback_profile_document_support() {
 	/>
 	<label for="bp_media_profile_document_support">
 		<?php
-		if( bp_is_active('activity') ) {
+		if ( bp_is_active( 'activity' ) ) {
 			_e( 'Allow members to upload documents in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload documents in <strong>profiles</strong>', 'buddyboss' );
@@ -1187,7 +1201,7 @@ function bp_media_settings_callback_extension_document_support() {
 		$counter = 1;
 		foreach ( $extensions as $k => $extension ) {
 
-			$k = ( !empty( $k )  ? $k : $counter );
+			$k = ( ! empty( $k ) ? $k : $counter );
 
 			$name       = 'bp_document_extensions_support[' . $k . ']';
 			$edit       = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'readonly="readonly"' : '';
@@ -1198,10 +1212,9 @@ function bp_media_settings_callback_extension_document_support() {
 			if ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) {
 				$document_icon = $extension['icon'];
 			} else {
-				$document_file_extension = substr(strrchr( $extension['extension'],'.'),1);
-				$document_icon = bp_document_svg_icon( $document_file_extension );
+				$document_file_extension = substr( strrchr( $extension['extension'], '.' ), 1 );
+				$document_icon           = bp_document_svg_icon( $document_file_extension );
 			}
-
 
 			?>
 			<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
@@ -1217,7 +1230,8 @@ function bp_media_settings_callback_extension_document_support() {
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
 					<?php
-					if ( $is_default ) { ?>
+					if ( $is_default ) {
+						?>
 						<i class="bb-icon <?php echo $document_icon; ?>"></i>
 						<?php
 					}
@@ -1235,8 +1249,11 @@ function bp_media_settings_callback_extension_document_support() {
 						</select>
 						<?php
 					} else {
-						?><input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/><?php
-					}?>
+						?>
+						<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/>
+						<?php
+					}
+					?>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-mime" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
@@ -1246,7 +1263,8 @@ function bp_media_settings_callback_extension_document_support() {
 						<a href="#" id="<?php echo esc_attr( $name . '[mime_type]' ); ?>" class="btn-check-mime-type button"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
 						<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
 						<?php
-					} ?>
+					}
+					?>
 				</td>
 			</tr>
 			<?php
@@ -1339,18 +1357,18 @@ function bp_document_get_settings_sections() {
 			'bp_document_settings_extensions' => array(
 				'page'     => 'document',
 				'title'    => sprintf(
-						'<a href="%1$s" rel="nofollow">%2$s</a> %3$s',
-						bp_get_admin_url(
-								add_query_arg(
-										array(
-												'page' => 'bp-settings',
-												'tab'  => 'bp-media#bp_media_settings_documents',
-										),
-										'admin.php'
-								)
-						),
-						__( 'Documents', 'buddyboss' ),
-						__( '&#8594; File Extensions', 'buddyboss' )
+					'<a href="%1$s" rel="nofollow">%2$s</a> %3$s',
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page' => 'bp-settings',
+								'tab'  => 'bp-media#bp_media_settings_documents',
+							),
+							'admin.php'
+						)
+					),
+					__( 'Documents', 'buddyboss' ),
+					__( '&#8594; File Extensions', 'buddyboss' )
 				),
 				'callback' => 'bp_document_settings_callback_extension_section',
 			),
@@ -1422,27 +1440,26 @@ function bp_document_settings_callback_extension_section() {
  * @since BuddyBoss 1.4.8
  */
 function bp_media_settings_callback_media_allowed_size() {
-	$max_size = bp_core_upload_max_size();
+	$max_size    = bp_core_upload_max_size();
 	$max_size_mb = bp_media_format_size_units( $max_size, false, 'MB' );
 	?>
 	<input type="number"
 		   name="bp_media_allowed_size"
 		   id="bp_media_allowed_size"
-		   class="regular-text"
+		   class="small-text"
 		   min="1"
 		   step="1"
-		   max="<?php echo esc_attr( $max_size_mb ) ?>"
+		   max="<?php echo esc_attr( $max_size_mb ); ?>"
 		   required
 		   value="<?php echo esc_attr( bp_media_allowed_upload_media_size() ); ?>"
-		   style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
-				'%1$s <strong>%2$s %3$s</strong>',
-				__( 'Set a maximum file size for photo uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
-				$max_size_mb,
-				'MB.'
+			'%1$s <strong>%2$s %3$s</strong>',
+			__( 'Set a maximum file size for photo uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
+			$max_size_mb,
+			'MB.'
 		);
 		?>
 	</p>
@@ -1458,7 +1475,7 @@ function bp_media_settings_callback_media_allowed_size() {
 function bp_media_allowed_upload_media_size() {
 
 	$max_size = bp_core_upload_max_size();
-	$default  =  bp_media_format_size_units( $max_size, false, 'MB' );
+	$default  = bp_media_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_media_size', (int) get_option( 'bp_media_allowed_size', $default ) );
 }
 
@@ -1468,27 +1485,26 @@ function bp_media_allowed_upload_media_size() {
  * @since BuddyBoss 1.4.8
  */
 function bp_media_settings_callback_document_allowed_size() {
-	$max_size = bp_core_upload_max_size();
+	$max_size    = bp_core_upload_max_size();
 	$max_size_mb = bp_document_format_size_units( $max_size, false, 'MB' );
 	?>
 	<input type="number"
 		   name="bp_document_allowed_size"
 		   id="bp_document_allowed_size"
-		   class="regular-text"
+		   class="small-text"
 		   min="1"
 		   step="1"
-		   max="<?php echo esc_attr( $max_size_mb ) ?>"
+		   max="<?php echo esc_attr( $max_size_mb ); ?>"
 		   required
 		   value="<?php echo esc_attr( bp_media_allowed_upload_document_size() ); ?>"
-		   style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
-				'%1$s <strong>%2$s %3$s</strong>',
-				__( 'Set a maximum file size for document uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
-				$max_size_mb,
-				'MB.'
+			'%1$s <strong>%2$s %3$s</strong>',
+			__( 'Set a maximum file size for document uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
+			$max_size_mb,
+			'MB.'
 		);
 		?>
 	</p>
@@ -1504,8 +1520,76 @@ function bp_media_settings_callback_document_allowed_size() {
  */
 function bp_media_allowed_upload_document_size() {
 	$max_size = bp_core_upload_max_size();
-	$default  =  bp_document_format_size_units( $max_size, false, 'MB' );
+	$default  = bp_document_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
+}
+
+/**
+ * Setting > Media > Photos > Allowed Per Batch
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_settings_callback_media_allowed_per_batch() {
+	?>
+	<input type="number"
+		   name="bp_media_allowed_per_batch"
+		   id="bp_media_allowed_per_batch"
+		   class="small-text"
+		   min="1"
+		   value="<?php echo esc_attr( bp_media_allowed_upload_media_per_batch() ); ?>"
+	/> <?php esc_html_e( 'per batch', 'buddyboss' ); ?>
+	<p class="description">
+		<?php
+		_e( 'Set a maximum number of images that can be added to one activity post or photo upload.', 'buddyboss' )
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Allowed per batch for the media.
+ *
+ * @return int Allowed upload per batch for the media.
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_allowed_upload_media_per_batch() {
+
+	$default = apply_filters( 'bp_media_upload_chunk_limit', 10 );
+	return (int) apply_filters( 'bp_media_allowed_upload_media_per_batch', (int) get_option( 'bp_media_allowed_per_batch', $default ) );
+}
+
+/**
+ * Setting > Media > Documents > Allowed Per Batch
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_settings_callback_document_allowed_per_batch() {
+	?>
+	<input type="number"
+		   name="bp_document_allowed_per_batch"
+		   id="bp_document_allowed_per_batch"
+		   class="small-text"
+		   min="1"
+		   value="<?php echo esc_attr( bp_media_allowed_upload_document_per_batch() ); ?>"
+	/> <?php esc_html_e( 'per batch', 'buddyboss' ); ?>
+	<p class="description">
+		<?php
+		_e( 'Set a maximum number of files that can be added to one activity post or document upload.', 'buddyboss' )
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Allowed per batch for the document.
+ *
+ * @return int Allowed per batch for the document.
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_allowed_upload_document_per_batch() {
+
+	$default = apply_filters( 'bp_document_upload_chunk_limit', 10 );
+	return (int) apply_filters( 'bp_media_allowed_upload_document_per_batch', (int) get_option( 'bp_document_allowed_per_batch', $default ) );
 }
 
 /**

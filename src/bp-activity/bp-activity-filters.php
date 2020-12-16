@@ -553,7 +553,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 */
 	$maybe_truncate_text = apply_filters(
 		'bp_activity_maybe_truncate_entry',
-		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type, array(), true )
+		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type, array( 'new_blog_post' ), true )
 	);
 
 	// The full text of the activity update should always show on the single activity screen.
@@ -582,13 +582,8 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * been truncated), add the "Read More" link. Note that bp_create_excerpt() is stripping
 	 * shortcodes, so we have strip them from the $text before the comparison.
 	 */
-	if ( in_array( $activities_template->activity->type, array( 'new_blog_post', 'new_blog_comment' ), true ) ) {
-		$excerpt_link = 'new_blog_post' === $activities_template->activity->type ? get_the_permalink( $activities_template->activity->secondary_item_id ) : bp_get_activity_thread_permalink();
-
-		$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, $excerpt_link, $append_text );
-	} elseif ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, __( '&hellip;', 'buddyboss' ) ) ) {
-		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
-
+	if ( strlen( $excerpt ) < strlen( strip_shortcodes( $text ) ) ) {
+		$id      = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>', $excerpt, $id, bp_get_activity_thread_permalink(), $append_text );
 	}
 
@@ -2017,7 +2012,6 @@ function bp_activity_document_add( $document ) {
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 				if ( ! empty( $parent_activity_id ) ) {
-
 					$document_activity                    = new BP_Activity_Activity( $activity_id );
 					$document_activity->secondary_item_id = $parent_activity_id;
 					$document_activity->save();
@@ -2269,6 +2263,119 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 
 }
 
+add_action( 'bp_before_activity_activity_content', 'bp_blogs_activity_content_set_temp_content' );
+
+/**
+ * Function which set the temporary content on the blog post activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_blogs_activity_content_set_temp_content() {
+
+	global $activities_template;
+
+	$activity = $activities_template->activity;
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) &&  'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$content = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if ( is_a( $content, 'WP_Post' ) ) {
+			$activities_template->activity->content = '&#8203;';
+		}
+	}
+
+}
+
+add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 9999, 2 );
+
+/**
+ * Function which set the content on activity blog post.
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_blogs_activity_content_with_read_more( $content, $activity ) {
+
+	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$blog_post = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if( is_a( $blog_post, 'WP_Post' ) ) {
+			$content = bp_create_excerpt( html_entity_decode( $blog_post->post_content ) );
+			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
+				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
+				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
+				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+					$iframe  = $matches[0];
+					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
+					$content .= $iframe;
+				} else {
+					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
+					if( isset( $src[0] ) ) {
+						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+					}
+				}
+
+			} else {
+				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
+				$content = strip_tags( $content, '<a><iframe>' );
+				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
+				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+					$content = $content;
+				} else {
+					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
+					if( isset( $src[0] ) ) {
+						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+					}
+				}
+			}
+		}
+
+	}
+
+	return $content;
+
+}
+
+add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_read_more', 9999, 2 );
+
+/**
+ * Function which set the content on activity blog post comment.
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ * @since BuddyBoss 1.5.5
+ */
+function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
+
+	if( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+		// Get activity object.
+		$comment_activity = new BP_Activity_Activity( $activity->item_id );
+		if( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+			$comment_post_type = $comment_activity->secondary_item_id;
+			$get_post_type     = get_post_type( $comment_post_type );
+			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
+			if( $comment_id ) {
+				$comment = get_comment( $comment_id );
+				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+				if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+				}
+			}
+		}
+	}
+
+	return $content;
+}
 /**
  * Create video activity for each video uploaded
  *

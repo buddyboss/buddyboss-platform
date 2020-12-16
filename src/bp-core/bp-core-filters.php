@@ -62,6 +62,7 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 // Removed Document and Media from WordPress media endpoints.
 add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999 );
 add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
+add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
 
 // Avatars.
 /**
@@ -1527,10 +1528,40 @@ function bp_rest_restrict_wp_attachment_response( $response, $post ) {
 		(
 			! empty( $media_meta ) ||
 			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post->ID )
 		)
 	) {
 		$response = array();
 	}
 
 	return $response;
+}
+
+/**
+ * Restrict users to access media and documents from `/wp-json/oembed/1.0/embed`
+ *
+ * @param int $post_id Current post id.
+ *
+ * @return mixed
+ */
+function bp_rest_restrict_oembed_request_post_id( $post_id ) {
+	$media_meta    = get_post_meta( $post_id, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post_id, 'bp_document_upload', true );
+	if (
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post_id )
+		)
+	) {
+		$post_id = 0;
+	}
+
+	return $post_id;
 }

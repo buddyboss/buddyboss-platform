@@ -201,7 +201,7 @@ $group_members = groups_get_group_members( $args );
 								if ( empty( $group_members['members'] ) ) {
 									$disabled = 'disabled';
 								} ?>
-								<input <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" value="<?php _e( 'Send Message', 'buddyboss' ); ?>" id="send_group_message_button" class="small">
+                                <button <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" id="send_group_message_button" class="small"><?php _e( 'Send Message', 'buddyboss' ); ?></button>
 							</div>
 						</div>
 					</div>
