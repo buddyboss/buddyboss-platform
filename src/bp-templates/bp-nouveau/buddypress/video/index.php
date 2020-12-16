@@ -30,7 +30,16 @@
 
 		<?php endif; ?>
 
-		<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+
+		<div class="video-options">
+			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+			<?php if ( is_user_logged_in() ) : ?>
+				<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-album" class="bb-create-album button small"><i class="bb-icon-media"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<?php bp_get_template_part( 'media/uploader' ); ?>
+				<?php bp_get_template_part( 'media/create-album' ); ?>
+			<?php endif; ?>
+		</div>
 
 		<?php bp_get_template_part( 'video/theatre' ); ?>
 
