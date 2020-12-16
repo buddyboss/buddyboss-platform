@@ -649,7 +649,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							// Generate 3 random images for video cover.
 							$numbers = range( 1, (int) $duration );
 							shuffle( $numbers );
-							$random_seconds = array_slice( $numbers, 0, 1 );
+							$random_seconds = array_slice( $numbers, 0, 3 );
 
 							// Get Upload directory.
 							$upload     = wp_upload_dir();
@@ -704,6 +704,8 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 										$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $upload_file['file'] );
 										wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 										$thumbnail_list[] = $preview_attachment_id;
+										update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
+										update_post_meta( $preview_attachment_id, 'video_id', $video_id );
 									}
 								}
 							}
