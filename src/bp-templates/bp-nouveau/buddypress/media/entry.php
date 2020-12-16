@@ -14,6 +14,7 @@ $move_id       = '';
 $move_type     = '';
 $media_privacy = bp_media_user_can_manage_media( bp_get_media_id(), bp_loggedin_user_id() );
 $can_manage    = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
+$can_move      = ( true === (bool) $media_privacy['can_add'] ) ? true : false;
 
 if ( $group_id > 0 ) {
 	$move_id   = $group_id;
@@ -36,21 +37,23 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 				</a>
 				<div class="media-action_list">
 					<ul>
-                        <?php
-                        if ( $is_comment_pic ) {
-	                        ?>
-                            <li class="move_file move-disabled" data-balloon-pos="down" data-balloon="Photos added in comment cannot be moved">
-                                <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                            </li>
-	                        <?php
-                        } else {
-                            ?>
-                            <li class="move_file">
-                                <a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                            </li>
-                            <?php
-                        }
-                        ?>
+						<?php
+						if ( $is_comment_pic ) {
+							?>
+							<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="Photos added in comment cannot be moved">
+								<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						} else {
+							if ( $can_move ) {
+								?>
+								<li class="move_file">
+									<a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
+								<?php
+							}
+						}
+						?>
 
 						<li class="delete_file">
 							<a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
@@ -72,7 +75,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 		   <img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
 		<?php
-		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) && !bp_is_media_directory() ) :
+		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) && ! bp_is_media_directory() ) :
 			?>
 			<div class="bb-media-check-wrap">
 				<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />

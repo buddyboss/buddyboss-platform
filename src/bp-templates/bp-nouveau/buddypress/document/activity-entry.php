@@ -20,6 +20,7 @@ $document_privacy  = bp_document_user_can_manage_document( bp_get_document_id(),
 $can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 $can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+$can_add           = ( true === (bool) $document_privacy['can_add'] ) ? true : false;
 $db_privacy        = bp_get_db_document_privacy();
 $extension_lists   = bp_document_extensions_list();
 $attachment_url    = '';
@@ -135,17 +136,19 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							if ( $is_comment_doc ) {
 								?>
-                                <li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="Documents added in comment cannot be moved">
-                                    <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                                </li>
+								<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="Documents added in comment cannot be moved">
+									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
 								<?php
-                            } else {
-								?>
-                                <li class="move_file document-action-class">
-                                    <a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                                </li>
-								<?php
-                            }
+							} else {
+								if ( $can_add ) {
+									?>
+									<li class="move_file document-action-class">
+										<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+									</li>
+									<?php
+								}
+							}
 						}
 						$item_id = 0;
 						if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {
