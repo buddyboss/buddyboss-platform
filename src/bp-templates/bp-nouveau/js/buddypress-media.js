@@ -5641,6 +5641,10 @@ window.bp = window.bp || {};
 				}
 				activity.remove();
 			}
+
+			// Report content popup
+			bp.Nouveau.reportPopUp();
+			bp.Nouveau.reportActions();
 		},
 
 		closeTheatre: function (event) {
@@ -6043,6 +6047,12 @@ window.bp = window.bp || {};
 								$('.bb-media-info-section:visible').show();
 
 								jQuery(window).scroll();
+								setTimeout(
+									function () { // Waiting to load dummy image
+										bp.Nouveau.reportPopUp();
+									},
+									1000
+								);
 							}
 						}
 					}
@@ -6090,6 +6100,12 @@ window.bp = window.bp || {};
 								$('.bb-media-info-section:visible').show();
 
 								jQuery(window).scroll();
+								setTimeout(
+									function () { // Waiting to load dummy image
+										bp.Nouveau.reportPopUp();
+									},
+									1000
+								);
 							}
 						}
 					}
