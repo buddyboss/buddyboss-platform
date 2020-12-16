@@ -420,23 +420,14 @@ function bbp_get_reply( $reply, $output = OBJECT, $filter = 'raw' ) {
 		return $reply;
 	}
 
-	if ( $reply->post_type !== bbp_get_reply_post_type() ) {
+	if ( bbp_get_reply_post_type() !== $reply->post_type ) {
 		return null;
 	}
 
-	if ( $output === OBJECT ) {
-		return $reply;
-
-	} elseif ( $output === ARRAY_A ) {
-		$_reply = get_object_vars( $reply );
-
-		return $_reply;
-
-	} elseif ( $output === ARRAY_N ) {
-		$_reply = array_values( get_object_vars( $reply ) );
-
-		return $_reply;
-
+	if ( ARRAY_A === $output ) {
+		$reply = get_object_vars( $reply );
+	} elseif ( ARRAY_N === $output ) {
+		$reply = array_values( get_object_vars( $reply ) );
 	}
 
 	return apply_filters( 'bbp_get_reply', $reply, $output, $filter );

@@ -58,7 +58,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		add_filter( 'bp_forum_topic_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_topic_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bbp_forums_topic_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
+		add_filter( 'bbp_get_topic', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -227,18 +227,20 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param boolean $restrict Check the item is valid or not.
-	 * @param object  $post     Current topic object.
+	 * @param object $post   Current topic object.
+	 * @param string $output Optional. OBJECT, ARRAY_A, or ARRAY_N. Default = OBJECT.
 	 *
-	 * @return false
+	 * @return object|array|null
 	 */
-	public function restrict_single_item( $restrict, $post ) {
+	public function restrict_single_item( $post, $output ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post->ID, self::$type ) ) {
-			return false;
+		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
+
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
+			return null;
 		}
 
-		return $restrict;
+		return $post;
 	}
 
 	/**

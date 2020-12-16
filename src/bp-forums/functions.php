@@ -928,39 +928,3 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 	);
 }
 
-/**
- * Retrieves forums post data given a post ID or post object.
- *
- * @since BuddyBoss 2.0.0
- *
- * @global WP_Post $post Global post object.
- *
- * @param int|WP_Post|null $post   Optional. Post ID or post object. Defaults to global $post.
- * @param string           $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which
- *                                 correspond to a WP_Post object, an associative array, or a numeric array,
- *                                 respectively. Default OBJECT.
- * @param string           $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db',
- *                                 or 'display'. Default 'raw'.
- * @return WP_Post|array|null Type corresponding to $output on success or null on failure.
- *                            When $output is OBJECT, a `WP_Post` instance is returned.
- */
-function bbp_get_post( $post = null, $output = OBJECT, $filter = 'raw' ) {
-	$post = get_post( $post, $output, $filter );
-
-	/**
-	 * Pre validate the Forum posts before fetch.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param boolean $validate Whether to check the post is valid or not.
-	 * @param object  $post     Post object.
-	 */
-	$validate = apply_filters( "bbp_forums_{$post->post_type}_pre_validate", true, (object) $post );
-
-	if ( empty( $validate ) ) {
-		return;
-	}
-
-	return $post;
-
-}

@@ -562,36 +562,27 @@ function bbp_get_topic_id( $topic_id = 0 ) {
  */
 function bbp_get_topic( $topic, $output = OBJECT, $filter = 'raw' ) {
 
-	// Use topic ID
+	// Use topic ID.
 	if ( empty( $topic ) || is_numeric( $topic ) ) {
 		$topic = bbp_get_topic_id( $topic );
 	}
 
-	// Attempt to load the topic
+	// Attempt to load the topic.
 	$topic = get_post( $topic, OBJECT, $filter );
 	if ( empty( $topic ) ) {
 		return $topic;
 	}
 
-	// Bail if post_type is not a topic
-	if ( $topic->post_type !== bbp_get_topic_post_type() ) {
+	// Bail if post_type is not a topic.
+	if ( bbp_get_topic_post_type() !== $topic->post_type ) {
 		return null;
 	}
 
-	// Tweak the data type to return
-	if ( $output === OBJECT ) {
-		return $topic;
-
-	} elseif ( $output === ARRAY_A ) {
-		$_topic = get_object_vars( $topic );
-
-		return $_topic;
-
-	} elseif ( $output === ARRAY_N ) {
-		$_topic = array_values( get_object_vars( $topic ) );
-
-		return $_topic;
-
+	// Tweak the data type to return.
+	if ( ARRAY_A === $output ) {
+		$topic = get_object_vars( $topic );
+	} elseif ( ARRAY_N === $output ) {
+		$topic = array_values( get_object_vars( $topic ) );
 	}
 
 	return apply_filters( 'bbp_get_topic', $topic, $output, $filter );

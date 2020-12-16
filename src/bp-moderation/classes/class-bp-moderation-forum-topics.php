@@ -47,7 +47,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
 		add_filter( 'bp_suspend_forum_topic_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
-		add_filter( 'bbp_forums_topic_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
+		add_filter( 'bbp_get_topic', array( $this, 'restrict_single_item' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
@@ -127,18 +127,20 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param boolean $restrict Check the item is valid or not.
-	 * @param object  $post     Current topic object.
+	 * @param object $post   Current topic object.
+	 * @param string $output Optional. OBJECT, ARRAY_A, or ARRAY_N. Default = OBJECT.
 	 *
-	 * @return false
+	 * @return object|array|null
 	 */
-	public function restrict_single_item( $restrict, $post ) {
+	public function restrict_single_item( $post, $output ) {
 
-		if ( $this->is_content_hidden( (int) $post->ID ) ) {
-			return false;
+		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
+
+		if ( $this->is_content_hidden( (int) $post_id ) ) {
+			return null;
 		}
 
-		return $restrict;
+		return $post;
 	}
 
 	/**
