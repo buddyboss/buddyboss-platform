@@ -1743,7 +1743,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	if ( ! $group_id ) {
 		$first_message           = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 
 		if ( $group_id ) {
@@ -1838,11 +1838,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
-		$count  = 1;
-		$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 		foreach ( $thread_template->thread->recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
-				$thread->thread['recipients'][ $count ] = array(
+				$thread->thread['recipients'][] = array(
 					'avatar'     => esc_url(
 						bp_core_fetch_avatar(
 							array(
@@ -1859,16 +1857,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
 					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 					'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
-					'id'         => $recipient->user_id,
 				);
-
-				if ( bp_is_active( 'moderation' ) ) {
-					$thread->thread['recipients'][ $count ]['is_user_suspended'] = bp_moderation_is_user_suspended( $recipient->user_id );
-					$thread->thread['recipients'][ $count ]['is_user_blocked']   = bp_moderation_is_user_blocked( $recipient->user_id );
-					$thread->thread['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( (int) $recipient->user_id, $admins, true ) ) ? true : false;
-				}
-
-				$count ++;
 			}
 		}
 	}
@@ -2056,11 +2045,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
 				'display_date'  => bp_get_the_thread_message_time_since(),
 			);
-		}
-
-		if ( bp_is_active( 'moderation' ) ) {
-			$thread->messages[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
-			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
 		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
