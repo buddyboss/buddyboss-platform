@@ -72,10 +72,11 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 									}
 								}
 							}
-							if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {
-								$item_id = bp_get_activity_comment_id();
-							} else {
-								if ( bp_is_active( 'activity' ) ) {
+							$item_id = 0;
+							if ( bp_is_active( 'activity' ) ) {
+								if ( bp_get_activity_comment_id() ) {
+									$item_id = bp_get_activity_comment_id();
+								} else {
 									$item_id = bp_get_activity_id();
 								}
 							}
