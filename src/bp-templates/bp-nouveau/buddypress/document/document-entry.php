@@ -274,6 +274,16 @@ if ( $attachment_id ) {
 								<?php
 							}
 						}
+
+						$report_btn = bp_document_get_report_link( array( 'id' => bp_get_document_id() ) );
+						if ( $report_btn && 'document' === $document_type ) {
+							?>
+							<li class="report_file">
+								<?php echo $report_btn; ?>
+							</li>
+							<?php
+						}
+
 						?>
 						<li class="delete_file">
 							<a class="document-file-delete" data-item-from="listing" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $document_type ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
