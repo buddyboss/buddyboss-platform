@@ -3687,7 +3687,7 @@ function bp_document_is_activity_comment_document( $document ) {
  * @param int $activity_id Activity ID to update meta for.
  *
  * @return bool True on success, false on failure.
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 1.5.6
  */
 function bp_document_activity_update_document_id_meta( $activity_id ) {
 	// Check activity component enabled or not.
