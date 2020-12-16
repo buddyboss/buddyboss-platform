@@ -9,6 +9,24 @@
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_video_id(); ?>" data-date-created="<?php bp_video_date_created(); ?>">
 
     <div class="bb-video-thumb bb-item-thumb">
+        <div class="video-action-wrap item-action-wrap">
+            <a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="More actions">
+                <i class="bb-icon-menu-dots-v"></i>
+            </a>
+            <div class="video-action_list item-action_list">
+                <ul>
+                    <li class="edit_video">
+                        <a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-edit">Edit</a>
+                    </li>    
+                    <li class="move_video">
+                        <a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-move">Move</a>
+                    </li>
+                    <li class="delete_file">
+                        <a class="video-file-delete" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-item-from="media" data-item-id="567" data-type="video" href="#">Delete</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
            data-id="<?php bp_video_id(); ?>"
            data-attachment-full="<?php bp_video_attachment_image(); ?>"

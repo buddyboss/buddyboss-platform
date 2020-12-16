@@ -144,6 +144,33 @@
 	}
 }
 
+.bb-activity-video-elem {
+
+	.entry-video:before {
+		content: " ";
+		position: absolute;
+		background: rgba(0, 0, 0, 0.35);
+		border-radius: 3px;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		z-index: 1;
+		transition: 0.3s all;
+		opacity: 0;
+		visibility: visible;
+	}
+	
+	&.is-visible .entry-video:before,
+	&:hover .entry-video:before {
+		opacity: 1;
+		visibility: visible;
+	}
+
+}
+
+
+
 .bb-media-length-4 {
 
 	.act-grid-1-2 {

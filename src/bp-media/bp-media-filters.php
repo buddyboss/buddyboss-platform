@@ -67,6 +67,8 @@ add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_co
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
 
+add_filter( 'bp_get_activity_entry_css_class', 'bp_video_activity_entry_css_class' );
+
 /**
  * Add Media items for search
  */
@@ -2355,6 +2357,29 @@ function bp_media_activity_entry_css_class( $class ) {
 		$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 		if ( ! empty( $media_ids ) ) {
 			$class .= ' media-activity-wrap';
+		}
+	}
+
+	return $class;
+
+}
+
+/**
+ * Added activity entry class for Video.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param string $class class.
+ *
+ * @return string
+ */
+function bp_video_activity_entry_css_class( $class ) {
+
+	if ( bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
+
+		$video_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_ids', true );
+		if ( ! empty( $video_ids ) ) {
+			$class .= ' video-activity-wrap';
 		}
 	}
 

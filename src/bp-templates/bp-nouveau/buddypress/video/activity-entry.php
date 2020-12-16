@@ -15,8 +15,26 @@ $height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $v
 ?>
 
 <div class="bb-activity-video-elem <?php echo $video_template->current_video > 4 ? 'hide' : ''; echo $video_template->video_count == 1 || $video_template->video_count > 1 && $video_template->current_video == 0 ? 'act-grid-1-1 ' : ''; echo $video_template->video_count > 1 && $video_template->current_video > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
+	<div class="video-action-wrap item-action-wrap">
+		<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="More actions">
+			<i class="bb-icon-menu-dots-v"></i>
+		</a>
+		<div class="video-action_list item-action_list">
+			<ul>
+				<li class="edit_video">
+					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-edit">Edit</a>
+				</li>    
+				<li class="move_video">
+					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-move">Move</a>
+				</li>
+				<li class="delete_file">
+					<a class="video-file-delete" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-item-from="media" data-item-id="567" data-type="video" href="#">Delete</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 	<a href="#"
-	   class="bb-open-video-theatre entry-img"
+	   class="bb-open-video-theatre entry-video"
 	   data-id="<?php bp_video_id(); ?>"
 	   data-attachment-id="<?php bp_video_attachment_id(); ?>"
 	   data-attachment-full="<?php bp_video_attachment_image(); ?>"
