@@ -66,6 +66,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'get_the_author_user_email', array( $this, 'get_the_author_name' ), 10, 2 );
 		add_filter( 'get_the_author_display_name', array( $this, 'get_the_author_name' ), 10, 2 );
 		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_meta' ), 10, 2 );
+		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 99, 3 );
 	}
 
 	/**
@@ -568,5 +569,47 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Remove Profile photo for suspend member.
+	 *
+	 * @since BuddyPress 2.9.0
+	 *
+	 * @param  string $retval      The URL of the avatar.
+	 * @param  mixed  $id_or_email The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
+	 *                             user email, WP_User object, WP_Post object, or WP_Comment object.
+	 * @param  array  $args        Arguments passed to get_avatar_data(), after processing.
+	 * @return string
+	 */
+	public function get_avatar_url( $retval, $id_or_email, $args  ) {
+
+		// Ugh, hate duplicating code; process the user identifier.
+		if ( is_numeric( $id_or_email ) ) {
+			$user = get_user_by( 'id', absint( $id_or_email ) );
+		} elseif ( $id_or_email instanceof WP_User ) {
+			// User Object
+			$user = $id_or_email;
+		} elseif ( $id_or_email instanceof WP_Post ) {
+			// Post Object
+			$user = get_user_by( 'id', (int) $id_or_email->post_author );
+		} elseif ( $id_or_email instanceof WP_Comment ) {
+			if ( ! empty( $id_or_email->user_id ) ) {
+				$user = get_user_by( 'id', (int) $id_or_email->user_id );
+			}
+		} elseif ( is_email( $id_or_email ) ) {
+			$user = get_user_by( 'email', $id_or_email );
+		}
+
+		// No user, so bail.
+		if ( false === $user instanceof WP_User ) {
+			return $retval;
+		}
+
+		if ( bp_moderation_is_user_suspended( $user->ID ) ) {
+			return buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+		}
+
+		return $retval;
 	}
 }

@@ -33,7 +33,7 @@ if ( bp_is_active( 'moderation' ) ) {
 		<?php endif; ?>
 
 
-		<?php if ( ! $is_user_suspended || $is_user_blocked ) { ?>
+		<?php if ( ! $is_user_suspended && ! $is_user_blocked ) { ?>
 
 			<a href="<?php bbp_reply_url(); ?>" class="bbp-reply-permalink">#<?php bbp_reply_id(); ?></a>
 
@@ -55,20 +55,13 @@ if ( bp_is_active( 'moderation' ) ) {
 
 		<?php do_action( 'bbp_theme_before_reply_author_details' ); ?>
 
-		<?php if ( $is_user_suspended || $is_user_blocked ) { ?>
-			<span class="bbp-author-avatar">
-				<?php echo get_avatar( 0 ); ?>
-			</span>
-			<br>
-			<span class="bbp-author-name"><?php esc_html_e( 'Blocked User', 'buddyboss' ); ?></span>
-		<?php } else {
-			bbp_reply_author_link(
-					array(
-							'sep'       => '<br />',
-							'show_role' => true,
-					)
-			);
-		}
+		<?php
+		bbp_reply_author_link(
+			array(
+				'sep'       => '<br />',
+				'show_role' => true,
+			)
+		);
 		?>
 
 		<?php do_action( 'bbp_theme_after_reply_author_details' ); ?>
