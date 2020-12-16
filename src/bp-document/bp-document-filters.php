@@ -64,6 +64,7 @@ add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
+add_action( 'bp_activity_screen_single_activity_permalink', 'bp_document_single_activity_screen_update_document_id_meta', 0 );
 
 function bp_document_search_label_search( $type ) {
 
@@ -1707,4 +1708,14 @@ function bp_document_activity_entry_css_class( $class ) {
 
 	return $class;
 
+}
+
+/**
+ * Update document id in activity meta for document activity on single screen.
+ *
+ * @since BuddyBoss 1.5.6
+ * @param object $activity Activity Object.
+ */
+function bp_document_single_activity_screen_update_document_id_meta( $activity ) {
+	bp_document_activity_update_document_id_meta( $activity->id );
 }
