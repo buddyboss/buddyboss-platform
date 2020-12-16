@@ -447,7 +447,17 @@ class BP_Invitation {
 			$where_conditions['search_terms'] = $wpdb->prepare( "( class LIKE %s )", $search_terms_like, $search_terms_like );
 		}
 
-		// Custom WHERE
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$where_conditions = apply_filters( 'bp_invitations_get_where_conditions', $where_conditions, $args );
+
+		// Custom WHERE.
 		if ( ! empty( $where_conditions ) ) {
 			$where = 'WHERE ' . implode( ' AND ', $where_conditions );
 		}
