@@ -3680,3 +3680,34 @@ function bp_document_is_activity_comment_document( $document ) {
 	return $is_comment_document;
 
 }
+
+/**
+ * Update document id for document activity in meta.
+ *
+ * @param int $activity_id Activity ID to update meta for.
+ *
+ * @return bool True on success, false on failure.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_document_activity_update_document_id_meta( $activity_id ) {
+	// Check activity component enabled or not.
+	if ( ! bp_is_active( 'activity' ) ) {
+		return false;
+	}
+
+	$activity_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+
+	if ( ! empty( $activity_document_ids ) ) {
+		return false;
+	}
+
+	$document_id = BP_Document::get_activity_document_id( $activity_id );
+
+	if ( ! empty( $document_id ) && 1 <= $document_id ) {
+		bp_activity_update_meta( $activity_id, 'bp_document_id', $document_id );
+
+		return true;
+	}
+
+	return false;
+}

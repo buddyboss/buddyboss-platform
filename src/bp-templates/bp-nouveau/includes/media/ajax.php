@@ -766,6 +766,10 @@ function bp_nouveau_ajax_media_get_activity() {
 	if ( bp_has_activities( $args ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
+
+			// Update media id for media activity in meta.
+			bp_media_activity_update_media_id_meta( bp_get_activity_id() );
+
 			bp_get_template_part( 'activity/entry' );
 		}
 	}
