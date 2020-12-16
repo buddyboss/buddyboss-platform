@@ -347,6 +347,50 @@ add_action( 'wp_ajax_bp_moderation_content_actions_request', 'bp_moderation_cont
 add_action( 'wp_ajax_nopriv_bp_moderation_content_actions_request', 'bp_moderation_content_actions_request' );
 
 /**
+ * Function to handle moderation request for user
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bp_moderation_user_actions_request() {
+	$response = array(
+		'success' => false,
+		'message' => '',
+	);
+
+	$nonce      = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$item_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$sub_action = filter_input( INPUT_POST, 'sub_action', FILTER_SANITIZE_STRING );
+	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+
+	if ( empty( $item_id ) || empty( $item_type ) ) {
+		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
+	}
+
+	if ( wp_verify_nonce( $nonce, 'bp-hide-unhide-moderation' ) && ! is_wp_error( $response['message'] ) ) {
+
+		if ( 'suspend' === $sub_action ) {
+			BP_Suspend_Member::suspend_user( $item_id );
+			$response['success'] = true;
+			$response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss' );
+		} elseif ( 'unsuspend' === $sub_action ) {
+			BP_Suspend_Member::unsuspend_user( $item_id );
+			$response['success'] = true;
+			$response['message'] = esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' );
+		}
+	}
+
+	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
+		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+	}
+
+	echo wp_json_encode( $response );
+	exit();
+}
+
+add_action( 'wp_ajax_bp_moderation_user_actions_request', 'bp_moderation_user_actions_request' );
+add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_user_actions_request' );
+
+/**
  * Function to Popup markup for moderation content report
  *
  * @since BuddyBoss 2.0.0
