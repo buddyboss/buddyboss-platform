@@ -126,7 +126,14 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		if ( function_exists( $function ) ) {
 			if ( ! empty( $item_id ) ) {
 				$post_media = $function( $item_id, 'bp_media_ids', true );
-				$media_ids  = wp_parse_id_list( $post_media );
+
+				if ( empty( $post_media ) ){
+					$post_media = BP_Media::get_activity_media_id( $item_id );
+				}
+
+				if ( ! empty( $post_media )  ){
+					$media_ids  = wp_parse_id_list( $post_media );
+				}
 			}
 		}
 

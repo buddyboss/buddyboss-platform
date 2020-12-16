@@ -126,7 +126,13 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		if ( function_exists( $function ) ) {
 			if ( ! empty( $item_id ) ) {
 				$post_document = $function( $item_id, 'bp_document_ids', true );
-				$document_ids  = wp_parse_id_list( $post_document );
+				if ( empty( $post_document ) ){
+					$post_document = BP_Document::get_activity_document_id( $item_id );
+				}
+
+				if ( ! empty( $post_document )  ){
+					$document_ids  = wp_parse_id_list( $post_document );
+				}
 			}
 		}
 
