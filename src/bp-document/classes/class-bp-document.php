@@ -1866,7 +1866,23 @@ class BP_Document {
 			return false;
 		}
 
-		$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+		$activity_document_id = false;
+
+		// Check activity component enabled or not.
+		if ( bp_is_active( 'activity' ) ) {
+			$activity_document_id = bp_activity_get_meta( $activity_id, 'bp_document_id', true );
+		}
+
+		if ( empty( $activity_document_id ) ) {
+			$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+
+			if ( bp_is_active( 'activity' ) ) {
+				$document_activity = bp_activity_get_meta( $activity_id, 'bp_document_activity', true );
+				if ( ! empty( $document_activity ) && ! empty( $activity_document_id ) ) {
+					bp_activity_update_meta( $activity_id, 'bp_document_id', $activity_document_id );
+				}
+			}
+		}
 
 		return $activity_document_id;
 	}
