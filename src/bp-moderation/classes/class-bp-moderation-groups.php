@@ -52,6 +52,9 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
+
+		// Restrict private group report button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
 	}
 
 	/**
@@ -137,5 +140,25 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		}
 
 		return $restrict;
+	}
+
+	/**
+	 * Function to restrict private group report button for it's member only.
+	 *
+	 * @param array $args    report button arguments.
+	 * @param int   $item_id group id.
+	 *
+	 * @return array|mixed
+	 */
+	public function update_button_args( $args, $item_id ) {
+
+		$group_data    = groups_get_group( $item_id );
+		$is_group_user = groups_is_user_member( bp_loggedin_user_id(), $item_id );
+
+		if ( 'private' === $group_data->status && false === $is_group_user ) {
+			$args = false;
+		}
+
+		return $args;
 	}
 }
