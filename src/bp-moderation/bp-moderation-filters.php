@@ -60,7 +60,6 @@ add_filter( 'bp_core_get_js_strings', 'bp_moderation_js_strings' );
  */
 function bp_moderation_content_report() {
 	$response = array(
-		'success' => false,
 		'message' => '',
 	);
 
@@ -74,26 +73,29 @@ function bp_moderation_content_report() {
 	$item_note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
-		return new WP_Error(
+		$response['message'] = new WP_Error(
 			'bp_moderation_missing_data',
 			esc_html__( 'Required field missing.', 'buddyboss' )
 		);
+		wp_send_json_error( $response );
 	}
 
 	if ( 'other' === $category && empty( $item_note ) ) {
-		return new WP_Error(
+		$response['message'] = new WP_Error(
 			'bp_moderation_missing_data',
 			esc_html__( 'Please specify reason to report this content.', 'buddyboss' )
 		);
+		wp_send_json_error( $response );
 	}
 
 	// Check the current has access to report the item ot not.
 	$user_can = bp_moderation_user_can( $item_id, $item_type );
 	if ( false === (bool) $user_can ) {
-		return new WP_Error(
+		$response['message'] = new WP_Error(
 			'bp_moderation_invalid_access',
 			esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' )
 		);
+		wp_send_json_error( $response );
 	}
 
 	/**
@@ -105,10 +107,11 @@ function bp_moderation_content_report() {
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
-		return new WP_Error(
+		$response['message'] = new WP_Error(
 			'bp_moderation_already_reported',
 			esc_html__( 'Already reported this item.', 'buddyboss' )
 		);
+		wp_send_json_error( $response );
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
@@ -122,7 +125,6 @@ function bp_moderation_content_report() {
 		);
 
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
-			$response['success']    = true;
 			$response['moderation'] = $moderation;
 
 			$button_args = array(
@@ -138,11 +140,12 @@ function bp_moderation_content_report() {
 		$response['message'] = $moderation->errors;
 	}
 
-	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
+	if ( empty( $response['message'] ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_error', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
-	echo wp_json_encode( $response );
+	wp_send_json_success( $response );
 	exit();
 }
 

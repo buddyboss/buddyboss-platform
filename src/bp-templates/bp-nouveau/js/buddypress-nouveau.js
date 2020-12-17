@@ -1825,59 +1825,57 @@ window.bp = window.bp || {};
 				}
 			});
 
-			$('#bb-report-content').submit(function () {
+			$( '#bb-report-content' ).submit( function ( e ) {
 
-				$('#bb-report-content').find('.report-submit').addClass('loading');
+				$( '#bb-report-content' ).find( '.report-submit' ).addClass( 'loading' );
 
-				$('.bp-report-form-err').empty();
+				$( '.bp-report-form-err' ).empty();
 
 				var data = {
 					action: 'bp_moderation_content_report',
 				};
-				$.each($(this).serializeArray(), function (_, kv) {
-					data[kv.name] = kv.value;
-				});
+				$.each( $( this ).serializeArray(), function ( _, kv ) {
+					data[ kv.name ] = kv.value;
+				} );
 
-				$.post(BP_Nouveau.ajaxurl, data, function (response) {
-					var result = $.parseJSON(response);
-					if (result.success) {
+				$.post( BP_Nouveau.ajaxurl, data, function ( response ) {
+					if ( response.success ) {
 						_this.resetReportPopup();
-						_this.changeReportButtonStatus(result.button);
-						$('#bb-report-content').find('.report-submit').removeClass('loading');
-						$('.mfp-close').trigger('click');
+						_this.changeReportButtonStatus( response.data.button );
+						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
+						$( '.mfp-close' ).trigger( 'click' );
 					} else {
-						$('#bb-report-content').find('.report-submit').removeClass('loading');
-						_this.handleReportError(result.message.errors);
+						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
+						_this.handleReportError( response.data.message.errors, e.currentTarget );
 					}
-				});
-			});
+				} );
+			} );
 
-			$('#bb-block-member').submit(function () {
+			$( '#bb-block-member' ).submit( function ( e ) {
 
-				$('#bb-block-member').find('.report-submit').addClass('loading');
+				$( '#bb-block-member' ).find( '.report-submit' ).addClass( 'loading' );
 
-				$('.bp-report-form-err').empty();
+				$( '.bp-report-form-err' ).empty();
 
 				var data = {
 					action: 'bp_moderation_block_member',
 				};
-				$.each($(this).serializeArray(), function (_, kv) {
-					data[kv.name] = kv.value;
-				});
+				$.each( $( this ).serializeArray(), function ( _, kv ) {
+					data[ kv.name ] = kv.value;
+				} );
 
-				$.post(BP_Nouveau.ajaxurl, data, function (response) {
-					var result = $.parseJSON(response);
-					if (result.success) {
+				$.post( BP_Nouveau.ajaxurl, data, function ( response ) {
+					if ( response.success ) {
 						_this.resetReportPopup();
-						_this.changeReportButtonStatus(result.button);
-						$('#bb-block-member').find('.report-submit').removeClass('loading');
-						$('.mfp-close').trigger('click');
+						_this.changeReportButtonStatus( response.data.button );
+						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+						$( '.mfp-close' ).trigger( 'click' );
 					} else {
-						$('#bb-block-member').find('.report-submit').removeClass('loading');
-						_this.handleReportError(result.message.errors);
+						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+						_this.handleReportError( response.data.message.errors, e.currentTarget );
 					}
-				});
-			});
+				} );
+			} );
 		},
 		resetReportPopup: function () {
 			$('form#bb-report-content').trigger('reset');
@@ -1898,17 +1896,19 @@ window.bp = window.bp || {};
 			btn_report.html(button.link_text);
 			btn_report.attr('class', button.button_attr.class);
 		},
-		handleReportError: function ( errors ){
+		handleReportError: function ( errors, target ) {
 			var message = '';
-			if ('' !== errors.bp_moderation_missing_data) {
+			if ( errors.bp_moderation_missing_data ) {
 				message = errors.bp_moderation_missing_data;
-			} else if ('' !== errors.bp_moderation_already_reported) {
+			} else if ( errors.bp_moderation_already_reported ) {
 				message = errors.bp_moderation_already_reported;
-			} else if ('' !== errors.bp_moderation_missing_error) {
+			} else if ( errors.bp_moderation_missing_error ) {
 				message = errors.bp_moderation_missing_error;
+			} else if ( errors.bp_moderation_invalid_access ) {
+				message = errors.bp_moderation_invalid_access;
 			}
 
-			$('.bp-report-form-err').html(message);
+			jQuery( target ).closest( '.bb-report-type-wrp' ).find( '.bp-report-form-err' ).html( message );
 		},
 		setFormValues: function (data) {
 			var mf_content = $('.mfp-content');
