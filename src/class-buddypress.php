@@ -694,6 +694,7 @@ class BuddyPress {
 			'BP_Suspend_Media'                             => 'suspend',
 			'BP_Suspend_Album'                             => 'suspend',
 			'BP_Suspend_Comment'                           => 'suspend',
+			'BP_Suspend_Message'                           => 'suspend',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
