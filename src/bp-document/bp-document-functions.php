@@ -2142,37 +2142,37 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 
 	global $wpdb, $bp;
 
-	if( 0 === $document_id ) {
+	if ( 0 === $document_id ) {
 		return false;
 	}
 
-	if( (int) $document_id > 0 ) {
+	if ( (int) $document_id > 0 ) {
 		$has_access = bp_document_user_can_edit( $document_id );
-		if( ! $has_access ) {
+		if ( ! $has_access ) {
 			return false;
 		}
 	}
 
-	if( (int) $folder_id > 0 ) {
+	if ( (int) $folder_id > 0 ) {
 		$has_access = bp_folder_user_can_edit( $folder_id );
-		if( ! $has_access ) {
+		if ( ! $has_access ) {
 			return false;
 		}
 	}
 
-	if( ! $group_id ) {
+	if ( ! $group_id ) {
 		$get_document = new BP_Document( $document_id );
-		if( $get_document->group_id > 0 ) {
+		if ( $get_document->group_id > 0 ) {
 			$group_id = $get_document->group_id;
 		}
 	}
 
-	if( $group_id > 0 ) {
+	if ( $group_id > 0 ) {
 		$destination_privacy = 'public';
-	} elseif( $folder_id > 0 ) {
+	} elseif ( $folder_id > 0 ) {
 		$destination_folder = BP_Document_Folder::get_folder_data( array( $folder_id ) );
 		$destination_folder = ( ! empty( $destination_folder ) ) ? current( $destination_folder ) : array();
-		if( empty( $destination_folder ) ) {
+		if ( empty( $destination_folder ) ) {
 			return false;
 		}
 		$destination_privacy = $destination_folder->privacy;
@@ -2186,7 +2186,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		$destination_privacy = $document_object->privacy;
 	}
 
-	if( empty( $destination_privacy ) ) {
+	if ( empty( $destination_privacy ) ) {
 		$destination_privacy = 'loggedin';
 	}
 
@@ -2195,10 +2195,11 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 	$document->group_id      = $group_id;
 	$document->date_modified = bp_core_current_time();
 	$document->privacy       = ( $group_id > 0 ) ? 'grouponly' : $destination_privacy;
+	$document->menu_order    = 0;
 	$document->save();
 
 	// Update document activity privacy.
-	if( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+	if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 
 		$document_attachment = $document->attachment_id;
 		$parent_activity_id  = get_post_meta( $document_attachment, 'bp_document_parent_activity_id', true );
@@ -2206,13 +2207,13 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		// If found need to make this activity to main activity.
 		$child_activity_id = get_post_meta( $document_attachment, 'bp_document_activity_id', true );
 
-		if( bp_is_active( 'activity' ) ) {
+		if ( bp_is_active( 'activity' ) ) {
 
 			// Single document upload.
-			if( empty( $child_activity_id ) ) {
+			if ( empty( $child_activity_id ) ) {
 				$activity = new BP_Activity_Activity( (int) $parent_activity_id );
 				// Update activity data.
-				if( bp_activity_user_can_delete( $activity ) ) {
+				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
 					$activity->hide_sitewide     = 0;
 					$activity->secondary_item_id = 0;
@@ -2221,12 +2222,12 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				}
 
 				bp_activity_delete_meta( (int) $parent_activity_id, 'bp_document_folder_activity' );
-				if( $folder_id > 0 ) {
+				if ( $folder_id > 0 ) {
 					// Update to moved album id.
 					bp_activity_update_meta( (int) $parent_activity_id, 'bp_document_folder_activity', (int) $folder_id );
 				}
 
-			// We have to change child activity privacy when we move the document while at a time multiple document uploaded.
+				// We have to change child activity privacy when we move the document while at a time multiple document uploaded.
 			} else {
 
 				$parent_activity_document_ids = bp_activity_get_meta( $parent_activity_id, 'bp_document_ids', true );
@@ -2234,11 +2235,11 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Get the parent activity.
 				$parent_activity = new BP_Activity_Activity( (int) $parent_activity_id );
 
-				if( bp_activity_user_can_delete( $parent_activity ) && ! empty( $parent_activity_document_ids ) ) {
+				if ( bp_activity_user_can_delete( $parent_activity ) && ! empty( $parent_activity_document_ids ) ) {
 					$parent_activity_document_ids = explode( ',', $parent_activity_document_ids );
 
 					// Do the changes if only one media is attached to a activity.
-					if( 1 === sizeof( $parent_activity_document_ids ) ) {
+					if ( 1 === count( $parent_activity_document_ids ) ) {
 
 						// Get the document object.
 						$document = new BP_Document( $document_id );
@@ -2262,7 +2263,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						update_post_meta( $document->attachment_id, 'bp_document_saved', 1 );
 
 						bp_activity_delete_meta( $parent_activity_id, 'bp_document_folder_activity' );
-						if( $document_album > 0 ) {
+						if ( $document_album > 0 ) {
 							bp_activity_update_meta( $parent_activity_id, 'bp_document_folder_activity', $document_album );
 						}
 
@@ -2276,13 +2277,13 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						$parent_activity->privacy = $destination_privacy;
 						$parent_activity->save();
 
-					} elseif( count( $parent_activity_document_ids ) > 2 ) {
+					} elseif ( count( $parent_activity_document_ids ) > 1 ) {
 
 						// Get the child activity.
 						$activity = new BP_Activity_Activity( (int) $child_activity_id );
 
 						// Update activity data.
-						if( bp_activity_user_can_delete( $activity ) ) {
+						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
 							$activity->hide_sitewide     = 0;
@@ -2302,17 +2303,17 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 							bp_activity_delete_meta( $child_activity_id, 'bp_document_activity' );
 
 							bp_activity_delete_meta( (int) $child_activity_id, 'bp_document_folder_activity' );
-							if( $folder_id > 0 ) {
+							if ( $folder_id > 0 ) {
 								bp_activity_update_meta( (int) $child_activity_id, 'bp_document_folder_activity', (int) $folder_id );
 							}
 
 							// Remove the document id from the parent activity meta.
-							if( ( $key = array_search( $document_id, $parent_activity_document_ids ) ) !== false ) {
+							if ( ( $key = array_search( $document_id, $parent_activity_document_ids ) ) !== false ) {
 								unset( $parent_activity_document_ids[ $key ] );
 							}
 
 							// Update the activity meta.
-							if( ! empty( $parent_activity_document_ids ) ) {
+							if ( ! empty( $parent_activity_document_ids ) ) {
 								$activity_document_ids = implode( ',', $parent_activity_document_ids );
 								bp_activity_update_meta( $parent_activity_id, 'bp_document_ids', $activity_document_ids );
 							} else {
