@@ -86,6 +86,8 @@ window.bp = window.bp || {};
 			$(document).on('click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a', this.videoActivityActionButton.bind(this));
 			$(document).on('change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind(this));
 			$(document).on('click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind(this));
+			$(document).on('click', '.video-action_list .edit_video', this.editVideo.bind(this));
+			$(document).on('click', '.video-action_list .video-file-delete', this.deleteVideo.bind(this));
 		},
 
 		
@@ -430,6 +432,25 @@ window.bp = window.bp || {};
 			if ( self.$el.find( '#activity-post-media-uploader' ).hasClass( 'open' ) ) {
 				return false;
 			}
+
+		},
+
+		editVideo: function ( e ) {
+			e.preventDefault();
+
+			//ToDo: Open Edit Popup here
+			console.log('Open Edit Popup here');
+		},
+
+		deleteVideo: function ( e ) {
+			e.preventDefault();
+
+			if(!confirm('Are you sure you want to delete this video?')) {
+				return;
+			}
+
+			//ToDo: Delete Video Code goes here
+			console.log('Delete Video');
 
 		},
 
