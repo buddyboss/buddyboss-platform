@@ -89,9 +89,8 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_document();
 	}
 
-	bp_core_install_suspend();
-
 	if ( ! empty( $active_components['moderation'] ) ) {
+		bp_core_install_suspend();
 		bp_core_install_moderation();
 	}
 

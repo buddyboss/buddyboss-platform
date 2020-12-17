@@ -55,6 +55,17 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 						}
 						?>
 
+						<?php
+						$report_btn = bp_media_get_report_link( array( 'id' => bp_get_media_id() ) );
+						if ( $report_btn ) {
+							?>
+							<li class="report_file">
+								<?php echo $report_btn; ?>
+							</li>
+							<?php
+						}
+						?>
+
 						<li class="delete_file">
 							<a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 						</li>

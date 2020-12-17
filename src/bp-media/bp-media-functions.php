@@ -3311,3 +3311,32 @@ function bp_media_is_activity_comment_photo( $photo ) {
 	return $is_comment_photo;
 
 }
+
+/**
+ * Function to get media report link
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param array $args button arguments.
+ *
+ * @return mixed|void
+ */
+function bp_media_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$report_btn = bp_moderation_get_report_button( array(
+		'id'                => 'media_report',
+		'component'         => 'moderation',
+		'must_be_logged_in' => true,
+		'button_attr'       => array(
+			'data-bp-content-id'   => $args['id'],
+			'data-bp-content-type' => BP_Moderation_Media::$moderation_type,
+		),
+	),
+		true );
+
+	return apply_filters( 'bp_media_get_report_link', $report_btn, $args );
+}

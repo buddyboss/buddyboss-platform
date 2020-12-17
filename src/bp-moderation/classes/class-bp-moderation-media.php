@@ -54,7 +54,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		}
 
 		// Update report button.
-		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
+		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 
 	}
 
@@ -131,7 +131,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 *
 	 * @return array
 	 */
-	public function update_button_args( $item_id ) {
+	public function update_button_sub_items( $item_id ) {
 		$media = new BP_Media( $item_id );
 
 		if ( empty( $media->id ) ) {
