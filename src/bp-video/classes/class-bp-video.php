@@ -623,6 +623,8 @@ class BP_Video {
 
 			$video->attachment_data = $attachment_data;
 
+			$video->video_link = wp_get_attachment_url( $video->attachment_id );
+
 			$videos[] = $video;
 		}
 

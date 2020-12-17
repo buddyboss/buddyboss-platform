@@ -469,8 +469,8 @@ window.bp = window.bp || {};
 			this.current_video = false;
 			this.current_video_index = 0;
 			this.is_open_video = false;
-			this.nextVideoLink = $( '.bb-next-video' );
-			this.previousVideoLink = $( '.bb-prev-video' );
+			this.nextVideoLink = $( '.bb-next-media' );
+			this.previousVideoLink = $( '.bb-prev-media' );
 			this.activity_ajax = false;
 			this.group_id = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 
@@ -482,6 +482,8 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.bb-open-video-theatre', this.openTheatre.bind( this ) );
+			$( document ).on( 'click', '.bb-prev-media', this.previous.bind(this));
+			$( document ).on( 'click', '.bb-next-media', this.next.bind(this));
 
 		},
 		openTheatre: function ( event ) {
@@ -619,6 +621,86 @@ window.bp = window.bp || {};
 				self.nextVideoLink.show();
 			}
 		},
+		next: function (event) {
+			event.preventDefault();
+			var self = this, activity_id;
+			self.resetRemoveActivityCommentsData();
+			if (typeof self.videos[ self.current_index + 1 ] !== 'undefined') {
+				self.current_index = self.current_index + 1;
+				activity_id = self.current_video.activity_id;
+				self.current_video = self.videos[ self.current_index ];
+				self.showVideo();
+				if (activity_id != self.current_video.activity_id) {
+					self.getActivity();
+				} else {
+					self.getMediasDescription();
+				}
+			} else {
+				self.nextLink.hide();
+			}
+		},
+
+		previous: function (event) {
+			event.preventDefault();
+			var self = this, activity_id;
+			self.resetRemoveActivityCommentsData();
+			if (typeof self.videos[ self.current_index - 1 ] !== 'undefined') {
+				self.current_index = self.current_index - 1;
+				activity_id = self.current_video.activity_id;
+				self.current_video = self.videos[ self.current_index ];
+				self.showVideo();
+				if (activity_id != self.current_video.activity_id) {
+					self.getActivity();
+				} else {
+					self.getMediasDescription();
+				}
+			} else {
+				self.previousLink.hide();
+			}
+		},
+
+		resetRemoveActivityCommentsData: function () {
+			var self = this, activity_comments = false, activity_meta = false, activity_state = false, activity = false,
+			    html = false, classes = false;
+			if (self.current_video.parent_activity_comments) {
+				activity = $('.bb-media-model-wrapper.video [data-bp-activity-id="' + self.current_video.activity_id + '"]');
+				activity_comments = activity.find('.activity-comments');
+				if (activity_comments.length) {
+					html = activity_comments.html();
+					classes = activity_comments.attr('class');
+					activity_comments.remove();
+					activity_comments = $('[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments');
+					if (activity_comments.length) {
+						activity_comments.html(html);
+						activity_comments.attr('class', classes);
+					}
+				}
+				activity_state = activity.find('.activity-state');
+				if (activity_state.length) {
+					html = activity_state.html();
+					classes = activity_state.attr('class');
+					activity_state.remove();
+					activity_state = $('[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-state');
+					if (activity_state.length) {
+						activity_state.html(html);
+						activity_state.attr('class', classes);
+					}
+				}
+				activity_meta = activity.find('.activity-meta');
+				if (activity_meta.length) {
+					html = activity_meta.html();
+					classes = activity_meta.attr('class');
+					activity_meta.remove();
+					activity_meta = $('[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-meta');
+					if (activity_meta.length) {
+						activity_meta.html(html);
+						activity_meta.attr('class', classes);
+					}
+				}
+				activity.remove();
+			}
+		},
+
 		getActivity: function () {
 			var self = this;
 
@@ -635,6 +717,7 @@ window.bp = window.bp || {};
 					self.activity_ajax.abort();
 				}
 
+				$( '.bb-media-info-section.media' ).show();
 				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments' );
 				if ( on_page_activity_comments.length ) {
 					self.current_video.parent_activity_comments = true;

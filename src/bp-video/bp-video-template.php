@@ -589,7 +589,6 @@ function bp_video_link() {
 function bp_get_video_link() {
 	global $video_template;
 
-	$video_link = wp_get_attachment_url( $video_template->video->attachment_id );
 	/**
 	 * Filters the video ID being displayed.
 	 *
@@ -597,7 +596,7 @@ function bp_get_video_link() {
 	 *
 	 * @since BuddyBoss 1.6.0
 	 */
-	return apply_filters( 'bp_get_video_link', $video_link );
+	return apply_filters( 'bp_get_video_link', $video_template->video->video_link );
 }
 
 /**
