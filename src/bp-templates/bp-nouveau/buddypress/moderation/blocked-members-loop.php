@@ -10,17 +10,17 @@ if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FI
 	?>
     <table id="moderation-list" class="bp-tables-user">
     <thead>
-    <th>
+    <th class="title">
 		<?php
 		esc_html_e( 'Blocked Member', 'buddyboss' );
 		?>
     </th>
-    <th>
+    <th class="title">
 		<?php
 		esc_html_e( 'Blocked', 'buddyboss' );
 		?>
     </th>
-    <th></th>
+    <th class="title"></th>
     </thead>
     <tbody>
 <?php
