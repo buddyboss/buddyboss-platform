@@ -2305,7 +2305,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 							}
 
 							// Remove the document id from the parent activity meta.
-							if ( ( $key = array_search( $document_id, $parent_activity_document_ids ) ) !== false ) {
+							$key = array_search( $document_id, $parent_activity_document_ids );
+							if ( false !== $key ) {
 								unset( $parent_activity_document_ids[ $key ] );
 							}
 
