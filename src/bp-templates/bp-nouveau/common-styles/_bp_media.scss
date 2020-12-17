@@ -360,6 +360,15 @@
 
 	}
 
+	.bp-video-upload-tab.selected {
+		color: #122b46;
+	}
+
+}
+
+.bp-media-upload-tab-content,
+.bp-video-upload-tab-content {
+	padding-top: 30px;
 }
 
 #bp-media-uploader .popup-on-fly-create-folder-title.error + .error-box,

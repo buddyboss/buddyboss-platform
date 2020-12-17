@@ -12842,6 +12842,15 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 20px;
 }
 
+.modal-container .bp-video-upload-tab.selected {
+  color: #122b46;
+}
+
+.bp-media-upload-tab-content,
+.bp-video-upload-tab-content {
+  padding-top: 30px;
+}
+
 #bp-media-uploader .popup-on-fly-create-folder-title.error + .error-box,
 #boss-media-create-album-popup .popup-on-fly-create-folder-title.error + .error-box {
   display: block;
