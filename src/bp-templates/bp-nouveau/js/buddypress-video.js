@@ -732,10 +732,13 @@ window.bp = window.bp || {};
 							action: 'video_get_activity',
 							id: self.current_video.activity_id,
 							group_id: ! _.isUndefined( self.current_video.group_id ) ? self.current_video.group_id : 0,
+							video_id: ! _.isUndefined( self.current_video.id ) ? self.current_video.id : 0,
 							nonce: BP_Nouveau.nonces.video
 						},
 						success: function ( response ) {
 							if ( response.success ) {
+
+								$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).html( response.data.video_data );
 								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
 								$( '.bb-media-info-section:visible' ).show();
 

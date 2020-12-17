@@ -1669,3 +1669,9 @@ video::-webkit-media-text-track-display {
   outline: none;
   background: none;
 }
+
+.bb-media-model-wrapper.video .bb-media-section figure{
+  max-height: 90vh;
+  width: 100% !important;
+  height: auto !important;
+}
