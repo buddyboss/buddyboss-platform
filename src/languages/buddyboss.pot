@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-17 05:00:49+00:00\n"
+"POT-Creation-Date: 2020-12-17 13:47:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -380,7 +380,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1509
 #: bp-forums/admin/replies.php:806 bp-forums/admin/topics.php:899
 #: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2226
-#: bp-forums/topics/functions.php:2076 bp-forums/topics/template.php:3038
+#: bp-forums/topics/functions.php:2081 bp-forums/topics/template.php:3038
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:611
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:612
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:941
@@ -697,7 +697,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:536
 #: bp-core/classes/class-bp-admin.php:537 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1754
-#: bp-media/bp-media-filters.php:1261 bp-video/bp-video-filters.php:1187
+#: bp-media/bp-media-filters.php:1261 bp-video/bp-video-filters.php:1184
 msgid "Tools"
 msgstr ""
 
@@ -1290,7 +1290,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1122
 #: bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:202
-#: bp-video/bp-video-filters.php:1238
+#: bp-video/bp-video-filters.php:1235
 msgid "Forums"
 msgstr ""
 
@@ -2794,7 +2794,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2372
-#: bp-media/bp-media-filters.php:1361 bp-video/bp-video-filters.php:1279
+#: bp-media/bp-media-filters.php:1361 bp-video/bp-video-filters.php:1276
 msgid "Run Migration"
 msgstr ""
 
@@ -3497,7 +3497,7 @@ msgstr ""
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
 #: bp-media/bp-media-filters.php:1319
 #: bp-templates/bp-nouveau/includes/groups/classes.php:300
-#: bp-video/bp-video-filters.php:1244
+#: bp-video/bp-video-filters.php:1241
 msgid "Discussions"
 msgstr ""
 
@@ -3513,7 +3513,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:1325 bp-video/bp-video-filters.php:1250
+#: bp-media/bp-media-filters.php:1325 bp-video/bp-video-filters.php:1247
 msgid "Replies"
 msgstr ""
 
@@ -3652,7 +3652,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1659 bp-forums/admin/tools.php:1661
 #: bp-forums/admin/tools.php:1733 bp-forums/admin/tools.php:1735
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1770
-#: bp-video/bp-video-filters.php:1615
+#: bp-video/bp-video-filters.php:1612
 msgid "Complete!"
 msgstr ""
 
@@ -4044,7 +4044,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:22
 #: bp-document/bp-document-functions.php:1964
-#: bp-video/bp-video-filters.php:1232 bp-video/bp-video-functions.php:3340
+#: bp-video/bp-video-filters.php:1229 bp-video/bp-video-functions.php:3340
 msgid "Video"
 msgstr ""
 
@@ -8675,7 +8675,7 @@ msgid "Download"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:1053 bp-media/bp-media-filters.php:1865
-#: bp-video/bp-video-filters.php:1707
+#: bp-video/bp-video-filters.php:1704
 msgid "File not found"
 msgstr ""
 
@@ -8702,7 +8702,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-document/bp-document-filters.php:1631 bp-media/bp-media-filters.php:2282
-#: bp-video/bp-video-filters.php:2102
+#: bp-video/bp-video-filters.php:2099
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -10257,7 +10257,7 @@ msgid "Move this item to the Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:817 bp-forums/admin/topics.php:909
-#: bp-forums/replies/template.php:2118 bp-forums/topics/functions.php:2077
+#: bp-forums/replies/template.php:2118 bp-forums/topics/functions.php:2082
 #: bp-forums/topics/template.php:2713
 msgid "Trash"
 msgstr ""
@@ -11401,7 +11401,7 @@ msgid "Open this discussion"
 msgstr ""
 
 #: bp-forums/admin/topics.php:849 bp-forums/forums/functions.php:1661
-#: bp-forums/topics/functions.php:2074 bp-forums/topics/template.php:2821
+#: bp-forums/topics/functions.php:2079 bp-forums/topics/template.php:2821
 msgid "Open"
 msgstr ""
 
@@ -11494,7 +11494,7 @@ msgid "Forums Default"
 msgstr ""
 
 #: bp-forums/classes/class-bbpress.php:550 bp-forums/forums/functions.php:1662
-#: bp-forums/topics/functions.php:2075
+#: bp-forums/topics/functions.php:2080
 msgid "Closed"
 msgstr ""
 
@@ -11864,9 +11864,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1379
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1414
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1447
-#: bp-forums/templates/default/bbpress-functions.php:772
-#: bp-forums/templates/default/bbpress-functions.php:840
-#: bp-forums/templates/default/bbpress-functions.php:908
+#: bp-forums/templates/default/bbpress-functions.php:759
+#: bp-forums/templates/default/bbpress-functions.php:827
+#: bp-forums/templates/default/bbpress-functions.php:895
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -12333,9 +12333,9 @@ msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:434
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:846
-#: bp-forums/replies/functions.php:1364 bp-forums/replies/template.php:589
+#: bp-forums/replies/functions.php:1369 bp-forums/replies/template.php:589
 #: bp-forums/templates/default/bbpress/form-reply.php:28
-#: bp-forums/topics/functions.php:1372 bp-forums/topics/functions.php:1744
+#: bp-forums/topics/functions.php:1377 bp-forums/topics/functions.php:1749
 #. translators: Topic Title.
 msgid "Reply To: %s"
 msgstr ""
@@ -12439,8 +12439,8 @@ msgid "Favorites are no longer active."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1332
-#: bp-forums/templates/default/bbpress-functions.php:758
-#: bp-forums/templates/default/bbpress-functions.php:894
+#: bp-forums/templates/default/bbpress-functions.php:745
+#: bp-forums/templates/default/bbpress-functions.php:881
 msgid "Subscriptions are no longer active."
 msgstr ""
 
@@ -12842,7 +12842,7 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2440
+#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2445
 #: bp-groups/bp-groups-admin.php:1452 bp-groups/bp-groups-functions.php:1306
 #: bp-groups/bp-groups-functions.php:3978
 #: bp-groups/bp-groups-functions.php:3997
@@ -13173,11 +13173,11 @@ msgstr ""
 #: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:416
 #: bp-forums/groups.php:341 bp-forums/groups.php:522
 #: bp-forums/notifications.php:365 bp-forums/replies/functions.php:124
-#: bp-forums/replies/functions.php:548 bp-forums/replies/functions.php:1311
-#: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:553
-#: bp-forums/topics/functions.php:1217 bp-forums/topics/functions.php:1539
-#: bp-forums/topics/functions.php:1914 bp-forums/topics/functions.php:1959
-#: bp-forums/topics/functions.php:2023 bp-forums/users/functions.php:443
+#: bp-forums/replies/functions.php:548 bp-forums/replies/functions.php:1316
+#: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:554
+#: bp-forums/topics/functions.php:1222 bp-forums/topics/functions.php:1544
+#: bp-forums/topics/functions.php:1919 bp-forums/topics/functions.php:1964
+#: bp-forums/topics/functions.php:2028 bp-forums/users/functions.php:443
 #: bp-forums/users/functions.php:1164 bp-forums/users/functions.php:1270
 msgid "<strong>ERROR</strong>: Are you sure you wanted to do that?"
 msgstr ""
@@ -13211,7 +13211,7 @@ msgid ""
 msgstr ""
 
 #: bp-forums/forums/functions.php:212 bp-forums/replies/functions.php:300
-#: bp-forums/topics/functions.php:277
+#: bp-forums/topics/functions.php:278
 msgid "<strong>ERROR</strong>: Slow down; you move too fast."
 msgstr ""
 
@@ -13426,20 +13426,20 @@ msgid "<strong>ERROR</strong>: Discussion does not exist."
 msgstr ""
 
 #: bp-forums/replies/functions.php:199 bp-forums/replies/functions.php:213
-#: bp-forums/topics/functions.php:213 bp-forums/topics/functions.php:227
-#: bp-forums/topics/functions.php:568
+#: bp-forums/topics/functions.php:214 bp-forums/topics/functions.php:228
+#: bp-forums/topics/functions.php:569
 msgid "<strong>ERROR</strong>: Forum ID is missing."
 msgstr ""
 
-#: bp-forums/replies/functions.php:203 bp-forums/topics/functions.php:217
+#: bp-forums/replies/functions.php:203 bp-forums/topics/functions.php:218
 msgid "<strong>ERROR</strong>: Forum ID must be a number."
 msgstr ""
 
-#: bp-forums/replies/functions.php:217 bp-forums/topics/functions.php:231
+#: bp-forums/replies/functions.php:217 bp-forums/topics/functions.php:232
 msgid "<strong>ERROR</strong>: Forum ID cannot be a negative number."
 msgstr ""
 
-#: bp-forums/replies/functions.php:221 bp-forums/topics/functions.php:235
+#: bp-forums/replies/functions.php:221 bp-forums/topics/functions.php:236
 msgid "<strong>ERROR</strong>: Forum does not exist."
 msgstr ""
 
@@ -13465,7 +13465,7 @@ msgid ""
 "capability to read or create new replies in it."
 msgstr ""
 
-#: bp-forums/replies/functions.php:294 bp-forums/replies/functions.php:645
+#: bp-forums/replies/functions.php:294 bp-forums/replies/functions.php:650
 msgid "<strong>ERROR</strong>: Your reply cannot be empty."
 msgstr ""
 
@@ -13483,7 +13483,7 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Discussion is closed."
 msgstr ""
 
-#: bp-forums/replies/functions.php:408 bp-forums/replies/functions.php:747
+#: bp-forums/replies/functions.php:408 bp-forums/replies/functions.php:752
 msgid "<strong>ERROR</strong>: There was a problem adding the tags to the topic."
 msgstr ""
 
@@ -13499,100 +13499,100 @@ msgstr ""
 msgid "<strong>ERROR</strong>: You do not have permission to edit that reply."
 msgstr ""
 
-#: bp-forums/replies/functions.php:651
+#: bp-forums/replies/functions.php:656
 msgid "<strong>ERROR</strong>: Your reply cannot be edited at this time."
 msgstr ""
 
-#: bp-forums/replies/functions.php:656 bp-forums/topics/functions.php:644
+#: bp-forums/replies/functions.php:661 bp-forums/topics/functions.php:649
 msgid "<strong>ERROR</strong>: Your reply cannot be edited now."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1287
+#: bp-forums/replies/functions.php:1292
 msgid "<strong>ERROR</strong>: Reply ID to move not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1296
+#: bp-forums/replies/functions.php:1301
 msgid "<strong>ERROR</strong>: The reply you want to move was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1306
+#: bp-forums/replies/functions.php:1311
 msgid "<strong>ERROR</strong>: The discussion you want to move from was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1317 bp-forums/topics/functions.php:1228
-#: bp-forums/topics/functions.php:1545
+#: bp-forums/replies/functions.php:1322 bp-forums/topics/functions.php:1233
+#: bp-forums/topics/functions.php:1550
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the source "
 "discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1327
+#: bp-forums/replies/functions.php:1332
 msgid "<strong>ERROR</strong>: You need to choose a valid move option."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1339 bp-forums/topics/functions.php:1567
+#: bp-forums/replies/functions.php:1344 bp-forums/topics/functions.php:1572
 msgid "<strong>ERROR</strong>: Destination discussion ID not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1349
+#: bp-forums/replies/functions.php:1354
 msgid "<strong>ERROR</strong>: The discussion you want to move to was not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1354 bp-forums/topics/functions.php:1582
+#: bp-forums/replies/functions.php:1359 bp-forums/topics/functions.php:1587
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the "
 "destination discussion!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1411 bp-forums/topics/functions.php:1621
+#: bp-forums/replies/functions.php:1416 bp-forums/topics/functions.php:1626
 msgid ""
 "<strong>ERROR</strong>: There was a problem converting the reply into the "
 "discussion. Please try again."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1416
+#: bp-forums/replies/functions.php:1421
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to create new "
 "discussions. The reply could not be converted into a discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1605
+#: bp-forums/replies/functions.php:1610
 msgid "<strong>ERROR:</strong> You do not have the permission to do that!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1618
+#: bp-forums/replies/functions.php:1623
 msgid "<strong>ERROR</strong>: There was a problem unmarking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1618
+#: bp-forums/replies/functions.php:1623
 msgid "<strong>ERROR</strong>: There was a problem marking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1637
+#: bp-forums/replies/functions.php:1642
 msgid "<strong>ERROR</strong>: There was a problem trashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1645
+#: bp-forums/replies/functions.php:1650
 msgid "<strong>ERROR</strong>: There was a problem untrashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1653
+#: bp-forums/replies/functions.php:1658
 msgid "<strong>ERROR</strong>: There was a problem deleting the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2124
+#: bp-forums/replies/functions.php:2129
 msgid "All Posts"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2126 bp-forums/replies/template.php:51
+#: bp-forums/replies/functions.php:2131 bp-forums/replies/template.php:51
 msgid "All Replies"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2172 bp-forums/topics/functions.php:3663
+#: bp-forums/replies/functions.php:2177 bp-forums/topics/functions.php:3668
 msgid "Replies: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2406 bp-forums/users/template.php:517
+#: bp-forums/replies/functions.php:2411 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1453 bp-groups/bp-groups-functions.php:1314
 #: bp-groups/bp-groups-functions.php:3980
 #: bp-groups/bp-groups-functions.php:3999
@@ -13604,18 +13604,18 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2427 bp-forums/users/template.php:503
+#: bp-forums/replies/functions.php:2432 bp-forums/users/template.php:503
 msgid "Guest"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2431 bp-members/bp-members-functions.php:540
+#: bp-forums/replies/functions.php:2436 bp-members/bp-members-functions.php:540
 #: bp-messages/bp-messages-template.php:1791
 #: bp-messages/bp-messages-template.php:2056
 #: bp-messages/classes/class-bp-messages-thread.php:1340
 msgid "Deleted User"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2436
+#: bp-forums/replies/functions.php:2441
 msgid "Administrator"
 msgstr ""
 
@@ -14375,45 +14375,45 @@ msgstr ""
 msgid "Type your discussion content here"
 msgstr ""
 
+#: bp-forums/templates/default/bbpress-functions.php:703
 #: bp-forums/templates/default/bbpress-functions.php:716
-#: bp-forums/templates/default/bbpress-functions.php:729
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:763
+#: bp-forums/templates/default/bbpress-functions.php:750
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:780
+#: bp-forums/templates/default/bbpress-functions.php:767
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:785
-#: bp-forums/templates/default/bbpress-functions.php:853
-#: bp-forums/templates/default/bbpress-functions.php:921
+#: bp-forums/templates/default/bbpress-functions.php:772
+#: bp-forums/templates/default/bbpress-functions.php:840
+#: bp-forums/templates/default/bbpress-functions.php:908
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:793
-#: bp-forums/templates/default/bbpress-functions.php:861
-#: bp-forums/templates/default/bbpress-functions.php:929
+#: bp-forums/templates/default/bbpress-functions.php:780
+#: bp-forums/templates/default/bbpress-functions.php:848
+#: bp-forums/templates/default/bbpress-functions.php:916
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:826
+#: bp-forums/templates/default/bbpress-functions.php:813
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:831
+#: bp-forums/templates/default/bbpress-functions.php:818
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:848
-#: bp-forums/templates/default/bbpress-functions.php:916
+#: bp-forums/templates/default/bbpress-functions.php:835
+#: bp-forums/templates/default/bbpress-functions.php:903
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:899
+#: bp-forums/templates/default/bbpress-functions.php:886
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -14433,218 +14433,218 @@ msgid ""
 "discussions."
 msgstr ""
 
-#: bp-forums/topics/functions.php:185 bp-forums/topics/functions.php:619
+#: bp-forums/topics/functions.php:185 bp-forums/topics/functions.php:620
 msgid "<strong>ERROR</strong>: Your discussion needs a subject."
 msgstr ""
 
-#: bp-forums/topics/functions.php:203 bp-forums/topics/functions.php:633
+#: bp-forums/topics/functions.php:204 bp-forums/topics/functions.php:638
 msgid "<strong>ERROR</strong>: Your discussion cannot be empty."
 msgstr ""
 
-#: bp-forums/topics/functions.php:249
+#: bp-forums/topics/functions.php:250
 msgid ""
 "<strong>ERROR</strong>: This forum is a category. No discussions can be "
 "created in this forum."
 msgstr ""
 
-#: bp-forums/topics/functions.php:256 bp-forums/topics/functions.php:590
+#: bp-forums/topics/functions.php:257 bp-forums/topics/functions.php:591
 msgid "<strong>ERROR</strong>: This forum has been closed to new discussions."
 msgstr ""
 
-#: bp-forums/topics/functions.php:262 bp-forums/topics/functions.php:596
+#: bp-forums/topics/functions.php:263 bp-forums/topics/functions.php:597
 msgid ""
 "<strong>ERROR</strong>: This forum is private and you do not have the "
 "capability to read or create new discussions in it."
 msgstr ""
 
-#: bp-forums/topics/functions.php:268 bp-forums/topics/functions.php:602
+#: bp-forums/topics/functions.php:269 bp-forums/topics/functions.php:603
 msgid ""
 "<strong>ERROR</strong>: This forum is hidden and you do not have the "
 "capability to read or create new discussions in it."
 msgstr ""
 
-#: bp-forums/topics/functions.php:290
+#: bp-forums/topics/functions.php:291
 msgid ""
 "<strong>ERROR</strong>: Duplicate discussion detected; it looks as though "
 "you've already said that!"
 msgstr ""
 
-#: bp-forums/topics/functions.php:296
+#: bp-forums/topics/functions.php:297
 msgid "<strong>ERROR</strong>: Your discussion cannot be created at this time."
 msgstr ""
 
-#: bp-forums/topics/functions.php:515 bp-forums/topics/functions.php:1210
+#: bp-forums/topics/functions.php:516 bp-forums/topics/functions.php:1215
 msgid "<strong>ERROR</strong>: Discussion ID not found."
 msgstr ""
 
-#: bp-forums/topics/functions.php:526
+#: bp-forums/topics/functions.php:527
 msgid "<strong>ERROR</strong>: The discussion you want to edit was not found."
 msgstr ""
 
-#: bp-forums/topics/functions.php:537
+#: bp-forums/topics/functions.php:538
 msgid "<strong>ERROR</strong>: You do not have permission to edit that discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:583
+#: bp-forums/topics/functions.php:584
 msgid ""
 "<strong>ERROR</strong>: This forum is a category. No topics can be created "
 "in it."
 msgstr ""
 
-#: bp-forums/topics/functions.php:639
+#: bp-forums/topics/functions.php:644
 msgid "<strong>ERROR</strong>: Your discussion cannot be edited at this time."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1222
+#: bp-forums/topics/functions.php:1227
 msgid "<strong>ERROR</strong>: The discussion you want to merge was not found."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1236
+#: bp-forums/topics/functions.php:1241
 msgid "<strong>ERROR</strong>: Destination discussion ID not found."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1243
+#: bp-forums/topics/functions.php:1248
 msgid "<strong>ERROR</strong>: The discussion you want to merge to was not found."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1248
+#: bp-forums/topics/functions.php:1253
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the "
 "destination discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1515
+#: bp-forums/topics/functions.php:1520
 msgid "<strong>ERROR</strong>: Reply ID to split the topic from not found!"
 msgstr ""
 
-#: bp-forums/topics/functions.php:1524
+#: bp-forums/topics/functions.php:1529
 msgid "<strong>ERROR</strong>: The reply you want to split from was not found."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1534
+#: bp-forums/topics/functions.php:1539
 msgid "<strong>ERROR</strong>: The topic you want to split was not found."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1555
+#: bp-forums/topics/functions.php:1560
 msgid "<strong>ERROR</strong>: You need to choose a valid split option."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1577
+#: bp-forums/topics/functions.php:1582
 msgid "<strong>ERROR</strong>: The discussion you want to split to was not found!"
 msgstr ""
 
-#: bp-forums/topics/functions.php:1626
+#: bp-forums/topics/functions.php:1631
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to create new "
 "topics. The reply could not be converted into a discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1903
+#: bp-forums/topics/functions.php:1908
 msgid ""
 "<strong>ERROR</strong>: The following problem(s) have been found while "
 "getting the tag: %s"
 msgstr ""
 
-#: bp-forums/topics/functions.php:1920 bp-forums/topics/functions.php:1965
+#: bp-forums/topics/functions.php:1925 bp-forums/topics/functions.php:1970
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the "
 "discussion tags."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1926 bp-forums/topics/functions.php:1971
+#: bp-forums/topics/functions.php:1931 bp-forums/topics/functions.php:1976
 msgid "<strong>ERROR</strong>: You need to enter a tag name."
 msgstr ""
 
-#: bp-forums/topics/functions.php:1943
+#: bp-forums/topics/functions.php:1948
 msgid ""
 "<strong>ERROR</strong>: The following problem(s) have been found while "
 "updating the tag: %s"
 msgstr ""
 
-#: bp-forums/topics/functions.php:1982 bp-forums/topics/functions.php:2007
+#: bp-forums/topics/functions.php:1987 bp-forums/topics/functions.php:2012
 msgid ""
 "<strong>ERROR</strong>: The following problem(s) have been found while "
 "merging the tags: %s"
 msgstr ""
 
-#: bp-forums/topics/functions.php:1991
+#: bp-forums/topics/functions.php:1996
 msgid "<strong>ERROR</strong>: The tags which are being merged can not be the same."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2029
+#: bp-forums/topics/functions.php:2034
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to delete the "
 "discussion tags."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2038
+#: bp-forums/topics/functions.php:2043
 msgid ""
 "<strong>ERROR</strong>: The following problem(s) have been found while "
 "deleting the tag: %s"
 msgstr ""
 
-#: bp-forums/topics/functions.php:2078
+#: bp-forums/topics/functions.php:2083
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1127
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1165
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1200
 msgid "Pending"
 msgstr ""
 
-#: bp-forums/topics/functions.php:2094
+#: bp-forums/topics/functions.php:2099
 msgid "Normal"
 msgstr ""
 
-#: bp-forums/topics/functions.php:2095
+#: bp-forums/topics/functions.php:2100
 msgid "Sticky"
 msgstr ""
 
-#: bp-forums/topics/functions.php:2096
+#: bp-forums/topics/functions.php:2101
 msgid "Super Sticky"
 msgstr ""
 
-#: bp-forums/topics/functions.php:2205
+#: bp-forums/topics/functions.php:2210
 msgid "<strong>ERROR:</strong> You do not have the permission to do that."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2218
+#: bp-forums/topics/functions.php:2223
 msgid "<strong>ERROR</strong>: There was a problem closing the discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2218
+#: bp-forums/topics/functions.php:2223
 msgid "<strong>ERROR</strong>: There was a problem opening the discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2229
+#: bp-forums/topics/functions.php:2234
 msgid "<strong>ERROR</strong>: There was a problem unsticking the discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2229
+#: bp-forums/topics/functions.php:2234
 msgid "<strong>ERROR</strong>: There was a problem sticking the discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2239
+#: bp-forums/topics/functions.php:2244
 msgid ""
 "<strong>ERROR</strong>: There was a problem unmarking the discussion as "
 "spam."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2239
+#: bp-forums/topics/functions.php:2244
 msgid "<strong>ERROR</strong>: There was a problem marking the discussion as spam."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2258
+#: bp-forums/topics/functions.php:2263
 msgid "<strong>ERROR</strong>: There was a problem trashing the discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2266
+#: bp-forums/topics/functions.php:2271
 msgid "<strong>ERROR</strong>: There was a problem untrashing the discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:2274
+#: bp-forums/topics/functions.php:2279
 msgid "<strong>ERROR</strong>: There was a problem deleting the discussion."
 msgstr ""
 
-#: bp-forums/topics/functions.php:3635 bp-forums/topics/template.php:51
+#: bp-forums/topics/functions.php:3640 bp-forums/topics/template.php:51
 msgid "All Discussions"
 msgstr ""
 
@@ -16204,7 +16204,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
 #: bp-templates/bp-nouveau/includes/groups/classes.php:368
 #: bp-templates/bp-nouveau/includes/groups/functions.php:859
-#: bp-video/bp-video-filters.php:1226
+#: bp-video/bp-video-filters.php:1223
 msgid "Albums"
 msgstr ""
 
@@ -18492,24 +18492,24 @@ msgid ""
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1295 bp-video/bp-video-filters.php:1221
+#: bp-media/bp-media-filters.php:1295 bp-video/bp-video-filters.php:1218
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1298 bp-video/bp-video-filters.php:1223
+#: bp-media/bp-media-filters.php:1298 bp-video/bp-video-filters.php:1220
 msgid "Migration in progress"
 msgstr ""
 
 #: bp-media/bp-media-filters.php:1303 bp-media/bp-media-filters.php:1309
 #: bp-media/bp-media-filters.php:1315 bp-media/bp-media-filters.php:1321
-#: bp-media/bp-media-filters.php:1327 bp-video/bp-video-filters.php:1228
-#: bp-video/bp-video-filters.php:1234 bp-video/bp-video-filters.php:1240
-#: bp-video/bp-video-filters.php:1246 bp-video/bp-video-filters.php:1252
+#: bp-media/bp-media-filters.php:1327 bp-video/bp-video-filters.php:1225
+#: bp-video/bp-video-filters.php:1231 bp-video/bp-video-filters.php:1237
+#: bp-video/bp-video-filters.php:1243 bp-video/bp-video-filters.php:1249
 msgid "out of"
 msgstr ""
 
 #: bp-media/bp-media-filters.php:1339 bp-media/bp-media-filters.php:1353
-#: bp-video/bp-video-filters.php:1262 bp-video/bp-video-filters.php:1273
+#: bp-video/bp-video-filters.php:1259 bp-video/bp-video-filters.php:1270
 msgid "Re-Run Migration"
 msgstr ""
 
@@ -23015,7 +23015,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:20
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:33
-#: bp-video/bp-video-filters.php:2097
+#: bp-video/bp-video-filters.php:2094
 msgid "%s video"
 msgid_plural "%s videos"
 msgstr[0] ""
@@ -24900,25 +24900,25 @@ msgstr ""
 msgid "Matroska"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1129 bp-video/bp-video-filters.php:1145
-#: bp-video/bp-video-filters.php:1146 bp-video/bp-video-filters.php:1199
-#: bp-video/bp-video-filters.php:1326
+#: bp-video/bp-video-filters.php:1126 bp-video/bp-video-filters.php:1142
+#: bp-video/bp-video-filters.php:1143 bp-video/bp-video-filters.php:1196
+#: bp-video/bp-video-filters.php:1323
 msgid "Import Video"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1204
+#: bp-video/bp-video-filters.php:1201
 msgid ""
 "BuddyBoss Video plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1269 bp-video/bp-video-functions.php:2468
+#: bp-video/bp-video-filters.php:1266 bp-video/bp-video-functions.php:2468
 msgid ""
 "BuddyBoss Video data update is complete! Any previously uploaded member "
 "videos should display in their profiles now."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1278
+#: bp-video/bp-video-filters.php:1275
 msgid ""
 "Import your existing members video uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -24926,7 +24926,7 @@ msgid ""
 "old videos into the new Video component."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1324
+#: bp-video/bp-video-filters.php:1321
 msgid ""
 "We have found some video uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -24935,31 +24935,31 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1506
+#: bp-video/bp-video-filters.php:1503
 msgid "Repair video on the site."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1511
+#: bp-video/bp-video-filters.php:1508
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1565
+#: bp-video/bp-video-filters.php:1562
 msgid "%s video updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1575
+#: bp-video/bp-video-filters.php:1572
 msgid "Video update complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1603
+#: bp-video/bp-video-filters.php:1600
 msgid "%s Forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1611
+#: bp-video/bp-video-filters.php:1608
 msgid "Forums video privacy updated %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1724
+#: bp-video/bp-video-filters.php:1721
 msgid "Go to video"
 msgstr ""
 
