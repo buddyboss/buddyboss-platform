@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-16 21:42:58+00:00\n"
+"POT-Creation-Date: 2020-12-17 11:18:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1005,7 +1005,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:327
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:12
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:85
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:59
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:70
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:556
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:557
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:933
@@ -3043,13 +3043,13 @@ msgstr ""
 msgid "Create Page"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:446
+#: bp-core/admin/bp-core-admin-schema.php:445
 #: bp-core/admin/settings/bp-admin-setting-general.php:21
 #: bp-forums/core/update.php:188
 msgid "General"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:450
+#: bp-core/admin/bp-core-admin-schema.php:449
 #: bp-core/admin/bp-core-admin-settings.php:977
 #: bp-core/admin/bp-core-admin-settings.php:1005
 #: bp-core/admin/bp-core-admin-settings.php:1033
@@ -3058,14 +3058,14 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:454
+#: bp-core/admin/bp-core-admin-schema.php:453
 #: bp-core/admin/bp-core-admin-settings.php:982
 #: bp-core/admin/bp-core-admin-settings.php:1010
 #: bp-core/admin/bp-core-admin-settings.php:1047 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:458
+#: bp-core/admin/bp-core-admin-schema.php:457
 #: bp-core/admin/bp-core-admin-settings.php:987
 #: bp-core/admin/bp-core-admin-settings.php:1015
 #: bp-core/admin/bp-core-admin-settings.php:1052
@@ -7164,7 +7164,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:739 bp-groups/bp-groups-template.php:744
 #: bp-groups/bp-groups-template.php:749 bp-groups/bp-groups-template.php:752
 #: bp-groups/bp-groups-template.php:763 bp-groups/bp-groups-template.php:852
-#: bp-moderation/classes/class-bp-moderation-groups.php:99
+#: bp-moderation/classes/class-bp-moderation-groups.php:102
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:61
 msgid "Group"
 msgstr ""
@@ -7808,13 +7808,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -20691,7 +20691,7 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/document/entry.php:18
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:82
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:93
 #: bp-templates/bp-nouveau/includes/media/functions.php:169
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
@@ -21498,7 +21498,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-members.php:215
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:201
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:220
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:568
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:586
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:48
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:24
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-list.php:34
@@ -21712,11 +21712,11 @@ msgstr ""
 msgid "Item type field missing."
 msgstr ""
 
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:311
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:329
 msgid "<strong>ERROR</strong>: Your account has been Suspended."
 msgstr ""
 
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:391
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:409
 msgid "<strong>ERROR</strong>: Your account has been suspended."
 msgstr ""
 

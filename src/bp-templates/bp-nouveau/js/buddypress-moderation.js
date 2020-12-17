@@ -96,11 +96,13 @@ window.bp = window.bp || {};
 			}
 		},
 		unblockUser: function () {
-			$( document ).on( 'click', '.moderation-item-actions .bp-unblock-user', function () {
+			$( document ).on( 'click', '.moderation-item-actions .bp-unblock-user', function ( event ) {
 
 				if ( !confirm( BP_Nouveau.moderation.unblock_user_msg ) ) {
 					return false;
 				}
+
+				$(event.currentTarget).append(' <i class="bb-icon bb-icon-loader animate-spin"></i>');
 
 				var curObj = $( this );
 				var id = curObj.attr( 'data-id' );
@@ -119,6 +121,7 @@ window.bp = window.bp || {};
 							curObj.parent().closest( '.moderation-item-wrp' ).remove();
 						} );
 					} else {
+						$(event.currentTarget).find('.bb-icon-loader').remove();
 						alert( result.message );
 					}
 				} );

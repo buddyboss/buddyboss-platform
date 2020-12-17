@@ -3093,6 +3093,28 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a {
+  background-color: transparent;
+  text-align: right;
+  font-weight: 400;
+  box-shadow: none;
+  border-radius: 0;
+  min-height: auto;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a:before {
+  content: "\e8ea";
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a:hover,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a:hover {
+  background-color: #f5f5f5;
+}
+
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.privacy_file a:before,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.privacy_file a:before {
   content: "\e90d";
@@ -3742,6 +3764,10 @@ span.dashicons.dashicons-admin-file:before {
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text {
     font-size: 12px;
   }
+}
+
+.mfp-wrap.mfp-wrap {
+  z-index: 999999;
 }
 
 /**

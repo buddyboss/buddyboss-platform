@@ -1141,7 +1141,7 @@
 				var confirmChecked = false;
 				var msg = '';
 				$( '.mass-check-deactivate' ).each( function () {
-					if ( $( this ).prop( "checked" ) == true ) {
+					if ( $( this ).prop( 'checked' ) == true ) {
 						confirmChecked = true;
 					}
 					msg = msg + $( this ).parent().find( '.component-deactivate-msg' ).text();

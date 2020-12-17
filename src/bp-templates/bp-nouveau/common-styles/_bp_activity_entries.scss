@@ -1119,6 +1119,26 @@ span.dashicons.dashicons-admin-file:before {
 						font-size: 15px;
 					}
 
+					&.report_file a {
+						background-color: transparent;
+						text-align: left;
+						font-weight: 400;
+						box-shadow: none;
+						border-radius: 0;
+						min-height: auto;
+
+						&:before {
+							content: "\e8ea";
+							font-size: 14px;
+							vertical-align: middle;
+						}
+
+						&:hover {
+							background-color: #f5f5f5;
+						}
+
+					}
+
 					&.privacy_file a:before {
 						content: "\e90d";
 						font-size: 15px;
@@ -1847,4 +1867,8 @@ span.dashicons.dashicons-admin-file:before {
 			font-size: 12px;
 		}
 	}
+}
+
+.mfp-wrap.mfp-wrap {
+	z-index: 999999;
 }
