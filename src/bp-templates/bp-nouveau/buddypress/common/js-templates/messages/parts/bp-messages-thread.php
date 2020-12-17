@@ -51,16 +51,19 @@
 			<div class="thread-to">
 
 				<# if ( data.group_name && data.group_name.length && data.is_group_thread ) { #>
-				<span class="user-name">{{data.group_name}}</span> <# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
-				<span class="user-name"><?php _e( 'Blocked User', 'buddyboss' ); ?></span> <# } else { #>
-
-				<# for ( i in first_three ) { if( other_recipients[i].is_user_blocked || other_recipients[i].is_user_suspended ){ #><span class="user-name">
-							<?php esc_html_e( 'Blocked User', 'buddyboss' ); ?></span> <# } else { #>
-				<span class="user-name">
-								{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #><?php _e( ',',
-							'buddyboss' ); ?><# } #>
-							</span> <# } } #> <# if ( data.toOthers ) { #>
-				<span class="num-name">{{data.toOthers}}</span> <# } #>
+				    <span class="user-name">{{data.group_name}}</span>
+                <# } else { #>
+                <# for ( i in first_three ) { #>
+                    <span class="user-name">
+                        {{other_recipients[i].user_name}}
+                        <# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #>
+                        <?php _e( ',', 'buddyboss' ); ?>
+                        <# } #>
+                    </span>
+                <# } #>
+                <# if ( data.toOthers ) { #>
+				<span class="num-name">{{data.toOthers}}</span>
+                <# } #>
 
 				<# } #>
 			</div>
@@ -69,14 +72,11 @@
 				<span class="last-message-sender">
 				  <# if ( data.sender_is_you ) { #>
 					<?php _e( 'You', 'buddyboss' ); ?>:
-				  <# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
-					<?php _e( 'Blocked User', 'buddyboss' ); ?>:
-				  <# } else if ( other_recipients && other_recipients.length ) { #>
+				  <# } else { #>
 					{{ data.sender_name }}:
 				  <# } #>
-				</span> <# if ( data.is_user_suspended ) { #>
-				<?php _e( 'Content from suspended user', 'buddyboss' ); ?>: <# } else if ( data.is_user_blocked ) { #>
-				<?php _e( 'Content from blocked user', 'buddyboss' ); ?>: <# } else { #> {{{data.excerpt}}} <# } #>
+				</span>
+                {{{data.excerpt}}}
 			</div>
 		</div>
 

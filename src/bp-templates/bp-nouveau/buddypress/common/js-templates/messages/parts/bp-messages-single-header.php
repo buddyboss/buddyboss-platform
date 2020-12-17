@@ -17,14 +17,26 @@
 						<# } else { #>
 							<a href="{{data.group_link}}">{{data.group_name}}</a>
 						<# } #>
-					</span> <# } else { #> <# for ( i in other_recipients ) { #> <span class="participants-name">
+					</span>
+                <# } else { #>
+                    <# for ( i in other_recipients ) { #>
+                        <span class="participants-name">
                             <# if ( other_recipients[i].is_deleted ) { #>
-								{{other_recipients[i].user_name}}
-							<# } else if( other_recipients[i].is_user_blocked || other_recipients[i].is_user_suspended ){ #>
-								<?php esc_html_e( 'Blocked User', 'buddyboss' ); ?>
-					 <# } else { #> <a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #><?php _e( ',',
-							'buddyboss' ); ?>
-					<# } #> </span> <# } #>
+                                {{other_recipients[i].user_name}}
+                             <# } else { #>
+                                <# if( other_recipients[i].is_user_blocked || other_recipients[i].is_user_suspended ) { #>
+                                    {{other_recipients[i].user_name}}
+                                <# } else { #>
+                                    <a href="{{other_recipients[i].user_link}}">
+                                        {{other_recipients[i].user_name}}
+                                    </a>
+                                <# } #>
+                            <# } #>
+                            <# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #>
+                                <?php _e( ',', 'buddyboss' ); ?>
+                            <# } #>
+                        </span>
+                    <# } #>
 
 				<# } #>
 			</dt>
