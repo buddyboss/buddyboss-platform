@@ -160,7 +160,6 @@ add_action( 'wp_ajax_nopriv_bp_moderation_content_report', 'bp_moderation_conten
  */
 function bp_moderation_block_member() {
 	$response = array(
-		'success' => false,
 		'message' => '',
 	);
 
@@ -168,24 +167,28 @@ function bp_moderation_block_member() {
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
-		return new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
 	if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
-		return new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
 	if ( (int) bp_loggedin_user_id() === (int) $item_id ) {
-		return new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not able to block him self.', 'buddyboss' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not able to block him self.', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
 	// Check the current has access to report the item ot not.
 	$user_can = bp_moderation_user_can( $item_id, BP_Moderation_Members::$moderation_type );
 	if ( false === (bool) $user_can ) {
-		return new WP_Error(
+		$response['message'] = new WP_Error(
 			'bp_moderation_invalid_access',
 			esc_html__( 'Sorry, you can not able to block this member.', 'buddyboss' )
 		);
+		wp_send_json_error( $response );
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
@@ -198,7 +201,6 @@ function bp_moderation_block_member() {
 		);
 
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
-			$response['success']    = true;
 			$response['moderation'] = $moderation;
 
 			if ( bp_is_friend( $item_id ) ) {
@@ -233,11 +235,12 @@ function bp_moderation_block_member() {
 		$response['message'] = $moderation->errors;
 	}
 
-	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
+	if ( empty( $response['message'] ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_error', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
-	echo wp_json_encode( $response );
+	wp_send_json_success( $response );
 	exit();
 
 }

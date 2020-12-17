@@ -1906,6 +1906,8 @@ window.bp = window.bp || {};
 				message = errors.bp_moderation_missing_error;
 			} else if ( errors.bp_moderation_invalid_access ) {
 				message = errors.bp_moderation_invalid_access;
+			} else if ( errors.bp_moderation_invalid_item_id ) {
+				message = errors.bp_moderation_invalid_item_id;
 			}
 
 			jQuery( target ).closest( '.bb-report-type-wrp' ).find( '.bp-report-form-err' ).html( message );
