@@ -56,14 +56,14 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 
-		add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 10, 2 );
-		add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 10, 2 );
-		add_filter( 'get_the_author_user_login', array( $this, 'get_the_author_name' ), 10, 2 );
-		add_filter( 'get_the_author_user_email', array( $this, 'get_the_author_name' ), 10, 2 );
-		add_filter( 'get_the_author_display_name', array( $this, 'get_the_author_name' ), 10, 2 );
-		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_meta' ), 10, 2 );
-		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_meta' ), 10, 2 );
-		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 99, 3 );
+		add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'get_the_author_user_login', array( $this, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'get_the_author_user_email', array( $this, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'get_the_author_display_name', array( $this, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
+		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 	}
 
 	/**
@@ -168,8 +168,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $domain  User domain link
-	 * @param int    $user_id User id
+	 * @param string $domain  User domain link.
+	 * @param int    $user_id User id.
 	 *
 	 * @return string
 	 */
@@ -186,8 +186,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $value   User meta
-	 * @param int    $user_id User id
+	 * @param string $value   User meta.
+	 * @param int    $user_id User id.
 	 *
 	 * @return string
 	 */
@@ -204,8 +204,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $value   User meta
-	 * @param int    $user_id User id
+	 * @param string $value   User meta.
+	 * @param int    $user_id User id.
 	 *
 	 * @return string
 	 */
@@ -229,16 +229,16 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @param  array  $args        Arguments passed to get_avatar_data(), after processing.
 	 * @return string
 	 */
-	public function get_avatar_url( $retval, $id_or_email, $args  ) {
+	public function get_avatar_url( $retval, $id_or_email, $args ) {
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
 			$user = get_user_by( 'id', absint( $id_or_email ) );
 		} elseif ( $id_or_email instanceof WP_User ) {
-			// User Object
+			// User Object.
 			$user = $id_or_email;
 		} elseif ( $id_or_email instanceof WP_Post ) {
-			// Post Object
+			// Post Object.
 			$user = get_user_by( 'id', (int) $id_or_email->post_author );
 		} elseif ( $id_or_email instanceof WP_Comment ) {
 			if ( ! empty( $id_or_email->user_id ) ) {
@@ -258,5 +258,31 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Get dummy URL from DB for Group and User
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $avatar_url URL for a locally uploaded avatar.
+	 * @param array  $params     Array of parameters for the request.
+	 *
+	 * @return string $avatar_url
+	 */
+	public function bp_fetch_avatar_url( $avatar_url, $params ) {
+
+		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
+
+			// check for user avatar.
+			if ( 'avatars' === $params['avatar_dir'] ) {
+				if ( bp_moderation_is_user_blocked( $item_id ) ) {
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+				}
+			}
+		}
+
+		return $avatar_url;
 	}
 }
