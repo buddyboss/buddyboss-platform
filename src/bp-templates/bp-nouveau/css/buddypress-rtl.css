@@ -16749,6 +16749,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .moderation-popup .modal-container .form-item {
   margin-bottom: 10px;
+  text-align: right;
 }
 
 .moderation-popup .modal-container .form-item > span {
@@ -16782,6 +16783,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .moderation-popup .bb-report-type-wrp {
   font-size: 15px;
+  text-align: right;
 }
 
 .moderation-popup .bb-report-type-wrp p {
@@ -16798,6 +16800,10 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .moderation-popup .bb-report-type-wrp .bb-model-footer {
   margin-top: 15px;
+}
+
+[dir="rtl"] .moderation-popup .bb-report-type-wrp .bb-model-footer {
+  text-align: right;
 }
 
 .mass-user-block-list.moderation-popup .bb-model-header {

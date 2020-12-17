@@ -4392,6 +4392,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	.form-item {
 		margin-bottom: 10px;
+		text-align: left;
 
 		> span {
 			font-size: 14px;
@@ -4428,6 +4429,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .moderation-popup .bb-report-type-wrp {
 	font-size: 15px;
+	text-align: left;
 
 	p {
 		margin-bottom: 10px;
@@ -4444,6 +4446,11 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	.bb-model-footer {
 		margin-top: 15px;
+
+		[dir="rtl"] & {
+			text-align: left;
+		}
+
 	}
 
 }
