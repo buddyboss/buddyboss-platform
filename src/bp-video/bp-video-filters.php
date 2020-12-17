@@ -32,9 +32,6 @@ add_action( 'bbp_template_after_single_topic', 'bp_video_add_theatre_template' )
 add_action( 'bbp_new_reply', 'bp_video_forums_new_post_video_save', 999 );
 add_action( 'bbp_new_topic', 'bp_video_forums_new_post_video_save', 999 );
 add_action( 'edit_post', 'bp_video_forums_new_post_video_save', 999 );
-add_action( 'bbp_new_reply', 'bp_video_forums_save_gif_data', 999 );
-add_action( 'bbp_new_topic', 'bp_video_forums_save_gif_data', 999 );
-add_action( 'edit_post', 'bp_video_forums_save_gif_data', 999 );
 
 add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
 add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
