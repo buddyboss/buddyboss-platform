@@ -407,6 +407,20 @@ function bp_moderation_user_can( $item_id, $item_type ) {
 		return false;
 	}
 
+	/**
+	 * Filter to check the current permission.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $boolean Check its true/false.
+	 * @param string $item_id item id.
+	 */
+	$args = apply_filters( "bp_moderation_{$item_type}_button_args", true, $item_id );
+
+	if ( empty( $args ) ) {
+		return false;
+	}
+
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -716,7 +730,7 @@ function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param int    $default bool Optional.Default value true.
+ * @param int $default bool Optional.Default value true.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
