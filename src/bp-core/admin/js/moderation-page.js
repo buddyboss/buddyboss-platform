@@ -22,6 +22,9 @@ jQuery(document).ready(function ($) {
             sub_action: sub_action,
             nonce: nonce,
         };
+
+        $(event.currentTarget).append(' <i class="bb-icon bb-icon-loader animate-spin"></i>');
+
         $.post(ajaxurl, data, function (response) {
             var result = $.parseJSON(response);
             var hideArg = '';
@@ -47,6 +50,7 @@ jQuery(document).ready(function ($) {
                 window.location.href = url;
             } else {
                 $('.bp-moderation-ajax-msg p').text(result.message.errors.bp_moderation_content_actions_request).parent().removeClass('hidden');
+                $(event.currentTarget).find('.bb-icon-loader').remove();
             }
             curObj.removeClass('disabled');
         });
@@ -74,6 +78,10 @@ jQuery(document).ready(function ($) {
             sub_action: sub_action,
             nonce: nonce,
         };
+
+        
+
+        $(event.currentTarget).append(' <i class="bb-icon bb-icon-loader animate-spin"></i>');
 
         $.post(ajaxurl, data, function (response) {
             var result = $.parseJSON(response);
@@ -112,6 +120,7 @@ jQuery(document).ready(function ($) {
                 window.location.href = url;
             } else {
                 $('.bp-moderation-ajax-msg p').text(result.message.errors.bp_moderation_user_missing_data).parent().removeClass('hidden');
+                $(event.currentTarget).find('.bb-icon-loader').remove();
             }
             curObj.removeClass('disabled');
         });
