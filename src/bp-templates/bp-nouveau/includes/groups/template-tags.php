@@ -1015,7 +1015,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 			}
 		}
 
-		if ( bp_is_active( 'moderation' ) && bp_is_group_single() && is_user_logged_in() ) {
+		if ( bp_is_active( 'moderation' ) && bp_is_group_single() && is_user_logged_in() && 'manage_members' !== $type ) {
 			$buttons['group_report'] = bp_moderation_get_report_button( array(
 					'id'                => 'group_report',
 					'position'          => 50,
