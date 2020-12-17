@@ -3147,7 +3147,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 							}
 
 							// Remove the media id from the parent activity meta.
-							if ( ( $key = array_search( $media_id, $parent_activity_media_ids ) ) !== false ) {
+							$key = array_search( $media_id, $parent_activity_media_ids );
+							if ( false !== $key ) {
 								unset( $parent_activity_media_ids[ $key ] );
 							}
 
