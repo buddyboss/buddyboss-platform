@@ -45,6 +45,9 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
 		add_filter( 'bp_suspend_document_folder_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// Validate item before proceed.
+		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -92,5 +95,29 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Filter to check the document folder is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $retval  Check item is valid or not.
+	 * @param string $item_id item id.
+	 *
+	 * @return bool
+	 */
+	public function validate_single_item( $retval, $item_id ) {
+		if ( empty( $item_id ) ) {
+			return $retval;
+		}
+
+		$document_folder = new BP_Document_Folder( (int) $item_id );
+
+		if ( empty( $document_folder ) || empty( $document_folder->id ) ) {
+			return false;
+		}
+
+		return $retval;
 	}
 }

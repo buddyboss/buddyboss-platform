@@ -56,6 +56,9 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 
+		// Validate item before proceed.
+		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
 	}
 
 	/**
@@ -145,5 +148,29 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		}
 
 		return $sub_items;
+	}
+
+	/**
+	 * Filter to check the media is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $retval  Check item is valid or not.
+	 * @param string $item_id item id.
+	 *
+	 * @return bool
+	 */
+	public function validate_single_item( $retval, $item_id ) {
+		if ( empty( $item_id ) ) {
+			return $retval;
+		}
+
+		$media = new BP_Media( (int) $item_id );
+
+		if ( empty( $media ) || empty( $media->id ) ) {
+			return false;
+		}
+
+		return $retval;
 	}
 }

@@ -58,7 +58,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 
-		// Validate item before procceed.
+		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 	}
 
@@ -221,6 +221,5 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
-
 	}
 }

@@ -64,6 +64,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
+
+		// Validate item before proceed.
+		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -284,5 +287,28 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $avatar_url;
+	}
+
+	/**
+	 * Filter to check the member is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $retval  Check item is valid or not.
+	 * @param string $item_id item id.
+	 *
+	 * @return bool
+	 */
+	public function validate_single_item( $retval, $item_id ) {
+		if ( empty( $item_id ) ) {
+			return $retval;
+		}
+
+		$user = get_userdata( (int) $item_id );
+		if ( empty( $user ) || ! $user->exists() ) {
+			return false;
+		}
+
+		return $retval;
 	}
 }
