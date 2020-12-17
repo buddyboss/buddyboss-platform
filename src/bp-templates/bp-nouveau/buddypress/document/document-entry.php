@@ -308,15 +308,18 @@ id="div-listing-<?php bp_document_id(); ?>">
 						    }
 						}
 
-						$report_btn = bp_document_get_report_link( array( 'id' => bp_get_document_id() ) );
-						if ( $report_btn && 'document' === $document_type ) {
-							?>
-	                        <li class="report_file">
-								<?php echo $report_btn; ?>
-	                        </li>
-							<?php
-						}
+					}
 
+					$report_btn = bp_document_get_report_link( array( 'id' => bp_get_document_id() ) );
+					if ( $report_btn && 'document' === $document_type ) {
+						?>
+                        <li class="report_file">
+							<?php echo $report_btn; ?>
+                        </li>
+						<?php
+					}
+
+					if ( $can_manage ) {
 						?>
 						<li class="delete_file">
 							<a class="document-file-delete" data-item-from="listing"
