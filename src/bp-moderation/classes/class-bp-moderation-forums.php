@@ -56,6 +56,9 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
+
+		// Validate item before proceed.
+		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -161,5 +164,29 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Filter to check the forum is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $retval  Check item is valid or not.
+	 * @param string $item_id item id.
+	 *
+	 * @return bool
+	 */
+	public function validate_single_item( $retval, $item_id ) {
+		if ( empty( $item_id ) ) {
+			return $retval;
+		}
+
+		$forum = bbp_get_forum( (int) $item_id );
+
+		if ( empty( $forum ) || empty( $forum->ID ) ) {
+			return false;
+		}
+
+		return $retval;
 	}
 }
