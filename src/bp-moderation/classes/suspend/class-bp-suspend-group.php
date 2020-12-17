@@ -52,6 +52,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_filter( 'bp_groups_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_groups_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
+		// invitation
+		add_filter( 'bp_invitations_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_invitations_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -107,7 +111,12 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return $join_sql;
 		}
 
-		$join_sql .= $this->exclude_joint_query( 'g.id' );
+		$action_name = current_filter();
+		if ( 'bp_invitations_get_join_sql' === $action_name ) {
+			$join_sql .= $this->exclude_joint_query( 'i.item_id' );
+		} else {
+			$join_sql .= $this->exclude_joint_query( 'g.id' );
+		}
 
 		/**
 		 * Filters the hidden Group Where SQL statement.

@@ -350,19 +350,19 @@ class BP_Invitation {
 		// id
 		if ( false !== $args['id'] ) {
 			$id_in = implode( ',', wp_parse_id_list( $args['id'] ) );
-			$where_conditions['id'] = "id IN ({$id_in})";
+			$where_conditions['id'] = "i.id IN ({$id_in})";
 		}
 
 		// user_id
 		if ( ! empty( $args['user_id'] ) ) {
 			$user_id_in = implode( ',', wp_parse_id_list( $args['user_id'] ) );
-			$where_conditions['user_id'] = "user_id IN ({$user_id_in})";
+			$where_conditions['user_id'] = "i.user_id IN ({$user_id_in})";
 		}
 
 		// inviter_id. 0 can be meaningful, in the case of requests.
 		if ( ! empty( $args['inviter_id'] ) || 0 === $args['inviter_id'] ) {
 			$inviter_id_in = implode( ',', wp_parse_id_list( $args['inviter_id'] ) );
-			$where_conditions['inviter_id'] = "inviter_id IN ({$inviter_id_in})";
+			$where_conditions['inviter_id'] = "i.inviter_id IN ({$inviter_id_in})";
 		}
 
 		// invitee_email
@@ -379,7 +379,7 @@ class BP_Invitation {
 			}
 
 			$invitee_email_in = implode( ',', $email_clean );
-			$where_conditions['invitee_email'] = "invitee_email IN ({$invitee_email_in})";
+			$where_conditions['invitee_email'] = "i.invitee_email IN ({$invitee_email_in})";
 		}
 
 		// class
@@ -396,26 +396,26 @@ class BP_Invitation {
 			}
 
 			$cn_in = implode( ',', $cn_clean );
-			$where_conditions['class'] = "class IN ({$cn_in})";
+			$where_conditions['class'] = "i.class IN ({$cn_in})";
 		}
 
 		// item_id
 		if ( ! empty( $args['item_id'] ) ) {
 			$item_id_in = implode( ',', wp_parse_id_list( $args['item_id'] ) );
-			$where_conditions['item_id'] = "item_id IN ({$item_id_in})";
+			$where_conditions['item_id'] = "i.item_id IN ({$item_id_in})";
 		}
 
 		// secondary_item_id
 		if ( ! empty( $args['secondary_item_id'] ) ) {
 			$secondary_item_id_in = implode( ',', wp_parse_id_list( $args['secondary_item_id'] ) );
-			$where_conditions['secondary_item_id'] = "secondary_item_id IN ({$secondary_item_id_in})";
+			$where_conditions['secondary_item_id'] = "i.secondary_item_id IN ({$secondary_item_id_in})";
 		}
 
 		// type
 		if ( ! empty( $args['type'] ) && 'all' !== $args['type'] ) {
 			if ( 'invite' == $args['type'] || 'request' == $args['type'] ) {
 				$type_clean = $wpdb->prepare( '%s', $args['type'] );
-				$where_conditions['type'] = "type = {$type_clean}";
+				$where_conditions['type'] = "i.type = {$type_clean}";
 			}
 		}
 
@@ -426,26 +426,36 @@ class BP_Invitation {
 		 */
 		if ( ! empty( $args['invite_sent'] ) && 'all' !== $args['invite_sent'] ) {
 			if ( $args['invite_sent'] == 'draft' ) {
-				$where_conditions['invite_sent'] = "invite_sent = 0";
+				$where_conditions['invite_sent'] = "i.invite_sent = 0";
 			} else if ( $args['invite_sent'] == 'sent' ) {
-				$where_conditions['invite_sent'] = "invite_sent = 1";
+				$where_conditions['invite_sent'] = "i.invite_sent = 1";
 			}
 		}
 
 		// accepted
 		if ( ! empty( $args['accepted'] ) && 'all' !== $args['accepted'] ) {
 			if ( $args['accepted'] == 'pending' ) {
-				$where_conditions['accepted'] = "accepted = 0";
+				$where_conditions['accepted'] = "i.accepted = 0";
 			} else if ( $args['accepted'] == 'accepted' ) {
-				$where_conditions['accepted'] = "accepted = 1";
+				$where_conditions['accepted'] = "i.accepted = 1";
 			}
 		}
 
 		// search_terms
 		if ( ! empty( $args['search_terms'] ) ) {
 			$search_terms_like = '%' . bp_esc_like( $args['search_terms'] ) . '%';
-			$where_conditions['search_terms'] = $wpdb->prepare( "( class LIKE %s )", $search_terms_like, $search_terms_like );
+			$where_conditions['search_terms'] = $wpdb->prepare( "( i.class LIKE %s )", $search_terms_like, $search_terms_like );
 		}
+
+		/**
+		 * Filters the Where SQL statement for group invitation .
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$where_conditions = apply_filters( 'bp_invitations_get_where_conditions', $where_conditions, $args );
 
 		// Custom WHERE
 		if ( ! empty( $where_conditions ) ) {
@@ -772,6 +782,16 @@ class BP_Invitation {
 			'per_page' => $r['per_page'],
 		) );
 
+		/**
+		 * Filters the join SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $r        Array of parsed arguments for the get method.
+		 * @param array $from_sql form  SQL statement.
+		 */
+		$sql['from'] = apply_filters( 'bp_invitations_get_join_sql', $sql['from'], $args );
+
 		$paged_invites_sql = "{$sql['select']} {$sql['fields']} {$sql['from']} {$sql['where']} {$sql['orderby']} {$sql['pagination']}";
 
 		/**
@@ -833,7 +853,18 @@ class BP_Invitation {
 
 		// Build the query
 		$select_sql = "SELECT COUNT(*)";
-		$from_sql   = "FROM {$invites_table_name}";
+		$from_sql   = "FROM {$invites_table_name} i";
+
+		/**
+		 * Filters the join SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $r        Array of parsed arguments for the get method.
+		 * @param array $from_sql form  SQL statement.
+		 */
+		$from_sql = apply_filters( 'bp_invitations_get_join_sql', $from_sql, $args );
+
 		$where_sql  = self::get_where_sql( $args );
 		$sql        = "{$select_sql} {$from_sql} {$where_sql}";
 
