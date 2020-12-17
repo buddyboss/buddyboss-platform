@@ -1021,7 +1021,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 					'component'         => 'moderation',
 					'parent_element'    => $parent_element,
 					'parent_attr'       => array(
-						'id'    => $button_args['wrapper_id'],
+						'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
 						'class' => $parent_class,
 					),
 					'must_be_logged_in' => true,
