@@ -572,7 +572,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		$user_action_type = ( 1 === (int) $item['hide_sitewide'] ) ? 'unsuspend' : 'suspend';
-		$action_label     = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
+		$action_label     = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
 		$user_id          = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
 
 		// Build actions URL.
