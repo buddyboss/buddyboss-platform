@@ -228,7 +228,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	}
 
 	// Check the current user's permission.
-	$user_can = bp_moderation_user_can( $item_id, $item_type );
+	$user_can = bp_moderation_user_can( $item_id, $item_type, false );
 
 	if ( false === (bool) $user_can ) {
 		return ! empty( $html ) ? '' : array();
@@ -394,14 +394,15 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
 /**
  * Check the user can report the current Item or Not.
  *
- * @param int    $item_id   Item ID.
- * @param string $item_type Item Type.
+ * @param int    $item_id         Item ID.
+ * @param string $item_type       Item Type.
+ * @param string $bypass_validate Should validate items or not.
  *
  * @since BuddyBoss 2.0.0
  *
  * @return bool
  */
-function bp_moderation_user_can( $item_id, $item_type ) {
+function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true ) {
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return false;
@@ -440,7 +441,7 @@ function bp_moderation_user_can( $item_id, $item_type ) {
 	 */
 	$validate = apply_filters( "bp_moderation_{$item_type}_validate", true, $item_id );
 
-	if ( empty( $validate ) ) {
+	if ( $bypass_validate && empty( $validate ) ) {
 		return false;
 	}
 

@@ -787,11 +787,40 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
+		$sql['select'] = 'SELECT COUNT(DISTINCT m.group_id) ';
+		$sql['from'] = "FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g";
+		$sql['where'] = array( '1=1' );
+
 		if ( $user_id != bp_loggedin_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
-			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id AND g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
+			$sql['where'][] = "m.group_id = g.id AND g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
 		} else {
-			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
+			$sql['where'][] = "m.group_id = g.id AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
 		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$sql['where'] = apply_filters( 'bp_groups_get_where_conditions', $sql['where'], array() );
+		$sql['where'] = "WHERE " . implode( ' AND ', $sql['where'] );
+
+		/**
+		 * Filters the From SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $r    Array of parsed arguments for the get method.
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['from'] = apply_filters( 'bp_groups_get_join_sql', $sql['from'], array() );
+
+		$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
+
+		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $user_id ) );
 	}
 
 	/**
