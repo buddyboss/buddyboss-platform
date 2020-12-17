@@ -173,7 +173,7 @@
 								</div>
 								<div class="user-actions">
                                     <# if ( true === item.is_blocked ) { #>
-                                        <a id="reported-user" class="blocked-member button small">
+                                        <a id="reported-user" class="blocked-member button small disabled">
                                             <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
                                         </a>
                                     <# } else{ #>
