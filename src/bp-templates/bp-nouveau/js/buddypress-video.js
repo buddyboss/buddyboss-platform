@@ -332,7 +332,7 @@ window.bp = window.bp || {};
 				);
 			}
 		},
-		
+
 		closeUploader: function (event) {
 			event.preventDefault();
 			$( '#bp-video-uploader' ).hide();
