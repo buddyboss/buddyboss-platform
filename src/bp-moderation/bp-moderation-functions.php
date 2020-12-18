@@ -478,9 +478,53 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
-	$validate = bp_moderation_can_report( $item_id, $item_type, $bypass_validate );
+	/**
+	 * Filter to check the current permission.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $boolean Check its true/false.
+	 * @param string $item_id item id.
+	 */
+	$args = apply_filters( "bp_moderation_{$item_type}_button_args", true, $item_id );
 
-	if ( empty( $validate ) ) {
+	if ( empty( $args ) ) {
+		return false;
+	}
+
+	// Check moderation setting enabled or not.
+	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return false;
+		}
+	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+		return false;
+	}
+
+	/**
+	 * Filter to check the item_id is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $boolean Check item is valid or not.
+	 * @param string $item_id item id.
+	 */
+	$validate = apply_filters( "bp_moderation_{$item_type}_validate", true, $item_id );
+
+	if ( $bypass_validate && empty( $validate ) ) {
+		return false;
+	}
+
+	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
+	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
+
+	// If Sub type moderation disabled then reporting option should not show.
+	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
+		return false;
+	}
+
+	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
 
@@ -901,6 +945,9 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 	$user_id = 0;
 	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
+	error_log( '-------------------------------------------' );
+	error_log( print_r( debug_backtrace(), true ) );
+	error_log( '-------------------------------------------' );
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_id = $class::get_content_owner_id( $moderation_item_id );
 	}
