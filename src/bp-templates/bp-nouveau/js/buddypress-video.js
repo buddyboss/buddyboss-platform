@@ -626,8 +626,8 @@ window.bp = window.bp || {};
 			if (typeof self.current_video === 'undefined') {
 				return false;
 			}
-			// refresh img.
-			$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'img' ).attr( 'src', self.current_video.attachment );
+			// refresh video.
+			$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 
 			// privacy.
 			var video_privacy_wrap = $( '.bb-media-section .bb-media-privacy-wrap' );
@@ -686,7 +686,7 @@ window.bp = window.bp || {};
 				if (activity_id != self.current_video.activity_id) {
 					self.getActivity();
 				} else {
-					self.getMediasDescription();
+					self.getVideosDescription();
 				}
 			} else {
 				self.nextLink.hide();
@@ -705,7 +705,7 @@ window.bp = window.bp || {};
 				if (activity_id != self.current_video.activity_id) {
 					self.getActivity();
 				} else {
-					self.getMediasDescription();
+					self.getVideosDescription();
 				}
 			} else {
 				self.previousLink.hide();
