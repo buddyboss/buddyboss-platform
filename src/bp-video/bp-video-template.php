@@ -618,6 +618,7 @@ function bp_video_type() {
  */
 function bp_get_video_type() {
 	global $video_template;
+
 	/**
 	 * Filters the video ID being displayed.
 	 *
@@ -1659,4 +1660,34 @@ function bp_video_album_user_can_edit( $album = false ) {
 	 * @since BuddyBoss 1.6.0
 	 */
 	return (bool) apply_filters( 'bp_video_album_user_can_edit', $can_edit, $album );
+}
+
+/**
+ * Output the video length.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_length() {
+	echo bp_get_video_length();
+}
+
+/**
+ * Return the video length.
+ *
+ * @return int The video attachment ID.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_video_length() {
+	global $video_template;
+
+	/**
+	 * Filters the video length being displayed.
+	 *
+	 * @param string {$video_template->video->attachment_data->meta->length_formatted} The video length.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_video_length', $video_template->video->attachment_data->meta->length_formatted );
 }
