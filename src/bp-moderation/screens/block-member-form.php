@@ -51,6 +51,9 @@
 						<p>
 							<?php esc_html_e( 'If you\'re friends, This action will also unfriend blocked members.', 'buddyboss' ); ?>
 						</p>
+						<p>
+							<?php esc_html_e( 'Note : Content related to this member will be hidden in 5-10 Min. please check after some time.', 'buddyboss' ); ?>
+						</p>
 						<form id="bb-block-member" action="javascript:void(0);">
 							<footer class="bb-model-footer">
 								<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
