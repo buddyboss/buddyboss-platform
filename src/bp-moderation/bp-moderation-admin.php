@@ -231,14 +231,21 @@ function bp_moderation_admin_load() {
 		$admins        = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID', ) ) );
 
 		foreach ( $moderation_ids as $moderation_id ) {
-			$moderation_obj = new BP_Moderation();
-
-			if ( BP_Moderation_Members::$moderation_type === $moderation_obj->item_type && in_array( $moderation_obj->item_id, $admins, true ) ) {
-				continue;
-			}
-
+			$moderation_obj     = new BP_Moderation();
 			$moderation_obj->id = $moderation_id;
 			$moderation_obj->populate();
+
+			if ( BP_Moderation_Members::$moderation_type === $moderation_obj->item_type ) {
+				if ( ! in_array( $moderation_obj->item_id, $admins, true ) ) {
+					if ( 'hide' === $doaction ) {
+						BP_Suspend_Member::suspend_user( $moderation_obj->item_id );
+					} else {
+						BP_Suspend_Member::unsuspend_user( $moderation_obj->item_id );
+					}
+					$user_count ++;
+				}
+				continue;
+			}
 
 			if ( 'hide' === $doaction ) {
 				$moderation = bp_moderation_hide(
