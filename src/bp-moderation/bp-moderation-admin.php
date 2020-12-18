@@ -185,6 +185,10 @@ function bp_moderation_admin_load() {
 		);
 	}
 
+
+	/**
+	 * Handle bulk actions for moderation.
+	 */
 	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save', 'view' ), true ) ) {
 
 		// Build redirection URL.
@@ -245,27 +249,27 @@ function bp_moderation_admin_load() {
 					$user_count ++;
 				}
 				continue;
-			}
-
-			if ( 'hide' === $doaction ) {
-				$moderation = bp_moderation_hide(
-					array(
-						'content_id'   => $moderation_obj->item_id,
-						'content_type' => $moderation_obj->item_type,
-					)
-				);
-				if ( 1 === $moderation->hide_sitewide ) {
-					$content_count ++;
-				}
 			} else {
-				$moderation = bp_moderation_unhide(
-					array(
-						'content_id'   => $moderation_obj->item_id,
-						'content_type' => $moderation_obj->item_type,
-					)
-				);
-				if ( 0 === $moderation->hide_sitewide ) {
-					$content_count ++;
+				if ( 'hide' === $doaction ) {
+					$moderation = bp_moderation_hide(
+						array(
+							'content_id'   => $moderation_obj->item_id,
+							'content_type' => $moderation_obj->item_type,
+						)
+					);
+					if ( 1 === $moderation->hide_sitewide ) {
+						$content_count ++;
+					}
+				} else {
+					$moderation = bp_moderation_unhide(
+						array(
+							'content_id'   => $moderation_obj->item_id,
+							'content_type' => $moderation_obj->item_type,
+						)
+					);
+					if ( 0 === $moderation->hide_sitewide ) {
+						$content_count ++;
+					}
 				}
 			}
 		}

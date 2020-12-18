@@ -321,7 +321,7 @@ function bp_moderation_content_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_user_can_moderate( $item_id, $item_type );
+	$user_can = bp_moderation_can_report( $item_id, $item_type );
 	if ( false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' ) );
 		wp_send_json_error( $response );
@@ -387,7 +387,7 @@ function bp_moderation_user_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_user_can_moderate( $item_id, $item_type );
+	$user_can = bp_moderation_can_report( $item_id, $item_type );
 	if ( false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' ) );
 		wp_send_json_error( $response );

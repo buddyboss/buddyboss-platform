@@ -392,6 +392,76 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
 }
 
 /**
+ * Check the user can moderate the current Item or Not.
+ *
+ * @param int    $item_id         Item ID.
+ * @param string $item_type       Item Type.
+ * @param string $bypass_validate Should validate items or not.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @return bool
+ */
+function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true ) {
+
+	if ( empty( $item_id ) || empty( $item_type ) ) {
+		return false;
+	}
+
+	/**
+	 * Filter to check the current permission.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $boolean Check its true/false.
+	 * @param string $item_id item id.
+	 */
+	$args = apply_filters( "bp_moderation_{$item_type}_button_args", true, $item_id );
+
+	if ( empty( $args ) ) {
+		return false;
+	}
+
+	// Check moderation setting enabled or not.
+	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return false;
+		}
+	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+		return false;
+	}
+
+	/**
+	 * Filter to check the item_id is valid or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param bool   $boolean Check item is valid or not.
+	 * @param string $item_id item id.
+	 */
+	$validate = apply_filters( "bp_moderation_{$item_type}_validate", true, $item_id );
+
+	if ( $bypass_validate && empty( $validate ) ) {
+		return false;
+	}
+
+	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
+	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
+
+	// If Sub type moderation disabled then reporting option should not show.
+	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
+		return false;
+	}
+
+	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Check the user can report the current Item or Not.
  *
  * @param int    $item_id         Item ID.
@@ -408,128 +478,14 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
-	/**
-	 * Filter to check the current permission.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param bool   $boolean Check its true/false.
-	 * @param string $item_id item id.
-	 */
-	$args = apply_filters( "bp_moderation_{$item_type}_button_args", true, $item_id );
+	$validate = bp_moderation_can_report( $item_id, $item_type, $bypass_validate );
 
-	if ( empty( $args ) ) {
-		return false;
-	}
-
-	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
-			return false;
-		}
-	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
-		return false;
-	}
-
-	/**
-	 * Filter to check the item_id is valid or not.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param bool   $boolean Check item is valid or not.
-	 * @param string $item_id item id.
-	 */
-	$validate = apply_filters( "bp_moderation_{$item_type}_validate", true, $item_id );
-
-	if ( $bypass_validate && empty( $validate ) ) {
-		return false;
-	}
-
-	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
-	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
-	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
-
-	// If Sub type moderation disabled then reporting option should not show.
-	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
-		return false;
-	}
-
-	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
+	if ( empty( $validate ) ) {
 		return false;
 	}
 
 	// Hide if content is created by current user.
 	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type ) ) {
-		return false;
-	}
-
-	return true;
-}
-
-/**
- * Check the user can moderate the current Item or Not.
- *
- * @param int    $item_id         Item ID.
- * @param string $item_type       Item Type.
- * @param string $bypass_validate Should validate items or not.
- *
- * @since BuddyBoss 2.0.0
- *
- * @return bool
- */
-function bp_moderation_user_can_moderate( $item_id, $item_type, $bypass_validate = true ) {
-
-	if ( empty( $item_id ) || empty( $item_type ) ) {
-		return false;
-	}
-
-	/**
-	 * Filter to check the current permission.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param bool   $boolean Check its true/false.
-	 * @param string $item_id item id.
-	 */
-	$args = apply_filters( "bp_moderation_{$item_type}_button_args", true, $item_id );
-
-	if ( empty( $args ) ) {
-		return false;
-	}
-
-	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
-			return false;
-		}
-	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
-		return false;
-	}
-
-	/**
-	 * Filter to check the item_id is valid or not.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param bool   $boolean Check item is valid or not.
-	 * @param string $item_id item id.
-	 */
-	$validate = apply_filters( "bp_moderation_{$item_type}_validate", true, $item_id );
-
-	if ( $bypass_validate && empty( $validate ) ) {
-		return false;
-	}
-
-	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
-	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
-	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
-
-	// If Sub type moderation disabled then reporting option should not show.
-	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
-		return false;
-	}
-
-	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
 
