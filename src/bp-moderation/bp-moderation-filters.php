@@ -58,6 +58,32 @@ function bp_moderation_js_strings( $params ) {
 add_filter( 'bp_core_get_js_strings', 'bp_moderation_js_strings' );
 
 /**
+ * Update modebypass Param for wp redirect
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param Array $location Url to redirect
+ */
+function bp_moderation_wp_redirect( $location ) {
+	$modbypass = filter_input( INPUT_GET, 'modbypass', FILTER_SANITIZE_NUMBER_INT );
+	if ( ! empty( $modbypass ) ) {
+
+		$query_str = parse_url( $location, PHP_URL_QUERY );
+		parse_str( $query_str, $params );
+
+		$params['modbypass'] = $modbypass;
+
+		if ( ! empty( $params ) ) {
+			$location = add_query_arg( $params, $location );
+		}
+	}
+
+	return $location;
+}
+
+add_filter( 'wp_redirect', 'bp_moderation_wp_redirect' );
+
+/**
  * Function to handle frontend report form submission.
  *
  * @since BuddyBoss 2.0.0
