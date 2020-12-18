@@ -1103,8 +1103,6 @@ class BP_Media {
 
 		$from_sql = " FROM {$bp->media->table_name} m";
 
-		$join_sql = '';
-
 		// Where conditions.
 		$where_conditions = array();
 
@@ -1120,7 +1118,7 @@ class BP_Media {
 		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
 		 */
-		$where_conditions = apply_filters( 'bp_media_get_where_count_conditions', $where_conditions, $select_sql, $from_sql, $join_sql );
+		$where_conditions = apply_filters( 'bp_media_get_where_count_conditions', $where_conditions, $select_sql, $from_sql );
 
 		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
 
@@ -1134,9 +1132,9 @@ class BP_Media {
 		 * @param string $from_sql   Current FROM MySQL statement.
 		 * @param string $where_sql  Current WHERE MySQL statement.
 		 */
-		$join_sql = apply_filters( 'bp_media_get_join_count_sql', $join_sql, $select_sql, $from_sql, $where_sql );
+		$from_sql = apply_filters( 'bp_media_get_join_count_sql', $from_sql, $select_sql, $where_sql );
 
-		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
+		$media_ids_sql = "{$select_sql} {$from_sql} {$where_sql}";
 		$total_count   = (int) $wpdb->get_var( $media_ids_sql ); // phpcs:ignore.
 
 		return $total_count;
