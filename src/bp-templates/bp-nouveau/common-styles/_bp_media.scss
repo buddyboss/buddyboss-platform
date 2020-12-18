@@ -4463,6 +4463,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 }
 
+.moderation_notice.is_hidden {
+	display: none;
+}
+
 .moderation-popup .bb-report-type-wrp {
 	font-size: 15px;
 	text-align: left;
