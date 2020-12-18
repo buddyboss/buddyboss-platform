@@ -1,6 +1,9 @@
 /* global Bp_Moderation */
 jQuery(document).ready(function ($) {
 
+    /**
+     * Function for hide/unhide content on frontend from backend listing.
+     */
     $(document).on('click', '.bp-hide-request', function (event) {
         event.preventDefault();
         if (!confirm(Bp_Moderation.strings.confirm_msg)) {
@@ -26,10 +29,9 @@ jQuery(document).ready(function ($) {
         $(event.currentTarget).append(' <i class="bb-icon bb-icon-loader animate-spin"></i>');
 
         $.post(ajaxurl, data, function (response) {
-            var result = $.parseJSON(response);
             var hideArg = '';
             var url = window.location.href;
-            if (true===result.success) {
+            if (true===response.success) {
                 if ('hide'===sub_action) {
                     curObj.attr('data-action', 'unhide');
                     curObj.attr('title', Bp_Moderation.strings.unhide_label);
@@ -49,13 +51,25 @@ jQuery(document).ready(function ($) {
                 }
                 window.location.href = url;
             } else {
-                $('.bp-moderation-ajax-msg p').text(result.message.errors.bp_moderation_content_actions_request).parent().removeClass('hidden');
+                var msg = '';
+                if (response.data.message.errors.bp_moderation_missing_data) {
+                    msg = response.data.message.errors.bp_moderation_missing_data;
+                } else if (response.data.message.errors.bp_moderation_content_actions_request) {
+                    msg = response.data.message.errors.bp_moderation_content_actions_request;
+                } else if (response.data.message.errors.bp_moderation_invalid_access) {
+                    msg = response.data.message.errors.bp_moderation_invalid_access;
+                }
+                $('.bp-moderation-ajax-msg').removeClass('notice-success').addClass('notice-error');
+                $('.bp-moderation-ajax-msg p').text(msg).parent().removeClass('hidden');
                 $(event.currentTarget).find('.bb-icon-loader').remove();
             }
             curObj.removeClass('disabled');
         });
     });
 
+    /**
+     * Function for suspend/unsuspend user from backend listing.
+     */
     $(document).on('click', '.bp-block-user', function (event) {
         event.preventDefault();
 
@@ -79,14 +93,11 @@ jQuery(document).ready(function ($) {
             nonce: nonce,
         };
 
-        
-
         $(event.currentTarget).append(' <i class="bb-icon bb-icon-loader animate-spin"></i>');
 
         $.post(ajaxurl, data, function (response) {
-            var result = $.parseJSON(response);
             var hideArg = '';
-            if (true===result.success) {
+            if (true===response.success) {
                 var url = window.location.href;
                 if ('suspend'===sub_action) {
                     curObj.attr('data-action', 'unsuspend');
@@ -119,7 +130,14 @@ jQuery(document).ready(function ($) {
                 }
                 window.location.href = url;
             } else {
-                $('.bp-moderation-ajax-msg p').text(result.message.errors.bp_moderation_user_missing_data).parent().removeClass('hidden');
+                var msg = '';
+                if (response.data.message.errors.bp_moderation_user_missing_data) {
+                    msg = response.data.message.errors.bp_moderation_user_missing_data;
+                } else if (response.data.message.errors.bp_moderation_invalid_access) {
+                    msg = response.data.message.errors.bp_moderation_invalid_access;
+                }
+                $('.bp-moderation-ajax-msg').removeClass('notice-success').addClass('notice-error');
+                $('.bp-moderation-ajax-msg p').text(msg).parent().removeClass('hidden');
                 $(event.currentTarget).find('.bb-icon-loader').remove();
             }
             curObj.removeClass('disabled');
