@@ -473,11 +473,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 		$admins      = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 
-		$actions = array(
-			'view_report'  => '',
-			'view_content' => '',
-			'hide'         => '',
-		);
+		$actions = array();
 
 		$moderation_args = array(
 			'page'         => 'bp-moderation',
@@ -511,12 +507,15 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			esc_html__( 'View Reports', 'buddyboss' )
 		);
 
-		$actions['view_content'] = sprintf(
-			'<a href="%s" title="%s"> %s </a>',
-			esc_url( bp_moderation_get_permalink( $item['item_id'], $item['item_type'] ) ),
-			esc_attr__( 'View', 'buddyboss' ),
-			esc_html__( 'View Content', 'buddyboss' )
-		);
+		$view_content_url = bp_moderation_get_permalink( $item['item_id'], $item['item_type'] );
+		if ( ! empty( $view_content_url ) ) {
+			$actions['view_content'] = sprintf(
+				'<a href="%s" title="%s"> %s </a>',
+				esc_url( $view_content_url ),
+				esc_attr__( 'View', 'buddyboss' ),
+				esc_html__( 'View Content', 'buddyboss' )
+			);
+		}
 
 		$actions['hide'] = sprintf(
 			'<a href="javascript:void(0);" class="%s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
