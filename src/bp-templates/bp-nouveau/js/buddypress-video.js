@@ -297,7 +297,7 @@ window.bp = window.bp || {};
 				);
 
 				closest_parent.find( '.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li' ).show().children( 'span, i' ).show();
-				closest_parent.find( '.location-folder-title' ).text( BP_Nouveau.media.target_text );
+				closest_parent.find( '.location-folder-title' ).text( BP_Nouveau.video.target_text );
 				closest_parent.find( '.location-folder-back' ).hide().closest( '.has-folderlocationUI' ).find( '.bb-folder-selected-id' ).val( '0' );
 				closest_parent.find( '.ac_document_search_folder' ).val( '' );
 				closest_parent.find( '.bb-model-header h4 span' ).text( '...' );
@@ -490,8 +490,8 @@ window.bp = window.bp || {};
 			this.current_video = false;
 			this.current_video_index = 0;
 			this.is_open_video = false;
-			this.nextVideoLink = $( '.bb-next-video' );
-			this.previousVideoLink = $( '.bb-prev-video' );
+			this.nextVideoLink = $( '.bb-next-media' );
+			this.previousVideoLink = $( '.bb-prev-media' );
 			this.activity_ajax = false;
 			this.group_id = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 
@@ -537,6 +537,38 @@ window.bp = window.bp || {};
 			self.is_open_video = true;
 
 			// document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
+		},
+
+		getVideosDescription: function () {
+			var self = this;
+
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
+
+			if ( self.activity_ajax != false ) {
+				self.activity_ajax.abort();
+			}
+
+			self.activity_ajax = $.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'media_get_media_description',
+						id: self.current_video.id,
+						attachment_id: self.current_video.attachment_id,
+						nonce: BP_Nouveau.nonces.video
+					},
+					success: function ( response ) {
+						if ( response.success ) {
+							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
+							$( '.bb-media-info-section:visible' ).show();
+							$( window ).scroll();
+						} else {
+							$( '.bb-media-info-section.media' ).hide();
+						}
+					}
+				}
+			);
 		},
 
 		setVideos: function (target) {
