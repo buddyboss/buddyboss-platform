@@ -440,7 +440,7 @@ function bp_document_update_document_privacy( $folder ) {
 /**
  * Save document when new topic or reply is saved
  *
- * @param $post_id
+ * @param int $post_id post id of the topic or reply.
  *
  * @since BuddyBoss 1.4.0
  */

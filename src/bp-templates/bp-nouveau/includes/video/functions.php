@@ -104,6 +104,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'maxFiles'                           => apply_filters( 'bp_video_upload_chunk_limit', 10 ),
 		'cover_video_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss' ),
 		'cover_video_size_error_description' => __( 'To reposition your cover video, please upload a larger image and then try again.', 'buddyboss' ),
+		'video_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
 	);
 
 	if ( bp_is_single_video_album() ) {

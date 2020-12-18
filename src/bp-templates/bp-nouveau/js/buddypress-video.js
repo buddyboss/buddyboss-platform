@@ -83,80 +83,82 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bp-add-video', this.openUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
-			$(document).on('click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a', this.videoActivityActionButton.bind(this));
-			$(document).on('change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind(this));
-			$(document).on('click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind(this));
+			$( document ).on( 'click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
+			$( document ).on( 'change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind( this ) );
+			$( document ).on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
+			$( document ).on( 'click', '.video-action_list .edit_video', this.editVideo.bind( this ) );
+			$( document ).on( 'click', '.video-action_list .video-file-delete', this.deleteVideo.bind( this ) );
 		},
 
-		
+
 		/**
 		 * Video Activity action Button
 		 */
-		videoActivityActionButton: function (event) {
+		videoActivityActionButton: function ( event ) {
 			event.preventDefault();
 
-			$(event.currentTarget).closest('.bb-activity-video-elem').toggleClass('is-visible').siblings().removeClass('is-visible').closest('.activity-item').siblings().find('.bb-activity-video-elem').removeClass('is-visible');
+			$( event.currentTarget ).closest( '.bb-activity-video-elem' ).toggleClass( 'is-visible' ).siblings().removeClass( 'is-visible' ).closest( '.activity-item' ).siblings().find( '.bb-activity-video-elem' ).removeClass( 'is-visible' );
 
-			if ($(event.currentTarget).closest('.bb-activity-video-elem').length < 1) {
-				$(event.currentTarget).closest('.bb-item-thumb').toggleClass('is-visible').parent().siblings().find('.bb-item-thumb').removeClass('is-visible').removeClass('is-visible');
+			if ( $( event.currentTarget ).closest( '.bb-activity-video-elem' ).length < 1 ) {
+				$( event.currentTarget ).closest( '.bb-item-thumb' ).toggleClass( 'is-visible' ).parent().siblings().find( '.bb-item-thumb' ).removeClass( 'is-visible' ).removeClass( 'is-visible' );
 			}
 
-			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( !$(event.currentTarget).hasClass('video-action_more') ) ) {
-				$(event.currentTarget).closest('.bb-activity-video-elem').removeClass('is-visible');
-				$(event.currentTarget).closest('.bb-item-thumb').removeClass('is-visible');
+			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( !$( event.currentTarget ).hasClass( 'video-action_more' ) ) ) {
+				$( event.currentTarget ).closest( '.bb-activity-video-elem' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-item-thumb' ).removeClass( 'is-visible' );
 			}
 		},
 
-		toggleSelectAllVideo: function (event) {
+		toggleSelectAllVideo: function ( event ) {
 			event.preventDefault();
 
-			if ($(event.currentTarget).hasClass('selected')) {
-				$(event.currentTarget).data('bp-tooltip', BP_Nouveau.media.i18n_strings.selectall);
-				this.deselectAllVideo(event);
+			if ( $( event.currentTarget ).hasClass( 'selected' ) ) {
+				$( event.currentTarget ).data( 'bp-tooltip', BP_Nouveau.media.i18n_strings.selectall );
+				this.deselectAllVideo( event );
 			} else {
-				$(event.currentTarget).data('bp-tooltip', BP_Nouveau.media.i18n_strings.unselectall);
-				this.selectAllVideo(event);
+				$( event.currentTarget ).data( 'bp-tooltip', BP_Nouveau.media.i18n_strings.unselectall );
+				this.selectAllVideo( event );
 			}
 
-			$(event.currentTarget).toggleClass('selected');
+			$( event.currentTarget ).toggleClass( 'selected' );
 		},
 
-		selectAllVideo: function (event) {
+		selectAllVideo: function ( event ) {
 			event.preventDefault();
 
-			$('#buddypress').find('.video-list:not(.existing-video-list)').find('.bb-video-check-wrap [name="bb-video-select"]').each(
+			$( '#buddypress' ).find( '.video-list:not(.existing-video-list)' ).find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
 				function () {
-					$(this).prop('checked', true);
-					$(this).closest('.bb-item-thumb').addClass('selected');
-					$(this).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.unselect);
+					$( this ).prop( 'checked', true );
+					$( this ).closest( '.bb-item-thumb' ).addClass( 'selected' );
+					$( this ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', BP_Nouveau.media.i18n_strings.unselect );
 				}
 			);
 		},
 
-		deselectAllVideo: function (event) {
+		deselectAllVideo: function ( event ) {
 			event.preventDefault();
 
-			$('#buddypress').find('.video-list:not(.existing-video-list)').find('.bb-video-check-wrap [name="bb-video-select"]').each(
+			$( '#buddypress' ).find( '.video-list:not(.existing-video-list)' ).find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
 				function () {
-					$(this).prop('checked', false);
-					$(this).closest('.bb-item-thumb').removeClass('selected');
-					$(this).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.select);
+					$( this ).prop( 'checked', false );
+					$( this ).closest( '.bb-item-thumb' ).removeClass( 'selected' );
+					$( this ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', BP_Nouveau.media.i18n_strings.select );
 				}
 			);
 		},
 
-		addSelectedClassToWrapper: function (event) {
+		addSelectedClassToWrapper: function ( event ) {
 			var target = event.currentTarget;
-			if ($(target).is(':checked')) {
-				$(target).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.unselect);
-				$(target).closest('.bb-item-thumb').addClass('selected');
+			if ( $( target ).is( ':checked' ) ) {
+				$( target ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', BP_Nouveau.media.i18n_strings.unselect );
+				$( target ).closest( '.bb-item-thumb' ).addClass( 'selected' );
 			} else {
-				$(target).closest('.bb-item-thumb').removeClass('selected');
-				$(target).closest('.bb-video-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip', BP_Nouveau.media.i18n_strings.select);
+				$( target ).closest( '.bb-item-thumb' ).removeClass( 'selected' );
+				$( target ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', BP_Nouveau.media.i18n_strings.select );
 
-				var selectAllVideo = $('.bp-nouveau #bb-select-deselect-all-video');
-				if (selectAllVideo.hasClass('selected')) {
-					selectAllVideo.removeClass('selected');
+				var selectAllVideo = $( '.bp-nouveau #bb-select-deselect-all-video' );
+				if ( selectAllVideo.hasClass( 'selected' ) ) {
+					selectAllVideo.removeClass( 'selected' );
 				}
 			}
 		},
@@ -408,8 +410,8 @@ window.bp = window.bp || {};
 				);
 			}
 		},
-		
-		closeUploader: function (event) {
+
+		closeUploader: function ( event ) {
 			event.preventDefault();
 			$( '#bp-video-uploader' ).hide();
 			$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload );
@@ -430,6 +432,25 @@ window.bp = window.bp || {};
 			if ( self.$el.find( '#activity-post-media-uploader' ).hasClass( 'open' ) ) {
 				return false;
 			}
+
+		},
+
+		editVideo: function ( e ) {
+			e.preventDefault();
+
+			//ToDo: Open Edit Popup here
+			console.log( 'Open Edit Popup here' );
+		},
+
+		deleteVideo: function ( e ) {
+			e.preventDefault();
+
+			if ( !confirm( 'Are you sure you want to delete this video?' ) ) {
+				return;
+			}
+
+			//ToDo: Delete Video Code goes here
+			console.log( 'Delete Video' );
 
 		},
 
@@ -469,8 +490,8 @@ window.bp = window.bp || {};
 			this.current_video = false;
 			this.current_video_index = 0;
 			this.is_open_video = false;
-			this.nextVideoLink = $( '.bb-next-media' );
-			this.previousVideoLink = $( '.bb-prev-media' );
+			this.nextVideoLink = $( '.bb-next-video' );
+			this.previousVideoLink = $( '.bb-prev-video' );
 			this.activity_ajax = false;
 			this.group_id = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 

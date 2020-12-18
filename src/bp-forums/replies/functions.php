@@ -114,27 +114,27 @@ function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
  */
 function bbp_new_reply_handler( $action = '' ) {
 
-	// Bail if action is not bbp-new-reply
+	// Bail if action is not bbp-new-reply.
 	if ( 'bbp-new-reply' !== $action ) {
 		return;
 	}
 
-	// Nonce check
+	// Nonce check.
 	if ( ! bbp_verify_nonce_request( 'bbp-new-reply' ) ) {
 		bbp_add_error( 'bbp_new_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 		return;
 	}
 
-	// Define local variable(s)
+	// Define local variable(s).
 	$topic_id    = $forum_id = $reply_author = $anonymous_data = $reply_to = 0;
 	$reply_title = $reply_content = $terms = '';
 
 	/** Reply Author */
 
-	// User is anonymous
+	// User is anonymous.
 	if ( bbp_is_anonymous() ) {
 
-		// Filter anonymous data
+		// Filter anonymous data.
 		$anonymous_data = bbp_filter_anonymous_post_data();
 
 		// Anonymous data checks out, so set cookies, etc...
@@ -142,15 +142,15 @@ function bbp_new_reply_handler( $action = '' ) {
 			bbp_set_current_anonymous_user_data( $anonymous_data );
 		}
 
-		// User is logged in
+		// User is logged in.
 	} else {
 
-		// User cannot create replies
+		// User cannot create replies.
 		if ( ! current_user_can( 'publish_replies' ) ) {
 			bbp_add_error( 'bbp_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to reply.', 'buddyboss' ) );
 		}
 
-		// Reply author is current user
+		// Reply author is current user.
 		$reply_author = bbp_get_current_user_id();
 
 	}
@@ -161,25 +161,25 @@ function bbp_new_reply_handler( $action = '' ) {
 	if ( empty( $_POST['bbp_topic_id'] ) ) {
 		bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID is missing.', 'buddyboss' ) );
 
-		// Topic id is not a number
+		// Topic id is not a number.
 	} elseif ( ! is_numeric( $_POST['bbp_topic_id'] ) ) {
 		bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID must be a number.', 'buddyboss' ) );
 
-		// Topic id might be valid
+		// Topic id might be valid.
 	} else {
 
-		// Get the topic id
+		// Get the topic id.
 		$posted_topic_id = intval( $_POST['bbp_topic_id'] );
 
-		// Topic id is a negative number
+		// Topic id is a negative number.
 		if ( 0 > $posted_topic_id ) {
 			bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID cannot be a negative number.', 'buddyboss' ) );
 
-			// Topic does not exist
+			// Topic does not exist.
 		} elseif ( ! bbp_get_topic( $posted_topic_id ) ) {
 			bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion does not exist.', 'buddyboss' ) );
 
-			// Use the POST'ed topic id
+			// Use the POST'ed topic id.
 		} else {
 			$topic_id = $posted_topic_id;
 		}
@@ -187,68 +187,68 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	/** Forum ID */
 
-	// Try to use the forum id of the topic
+	// Try to use the forum id of the topic.
 	if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) {
 		$forum_id = bbp_get_topic_forum_id( $topic_id );
 
-		// Error check the POST'ed forum id
+		// Error check the POST'ed forum id.
 	} elseif ( isset( $_POST['bbp_forum_id'] ) ) {
 
-		// Empty Forum id was passed
+		// Empty Forum id was passed.
 		if ( empty( $_POST['bbp_forum_id'] ) ) {
 			bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss' ) );
 
-			// Forum id is not a number
+			// Forum id is not a number.
 		} elseif ( ! is_numeric( $_POST['bbp_forum_id'] ) ) {
 			bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss' ) );
 
-			// Forum id might be valid
+			// Forum id might be valid.
 		} else {
 
-			// Get the forum id
+			// Get the forum id.
 			$posted_forum_id = intval( $_POST['bbp_forum_id'] );
 
-			// Forum id is empty
+			// Forum id is empty.
 			if ( 0 === $posted_forum_id ) {
 				bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss' ) );
 
-				// Forum id is a negative number
+				// Forum id is a negative number.
 			} elseif ( 0 > $posted_forum_id ) {
 				bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID cannot be a negative number.', 'buddyboss' ) );
 
-				// Forum does not exist
+				// Forum does not exist.
 			} elseif ( ! bbp_get_forum( $posted_forum_id ) ) {
 				bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum does not exist.', 'buddyboss' ) );
 
-				// Use the POST'ed forum id
+				// Use the POST'ed forum id.
 			} else {
 				$forum_id = $posted_forum_id;
 			}
 		}
 	}
 
-	// Forum exists
+	// Forum exists.
 	if ( ! empty( $forum_id ) ) {
 
-		// Forum is a category
+		// Forum is a category.
 		if ( bbp_is_forum_category( $forum_id ) ) {
 			bbp_add_error( 'bbp_new_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss' ) );
 
-			// Forum is not a category
+			// Forum is not a category.
 		} else {
 
-			// Forum is closed and user cannot access
+			// Forum is closed and user cannot access.
 			if ( bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
 				bbp_add_error( 'bbp_new_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss' ) );
 			}
 
-			// Forum is private and user cannot access
+			// Forum is private and user cannot access.
 			if ( bbp_is_forum_private( $forum_id ) ) {
 				if ( ! current_user_can( 'read_private_forums' ) ) {
 					bbp_add_error( 'bbp_new_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
 				}
 
-				// Forum is hidden and user cannot access
+				// Forum is hidden and user cannot access.
 			} elseif ( bbp_is_forum_hidden( $forum_id ) ) {
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
 					bbp_add_error( 'bbp_new_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
@@ -259,7 +259,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	/** Unfiltered HTML */
 
-	// Remove kses filters from title and content for capable users and if the nonce is verified
+	// Remove kses filters from title and content for capable users and if the nonce is verified.
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $topic_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
@@ -272,7 +272,7 @@ function bbp_new_reply_handler( $action = '' ) {
 		$reply_title = esc_attr( strip_tags( $_POST['bbp_reply_title'] ) );
 	}
 
-	// Filter and sanitize
+	// Filter and sanitize.
 	$reply_title = apply_filters( 'bbp_new_reply_pre_title', $reply_title );
 
 	/** Reply Content */
@@ -284,7 +284,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	// Filter and sanitize
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
-	// No reply content
+	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_video'] )
@@ -322,32 +322,32 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	/** Reply Status */
 
-	// Maybe put into moderation
+	// Maybe put into moderation.
 	if ( ! bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 		$reply_status = bbp_get_pending_status_id();
 
-		// Default
+		// Default.
 	} else {
 		$reply_status = bbp_get_public_status_id();
 	}
 
 	/** Reply To */
 
-	// Handle Reply To of the reply; $_REQUEST for non-JS submissions
+	// Handle Reply To of the reply; $_REQUEST for non-JS submissions.
 	if ( isset( $_REQUEST['bbp_reply_to'] ) ) {
 		$reply_to = bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
 	}
 
 	/** Topic Closed */
 
-	// If topic is closed, moderators can still reply
+	// If topic is closed, moderators can still reply.
 	if ( bbp_is_topic_closed( $topic_id ) && ! current_user_can( 'moderate' ) ) {
 		bbp_add_error( 'bbp_reply_topic_closed', __( '<strong>ERROR</strong>: Discussion is closed.', 'buddyboss' ) );
 	}
 
 	/** Topic Tags */
 
-	// Either replace terms
+	// Either replace terms.
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
 		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
 
@@ -355,7 +355,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
 		$terms = '';
 
-		// Existing terms
+		// Existing terms.
 	} else {
 		$terms = bbp_get_topic_tag_names( $topic_id );
 	}
@@ -364,7 +364,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	do_action( 'bbp_new_reply_pre_extras', $topic_id, $forum_id );
 
-	// Bail if errors
+	// Bail if errors.
 	if ( bbp_has_errors() ) {
 		return;
 	}
@@ -372,7 +372,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	/** No Errors */
 
 	// Add the content of the form to $reply_data as an array
-	// Just in time manipulation of reply data before being created
+	// Just in time manipulation of reply data before being created.
 	$reply_data = apply_filters(
 		'bbp_new_reply_pre_insert',
 		array(
@@ -640,8 +640,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
-	// No reply content
-	if ( empty( $reply_content ) ) {
+	// No reply content.
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+	     && empty( $_POST['bbp_media'] )
+	     && empty( $_POST['bbp_video'] )
+	     && empty( $_POST['bbp_media_gif'] )
+	     && empty( $_POST['bbp_document'] )
+	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
 
