@@ -1016,9 +1016,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id );
 
 			if ( bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id ) ) {
-				$threads->threads[ $i ]['excerpt'] = '<p class="suspended">' . esc_html__( 'Content from suspended user', 'buddyboss' ) . '</p>';
+				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Content from suspended user', 'buddyboss' );
 			} elseif ( bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id ) ) {
-				$threads->threads[ $i ]['excerpt'] = '<p class="blocked">' . esc_html__( 'Content from blocked user', 'buddyboss' ) . '</p>';
+				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Content from blocked user', 'buddyboss' );
 			}
 		}
 
