@@ -378,18 +378,8 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
-			// if object is activity and object nav does not exists fallback to scope = all
-			if ( data.object == 'activity' && !$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
-				data.scope = 'all';
-			}
-
-			// if object is media and object nav does not exists fallback to scope = all
-			if ( data.object == 'media' && !$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
-				data.scope = 'all';
-			}
-
-			// if object is document and object nav does not exists fallback to scope = all
-			if ( data.object == 'document' && !$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+			// if object is members, activity, media, document and object nav does not exists fallback to scope = all
+			if ( [ 'members', 'activity', 'media', 'document' ].includes( data.object ) && !$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
 			}
 
