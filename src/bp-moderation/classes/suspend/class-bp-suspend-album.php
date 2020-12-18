@@ -213,7 +213,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 					'args'     => array( $album_id, $hide_sitewide, $args ),
 				)
 			);
-			$bp_background_updater->save()->dispatch();
+			$bp_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -253,7 +253,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 					'args'     => array( $album_id, $hide_sitewide, $force_all, $args ),
 				)
 			);
-			$bp_background_updater->save()->dispatch();
+			$bp_background_updater->save()->schedule_event();
 		}
 	}
 

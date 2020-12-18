@@ -218,7 +218,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 					'args'     => array( $group_id, $hide_sitewide, $args ),
 				)
 			);
-			$bp_background_updater->save()->dispatch();
+			$bp_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -258,7 +258,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 					'args'     => array( $group_id, $hide_sitewide, $force_all, $args ),
 				)
 			);
-			$bp_background_updater->save()->dispatch();
+			$bp_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -294,6 +294,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'media' ) ) {
 			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id );
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id );
+		}
+
+		if ( bp_is_active( 'messages' ) ) {
+			$related_contents[ BP_Suspend_Message::$type ] = BP_Suspend_Message::get_group_message_thread_ids( $group_id );
 		}
 
 		return $related_contents;
