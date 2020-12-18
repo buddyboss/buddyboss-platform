@@ -886,10 +886,17 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
  */
 function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 	$is_enabled = bp_is_moderation_content_reporting_enable( false, $content_type );
-	if ( ! empty( $is_enabled ) ) {
-		$is_enabled = get_option( 'bpm_reporting_auto_hide', $default );
+	if ( empty( $is_enabled ) ) {
+		return false;
 	}
-	return (bool) apply_filters( 'bp_is_moderation_auto_hide_enable', (bool) $is_enabled );
+
+	$settings = get_option( 'bpm_reporting_auto_hide', $default );
+
+	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		$settings[ $content_type ] = $default;
+	}
+
+	return (bool) apply_filters( 'bp_is_moderation_auto_hide_enable', (bool) $settings[ $content_type ], $content_type );
 }
 
 /**
