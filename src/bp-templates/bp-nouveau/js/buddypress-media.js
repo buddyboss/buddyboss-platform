@@ -1157,7 +1157,6 @@ window.bp = window.bp || {};
 
 			}
 
-
 			activityId = target.data( 'parent-activity-id' );
 			if ( fromWhere && fromWhere.length && 'activity' === fromWhere && media.length == 0 ) {
 				id = target.attr( 'data-item-id' );

@@ -73,6 +73,25 @@ function bp_nouveau_video_enqueue_scripts() {
  */
 function bp_nouveau_video_localize_scripts( $params = array() ) {
 
+	$album_id         = 0;
+	$type             = '';
+	$user_id          = bp_loggedin_user_id();
+	$group_id         = 0;
+	$move_to_id_popup = $user_id;
+	if ( bp_is_group_video() || bp_is_group_video_albums() ) {
+		$album_id         = (int) bp_action_variable( 1 );
+		$type             = 'group';
+		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
+		$move_to_id_popup = $group_id;
+	} elseif ( bp_is_user_video() || bp_is_user_albums() ) {
+		$album_id         = (int) bp_action_variable( 0 );
+		$type             = 'profile';
+		$move_to_id_popup = $user_id;
+	} elseif ( bp_is_video_directory() ) {
+		$album_id = 0;
+		$type     = 'profile';
+	}
+
 	$extensions     = array();
 	$mime_types     = array();
 	$all_extensions = bp_video_extensions_list();
@@ -101,9 +120,14 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_size_error_header'            => __( 'File too large ', 'buddyboss' ),
 		'video_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
 		'dictFileTooBig'                     => __( 'File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.', 'buddyboss' ),
-		'maxFiles'                           => apply_filters( 'bp_video_upload_chunk_limit', 10 ),
+		'maxFiles'                           => bp_video_allowed_upload_video_per_batch(),
+		'is_video_directory'                 => ( bp_is_video_directory() ) ? 'yes' : 'no',
+		'create_album_error_title'           => __( 'Please enter title of album', 'buddyboss' ),
 		'cover_video_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss' ),
 		'cover_video_size_error_description' => __( 'To reposition your cover video, please upload a larger image and then try again.', 'buddyboss' ),
+		'current_album'                      => $album_id,
+		'current_type'                       => $type,
+		'move_to_id_popup'                   => $move_to_id_popup,
 		'video_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
 	);
 
@@ -126,6 +150,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Videos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'video_delete_confirm' => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
 	);
 
 	return $params;
