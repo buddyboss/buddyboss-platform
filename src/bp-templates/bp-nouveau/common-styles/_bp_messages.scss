@@ -360,18 +360,21 @@
 				content: "\e937";
 			}
 
+			li.reported-content a,
+			li.reported_thread a,
 			li.report_thread a {
-
-				&.reported-content {
-					pointer-events: none;
-					opacity: 0.9;
-				}
 
 				&:before {
 					content: "\e8ea";
 					vertical-align: middle;
 				}
 
+			}
+
+			li.reported-content,
+			li.reported_thread {
+				pointer-events: none;
+				opacity: 0.9;
 			}
 
 		}

@@ -6361,14 +6361,17 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   content: "\e937";
 }
 
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a.reported-content {
-  pointer-events: none;
-  opacity: 0.9;
-}
-
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content a:before,
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread a:before,
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
   content: "\e8ea";
   vertical-align: middle;
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content,
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread {
+  pointer-events: none;
+  opacity: 0.9;
 }
 
 .bp-messages-content .single-thread-title {
@@ -16805,6 +16808,40 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .moderation-popup .modal-container .form-item label > textarea {
   margin-right: 28px;
   width: calc(100% - 26px);
+}
+
+.moderation-popup .modal-container .bp-report-form-err {
+  display: flex;
+  color: #ef3e46;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  padding: 10px 0;
+  background: #fff;
+  -webkit-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  margin: 10px 0 20px;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.moderation-popup .modal-container .bp-report-form-err:empty {
+  display: none;
+}
+
+.moderation-popup .modal-container .bp-report-form-err:before {
+  content: "\f534";
+  background-color: #d33;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  font-family: dashicons;
+  right: 0;
+  margin: -10px 0 -10px 10px;
+  position: relative;
+  padding: 0 0.5em;
+  border-radius: 0 3px 3px 0;
 }
 
 .moderation-popup .bb-report-type-wrp {

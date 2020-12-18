@@ -305,7 +305,7 @@ function bp_moderation_unblock_user() {
 	$moderation = new BP_Moderation( $item_id, BP_Moderation_Members::$moderation_type );
 
 	if ( empty( $moderation ) || is_wp_error( $moderation ) || true === $moderation->hide_sitewide ) {
-		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you can not unblock suspended member.', 'buddypress' ) );
+		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you can not unblock suspended member.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 

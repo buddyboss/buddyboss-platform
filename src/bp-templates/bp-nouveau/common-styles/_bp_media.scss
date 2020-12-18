@@ -4425,6 +4425,42 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		}
 
 	}
+
+	.bp-report-form-err {
+		display: flex;
+		color: #ef3e46;
+		flex-flow: row nowrap;
+		align-items: stretch;
+		padding: 10px 0;
+		background: #fff;
+		-webkit-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+		-moz-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+		margin: 10px 0 20px;
+		position: relative;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+
+		&:empty {
+			display: none;
+		}
+
+		&:before {
+			content: "\f534";
+			background-color: #d33;
+			color: #fff;
+			display: flex;
+			align-items: center;
+			font-family: dashicons;
+			left: 0;
+			margin: -10px 10px -10px 0;
+			position: relative;
+			padding: 0 0.5em;
+			border-radius: 3px 0 0 3px;
+		}
+
+	}
+
 }
 
 .moderation-popup .bb-report-type-wrp {
