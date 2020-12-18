@@ -274,6 +274,12 @@ function bp_moderation_unblock_user() {
 		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Moderation reported not found.', 'buddyboss' ) );
 	}
 
+	$moderation = new BP_Moderation( $item_id, BP_Moderation_Members::$moderation_type );
+
+	if ( empty( $moderation ) || is_wp_error( $moderation ) || true === $moderation->hide_sitewide ) {
+		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you can not unblock suspended member.', 'buddypress' ) );
+	}
+
 	if ( wp_verify_nonce( $nonce, 'bp-unblock-user' ) && ! is_wp_error( $response['message'] ) ) {
 		$moderation = bp_moderation_delete(
 			array(
