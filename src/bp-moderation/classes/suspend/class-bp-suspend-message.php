@@ -46,8 +46,8 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			return;
 		}
 
-		add_filter( 'bp_messages_message_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_messages_message_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
 	/**
@@ -62,19 +62,10 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	public static function get_group_message_thread_ids( $group_id ) {
 		$mthread_ids = array();
 
-		/*$messages = BP_Messages_Thread::get(
-			'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-		);
-		$messages = BP_Messages_Message::get(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-		);*/
-
+		$mthread_id = groups_get_groupmeta( $group_id, 'group_message_thread', true );
+		if ( ! empty( $mthread_id ) ) {
+			$mthread_ids = array( $mthread_id );
+		}
 
 		if ( ! empty( $messages['messages'] ) ) {
 			$mthread_ids = $messages['messages'];
@@ -99,7 +90,13 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			return $join_sql;
 		}
 
-		$join_sql .= $this->exclude_joint_query( 'm.thread_id' );
+		$action_name = current_filter();
+
+		if ( 'bp_messages_recipient_get_join_sql' === $action_name ){
+			$join_sql .= $this->exclude_joint_query( 'r.thread_id' );
+		} else {
+			$join_sql .= $this->exclude_joint_query( 'm.thread_id' );
+		}
 
 		/**
 		 * Filters the hidden message Where SQL statement.
@@ -129,6 +126,8 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
+		$action_name = current_filter();
+
 		$where                  = array();
 		$where['suspend_where'] = $this->exclude_where_query();
 
@@ -143,7 +142,11 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_message_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
+				$where_conditions .= 'AND ( ' . implode( ' AND ', $where ) . ' )';
+			} else {
+					$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			}
 		}
 
 		return $where_conditions;
@@ -184,7 +187,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 					'args'     => array( $folder_id, $hide_sitewide, $args ),
 				)
 			);
-			$bp_background_updater->save()->dispatch();
+			$bp_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -224,7 +227,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 					'args'     => array( $folder_id, $hide_sitewide, $force_all, $args ),
 				)
 			);
-			$bp_background_updater->save()->dispatch();
+			$bp_background_updater->save()->schedule_event();
 		}
 	}
 

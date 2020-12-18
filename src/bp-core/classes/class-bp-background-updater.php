@@ -67,7 +67,7 @@ if ( ! class_exists( 'BP_Background_Updater' ) ) {
 		/**
 		 * Schedule fallback event.
 		 */
-		protected function schedule_event() {
+		public function schedule_event() {
 			if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
 				wp_schedule_event( time() + 10, $this->cron_interval_identifier, $this->cron_hook_identifier );
 			}

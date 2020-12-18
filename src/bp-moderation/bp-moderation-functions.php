@@ -787,6 +787,10 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 		// Check for album type and content type as media.
 	} elseif ( BP_Moderation_Album::$moderation_type === $content_type ) {
 		$content_type = BP_Moderation_Media::$moderation_type;
+
+		// Check for message type and content type as user.
+	} elseif ( BP_Moderation_Message::$moderation_type ) {
+		return bp_is_moderation_member_blocking_enable(0);
 	}
 
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
