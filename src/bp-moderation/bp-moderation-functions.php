@@ -945,9 +945,6 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 	$user_id = 0;
 	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
-	error_log( '-------------------------------------------' );
-	error_log( print_r( debug_backtrace(), true ) );
-	error_log( '-------------------------------------------' );
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_id = $class::get_content_owner_id( $moderation_item_id );
 	}
