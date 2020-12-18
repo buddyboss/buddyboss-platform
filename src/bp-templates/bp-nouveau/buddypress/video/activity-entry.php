@@ -33,7 +33,7 @@ $height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $v
 			</ul>
 		</div>
 	</div>
-	<a href="#"
+        <!--<a href="#"
 	   class="bb-open-video-theatre entry-video"
 	   data-id="<?php bp_video_id(); ?>"
 	   data-attachment-id="<?php bp_video_attachment_id(); ?>"
@@ -51,5 +51,8 @@ $height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $v
 			<span class="bb-videos-length"><span><strong>+<?php echo $video_template->video_count - 5; ?></strong> <span><?php _e( 'More Videos', 'buddyboss' ); ?></span></span></span>
 			<?php
 		} ?>
-	</a>
+	</a>-->
+	<video id="video-<?php bp_video_id(); ?>" class="video-js" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }'>
+		<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
+	</video>
 </div>

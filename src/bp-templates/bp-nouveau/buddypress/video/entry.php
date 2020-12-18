@@ -39,6 +39,15 @@
            href="#">
            <img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php bp_video_title(); ?>" class="lazy"/>
         </a>
+        <!--<video
+                id="video-<?php bp_video_id(); ?>"
+                class="video-js chetan "
+                controls
+                preload="auto"
+                poster="<?php bp_video_attachment_image(); ?>"
+                data-setup='{"fluid": true}'>
+            <source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
+        </video>-->
         <?php
 		$video_privacy  = bp_video_user_can_manage_video( bp_get_video_id(), bp_loggedin_user_id() );
 		$can_manage = ( true === (bool) $video_privacy['can_manage'] ) ? true : false;

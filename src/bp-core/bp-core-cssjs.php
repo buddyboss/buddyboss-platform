@@ -178,6 +178,11 @@ function bp_core_register_common_scripts() {
 				'dependencies' => array( 'jquery' ),
 				'footer'       => true,
 		),
+		'bp-media-videojs'   => array(
+			'file'         => "{$url}vendor/video{$min}.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
 
 	);
 
@@ -346,6 +351,10 @@ function bp_core_register_common_styles() {
 			'jquery-datetimepicker' => array(
 					'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
 					'dependencies' => array(),
+			),
+			'bp-media-videojs-css' => array(
+				'file'         => "{$url}vendor/video-js{$min}.css",
+				'dependencies' => array(),
 			),
 		)
 	);

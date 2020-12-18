@@ -570,6 +570,65 @@ function bp_get_video_attachment_id() {
 }
 
 /**
+ * Output the video attachment ID.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_link() {
+	echo bp_get_video_link();
+}
+
+/**
+ * Return the video attachment ID.
+ *
+ * @return int The video attachment ID.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_video_link() {
+	global $video_template;
+
+	/**
+	 * Filters the video ID being displayed.
+	 *
+	 * @param int $id The video attachment ID.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_video_link', $video_template->video->video_link );
+}
+
+/**
+ * Output the video attachment ID.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_type() {
+	echo bp_get_video_type();
+}
+
+/**
+ * Return the video attachment ID.
+ *
+ * @return int The video attachment ID.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_video_type() {
+	global $video_template;
+	/**
+	 * Filters the video ID being displayed.
+	 *
+	 * @param int $id The video attachment ID.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_video_type', $video_template->video->attachment_data->meta->mime_type );
+}
+
+/**
  * Output the video title.
  *
  * @since BuddyBoss 1.6.0
@@ -874,7 +933,7 @@ function bp_get_video_attachment_image() {
 	 *
 	 * @since BuddyBoss 1.6.0
 	 */
-	return apply_filters( 'bp_get_video_attachment_image', $video_template->video->attachment_data->full );
+	return apply_filters( 'bp_get_video_attachment_image', $video_template->video->attachment_data->thumb );
 }
 
 /**
