@@ -805,7 +805,7 @@ class BP_Groups_Member {
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
 		 */
-		$sql['where'] = apply_filters( 'bp_groups_get_where_conditions', $sql['where'], array() );
+		$sql['where'] = apply_filters( 'bp_groups_get_where_count_conditions', $sql['where'], array() );
 		$sql['where'] = "WHERE " . implode( ' AND ', $sql['where'] );
 
 		/**
@@ -816,7 +816,7 @@ class BP_Groups_Member {
 		 * @param array $r    Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.
 		 */
-		$sql['from'] = apply_filters( 'bp_groups_get_join_sql', $sql['from'], array() );
+		$sql['from'] = apply_filters( 'bp_groups_get_join_count_sql', $sql['from'], array() );
 
 		$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
