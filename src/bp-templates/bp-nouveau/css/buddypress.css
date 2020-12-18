@@ -12838,7 +12838,7 @@ body.login .login-popup .mfp-close:hover {
   overflow: auto;
 }
 
-.modal-container#boss-media-create-album-popup .bb-model-header {
+.modal-container#boss-media-create-album-popup .bb-model-header, .modal-container#boss-video-create-album-popup .bb-model-header {
   margin-bottom: 20px;
 }
 

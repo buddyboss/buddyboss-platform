@@ -204,6 +204,10 @@ window.bp = window.bp || {};
 
 			$('#bp-media-uploader').on('click', '.bp-media-upload-tab', this.changeUploadModalTab.bind(this));
 
+			//Video Album
+			bpNouveau.on('click', '#bb-create-video-album', this.openCreateVideoAlbumModal.bind(this));
+
+
 			// Fetch Media.
 			$('.bp-nouveau [data-bp-list="media"]').on('click', 'li.load-more', this.injectMedias.bind(this));
 			$('.bp-nouveau #albums-dir-list').on('click', 'li.load-more', this.appendAlbums.bind(this));
@@ -267,6 +271,10 @@ window.bp = window.bp || {};
 			$('#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream').on('click', '.ac-media-close-button', this.closeMediaMove.bind(this));
 			mediaStream.on('click', '.ac-document-rename', this.renameDocument.bind(this));
 			mediaStream.on('click', '.ac-document-privacy', this.editPrivacyDocument.bind(this));
+
+
+
+
 			//mediaStream.on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
 			mediaStream.on('keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind(this));
 			mediaStream.on('click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind(this));
@@ -3987,6 +3995,13 @@ window.bp = window.bp || {};
 
 			this.openUploader(event);
 			$('#bp-media-create-album').show();
+		},
+
+		openCreateVideoAlbumModal: function (event) {
+			event.preventDefault();
+
+			this.openUploader(event);
+			$('#bp-video-create-album').show();
 		},
 
 		openCreateFolderModal: function (event) {

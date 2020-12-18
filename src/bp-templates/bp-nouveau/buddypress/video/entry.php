@@ -35,9 +35,11 @@ if ( $group_id > 0 ) {
             </a>
             <div class="video-action_list item-action_list">
                 <ul>
+					<!--
                     <li class="edit_video">
-                        <a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
+                        <a href="#" data-action="video" data-video-id="<?php /*bp_video_id(); */?>" data-parent-activity-id="<?php /*bp_video_parent_activity_id(); */?>" data-item-activity-id="<?php /*bp_video_activity_id(); */?>" data-type="<?php /*echo esc_attr( $move_type ); */?>" id="<?php /*echo esc_attr( $move_id ); */?>" class="ac-video-edit"><?php /*esc_html_e( 'Edit', 'buddyboss' ); */?></a>
                     </li>
+-->
                     <li class="move_video">
                         <a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
                     </li>
