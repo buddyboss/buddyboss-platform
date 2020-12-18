@@ -115,14 +115,23 @@ window.bp = window.bp || {};
 					nonce: nonce,
 				};
 				$.post( ajaxurl, data, function ( response ) {
-					var result = $.parseJSON( response );
-					if ( true === result.success ) {
-						curObj.parent().closest( '.moderation-item-wrp' ).fadeOut( 'normal', function () {
-							curObj.parent().closest( '.moderation-item-wrp' ).remove();
-						} );
+					if (true===response.success) {
+						curObj.parent().closest('.moderation-item-wrp').fadeOut('normal', function () {
+							curObj.parent().closest('.moderation-item-wrp').remove();
+						});
 					} else {
 						$(event.currentTarget).find('.bb-icon-loader').remove();
-						alert( result.message );
+						var msg = '';
+						if (response.data.message.errors.bp_moderation_missing_data) {
+							msg = response.data.message.errors.bp_moderation_missing_data;
+						} else if (response.data.message.errors.bp_moderation_not_exit) {
+							msg = response.data.message.errors.bp_moderation_not_exit;
+						} else if (response.data.message.errors.bp_rest_invalid_id) {
+							msg = response.data.message.errors.bp_rest_invalid_id;
+						} else if (response.data.message.errors.bp_moderation_block_error) {
+							msg = response.data.message.errors.bp_moderation_block_error;
+						}
+						alert(msg);
 					}
 				} );
 			} );

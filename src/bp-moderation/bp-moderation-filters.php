@@ -294,16 +294,19 @@ function bp_moderation_unblock_user() {
 
 	if ( empty( $item_id ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
 	if ( ! bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Moderation reported not found.', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
 	$moderation = new BP_Moderation( $item_id, BP_Moderation_Members::$moderation_type );
 
 	if ( empty( $moderation ) || is_wp_error( $moderation ) || true === $moderation->hide_sitewide ) {
 		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you can not unblock suspended member.', 'buddypress' ) );
+		wp_send_json_error( $response );
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-unblock-user' ) && ! is_wp_error( $response['message'] ) ) {
@@ -322,9 +325,10 @@ function bp_moderation_unblock_user() {
 
 	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_block_error', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
-	echo wp_json_encode( $response );
+	wp_send_json_success( $response );
 	exit();
 }
 
