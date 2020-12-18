@@ -313,6 +313,14 @@ function bp_moderation_content_actions_request() {
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+
+	// Check the current has access to report the item ot not.
+	$user_can = bp_moderation_user_can_moderate( $item_id, $item_type );
+	if ( false === (bool) $user_can ) {
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-hide-unhide-moderation' ) && ! is_wp_error( $response['message'] ) ) {
@@ -325,7 +333,7 @@ function bp_moderation_content_actions_request() {
 			);
 			if ( 1 === $moderation->hide_sitewide ) {
 				$response['success'] = true;
-				$response['message'] = 'user' === $item_type ? esc_html__( 'Member has been successfully suspended.', 'buddyboss' ) : esc_html__( 'Content has been successfully hidden.', 'buddyboss' );
+				$response['message'] = esc_html__( 'Content has been successfully hidden.', 'buddyboss' );
 			}
 		} else {
 			$moderation = bp_moderation_unhide(
@@ -336,16 +344,17 @@ function bp_moderation_content_actions_request() {
 			);
 			if ( 0 === $moderation->hide_sitewide ) {
 				$response['success'] = true;
-				$response['message'] = 'user' === $item_type ? esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' ) : esc_html__( 'Content has been successfully unhidden.', 'buddyboss' );
+				$response['message'] = esc_html__( 'Content has been successfully unhidden.', 'buddyboss' );
 			}
 		}
 	}
 
 	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_content_actions_request', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
-	echo wp_json_encode( $response );
+	wp_send_json_success( $response );
 	exit();
 }
 
@@ -370,6 +379,14 @@ function bp_moderation_user_actions_request() {
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+
+	// Check the current has access to report the item ot not.
+	$user_can = bp_moderation_user_can_moderate( $item_id, $item_type );
+	if ( false === (bool) $user_can ) {
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-hide-unhide-moderation' ) && ! is_wp_error( $response['message'] ) ) {
@@ -387,9 +404,10 @@ function bp_moderation_user_actions_request() {
 
 	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
-	echo wp_json_encode( $response );
+	wp_send_json_success( $response );
 	exit();
 }
 
