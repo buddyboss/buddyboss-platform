@@ -204,10 +204,6 @@ window.bp = window.bp || {};
 
 			$('#bp-media-uploader').on('click', '.bp-media-upload-tab', this.changeUploadModalTab.bind(this));
 
-			//Video Album
-			bpNouveau.on('click', '#bb-create-video-album', this.openCreateVideoAlbumModal.bind(this));
-
-
 			// Fetch Media.
 			$('.bp-nouveau [data-bp-list="media"]').on('click', 'li.load-more', this.injectMedias.bind(this));
 			$('.bp-nouveau #albums-dir-list').on('click', 'li.load-more', this.appendAlbums.bind(this));
@@ -3995,13 +3991,6 @@ window.bp = window.bp || {};
 
 			this.openUploader(event);
 			$('#bp-media-create-album').show();
-		},
-
-		openCreateVideoAlbumModal: function (event) {
-			event.preventDefault();
-
-			this.openUploader(event);
-			$('#bp-video-create-album').show();
 		},
 
 		openCreateFolderModal: function (event) {
