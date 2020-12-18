@@ -52,6 +52,10 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
+		// modify in group photos count.
+		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
 		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
 	}
