@@ -114,6 +114,11 @@ window.bp = window.bp || {};
 					type: type,
 					nonce: nonce,
 				};
+
+				if (!curObj.parent().closest('.moderation').find('.bp-feedback').hasClass('is_hidden')) {
+					curObj.parent().closest('.moderation').find('.bp-feedback').addClass('is_hidden');
+				}
+
 				$.post( ajaxurl, data, function ( response ) {
 					if (true===response.success) {
 						curObj.parent().closest('.moderation-item-wrp').fadeOut('normal', function () {
@@ -131,7 +136,8 @@ window.bp = window.bp || {};
 						} else if (response.data.message.errors.bp_moderation_block_error) {
 							msg = response.data.message.errors.bp_moderation_block_error;
 						}
-						alert(msg);
+						curObj.parent().closest('.moderation').find('.bp-feedback').removeClass('is_hidden');
+						curObj.parent().closest('.moderation').find('.bp-feedback p').html(msg);
 					}
 				} );
 			} );
