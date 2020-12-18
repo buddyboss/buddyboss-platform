@@ -582,8 +582,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function get_the_author_name( $value, $user_id ) {
 
-		$username_visible = filter_input( INPUT_GET, 'username_visible', FILTER_SANITIZE_NUMBER_INT );
-		if ( ! empty( $username_visible ) || (  bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
 			return $value;
 		}
 
