@@ -582,6 +582,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function get_the_author_name( $value, $user_id ) {
 
+		$username_visible = filter_input( INPUT_GET, 'username_visible', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! empty( $username_visible ) || (  bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
+			return $value;
+		}
+
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
 			return esc_html__( 'Blocked User', 'buddyboss' );
 		}
