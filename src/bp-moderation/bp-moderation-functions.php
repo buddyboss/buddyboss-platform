@@ -865,7 +865,7 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 		$content_type = BP_Moderation_Media::$moderation_type;
 
 		// Check for message type and content type as user.
-	} elseif ( BP_Moderation_Message::$moderation_type ) {
+	} elseif ( BP_Moderation_Message::$moderation_type === $content_type ) {
 		return bp_is_moderation_member_blocking_enable(0);
 	}
 
