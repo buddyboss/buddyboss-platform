@@ -21,9 +21,9 @@ $admins            = array_map( 'intval', get_users(
 		<?php
 		/* translators: accessibility text */
 		if ( $is_content_screen ) {
-			printf( esc_html__( 'View Reported Content', 'buddyboss' ) );
+			printf( esc_html__( 'Reported Content', 'buddyboss' ) );
 		} else {
-			printf( esc_html__( 'View Blocked Member', 'buddyboss' ) );
+			printf( esc_html__( 'Blocked Member', 'buddyboss' ) );
 		}
 		?>
 	</h1>
