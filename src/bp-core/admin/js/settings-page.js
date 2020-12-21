@@ -1162,7 +1162,7 @@
 			//Moderation Reporting Block
 			$( document ).on( 'change', '#bp_moderation_settings_reporting .bpm_reporting_content_content_label > input', function () {
 				if ( $( this ).prop( 'checked' ) ) {
-					$( this ).parent().next( 'label' ).removeClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).prop( 'checked', 'checked' ).removeProp( 'disabled' );
+					$( this ).parent().next( 'label' ).removeClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).prop( 'checked', 'checked' ).prop('disabled', false);
 				} else {
 					$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).prop( 'disabled', 'disabled' );
 				}
