@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Suspend Member Classes
  *
- * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -73,9 +73,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Suspend User
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int $user_id user id.
 	 *
-	 * @since BuddyBoss 2.0.0
 	 */
 	public static function suspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
@@ -108,9 +109,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Un-suspend User
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int $user_id user id.
 	 *
-	 * @since BuddyBoss 2.0.0
 	 */
 	public static function unsuspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
@@ -599,13 +601,15 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyPress 2.9.0
 	 *
-	 * @param  string $retval      The URL of the avatar.
-	 * @param  mixed  $id_or_email The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
+	 * @param string $retval       The URL of the avatar.
+	 * @param mixed  $id_or_email  The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
 	 *                             user email, WP_User object, WP_Post object, or WP_Comment object.
-	 * @param  array  $args        Arguments passed to get_avatar_data(), after processing.
+	 * @param array  $args         Arguments passed to get_avatar_data(), after processing.
+	 *
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
+		$user = false;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {

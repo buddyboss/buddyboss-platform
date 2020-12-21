@@ -238,6 +238,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
+		$user = false;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
