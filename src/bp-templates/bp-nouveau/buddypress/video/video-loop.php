@@ -11,8 +11,7 @@ bp_nouveau_before_loop();
 
 if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
 
-	$paged_page = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
-	if ( empty( $paged_page ) || 1 === $paged_page ) : ?>
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 		<ul class="video-list item-list bp-list bb-video-list grid">
 		<?php
 	endif;
@@ -32,7 +31,7 @@ if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
 		<?php
 	endif;
 
-	if ( empty( $paged_page ) || 1 === $paged_page ) :
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
 		?>
 		</ul>
 		<?php
