@@ -93,9 +93,9 @@ class BP_Core_Suspend {
 			unset( $args['action'] );
 		}
 
-		$member = false;
+		$members = false;
 		if ( ! empty( $args['blocked_user'] ) ) {
-			$member = $args['blocked_user'];
+			$members = $args['blocked_user'];
 			unset( $args['blocked_user'] );
 		}
 
@@ -113,13 +113,16 @@ class BP_Core_Suspend {
 			$wpdb->insert( $table_name, $args ); // phpcs:ignore
 		}
 
-		if ( ! empty( $member ) && empty( $action_suspend ) ) {
-			self::add_suspend_details(
-				array(
-					'suspend_id' => ! empty( $recode ) ? $recode->id : $wpdb->insert_id,
-					'user_id'    => $member,
-				)
-			);
+		if ( ! empty( $members ) && empty( $action_suspend ) ) {
+			$members = (array) $members;
+			foreach ( $members as $member ) {
+				self::add_suspend_details(
+					array(
+						'suspend_id' => ! empty( $recode ) ? $recode->id : $wpdb->insert_id,
+						'user_id'    => $member,
+					)
+				);
+			}
 		}
 
 		return ! empty( $recode ) ? $recode->id : $wpdb->insert_id;

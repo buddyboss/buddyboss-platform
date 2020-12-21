@@ -195,8 +195,9 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		$is_group_block = true;
 		if ( ! empty( $args['blocked_user'] ) ) {
-			$blocked_user = $args['blocked_user'];
-			$g_admins     = groups_get_group_admins( $group_id );
+			$blocked_user         = $args['blocked_user'];
+			$args['blocked_user'] = (array) $args['blocked_user'];
+			$g_admins             = groups_get_group_admins( $group_id );
 
 			// if more then one admin for group then check all blocked/suspended.
 			if ( 1 < count( $g_admins ) ) {
@@ -207,9 +208,13 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 						$is_group_block = false;
 					}
 
+					if ( bp_moderation_is_user_blocked( $admin_id ) ) {
+						$args['blocked_user'][] = $admin_id;
+					}
+
 					// if any one organiser of group is not suspend then group should not be hide by suspend user.
 					if ( $blocked_user !== $admin_id && ! bp_moderation_is_user_suspended( $admin_id ) ) {
-						if ( isset( $args['user_suspended'] ) ){
+						if ( isset( $args['user_suspended'] ) ) {
 							$args['user_suspended'] = false;
 						}
 					}
