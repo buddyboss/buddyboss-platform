@@ -2148,3 +2148,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
 .row-actions .suspend a:hover {
   color: #dc3232;
 }
+
+.users tr.suspended-user {
+  background-color: #f5dada;
+}
