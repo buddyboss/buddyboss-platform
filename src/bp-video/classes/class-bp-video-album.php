@@ -461,8 +461,7 @@ class BP_Video_Album {
 	 * @param array $album_ids Array of video IDs.
 	 *
 	 * @return array
-	 *@since BuddyBoss 1.6.0
-	 *
+	 * @since BuddyBoss 1.6.0
 	 */
 	public static function get_album_data( $album_ids = array() ) {
 		global $wpdb;

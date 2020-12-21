@@ -2,9 +2,12 @@
 /**
  * BuddyBoss Video templates
  *
+ * @package BuddyBoss\Core
+ *
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
 ?>
 
 	<?php bp_nouveau_before_video_directory_content(); ?>

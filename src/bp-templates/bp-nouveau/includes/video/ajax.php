@@ -2,6 +2,7 @@
 /**
  * Video Ajax functions
  *
+ * @package BuddyBoss\Core
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
@@ -110,8 +111,6 @@ add_action(
  * Load the template loop for the albums object.
  *
  * @since BuddyBoss 1.0.0
- *
- * @return string Template loop for the albums object
  */
 function bp_nouveau_ajax_albums_loader() {
 	$response = array(
@@ -126,7 +125,7 @@ function bp_nouveau_ajax_albums_loader() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -169,8 +168,6 @@ function bp_nouveau_ajax_albums_loader() {
  * Upload a video via a POST request.
  *
  * @since BuddyBoss 1.0.0
- *
- * @return string HTML
  */
 function bp_nouveau_ajax_video_upload() {
 	$response = array(
@@ -210,8 +207,6 @@ function bp_nouveau_ajax_video_upload() {
  * Save video
  *
  * @since BuddyBoss 1.0.0
- *
- * @return string HTML
  */
 function bp_nouveau_ajax_video_save() {
 	$response = array(
@@ -226,7 +221,7 @@ function bp_nouveau_ajax_video_save() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -272,8 +267,6 @@ function bp_nouveau_ajax_video_save() {
  * Delete video
  *
  * @since BuddyBoss 1.0.0
- *
- * @return string HTML
  */
 function bp_nouveau_ajax_video_delete() {
 	$response = array(
@@ -288,7 +281,7 @@ function bp_nouveau_ajax_video_delete() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -313,7 +306,7 @@ function bp_nouveau_ajax_video_delete() {
 
 		if ( bp_video_user_can_delete( $video_id ) ) {
 
-			// delete video
+			// delete video.
 			if ( bp_video_delete( array( 'id' => $video_id ) ) ) {
 				$video_ids[] = $video_id;
 			}
@@ -339,8 +332,6 @@ function bp_nouveau_ajax_video_delete() {
  * Move video to album
  *
  * @since BuddyBoss 1.0.0
- *
- * @return string HTML
  */
 function bp_nouveau_ajax_video_move_to_album() {
 	$response = array(
@@ -439,8 +430,6 @@ function bp_nouveau_ajax_video_move_to_album() {
  * Save album
  *
  * @since BuddyBoss 1.0.0
- *
- * @return string HTML
  */
 function bp_nouveau_ajax_video_album_save() {
 	$response = array(
@@ -455,7 +444,7 @@ function bp_nouveau_ajax_video_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -519,12 +508,12 @@ function bp_nouveau_ajax_video_album_save() {
 	$videos = filter_input( INPUT_POST, 'videos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( ! empty( $videos ) ) {
-		// set album id for video
+		// set album id for video.
 		foreach ( $videos as $key => $video ) {
 			$videos[ $key ]['album_id'] = $album_id;
 		}
 
-		// save all video uploaded
+		// save all video uploaded.
 		bp_video_add_handler( $videos, $privacy );
 	}
 
@@ -560,7 +549,7 @@ function bp_nouveau_ajax_video_album_delete() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -590,7 +579,7 @@ function bp_nouveau_ajax_video_album_delete() {
 		wp_send_json_error( $response );
 	}
 
-	// delete album
+	// delete album.
 	$album_id = bp_video_album_delete( array( 'id' => $album_id ) );
 
 	if ( ! $album_id ) {
@@ -615,8 +604,6 @@ function bp_nouveau_ajax_video_album_delete() {
  * Get activity for the video
  *
  * @since BuddyBoss 1.0.0
- *
- * @return string HTML
  */
 function bp_nouveau_ajax_video_get_activity() {
 	$response = array(
@@ -626,7 +613,7 @@ function bp_nouveau_ajax_video_get_activity() {
 		),
 	);
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -646,10 +633,10 @@ function bp_nouveau_ajax_video_get_activity() {
 	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 	add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
 
-	$video_data = [];
+	$video_data = array();
 	if ( ! empty( $video_id ) ) {
 		$args = array(
-			'include'     => $video_id
+			'include' => $video_id,
 		);
 		ob_start();
 		if ( bp_has_video( $args ) ) {
@@ -703,8 +690,8 @@ function bp_nouveau_ajax_video_get_activity() {
 
 	wp_send_json_success(
 		array(
-			'activity' => $activity,
-			'video_data' => $video_data
+			'activity'   => $activity,
+			'video_data' => $video_data,
 		)
 	);
 }
@@ -722,7 +709,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 		),
 	);
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -742,7 +729,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 		wp_send_json_error( $response );
 	}
 
-	// delete attachment with its meta
+	// delete attachment with its meta.
 	$deleted = wp_delete_attachment( $id, true );
 
 	if ( ! $deleted ) {
@@ -765,7 +752,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 		),
 	);
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -796,7 +783,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! in_array( $privacy, array_keys( bp_video_get_visibility_levels() ) ) ) {
+	if ( ! in_array( $privacy, array_keys( bp_video_get_visibility_levels() ), true ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Privacy option is not valid.', 'buddyboss' )
@@ -865,8 +852,14 @@ function bp_nouveau_ajax_video_description_save() {
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_video_tabs', 10, 2 );
+
 /**
  * Object template results video tabs.
+ *
+ * @param string $results data array.
+ * @param string $object scope name.
+ *
+ * @return mixed
  *
  * @since BuddyBoss 1.0.0
  */
@@ -900,7 +893,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
 /**
  * Change the querystring based on caller of the albums video query
  *
- * @param $querystring
+ * @param string $querystring query string of query.
  *
  * @return string
  */
@@ -975,12 +968,12 @@ function bp_nouveau_ajax_video_get_video_description() {
 		<li class="activity activity_update activity-item mini ">
 			<div class="bp-activity-head">
 				<div class="activity-avatar item-avatar">
-					<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
+					<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo wp_kses_post( $avatar ); ?></a>
 				</div>
 
 				<div class="activity-header">
-					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $display_name; ?></a> <?php echo __( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
-					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
+					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo wp_kses( $time_since ); ?></a></p>
 				</div>
 			</div>
 			<div class="activity-video-description">
@@ -990,16 +983,16 @@ function bp_nouveau_ajax_video_get_video_description() {
 					?>
 					<a class="bp-add-video-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 						<span class="bb-icon-edit-thin"></span>
-						<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-						<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+						<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+						<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
 
 					<div class="bp-edit-video-activity-description" style="display: none;">
 						<div class="innerWrap">
-							<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
+							<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo wp_kses_post( $content ); ?></textarea>
 						</div>
 						<div class="in-profile description-new-submit">
-							<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+							<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
 							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
 							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 						</div>
@@ -1015,7 +1008,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 					if ( $download_url ) {
 						?>
 						<a class="download-video" href="<?php echo esc_url( $download_url ); ?>">
-							<?php _e( 'Download', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php
 					}
@@ -1035,6 +1028,11 @@ function bp_nouveau_ajax_video_get_video_description() {
 	);
 }
 
+/**
+ * Get the album vide based on the parent child.
+ *
+ * @since BuddyBoss 1.5.7
+ */
 function bp_nouveau_ajax_video_get_album_view() {
 
 	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );

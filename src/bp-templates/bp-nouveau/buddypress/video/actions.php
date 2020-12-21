@@ -2,6 +2,8 @@
 /**
  * BuddyBoss - Video Actions
  *
+ * @package BuddyBoss\Core
+ *
  * @since BuddyBoss 1.0.0
  */
 
@@ -9,8 +11,8 @@ if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_g
 
 	<header class="bb-member-media-header bb-videos-actions">
 		<div class="bb-media-meta bb-videos-meta">
-			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-video" href="#"><i class="bb-icon-trash-small"></i></a>
-			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Select All', 'buddyboss' ); ?>" class="bb-select bp-tooltip" id="bb-select-deselect-all-video" href="#"><i class="bb-icon-check"></i></a>
+			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-video" href="#"><i class="bb-icon-trash-small"></i></a>
+			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select All', 'buddyboss' ); ?>" class="bb-select bp-tooltip" id="bb-select-deselect-all-video" href="#"><i class="bb-icon-check"></i></a>
 		</div>
 	</header>
 

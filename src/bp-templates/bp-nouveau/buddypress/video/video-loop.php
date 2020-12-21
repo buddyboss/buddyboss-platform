@@ -2,13 +2,17 @@
 /**
  * BuddyBoss - Video Loop
  *
+ * @package BuddyBoss\Core
+ *
  * @since BuddyBoss 1.0.0
  */
 
 bp_nouveau_before_loop();
 
 if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+
+	$paged_page = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+	if ( empty( $paged_page ) || 1 === $paged_page ) : ?>
 		<ul class="video-list item-list bp-list bb-video-list grid">
 		<?php
 	endif;
@@ -20,14 +24,16 @@ if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
 
 	endwhile;
 
-	if ( bp_video_has_more_items() ) : ?>
+	if ( bp_video_has_more_items() ) :
+		?>
 		<li class="load-more">
 			<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 		</li>
-	<?php
+		<?php
 	endif;
 
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+	if ( empty( $paged_page ) || 1 === $paged_page ) :
+		?>
 		</ul>
 		<?php
 	endif;
