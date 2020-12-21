@@ -120,7 +120,7 @@ function bp_moderation_content_report() {
 
 	if (
 		( 'other' === $category && empty( $item_note ) ) ||
-		( 'other' !== $category && ! in_array( $category, $reports_terms, true ) )
+		( 'other' !== $category && ! in_array( (int) $category, $reports_terms, true ) )
 	) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_missing_data',
