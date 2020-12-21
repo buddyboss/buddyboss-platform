@@ -94,7 +94,7 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $item_id Content item id.
+	 * @param int|array $item_id Content item id.
 	 */
 	abstract public static function get_content_owner_id( $item_id );
 

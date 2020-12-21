@@ -335,13 +335,13 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	protected function get_related_contents( $topic_id, $args = array() ) {
 		$related_contents = array();
 
+		if ( bp_is_active( 'forums' ) ) {
+			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_topic_reply_replies( $topic_id );
+		}
+
 		if ( bp_is_active( 'activity' ) ) {
 			$activity_id                                    = get_post_meta( $topic_id, '_bbp_activity_id', true );
 			$related_contents[ BP_Suspend_Activity::$type ] = array( $activity_id );
-		}
-
-		if ( bp_is_active( 'forums' ) ) {
-			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_topic_reply_replies( $topic_id );
 		}
 
 		if ( bp_is_active( 'document' ) ) {

@@ -301,12 +301,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	protected function get_related_contents( $forum_id, $args = array() ) {
 		$related_contents = array();
 
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $forum_id );
-		}
-
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_forum_topics_ids( $forum_id );
+		}
+
+		if ( bp_is_active( 'activity' ) ) {
+			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $forum_id );
 		}
 
 		return $related_contents;

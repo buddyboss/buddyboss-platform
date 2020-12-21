@@ -490,14 +490,6 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$action_label      = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
 		$user_id           = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
 		$class             = ( BP_Moderation_Members::$moderation_type === $item['item_type'] ) ? 'bp-hide-user' : 'bp-hide-request';
-		$user_action_type  = 'hide';
-		$user_action_label = esc_html__( 'Suspend', 'buddyboss' );
-		$user_data         = BP_Moderation::get_specific_moderation( $user_id, 'user' );
-
-		if ( ! empty( $user_data ) ) {
-			$user_action_type  = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
-			$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
-		}
 
 		$view_url               = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
 		$actions['view_report'] = sprintf(
@@ -528,7 +520,17 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			esc_html( $action_label )
 		);
 
-		if ( ! in_array( $user_id, $admins, true ) ) {
+		if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
+
+			$user_action_type  = 'suspend';
+			$user_action_label = esc_html__( 'Suspend', 'buddyboss' );
+			$user_data         = BP_Moderation::get_specific_moderation( $user_id, 'user' );
+
+			if ( ! empty( $user_data ) ) {
+				$user_action_type  = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
+				$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
+			}
+
 			$actions['suspend'] = sprintf(
 				'<a href="javascript:void(0);" class="bp-block-user delete" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>',
 				esc_attr( $user_id ),
@@ -572,14 +574,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		$user_action_type = ( 1 === (int) $item['hide_sitewide'] ) ? 'unsuspend' : 'suspend';
 		$action_label     = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
-		$user_id          = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
 
 		// Build actions URL.
 		$view_url = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
 
 		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Reports', 'buddyboss' ) );
-		$actions['suspend']     = sprintf( '<a href="" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $user_id ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
-		printf( '%s <strong>%s</strong> %s', get_avatar( $user_id, '32' ), wp_kses_post( bp_core_get_userlink( $user_id ) ), wp_kses_post( $this->row_actions( $actions ) ) );
+		$actions['suspend']     = sprintf( '<a href="" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $item['item_id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
+		printf( '%s <strong>%s</strong> %s', get_avatar( $item['item_id'], '32' ), wp_kses_post( bp_core_get_userlink( $item['item_id'] ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 	}
 
 	/**
@@ -590,8 +591,14 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_content_owner( $item = array() ) {
-		$user_id = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
-		printf( '%s <strong>%s</strong>', get_avatar( $user_id, '32' ), wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+		$user_ids = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
+		if ( ! is_array( $user_ids ) ){
+			$user_ids = array( $user_ids );
+		}
+
+		foreach ( $user_ids as $user_id ){
+			printf( '%s <strong>%s</strong> <br/>', get_avatar( $user_id, '32' ), wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+		}
 	}
 
 	/**
