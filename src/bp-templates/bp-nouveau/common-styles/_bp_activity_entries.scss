@@ -804,6 +804,7 @@ span.dashicons.dashicons-admin-file:before {
 	content: "\e96a";
 }
 
+.activity-list .activity-item .activity-content.video-activity-wrap,
 .activity-list .activity-item .activity-content.document-activity {
 	position: relative;
 
@@ -1136,6 +1137,10 @@ span.dashicons.dashicons-admin-file:before {
 
 }
 
+#video-stream.video .video-list li:hover {
+	z-index: 11;
+}
+
 #video-stream.video .bb-item-thumb,
 .bb-activity-video-wrap .bb-activity-video-elem {
 	position: relative;
@@ -1275,9 +1280,13 @@ span.dashicons.dashicons-admin-file:before {
 						}
 					}
 
-					&.delete_file a:before {
+					&.delete_video a:before {
 						content: "\e937";
 						font-size: 15px;
+					}
+
+					&.edit_video a:before {
+						content: "\e80c";
 					}
 
 				}

@@ -27,13 +27,13 @@ $height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $v
 				<li class="move_video">
 					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-move">Move</a>
 				</li>
-				<li class="delete_file">
+				<li class="delete_video">
 					<a class="video-file-delete" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-item-from="media" data-item-id="567" data-type="video" href="#">Delete</a>
 				</li>
 			</ul>
 		</div>
 	</div>
-	<a href="#"
+        <!--<a href="#"
 	   class="bb-open-video-theatre entry-video"
 	   data-id="<?php bp_video_id(); ?>"
 	   data-attachment-id="<?php bp_video_attachment_id(); ?>"
@@ -51,5 +51,8 @@ $height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $v
 			<span class="bb-videos-length"><span><strong>+<?php echo $video_template->video_count - 5; ?></strong> <span><?php _e( 'More Videos', 'buddyboss' ); ?></span></span></span>
 			<?php
 		} ?>
-	</a>
+	</a>-->
+	<video id="video-<?php bp_video_id(); ?>" class="video-js" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }'>
+		<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
+	</video>
 </div>

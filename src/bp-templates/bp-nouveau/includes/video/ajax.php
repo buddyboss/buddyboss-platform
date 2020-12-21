@@ -637,6 +637,7 @@ function bp_nouveau_ajax_video_get_activity() {
 
 	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$video_id = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
 
 	// check activity is video or not.
 	$video_activity = bp_activity_get_meta( $post_id, 'bp_video_activity', true );
@@ -645,6 +646,21 @@ function bp_nouveau_ajax_video_get_activity() {
 	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 	add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
 
+	$video_data = [];
+	if ( ! empty( $video_id ) ) {
+		$args = array(
+			'include'     => $video_id
+		);
+		ob_start();
+		if ( bp_has_video( $args ) ) {
+			while ( bp_video() ) {
+				bp_the_video();
+				bp_get_template_part( 'video/single-video' );
+			}
+		}
+		$video_data = ob_get_contents();
+		ob_end_clean();
+	}
 	if ( ! empty( $video_activity ) ) {
 		$args = array(
 			'include'     => $post_id,
@@ -688,6 +704,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	wp_send_json_success(
 		array(
 			'activity' => $activity,
+			'video_data' => $video_data
 		)
 	);
 }

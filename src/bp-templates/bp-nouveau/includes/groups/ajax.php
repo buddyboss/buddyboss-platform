@@ -1033,6 +1033,10 @@ function bp_nouveau_ajax_groups_send_message() {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
 	}
 
+	if ( isset( $_POST['video'] ) && '' !== $_POST['video'] ) {
+		$_POST['video'] = json_decode( wp_kses_stripslashes( $_POST['video'] ), true );
+	}
+
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	/**

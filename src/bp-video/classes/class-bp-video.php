@@ -609,13 +609,36 @@ class BP_Video {
 				$video->menu_order    = (int) $video->menu_order;
 			}
 
-			// fetch attachment data
-			$attachment_data                 = new stdClass();
-			$attachment_data->full           = wp_get_attachment_image_url( $video->attachment_id, 'full' );
-			$attachment_data->thumb          = wp_get_attachment_image_url( $video->attachment_id, 'bp-video-thumbnail' );
-			$attachment_data->activity_thumb = wp_get_attachment_image_url( $video->attachment_id, 'bp-activity-video-thumbnail' );
-			$attachment_data->meta           = wp_get_attachment_metadata( $video->attachment_id );
-			$video->attachment_data          = $attachment_data;
+			// fetch video thumbnail attachment data.
+			$attachment_data = new stdClass();
+
+			$attachment_data->full           = '';
+			$attachment_data->thumb          = '';
+			$attachment_data->activity_thumb = '';
+
+			$get_video_thumb_ids = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
+			$get_video_thumb_id  = get_post_meta( $video->attachment_id, 'video_preview_thumbnails_id', true );
+
+			$attachment_data->meta = (object) wp_get_attachment_metadata( $video->attachment_id );
+
+			if ( $get_video_thumb_id ) {
+				$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
+				$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
+				$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
+
+			} elseif ( $get_video_thumb_ids ) {
+				$get_video_thumb_ids_arr = explode( ',', $get_video_thumb_ids );
+				if ( $get_video_thumb_ids_arr ) {
+					$get_video_thumb_id              = current( $get_video_thumb_ids_arr );
+					$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
+					$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
+					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
+				}
+			}
+
+			$video->attachment_data = $attachment_data;
+
+			$video->video_link = wp_get_attachment_url( $video->attachment_id );
 
 			$videos[] = $video;
 		}

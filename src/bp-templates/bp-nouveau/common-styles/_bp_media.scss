@@ -169,7 +169,6 @@
 
 }
 
-
 .bb-media-length-4 {
 
 	.act-grid-1-2 {
@@ -603,6 +602,7 @@
 	}
 
 	&.selected,
+	&.is-visible,
 	&:hover {
 
 		.bb-item-cover-wrap:after,
@@ -3777,6 +3777,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
+#bp-video-uploader .modal-container,
 .modal-container.has-folderlocationUI {
 
 	.bb-model-footer a {
