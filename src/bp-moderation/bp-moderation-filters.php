@@ -110,7 +110,18 @@ function bp_moderation_content_report() {
 		wp_send_json_error( $response );
 	}
 
-	if ( 'other' === $category && empty( $item_note ) ) {
+	$reports_terms   = get_terms(
+		'bpm_category',
+		array(
+			'hide_empty' => false,
+			'fields'     => 'ids',
+		)
+	);
+
+	if (
+		( 'other' === $category && empty( $item_note ) ) ||
+		( 'other' !== $category && ! in_array( $category, $reports_terms, true ) )
+	) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_missing_data',
 			esc_html__( 'Please specify reason to report this content.', 'buddyboss' )
