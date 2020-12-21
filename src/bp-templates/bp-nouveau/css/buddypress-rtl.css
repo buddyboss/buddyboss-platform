@@ -12870,8 +12870,17 @@ body.login .login-popup .mfp-close:hover {
   overflow: auto;
 }
 
-.modal-container#boss-media-create-album-popup .bb-model-header {
+.modal-container#boss-media-create-album-popup .bb-model-header, .modal-container#boss-video-create-album-popup .bb-model-header {
   margin-bottom: 20px;
+}
+
+.modal-container .bp-video-upload-tab.selected {
+  color: #122b46;
+}
+
+.bp-media-upload-tab-content,
+.bp-video-upload-tab-content {
+  padding-top: 30px;
 }
 
 #bp-media-uploader .popup-on-fly-create-folder-title.error + .error-box,
@@ -16827,7 +16836,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .directory.media .media-options,
-.directory.document .document-options {
+.directory.document .document-options,
+.directory.video .video-options {
   position: absolute;
   left: 0;
   top: 0;
@@ -16836,8 +16846,13 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-video-search,
 .directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
-.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search {
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-video-search,
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form #dir-video-search {
   border: 0;
   background-color: transparent;
   padding-right: 32px;
@@ -16846,54 +16861,64 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .directory.media .media-options a.button > i,
-.directory.document .document-options a.button > i {
+.directory.document .document-options a.button > i,
+.directory.video .video-options a.button > i {
   margin-left: 6px;
 }
 
 .directory.media .media-options > *,
-.directory.document .document-options > * {
+.directory.document .document-options > *,
+.directory.video .video-options > * {
   margin-right: 6px;
 }
 
 @media screen and (max-width: 1024px) {
   .directory.media .media-options,
-  .directory.document .document-options {
+  .directory.document .document-options,
+  .directory.video .video-options {
     position: static;
     margin: 0;
   }
   .directory.media .media-options > *,
-  .directory.document .document-options > * {
+  .directory.document .document-options > *,
+  .directory.video .video-options > * {
     margin-bottom: 15px;
     width: 100% !important;
   }
   .directory.media .media-options .subnav-filters .subnav-search,
-  .directory.document .document-options .subnav-filters .subnav-search {
+  .directory.document .document-options .subnav-filters .subnav-search,
+  .directory.video .video-options .subnav-filters .subnav-search {
     width: 100%;
   }
   .directory.media .media-options .subnav-filters .subnav-search .bp-search,
-  .directory.document .document-options .subnav-filters .subnav-search .bp-search {
+  .directory.document .document-options .subnav-filters .subnav-search .bp-search,
+  .directory.video .video-options .subnav-filters .subnav-search .bp-search {
     width: 100%;
   }
   .directory.media .media-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form,
-  .directory.document .document-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form {
+  .directory.document .document-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form,
+  .directory.video .video-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form {
     width: 100%;
   }
 }
 
 .directory.media .media-options .subnav-filters,
-.directory.document .document-options .subnav-filters {
+.directory.document .document-options .subnav-filters,
+.directory.video .video-options .subnav-filters {
   display: inline-block;
   vertical-align: middle;
 }
 
 .directory.media .media-options .subnav-filters .subnav-search,
-.directory.document .document-options .subnav-filters .subnav-search {
+.directory.document .document-options .subnav-filters .subnav-search,
+.directory.video .video-options .subnav-filters .subnav-search {
   margin: 0;
   position: initial;
 }
 
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form,
-.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form {
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form,
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form {
   background-color: #fff;
   border: 1px solid #dedfe2;
   box-shadow: none;
@@ -16903,7 +16928,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"],
-.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"] {
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"],
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"] {
   position: absolute;
   opacity: 0;
   visibility: hidden;

@@ -5663,6 +5663,10 @@ window.bp = window.bp || {};
 				$( event.currentTarget ).closest( '.bb-photo-thumb' ).toggleClass( 'is-visible' ).parent().siblings().find( '.bb-photo-thumb' ).removeClass( 'is-visible' ).removeClass( 'is-visible' );
 			}
 
+			if ( $(event.currentTarget).hasClass( 'video-action_more' ) ) {
+				$(event.currentTarget).closest( '.bb-video-thumb' ).toggleClass('is-visible').parent().siblings().find('.bb-video-thumb').removeClass('is-visible');
+			}
+
 			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( !$( event.currentTarget ).hasClass( 'document-action_more' ) && !$( event.currentTarget ).hasClass( 'media-action_more' ) ) ) {
 				$( event.currentTarget ).closest( '.bb-activity-media-elem' ).removeClass( 'is-visible' );
 				$( event.currentTarget ).closest( '.bb-photo-thumb' ).removeClass( 'is-visible' );

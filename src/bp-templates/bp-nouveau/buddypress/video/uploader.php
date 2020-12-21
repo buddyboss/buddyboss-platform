@@ -9,7 +9,7 @@
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
 			<div class="modal-wrapper">
-				<div class="modal-container">
+				<div class="modal-container has-folderlocationUI">
 
 					<header class="bb-model-header">
 						<a href="#" class="bp-video-upload-tab bp-upload-tab selected" data-content="bp-video-dropzone-content" id="bp-video-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>

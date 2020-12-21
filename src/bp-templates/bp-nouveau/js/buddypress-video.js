@@ -79,6 +79,7 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
+			var bpNouveau = $('.bp-nouveau');
 
 			$( document ).on( 'click', '#bp-add-video', this.openUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
@@ -88,6 +89,11 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
 			$( document ).on( 'click', '.video-action_list .edit_video', this.editVideo.bind( this ) );
 			$( document ).on( 'click', '.video-action_list .video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
+
+			//Video Album, Video Directory
+			bpNouveau.on('click', '#bb-create-video-album', this.openCreateVideoAlbumModal.bind(this));
+			bpNouveau.on( 'click', '#bp-video-create-album-close', this.closeCreateVideoAlbumModal.bind( this ) );
+
 		},
 
 		/**
@@ -419,6 +425,8 @@ window.bp = window.bp || {};
 			this.dropzone_video = [];
 		},
 
+
+
 		toggle_video_uploader: function () {
 			var self = this;
 
@@ -604,6 +612,24 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+		},
+
+		//Video Directory
+
+		openCreateVideoAlbumModal: function (event) {
+			event.preventDefault();
+
+			this.openUploader(event);
+			$('#bp-video-create-album').show();
+		},
+
+		closeCreateVideoAlbumModal: function (event) {
+			event.preventDefault();
+
+			this.closeUploader( event );
+			$( '#bp-video-create-album' ).hide();
+			$( '#bb-album-title' ).val( '' );
 
 		},
 
