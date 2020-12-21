@@ -316,6 +316,112 @@ window.bp = window.bp || {};
 			var self = this;
 			event.preventDefault();
 
+			if ( typeof window.Dropzone !== 'undefined' && $( 'div.video-uploader-wrapper #video-uploader' ).length ) {
+
+				$( '#bp-video-uploader' ).show();
+
+				self.video_dropzone_obj = new Dropzone( 'div.video-uploader-wrapper #video-uploader', self.videoOptions );
+
+				self.video_dropzone_obj.on(
+					'sending',
+					function ( file, xhr, formData ) {
+						formData.append( 'action', 'video_upload' );
+						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+					}
+				);
+
+				self.video_dropzone_obj.on(
+					'addedfile',
+					function () {
+						setTimeout(
+							function () {
+								if ( self.video_dropzone_obj.getAcceptedFiles().length ) {
+									$( '#bp-video-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video.length, self.video_dropzone_obj.getAcceptedFiles().length ) ).show();
+								}
+							},
+							1000
+						);
+					}
+				);
+
+				self.video_dropzone_obj.on(
+					'error',
+					function ( file, response ) {
+						if ( file.accepted ) {
+							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							}
+						} else {
+							this.removeFile( file );
+						}
+					}
+				);
+
+				self.video_dropzone_obj.on(
+					'queuecomplete',
+					function () {
+						$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload );
+					}
+				);
+
+				self.video_dropzone_obj.on(
+					'processing',
+					function () {
+						$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
+					}
+				);
+
+				self.video_dropzone_obj.on(
+					'success',
+					function ( file, response ) {
+						if ( response.data.id ) {
+							file.id                  = response.id;
+							response.data.uuid       = file.upload.uuid;
+							response.data.menu_order = self.dropzone_video.length;
+							response.data.album_id   = self.video_album_id;
+							response.data.group_id   = self.video_group_id;
+							response.data.saved      = false;
+							self.dropzone_video.push( response.data );
+						} else {
+							this.removeFile( file );
+						}
+						$( '#bp-video-submit' ).show();
+						$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
+						$( '#bp-video-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video.length, self.video_dropzone_obj.getAcceptedFiles().length ) ).show();
+					}
+				);
+
+				self.video_dropzone_obj.on(
+					'removedfile',
+					function ( file ) {
+						if ( self.dropzone_video.length ) {
+							for ( var i in self.dropzone_video ) {
+								if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
+
+									if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && ! self.dropzone_video[ i ].saved ) {
+										self.removeAttachment( self.dropzone_video[ i ].id );
+									}
+
+									self.dropzone_video.splice( i, 1 );
+									break;
+								}
+							}
+						}
+						if ( ! self.video_dropzone_obj.getAcceptedFiles().length ) {
+							$( '#bp-video-uploader-modal-status-text' ).text( '' );
+							$( '#bp-video-submit' ).hide();
+						} else {
+							$( '#bp-video-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video.length, self.video_dropzone_obj.getAcceptedFiles().length ) ).show();
+						}
+					}
+				);
+			}
+		},
+
+		openAlbumUploader: function ( event ) {
+			var self = this;
+			event.preventDefault();
+
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div#video-album-uploader' ).length ) {
 
 				$( '#bp-video-uploader' ).show();
@@ -622,7 +728,7 @@ window.bp = window.bp || {};
 		openCreateVideoAlbumModal: function (event) {
 			event.preventDefault();
 
-			this.openUploader(event);
+			this.openAlbumUploader(event);
 			$('#bp-video-create-album').show();
 		},
 
