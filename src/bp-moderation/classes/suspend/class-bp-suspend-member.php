@@ -472,9 +472,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id );
 
-		if ( bp_is_active( 'groups' ) ) {
+		/*if ( bp_is_active( 'groups' ) ) {
 			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
-		}
+		}*/
 
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id );

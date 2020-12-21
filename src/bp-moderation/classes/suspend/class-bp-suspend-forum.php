@@ -221,6 +221,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		// if Group forums then return
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		if ( ! empty( $group_ids ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
