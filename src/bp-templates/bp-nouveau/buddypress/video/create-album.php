@@ -24,7 +24,7 @@
 
                     <div class="bb-field-wrap">
                         <div class="video-uploader-wrapper">
-                            <div class="dropzone" id="video-uploader"></div>
+                            <div class="dropzone" id="video-album-uploader"></div>
                         </div>
                     </div>
 
