@@ -11,7 +11,7 @@ $group_members = groups_get_group_members( $args );
 
 <div id="group-messages-container">
 
-	<?php if ( $group_members['count'] != 0 ) { ?>
+	<?php if ( 0 !== $group_members['count'] ) { ?>
 		<div class="bb-groups-messages-left">
 			<div class="bb-groups-messages-left-inner">
 				<div class="bb-panel-head">
@@ -77,7 +77,7 @@ $group_members = groups_get_group_members( $args );
 							<p></p>
 						</div>
 					</div>
-					<?php if ( $group_members['count'] != 0 ) { ?>
+					<?php if ( 0 !== $group_members['count'] ) { ?>
 					<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true">
 						<option value="all" selected="selected"><?php esc_html_e( 'All Group Members', 'buddyboss' ); ?></option>
 					</select>
@@ -135,14 +135,6 @@ $group_members = groups_get_group_members( $args );
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) : ?>
-								<div class="post-elements-buttons-item post-media document-support">
-									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
-										<span class="bb-icon bb-icon-attach"></span>
-									</a>
-								</div>
-							<?php endif; ?>
-
 							<?php
 							$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
 							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bp_is_messages_video_support_enabled() ) :
@@ -153,7 +145,13 @@ $group_members = groups_get_group_members( $args );
 									</a>
 								</div>
 							<?php endif; ?>
-
+							<?php if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) : ?>
+								<div class="post-elements-buttons-item post-media document-support">
+									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
+										<span class="bb-icon bb-icon-attach"></span>
+									</a>
+								</div>
+							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
@@ -200,8 +198,9 @@ $group_members = groups_get_group_members( $args );
 
 								if ( empty( $group_members['members'] ) ) {
 									$disabled = 'disabled';
-								} ?>
-                                <button <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" id="send_group_message_button" class="small"><?php _e( 'Send Message', 'buddyboss' ); ?></button>
+								}
+								?>
+								<button <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" id="send_group_message_button" class="small"><?php esc_html_e( 'Send Message', 'buddyboss' ); ?></button>
 							</div>
 						</div>
 					</div>
