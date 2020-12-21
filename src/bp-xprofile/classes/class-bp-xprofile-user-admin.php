@@ -133,7 +133,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				// If member is already a suspended , show a generic metabox.
 				add_meta_box(
 						'bp_xprofile_user_admin_empty_profile',
-						__( 'User marked as a suspended', 'buddyboss' ),
+						__( 'Member marked as suspended', 'buddyboss' ),
 						array( $this, 'user_admin_suspended_metabox' ),
 						$screen_id,
 						'normal',
@@ -498,7 +498,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_suspended_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php printf( __( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 

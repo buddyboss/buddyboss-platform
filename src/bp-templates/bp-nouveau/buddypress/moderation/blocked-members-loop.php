@@ -13,14 +13,10 @@ if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FI
     <thead>
     <th class="title">
 		<?php
-		esc_html_e( 'Blocked Member', 'buddyboss' );
+		esc_html_e( 'Blocked Members', 'buddyboss' );
 		?>
     </th>
-    <th class="title">
-		<?php
-		esc_html_e( 'Blocked', 'buddyboss' );
-		?>
-    </th>
+    <th class="title"></th>
     <th class="title"></th>
     </thead>
     <tbody>

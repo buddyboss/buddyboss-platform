@@ -122,7 +122,7 @@ $admins            = array_map( 'intval', get_users(
 														'<a href="%s" title="%s"> %s </a>',
 														esc_url( bp_moderation_get_permalink( $moderation_request_data->item_id, $moderation_request_data->item_type ) ),
 														esc_attr__( 'View', 'buddyboss' ),
-														esc_html__( 'View Content', 'buddyboss' )
+														esc_html__( 'Click here to View Content', 'buddyboss' )
 													)
 												);
 												?>
