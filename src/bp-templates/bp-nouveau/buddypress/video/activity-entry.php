@@ -9,8 +9,8 @@
 <?php
 global $video_template;
 
-$width  =  isset( $video_template->video->attachment_data->meta['width'] ) ? $video_template->video->attachment_data->meta['width'] : 0;
-$height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $video_template->video->attachment_data->meta['height'] : 0;
+$width  =  isset( $video_template->video->attachment_data->thumb_meta['width'] ) ? $video_template->video->attachment_data->thumb_meta['width'] : 0;
+$height =  isset( $video_template->video->attachment_data->thumb_meta['height'] ) ? $video_template->video->attachment_data->thumb_meta['height'] : 0;
 
 ?>
 
@@ -23,7 +23,7 @@ $height =  isset( $video_template->video->attachment_data->meta['height'] ) ? $v
 			<ul>
 				<li class="edit_video">
 					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-edit">Edit</a>
-				</li>    
+				</li>
 				<li class="move_video">
 					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-move">Move</a>
 				</li>
