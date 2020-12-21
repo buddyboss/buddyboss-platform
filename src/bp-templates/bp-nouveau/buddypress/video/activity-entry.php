@@ -44,4 +44,5 @@ echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) :
 	<video id="video-<?php bp_video_id(); ?>" class="video-js" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }'>
 		<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
 	</video>
+	<p class="bb-video-duration">1:45</p>
 </div>
