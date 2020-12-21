@@ -911,6 +911,8 @@ class BP_Moderation {
 
 	/**
 	 * Hide Moderation entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function hide() {
 
@@ -1082,6 +1084,8 @@ class BP_Moderation {
 	/**
 	 * Store Moderation entry
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return bool
 	 */
 	public function store() {
@@ -1123,6 +1127,8 @@ class BP_Moderation {
 
 	/**
 	 * Store Moderation report entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return false
 	 */
@@ -1228,6 +1234,8 @@ class BP_Moderation {
 
 	/**
 	 * Hide related content of report entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function hide_related_content() {
 		/**
@@ -1243,6 +1251,8 @@ class BP_Moderation {
 
 	/**
 	 * Unhide Moderation entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function unhide() {
 		$this->hide_sitewide = 0;
@@ -1364,6 +1374,8 @@ class BP_Moderation {
 	/**
 	 * Un-hide related content of report entry
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param bool $force_all Should delete all reported entry.
 	 */
 	public function unhide_related_content( $force_all = false ) {
@@ -1383,12 +1395,14 @@ class BP_Moderation {
 	/**
 	 * Delete record by moderation_id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int $moderation_id Moderation moderation_id.
 	 */
 	public static function delete_moderation_by_id( $moderation_id = 0 ) {
 		global $wpdb, $bp;
 
-		$args        = array( 'moderation_id' => $moderation_id );
+		$args = array( 'moderation_id' => $moderation_id );
 		$wpdb->delete( $bp->moderation->table_name_reports, $args ); // phpcs:ignore
 
 		self::delete_meta( $moderation_id );

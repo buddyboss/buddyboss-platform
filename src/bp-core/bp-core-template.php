@@ -2803,7 +2803,7 @@ function bp_is_user_document() {
  *
  * Eg http://example.com/members/joe/moderation/ (or a subpage thereof).
  *
- * @since BuddyPress 1.5.4
+ * @since BuddyPress 2.0.0
  *
  * @return bool True if the current page is a user's moderation page.
  */

@@ -82,7 +82,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the Member Search query.
 			 *
-			 * @since BuddyBoss 1.5.4
+			 * @since BuddyBoss 2.0.0
 			 *
 			 * @param string $join_sql JOIN clause.
 			 * @param string $uid_name User ID field name.
@@ -274,7 +274,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the member Search query.
 			 *
-             * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 2.0.0
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $uid_name         User ID field name.

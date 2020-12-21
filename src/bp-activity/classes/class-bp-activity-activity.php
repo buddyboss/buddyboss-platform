@@ -1569,7 +1569,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
 				 *
-				 * @since BuddyPress 1.5.0
+				 * @since BuddyPress 2.0.0
 				 *
 				 * @param string $from Activity Comment from query
 				 *
@@ -1579,7 +1579,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL Where query for legacy activity comment.
 				 *
-				 * @since BuddyPress 1.5.0
+				 * @since BuddyPress 2.0.0
 				 *
 				 * @param string $where Activity Comment from query
 				 *
