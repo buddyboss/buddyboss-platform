@@ -1137,6 +1137,11 @@ span.dashicons.dashicons-admin-file:before {
 							background-color: #f5f5f5;
 						}
 
+						&.reported-content {
+							opacity: 0.8 !important;
+							pointer-events: none;
+						}
+
 					}
 
 					&.privacy_file a:before {
