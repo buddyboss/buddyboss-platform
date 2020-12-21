@@ -102,10 +102,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Set up items for display in the list table.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * Handles filtering of data, sorting, pagination, and any other data
 	 * manipulation required prior to rendering.
-	 *
-	 * @since BuddyBoss 2.0.0
 	 */
 	public function prepare_items() {
 

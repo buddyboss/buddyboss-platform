@@ -154,7 +154,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up taxonomies.
 	 *
-	 * @since BuddyPress 2.6.0
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function register_taxonomies() {
 		// Group Type.

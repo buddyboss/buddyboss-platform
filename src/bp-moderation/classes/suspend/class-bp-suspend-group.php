@@ -167,6 +167,8 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Restrict Single item.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $group    Current group object.
 	 *

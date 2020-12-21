@@ -131,6 +131,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Validate the group is valid or not.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $group    Current group object.
 	 *
@@ -147,6 +149,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 	/**
 	 * Function to restrict private group report button for it's member only.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args    report button arguments.
 	 * @param int   $item_id group id.

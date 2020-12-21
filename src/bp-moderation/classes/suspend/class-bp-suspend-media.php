@@ -119,6 +119,8 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Get Media ids of blocked item [ Forums/topics/replies/activity etc ] from meta
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
 	 *

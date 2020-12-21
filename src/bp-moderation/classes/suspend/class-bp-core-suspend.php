@@ -22,6 +22,8 @@ class BP_Core_Suspend {
 
 	/**
 	 * BP_Core_Suspend constructor.
+	 *
+	 * @since   BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 		$this->load_on_bp_dependency();
