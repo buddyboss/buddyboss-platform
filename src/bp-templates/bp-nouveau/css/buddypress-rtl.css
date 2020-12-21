@@ -3265,8 +3265,8 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 13px;
 }
 
-#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.delete_video a:before,
-.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.delete_video a:before {
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.delete_file a:before,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.delete_file a:before {
   content: "\e937";
   font-size: 15px;
 }
@@ -13109,6 +13109,21 @@ body.login .login-popup .mfp-close:hover {
 .bb-item-thumb:hover .bb-action-check-wrap {
   visibility: visible;
   opacity: 1;
+}
+
+.bb-activity-video-elem .bb-video-duration,
+.bb-video-thumb .bb-video-duration {
+  font-size: 13px;
+  margin: 0;
+  background-color: #000;
+  color: #fff;
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 11;
 }
 
 .bb-action-check-wrap {
