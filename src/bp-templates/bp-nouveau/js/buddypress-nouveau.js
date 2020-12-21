@@ -1772,6 +1772,7 @@ window.bp = window.bp || {};
 						var contentType = this.currItem.el.data( 'bp-content-type' );
 						var nonce = this.currItem.el.data( 'bp-nonce' );
 						if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+							$( document ).find( '.bp-report-form-err' ).empty();
 							_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
 						}
 					}

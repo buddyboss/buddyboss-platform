@@ -221,6 +221,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		// if Group forums then return
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		if ( ! empty( $group_ids ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -301,12 +307,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	protected function get_related_contents( $forum_id, $args = array() ) {
 		$related_contents = array();
 
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $forum_id );
-		}
-
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_forum_topics_ids( $forum_id );
+		}
+
+		if ( bp_is_active( 'activity' ) ) {
+			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $forum_id );
 		}
 
 		return $related_contents;

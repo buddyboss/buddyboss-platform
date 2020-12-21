@@ -2122,6 +2122,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
   transform: translateY(-50%);
   overflow: auto;
   max-height: 90%;
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 #bp-hello-container.deactivation-popup .bp-hello-footer {
@@ -2136,4 +2138,17 @@ body .section-repair_community .settings fieldset .checkbox label code {
 #bp-hello-container.deactivation-popup .bp-hello-content {
   height: auto;
   padding: 20px 23px;
+}
+
+#bp_moderation_action td a {
+  text-decoration: none;
+}
+
+.row-actions .suspend a,
+.row-actions .suspend a:hover {
+  color: #dc3232;
+}
+
+.users tr.suspended-user {
+  background-color: #f5dada;
 }

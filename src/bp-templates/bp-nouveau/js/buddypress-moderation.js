@@ -49,6 +49,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="moderation"] .pager .md-more-container.load-more', this.injectModerations.bind( this ) );
+			$('#buddypress [data-bp-list="members"]').on('bp_ajax_request', this.bp_ajax_connection_request);
 		},
 
 		injectModerations: function ( event ) {
@@ -95,6 +96,15 @@ window.bp = window.bp || {};
 				);
 			}
 		},
+
+		bp_ajax_connection_request: function (event, data) {
+			var selector = $( '#friends-personal-li' ).find( '.count' );
+			var oldValue = selector.html();
+			if ( oldValue !== data.response.count ) {
+				selector.html( data.response.count );
+			}
+		},
+
 		unblockUser: function () {
 			$( document ).on( 'click', '.moderation-item-actions .bp-unblock-user', function ( event ) {
 

@@ -78,18 +78,18 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content owner id.
+	 * Get Content owner ids.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $group_id Group id.
 	 *
-	 * @return int
+	 * @return array
 	 */
 	public static function get_content_owner_id( $group_id ) {
-		$group = new BP_Groups_Group( $group_id );
+		$g_admins     = groups_get_group_admins( $group_id );
 
-		return ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
+		return ( ! empty( $g_admins ) ) ? wp_list_pluck( $g_admins, 'user_id' ) : 0;
 	}
 
 	/**
@@ -131,6 +131,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Validate the group is valid or not.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $group    Current group object.
 	 *
@@ -147,6 +149,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 	/**
 	 * Function to restrict private group report button for it's member only.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args    report button arguments.
 	 * @param int   $item_id group id.

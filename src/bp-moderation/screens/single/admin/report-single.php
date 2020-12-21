@@ -94,8 +94,15 @@ $admins            = array_map( 'intval', get_users(
 											</td>
 											<td>
 												<?php
-												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-												printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+												$user_ids = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+												if ( ! is_array( $user_ids ) ){
+													$user_ids = array( $user_ids );
+												}
+
+												foreach ( $user_ids as $user_id ){
+													printf( '<strong>%s</strong> <br/>', wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+
+												}
 												?>
 											</td>
 										</tr>
@@ -149,8 +156,7 @@ $admins            = array_map( 'intval', get_users(
 											</td>
 											<td>
 												<?php
-												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-												printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+												printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $moderation_request_data->item_id ) ) );
 												?>
 											</td>
 										</tr>
@@ -188,14 +194,7 @@ $admins            = array_map( 'intval', get_users(
 									<?php
 									if ( $is_content_screen ) {
 
-										$user_id          = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-										$user_action_type = 'hide';
-										$user_data        = BP_Moderation::get_specific_moderation( $user_id, BP_Moderation_Members::$moderation_type );
-										$user_action_text = esc_html__( 'Suspend Content Author', 'buddyboss' );
-										if ( ! empty( $user_data ) ) {
-											$user_action_type = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
-											$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
-										}
+										$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 										?>
 										<a href="javascript:void(0);"
 											class="button button-primary bp-hide-request single-report-btn"
@@ -209,7 +208,14 @@ $admins            = array_map( 'intval', get_users(
 											?>
 										</a>
 										<?php
-										if ( ! in_array( $user_id, $admins, true ) ) {
+										if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
+											$user_action_type = 'suspend';
+											$user_data        = BP_Moderation::get_specific_moderation( $user_id, BP_Moderation_Members::$moderation_type );
+											$user_action_text = esc_html__( 'Suspend Content Author', 'buddyboss' );
+											if ( ! empty( $user_data ) ) {
+												$user_action_type = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
+												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
+											}
 											?>
 											<a href="javascript:void(0);"
 												class="button button-primary bp-block-user single-report-btn content-author"
@@ -224,14 +230,14 @@ $admins            = array_map( 'intval', get_users(
 											<?php
 										}
 									} else {
-										if ( ! in_array( $user_id, $admins, true ) ) {
+										if ( ! in_array( $moderation_request_data->item_id, $admins, true ) ) {
 											$action_type        = ( 'unhide' === $action_type ) ? 'unsuspend' : 'suspend';
 											$member_action_text = ( 'unsuspend' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
 											?>
 											<a href="javascript:void(0);"
 												class="button button-primary bp-block-user single-report-btn"
 												data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-												data-type="user"
+                                                data-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>"
 												data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
 												data-action="<?php echo esc_attr( $action_type ); ?>"
 												title="<?php echo esc_attr( $action_label ); ?>">

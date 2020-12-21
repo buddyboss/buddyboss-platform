@@ -911,6 +911,8 @@ class BP_Moderation {
 
 	/**
 	 * Hide Moderation entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function hide() {
 
@@ -1082,6 +1084,8 @@ class BP_Moderation {
 	/**
 	 * Store Moderation entry
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return bool
 	 */
 	public function store() {
@@ -1123,6 +1127,8 @@ class BP_Moderation {
 
 	/**
 	 * Store Moderation report entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return false
 	 */
@@ -1171,7 +1177,7 @@ class BP_Moderation {
 				if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
 
 					$tokens = array(
-						'user_name'     => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
+						'user_name'     => bp_core_get_user_displayname( $this->item_id ),
 						'times_blocked' => $this->count,
 						'member_link'   => '',
 						'report_link'   => add_query_arg(
@@ -1191,10 +1197,22 @@ class BP_Moderation {
 
 					$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
 
+					$user_ids = bp_moderation_get_content_owner_id( $this->item_id, $this->item_type );
+					if ( ! is_array( $user_ids ) ){
+						$user_ids = array( $user_ids );
+					}
+
+					$content_owner = array();
+					if ( ! empty( $user_ids ) ) {
+						foreach ( $user_ids as $user_id ) {
+							$content_owner[] = bp_core_get_user_displayname( $user_id );
+						}
+					}
+
 					$tokens = array(
 						'content_excerpt'       => '',
 						'content_type'          => bp_moderation_get_content_type( $this->item_type ),
-						'content_owner'         => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
+						'content_owner'         => implode( ', ', $content_owner ),
 						'content_timesreported' => $this->count,
 						'content_link'          => '',
 						'content_reportlink'    => add_query_arg(
@@ -1216,6 +1234,8 @@ class BP_Moderation {
 
 	/**
 	 * Hide related content of report entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function hide_related_content() {
 		/**
@@ -1231,6 +1251,8 @@ class BP_Moderation {
 
 	/**
 	 * Unhide Moderation entry
+	 *
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function unhide() {
 		$this->hide_sitewide = 0;
@@ -1352,6 +1374,8 @@ class BP_Moderation {
 	/**
 	 * Un-hide related content of report entry
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param bool $force_all Should delete all reported entry.
 	 */
 	public function unhide_related_content( $force_all = false ) {
@@ -1371,12 +1395,14 @@ class BP_Moderation {
 	/**
 	 * Delete record by moderation_id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int $moderation_id Moderation moderation_id.
 	 */
 	public static function delete_moderation_by_id( $moderation_id = 0 ) {
 		global $wpdb, $bp;
 
-		$args        = array( 'moderation_id' => $moderation_id );
+		$args = array( 'moderation_id' => $moderation_id );
 		$wpdb->delete( $bp->moderation->table_name_reports, $args ); // phpcs:ignore
 
 		self::delete_meta( $moderation_id );

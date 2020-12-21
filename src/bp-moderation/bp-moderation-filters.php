@@ -110,7 +110,18 @@ function bp_moderation_content_report() {
 		wp_send_json_error( $response );
 	}
 
-	if ( 'other' === $category && empty( $item_note ) ) {
+	$reports_terms   = get_terms(
+		'bpm_category',
+		array(
+			'hide_empty' => false,
+			'fields'     => 'ids',
+		)
+	);
+
+	if (
+		( 'other' === $category && empty( $item_note ) ) ||
+		( 'other' !== $category && ! in_array( (int) $category, $reports_terms, true ) )
+	) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_missing_data',
 			esc_html__( 'Please specify reason to report this content.', 'buddyboss' )
@@ -336,7 +347,7 @@ add_action( 'wp_ajax_bp_moderation_unblock_user', 'bp_moderation_unblock_user' )
 add_action( 'wp_ajax_nopriv_bp_moderation_unblock_user', 'bp_moderation_unblock_user' );
 
 /**
- * Function to handle moderation request from frontend
+ * Function to handle moderation request from Backend.
  *
  * @since BuddyBoss 2.0.0
  */
@@ -357,8 +368,8 @@ function bp_moderation_content_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_can_report( $item_id, $item_type );
-	if ( false === (bool) $user_can ) {
+	$user_can = bp_moderation_can_report( $item_id, $item_type, 'hide' == $sub_action );
+	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -402,7 +413,7 @@ add_action( 'wp_ajax_bp_moderation_content_actions_request', 'bp_moderation_cont
 add_action( 'wp_ajax_nopriv_bp_moderation_content_actions_request', 'bp_moderation_content_actions_request' );
 
 /**
- * Function to handle moderation request for user
+ * Function to handle moderation request for user from backend.
  *
  * @since BuddyBoss 2.0.0
  */
@@ -423,8 +434,8 @@ function bp_moderation_user_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_can_report( $item_id, $item_type );
-	if ( false === (bool) $user_can ) {
+	$user_can = bp_moderation_can_report( $item_id, $item_type, 'suspend' == $sub_action );
+	if (  ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}

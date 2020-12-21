@@ -229,7 +229,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Remove Profile photo for block member.
 	 *
-	 * @since BuddyPress 2.9.0
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param  string $retval      The URL of the avatar.
 	 * @param  mixed  $id_or_email The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
@@ -238,6 +238,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
+		$user = false;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -271,7 +272,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get dummy URL from DB for Group and User
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $avatar_url URL for a locally uploaded avatar.
 	 * @param array  $params     Array of parameters for the request.

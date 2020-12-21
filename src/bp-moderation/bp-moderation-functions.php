@@ -528,8 +528,13 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
+	$owner_ids = bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type );
+	if ( ! is_array( $owner_ids ) ){
+		$owner_ids = array( $owner_ids );
+	}
+
 	// Hide if content is created by current user.
-	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type ) ) {
+	if ( in_array( bp_loggedin_user_id(), $owner_ids, true ) ) {
 		return false;
 	}
 
@@ -860,13 +865,16 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 		$content_type = BP_Moderation_Media::$moderation_type;
 
 		// Check for message type and content type as user.
-	} elseif ( BP_Moderation_Message::$moderation_type ) {
+	} elseif ( BP_Moderation_Message::$moderation_type === $content_type ) {
 		return bp_is_moderation_member_blocking_enable(0);
 	}
 
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		if ( empty( $settings ) ){
+			$settings = array();
+		}
 		$settings[ $content_type ] = $default;
 	}
 
@@ -890,9 +898,11 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 		return false;
 	}
 
-	$settings = get_option( 'bpm_reporting_auto_hide', $default );
-
+	$settings = get_option( 'bpm_reporting_auto_hide', array() );
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		if ( empty( $settings ) ){
+			$settings = array();
+		}
 		$settings[ $content_type ] = $default;
 	}
 
@@ -915,6 +925,9 @@ function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_typ
 	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		if ( empty( $settings ) ){
+			$settings = array();
+		}
 		$settings[ $content_type ] = $default;
 	}
 
@@ -945,18 +958,18 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
  * @param int    $moderation_item_id   content id.
  * @param string $moderation_item_type content type.
  *
- * @return int
+ * @return int|array
  */
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
-	$user_id = 0;
+	$user_ids = 0;
 	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
-		$user_id = $class::get_content_owner_id( $moderation_item_id );
+		$user_ids = $class::get_content_owner_id( $moderation_item_id );
 	}
 
-	return (int) $user_id;
+	return is_array( $user_ids ) ? $user_ids : (int) $user_ids;
 }
 
 /**

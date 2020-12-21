@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Suspend Member Classes
  *
- * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Suspend
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -73,9 +73,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Suspend User
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int $user_id user id.
 	 *
-	 * @since BuddyBoss 2.0.0
 	 */
 	public static function suspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
@@ -108,9 +109,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Un-suspend User
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int $user_id user id.
 	 *
-	 * @since BuddyBoss 2.0.0
 	 */
 	public static function unsuspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
@@ -470,19 +472,19 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id );
 
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ]         = BP_Suspend_Activity::get_member_activity_ids( $member_id );
-			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_member_activity_comment_ids( $member_id );
-		}
-
-		if ( bp_is_active( 'groups' ) ) {
+		/*if ( bp_is_active( 'groups' ) ) {
 			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
-		}
+		}*/
 
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id );
 			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_member_topic_ids( $member_id );
 			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_member_reply_ids( $member_id );
+		}
+
+		if ( bp_is_active( 'activity' ) ) {
+			$related_contents[ BP_Suspend_Activity::$type ]         = BP_Suspend_Activity::get_member_activity_ids( $member_id );
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_member_activity_comment_ids( $member_id );
 		}
 
 		if ( bp_is_active( 'document' ) ) {
@@ -597,15 +599,17 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Remove Profile photo for suspend member.
 	 *
-	 * @since BuddyPress 2.9.0
+	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param  string $retval      The URL of the avatar.
-	 * @param  mixed  $id_or_email The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
+	 * @param string $retval       The URL of the avatar.
+	 * @param mixed  $id_or_email  The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
 	 *                             user email, WP_User object, WP_Post object, or WP_Comment object.
-	 * @param  array  $args        Arguments passed to get_avatar_data(), after processing.
+	 * @param array  $args         Arguments passed to get_avatar_data(), after processing.
+	 *
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
+		$user = false;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -639,7 +643,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Get dummy URL from DB for Group and User
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $avatar_url URL for a locally uploaded avatar.
 	 * @param array  $params     Array of parameters for the request.

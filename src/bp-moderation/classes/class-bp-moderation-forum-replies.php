@@ -107,6 +107,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Update where query Remove hidden/blocked user's forum's replies
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param string $where   forum's replies Where sql.
 	 * @param object $suspend suspend object.
 	 *
