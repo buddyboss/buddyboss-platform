@@ -2,8 +2,11 @@
 /**
  * BuddyBoss - Video Uploader
  *
+ * @package BuddyBoss\Core
+ *
  * @since BuddyBoss 1.0.0
  */
+
 ?>
 <div id="bp-video-uploader" style="display: none;">
 	<transition name="modal">
@@ -75,7 +78,6 @@
 					<?php endif; ?>
 
 					<footer class="bb-model-footer flex align-items-center">
-						<!--<a class="button outline" id="bp-video-add-more" style="display: none;" href="#">+ <?php // _e( 'Add More Video', 'buddyboss' ); ?></a>-->
 
 						<?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
 							<div class="bb-dropdown-wrap">

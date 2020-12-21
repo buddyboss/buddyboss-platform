@@ -2,6 +2,7 @@
 /**
  * BP Nouveau Video
  *
+ * @package BuddyBoss\Core
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
@@ -49,13 +50,16 @@ class BP_Nouveau_Video {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';
 
-		// Load AJAX code only on AJAX requests.
+			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'video_' ) ) {
-					require $this->dir . 'ajax.php';
+			add_action(
+				'admin_init',
+				function() {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'video_' ) ) {
+						require $this->dir . 'ajax.php';
+					}
 				}
-			} );
+			);
 		}
 	}
 
@@ -65,7 +69,7 @@ class BP_Nouveau_Video {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function setup_actions() {
-		// Enqueue the scripts for the new UI
+		// Enqueue the scripts for the new UI.
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_video_enqueue_scripts' );
 	}
 
@@ -76,10 +80,10 @@ class BP_Nouveau_Video {
 	 */
 	protected function setup_filters() {
 
-		// Register messages scripts
+		// Register messages scripts.
 		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_video_register_scripts', 10, 1 );
 
-		// Localize Scripts
+		// Localize Scripts.
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_video_localize_scripts', 10, 1 );
 
 		// Redirect edit button video popup activity to parent activity edit.
@@ -89,6 +93,8 @@ class BP_Nouveau_Video {
 
 /**
  * Launch the Video loader class.
+ *
+ * @param null $bp_nouveau template.
  *
  * @since BuddyBoss 1.0.0
  */

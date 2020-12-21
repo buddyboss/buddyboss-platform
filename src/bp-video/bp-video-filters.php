@@ -52,7 +52,6 @@ add_filter( 'bp_messages_message_validated_content', 'bp_video_gif_message_valid
 // Core tools.
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_video_get_tools_video_settings_admin_tabs', 20, 1 );
 add_action( 'bp_core_activation_notice', 'bp_video_activation_notice' );
-add_action( 'wp_ajax_bp_video_import_status_request', 'bp_video_import_status_request' );
 add_filter( 'bp_repair_list', 'bp_video_add_admin_repair_items' );
 
 // Download Video.

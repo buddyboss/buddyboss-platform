@@ -2,6 +2,8 @@
 /**
  * Video Template tags
  *
+ * @package BuddyBoss\Core
+ *
  * @since BuddyBoss 1.0.0
  */
 
@@ -61,7 +63,6 @@ function bp_nouveau_after_video_directory_content() {
 	 */
 	do_action( 'bp_after_directory_video' );
 
-	//bp_get_template_part( 'common/js-templates/video/comments' );
 }
 
 /**
@@ -79,7 +80,7 @@ function bp_nouveau_video_hook( $when = '', $suffix = '' ) {
 		$hook[] = $when;
 	}
 
-	// It's an video entry hook
+	// It's an video entry hook.
 	$hook[] = 'video';
 
 	if ( $suffix ) {
@@ -105,13 +106,13 @@ function bp_nouveau_video_timestamp() {
 	 *
 	 * @return integer The Video timestamp.
 	 */
-	function bp_nouveau_get_video_timestamp() {
-		/**
-		 * Filter here to edit the video timestamp.
-		 *
-		 * @since BuddyBoss 1.0.0
-		 *
-		 * @param integer $value The Video timestamp.
-		 */
-		return apply_filters( 'bp_nouveau_get_video_timestamp', strtotime( bp_get_video_date_created() ) );
-	}
+function bp_nouveau_get_video_timestamp() {
+	/**
+	 * Filter here to edit the video timestamp.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param integer $value The Video timestamp.
+	 */
+	return apply_filters( 'bp_nouveau_get_video_timestamp', strtotime( bp_get_video_date_created() ) );
+}

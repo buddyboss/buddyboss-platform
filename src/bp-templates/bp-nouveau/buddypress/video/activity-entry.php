@@ -2,19 +2,27 @@
 /**
  * BuddyBoss - Activity Video
  *
+ * @package BuddyBoss\Core
+ *
  * @since BuddyBoss 1.0.0
  */
-?>
 
-<?php
 global $video_template;
 
-$width  =  isset( $video_template->video->attachment_data->thumb_meta['width'] ) ? $video_template->video->attachment_data->thumb_meta['width'] : 0;
-$height =  isset( $video_template->video->attachment_data->thumb_meta['height'] ) ? $video_template->video->attachment_data->thumb_meta['height'] : 0;
+$width  = isset( $video_template->video->attachment_data->thumb_meta['width'] ) ? $video_template->video->attachment_data->thumb_meta['width'] : 0;
+$height = isset( $video_template->video->attachment_data->thumb_meta['height'] ) ? $video_template->video->attachment_data->thumb_meta['height'] : 0;
 
 ?>
 
-<div class="bb-activity-video-elem <?php echo $video_template->current_video > 4 ? 'hide' : ''; echo $video_template->video_count == 1 || $video_template->video_count > 1 && $video_template->current_video == 0 ? 'act-grid-1-1 ' : ''; echo $video_template->video_count > 1 && $video_template->current_video > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
+<div class="bb-activity-video-elem
+<?php
+echo $video_template->current_video > 4 ? esc_attr( 'hide' ) : '';
+echo 1 === $video_template->video_count || $video_template->video_count > 1 && 0 === $video_template->current_video ? esc_attr( 'act-grid-1-1 ' ) : '';
+echo $video_template->video_count > 1 && $video_template->current_video > 0 ? esc_attr( 'act-grid-1-2 ' ) : '';
+echo $width > $height ? esc_attr( 'bb-horizontal-layout' ) : '';
+echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) : '';
+?>
+">
 	<div class="video-action-wrap item-action-wrap">
 		<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="More actions">
 			<i class="bb-icon-menu-dots-v"></i>
@@ -33,25 +41,6 @@ $height =  isset( $video_template->video->attachment_data->thumb_meta['height'] 
 			</ul>
 		</div>
 	</div>
-        <!--<a href="#"
-	   class="bb-open-video-theatre entry-video"
-	   data-id="<?php bp_video_id(); ?>"
-	   data-attachment-id="<?php bp_video_attachment_id(); ?>"
-	   data-attachment-full="<?php bp_video_attachment_image(); ?>"
-	   data-activity-id="<?php bp_video_activity_id(); ?>"
-	   data-privacy="<?php bp_video_privacy(); ?>"
-	   data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>"
-	   data-album-id="<?php bp_video_album_id(); ?>"
-	   data-group-id="<?php bp_video_group_id(); ?>"
-	>
-		<img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_video_attachment_image_activity_thumbnail(); ?>" class="no-round video lazy" alt="<?php bp_video_title(); ?>" />
-
-		<?php if ( $video_template->video_count > 5 && $video_template->current_video == 4 ) {
-			?>
-			<span class="bb-videos-length"><span><strong>+<?php echo $video_template->video_count - 5; ?></strong> <span><?php _e( 'More Videos', 'buddyboss' ); ?></span></span></span>
-			<?php
-		} ?>
-	</a>-->
 	<video id="video-<?php bp_video_id(); ?>" class="video-js" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }'>
 		<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
 	</video>

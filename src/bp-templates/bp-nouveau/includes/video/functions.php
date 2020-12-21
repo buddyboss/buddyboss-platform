@@ -2,6 +2,8 @@
 /**
  * Video functions
  *
+ * @package BuddyBoss\Core
+ *
  * @since BuddyBoss 1.0.0
  */
 
@@ -13,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  *
- * @param array $scripts The array of scripts to register
+ * @param array $scripts The array of scripts to register.
  *
  * @return array The same array with the specific video scripts.
  */
@@ -41,16 +43,7 @@ function bp_nouveau_video_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_video_enqueue_scripts() {
 
-	if ( bp_is_user_video() ||
-		 bp_is_single_video_album() ||
-		 bp_is_video_directory() ||
-		 bp_is_activity_component() ||
-		 bp_is_group_activity() ||
-		 bp_is_group_video() ||
-		 bp_is_group_video_albums() ||
-		 bp_is_group_messages() ||
-		 bp_is_messages_component()
-	) {
+	if ( bp_is_user_video() || bp_is_single_video_album() || bp_is_video_directory() || bp_is_activity_component() || bp_is_group_activity() || bp_is_group_video() || bp_is_group_video_albums() || bp_is_group_messages() || bp_is_messages_component() ) {
 
 		if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_video_support_enabled() || bp_is_group_messages() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
@@ -68,7 +61,7 @@ function bp_nouveau_video_enqueue_scripts() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array $params Associative array containing the JS Strings needed by scripts
+ * @param  array $params Associative array containing the JS Strings needed by scripts.
  * @return array         The same array with specific strings for the messages UI if needed.
  */
 function bp_nouveau_video_localize_scripts( $params = array() ) {
@@ -210,6 +203,12 @@ function bp_nouveau_get_video_directory_nav_items() {
 	return apply_filters( 'bp_nouveau_get_video_directory_nav_items', $nav_items );
 }
 
+/**
+ * Download the file.
+ *
+ * @param int    $attachment_id id of the attachment.
+ * @param string $type type of download.
+ */
 function bp_video_download_file( $attachment_id, $type = 'video' ) {
 
 	// Add action to prevent issues in IE.
@@ -264,8 +263,6 @@ function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
 
 /**
  * Function get video support extension.
- *
- * @param string $format
  *
  * @return array|mixed|string|void
  */
