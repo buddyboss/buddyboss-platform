@@ -196,18 +196,18 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int      $folder_id     message thread id.
+	 * @param int      $message_id     message thread id.
 	 * @param int|null $hide_sitewide Item hidden sitewide or user specific.
 	 * @param int      $force_all     Un-hide for all users.
 	 * @param array    $args          Parent args.
 	 */
-	public function manage_unhidden_message( $folder_id, $hide_sitewide, $force_all, $args = array() ) {
+	public function manage_unhidden_message( $message_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
-				'item_id'   => $folder_id,
+				'item_id'   => $message_id,
 				'item_type' => self::$type,
 			)
 		);
@@ -216,15 +216,35 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
+		if (
+			isset( $suspend_args['author_compare'] ) &&
+			true === (bool) $suspend_args['author_compare'] &&
+			isset( $suspend_args['type'] ) &&
+			$suspend_args['type'] !== self::$type
+		) {
+			$thread_author_id = BP_Moderation_Message::get_content_owner_id( $message_id );
+			if ( isset( $suspend_args['blocked_user'] ) && $thread_author_id === $suspend_args['blocked_user'] ) {
+				unset( $suspend_args['blocked_user'] );
+			}
+		}
+
+		if ( isset( $suspend_args['author_compare'] ) ) {
+			unset( $suspend_args['author_compare'] );
+		}
+
+		if ( isset( $suspend_args['type'] ) ) {
+			unset( $suspend_args['type'] );
+		}
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ! empty( $args ) ) {
-			$this->unhide_related_content( $folder_id, $hide_sitewide, $force_all, $args );
+			$this->unhide_related_content( $message_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
 				array(
 					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $folder_id, $hide_sitewide, $force_all, $args ),
+					'args'     => array( $message_id, $hide_sitewide, $force_all, $args ),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();

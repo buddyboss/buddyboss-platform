@@ -218,6 +218,26 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
+		if (
+			isset( $suspend_args['author_compare'] ) &&
+			true === (bool) $suspend_args['author_compare'] &&
+			isset( $suspend_args['type'] ) &&
+			$suspend_args['type'] !== self::$type
+		) {
+			$ac_comment_user = BP_Moderation_Activity_Comment::get_content_owner_id( $acomment_id );
+			if ( isset( $suspend_args['blocked_user'] ) && $ac_comment_user === $suspend_args['blocked_user'] ) {
+				unset( $suspend_args['blocked_user'] );
+			}
+		}
+
+		if ( isset( $suspend_args['author_compare'] ) ) {
+			unset( $suspend_args['author_compare'] );
+		}
+
+		if ( isset( $suspend_args['type'] ) ) {
+			unset( $suspend_args['type'] );
+		}
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ! empty( $args ) ) {

@@ -287,6 +287,26 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
+		if (
+			isset( $suspend_args['author_compare'] ) &&
+			true === (bool) $suspend_args['author_compare'] &&
+			isset( $suspend_args['type'] ) &&
+			$suspend_args['type'] !== self::$type
+		) {
+			$reply_author_id = BP_Moderation_Forum_Replies::get_content_owner_id( $reply_id );
+			if ( isset( $suspend_args['blocked_user'] ) && $reply_author_id === $suspend_args['blocked_user'] ) {
+				unset( $suspend_args['blocked_user'] );
+			}
+		}
+
+		if ( isset( $suspend_args['author_compare'] ) ) {
+			unset( $suspend_args['author_compare'] );
+		}
+
+		if ( isset( $suspend_args['type'] ) ) {
+			unset( $suspend_args['type'] );
+		}
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ! empty( $args ) ) {

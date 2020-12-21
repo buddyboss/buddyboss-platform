@@ -36,6 +36,11 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_group' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_group' ), 10, 4 );
 
+		// Action to update group forum block list when associate with group.
+		add_filter( 'update_group_metadata', array( $this, 'update_group_meta_before_block_list' ), 10, 5 );
+		add_action( 'added_group_meta', array( $this, 'update_group_forum_block_list' ), 10, 4 );
+		add_action( 'updated_group_meta', array( $this, 'update_group_forum_block_list' ), 10, 4 );
+
 		// Add moderation data when group is added.
 		add_action( 'groups_group_after_save', array( $this, 'sync_moderation_data_on_save' ), 10, 1 );
 
@@ -52,7 +57,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_filter( 'bp_groups_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_groups_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// group count
+		// group count.
 		add_filter( 'bp_groups_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_groups_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -248,6 +253,26 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
+		if (
+			isset( $suspend_args['author_compare'] ) &&
+			true === (bool) $suspend_args['author_compare'] &&
+			isset( $suspend_args['type'] ) &&
+			$suspend_args['type'] !== self::$type
+		) {
+			$group_author_id = BP_Moderation_Groups::get_content_owner_id( $group_id );
+			if ( isset( $suspend_args['blocked_user'] ) && in_array( $suspend_args['blocked_user'], $group_author_id, true ) ) {
+				unset( $suspend_args['blocked_user'] );
+			}
+		}
+
+		if ( isset( $suspend_args['author_compare'] ) ) {
+			unset( $suspend_args['author_compare'] );
+		}
+
+		if ( isset( $suspend_args['type'] ) ) {
+			unset( $suspend_args['type'] );
+		}
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ! empty( $args ) ) {
@@ -341,5 +366,79 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $group->id, $this->item_type );
+	}
+
+	/**
+	 * Short-circuits updating metadata of a specific type.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param null|bool $check      Whether to allow updating metadata for the given type.
+	 * @param int       $object_id  ID of the object metadata is for.
+	 * @param string    $meta_key   Metadata key.
+	 * @param mixed     $meta_value Metadata value. Must be serializable if non-scalar.
+	 * @param mixed     $prev_value Optional. Previous value to check before updating.
+	 *                              If specified, only update existing metadata entries with
+	 *                              this value. Otherwise, update all entries.
+	 *
+	 * @return null|bool
+	 */
+	public function update_group_meta_before_block_list( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+		if ( 'forum_id' === $meta_key && bp_is_active( 'forums' ) ) {
+			if ( empty( $prev_value ) ) {
+				$prev_value = bbp_get_group_forum_ids( $object_id );
+			}
+
+			$forum_id     = (int) ( is_array( $prev_value ) ? current( $prev_value ) : $prev_value );
+			$forum_author = get_post_field( 'post_author', $forum_id );
+			remove_filter( 'query', 'bp_filter_metaid_column_name' );
+			do_action(
+				'bp_suspend_hide_' . BP_Suspend_Forum::$type,
+				$forum_id,
+				(bool) bp_moderation_is_user_suspended( $forum_author ),
+				array(
+					'blocked_user'   => $forum_author,
+					'user_suspended' => (bool) bp_moderation_is_user_suspended( $forum_author ),
+				)
+			);
+			add_filter( 'query', 'bp_filter_metaid_column_name' );
+		}
+
+		return $check;
+	}
+
+	/**
+	 * Fires immediately before updating metadata of a specific type.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $meta_id     ID of the metadata entry to update.
+	 * @param int    $object_id   ID of the object metadata is for.
+	 * @param string $meta_key    Metadata key.
+	 * @param mixed  $forum_id Metadata value. Serialized if non-scalar.
+	 */
+	public function update_group_forum_block_list( $meta_id, $object_id, $meta_key, $forum_id ) {
+		if ( 'forum_id' !== $meta_key ) {
+			return;
+		}
+
+		$forum_id = (int) ( is_array( $forum_id ) ? current( $forum_id ) : $forum_id );
+
+		if ( empty( $forum_id ) || ! bp_is_active( 'forums' ) ) {
+			return;
+		}
+
+		do_action(
+			'bp_suspend_unhide_' . BP_Suspend_Forum::$type,
+			$forum_id,
+			0,
+			false,
+			array(
+				'blocked_user'   => get_post_field( 'post_author', $forum_id ),
+				'user_suspended' => 0,
+				'author_compare' => true,
+				'type'           => BP_Suspend_Forum::$type,
+			)
+		);
 	}
 }
