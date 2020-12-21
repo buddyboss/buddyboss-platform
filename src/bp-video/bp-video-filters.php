@@ -1,5 +1,9 @@
 <?php
-// Exit if accessed directly.
+
+/**
+ * Exit if accessed directly.
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -317,10 +321,16 @@ function bp_video_activity_comment_entry( $comment_id ) {
  */
 function bp_video_update_activity_video_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
-	if ( ! isset( $_POST['video'] ) || empty( $_POST['video'] ) ) {
+
+	$post_video   = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$post_edit    = filter_input( INPUT_POST, 'edit', FILTER_SANITIZE_STRING );
+	$post_action  = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$post_privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+
+	if ( ! isset( $post_video ) || empty( $post_video ) ) {
 
 		// delete video ids and meta for activity if empty video in request.
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $post_edit ) ) {
 			$old_video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 			if ( ! empty( $old_video_ids ) ) {
@@ -341,9 +351,9 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( ! empty( $activity_id ) && isset( $post_action ) && 'new_activity_comment' === $post_action ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
-		if ( $parent_activity->component === 'groups' ) {
+		if ( 'groups' === $parent_activity->component ) {
 			$_POST['privacy'] = 'grouponly';
 		} elseif ( ! empty( $parent_activity->privacy ) ) {
 			$_POST['privacy'] = $parent_activity->privacy;
@@ -355,7 +365,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	remove_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 
-	$video_ids = bp_video_add_handler( $_POST['video'], $_POST['privacy'] );
+	$video_ids = bp_video_add_handler( $post_video, $post_privacy );
 
 	add_action( 'bp_activity_posted_update', 'bp_video_update_activity_video_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_video_groups_activity_update_video_meta', 10, 4 );
@@ -365,8 +375,8 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	// save video meta for activity.
 	if ( ! empty( $activity_id ) ) {
 
-		// Delete video if not exists in current video ids
-		if ( isset( $_POST['edit'] ) ) {
+		// Delete video if not exists in current video ids.
+		if ( isset( $post_edit ) ) {
 			$old_video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 			$old_video_ids = explode( ',', $old_video_ids );
 
@@ -377,7 +387,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 
 				foreach ( $old_video_ids as $video_id ) {
 
-					if ( ! in_array( $video_id, $video_ids ) ) {
+					if ( ! in_array( $video_id, $video_ids, true ) ) {
 						bp_video_delete( array( 'id' => $video_id ) );
 					}
 				}
@@ -434,7 +444,7 @@ function bp_video_delete_activity_video( $activities ) {
 		foreach ( $activities as $activity ) {
 			$activity_id    = $activity->id;
 			$video_activity = bp_activity_get_meta( $activity_id, 'bp_video_activity', true );
-			if ( ! empty( $video_activity ) && '1' == $video_activity ) {
+			if ( ! empty( $video_activity ) && '1' === $video_activity ) {
 				bp_video_delete( array( 'activity_id' => $activity_id ) );
 			}
 
@@ -1130,161 +1140,6 @@ function bp_video_get_tools_video_settings_admin_tabs( $tabs ) {
 }
 
 /**
- * Add Import Video admin menu in tools
- *
- * @since BuddyPress 3.0.0
- */
-function bp_video_import_admin_menu() {
-
-	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Import Video', 'buddyboss' ),
-		__( 'Import Video', 'buddyboss' ),
-		'manage_options',
-		'bp-video-import',
-		'bp_video_import_submenu_page'
-	);
-
-}
-add_action( bp_core_admin_hook(), 'bp_video_import_admin_menu' );
-
-/**
- * Import Video menu page
- *
- * @since BuddyBoss 1.6.0
- */
-function bp_video_import_submenu_page() {
-	global $wpdb;
-	global $bp;
-
-	$bp_video_import_status = get_option( 'bp_video_import_status' );
-
-	$check                        = false;
-	$buddyboss_video_table        = $bp->table_prefix . 'buddyboss_media';
-	$buddyboss_video_albums_table = $bp->table_prefix . 'buddyboss_video_albums';
-	if ( empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_video_table}' ;" ) ) || empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_video_albums_table}' ;" ) ) ) {
-		$check = true;
-	}
-
-	$is_updating = false;
-	if ( isset( $_POST['bp-video-import-submit'] ) && ! $check ) {
-		if ( 'done' != $bp_video_import_status || isset( $_POST['bp-video-re-run-import'] ) ) {
-			update_option( 'bp_video_import_status', 'reset_albums' );
-			$is_updating = true;
-		}
-	}
-
-	if ( in_array( $bp_video_import_status, array( 'importing', 'start', 'reset_albums', 'reset_video', 'reset_forum', 'reset_topic', 'reset_reply', 'reset_options' ) ) ) {
-		$is_updating = true;
-	}
-
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-bp-member-type-import">
-			<div class="boss-import-area">
-				<form id="bp-member-type-import-form" method="post" action="">
-					<div class="import-panel-content">
-						<h2><?php _e( 'Import Video', 'buddyboss' ); ?></h2>
-
-						<?php
-						if ( $check ) {
-							?>
-							<p><?php _e( 'BuddyBoss Video plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
-							<?php
-						} elseif ( $is_updating ) {
-							$total_video   = get_option( 'bp_video_import_total_video', 0 );
-							$total_albums  = get_option( 'bp_video_import_total_albums', 0 );
-							$albums_done   = get_option( 'bp_video_import_albums_done', 0 );
-							$video_done    = get_option( 'bp_video_import_video_done', 0 );
-							$forums_done   = get_option( 'bp_video_import_forums_done', 0 );
-							$forums_total  = get_option( 'bp_video_import_forums_total', 0 );
-							$topics_done   = get_option( 'bp_video_import_topics_done', 0 );
-							$topics_total  = get_option( 'bp_video_import_topics_total', 0 );
-							$replies_done  = get_option( 'bp_video_import_replies_done', 0 );
-							$replies_total = get_option( 'bp_video_import_replies_total', 0 );
-							$albums_ids    = get_option( 'bp_video_import_albums_ids', array() );
-							$video_ids     = get_option( 'bp_video_import_video_ids', array() );
-							?>
-							<p>
-								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
-							</p>
-							<label style="display: none;" id="bp-video-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
-							<table class="form-table">
-								<tr>
-									<th scope="row"><?php _e( 'Albums', 'buddyboss' ); ?></th>
-									<td>
-										<span id="bp-video-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-video-import-albums-total"><?php echo $total_albums; ?></span></td>
-								</tr>
-								<tr>
-									<th scope="row"><?php _e( 'Video', 'buddyboss' ); ?></th>
-									<td>
-										<span id="bp-video-import-video-done"><?php echo $video_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-video-import-video-total"><?php echo $total_video; ?></span></td>
-								</tr>
-								<tr>
-									<th scope="row"><?php _e( 'Forums', 'buddyboss' ); ?></th>
-									<td>
-										<span id="bp-video-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-video-import-video-total"><?php echo $forums_total; ?></span></td>
-								</tr>
-								<tr>
-									<th scope="row"><?php _e( 'Discussions', 'buddyboss' ); ?></th>
-									<td>
-										<span id="bp-video-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-video-import-video-total"><?php echo $topics_total; ?></span></td>
-								</tr>
-								<tr>
-									<th scope="row"><?php _e( 'Replies', 'buddyboss' ); ?></th>
-									<td>
-										<span id="bp-video-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-video-import-video-total"><?php echo $replies_total; ?></span></td>
-								</tr>
-							</table>
-							<p>
-								<label id="bp-video-import-msg"></label>
-							</p>
-							<input type="hidden" value="bp-video-import-updating" id="bp-video-import-updating"/>
-							<?php if ( ! empty( $albums_ids ) || ! empty( $video_ids ) ) { ?>
-								<input type="hidden" value="1" name="bp-video-re-run-import" id="bp-video-re-run-import"/>
-								<input type="submit" style="display: none;" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>" id="bp-video-import-submit" name="bp-video-import-submit" class="button-primary"/>
-								<?php
-							}
-						} elseif ( 'done' == $bp_video_import_status ) {
-							$albums_ids = get_option( 'bp_video_import_albums_ids', array() );
-							$video_ids  = get_option( 'bp_video_import_video_ids', array() );
-							?>
-							<p><?php _e( 'BuddyBoss Video data update is complete! Any previously uploaded member videos should display in their profiles now.', 'buddyboss' ); ?></p>
-
-							<?php if ( ! empty( $albums_ids ) || ! empty( $video_ids ) ) { ?>
-								<input type="hidden" value="1" name="bp-video-re-run-import" id="bp-video-re-run-import"/>
-								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>" id="bp-video-import-submit" name="bp-video-import-submit" class="button-primary"/>
-								<?php
-							}
-						} else {
-							?>
-							<p><?php _e( 'Import your existing members video uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old videos into the new Video component.', 'buddyboss' ); ?></p>
-							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>" id="bp-video-import-submit" name="bp-video-import-submit" class="button-primary"/>
-						<?php } ?>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<br/>
-
-	<?php
-}
-
-/**
  * Hook to display admin notices when video component is active
  *
  * @since BuddyBoss 1.6.0
@@ -1299,7 +1154,7 @@ function bp_video_activation_notice() {
 
 	$bp_video_import_status = get_option( 'bp_video_import_status' );
 
-	if ( 'done' != $bp_video_import_status ) {
+	if ( 'done' !== $bp_video_import_status ) {
 
 		$buddyboss_video_table        = $bp->table_prefix . 'buddyboss_media';
 		$buddyboss_video_albums_table = $bp->table_prefix . 'buddyboss_video_albums';
@@ -1368,7 +1223,7 @@ function bp_video_activity_update_video_privacy( $activity ) {
 		foreach ( $video_ids as $video_id ) {
 			$video = new BP_Video( $video_id );
 			// Do not update the privacy if the video is added to forum.
-			if ( ! in_array( $video->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ) ) ) {
+			if ( ! in_array( $video->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
 				$video->privacy = $activity->privacy;
 				$video->save();
 			}
@@ -1522,7 +1377,7 @@ function bp_video_admin_repair_video() {
 	$bp     = buddypress();
 
 	$video_query = "SELECT id, activity_id FROM {$bp->video->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
-	$videos      = $wpdb->get_results( $video_query );
+	$videos      = $wpdb->get_results( $video_query );  // phpcs:ignore
 
 	if ( ! empty( $videos ) ) {
 		foreach ( $videos as $video ) {
@@ -1534,7 +1389,7 @@ function bp_video_admin_repair_video() {
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 						$update_query = "UPDATE {$bp->video->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $video->id . ' ';
-						$wpdb->query( $update_query );
+						$wpdb->query( $update_query );  // phpcs:ignore
 					}
 					if ( 'video' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1545,7 +1400,7 @@ function bp_video_admin_repair_video() {
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $video_activity->component ) {
 									$update_query = "UPDATE {$bp->video->table_name} SET group_id=" . $video_activity->item_id . ", privacy='grouponly' WHERE id=" . $video->id . ' ';
-									$wpdb->query( $update_query );
+									$wpdb->query( $update_query );  // phpcs:ignore
 									$activity->item_id   = $video_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1558,7 +1413,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -1580,23 +1435,24 @@ function bp_video_admin_repair_video() {
  */
 function bp_video_forum_privacy_repair() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+	$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
 	$bp     = buddypress();
 
 	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_video_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
-	$records = $wpdb->get_col( $squery );
+	$records = $wpdb->get_col( $squery ); // phpcs:ignore
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
 				$video_ids = get_post_meta( $record, 'bp_video_ids', true );
 				if ( $video_ids ) {
 					$update_query = "UPDATE {$bp->video->table_name} SET `privacy`= 'forums' WHERE id in (" . $video_ids . ')';
-					$wpdb->query( $update_query );
+					$wpdb->query( $update_query ); // phpcs:ignore
 				}
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -1604,7 +1460,7 @@ function bp_video_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums video privacy updated %s', 'buddyboss' );
+		$statement = __( 'Forums video privacy updated %s', 'buddyboss' ); // phpcs:ignore
 
 		return array(
 			'status'  => 1,
@@ -1719,7 +1575,7 @@ function bp_video_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
 		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-video-forward">' . esc_html__( 'Go to video', 'buddyboss' ) . '</a>';
 	}
-	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+	wp_die( $message, $title, array( 'response' => $status ) ); // phpcs:ignore
 }
 
 /**
@@ -1749,14 +1605,14 @@ function bp_video_readfile_chunked( $file, $start = 0, $length = 0 ) {
 	if ( ! defined( 'BP_VIDEO_CHUNK_SIZE' ) ) {
 		define( 'BP_VIDEO_CHUNK_SIZE', 1024 * 1024 );
 	}
-	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	$handle = @fopen( $file, 'r' ); // phpcs:ignore
 
 	if ( false === $handle ) {
 		return false;
 	}
 
 	if ( ! $length ) {
-		$length = @filesize( $file ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		$length = @filesize( $file ); // phpcs:ignore
 	}
 
 	$read_length = (int) BP_VIDEO_CHUNK_SIZE;
@@ -1764,17 +1620,17 @@ function bp_video_readfile_chunked( $file, $start = 0, $length = 0 ) {
 	if ( $length ) {
 		$end = $start + $length - 1;
 
-		@fseek( $handle, $start ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-		$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		@fseek( $handle, $start ); // phpcs:ignore
+		$p = @ftell( $handle ); // phpcs:ignore
 
-		while ( ! @feof( $handle ) && $p <= $end ) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		while ( ! @feof( $handle ) && $p <= $end ) { // phpcs:ignore
 			// Don't run past the end of file.
 			if ( $p + $read_length > $end ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.XSS.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread
-			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			echo @fread( $handle, $read_length ); // phpcs:ignore
+			$p = @ftell( $handle ); // phpcs:ignore
 
 			if ( ob_get_length() ) {
 				ob_flush();
@@ -1791,7 +1647,7 @@ function bp_video_readfile_chunked( $file, $start = 0, $length = 0 ) {
 		}
 	}
 
-	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
+	return @fclose( $handle ); // phpcs:ignore
 }
 
 /**
@@ -1813,7 +1669,7 @@ function bp_video_download_headers( $file_path, $filename, $download_range = arr
 	header( 'Content-Disposition: attachment; filename="' . $filename . '";' );
 	header( 'Content-Transfer-Encoding: binary' );
 
-	$file_size = @filesize( $file_path ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+	$file_size = @filesize( $file_path ); // phpcs:ignore
 	if ( ! $file_size ) {
 		return;
 	}
@@ -1858,10 +1714,10 @@ function bp_video_set_time_limit( $limit = 0 ) {
 function bp_video_check_server_config() {
 	bp_video_set_time_limit( 0 );
 	if ( function_exists( 'apache_setenv' ) ) {
-		@apache_setenv( 'no-gzip', 1 ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_apache_setenv
+		@apache_setenv( 'no-gzip', 1 ); // phpcs:ignore
 	}
-	@ini_set( 'zlib.output_compression', 'Off' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
-	@session_write_close(); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.VIP.SessionFunctionsUsage.session_session_write_close
+	@ini_set( 'zlib.output_compression', 'Off' ); // phpcs:ignore
+	@session_write_close(); // phpcs:ignore
 }
 
 /**
@@ -1875,10 +1731,10 @@ function bp_video_clean_buffers() {
 	if ( ob_get_level() ) {
 		$levels = ob_get_level();
 		for ( $i = 0; $i < $levels; $i++ ) {
-			@ob_end_clean(); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			@ob_end_clean(); // phpcs:ignore
 		}
 	} else {
-		@ob_end_clean(); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		@ob_end_clean(); // phpcs:ignore
 	}
 }
 
@@ -2090,16 +1946,16 @@ function bp_video_activity_after_email_content( $activity ) {
 	if ( ! empty( $video_ids ) ) {
 		$video_ids  = explode( ',', $video_ids );
 		$video_text = sprintf(
-			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ),
+			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ), // phpcs:ignore
 			number_format_i18n( count( $video_ids ) )
 		);
 		$content    = sprintf(
 			/* translator: 1. Activity link, 2. Activity video count */
-			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ),
+			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ), // phpcs:ignore
 			bp_activity_get_permalink( $activity->id ),
 			$video_text
 		);
-		echo wpautop( $content );
+		echo wpautop( $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
@@ -2171,6 +2027,9 @@ function bp_video_protect_download_rewite_rules( $rewrite ) {
 }
 add_filter( 'mod_rewrite_rules', 'bp_video_protect_download_rewite_rules' );
 
+/**
+ * Function to create a protected directory for the videos.
+ */
 function bp_video_check_download_album_protection() {
 
 	$upload_dir = wp_get_upload_dir();

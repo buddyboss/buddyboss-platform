@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.6.0
  */
 function bp_video_slug() {
-	echo bp_get_video_slug();
+	echo bp_get_video_slug(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -42,7 +42,7 @@ function bp_get_video_slug() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_root_slug() {
-	echo bp_get_video_root_slug();
+	echo bp_get_video_root_slug(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -302,7 +302,7 @@ function bp_get_video_load_more_link() {
  * @global object $video_template {@link BP_Video_Template}
  */
 function bp_video_pagination_count() {
-	echo bp_get_video_pagination_count();
+	echo bp_get_video_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -332,7 +332,7 @@ function bp_get_video_pagination_count() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_pagination_links() {
-	echo bp_get_video_pagination_links();
+	echo bp_get_video_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -395,7 +395,7 @@ function bp_video_has_more_items() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_count() {
-	echo bp_get_video_count();
+	echo bp_get_video_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -425,7 +425,7 @@ function bp_get_video_count() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_per_page() {
-	echo bp_get_video_per_page();
+	echo bp_get_video_per_page(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -455,7 +455,7 @@ function bp_get_video_per_page() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_id() {
-	echo bp_get_video_id();
+	echo bp_get_video_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -485,7 +485,7 @@ function bp_get_video_id() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_blog_id() {
-	echo bp_get_video_blog_id();
+	echo bp_get_video_blog_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -515,7 +515,7 @@ function bp_get_video_blog_id() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_user_id() {
-	echo bp_get_video_user_id();
+	echo bp_get_video_user_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -545,7 +545,7 @@ function bp_get_video_user_id() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_attachment_id() {
-	echo bp_get_video_attachment_id();
+	echo bp_get_video_attachment_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -575,7 +575,7 @@ function bp_get_video_attachment_id() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_link() {
-	echo bp_get_video_link();
+	echo bp_get_video_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -605,7 +605,7 @@ function bp_get_video_link() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_type() {
-	echo bp_get_video_type();
+	echo bp_get_video_type(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -635,7 +635,7 @@ function bp_get_video_type() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_title() {
-	echo bp_get_video_title();
+	echo bp_get_video_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -662,7 +662,7 @@ function bp_get_video_title() {
 /**
  * Determine if the current user can delete an video item.
  *
- * @param int|BP_Video $video BP_Video object or ID of the video
+ * @param int|BP_Video $video BP_Video object or ID of the video.
  *
  * @return bool True if can delete, false otherwise.
  * @since BuddyBoss 1.2.0
@@ -693,7 +693,7 @@ function bp_video_user_can_delete( $video = false ) {
 		}
 
 		// Users are allowed to delete their own video.
-		if ( isset( $video->user_id ) && ( $video->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $video->user_id ) && ( bp_loggedin_user_id() === $video->user_id ) ) {
 			$can_delete = true;
 		}
 
@@ -703,13 +703,13 @@ function bp_video_user_can_delete( $video = false ) {
 			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $video->group_id );
 			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $video->group_id );
 			if ( $manage ) {
-				if ( $video->user_id === bp_loggedin_user_id() ) {
+				if ( bp_loggedin_user_id() === $video->user_id ) {
 					$can_delete = true;
 				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 					$can_delete = true;
-				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+				} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 					$can_delete = true;
-				} elseif ( 'admins' == $status && $is_admin ) {
+				} elseif ( 'admins' === $status && $is_admin ) {
 					$can_delete = true;
 				}
 			}
@@ -733,7 +733,7 @@ function bp_video_user_can_delete( $video = false ) {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_album_id() {
-	echo bp_get_video_album_id();
+	echo bp_get_video_album_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -763,7 +763,7 @@ function bp_get_video_album_id() {
  * @since BuddyBoss 1.2.5
  */
 function bp_video_group_id() {
-	echo bp_get_video_group_id();
+	echo bp_get_video_group_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -793,7 +793,7 @@ function bp_get_video_group_id() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_activity_id() {
-	echo bp_get_video_activity_id();
+	echo bp_get_video_activity_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -823,7 +823,7 @@ function bp_get_video_activity_id() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_date_created() {
-	echo bp_get_video_date_created();
+	echo bp_get_video_date_created(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -853,7 +853,7 @@ function bp_get_video_date_created() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_attachment_image_thumbnail() {
-	echo bp_get_video_attachment_image_thumbnail();
+	echo bp_get_video_attachment_image_thumbnail(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -883,7 +883,7 @@ function bp_get_video_attachment_image_thumbnail() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_attachment_image_activity_thumbnail() {
-	echo bp_get_video_attachment_image_activity_thumbnail();
+	echo bp_get_video_attachment_image_activity_thumbnail(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -913,7 +913,7 @@ function bp_get_video_attachment_image_activity_thumbnail() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_attachment_image() {
-	echo bp_get_video_attachment_image();
+	echo bp_get_video_attachment_image(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -970,7 +970,7 @@ function bp_get_video_directory_permalink() {
  * @since BuddyBoss 1.2.3
  */
 function bp_video_privacy() {
-	echo bp_get_video_privacy();
+	echo bp_get_video_privacy(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1000,7 +1000,7 @@ function bp_get_video_privacy() {
  * @since BuddyBoss 1.2.0
  */
 function bp_video_parent_activity_id() {
-	echo bp_get_video_parent_activity_id();
+	echo bp_get_video_parent_activity_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1097,14 +1097,14 @@ function bp_has_video_albums( $args = '' ) {
 			// get the login user id.
 			$current_user_id = get_current_user_id();
 
-			// check if the login user is friends of the display user
+			// check if the login user is friends of the display user.
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
 
 			/**
-			 * check if the login user is friends of the display user
+			 * Check if the login user is friends of the display user,
 			 * OR check if the login user and the display user is the same
 			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id === $user_id ) {
 				$privacy[] = 'friends';
 			}
 		}
@@ -1140,7 +1140,7 @@ function bp_has_video_albums( $args = '' ) {
 			'fields'       => 'all',
 			'count_total'  => false,
 
-			// Filtering
+			// Filtering.
 			'user_id'      => $user_id,     // user_id to filter on.
 			'group_id'     => $group_id,    // group_id to filter on.
 			'privacy'      => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
@@ -1252,7 +1252,7 @@ function bp_get_video_album_load_more_link() {
  * @global object $video_album_template {@link BP_Video_Album_Template}
  */
 function bp_video_album_pagination_count() {
-	echo bp_get_video_album_pagination_count();
+	echo bp_get_video_album_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1282,7 +1282,7 @@ function bp_get_video_album_pagination_count() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_album_pagination_links() {
-	echo bp_get_video_album_pagination_links();
+	echo bp_get_video_album_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1345,7 +1345,7 @@ function bp_video_album_has_more_items() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_album_count() {
-	echo bp_get_video_album_count();
+	echo bp_get_video_album_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1375,7 +1375,7 @@ function bp_get_video_album_count() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_album_per_page() {
-	echo bp_get_video_album_per_page();
+	echo bp_get_video_album_per_page(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1405,7 +1405,7 @@ function bp_get_video_album_per_page() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_album_title() {
-	echo bp_get_video_album_title();
+	echo bp_get_video_album_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1456,7 +1456,7 @@ function bp_get_video_album_privacy() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_album_link() {
-	echo bp_get_video_album_link();
+	echo bp_get_video_album_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1490,7 +1490,7 @@ function bp_get_video_album_link() {
 /**
  * Determine if the current user can delete an album item.
  *
- * @param int|BP_Video_Album $album BP_Video_Album object or ID of the album
+ * @param int|BP_Video_Album $album BP_Video_Album object or ID of the album.
  *
  * @return bool True if can delete, false otherwise.
  * @since BuddyBoss 1.6.0
@@ -1575,7 +1575,7 @@ function bp_video_user_can_edit( $video = false ) {
 		}
 
 		// Users are allowed to edit their own media.
-		if ( isset( $video->user_id ) && ( $video->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $video->user_id ) && ( bp_loggedin_user_id() === $video->user_id ) ) {
 			$can_edit = true;
 		}
 
@@ -1587,7 +1587,7 @@ function bp_video_user_can_edit( $video = false ) {
 			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $video->group_id );
 
 			if ( $manage ) {
-				if ( $video->user_id === bp_loggedin_user_id() ) {
+				if ( bp_loggedin_user_id() === $video->user_id ) {
 					$can_edit = true;
 				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 					$can_edit = true;
@@ -1668,7 +1668,7 @@ function bp_video_album_user_can_edit( $album = false ) {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_length() {
-	echo bp_get_video_length();
+	echo bp_get_video_length(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
