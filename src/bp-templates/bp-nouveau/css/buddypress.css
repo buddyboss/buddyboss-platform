@@ -3265,8 +3265,8 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 13px;
 }
 
-#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.delete_video a:before,
-.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.delete_video a:before {
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.delete_file a:before,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.delete_file a:before {
   content: "\e937";
   font-size: 15px;
 }
