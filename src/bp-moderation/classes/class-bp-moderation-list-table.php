@@ -93,9 +93,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		if ( 'reported-content' === $current_tab ) {
-			esc_html_e( 'Sorry, no reported content was found.', 'buddyboss' );
+			esc_html_e( 'No reported content found.', 'buddyboss' );
 		} else {
-			esc_html_e( 'Sorry, no blocked members were found.', 'buddyboss' );
+			esc_html_e( 'No blocked members found.', 'buddyboss' );
 		}
 	}
 

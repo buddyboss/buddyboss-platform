@@ -1015,11 +1015,11 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'moderation-block-member-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading your blocked members. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading blocked members. Please wait.', 'buddyboss' ),
 		),
 		'moderation-requests-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no blocked members were found.', 'buddyboss' ),
+			'message' => __( 'No blocked members found.', 'buddyboss' ),
 		)
 	) );
 

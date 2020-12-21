@@ -275,7 +275,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 					<?php checked( bp_is_moderation_auto_hide_enable( false, $slug ) ); ?> />
 			<?php
 			// translators: html for threshold fields.
-			printf( esc_html__( 'Automatically hide content after they have been reported at least %s times.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( esc_html__( 'Auto hide activity after %s reports.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</label>
 		<br/>
