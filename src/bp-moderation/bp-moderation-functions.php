@@ -872,6 +872,9 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		if ( empty( $settings ) ){
+			$settings = array();
+		}
 		$settings[ $content_type ] = $default;
 	}
 
@@ -895,9 +898,11 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 		return false;
 	}
 
-	$settings = get_option( 'bpm_reporting_auto_hide', $default );
-
+	$settings = get_option( 'bpm_reporting_auto_hide', array() );
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		if ( empty( $settings ) ){
+			$settings = array();
+		}
 		$settings[ $content_type ] = $default;
 	}
 
@@ -920,6 +925,9 @@ function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_typ
 	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
+		if ( empty( $settings ) ){
+			$settings = array();
+		}
 		$settings[ $content_type ] = $default;
 	}
 
