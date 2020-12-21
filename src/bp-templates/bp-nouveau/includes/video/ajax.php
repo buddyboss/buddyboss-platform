@@ -1094,7 +1094,7 @@ function bp_nouveau_ajax_video_move() {
 		wp_send_json_error( $response );
 	}
 
-	// Move media.
+	// Move video.
 	$album_id    = ! empty( $_POST['album_id'] ) ? (int) $_POST['album_id'] : 0;
 	$video_id    = ! empty( $_POST['video_id'] ) ? (int) $_POST['video_id'] : 0;
 	$group_id    = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;

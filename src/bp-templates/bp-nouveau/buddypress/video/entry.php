@@ -10,7 +10,7 @@ global $video_template;
 
 $attachment_id = bp_get_video_attachment_id();
 $download_url  = bp_video_download_link( $attachment_id, bp_get_video_id() );
-$group_id      = bp_get_media_group_id();
+$group_id      = bp_get_video_group_id();
 $move_id       = '';
 $move_type     = '';
 $video_privacy = bp_video_user_can_manage_video( bp_get_video_id(), bp_loggedin_user_id() );

@@ -3487,8 +3487,6 @@ function bp_video_album_recursive_li_list( $array, $first = false ) {
  */
 function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id = 0 ) {
 
-	global $wpdb, $bp;
-
 	if ( 0 === $video_id ) {
 		return false;
 	}
