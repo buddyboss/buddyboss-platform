@@ -193,61 +193,30 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public function manage_hidden_group( $group_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$is_group_block = true;
-		if ( ! empty( $args['blocked_user'] ) ) {
-			$blocked_user         = $args['blocked_user'];
-			$args['blocked_user'] = (array) $args['blocked_user'];
-			$g_admins             = groups_get_group_admins( $group_id );
+		$suspend_args = wp_parse_args(
+			$args,
+			array(
+				'item_id'   => $group_id,
+				'item_type' => self::$type,
+			)
+		);
 
-			// if more then one admin for group then check all blocked/suspended.
-			if ( 1 < count( $g_admins ) ) {
-				$g_admins = wp_list_pluck( $g_admins, 'user_id' );
-				foreach ( $g_admins as $admin_id ) {
-					// Check group all organiser is block/suspend except `blocked_user` then we should block group.
-					if ( $blocked_user !== $admin_id && ! bp_moderation_is_user_suspended( $admin_id ) && ! bp_moderation_is_user_blocked( $admin_id ) ) {
-						$is_group_block = false;
-					}
-
-					if ( bp_moderation_is_user_blocked( $admin_id ) ) {
-						$args['blocked_user'][] = $admin_id;
-					}
-
-					// if any one organiser of group is not suspend then group should not be hide by suspend user.
-					if ( $blocked_user !== $admin_id && ! bp_moderation_is_user_suspended( $admin_id ) ) {
-						if ( isset( $args['user_suspended'] ) ) {
-							$args['user_suspended'] = false;
-						}
-					}
-				}
-			}
+		if ( ! is_null( $hide_sitewide ) ) {
+			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
-		if ( $is_group_block ) {
-			$suspend_args = wp_parse_args(
-				$args,
+		BP_Core_Suspend::add_suspend( $suspend_args );
+
+		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+			$this->hide_related_content( $group_id, $hide_sitewide, $args );
+		} else {
+			$bp_background_updater->push_to_queue(
 				array(
-					'item_id'   => $group_id,
-					'item_type' => self::$type,
+					'callback' => array( $this, 'hide_related_content' ),
+					'args'     => array( $group_id, $hide_sitewide, $args ),
 				)
 			);
-
-			if ( ! is_null( $hide_sitewide ) ) {
-				$suspend_args['hide_sitewide'] = $hide_sitewide;
-			}
-
-			BP_Core_Suspend::add_suspend( $suspend_args );
-
-			if ( $this->backgroup_diabled || ! empty( $args ) ) {
-				$this->hide_related_content( $group_id, $hide_sitewide, $args );
-			} else {
-				$bp_background_updater->push_to_queue(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $group_id, $hide_sitewide, $args ),
-					)
-				);
-				$bp_background_updater->save()->schedule_event();
-			}
+			$bp_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -262,17 +231,6 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_group( $group_id, $hide_sitewide, $force_all, $args = array() ) {
-
-		if ( ! empty( $args['blocked_user'] ) ) {
-			$g_admins     = groups_get_group_admins( $group_id );
-
-			// if more then one admin for group then check all remove `user_suspended` flag as one admin will not be suspended.
-			if ( 1 < count( $g_admins ) ) {
-				if ( isset( $args['user_suspended'] ) ){
-					$args['user_suspended'] = false;
-				}
-			}
-		}
 
 		global $bp_background_updater;
 
@@ -315,13 +273,6 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $group_id, $args = array() ) {
 		$related_contents = array();
-
-		if ( bp_is_active( 'forums' ) ) {
-			$forum_id = groups_get_groupmeta( $group_id, 'forum_id' );
-			if ( is_array( $forum_id ) && ! empty( $forum_id[0] ) ) {
-				$related_contents[ BP_Suspend_Forum::$type ] = array( $forum_id[0] );
-			}
-		}
 
 		if ( bp_is_active( 'activity' ) ) {
 			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_group_activity_ids( $group_id );
