@@ -124,6 +124,38 @@
 			}
 		}
 
+		.comment-item.suspended-comment-item {
+			pointer-events: none;
+			opacity: 0.7;
+
+			.item-avatar {
+				position: relative;
+
+				&:before {
+					content: "\e8c9";
+					position: absolute;
+					bottom: 5px;
+					color: #668682;
+					transform: rotate(90deg);
+					right: 4px;
+					font-family: "bb-icons"; /* stylelint-disable-line */
+					font-size: 18px;
+					speak: none;
+					display: inline-block;
+					text-decoration: inherit;
+					text-transform: none;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					z-index: 1;
+				}
+
+			}
+
+			.activity-time-since {
+				display: none;
+			}
+		}
+
 	} // close .activity-comments
 
 	// Activity li.mini Comments

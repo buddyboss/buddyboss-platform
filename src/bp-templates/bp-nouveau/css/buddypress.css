@@ -3889,6 +3889,36 @@ span.dashicons.dashicons-admin-file:before {
   color: #5087e5;
 }
 
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .item-avatar {
+  position: relative;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .item-avatar:before {
+  content: '\e8c9';
+  position: absolute;
+  bottom: 5px;
+  color: #668682;
+  transform: rotate(90deg);
+  right: 4px;
+  font: normal normal normal 18px/1 "bb-icons";
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  z-index: 1;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .activity-time-since {
+  display: none;
+}
+
 .buddypress-wrap .mini .activity-comments {
   clear: both;
   margin-top: 0;
@@ -11260,6 +11290,38 @@ h2.bbp-form-title.entry-title {
 .bbp-forum-title-label span {
   opacity: 0.6;
   font-size: 14px;
+}
+
+.bs-reply-suspended-block {
+  pointer-events: none;
+}
+
+.bs-reply-suspended-block .bbp-author-role {
+  display: none;
+}
+
+.bs-reply-header.bs-reply-suspended-header {
+  opacity: 0.7;
+}
+
+.bs-reply-header.bs-reply-suspended-header .bbp-reply-author.bp-suspended-avatar:before {
+  content: '\e8c9';
+  position: absolute;
+  bottom: 5px;
+  color: #668682;
+  transform: rotate(90deg);
+  right: 4px;
+  font: normal normal normal 18px/1 "bb-icons";
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bbp-reply-content.bs-forum-suspended-content {
+  opacity: 0.7;
 }
 
 /**

@@ -14,15 +14,42 @@ if ( bp_is_active( 'moderation' ) ) {
 }
 ?>
 
-<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>"
+<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?> suspended-comment-item"
 	data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
-	<?php if ( $is_user_suspended ) {
-		esc_html_e( 'Content from suspended user.', 'buddyboss' );
-	} else if ( $is_user_blocked ) {
-		esc_html_e( 'Content from blocked user.', 'buddyboss' );
-	} else {
-		esc_html_e( 'Blocked Content.', 'buddyboss' );
-	} ?>
+
+	<div class="acomment-avatar item-avatar">
+		<a href="<?php bp_activity_comment_user_link(); ?>">
+			<?php
+			bp_activity_avatar(
+				array(
+					'type'    => 'thumb',
+					'user_id' => bp_get_activity_comment_user_id(),
+				)
+			);
+			?>
+		</a>
+	</div>
+
+	<div class="acomment-meta">
+
+		<?php bp_nouveau_activity_comment_action(); ?>
+
+	</div>
+
+	<div class="acomment-content">
+
+		<?php if ( $is_user_suspended ) {
+			esc_html_e( 'Content from suspended user.', 'buddyboss' );
+		} else if ( $is_user_blocked ) {
+			esc_html_e( 'Content from blocked user.', 'buddyboss' );
+		} else {
+			esc_html_e( 'Blocked Content.', 'buddyboss' );
+		} ?>
+
+	</div>
+	
+
+	
 
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
 </li>

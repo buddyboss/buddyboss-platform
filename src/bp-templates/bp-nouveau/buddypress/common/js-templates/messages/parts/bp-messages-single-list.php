@@ -20,6 +20,12 @@
 		</div>
         <# } #>
 
+        <# if ( data.is_user_suspended || data.is_user_blocked ) { #>
+            <div class="bp-avatar-wrap bp-suspended-avatar">
+                <img class="avatar" src="{{{data.sender_avatar}}}" alt="Suspended Member Avatar">
+            </div>
+        <# } #>
+
 		<div class="bp-single-message-content">
             <# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 			<div class="message-metadata">
@@ -57,7 +63,14 @@
             <div class="bp-messages-hook before-message-content">{{{data.beforeContent}}}</div>
             <# } #>
 
-            <div class="bp-message-content-wrap">{{{data.content}}}</div>
+            <# if ( data.is_user_suspended || data.is_user_blocked ) { #>
+                <div class="message-metadata bp-suspended-meta">
+                    <strong>{{data.sender_name}}</strong>
+                </div>
+                <div class="bp-message-content-wrap bp-suspended-content">{{{data.content}}}</div>
+            <# } else { #>
+                <div class="bp-message-content-wrap">{{{data.content}}}</div>
+            <# } #>
 
             <# if ( data.media ) { #>
             <div class="bb-activity-media-wrap bb-media-length-{{data.media.length}}">
