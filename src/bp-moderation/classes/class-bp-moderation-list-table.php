@@ -510,27 +510,23 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			);
 		}
 
-		$actions['hide'] = sprintf(
-			'<a href="javascript:void(0);" class="%s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
-			esc_attr( $class ),
-			esc_attr( $item['item_id'] ),
-			esc_attr( $item['item_type'] ),
-			esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
-			esc_attr( $action_type ),
-			esc_attr( $action_label ),
-			esc_html( $action_label )
-		);
+		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+			$actions['hide'] = sprintf(
+				'<a href="javascript:void(0);" class="%s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+				esc_attr( $class ),
+				esc_attr( $item['item_id'] ),
+				esc_attr( $item['item_type'] ),
+				esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
+				esc_attr( $action_type ),
+				esc_attr( $action_label ),
+				esc_html( $action_label )
+			);
+		}
 
 		if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
 
-			$user_action_type  = 'suspend';
-			$user_action_label = esc_html__( 'Suspend Owner', 'buddyboss' );
-			$user_data         = BP_Moderation::get_specific_moderation( $user_id, 'user' );
-
-			if ( ! empty( $user_data ) ) {
-				$user_action_type  = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
-				$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
-			}
+			$user_action_type  = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'suspend' : 'unsuspend';
+			$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
 
 			$actions['suspend'] = sprintf(
 				'<a href="javascript:void(0);" class="bp-block-user delete content-author" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
