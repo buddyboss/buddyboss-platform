@@ -416,7 +416,7 @@ window.bp = window.bp || {};
 							for ( var i in self.dropzone_video ) {
 								if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
 
-									if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && !self.dropzone_video[ i ].saved ) {
+									if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && ! self.dropzone_video[ i ].saved ) {
 										self.removeAttachment( self.dropzone_video[ i ].id );
 									}
 
@@ -425,7 +425,7 @@ window.bp = window.bp || {};
 								}
 							}
 						}
-						if ( !self.video_dropzone_obj.getAcceptedFiles().length ) {
+						if ( ! self.video_dropzone_obj.getAcceptedFiles().length ) {
 							$( '#bp-video-uploader-modal-status-text' ).text( '' );
 							$( '#bp-video-submit' ).hide();
 						} else {
@@ -442,6 +442,11 @@ window.bp = window.bp || {};
 
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div.video-thumbnail-uploader-wrapper #video-thumbnail-uploader' ).length ) {
 
+
+				var target              = $( event.currentTarget );
+				var videoAttachmentId   = target.attr( 'data-video-attachment-id' );
+				var videoId             = target.attr( 'data-video-id' );
+
 				$( '#bp-video-thumbnail-uploader' ).show();
 
 				self.video_thumb_dropzone_obj = new Dropzone( 'div.video-thumbnail-uploader-wrapper #video-thumbnail-uploader', self.videoThumbnailOptions );
@@ -456,15 +461,21 @@ window.bp = window.bp || {};
 
 				self.video_thumb_dropzone_obj.on(
 					'addedfile',
-					function () {
-						setTimeout(
-							function () {
-								if ( self.video_thumb_dropzone_obj.getAcceptedFiles().length ) {
-									$( '#bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) ).show();
-								}
-							},
-							1000
-						);
+					function ( file ) {
+
+						if ( file.video_thumbnail_edit_data ) {
+							self.dropzone_video_thumb.push( file.video_thumbnail_edit_data );
+							$( '#bp-video-thumbnail-uploader .video-thumbnail-uploader-wrapper .dropzone.dz-clickable').addClass( 'dz-max-files-reached' );
+						} else {
+							setTimeout(
+								function () {
+									if ( self.video_thumb_dropzone_obj.getAcceptedFiles().length ) {
+										$( '#bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) ).show();
+									}
+								},
+								1000
+							);
+						}
 					}
 				);
 
@@ -499,12 +510,12 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id = response.id;
-							response.data.uuid = file.upload.uuid;
-							response.data.menu_order = self.dropzone_video.length;
-							response.data.album_id = self.video_album_id;
-							response.data.group_id = self.video_group_id;
-							response.data.saved = false;
+							file.id                     = response.id;
+							response.data.uuid          = file.upload.uuid;
+							response.data.menu_order    = self.dropzone_video.length;
+							response.data.album_id      = self.video_album_id;
+							response.data.group_id      = self.video_group_id;
+							response.data.saved         = false;
 							self.dropzone_video_thumb.push( response.data );
 						} else {
 							this.removeFile( file );
@@ -531,7 +542,7 @@ window.bp = window.bp || {};
 								}
 							}
 						}
-						if ( !self.video_thumb_dropzone_obj.getAcceptedFiles().length ) {
+						if ( ! self.video_thumb_dropzone_obj.getAcceptedFiles().length ) {
 							$( '#bp-video-thumbnail-uploader-modal-status-text' ).text( '' );
 							$( '#bp-video-thumbnail-submit' ).hide();
 						} else {
@@ -539,7 +550,82 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+
+				var data = {
+					'action': 'video_get_edit_thumbnail_data',
+					'_wpnonce': BP_Nouveau.nonces.video,
+					'attachment_id': videoAttachmentId,
+					'video_id': videoId,
+				};
+
+				$.ajax(
+					{
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: data,
+						success: function ( response ) {
+							if ( response.success ) {
+
+								if ( response.data.default_images ) {
+									var ulSelector = $( '#bp-video-thumbnail-uploader .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
+									ulSelector.html( '' );
+									ulSelector.html( response.data.default_images );
+								}
+
+								if ( response.data.dropzone_edit ) {
+									var mock_file = false;
+
+									mock_file = false;
+									mock_file = {
+										name: response.data.dropzone_edit.name,
+										accepted: true,
+										kind: 'image',
+										upload: {
+											filename: response.data.dropzone_edit.name,
+											uuid: response.data.dropzone_edit.attachment_id
+										},
+										dataURL: response.data.dropzone_edit.url,
+										id: response.data.dropzone_edit.attachment_id,
+										video_thumbnail_edit_data: {
+											'id': response.data.dropzone_edit.attachment_id,
+											'media_id': response.data.dropzone_edit.id,
+											'name': response.data.dropzone_edit.name,
+											'thumb': response.data.dropzone_edit.thumb,
+											'url': response.data.dropzone_edit.url,
+											'uuid': response.data.dropzone_edit.attachment_id,
+											'menu_order': 0,
+											'saved': true
+										}
+									};
+
+									if ( self.video_thumb_dropzone_obj ) {
+										self.video_thumb_dropzone_obj.files.push( mock_file );
+										self.video_thumb_dropzone_obj.emit( 'addedfile', mock_file );
+										//self.video_thumb_dropzone_obj.emit( 'maxfilesreached', mock_file );
+										self.createThumbnailFromUrl( mock_file );
+
+									}
+								}
+							}
+						}
+					}
+				);
 			}
+		},
+
+		createThumbnailFromUrl: function ( mock_file ) {
+			var self = this;
+			self.video_thumb_dropzone_obj.createThumbnailFromUrl(
+				mock_file,
+				self.video_thumb_dropzone_obj.options.thumbnailWidth,
+				self.video_thumb_dropzone_obj.options.thumbnailHeight,
+				self.video_thumb_dropzone_obj.options.thumbnailMethod,
+				true,
+				function ( thumbnail ) {
+					self.video_thumb_dropzone_obj.emit( 'thumbnail', mock_file, thumbnail );
+					self.video_thumb_dropzone_obj.emit( 'complete', mock_file );
+				}
+			);
 		},
 
 		closeEditThumbnailUploader: function ( event ) {

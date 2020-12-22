@@ -104,6 +104,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'video_get_edit_thumbnail_data' => array(
+					'function' => 'bp_nouveau_ajax_video_get_edit_thumbnail_data',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1228,5 +1234,89 @@ function bp_nouveau_ajax_video_move() {
 	} else {
 		wp_send_json_error( $response );
 	}
+
+}
+
+function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
+
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_video';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_SANITIZE_NUMBER_INT );
+	$video_id      = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
+
+	if ( 0 === $video_id || 0 === $attachment_id ) {
+		wp_send_json_error( $response );
+	}
+
+	$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+	$preview_thumbnail_id      = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
+	$default_images            = '';
+	$dropzone_arr              = '';
+	if ( $auto_generated_thumbnails ) {
+		$auto_generated_thumbnails_arr = explode( ',', $auto_generated_thumbnails );
+		ob_start();
+		if ( $auto_generated_thumbnails_arr ) {
+			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
+				$attachment_url = wp_get_attachment_image_url( $auto_generated_thumbnail, 'full' );
+				?>
+				<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
+					<div class="">
+						<a class="" href="#">
+							<img src="<?php echo esc_url( $attachment_url ); ?>" class=""/>
+						</a>
+						<div class="bb-action-check-wrap">
+							<input id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
+							<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>"><span class="bb-icon bb-icon-check"></span></label>
+						</div>
+					</div>
+				</li>
+				<?php
+			}
+		}
+		$default_images = ob_get_contents();
+		ob_end_clean();
+	}
+
+	if ( $preview_thumbnail_id ) {
+		$auto_generated_thumbnails_arr = explode( ',', $auto_generated_thumbnails );
+		if ( ! in_array( $preview_thumbnail_id, $auto_generated_thumbnails_arr, true ) ) {
+			$video        = new BP_Video( $video_id );
+			$dropzone_arr = array(
+				'id'            => $video_id,
+				'attachment_id' => $video->attachment_id,
+				'thumb'         => wp_get_attachment_image_url( $preview_thumbnail_id, 'bp-media-thumbnail' ),
+				'url'           => wp_get_attachment_image_url( $preview_thumbnail_id, 'full' ),
+				'name'          => $video->title,
+				'saved'         => true,
+			);
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'default_images' => $default_images,
+			'dropzone_edit'  => $dropzone_arr,
+		)
+	);
 
 }
