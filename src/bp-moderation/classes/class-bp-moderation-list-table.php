@@ -532,8 +532,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			}
 
 			$actions['suspend'] = sprintf(
-				'<a href="javascript:void(0);" class="bp-block-user delete content-author" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+				'<a href="javascript:void(0);" class="bp-block-user delete content-author" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
 				esc_attr( $user_id ),
+				esc_attr( BP_Moderation_Members::$moderation_type ),
 				esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
 				esc_attr( $user_action_type ),
 				esc_attr( $user_action_label ),
