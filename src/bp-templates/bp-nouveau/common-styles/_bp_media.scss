@@ -630,6 +630,38 @@
 		z-index: 11;
 	}
 
+	.video-js .vjs-big-play-button,
+	.bb-video-play {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.video-js ~ .bb-video-play {
+		pointer-events: none;
+	}
+
+	.video-js.vjs-playing {
+
+		~ .bb-video-play,
+		~ .bb-video-duration {
+			display: none;
+		}
+
+		.vjs-big-play-button {
+			display: none;
+		}
+
+	}
+
+	.video-js .vjs-big-play-button {
+		height: 47px;
+		width: 52px;
+		border-radius: 50%;
+		border: 0 !important;
+	}
+
 }
 
 .bb-action-check-wrap {
