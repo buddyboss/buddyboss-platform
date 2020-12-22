@@ -1193,12 +1193,12 @@ class BP_Moderation {
 
 					return bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
 
-				} elseif ( bp_is_moderation_auto_hide_enable( $this->item_type ) ) {
+				} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 
 					$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
 
 					$user_ids = bp_moderation_get_content_owner_id( $this->item_id, $this->item_type );
-					if ( ! is_array( $user_ids ) ){
+					if ( ! is_array( $user_ids ) ) {
 						$user_ids = array( $user_ids );
 					}
 
