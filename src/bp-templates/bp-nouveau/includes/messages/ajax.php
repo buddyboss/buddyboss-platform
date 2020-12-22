@@ -1638,16 +1638,15 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$thread = new stdClass();
 
+	$recipients = (array) $thread_template->thread->recipients;
+	// Strip the sender from the recipient list, and unset them if they are
+	// not alone. If they are alone, let them talk to themselves.
+	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
+		unset( $recipients[ bp_loggedin_user_id() ] );
+	}
+
 	// Check recipients if connected or not.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-
-		$recipients = (array) $thread_template->thread->recipients;
-
-		// Strip the sender from the recipient list, and unset them if they are
-		// not alone. If they are alone, let them talk to themselves.
-		if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
-			unset( $recipients[ bp_loggedin_user_id() ] );
-		}
 
 		foreach ( $recipients as $recipient ) {
 			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
@@ -1664,6 +1663,28 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 				break;
 			}
+		}
+	}
+
+	/*if ( bp_is_active( 'moderation' ) ) {
+		$thread->thread['recipients'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+		$thread->thread['recipients'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+	}*/
+
+	// Check moderation if user blocked or not for single user thread
+	if ( bp_is_active( 'moderation' ) && ! empty( $recipients ) && 1 === count( $recipients ) ) {
+		$recipient_id = current( array_keys( $recipients ) );
+
+		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
+			$thread->feedback_error = array(
+				'feedback' => __( "You can't message suspended user.", 'buddyboss' ),
+				'type'     => 'error',
+			);
+		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
+			$thread->feedback_error = array(
+				'feedback' => __( "You can't message blocked user.", 'buddyboss' ),
+				'type'     => 'error',
+			);
 		}
 	}
 
