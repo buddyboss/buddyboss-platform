@@ -194,23 +194,25 @@ $admins            = array_map( 'intval', get_users(
 									<?php
 									if ( $is_content_screen ) {
 
-										$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-										?>
-										<a href="javascript:void(0);"
-											class="button button-primary bp-hide-request single-report-btn"
-											data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-											data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>"
-											data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-											data-action="<?php echo esc_attr( $action_type ); ?>"
-											title="<?php echo esc_html( $action_label ); ?>">
-											<?php
-											echo esc_html( $action_label );
+										$user_id   = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+										$user_data = BP_Moderation::get_specific_moderation( $user_id, BP_Moderation_Members::$moderation_type );
+										if ( 0 === (int) $user_data->hide_sitewide ) {
 											?>
-										</a>
-										<?php
+                                            <a href="javascript:void(0);"
+                                               class="button button-primary bp-hide-request single-report-btn"
+                                               data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
+                                               data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>"
+                                               data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
+                                               data-action="<?php echo esc_attr( $action_type ); ?>"
+                                               title="<?php echo esc_html( $action_label ); ?>">
+												<?php
+												echo esc_html( $action_label );
+												?>
+                                            </a>
+											<?php
+										}
 										if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
 											$user_action_type = 'suspend';
-											$user_data        = BP_Moderation::get_specific_moderation( $user_id, BP_Moderation_Members::$moderation_type );
 											$user_action_text = esc_html__( 'Suspend Content Author', 'buddyboss' );
 											if ( ! empty( $user_data ) ) {
 												$user_action_type = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
