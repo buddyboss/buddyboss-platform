@@ -2652,7 +2652,14 @@ function bp_core_get_components( $type = 'all' ) {
 			),
 			'default'              => false,
 			'deactivation_confirm' => true,
-			'deactivation_message' => __( 'Moderation deactivation message', 'buddyboss' ),
+			'deactivation_message' => __( '<p>Are you sure you want to deactivate Moderation component?</p>
+			<h4>On Deactivation:</h4>
+			<ul>
+			<li>- All suspended members will be allowed to login and content will be open.</li>
+			<li>- Members on the network will not be able to block each other. Blocked member will be open again for members on the network.</li>
+			<li>- Hidden content will start to show.</li>
+			</ul>
+			<p>Note: Moderation data will not be deleted. Activate component again to enable suspension, block and hide content again.</p>', 'buddyboss' ),
 		),
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
