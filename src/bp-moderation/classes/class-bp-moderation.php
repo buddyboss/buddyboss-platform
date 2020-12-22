@@ -303,7 +303,12 @@ class BP_Moderation {
 		$join_sql = '';
 
 		// Where conditions.
-		$where_conditions = array( '1=1 AND reported=1' );
+		$where_conditions = array( '1=1' );
+
+		// Exclude report list for backend.
+		if ( ! isset( $r['reported'] ) ) {
+			$where_conditions['reported'] = 'reported=1';
+		}
 
 		// Scope takes precedence.
 		if ( ! empty( $r['filter_query'] ) ) {

@@ -68,6 +68,7 @@
 				<# } #>
 			</div>
 
+            <# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 			<div class="thread-subject">
 				<span class="last-message-sender">
 				  <# if ( data.sender_is_you ) { #>
@@ -78,6 +79,8 @@
 				</span>
                 {{{data.excerpt}}}
 			</div>
+            <# } #>
+
 		</div>
 
 		<div class="thread-date">

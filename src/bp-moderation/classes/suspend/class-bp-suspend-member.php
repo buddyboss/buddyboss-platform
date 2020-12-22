@@ -239,6 +239,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$suspend_args['user_suspended'] = $hide_sitewide;
 		}
 
+		$suspend_args = self::validate_keys( $suspend_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
@@ -290,6 +292,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide']  = $hide_sitewide;
 			$suspend_args['user_suspended'] = $hide_sitewide;
 		}
+
+		$suspend_args = self::validate_keys( $suspend_args );
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
@@ -438,7 +442,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @param int   $hide_sitewide item hidden sitewide or user specific.
 	 * @param array $args          parent args.
 	 */
-	protected function prepare_suspend_args( $member_id, $hide_sitewide, $args ) {
+	protected function prepare_suspend_args( $member_id, $hide_sitewide, $args = array() ) {
 
 		$action_suspend = false;
 		if ( isset( $args['action'] ) ) {

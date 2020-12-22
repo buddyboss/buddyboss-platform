@@ -97,6 +97,13 @@ function bp_moderation_get_settings_fields() {
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
+
+		'bpm_reporting_categories'  => array(
+			'title'             => __( 'Reporting Category', 'buddyboss' ),
+			'callback'          => 'bpm_reporting_settings_callback_categories',
+			'sanitize_callback' => '',
+			'args'              => array(),
+		),
 	);
 
 	return (array) apply_filters( 'bp_moderation_get_settings_fields', $fields );
@@ -315,4 +322,27 @@ function bpm_reporting_settings_callback_email_notification() {
 		<?php esc_html_e( 'Notify administrators when content has been auto-hidden.', 'buddyboss' ); ?>
 	</label>
 	<?php
+}
+
+/**
+ * Moderation reporting reproting categories
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bpm_reporting_settings_callback_categories() {
+	printf(
+		'<label>%s</label>',
+		sprintf(
+			__( '<a href="%s">Manage</a> reporting from categories form members allowed to select from frontend.', 'buddyboss' ),
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'taxonomy' => 'bpm_category',
+						'tab'      => 'report-categories',
+					),
+					'edit-tags.php'
+				)
+			)
+		)
+	);
 }

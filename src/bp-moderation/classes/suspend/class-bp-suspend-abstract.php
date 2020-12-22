@@ -38,6 +38,25 @@ abstract class BP_Suspend_Abstract {
 	public $alias = 's';
 
 	/**
+	 * White listed DB Fields.
+	 *
+	 * @var array
+	 */
+	public static $white_list_keys = array(
+		'id',
+		'item_id',
+		'item_type',
+		'hide_sitewide',
+		'hide_parent',
+		'user_suspended',
+		'reported',
+		'last_updated',
+		'blog_id',
+		'blocked_user',
+		'action_suspend',
+	);
+
+	/**
 	 * Check whether bypass argument pass for admin user or not.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -145,13 +164,12 @@ abstract class BP_Suspend_Abstract {
 	 * @param int   $item_id       item id.
 	 * @param int   $hide_sitewide item hidden sitewide or user specific.
 	 * @param array $args          parent args.
+	 *
+	 * @return array
 	 */
-	protected function prepare_suspend_args( $item_id, $hide_sitewide, $args ) {
-		if ( empty( $args ) ) {
-			$args = array();
-			if ( isset( $hide_sitewide ) ) {
-				$args['hide_parent'] = $hide_sitewide;
-			}
+	protected function prepare_suspend_args( $item_id, $hide_sitewide, $args = array() ) {
+		if ( ! isset( $args['hide_parent'] ) && isset( $hide_sitewide ) ) {
+			$args['hide_parent'] = $hide_sitewide;
 		}
 
 		return $args;
@@ -247,6 +265,23 @@ abstract class BP_Suspend_Abstract {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Return whitelisted keys from array arguments.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return array|mixed
+	 */
+	public static function validate_keys( $args = array() ) {
+		if ( empty( $args ) ) {
+			return $args;
+		}
+
+		return array_intersect_key( $args, array_flip( self::$white_list_keys ) );
 	}
 
 }

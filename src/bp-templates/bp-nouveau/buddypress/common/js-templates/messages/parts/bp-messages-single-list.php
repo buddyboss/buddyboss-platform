@@ -6,6 +6,7 @@
 	<div class="bp-single-message-wrap">
 	<# } #>
 
+        <# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 		<div class="bp-avatar-wrap">
 			<# if ( data.is_deleted ) { #>
 				<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
@@ -17,8 +18,10 @@
 				</a>
 			<# } #>
 		</div>
+        <# } #>
 
 		<div class="bp-single-message-content">
+            <# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 			<div class="message-metadata">
 				<# if ( data.beforeMeta ) { #>
 				<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
@@ -48,6 +51,7 @@
 					<# } #>
 				<# } #>
 			</div>
+            <# } #>
 
             <# if ( data.beforeContent ) { #>
             <div class="bp-messages-hook before-message-content">{{{data.beforeContent}}}</div>

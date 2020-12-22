@@ -16,51 +16,13 @@ if ( bp_is_active( 'moderation' ) ) {
 
 <li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>"
 	data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
-	<div class="acomment-avatar item-avatar">
-		<?php if ( $is_user_suspended || $is_user_blocked ) { ?>
-			<span>
-				<?php
-				bp_activity_avatar(
-						array(
-								'type'    => 'thumb',
-								'user_id' => 0,
-						)
-				);
-				?>
-			</span>
-		<?php } else { ?>
-			<a href="<?php bp_activity_comment_user_link(); ?>">
-				<?php
-				bp_activity_avatar(
-						array(
-								'type'    => 'thumb',
-								'user_id' => bp_get_activity_comment_user_id(),
-						)
-				);
-				?>
-			</a>
-		<?php } ?>
-	</div>
-
-	<div class="acomment-meta">
-
-		<?php if ( $is_user_suspended || $is_user_blocked ) { ?>
-			<span class="author-name"><?php esc_html_e( 'Blocked User', 'buddyboss' ); ?></span>
-		<?php } else {
-			bp_nouveau_activity_comment_action();
-		} ?>
-
-	</div>
-
-	<div class="acomment-content">
-		<?php if ( $is_user_suspended ) {
-			esc_html_e( 'Content from suspended user.', 'buddyboss' );
-		} else if ( $is_user_blocked ) {
-			esc_html_e( 'Content from blocked user.', 'buddyboss' );
-		} else {
-			esc_html_e( 'Blocked Content.', 'buddyboss' );
-		} ?>
-	</div>
+	<?php if ( $is_user_suspended ) {
+		esc_html_e( 'Content from suspended user.', 'buddyboss' );
+	} else if ( $is_user_blocked ) {
+		esc_html_e( 'Content from blocked user.', 'buddyboss' );
+	} else {
+		esc_html_e( 'Blocked Content.', 'buddyboss' );
+	} ?>
 
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
 </li>
