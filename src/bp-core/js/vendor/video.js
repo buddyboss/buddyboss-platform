@@ -12367,7 +12367,15 @@
 
     var ext = getFileExtension(src);
     var mimetype = MimetypesKind[ext.toLowerCase()];
-    return mimetype || '';
+    switch (mimetype) {
+      case 'video/ogg':
+      case 'video/mp4':
+      case 'video/webm':
+        break;
+      default:
+        mimetype = false;
+    }
+    return mimetype;
   };
   /**
    * Find the mime type of a given source string if possible. Uses the player

@@ -49,6 +49,10 @@ function bp_nouveau_video_enqueue_scripts() {
 			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_style( 'bp-media-videojs-css' );
 			wp_enqueue_script( 'bp-media-videojs' );
+			wp_enqueue_script( 'bp-media-videojs-java' );
+			wp_enqueue_script( 'bp-media-videojs-vlc' );
+			wp_enqueue_script( 'bp-media-videojs-flv' );
+			wp_enqueue_script( 'bp-media-videojs-flash' );
 			wp_enqueue_script( 'bp-nouveau-video' );
 			wp_enqueue_script( 'bp-exif' );
 		}
