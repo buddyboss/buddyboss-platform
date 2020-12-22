@@ -74,13 +74,17 @@ class BP_Messages_Notice {
 	 * @since BuddyPress 1.0.0
 	 */
 	public function populate() {
-		global $wpdb;
+		$notices = self::get(
+			array(
+				'include'  => $this->id,
+				'per_page' => 1,
+				'orderby'  => 'id',
+			)
+		);
 
-		$bp = buddypress();
+		$notice = ( ! empty( $notices['notices'] ) ? current( $notices['notices'] ) : false );
 
-		$notice = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_notices} WHERE id = %d", $this->id ) );
-
-		if ( $notice ) {
+		if ( ! empty( $notice ) ) {
 			$this->subject   = $notice->subject;
 			$this->message   = $notice->message;
 			$this->date_sent = $notice->date_sent;
@@ -210,6 +214,209 @@ class BP_Messages_Notice {
 	/** Static Methods ********************************************************/
 
 	/**
+	 * Query for Notices.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $args        {
+	 * Array of parameters. All items are optional.
+	 *
+	 * @type string       $orderby     Optional. Property to sort by. Default: 'date_sent'.
+	 * @type string       $order       Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
+	 * @type int          $per_page    Optional. Number of items to return perpage of results. Default: 20.
+	 * @type int          $page        Optional. Page offset of results to return. Default: 1.
+	 * @type string       $fields      Which fields to return. Specify 'ids' to fetch a list of IDs. Default: 'all'
+	 *                                 (return BP_Groups_Group objects).
+	 * @type array|string $include     Array or comma-separated list of notice ids to limit results to.
+	 * @type array|string $exclude     Array or comma-separated list of notice ids that will be
+	 * @type int          $is_active   Fetch only Active notice or not Default null
+	 * @type int          $count_total Total count of all Notices matching non-paginated query params.
+	 * }
+	 *
+	 * @return array {
+	 * @type array        $notices     Array of notice objects returned by the
+	 *                                    paginated query. (IDs only if `fields` is set
+	 *                                    to `ids`.)
+	 * @type int          $total       Total count of all notices matching non-
+	 *                                        paginated query params.
+	 * }
+	 */
+	public static function get( $args = array() ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$defaults = array(
+			'orderby'     => 'date_sent',
+			'order'       => 'DESC',
+			'per_page'    => 20,
+			'page'        => 1,
+			'include'     => false,
+			'exclude'     => false,
+			'fields'      => 'all',
+			'is_active'   => null,
+			'count_total' => false,
+		);
+
+		$r = bp_parse_args( $args, $defaults, 'bp_messages_notice_get' );
+
+		$sql = array(
+			'select'     => 'SELECT DISTINCT mn.id',
+			'from'       => "{$bp->messages->table_name_notices} mn",
+			'where'      => '',
+			'orderby'    => '',
+			'pagination' => '',
+		);
+
+		$where_conditions = array();
+
+		if ( ! empty( $r['include'] ) ) {
+			$include                     = implode( ',', wp_parse_id_list( $r['include'] ) );
+			$where_conditions['include'] = "mn.id IN ({$include})";
+		}
+
+		if ( ! empty( $r['exclude'] ) ) {
+			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
+			$where_conditions['exclude'] = "mn.id NOT IN ({$exclude})";
+		}
+
+		if ( isset( $r['is_active'] ) ) {
+			$where_conditions['is_active'] = "mn.is_active = {$r['is_active']}";
+		}
+
+		/* Order/orderby ********************************************/
+
+		$order   = $r['order'];
+		$orderby = $r['orderby'];
+
+		// Sanitize 'order'.
+		$order = bp_esc_sql_order( $order );
+
+		/**
+		 * Filters the converted 'orderby' term.
+		 *
+		 * @param string $value   Converted 'orderby' term.
+		 * @param string $orderby Original orderby value.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 */
+		$orderby = apply_filters( 'bp_messages_notice_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
+
+		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
+
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && - 1 !== $r['per_page'] ) {
+			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 */
+		$where_conditions = apply_filters( 'bp_messages_notice_get_where_conditions', $where_conditions, $r );
+
+		$where = '';
+		if ( ! empty( $where_conditions ) ) {
+			$sql['where'] = implode( ' AND ', $where_conditions );
+			$where        = "WHERE {$sql['where']}";
+		}
+
+		/**
+		 * Filters the From SQL statement.
+		 *
+		 * @param array  $r   Array of parsed arguments for the get method.
+		 * @param string $sql From SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 */
+		$sql['from'] = apply_filters( 'bp_messages_notice_get_join_sql', $sql['from'], $r );
+
+		$paged_notices_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
+
+		/**
+		 * Filters the pagination SQL statement.
+		 *
+		 * @param string $value Concatenated SQL statement.
+		 * @param array  $sql   Array of SQL parts before concatenation.
+		 * @param array  $r     Array of parsed arguments for the get method.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 */
+		$paged_notices_sql = apply_filters( 'bp_messages_notice_get_paged_sql', $paged_notices_sql, $sql, $r );
+
+		$paged_notice_ids = $wpdb->get_col( $paged_notices_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		$paged_notices = array();
+
+		if ( 'ids' === $r['fields'] ) {
+			// We only want the IDs.
+			$paged_notices = array_map( 'intval', $paged_notice_ids );
+		} elseif ( ! empty( $paged_notice_ids ) ) {
+			$notice_ids_sql      = implode( ',', array_map( 'intval', $paged_notice_ids ) );
+			$notice_data_objects = $wpdb->get_results( "SELECT mn.* FROM {$bp->messages->table_name_notices} mn WHERE mn.id IN ({$notice_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			foreach ( (array) $notice_data_objects as $mdata ) {
+				$notice_data_objects[ $mdata->id ] = $mdata;
+			}
+			foreach ( $paged_notice_ids as $paged_notice_id ) {
+				$paged_notices[] = $notice_data_objects[ $paged_notice_id ];
+			}
+		}
+
+		$retval = array(
+			'notices' => $paged_notices,
+			'total'   => 0,
+		);
+
+		if ( ! empty( $r['count_total'] ) ) {
+			// Find the total number of groups in the results set.
+			$total_notices_sql = "SELECT COUNT(DISTINCT mn.id) FROM {$sql['from']} $where";
+
+			/**
+			 * Filters the SQL used to retrieve total group results.
+			 *
+			 * @param string $t_sql     Concatenated SQL statement used for retrieving total group results.
+			 * @param array  $total_sql Array of SQL parts for the query.
+			 * @param array  $r         Array of parsed arguments for the get method.
+			 *
+			 * @since BuddyPress 1.5.0
+			 */
+			$total_notices_sql = apply_filters( 'bp_messages_notice_get_total_sql', $total_notices_sql, $sql, $r );
+
+			$total_notices   = (int) $wpdb->get_var( $total_notices_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$retval['total'] = $total_notices;
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Convert the 'orderby' param into a proper SQL term/column.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param string $orderby Orderby term as passed to get().
+	 *
+	 * @return string $order_by_term SQL-friendly orderby term.
+	 */
+	protected static function convert_orderby_to_order_by_term( $orderby ) {
+		switch ( $orderby ) {
+			case 'id':
+				$order_by_term = 'mn.id';
+				break;
+			case 'date_sent':
+			default:
+				$order_by_term = 'mn.date_sent';
+				break;
+		}
+
+		return $order_by_term;
+	}
+
+
+	/**
 	 * Pulls up a list of notices.
 	 *
 	 * To get all notices, pass a value of -1 to pag_num.
@@ -224,8 +431,6 @@ class BP_Messages_Notice {
 	 * @return object List of notices to display.
 	 */
 	public static function get_notices( $args = array() ) {
-		global $wpdb;
-
 		$r = wp_parse_args(
 			$args,
 			array(
@@ -234,19 +439,21 @@ class BP_Messages_Notice {
 			)
 		);
 
-		$limit_sql = '';
-		if ( (int) $r['pag_num'] >= 0 ) {
-			$limit_sql = $wpdb->prepare( 'LIMIT %d, %d', (int) ( ( $r['pag_page'] - 1 ) * $r['pag_num'] ), (int) $r['pag_num'] );
-		}
+		$notices = self::get(
+			array(
+				'per_page' => $r['pag_num'],
+				'page'     => $r['pag_page'],
+			)
+		);
 
-		$bp = buddypress();
-
-		$notices = $wpdb->get_results( "SELECT * FROM {$bp->messages->table_name_notices} ORDER BY date_sent DESC {$limit_sql}" );
+		$notices = ! empty( $notices['notices'] ) ? $notices['notices'] : array();
 
 		// Integer casting.
-		foreach ( (array) $notices as $key => $data ) {
-			$notices[ $key ]->id        = (int) $notices[ $key ]->id;
-			$notices[ $key ]->is_active = (int) $notices[ $key ]->is_active;
+		if ( ! empty( $notices ) ) {
+			foreach ( (array) $notices as $key => $data ) {
+				$notices[ $key ]->id        = (int) $notices[ $key ]->id;
+				$notices[ $key ]->is_active = (int) $notices[ $key ]->is_active;
+			}
 		}
 
 		/**
@@ -267,11 +474,15 @@ class BP_Messages_Notice {
 	 * @return int
 	 */
 	public static function get_total_notice_count() {
-		global $wpdb;
+		$notices = self::get(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => 1,
+				'count_total' => true,
+			)
+		);
 
-		$bp = buddypress();
-
-		$notice_count = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->messages->table_name_notices}" );
+		$notice_count = ! empty( $notices['total'] ) ? $notices['total'] : 0;
 
 		/**
 		 * Filters the total number of notices.
@@ -292,11 +503,16 @@ class BP_Messages_Notice {
 		$notice = wp_cache_get( 'active_notice', 'bp_messages' );
 
 		if ( false === $notice ) {
-			global $wpdb;
+			$notices = self::get(
+				array(
+					'fields'    => 'ids',
+					'orderby'   => 'id',
+					'is_active' => 1,
+					'per_page'  => 1,
+				)
+			);
 
-			$bp = buddypress();
-
-			$notice_id = $wpdb->get_var( "SELECT id FROM {$bp->messages->table_name_notices} WHERE is_active = 1" );
+			$notice_id = ! empty( $notices['notices'] ) ? current( $notices['notices'] ) : false;
 			$notice    = new BP_Messages_Notice( $notice_id );
 
 			wp_cache_set( 'active_notice', $notice, 'bp_messages' );
