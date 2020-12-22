@@ -33,7 +33,7 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
 		<?php
 		$btn_cls = ( true === $hide_sitewide ) ? 'button disabled' : 'button bp-unblock-user';
 		?>
-		<a href="javascript:void(0)" class="<?php echo esc_attr( $btn_cls ); ?>" data-id="<?php echo esc_attr( bp_get_moderation_item_id() ); ?>" data-type="<?php echo esc_attr( bp_get_moderation_item_type() ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-unblock-user' ) ); ?>">
+		<a href="javascript:void(0)" class="<?php echo esc_attr( $btn_cls ); ?>" data-id="<?php echo esc_attr( bp_get_moderation_item_id() ); ?>" data-type="<?php echo esc_attr( bp_get_moderation_item_type() ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-unblock-user' ) ); ?>" <?php echo ( true === $hide_sitewide ) ? 'data-balloon-pos="left" data-balloon="Member Suspended"' : '' ?>>
 			<?php
 			esc_html_e( 'Unblock', 'buddyboss' );
 			?>
