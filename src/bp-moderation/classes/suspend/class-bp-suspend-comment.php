@@ -192,7 +192,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $comment_text;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$comment_text = esc_html__( 'Content from suspended user.', 'buddyboss' );
 		}
 
@@ -213,7 +213,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment_id) ) {
 			$return = esc_html__( 'Suspended User', 'buddyboss' );
 		}
 
@@ -232,7 +232,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment_id ) ) {
 			$author = esc_html__( 'Suspended User', 'buddyboss' );
 		}
 
@@ -255,7 +255,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $link;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$link = '';
 		}
 
@@ -279,7 +279,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $date;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$date = '';
 		}
 
@@ -305,7 +305,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $date;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$date = '';
 		}
 
@@ -329,7 +329,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $link;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$link = '';
 		}
 
@@ -348,7 +348,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_edit_comment_link( $link, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment_id ) ) {
 			$link = '';
 		}
 
@@ -423,5 +423,26 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $comment_id, $this->item_type );
+	}
+
+	/**
+	 * Check comment author is suspended or not
+	 *
+	 * @param int $comment_id comment id
+	 *
+	 * @return bool
+	 */
+	private function check_is_hidden( $comment_id ) {
+
+		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
+			return true;
+		}
+
+		$author_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
+		if ( bp_moderation_is_user_suspended( $author_id ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

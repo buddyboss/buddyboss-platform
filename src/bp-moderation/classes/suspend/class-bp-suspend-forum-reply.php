@@ -341,6 +341,11 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			return 'loop-blocked-single-reply.php';
 		}
 
+		$author_id = BP_Moderation_Forum_Replies::get_content_owner_id( $reply_id );
+		if ( bp_moderation_is_user_suspended( $author_id ) ) {
+			return 'loop-blocked-single-reply.php';
+		}
+
 		return $template_names;
 	}
 
