@@ -107,20 +107,22 @@ jQuery(document).ready(function ($) {
                 var url = window.location.href;
                 if ( 'suspend'===sub_action ) {
                     curObj.attr ( 'data-action', 'unsuspend' );
-                    curObj.attr ( 'title', Bp_Moderation.strings.unhide_label );
                     if ( curObj.hasClass ( 'content-author' ) ) {
                         curObj.text ( Bp_Moderation.strings.unsuspend_author_label );
+                        curObj.attr ( 'title', Bp_Moderation.strings.unsuspend_author_label );
                     } else {
                         curObj.text ( Bp_Moderation.strings.unsuspend_label );
+                        curObj.attr ( 'title', Bp_Moderation.strings.unsuspend_label );
                     }
                     hideArg = 'suspended';
                 } else if ( 'unsuspend'===sub_action ) {
                     curObj.attr ( 'data-action', 'suspend' );
-                    curObj.attr ( 'title', Bp_Moderation.strings.hide_label );
                     if ( curObj.hasClass ( 'content-author' ) ) {
                         curObj.text ( Bp_Moderation.strings.suspend_author_label );
+                        curObj.attr ( 'title', Bp_Moderation.strings.suspend_author_label );
                     } else {
                         curObj.text ( Bp_Moderation.strings.suspend_label );
+                        curObj.attr ( 'title', Bp_Moderation.strings.suspend_label );
                     }
                     hideArg = 'unsuspended';
                 }
