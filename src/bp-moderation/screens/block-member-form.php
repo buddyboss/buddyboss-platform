@@ -19,40 +19,52 @@
 
 					<div class="bb-report-type-wrp">
 						<p>
+							<?php esc_html_e( 'Are you sure you want to block selected member?', 'buddyboss' ); ?>
+							<br/>
 							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
 						</p>
 						<ul>
+							<?php if ( bp_is_active( 'activity' ) ): ?>
 							<li>
 								<?php
 								esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
 								?>
 							</li>
+							<?php endif; ?>
 							<li>
 								<?php
-								esc_html_e( 'Tag blocked member', 'buddyboss' );
+								esc_html_e( 'Mention blocked member', 'buddyboss' );
 								?>
 							</li>
+							<?php if ( bp_is_active( 'groups' ) ) : ?>
 							<li>
 								<?php
-								esc_html_e( 'Invite blocked member in event and groups', 'buddyboss' );
+								esc_html_e( 'Invite blocked member in groups', 'buddyboss' );
 								?>
 							</li>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'messages' ) ): ?>
 							<li>
 								<?php
 								esc_html_e( 'Message blocked member', 'buddyboss' );
 								?>
 							</li>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'friends' ) ): ?>
 							<li>
 								<?php
-								esc_html_e( 'Add blocked member as a friend', 'buddyboss' );
+								esc_html_e( 'Add blocked member in your connection', 'buddyboss' );
 								?>
 							</li>
+							<?php endif; ?>
 						</ul>
 						<p>
-							<?php esc_html_e( 'If you\'re friends, This action will also unfriend blocked members.', 'buddyboss' ); ?>
-						</p>
-						<p>
-							<?php esc_html_e( 'Note : Content related to this member will be hidden in 5-10 Min. please check after some time.', 'buddyboss' ); ?>
+							<?php if ( bp_is_active( 'friends' ) ): ?>
+								<?php esc_html_e( 'Note: If you\'re connected, This action will remove connection with the blocked member.', 'buddyboss' ); ?>
+								<br/>
+							<?php endif; ?>
+
+							<?php esc_html_e( 'All member specific content will be hidden for you in a few mins.', 'buddyboss' ); ?>
 						</p>
 						<form id="bb-block-member" action="javascript:void(0);">
 							<footer class="bb-model-footer">
