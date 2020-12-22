@@ -521,7 +521,7 @@ function bp_nouveau_ajax_video_album_save() {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
 		$redirect_url = trailingslashit( $group_link . '/albums/' . $album_id );
 	} else {
-		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_video_slug() . '/albums/' . $album_id );
+		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id );
 	}
 
 	wp_send_json_success(
