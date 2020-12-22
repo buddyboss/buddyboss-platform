@@ -52,23 +52,23 @@ echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) :
 			</ul>
 		</div>
 	</div>
-	<?php if ($video_template->video_count == 1) { ?>
+	<?php if ( $video_template->video_count == 1 ) { ?>
 		<video id="video-<?php bp_video_id(); ?>" class="video-js" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }'>
 			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
 		</video>
-		<p class="bb-video-duration">1:45</p>
+		<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 	<?php } else { ?>
 		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_attachment_image(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-			<img src="<?php echo esc_url(buddypress()->plugin_url); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
+			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpeg" data-src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
 			<?php
-			if ($video_template->video_count > 3 && 2 === $video_template->current_video) {
+			if ( $video_template->video_count > 3 && 2 === $video_template->current_video ) {
 				$count = $video_template->video_count - 3;
-			?>
-				<span class="bb-videos-length"><span><strong>+<?php echo esc_html($count); ?></strong> <span><?php esc_html_e('More Videos', 'buddyboss'); ?></span></span></span>
-			<?php
+				?>
+				<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
+				<?php
 			}
 			?>
-			<p class="bb-video-duration">1:45</p>
+			<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 		</a>
 	<?php } ?>
 </div>
