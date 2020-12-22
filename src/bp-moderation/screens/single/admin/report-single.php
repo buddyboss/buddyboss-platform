@@ -196,7 +196,7 @@ $admins            = array_map( 'intval', get_users(
 
 										$user_id   = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 										$user_data = BP_Moderation::get_specific_moderation( $user_id, BP_Moderation_Members::$moderation_type );
-										if ( 0 === (int) $user_data->hide_sitewide ) {
+										if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 											?>
                                             <a href="javascript:void(0);"
                                                class="button button-primary bp-hide-request single-report-btn"
@@ -212,12 +212,8 @@ $admins            = array_map( 'intval', get_users(
 											<?php
 										}
 										if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
-											$user_action_type = 'suspend';
-											$user_action_text = esc_html__( 'Suspend Owner', 'buddyboss' );
-											if ( ! empty( $user_data ) ) {
-												$user_action_type = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
-												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
-											}
+											$user_action_type = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'suspend' : 'unsuspend';
+											$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
 											?>
 											<a href="javascript:void(0);"
 												class="button button-primary bp-block-user single-report-btn content-author"
