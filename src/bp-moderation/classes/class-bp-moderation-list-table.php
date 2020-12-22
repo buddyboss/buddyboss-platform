@@ -129,6 +129,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$moderation_request_args['exclude_types'] = array( BP_Moderation_Members::$moderation_type );
 		} else {
 			$moderation_request_args['in_types'] = array( BP_Moderation_Members::$moderation_type );
+			$moderation_request_args['reported'] = false;
 		}
 
 		if ( 'reported-content' === $current_tab ) {
