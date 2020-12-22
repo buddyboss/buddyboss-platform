@@ -13063,6 +13063,27 @@ body.login .login-popup .mfp-close:hover {
   display: block;
 }
 
+.bb-item-cover-wrap:before {
+  content: '';
+  background: url(../images/video-play.svg) !important;
+  background-color: #fff !important;
+  height: 52px;
+  width: 52px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1111;
+  opacity: 0.8;
+  border: 0;
+  transition: all ease 0.3s !important;
+  border-radius: 50%;
+}
+
+.bb-item-cover-wrap:hover:before {
+  opacity: 1;
+}
+
 .bb-item-cover-wrap img {
   position: absolute;
   top: 0;
