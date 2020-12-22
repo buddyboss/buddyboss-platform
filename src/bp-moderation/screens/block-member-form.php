@@ -59,12 +59,18 @@
 							<?php endif; ?>
 						</ul>
 						<p>
+						
+							<?php esc_html_e( 'Note: ', 'buddyboss' ); ?>
+							<br/>
+
 							<?php if ( bp_is_active( 'friends' ) ): ?>
-								<?php esc_html_e( 'Note: If you\'re connected, This action will remove connection with the blocked member.', 'buddyboss' ); ?>
+								<?php esc_html_e( 'If you\'re connected, this action will remove connection with the blocked member.', 'buddyboss' ); ?>
 								<br/>
 							<?php endif; ?>
 
 							<?php esc_html_e( 'All member specific content will be hidden for you in a few mins.', 'buddyboss' ); ?>
+							<br/>
+							<?php esc_html_e( 'This will also send block report to site admin of the site.', 'buddyboss' ); ?>
 						</p>
 						<form id="bb-block-member" action="javascript:void(0);">
 							<footer class="bb-model-footer">
