@@ -214,7 +214,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
 		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
-			$return = esc_html__( 'Blocked User', 'buddyboss' );
+			$return = esc_html__( 'Suspended User', 'buddyboss' );
 		}
 
 		return $return;
@@ -233,7 +233,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function blocked_get_comment_author( $author, $comment_id ) {
 
 		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
-			$author = esc_html__( 'Blocked User', 'buddyboss' );
+			$author = esc_html__( 'Suspended User', 'buddyboss' );
 		}
 
 		return $author;
