@@ -13,21 +13,23 @@ $extension         = bp_document_extension( $attachment_id );
 $svg_icon          = bp_document_svg_icon( $extension, $attachment_id );
 $svg_icon_download = bp_document_svg_icon( 'download' );
 $url               = wp_get_attachment_url( $attachment_id );
-$filename           = basename( get_attached_file( $attachment_id ) );
+$filename          = basename( get_attached_file( $attachment_id ) );
 $size              = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
 $download_url      = bp_document_download_link( $attachment_id, bp_get_document_id() );
 $document_privacy  = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
 $can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 $can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+$can_add           = ( true === (bool) $document_privacy['can_add'] ) ? true : false;
 $db_privacy        = bp_get_db_document_privacy();
 $extension_lists   = bp_document_extensions_list();
 $attachment_url    = '';
 $mirror_text       = '';
+$is_comment_doc    = bp_document_is_activity_comment_document( $document_template->document );
 
 if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
-	$mirror_text		 = bp_document_mirror_text( $attachment_id );
+	$mirror_text         = bp_document_mirror_text( $attachment_id );
 }
 
 $group_id = bp_get_document_group_id();
@@ -40,8 +42,7 @@ if ( $group_id > 0 ) {
 }
 
 $extension_description = '';
-
-$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+$attachment_url        = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 
 if ( ! empty( $extension_lists ) ) {
 	$extension_lists = array_column( $extension_lists, 'description', 'extension' );
@@ -51,9 +52,9 @@ if ( ! empty( $extension_lists ) ) {
 	}
 }
 
-$class_theatre 	= apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
-$class_popup 	= apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
-$click_text 	= apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
+$class_theatre             = apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
+$class_popup               = apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
+$click_text                = apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
 $bp_document_music_preview = apply_filters( 'bp_document_music_preview', true );
 $bp_document_text_preview  = apply_filters( 'bp_document_text_preview', true );
 $bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
@@ -109,7 +110,7 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<?php echo $extension_description; ?>
-			<span class="document-helper-text"> <span> — </span><span class="document-helper-text-click"><?php echo __( 'Click to', 'buddyboss' ) ?></span><span class="document-helper-text-inner"><?php echo _e( $click_text, 'buddyboss' ); ?></span></span>
+			<span class="document-helper-text"> <span> — </span><span class="document-helper-text-click"><?php echo __( 'Click to', 'buddyboss' ); ?></span><span class="document-helper-text-inner"><?php echo _e( $click_text, 'buddyboss' ); ?></span></span>
 		</a>
 	</div>
 	<div class="document-action-wrap">
@@ -128,27 +129,40 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 						?>
 						<li class="copy_download_file_url document-action-class">
 							<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
-						</li><?php
+						</li>
+						<?php
 					}
-					if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
+					if ( bp_loggedin_user_id() === bp_get_document_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
-							?>
-						<li class="move_file document-action-class"><a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
-							<?php
+							if ( $is_comment_doc ) {
+								?>
+								<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="Documents added in comment cannot be moved">
+									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
+								<?php
+							} else {
+								if ( $can_add ) {
+									?>
+									<li class="move_file document-action-class">
+										<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+									</li>
+									<?php
+								}
+							}
 						}
-						$id = 0;
+						$item_id = 0;
 						if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {
-							$id = bp_get_activity_comment_id();
+							$item_id = bp_get_activity_comment_id();
 						} else {
 							if ( bp_is_active( 'activity' ) ) {
-								$id = bp_get_activity_id();
+								$item_id = bp_get_activity_id();
 							}
 						}
 						?>
-						<li class="delete_file document-action-class"><a class="document-file-delete" data-item-activity-id="<?php echo $id; ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+						<li class="delete_file document-action-class"><a class="document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 						<?php
 					}
-				?>
+					?>
 				</ul>
 			</div>
 	</div>
