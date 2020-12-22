@@ -563,7 +563,7 @@ body.vjs-full-window {
   font-size: 1.2em;
   line-height: 1.5;
   padding: 20px 24px;
-  z-index: 1;
+  z-index: 0;
 }
 
 .vjs-menu-button {

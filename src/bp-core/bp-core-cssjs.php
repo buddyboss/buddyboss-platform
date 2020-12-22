@@ -183,6 +183,26 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
+		'bp-media-videojs-java'   => array(
+			'file'         => "{$url}vendor/videojs-java.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-vlc'   => array(
+			'file'         => "{$url}vendor/videojs-vlc.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-flv'   => array(
+			'file'         => "{$url}vendor/flv.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-flash'   => array(
+			'file'         => "{$url}vendor/videojs-flash.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
 
 	);
 
