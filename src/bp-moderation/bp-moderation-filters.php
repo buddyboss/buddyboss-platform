@@ -201,7 +201,8 @@ add_action( 'wp_ajax_nopriv_bp_moderation_content_report', 'bp_moderation_conten
  */
 function bp_moderation_block_member() {
 	$response = array(
-		'message' => '',
+		'message'  => '',
+		'redirect' => '',
 	);
 
 	$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
@@ -271,6 +272,8 @@ function bp_moderation_block_member() {
 				),
 				false
 			);
+
+			$response['redirect'] = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members';
 		}
 
 		$response['message'] = $moderation->errors;

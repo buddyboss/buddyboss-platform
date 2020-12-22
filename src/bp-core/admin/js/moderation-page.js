@@ -72,19 +72,25 @@ jQuery(document).ready(function ($) {
      */
     $(document).on('click', '.bp-block-user', function (event) {
         event.preventDefault();
+        var curObj = $(this);
+        var sub_action = curObj.attr('data-action');
 
-        if (!confirm(Bp_Moderation.strings.confirm_msg)) {
-            return false;
+        if ( 'suspend'===sub_action ) {
+            if ( ! confirm ( BP_ADMIN.moderation.suspend_confirm_message ) ) {
+                return false;
+            }
+        } else if ( 'unsuspend'===sub_action ) {
+            if ( ! confirm ( BP_ADMIN.moderation.unsuspend_confirm_message ) ) {
+                return false;
+            }
         }
 
         $('.bp-moderation-ajax-msg p').text('').parent().addClass('hidden');
 
-        var curObj = $(this);
         curObj.addClass('disabled');
         var id = curObj.attr('data-id');
         var type = curObj.attr('data-type');
         var nonce = curObj.attr('data-nonce');
-        var sub_action = curObj.attr('data-action');
         var data = {
             action: 'bp_moderation_user_actions_request',
             id: id,
@@ -104,10 +110,6 @@ jQuery(document).ready(function ($) {
                     curObj.attr ( 'title', Bp_Moderation.strings.unhide_label );
                     if ( curObj.hasClass ( 'content-author' ) ) {
                         curObj.text ( Bp_Moderation.strings.unsuspend_author_label );
-                    } else if ( curObj.hasClass ( 'single-report-btn' ) ) {
-                        curObj.text ( Bp_Moderation.strings.unsuspend_member_label );
-                    } else if ( curObj.hasClass ( 'bp-report-listing' ) ) {
-                        curObj.text ( Bp_Moderation.strings.member_listing_unsuspend_label );
                     } else {
                         curObj.text ( Bp_Moderation.strings.unsuspend_label );
                     }
@@ -117,10 +119,6 @@ jQuery(document).ready(function ($) {
                     curObj.attr ( 'title', Bp_Moderation.strings.hide_label );
                     if ( curObj.hasClass ( 'content-author' ) ) {
                         curObj.text ( Bp_Moderation.strings.suspend_author_label );
-                    } else if ( curObj.hasClass ( 'single-report-btn' ) ) {
-                        curObj.text ( Bp_Moderation.strings.suspend_member_label );
-                    } else if ( curObj.hasClass ( 'bp-report-listing' ) ) {
-                        curObj.text ( Bp_Moderation.strings.member_listing_suspend_label );
                     } else {
                         curObj.text ( Bp_Moderation.strings.suspend_label );
                     }

@@ -178,7 +178,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			$columns = array(
 				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
-				'category' => esc_html__( 'Report/Category', 'buddyboss' ),
+				'category' => esc_html__( 'Category', 'buddyboss' ),
 				'date'     => esc_html__( 'Date', 'buddyboss' ),
 			);
 		} else {

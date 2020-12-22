@@ -328,7 +328,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		// The user exists; now do a check to see if the user is a suspended.
 		if ( is_a( $user, 'WP_User' ) && bp_moderation_is_user_suspended( $user->ID ) ) {
-			return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been Suspended.', 'buddyboss' ) );
+			return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been suspended. Please contact a site admin for more information.', 'buddyboss' ) );
 		}
 
 		// User is good to go!
@@ -408,7 +408,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	public function bp_live_suspended_login_error() {
 		global $error;
 
-		$error = __( '<strong>ERROR</strong>: Your account has been suspended.', 'buddyboss' ); // phpcs:ignore
+		$error = __( '<strong>ERROR</strong>: Your account has been suspended. Please contact a site admin for more information.', 'buddyboss' ); // phpcs:ignore
 
 		// Shake shake shake!
 		add_action( 'login_head', 'wp_shake_js', 12 );
@@ -599,7 +599,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Remove Profile photo for suspend member.
 	 *
-	 * @since BuddyPress 2.9.0
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $retval       The URL of the avatar.
 	 * @param mixed  $id_or_email  The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
@@ -643,7 +643,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Get dummy URL from DB for Group and User
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $avatar_url URL for a locally uploaded avatar.
 	 * @param array  $params     Array of parameters for the request.

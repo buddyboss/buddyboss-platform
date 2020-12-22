@@ -221,7 +221,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		// if Group forums then return
+		// if Group forums then return.
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
 		if ( ! empty( $group_ids ) ) {
 			return;
@@ -277,6 +277,26 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
+		}
+
+		if (
+			isset( $suspend_args['author_compare'] ) &&
+			true === (bool) $suspend_args['author_compare'] &&
+			isset( $suspend_args['type'] ) &&
+			$suspend_args['type'] !== self::$type
+		) {
+			$forum_author_id = BP_Moderation_Forums::get_content_owner_id( $forum_id );
+			if ( isset( $suspend_args['blocked_user'] ) && $forum_author_id === $suspend_args['blocked_user'] ) {
+				unset( $suspend_args['blocked_user'] );
+			}
+		}
+
+		if ( isset( $suspend_args['author_compare'] ) ) {
+			unset( $suspend_args['author_compare'] );
+		}
+
+		if ( isset( $suspend_args['type'] ) ) {
+			unset( $suspend_args['type'] );
 		}
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );

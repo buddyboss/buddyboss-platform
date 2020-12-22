@@ -2220,13 +2220,25 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 /*Moderation Reporting Block*/
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label {
-	min-width: 20%;
+	min-width: 27%;
+}
+
+#bp_moderation_settings_reporting label[for="bpm_reporting_content_reporting"] {
+	font-size: 16px;
+	margin-top: 5px;
+	display: block;
+}
+
+#bp_moderation_settings_reporting .small-text {
+	width: 48px;
+	min-height: 24px;
+	height: 24px;
 }
 
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label {
 	display: inline-block;
-	margin-bottom: 10px;
+	margin-bottom: 30px;
 }
 
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled {

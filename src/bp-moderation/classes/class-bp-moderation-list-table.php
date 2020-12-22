@@ -93,19 +93,19 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		if ( 'reported-content' === $current_tab ) {
-			esc_html_e( 'Sorry, no reported content was found.', 'buddyboss' );
+			esc_html_e( 'No reported content found.', 'buddyboss' );
 		} else {
-			esc_html_e( 'Sorry, no blocked members were found.', 'buddyboss' );
+			esc_html_e( 'No blocked members found.', 'buddyboss' );
 		}
 	}
 
 	/**
 	 * Set up items for display in the list table.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * Handles filtering of data, sorting, pagination, and any other data
 	 * manipulation required prior to rendering.
-	 *
-	 * @since BuddyBoss 2.0.0
 	 */
 	public function prepare_items() {
 
@@ -532,7 +532,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			}
 
 			$actions['suspend'] = sprintf(
-				'<a href="javascript:void(0);" class="bp-block-user delete bp-report-listing" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+				'<a href="javascript:void(0);" class="bp-block-user delete content-author" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>',
 				esc_attr( $user_id ),
 				esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
 				esc_attr( $user_action_type ),

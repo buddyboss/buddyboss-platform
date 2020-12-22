@@ -115,6 +115,8 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Get Document ids of blocked item [ Forums/topics/replies/activity etc ] from meta
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
 	 *
@@ -267,6 +269,26 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		if ( ! is_null( $hide_sitewide ) ) {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
+		}
+
+		if (
+			isset( $suspend_args['author_compare'] ) &&
+			true === (bool) $suspend_args['author_compare'] &&
+			isset( $suspend_args['type'] ) &&
+			$suspend_args['type'] !== self::$type
+		) {
+			$document_author_id = BP_Moderation_Document::get_content_owner_id( $document_id );
+			if ( isset( $suspend_args['blocked_user'] ) && $document_author_id === $suspend_args['blocked_user'] ) {
+				unset( $suspend_args['blocked_user'] );
+			}
+		}
+
+		if ( isset( $suspend_args['author_compare'] ) ) {
+			unset( $suspend_args['author_compare'] );
+		}
+
+		if ( isset( $suspend_args['type'] ) ) {
+			unset( $suspend_args['type'] );
 		}
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );

@@ -33,7 +33,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$this->item_type                              = self::$moderation_type;
 
 		// Register moderation data.
-		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ), 11 );
 
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -80,7 +80,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Comment', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Blog Comment', 'buddyboss' );
 
 		return $content_types;
 	}

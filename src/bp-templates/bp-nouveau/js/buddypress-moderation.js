@@ -133,6 +133,13 @@ window.bp = window.bp || {};
 					if (true===response.success) {
 						curObj.parent().closest('.moderation-item-wrp').fadeOut('normal', function () {
 							curObj.parent().closest('.moderation-item-wrp').remove();
+							var TableRow = $('#moderation-list >tbody >tr').length;
+
+							if ( 0 >= TableRow ) {
+								$ ( '#moderation-list' ).remove ();
+								$ ( '.bp-feedback' ).removeClass ( 'error' ).addClass ( 'info' ).removeClass ( 'is_hidden' );
+								$ ( '.bp-feedback p' ).html ( BP_Nouveau.moderation.no_user_msg );
+							}
 						});
 					} else {
 						$(event.currentTarget).find('.bb-icon-loader').remove();

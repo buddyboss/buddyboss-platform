@@ -154,7 +154,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up taxonomies.
 	 *
-	 * @since BuddyPress 2.6.0
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function register_taxonomies() {
 		// Group Type.
@@ -191,21 +191,25 @@ class BP_Moderation_Component extends BP_Component {
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'spam'        => array(
-					'name'        => __( 'Spam', 'buddyboss' ),
-					'description' => __( 'Unwanted commercial content or spam', 'buddyboss' ),
+				'offensive'        => array(
+					'name'        => __( 'Offensive', 'buddyboss' ),
+					'description' => __( 'Contains abusive or derogatory content', 'buddyboss' ),
 				),
-				'adult'       => array(
-					'name'        => __( 'Adult', 'buddyboss' ),
-					'description' => __( 'Pornography or sexually explicit material', 'buddyboss' ),
+				'inappropriate'       => array(
+					'name'        => __( 'Inappropriate', 'buddyboss' ),
+					'description' => __( 'Contains mature or sensitive content', 'buddyboss' ),
 				),
-				'hate-speech' => array(
-					'name'        => __( 'Hate Speech', 'buddyboss' ),
-					'description' => __( 'Hate speech or graphic violence', 'buddyboss' ),
+				'misinformation' => array(
+					'name'        => __( 'Misinformation', 'buddyboss' ),
+					'description' => __( 'Contains misleading or false information', 'buddyboss' ),
+				),
+				'suspicious'  => array(
+					'name'        => __( 'Suspicious', 'buddyboss' ),
+					'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss' ),
 				),
 				'harassment'  => array(
 					'name'        => __( 'Harassment', 'buddyboss' ),
-					'description' => __( 'Harassment or bullying', 'buddyboss' ),
+					'description' => __( 'Harassment or bullying behavior', 'buddyboss' ),
 				),
 			);
 

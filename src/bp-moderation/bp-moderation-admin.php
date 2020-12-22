@@ -41,17 +41,13 @@ function bp_moderation_admin_scripts( $hook ) {
 			'Bp_Moderation',
 			array(
 				'strings' => array(
-					'confirm_msg'                    => esc_js( __( 'Are you sure?', 'buddyboss' ) ),
-					'hide_label'                     => esc_js( __( 'Hide Content', 'buddyboss' ) ),
-					'unhide_label'                   => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
-					'suspend_label'                  => esc_js( __( 'Suspend', 'buddyboss' ) ),
-					'unsuspend_label'                => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
-					'suspend_author_label'           => esc_js( __( 'Suspend Content Author', 'buddyboss' ) ),
-					'unsuspend_author_label'         => esc_js( __( 'Unsuspend Content Author', 'buddyboss' ) ),
-					'suspend_member_label'           => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
-					'unsuspend_member_label'         => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
-					'member_listing_suspend_label'   => esc_js( __( 'Suspend Owner', 'buddyboss' ) ),
-					'member_listing_unsuspend_label' => esc_js( __( 'Unsuspend Owner', 'buddyboss' ) ),
+					'confirm_msg'            => esc_js( __( 'Are you sure? It will hide selected content for everybody in the network', 'buddyboss' ) ),
+					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
+					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
+					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
+					'unsuspend_label'        => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
+					'suspend_author_label'   => esc_js( __( 'Suspend Owner', 'buddyboss' ) ),
+					'unsuspend_author_label' => esc_js( __( 'Unsuspend Owner', 'buddyboss' ) ),
 				),
 			)
 		);
