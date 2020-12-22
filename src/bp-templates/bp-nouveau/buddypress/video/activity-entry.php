@@ -12,6 +12,14 @@ global $video_template;
 $width  = isset( $video_template->video->attachment_data->thumb_meta['width'] ) ? $video_template->video->attachment_data->thumb_meta['width'] : 0;
 $height = isset( $video_template->video->attachment_data->thumb_meta['height'] ) ? $video_template->video->attachment_data->thumb_meta['height'] : 0;
 
+$group_id = bp_get_video_group_id();
+if ( $group_id > 0 ) {
+	$move_id   = $group_id;
+	$move_type = 'group';
+} else {
+	$move_id   = bp_get_video_user_id();
+	$move_type = 'profile';
+}
 ?>
 
 <div class="bb-activity-video-elem
@@ -30,15 +38,17 @@ echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) :
 		</a>
 		<div class="video-action_list item-action_list">
 			<ul>
-				<li class="edit_video">
-					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-edit">Edit</a>
+				<li class="edit_thumbnail_video">
+					<a href="#" data-action="video" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
 				</li>
 				<li class="move_video">
-					<a href="#" data-action="video" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-type="profile" id="2" class="ac-video-move">Move</a>
+					<a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 				</li>
-				<li class="delete_video">
-					<a class="video-file-delete" data-media-id="567" data-parent-activity-id="" data-item-activity-id="194811" data-item-from="media" data-item-id="567" data-type="video" href="#">Delete</a>
+				<li class="delete_file">
+					<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 				</li>
+
+
 			</ul>
 		</div>
 	</div>
