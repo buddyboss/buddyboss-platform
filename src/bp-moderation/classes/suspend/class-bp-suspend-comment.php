@@ -435,14 +435,14 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	private function check_is_hidden( $comment_id ) {
 
 		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
-			return false;
+			return true;
 		}
 
 		$author_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( bp_moderation_is_user_suspended( $author_id ) ) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 }
