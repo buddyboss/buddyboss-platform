@@ -594,7 +594,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			return esc_html__( 'Blocked User', 'buddyboss' );
+			return esc_html__( 'Suspended User', 'buddyboss' );
 		}
 
 		return $value;
