@@ -1861,6 +1861,9 @@ window.bp = window.bp || {};
 						_this.changeReportButtonStatus( response.data.button );
 						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
 						$( '.mfp-close' ).trigger( 'click' );
+						if ( response.data.redirect ) {
+							location.href = response.data.redirect;
+						}
 					} else {
 						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
 						_this.handleReportError( response.data.message.errors, e.currentTarget );
