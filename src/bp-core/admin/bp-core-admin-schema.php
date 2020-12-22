@@ -1138,7 +1138,7 @@ function bp_core_install_suspend() {
 	   KEY item_id (item_id)
     ) {$charset_collate};";
 
-	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details(
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
 	   suspend_id bigint(20) NOT NULL,
 	   user_id bigint(20) NOT NULL,
