@@ -1691,3 +1691,67 @@ function bp_get_video_length() {
 	 */
 	return apply_filters( 'bp_get_video_length', $video_template->video->attachment_data->meta->length_formatted );
 }
+
+/**
+ * Output the video thumbnail ID.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_thumbnail_id() {
+	echo bp_get_video_thumbnail_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Return the video thumbnail ID.
+ *
+ * @return int The video thumbnail ID.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_video_thumbnail_id() {
+	global $video_template;
+
+	$thumbnail_id = get_post_meta( $video_template->video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+
+	/**
+	 * Filters the video thumbnail ID being displayed.
+	 *
+	 * @param int $id The video thumbnail ID.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_video_thumbnail_id', $thumbnail_id );
+}
+
+/**
+ * Output the auto generated video thumbnail IDs comma separated.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_auto_generated_thumbnail_ids() {
+	echo bp_get_video_auto_generated_thumbnail_ids(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Return the auto generated video thumbnail IDs comma separated.
+ *
+ * @return string|false The auto generated video thumbnail IDs comma separated.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_video_auto_generated_thumbnail_ids() {
+	global $video_template;
+
+	$thumbnail_ids = get_post_meta( $video_template->video->attachment_id, 'video_preview_thumbnails', true );
+
+	/**
+	 * Filters the auto generated video thumbnail IDs comma separated.
+	 *
+	 * @param string|false $thumbnail_ids The auto generated video thumbnail IDs comma separated.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_video_auto_generated_thumbnail_ids', $thumbnail_ids );
+}

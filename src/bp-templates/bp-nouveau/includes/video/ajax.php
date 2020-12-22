@@ -39,6 +39,12 @@ add_action(
 				),
 			),
 			array(
+				'video_thumbnail_upload' => array(
+					'function' => 'bp_nouveau_ajax_video_thumbnail_upload',
+					'nopriv'   => true,
+				),
+			),
+			array(
 				'video_save' => array(
 					'function' => 'bp_nouveau_ajax_video_save',
 					'nopriv'   => true,
@@ -89,6 +95,12 @@ add_action(
 			array(
 				'video_description_save' => array(
 					'function' => 'bp_nouveau_ajax_video_description_save',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'video_thumbnail_delete_attachment' => array(
+					'function' => 'bp_nouveau_ajax_video_thumbnail_delete_attachment',
 					'nopriv'   => true,
 				),
 			),
@@ -201,6 +213,88 @@ function bp_nouveau_ajax_video_upload() {
 	}
 
 	wp_send_json_success( $result );
+}
+
+/**
+ * Upload a video thumbnail via a POST request.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_ajax_video_thumbnail_upload() {
+	$response = array(
+		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss' ),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response, 500 );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_video';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response, 500 );
+	}
+
+	add_filter( 'upload_dir', 'bp_video_upload_dir' );
+
+	// Upload file.
+	$result = bp_video_thumbnail_upload();
+
+	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
+
+	if ( is_wp_error( $result ) ) {
+		$response['feedback'] = $result->get_error_message();
+		wp_send_json_error( $response, $result->get_error_code() );
+	}
+
+	wp_send_json_success( $result );
+}
+
+/**
+ * Delete attachment with its files
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_video';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+
+	if ( empty( $id ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// delete attachment with its meta.
+	$deleted = wp_delete_attachment( $id, true );
+
+	if ( ! $deleted ) {
+		wp_send_json_error( $response );
+	}
+
+	wp_send_json_success();
 }
 
 /**
@@ -521,7 +615,7 @@ function bp_nouveau_ajax_video_album_save() {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
 		$redirect_url = trailingslashit( $group_link . '/albums/' . $album_id );
 	} else {
-		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_video_slug() . '/albums/' . $album_id );
+		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id );
 	}
 
 	wp_send_json_success(

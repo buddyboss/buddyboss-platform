@@ -53,6 +53,114 @@ function bp_video_upload() {
 }
 
 /**
+ * Video thumbnail upload handler
+ *
+ * @param string $file_id
+ *
+ * @return array|int|null|WP_Error|WP_Post
+ * @since BuddyBoss 1.0.0
+ */
+function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
+
+	/**
+	 * Include required files
+	 */
+
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+	}
+
+	if ( ! function_exists( 'media_handle_upload' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/admin.php';
+	}
+
+	add_image_size( 'bp-video-thumbnail', 400, 400 );
+	add_image_size( 'bp-activity-video-thumbnail', 1600, 1600 );
+
+	$aid = media_handle_upload(
+		$file_id,
+		0,
+		array(),
+		array(
+			'test_form'            => false,
+			'upload_error_strings' => array(
+				false,
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size(),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
+				__( 'No file was uploaded.', 'buddyboss' ),
+				'',
+				__( 'Missing a temporary folder.', 'buddyboss' ),
+				__( 'Failed to write file to disk.', 'buddyboss' ),
+				__( 'File upload stopped by extension.', 'buddyboss' ),
+			),
+		)
+	);
+
+	remove_image_size( 'bp-video-thumbnail' );
+	remove_image_size( 'bp-activity-video-thumbnail' );
+
+	// if has wp error then throw it.
+	if ( is_wp_error( $aid ) ) {
+		return $aid;
+	}
+
+	// Image rotation fix.
+	do_action( 'bp_video_thumbnail_attachment_uploaded', $aid );
+
+	$attachment = get_post( $aid );
+
+	if ( ! empty( $attachment ) ) {
+		update_post_meta( $attachment->ID, 'bp_video_thumbnail_upload', true );
+		update_post_meta( $attachment->ID, 'bp_video_thumbnail_saved', '0' );
+
+		return $attachment;
+	}
+
+	return new WP_Error( 'error_uploading', __( 'Error while uploading thumbnail.', 'buddyboss' ), array( 'status' => 500 ) );
+
+}
+
+/**
+ * Create and upload the video thumbnail file
+ *
+ * @return array|null|WP_Error|WP_Post
+ * @since BuddyBoss 1.0.0
+ */
+function bp_video_thumbnail_upload() {
+	/**
+	 * Make sure user is logged in
+	 */
+	if ( ! is_user_logged_in() ) {
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
+	}
+
+	$attachment = bp_video_thumbnail_upload_handler();
+
+	if ( is_wp_error( $attachment ) ) {
+		return $attachment;
+	}
+
+	$name = $attachment->post_title;
+
+	$thumb_nfo = wp_get_attachment_image_src( $attachment->ID );
+	$url_nfo   = wp_get_attachment_image_src( $attachment->ID, 'full' );
+
+	$url       = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
+	$thumb_nfo = is_array( $thumb_nfo ) && ! empty( $thumb_nfo ) ? $thumb_nfo[0] : null;
+
+	$result = array(
+		'id'    => (int) $attachment->ID,
+		'thumb' => esc_url( $thumb_nfo ),
+		'url'   => esc_url( $url ),
+		'name'  => esc_attr( $name ),
+	);
+
+	return $result;
+}
+
+/**
  * Mine type for uploader allowed by buddyboss video for security reason
  *
  * @param Array $existing_mimes carry mime information.
@@ -715,6 +823,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 
 							if ( $thumbnail_list ) {
 								update_post_meta( $video['id'], 'video_preview_thumbnails', implode( ',', $thumbnail_list ) );
+								update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', current( $thumbnail_list ) );
 							}
 
 							$transcode_dir       = $upload['basedir'];
@@ -2985,7 +3094,7 @@ function bp_video_upload_dir( $pathdata ) {
 
 	$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 
-	if ( isset( $action ) && 'video_upload' === $action ) { // WPCS: CSRF ok, input var ok.
+	if ( isset( $action ) && ( 'video_upload' === $action || 'video_thumbnail_upload' === $action ) ) { // WPCS: CSRF ok, input var ok.
 
 		if ( empty( $pathdata['subdir'] ) ) {
 			$pathdata['path']   = $pathdata['path'] . '/bb_videos';
@@ -3003,7 +3112,7 @@ function bp_video_upload_dir( $pathdata ) {
 }
 
 /**
- * Set bb_documents folder for the document upload directory.
+ * Set bb_videos folder for the document upload directory.
  *
  * @param $pathdata
  *
