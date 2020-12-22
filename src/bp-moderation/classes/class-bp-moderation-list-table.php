@@ -577,12 +577,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$action_label     = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
 
 		// Build actions URL.
-		$view_url           = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
-		$bypass_avatar_url = add_query_arg( array( 'modbypass' => 1 ), bp_core_get_user_domain( $item['item_id'] ) );
+		$view_url          = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
 
 		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Reports', 'buddyboss' ) );
 		$actions['suspend']     = sprintf( '<a href="" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $item['item_id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
-		printf( '%s <strong><a href="%s">%s</a></strong> %s', get_avatar( $item['item_id'], '32' ), esc_url( $bypass_avatar_url ), esc_html( bp_core_get_userlink( $item['item_id'], true ) ), wp_kses_post( $this->row_actions( $actions ) ) );
+		printf( '%s <strong><a href="%s">%s</a></strong> %s', get_avatar( $item['item_id'], '32' ), esc_url( BP_Moderation_Members::get_permalink( $item['item_id'] ) ), esc_html( bp_core_get_userlink( $item['item_id'], true ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 	}
 
 	/**
