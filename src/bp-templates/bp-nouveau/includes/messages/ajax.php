@@ -1016,9 +1016,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id );
 
 			if ( bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id ) ) {
-				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Content from suspended user', 'buddyboss' );
+				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Hidden content from suspended member.', 'buddyboss' );
 			} elseif ( bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id ) ) {
-				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Content from blocked user', 'buddyboss' );
+				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Hidden content from blocked member.', 'buddyboss' );
 			}
 		}
 
@@ -1677,12 +1677,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( "You can't message suspended user.", 'buddyboss' ),
+				'feedback' => __( "You can't message suspended member.", 'buddyboss' ),
 				'type'     => 'error',
 			);
 		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( "You can't message blocked user.", 'buddyboss' ),
+				'feedback' => __( "You can't message blocked member.", 'buddyboss' ),
 				'type'     => 'error',
 			);
 		}
@@ -2089,9 +2089,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
 
 			if ( bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() ) ) {
-				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'Content from suspended user', 'buddyboss' ) . '</p>';
+				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'Hidden content from suspended member.', 'buddyboss' ) . '</p>';
 			} elseif ( bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() ) ) {
-				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'Content from blocked user', 'buddyboss' ) . '</p>';
+				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'Hidden content from blocked member.', 'buddyboss' ) . '</p>';
 			}
 		}
 
