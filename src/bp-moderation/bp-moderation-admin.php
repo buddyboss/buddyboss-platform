@@ -46,10 +46,8 @@ function bp_moderation_admin_scripts( $hook ) {
 					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
 					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
 					'unsuspend_label'        => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
-					'suspend_author_label'   => esc_js( __( 'Suspend Content Author', 'buddyboss' ) ),
-					'unsuspend_author_label' => esc_js( __( 'Unsuspend Content Author', 'buddyboss' ) ),
-					'suspend_member_label'   => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
-					'unsuspend_member_label' => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
+					'suspend_author_label'   => esc_js( __( 'Suspend Owner', 'buddyboss' ) ),
+					'unsuspend_author_label' => esc_js( __( 'Unsuspend Owner', 'buddyboss' ) ),
 				),
 			)
 		);
