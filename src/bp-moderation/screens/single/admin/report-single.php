@@ -213,10 +213,10 @@ $admins            = array_map( 'intval', get_users(
 										}
 										if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
 											$user_action_type = 'suspend';
-											$user_action_text = esc_html__( 'Suspend Content Author', 'buddyboss' );
+											$user_action_text = esc_html__( 'Suspend Owner', 'buddyboss' );
 											if ( ! empty( $user_data ) ) {
 												$user_action_type = ( 1 === (int) $user_data->hide_sitewide ) ? 'unsuspend' : 'suspend';
-												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
+												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
 											}
 											?>
 											<a href="javascript:void(0);"
@@ -234,7 +234,7 @@ $admins            = array_map( 'intval', get_users(
 									} else {
 										if ( ! in_array( $moderation_request_data->item_id, $admins, true ) ) {
 											$action_type        = ( 'unhide' === $action_type ) ? 'unsuspend' : 'suspend';
-											$member_action_text = ( 'unsuspend' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
+											$member_action_text = ( 'unsuspend' === $action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
 											?>
 											<a href="javascript:void(0);"
 												class="button button-primary bp-block-user single-report-btn"

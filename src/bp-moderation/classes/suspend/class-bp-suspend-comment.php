@@ -106,6 +106,8 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
+		$suspend_args = self::validate_keys( $suspend_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ! empty( $args ) ) {
@@ -158,13 +160,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( isset( $suspend_args['author_compare'] ) ) {
-			unset( $suspend_args['author_compare'] );
-		}
-
-		if ( isset( $suspend_args['type'] ) ) {
-			unset( $suspend_args['type'] );
-		}
+		$suspend_args = self::validate_keys( $suspend_args );
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 

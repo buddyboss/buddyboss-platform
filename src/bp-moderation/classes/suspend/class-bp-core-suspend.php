@@ -91,10 +91,6 @@ class BP_Core_Suspend {
 			unset( $args['action_suspend'] );
 		}
 
-		if ( isset( $args['action'] ) ) {
-			unset( $args['action'] );
-		}
-
 		$members = false;
 		if ( ! empty( $args['blocked_user'] ) ) {
 			$members = $args['blocked_user'];
@@ -232,10 +228,6 @@ class BP_Core_Suspend {
 		if ( isset( $args['action_suspend'] ) ) {
 			$action_suspend = $args['action_suspend'];
 			unset( $args['action_suspend'] );
-		}
-
-		if ( isset( $args['action'] ) ) {
-			unset( $args['action'] );
 		}
 
 		$member = false;
