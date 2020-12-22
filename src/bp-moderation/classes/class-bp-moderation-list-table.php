@@ -525,7 +525,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
 
-			$user_action_type  = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'suspend' : 'unsuspend';
+			$user_action_type  = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
 			$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
 
 			$actions['suspend'] = sprintf(
