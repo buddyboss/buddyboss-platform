@@ -416,7 +416,7 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 	 * @param bool   $boolean Check its true/false.
 	 * @param string $item_id item id.
 	 */
-	$args = apply_filters( "bp_moderation_{$item_type}_button_args", array(), $item_id );
+	$args = apply_filters( "bp_moderation_{$item_type}_button_args", array( 'id' => '' ), $item_id );
 
 	if ( empty( $args ) ) {
 		return false;
@@ -486,7 +486,7 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	 * @param bool   $boolean Check its true/false.
 	 * @param string $item_id item id.
 	 */
-	$args = apply_filters( "bp_moderation_{$item_type}_button_args", array(), $item_id );
+	$args = apply_filters( "bp_moderation_{$item_type}_button_args", array( 'id' => '' ), $item_id );
 
 	if ( empty( $args ) ) {
 		return false;
