@@ -100,9 +100,10 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
+
 			if ( $is_user_blocked ) {
 				$comment_text = esc_html__( 'Content from blocked user.', 'buddyboss' );
 			} else {
@@ -127,12 +128,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment_id, self::$moderation_type ) ) {
-			$comment_author_id = self::get_content_owner_id( $comment_id );
-			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
-			if ( $is_user_blocked ) {
-				$return = esc_html__( 'Blocked User', 'buddyboss' );
-			}
+		if ( $this->is_content_hidden( $comment_id ) ) {
+			$return = '';
 		}
 
 		return $return;
@@ -165,12 +162,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment_id, self::$moderation_type ) ) {
-			$comment_author_id = self::get_content_owner_id( $comment_id );
-			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
-			if ( $is_user_blocked ) {
-				$author = esc_html__( 'Blocked User', 'buddyboss' );
-			}
+		if ( $this->is_content_hidden( $comment_id ) ) {
+			$author = '';
 		}
 
 		return $author;
@@ -192,7 +185,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$link = '';
 		}
 
@@ -216,7 +209,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $date;
 		}
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$date = '';
 		}
 
@@ -242,7 +235,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $date;
 		}
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$date = '';
 		}
 
@@ -266,20 +259,20 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
-		$link .= bp_moderation_get_report_button(
-			array(
-				'id'                => 'comment_report',
-				'component'         => 'moderation',
-				'must_be_logged_in' => true,
-				'button_attr'       => array(
-					'data-bp-content-id'   => $comment->comment_ID,
-					'data-bp-content-type' => self::$moderation_type,
-				),
-			)
-		);
-
-		if ( BP_Core_Suspend::check_hidden_content( $comment->comment_ID, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$link = '';
+		} else {
+			$link .= bp_moderation_get_report_button(
+				array(
+					'id'                => 'comment_report',
+					'component'         => 'moderation',
+					'must_be_logged_in' => true,
+					'button_attr'       => array(
+						'data-bp-content-id'   => $comment->comment_ID,
+						'data-bp-content-type' => self::$moderation_type,
+					),
+				)
+			);
 		}
 
 		return $link;
@@ -297,7 +290,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function blocked_edit_comment_link( $link, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_hidden_content( $comment_id, self::$moderation_type ) ) {
+		if ( $this->is_content_hidden( $comment_id ) ) {
 			$link = '';
 		}
 
@@ -318,5 +311,24 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$args['button_attr']['class'] = 'report-content';
 
 		return $args;
+	}
+
+	/**
+	 * Check content is hidden or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return bool
+	 */
+	protected function is_content_hidden( $item_id ) {
+
+		$author_id = self::get_content_owner_id( $item_id );
+
+		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
+		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -195,4 +195,22 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		return $retval;
 	}
+
+	/**
+	 * Check content is hidden or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return bool
+	 */
+	protected function is_content_hidden( $item_id ) {
+
+		$author_id = self::get_content_owner_id( $item_id );
+
+		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
+		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+			return true;
+		}
+		return false;
+	}
 }
