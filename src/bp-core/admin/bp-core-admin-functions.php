@@ -1547,7 +1547,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 				),
 						$url );
 				$unsuspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
-				$actions['unsuspend'] = sprintf( '<a href="%1$s">%2$s</a>',
+				$actions['unsuspend'] = sprintf( '<a class="bp-unsuspend-user" href="%1$s" data-action="unsuspend">%2$s</a>',
 						esc_url( $unsuspend_link ),
 						esc_html__( 'Unsuspend', 'buddyboss' ) );
 
@@ -1559,7 +1559,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 				),
 						$url );
 				$suspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
-				$actions['suspend'] = sprintf( '<a class="submitdelete" href="%1$s">%2$s</a>',
+				$actions['suspend'] = sprintf( '<a class="submitdelete bp-suspend-user" href="%1$s" data-action="suspend">%2$s</a>',
 						esc_url( $suspend_link ),
 						esc_html__( 'Suspend', 'buddyboss' ) );
 			}

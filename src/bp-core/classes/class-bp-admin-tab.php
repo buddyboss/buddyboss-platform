@@ -119,6 +119,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
 						),
 					),
+					'moderation' => array(
+						'suspend_confirm_message'   => esc_js( __( 'Are you sure? Suspending selected member will kill their existing login session, not allow them to login anymore and their generated content will be hidden site wide in few minutes', 'buddyboss' ) ),
+						'unsuspend_confirm_message' => esc_js( __( 'Are you sure? Unsuspending selected member will allow them to login again and their generated content will be visible back again in few minutes', 'buddyboss' ) ),
+					)
 				) );
 		}
 

@@ -72,19 +72,21 @@ jQuery(document).ready(function ($) {
      */
     $(document).on('click', '.bp-block-user', function (event) {
         event.preventDefault();
+        var curObj = $(this);
+        var sub_action = curObj.attr('data-action');
 
-        if (!confirm(Bp_Moderation.strings.confirm_msg)) {
-            return false;
+        if ( 'suspend'===sub_action ) {
+            return confirm ( BP_ADMIN.moderation.suspend_confirm_message );
+        } else if ( 'unsuspend'===sub_action ) {
+            return confirm ( BP_ADMIN.moderation.unsuspend_confirm_message );
         }
 
         $('.bp-moderation-ajax-msg p').text('').parent().addClass('hidden');
 
-        var curObj = $(this);
         curObj.addClass('disabled');
         var id = curObj.attr('data-id');
         var type = curObj.attr('data-type');
         var nonce = curObj.attr('data-nonce');
-        var sub_action = curObj.attr('data-action');
         var data = {
             action: 'bp_moderation_user_actions_request',
             id: id,
