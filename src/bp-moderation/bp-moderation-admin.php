@@ -42,6 +42,7 @@ function bp_moderation_admin_scripts( $hook ) {
 			array(
 				'strings' => array(
 					'confirm_msg'            => esc_js( __( 'Are you sure? It will hide selected content for everybody in the network', 'buddyboss' ) ),
+					'unhide_confirm_msg'     => esc_js( __( 'Are you sure? It will unhide selected content for everybody in the network', 'buddyboss' ) ),
 					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
 					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
 					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),

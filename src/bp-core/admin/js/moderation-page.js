@@ -6,18 +6,26 @@ jQuery(document).ready(function ($) {
      */
     $(document).on('click', '.bp-hide-request', function (event) {
         event.preventDefault();
-        if (!confirm(Bp_Moderation.strings.confirm_msg)) {
-            return false;
+
+        var curObj = $(this);
+        var sub_action = curObj.attr('data-action');
+
+        if ( 'hide'===sub_action ) {
+            if ( ! confirm ( Bp_Moderation.strings.confirm_msg ) ) {
+                return false;
+            }
+        } else if ( 'unhide'===sub_action ) {
+            if ( ! confirm ( Bp_Moderation.strings.unhide_confirm_msg ) ) {
+                return false;
+            }
         }
 
         $('.bp-moderation-ajax-msg p').text('').parent().addClass('hidden');
 
-        var curObj = $(this);
         curObj.addClass('disabled');
         var id = curObj.attr('data-id');
         var type = curObj.attr('data-type');
         var nonce = curObj.attr('data-nonce');
-        var sub_action = curObj.attr('data-action');
         var data = {
             action: 'bp_moderation_content_actions_request',
             id: id,
