@@ -212,11 +212,15 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
+		$suspend_args = self::validate_keys( $suspend_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+			$args['type'] = self::$type;
 			$this->hide_related_content( $group_id, $hide_sitewide, $args );
 		} else {
+			$args['type'] = self::$type;
 			$bp_background_updater->push_to_queue(
 				array(
 					'callback' => array( $this, 'hide_related_content' ),
@@ -265,19 +269,15 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( isset( $suspend_args['author_compare'] ) ) {
-			unset( $suspend_args['author_compare'] );
-		}
-
-		if ( isset( $suspend_args['type'] ) ) {
-			unset( $suspend_args['type'] );
-		}
+		$suspend_args = self::validate_keys( $suspend_args );
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
 		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+			$args['type'] = self::$type;
 			$this->unhide_related_content( $group_id, $hide_sitewide, $force_all, $args );
 		} else {
+			$args['type'] = self::$type;
 			$bp_background_updater->push_to_queue(
 				array(
 					'callback' => array( $this, 'unhide_related_content' ),
@@ -300,6 +300,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $group_id, $args = array() ) {
 		$related_contents = array();
+
+		if ( bp_is_active( 'forums' ) ) {
+			$related_contents[ BP_Suspend_Forum::$type ] = (array) bbp_get_group_forum_ids( $group_id );
+		}
 
 		if ( bp_is_active( 'activity' ) ) {
 			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_group_activity_ids( $group_id );
@@ -397,8 +401,9 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 				$forum_id,
 				(bool) bp_moderation_is_user_suspended( $forum_author ),
 				array(
-					'blocked_user'   => $forum_author,
-					'user_suspended' => (bool) bp_moderation_is_user_suspended( $forum_author ),
+					'blocked_user'     => $forum_author,
+					'user_suspended'   => (bool) bp_moderation_is_user_suspended( $forum_author ),
+					'force_bg_process' => true,
 				)
 			);
 			add_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -434,10 +439,11 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			0,
 			false,
 			array(
-				'blocked_user'   => get_post_field( 'post_author', $forum_id ),
-				'user_suspended' => 0,
-				'author_compare' => true,
-				'type'           => BP_Suspend_Forum::$type,
+				'blocked_user'     => get_post_field( 'post_author', $forum_id ),
+				'user_suspended'   => 0,
+				'author_compare'   => true,
+				'type'             => BP_Suspend_Forum::$type,
+				'force_bg_process' => true,
 			)
 		);
 	}

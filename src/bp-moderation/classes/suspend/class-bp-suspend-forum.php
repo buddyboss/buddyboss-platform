@@ -223,8 +223,14 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		// if Group forums then return.
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
-		if ( ! empty( $group_ids ) ) {
+		if ( ! empty( $group_ids ) && ( ! isset( $args['type'] ) || empty( $args['type'] ) ) ) {
 			return;
+		}
+
+		$force_bg_process = false;
+		if ( isset( $args['force_bg_process'] ) ) {
+			$force_bg_process = (bool) $args['force_bg_process'];
+			unset( $args['force_bg_process'] );
 		}
 
 		$suspend_args = wp_parse_args(
@@ -239,9 +245,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			$suspend_args['hide_sitewide'] = $hide_sitewide;
 		}
 
+		$suspend_args = self::validate_keys( $suspend_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->backgroup_diabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
 			$this->hide_related_content( $forum_id, $hide_sitewide, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
@@ -267,6 +275,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function manage_unhidden_forum( $forum_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
+		$force_bg_process = false;
+		if ( isset( $args['force_bg_process'] ) ) {
+			$force_bg_process = (bool) $args['force_bg_process'];
+			unset( $args['force_bg_process'] );
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -291,17 +305,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( isset( $suspend_args['author_compare'] ) ) {
-			unset( $suspend_args['author_compare'] );
-		}
-
-		if ( isset( $suspend_args['type'] ) ) {
-			unset( $suspend_args['type'] );
-		}
+		$suspend_args = self::validate_keys( $suspend_args );
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->backgroup_diabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
 			$this->unhide_related_content( $forum_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
