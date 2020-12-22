@@ -1547,7 +1547,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 				),
 						$url );
 				$unsuspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
-				$actions['unsuspend'] = sprintf( '<a class="bp-unsuspend-user" href="%1$s" data-action="unsuspend">%2$s</a>',
+				$actions['unsuspend'] = sprintf( '<a class="bp-unsuspend-user ham" href="%1$s" data-action="unsuspend">%2$s</a>',
 						esc_url( $unsuspend_link ),
 						esc_html__( 'Unsuspend', 'buddyboss' ) );
 
