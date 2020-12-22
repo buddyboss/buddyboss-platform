@@ -76,9 +76,13 @@ jQuery(document).ready(function ($) {
         var sub_action = curObj.attr('data-action');
 
         if ( 'suspend'===sub_action ) {
-            return confirm ( BP_ADMIN.moderation.suspend_confirm_message );
+            if ( ! confirm ( BP_ADMIN.moderation.suspend_confirm_message ) ) {
+                return false;
+            }
         } else if ( 'unsuspend'===sub_action ) {
-            return confirm ( BP_ADMIN.moderation.unsuspend_confirm_message );
+            if ( ! confirm ( BP_ADMIN.moderation.unsuspend_confirm_message ) ) {
+                return false;
+            }
         }
 
         $('.bp-moderation-ajax-msg p').text('').parent().addClass('hidden');
