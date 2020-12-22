@@ -156,7 +156,7 @@ $admins            = array_map( 'intval', get_users(
 											</td>
 											<td>
 												<?php
-												printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $moderation_request_data->item_id ) ) );
+												printf( '<strong><a href="%s">%s</a></strong>', esc_url( BP_Moderation_Members::get_permalink( $moderation_request_data->item_id ) ), esc_html( bp_core_get_userlink( $moderation_request_data->item_id, true ) ) );
 												?>
 											</td>
 										</tr>

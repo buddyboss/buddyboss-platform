@@ -79,7 +79,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $member_id ) {
-		return '';
+		return add_query_arg( array( 'modbypass' => 1 ), bp_core_get_user_domain( $member_id ) );
 	}
 
 	/**
