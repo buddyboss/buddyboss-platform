@@ -2637,16 +2637,16 @@ window.bp = window.bp || {};
 					}
 				}
 
-			if ( this.firstFetch ) {
-				$('#bp-message-thread-list').animate({ scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 100);
-				this.firstFetch = false;
-			} else {
-				$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
-			}
+				if ( this.firstFetch ) {
+					$('#bp-message-thread-list').animate({ scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 100);
+					this.firstFetch = false;
+				} else {
+					$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
+				}
 
-			if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
-				$('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
-			}
+				if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
+					$('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
+				}
 
 				$( '#bp-message-load-more' ).removeClass( 'loading' );
 
