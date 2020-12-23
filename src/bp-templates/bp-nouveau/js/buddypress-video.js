@@ -117,6 +117,8 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bb-create-video-album', this.openCreateVideoAlbumModal.bind( this ) );
 			bpNouveau.on( 'click', '#bp-video-create-album-close', this.closeCreateVideoAlbumModal.bind( this ) );
 			$( document ).on( 'click', '#bp-video-create-album-submit', this.saveAlbum.bind( this ) );
+			//Video Load More
+			$( '.bp-nouveau [data-bp-list="video"]' ).on( 'click', 'li.load-more', this.injectVideos.bind( this ) );
 
 
 		},
@@ -1077,6 +1079,48 @@ window.bp = window.bp || {};
 				}
 			);
 
+		},
+
+
+		injectVideos: function ( event ) {
+			var store = bp.Nouveau.getStorage( 'bp-video' ),
+				scope = store.scope || null, filter = store.filter || null;
+
+			if ( $( event.currentTarget ).hasClass( 'load-more' ) ) {
+				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
+
+				// Stop event propagation.
+				event.preventDefault();
+
+				$( event.currentTarget ).find( 'a' ).first().addClass( 'loading' );
+
+				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
+					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+				}
+
+				bp.Nouveau.objectRequest(
+					{
+						object: 'video',
+						scope: scope,
+						filter: filter,
+						search_terms: search_terms,
+						page: next_page,
+						method: 'append',
+						target: '#buddypress [data-bp-list] ul.bp-list'
+					}
+				).done(
+					function ( response ) {
+						if ( true === response.success ) {
+							$( event.currentTarget ).remove();
+
+							// Update the current page.
+							self.current_page = next_page;
+
+							jQuery( window ).scroll();
+						}
+					}
+				);
+			}
 		},
 
 
