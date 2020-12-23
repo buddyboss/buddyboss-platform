@@ -3923,19 +3923,19 @@ function bp_email_get_schema() {
 		),
 		'content-moderation-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Content is auto hidden', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] Content auto-hidden on reporting', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{content.type}} has been automatically hidden because it has been reported at least {{content.timesreported}} time(s).", 'buddyboss' ),
+			'post_content' => __( "{{content.type}} has been auto-hidden because it has been reported {{content.timesreported}} time(s) by the members on the network.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{content.type}} has been automatically hidden because it has been reported at least {{content.timesreported}} time(s).", 'buddyboss' ),
+			'post_excerpt' => __( "{{content.type}} has been auto-hidden because it has been reported {{content.timesreported}} time(s) by the members on the network.", 'buddyboss' ),
 		),
 		'user-moderation-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Member is auto suspended', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] Member suspended on blocking', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{user.name}} has been automatically suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
+			'post_content' => __( "{{user.name}} has been auto-suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{user.name}} has been automatically suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
+			'post_excerpt' => __( "{{user.name}} has been auto-suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
 		),
 	);
 
@@ -4119,12 +4119,12 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$content_moderation_email = array(
-		'description' => __( 'Content moderation email description.', 'buddyboss' ), //Todo: Add proper description of email.
+		'description' => __( 'Content auto-hidden on reporting from members on the network.', 'buddyboss' ), //Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
 	$user_moderation_email = array(
-		'description' => __( 'User suspended email description.', 'buddyboss' ), //Todo: Add proper description of email.
+		'description' => __( 'Member suspended on blocking from other members on the network.', 'buddyboss' ), //Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 

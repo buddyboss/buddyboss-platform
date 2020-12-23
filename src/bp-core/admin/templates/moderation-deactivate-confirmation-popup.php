@@ -47,7 +47,7 @@ style="display: none;">
 		</button>
 		<button class="component-deactivate button">
 			<?php
-			esc_html_e( 'I understand deactivate', 'buddyboss' );
+			esc_html_e( 'Yes I understand, Deactivate', 'buddyboss' );
 			?>
 		</button>
 	</div>

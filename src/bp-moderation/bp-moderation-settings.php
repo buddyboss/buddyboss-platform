@@ -333,7 +333,7 @@ function bpm_reporting_settings_callback_categories() {
 	printf(
 		'<label>%s</label>',
 		sprintf(
-			__( '<a href="%s">Manage</a> reporting from categories form members allowed to select from frontend.', 'buddyboss' ),
+			__( '<a href="%s">Manage</a> categories for members to report content in the frontend.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
 					array(
