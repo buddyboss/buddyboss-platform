@@ -1176,6 +1176,9 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-open-video-theatre', this.openTheatre.bind( this ) );
 			$( document ).on( 'click', '.bb-prev-media', this.previous.bind( this ) );
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
+			$( document ).on( 'click', '.bp-add-video-activity-description', this.openVideoActivityDescription.bind( this ) );
+			$( document ).on( 'click', '#bp-activity-description-new-reset', this.closeVideoActivityDescription.bind( this ) );
+			$( document ).on( 'click', '#bp-activity-description-new-submit', this.submitVideoActivityDescription.bind( this ) );
 
 		},
 		openTheatre: function ( event ) {
@@ -1475,6 +1478,79 @@ window.bp = window.bp || {};
 			} else {
 				$( '.bb-media-info-section.media' ).hide();
 			}
+		},
+
+		openVideoActivityDescription: function ( event ) {
+			event.preventDefault();
+			var target = $( event.currentTarget );
+
+			if ( target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).length < 1 ) {
+				return false;
+			}
+
+			target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).show().addClass( 'open' );
+			target.parents( '.activity-video-description' ).find( '.bp-video-activity-description' ).hide();
+			target.hide();
+		},
+
+		closeVideoActivityDescription: function ( event ) {
+			event.preventDefault();
+			var target = $( event.currentTarget );
+
+			if ( target.parents( '.activity-video-description' ).length < 1 ) {
+				return false;
+			}
+
+			var default_value = target.parents( '.activity-video-description' ).find( '#add-activity-description' ).get( 0 ).defaultValue;
+
+			target.parents( '.activity-video-description' ).find( '.bp-add-video-activity-description' ).show();
+			target.parents( '.activity-video-description' ).find( '.bp-video-activity-description' ).show();
+			target.parents( '.activity-video-description' ).find( '#add-activity-description' ).val( default_value );
+			target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).hide().removeClass( 'open' );
+		},
+
+		submitVideoActivityDescription: function ( event ) {
+			event.preventDefault();
+
+			var target = $( event.currentTarget ),
+				parent_wrap = target.parents( '.activity-video-description' ),
+				description = parent_wrap.find( '#add-activity-description' ).val(),
+				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
+
+			var data = {
+				'action': 'video_description_save',
+				'description': description,
+				'attachment_id': attachment_id,
+				'_wpnonce': BP_Nouveau.nonces.video,
+			};
+
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					async: false,
+					success: function ( response ) {
+						if ( response.success ) {
+							target.parents( '.activity-video-description' ).find( '.bp-video-activity-description' ).html( response.data.description ).show();
+							target.parents( '.activity-video-description' ).find( '.bp-add-video-activity-description' ).show();
+							parent_wrap.find( '#add-activity-description' ).val( response.data.description );
+							parent_wrap.find( '#add-activity-description' ).get( 0 ).defaultValue = response.data.description;
+							if ( response.data.description == '' ) {
+								target.parents( '.activity-video-description' ).find( '.bp-add-video-activity-description' ).removeClass( 'show-edit' ).addClass( 'show-add' );
+							} else {
+								target.parents( '.activity-video-description' ).find( '.bp-add-video-activity-description' ).addClass( 'show-edit' ).removeClass( 'show-add' );
+							}
+
+							target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).hide().removeClass( 'open' );
+							target.parents( '.activity-video-description' ).find( '.bp-video-activity-description' ).show();
+							target.parents( '.activity-video-description' ).find( '.bp-feedback.error' ).remove();
+						} else {
+							target.parents( '.activity-video-description' ).prepend( response.data.feedback );
+						}
+					}
+				}
+			);
 		},
 	};
 
