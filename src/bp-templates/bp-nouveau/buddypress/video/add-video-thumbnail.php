@@ -16,7 +16,7 @@
 
 					<header class="bb-model-header">
 						<a href="#" class="bp-video-thumbnail-upload-tab bp-thumbnail-upload-tab selected" data-content="bp-video-thumbnail-dropzone-content" id="bp-video-thumbnail-uploader-modal-title">
-							<?php esc_html_e( 'Add/Edit Thumbnail', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?>
 						</a>
 
 						<span id="bp-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
