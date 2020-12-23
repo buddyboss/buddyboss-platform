@@ -123,6 +123,15 @@ class BP_Core_Suspend {
 			}
 		}
 
+		/**
+		 * Hook fire when item suspended
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param int $item_id item id.
+		 */
+		do_action( "bp_suspend_{$args['item_type']}_suspended", $args['item_id'] );
+
 		return ! empty( $recode ) ? $recode->id : $wpdb->insert_id;
 	}
 
@@ -259,6 +268,15 @@ class BP_Core_Suspend {
 
 			// Remove suspend record if item is not hidden
 			self::maybe_delete( $where['item_id'], $where['item_type'] );
+
+			/**
+			 * Hook fire when item unsuspended
+			 *
+			 * @since BuddyBoss 2.0.0
+			 *
+			 * @param int $item_id item id.
+			 */
+			do_action( "bp_suspend_{$args['item_type']}_unsuspended", $args['item_id'] );
 
 			return $flag;
 		}
