@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-23 08:44:28+00:00\n"
+"POT-Creation-Date: 2020-12-23 09:00:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -759,7 +759,7 @@ msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:2311
-#: bp-groups/bp-groups-activity.php:468
+#: bp-groups/bp-groups-activity.php:476
 msgid ""
 "Allowed time for editing this activity is passed already, you can not edit "
 "now."
@@ -999,7 +999,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:85
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:59
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:14
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:48
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:50
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:46
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:555
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:556
@@ -4045,7 +4045,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:22
 #: bp-document/bp-document-functions.php:1964
-#: bp-video/bp-video-functions.php:2650
+#: bp-video/bp-video-functions.php:2678
 msgid "Video"
 msgstr ""
 
@@ -8727,48 +8727,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1919
-#: bp-video/bp-video-functions.php:2605
+#: bp-video/bp-video-functions.php:2633
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1924
-#: bp-video/bp-video-functions.php:2610
+#: bp-video/bp-video-functions.php:2638
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1929
-#: bp-video/bp-video-functions.php:2615
+#: bp-video/bp-video-functions.php:2643
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1934
-#: bp-video/bp-video-functions.php:2620
+#: bp-video/bp-video-functions.php:2648
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1939
-#: bp-video/bp-video-functions.php:2625
+#: bp-video/bp-video-functions.php:2653
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1944
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2630
+#: bp-video/bp-video-functions.php:2658
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1949
-#: bp-video/bp-video-functions.php:2635
+#: bp-video/bp-video-functions.php:2663
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1954
-#: bp-video/bp-video-functions.php:2640
+#: bp-video/bp-video-functions.php:2668
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1959
-#: bp-video/bp-video-functions.php:2645
+#: bp-video/bp-video-functions.php:2673
 msgid "Text"
 msgstr ""
 
@@ -13697,7 +13697,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:44
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:51
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:45
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:47
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:43
 msgid "Move"
 msgstr ""
@@ -15288,7 +15288,7 @@ msgstr ""
 msgid "%1$s created the group %2$s"
 msgstr ""
 
-#: bp-groups/bp-groups-activity.php:140 bp-groups/bp-groups-activity.php:620
+#: bp-groups/bp-groups-activity.php:140 bp-groups/bp-groups-activity.php:628
 #: cli/components/activity.php:957
 msgid "%1$s joined the group %2$s"
 msgstr ""
@@ -23020,7 +23020,7 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:42
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:44
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:40
 #: bp-templates/bp-nouveau/includes/video/functions.php:145

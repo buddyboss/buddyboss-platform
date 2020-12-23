@@ -642,313 +642,22 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 				);
 
 				if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-					$error = '';
-					try {
-						$ffmpeg = FFMpeg\FFMpeg::create();
-					} catch ( Exception $ffmpeg ) {
-						$error = $ffmpeg->getMessage();
-					}
-					if ( empty( trim( $error ) ) ) {
 
-						$ff_probe = FFMpeg\FFProbe::create();
-						$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
-						// $bitrate    = round( $ff_probe->format( get_attached_file( $video['id'] ) )->get( 'bit_rate' ) / 1024 );
-						$dimension = $ffmpeg->getFFProbe()->streams( get_attached_file( $video['id'] ) )->videos()->first()->getDimensions();
-						// $dimensions = array(
-						// 'width'  => $dimension->getWidth(),
-						// 'height' => $dimension->getHeight(),
-						// );
+					$thumbnails   = get_post_meta( $video['id'], 'video_preview_thumbnails', true );
+					$thumbnail_id = get_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', true );
 
-						// $resolutions = array(
-						// '2160p' => array(
-						// 'support'      => ( $dimensions['width'] >= 3840 || $dimensions['height'] >= 2160 ) ? true : false,
-						// 'widthS'       => $dimensions['width'] >= 3840,
-						// 'heightS'      => $dimensions['height'] >= 2160,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 3840,
-						// 'height'       => 2160,
-						// 'kilo_bitrate' => 6144,
-						// 'bandwidth'    => 20971520,
-						// ),
-						// '1440p' => array(
-						// 'support'      => ( $dimensions['width'] >= 2560 || $dimensions['height'] >= 1440 ) ? true : false,
-						// 'widthS'       => $dimensions['width'] >= 2560,
-						// 'heightS'      => $dimensions['height'] >= 1440,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 2560,
-						// 'height'       => 1440,
-						// 'kilo_bitrate' => 4096,
-						// 'bandwidth'    => 15728640,
-						// ),
-						// '1080p' => array(
-						// 'support'      => ( $dimensions['width'] >= 1920 || $dimensions['height'] >= 1080 ) ? true : false,
-						// 'widthS'       => $dimensions['width'] >= 1920,
-						// 'heightS'      => $dimensions['height'] >= 1080,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 1920,
-						// 'height'       => 1080,
-						// 'kilo_bitrate' => 4096,
-						// 'bandwidth'    => 10485760,
-						// ),
-						// '720p'  => array(
-						// 'support'      => ( $dimensions['width'] >= 1280 || $dimensions['height'] >= 720 ) ? true : false,
-						// 'widthS'       => $dimensions['width'] >= 1280,
-						// 'heightS'      => $dimensions['height'] >= 720,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 1280,
-						// 'height'       => 720,
-						// 'kilo_bitrate' => 2048,
-						// 'bandwidth'    => 7340032,
-						// ),
-						// '480p'  => array(
-						// 'support'      => ( $dimensions['width'] >= 854 || $dimensions['height'] >= 480 ) ? true : false,
-						// 'widthS'       => $dimensions['width'] >= 854,
-						// 'heightS'      => $dimensions['height'] >= 480,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 854,
-						// 'height'       => 480,
-						// 'kilo_bitrate' => 750,
-						// 'bandwidth'    => 4718592,
-						// ),
-						// '360p'  => array(
-						// 'support'      => ( $dimensions['width'] >= 640 || $dimensions['height'] >= 360 ) ? true : false,
-						// 'widthS'       => $dimensions['width'] >= 640,
-						// 'heightS'      => $dimensions['height'] >= 360,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 640,
-						// 'height'       => 360,
-						// 'kilo_bitrate' => 276,
-						// 'bandwidth'    => 3145728,
-						// ),
-						// '240p'  => array(
-						// 'support'      => ( $dimensions['width'] >= 426 || $dimensions['height'] >= 240 ),
-						// 'widthS'       => $dimensions['width'] >= 426,
-						// 'heightS'      => $dimensions['height'] >= 240,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 426,
-						// 'height'       => 240,
-						// 'kilo_bitrate' => 150,
-						// 'bandwidth'    => 1572864,
-						// ),
-						// '144p'  => array(
-						// 'support'      => true,
-						// 'widthS'       => $dimensions['width'] >= 256,
-						// 'heightS'      => $dimensions['height'] >= 144,
-						// 'widthR'       => $dimensions['width'],
-						// 'heightR'      => $dimensions['height'],
-						// 'width'        => 256,
-						// 'height'       => 144,
-						// 'kilo_bitrate' => 80,
-						// 'bandwidth'    => 524288,
-						// ),
-						// );
+					if ( ! $thumbnails && ! $thumbnail_id ) {
+						global $bp_background_updater;
 
-						if ( ! empty( $duration ) ) {
-							// Update video attachment meta.
-							update_post_meta( $video['id'], 'duration', $duration );
+						$bp_background_updater->push_to_queue(
+							array(
+								'callback' => 'bp_video_background_create_thumbnail',
+								'args'     => array( $video_id, $video ),
+							)
+						);
 
-							// Generate 3 random images for video cover.
-							$numbers = range( 1, (int) $duration );
-							shuffle( $numbers );
-							$random_seconds = array_slice( $numbers, 0, 3 );
+						$bp_background_updater->save()->schedule_event();
 
-							// Get Upload directory.
-							$upload     = wp_upload_dir();
-							$upload_dir = $upload['basedir'];
-							$upload_dir = $upload_dir . '/' . $video['id'] . '-video-thumbnail-' . time();
-
-							// If folder not exists then create.
-							if ( ! is_dir( $upload_dir ) ) {
-
-								// Create temp folder.
-								wp_mkdir_p( $upload_dir );
-								chmod( $upload_dir, 0777 );
-
-							}
-
-							add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
-							add_action( 'intermediate_image_sizes_advanced', 'bp_video_disable_thumbnail_images' );
-							$thumbnail_list = array();
-							foreach ( $random_seconds as $second ) {
-
-								$str          = wp_rand();
-								$unique_file  = md5( $str );
-								$image_name   = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $unique_file );
-								$thumbnail    = $upload_dir . '/' . $image_name . '.png';
-								$file_name    = $image_name . '.png';
-								$thumb_ffmpeg = FFMpeg\FFMpeg::create();
-								$video_thumb  = $thumb_ffmpeg->open( get_attached_file( $video['id'] ) );
-								$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
-								$thumb_frame->save( $thumbnail );
-
-								unset( $thumb_ffmpeg );
-								unset( $video_thumb );
-								unset( $thumb_frame );
-
-								$upload_file = wp_upload_bits( $file_name, null, file_get_contents( $thumbnail ) );
-								if ( ! $upload_file['error'] ) {
-									$wp_filetype = wp_check_filetype( $file_name, null );
-									$attachment  = array(
-										'post_mime_type' => $wp_filetype['type'],
-										'post_title'     => sanitize_file_name( $image_name ),
-										'post_content'   => '',
-										'post_status'    => 'inherit',
-									);
-
-									$preview_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-									if ( ! is_wp_error( $preview_attachment_id ) ) {
-										if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-											require_once ABSPATH . 'wp-admin/includes/image.php';
-											require_once ABSPATH . 'wp-admin/includes/file.php';
-											require_once ABSPATH . 'wp-admin/includes/media.php';
-										}
-										$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $upload_file['file'] );
-										wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-										$thumbnail_list[] = $preview_attachment_id;
-										update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
-										update_post_meta( $preview_attachment_id, 'video_id', $video_id );
-									}
-								}
-							}
-							remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
-							remove_action( 'intermediate_image_sizes_advanced', 'bp_video_disable_thumbnail_images' );
-							bp_core_remove_temp_directory( $upload_dir );
-
-							if ( $thumbnail_list ) {
-								update_post_meta( $video['id'], 'video_preview_thumbnails', implode( ',', $thumbnail_list ) );
-								update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', current( $thumbnail_list ) );
-							}
-
-							$transcode_dir       = $upload['basedir'];
-							$original_video      = get_attached_file( $video['id'] );
-							$file_type           = wp_check_filetype( wp_get_attachment_url( $video['id'] ) );
-							$video_attachment_id = $video['id'];
-
-							// Create temp folder.
-							$upload_dir = $transcode_dir . '/' . $video['id'] . '-video-transcoder-' . time();
-
-							// If folder not exists then create.
-							if ( ! is_dir( $upload_dir ) ) {
-
-								// Create temp folder.
-								wp_mkdir_p( $upload_dir );
-								chmod( $upload_dir, 0777 );
-
-							}
-
-							// if ( $bitrate && ! empty( $resolutions ) ) {
-							// foreach ( $resolutions as $key => $value ) {
-							// Checks if the resolution is supported, if it is not passed to the next.
-							// if ( ! $value['support'] ) {
-							// continue;
-							// }
-							//
-							// $file_path = $upload_dir;
-							//
-							// Creates quality folder in question.
-							// if ( ! is_dir( $file_path . DIRECTORY_SEPARATOR . $key ) ) {
-							//
-							// Create temp folder.
-							// wp_mkdir_p( $file_path . DIRECTORY_SEPARATOR . $key );
-							// chmod( $file_path . DIRECTORY_SEPARATOR . $key, 0777 );
-							//
-							// }
-							//
-							// $format = new \FFMpeg\Format\Video\X264();
-							// $format->setAudioCodec( 'libmp3lame' );
-							// Checks if the original bitrate of the video is less than that of quality, if it is less it is used less, otherwise the resolution.
-							// $format->setKiloBitrate( ( $bitrate < $value['kilo_bitrate'] ) ? $bitrate : $value['kilo_bitrate'] );
-							//
-							// $video = $ffmpeg->open( get_attached_file( $video_attachment_id ) );
-							// $video->save( $format, $file_path . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . $key . '.' . $file_type['ext'] );
-							// }
-							// }
-							//
-							// if ( $bitrate && ! empty( $resolutions ) ) {
-							//
-							// $format = new \FFMpeg\Format\Video\X264();
-							//
-							// Parameters to generate the HLS list every 10 seconds of video.
-							// $format->setAdditionalParameters(
-							// array(
-							// '-g',
-							// '60',
-							// '-hls_time',
-							// '10',
-							// '-hls_list_size',
-							// '0',
-							// )
-							// );
-							// $format->setAudioCodec( 'libmp3lame' );
-							//
-							// $file_path = $upload_dir;
-							//
-							// foreach ( $resolutions as $key => $value ) {
-							// Checks if the resolution is supported, if it is not passed to the next.
-							// if ( ! $value['support'] ) {
-							// continue;
-							// }
-							//
-							// $filename = $key;
-							//
-							// List of quality list files.
-							// $paths[] = $file_path . DIRECTORY_SEPARATOR . $key;
-							//
-							// Checks whether the video is proportional.
-							// $prop = round( ( $value['heightR'] * 16 ) / $value['widthR'] ) === 9;
-							//
-							// $width  = $value['width'];
-							// $height = $value['height'];
-							//
-							// If the dimensions of the video are not proportional, check which measurement is larger and use it as a base.
-							// if ( ! $prop ) {
-							// if ( $value['widthR'] === $value['heightR'] ) {
-							// $width  = $value['height'];
-							// $height = $value['height'];
-							// } elseif ( $value['widthR'] > $value['heightR'] ) {
-							// $height = round( ( $value['widthR'] / 16 ) * 9 );
-							// } else {
-							// $width = round( ( $value['heightR'] / 9 ) * 16 );
-							// }
-							// }
-							//
-							// Checks if the original bitrate of the video is less than that of quality, if it is less it is used less, otherwise the resolution.
-							// $format->setKiloBitrate( ( $bitrate < $value['kilo_bitrate'] ) ? $bitrate : $value['kilo_bitrate'] );
-							//
-							// Checks whether measures are divisible (to avoid conversion errors).
-							// $width  = ( 0 === $width % 2 ) ? $width : $width + 1;
-							// $height = ( 0 === $height % 2 ) ? $height : $height + 1;
-							//
-							// Creates quality folder in question.
-							// if ( ! is_dir( $file_path . DIRECTORY_SEPARATOR . $key ) ) {
-							//
-							// Create temp folder.
-							// wp_mkdir_p( $file_path . DIRECTORY_SEPARATOR . $key );
-							// chmod( $file_path . DIRECTORY_SEPARATOR . $key, 0777 );
-							//
-							// }
-							//
-							// $video = $ffmpeg->open( get_attached_file( $video_attachment_id ) );
-							//
-							// $video->filters()->resize( new \FFMpeg\Coordinate\Dimension( $width, $height ), \FFMpeg\Filters\Video\ResizeFilter::RESIZEMODE_INSET, true )->synchronize();
-							//
-							// $video->save( $format, $file_path . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . $filename . '.m3u8' );
-							//
-							// Adds the supported resolution list generated previously to the video's general list.
-							// $ext  = '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=' . $value['bandwidth'] . ',NAME="' . $key . '"' . "\n";
-							// $ext .= $filename . '/' . $key . '/' . $filename . '.m3u8' . "\n";
-							//
-							// file_put_contents( $file_path . DIRECTORY_SEPARATOR . $filename . '.m3u8', $ext, FILE_APPEND );
-							// }
-							// }
-						}
 					}
 				}
 			}
@@ -968,6 +677,325 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 	 * @since BuddyBoss 1.2.0
 	 */
 	return apply_filters( 'bp_video_add_handler', $video_ids, (array) $videos );
+}
+
+/**
+ * Generate the video thumbnail.
+ *
+ * @param int   $video_id video id.
+ * @param array $video data of video.
+ */
+function bp_video_background_create_thumbnail( $video_id, $video ) {
+
+	$error = '';
+	try {
+		$ffmpeg = FFMpeg\FFMpeg::create();
+	} catch ( Exception $ffmpeg ) {
+		$error = $ffmpeg->getMessage();
+	}
+
+	if ( empty( trim( $error ) ) ) {
+
+		$ff_probe = FFMpeg\FFProbe::create();
+		$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
+		// $bitrate    = round( $ff_probe->format( get_attached_file( $video['id'] ) )->get( 'bit_rate' ) / 1024 );
+		$dimension = $ffmpeg->getFFProbe()->streams( get_attached_file( $video['id'] ) )->videos()->first()->getDimensions();
+		// $dimensions = array(
+		// 'width'  => $dimension->getWidth(),
+		// 'height' => $dimension->getHeight(),
+		// );
+
+		// $resolutions = array(
+		// '2160p' => array(
+		// 'support'      => ( $dimensions['width'] >= 3840 || $dimensions['height'] >= 2160 ) ? true : false,
+		// 'widthS'       => $dimensions['width'] >= 3840,
+		// 'heightS'      => $dimensions['height'] >= 2160,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 3840,
+		// 'height'       => 2160,
+		// 'kilo_bitrate' => 6144,
+		// 'bandwidth'    => 20971520,
+		// ),
+		// '1440p' => array(
+		// 'support'      => ( $dimensions['width'] >= 2560 || $dimensions['height'] >= 1440 ) ? true : false,
+		// 'widthS'       => $dimensions['width'] >= 2560,
+		// 'heightS'      => $dimensions['height'] >= 1440,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 2560,
+		// 'height'       => 1440,
+		// 'kilo_bitrate' => 4096,
+		// 'bandwidth'    => 15728640,
+		// ),
+		// '1080p' => array(
+		// 'support'      => ( $dimensions['width'] >= 1920 || $dimensions['height'] >= 1080 ) ? true : false,
+		// 'widthS'       => $dimensions['width'] >= 1920,
+		// 'heightS'      => $dimensions['height'] >= 1080,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 1920,
+		// 'height'       => 1080,
+		// 'kilo_bitrate' => 4096,
+		// 'bandwidth'    => 10485760,
+		// ),
+		// '720p'  => array(
+		// 'support'      => ( $dimensions['width'] >= 1280 || $dimensions['height'] >= 720 ) ? true : false,
+		// 'widthS'       => $dimensions['width'] >= 1280,
+		// 'heightS'      => $dimensions['height'] >= 720,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 1280,
+		// 'height'       => 720,
+		// 'kilo_bitrate' => 2048,
+		// 'bandwidth'    => 7340032,
+		// ),
+		// '480p'  => array(
+		// 'support'      => ( $dimensions['width'] >= 854 || $dimensions['height'] >= 480 ) ? true : false,
+		// 'widthS'       => $dimensions['width'] >= 854,
+		// 'heightS'      => $dimensions['height'] >= 480,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 854,
+		// 'height'       => 480,
+		// 'kilo_bitrate' => 750,
+		// 'bandwidth'    => 4718592,
+		// ),
+		// '360p'  => array(
+		// 'support'      => ( $dimensions['width'] >= 640 || $dimensions['height'] >= 360 ) ? true : false,
+		// 'widthS'       => $dimensions['width'] >= 640,
+		// 'heightS'      => $dimensions['height'] >= 360,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 640,
+		// 'height'       => 360,
+		// 'kilo_bitrate' => 276,
+		// 'bandwidth'    => 3145728,
+		// ),
+		// '240p'  => array(
+		// 'support'      => ( $dimensions['width'] >= 426 || $dimensions['height'] >= 240 ),
+		// 'widthS'       => $dimensions['width'] >= 426,
+		// 'heightS'      => $dimensions['height'] >= 240,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 426,
+		// 'height'       => 240,
+		// 'kilo_bitrate' => 150,
+		// 'bandwidth'    => 1572864,
+		// ),
+		// '144p'  => array(
+		// 'support'      => true,
+		// 'widthS'       => $dimensions['width'] >= 256,
+		// 'heightS'      => $dimensions['height'] >= 144,
+		// 'widthR'       => $dimensions['width'],
+		// 'heightR'      => $dimensions['height'],
+		// 'width'        => 256,
+		// 'height'       => 144,
+		// 'kilo_bitrate' => 80,
+		// 'bandwidth'    => 524288,
+		// ),
+		// );
+
+		if ( ! empty( $duration ) ) {
+			// Update video attachment meta.
+			update_post_meta( $video['id'], 'duration', $duration );
+
+			// Generate 3 random images for video cover.
+			$numbers = range( 1, (int) $duration );
+			shuffle( $numbers );
+			$random_seconds = array_slice( $numbers, 0, 3 );
+
+			// Get Upload directory.
+			$upload     = wp_upload_dir();
+			$upload_dir = $upload['basedir'];
+			$upload_dir = $upload_dir . '/' . $video['id'] . '-video-thumbnail-' . time();
+
+			// If folder not exists then create.
+			if ( ! is_dir( $upload_dir ) ) {
+
+				// Create temp folder.
+				wp_mkdir_p( $upload_dir );
+				chmod( $upload_dir, 0777 );
+
+			}
+
+			add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+			add_action( 'intermediate_image_sizes_advanced', 'bp_video_disable_thumbnail_images' );
+			$thumbnail_list = array();
+			foreach ( $random_seconds as $second ) {
+
+				$str          = wp_rand();
+				$unique_file  = md5( $str );
+				$image_name   = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $unique_file );
+				$thumbnail    = $upload_dir . '/' . $image_name . '.png';
+				$file_name    = $image_name . '.png';
+				$thumb_ffmpeg = FFMpeg\FFMpeg::create();
+				$video_thumb  = $thumb_ffmpeg->open( get_attached_file( $video['id'] ) );
+				$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
+				$thumb_frame->save( $thumbnail );
+
+				unset( $thumb_ffmpeg );
+				unset( $video_thumb );
+				unset( $thumb_frame );
+
+				$upload_file = wp_upload_bits( $file_name, null, file_get_contents( $thumbnail ) );
+				if ( ! $upload_file['error'] ) {
+					$wp_filetype = wp_check_filetype( $file_name, null );
+					$attachment  = array(
+						'post_mime_type' => $wp_filetype['type'],
+						'post_title'     => sanitize_file_name( $image_name ),
+						'post_content'   => '',
+						'post_status'    => 'inherit',
+					);
+
+					$preview_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+					if ( ! is_wp_error( $preview_attachment_id ) ) {
+						if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+							require_once ABSPATH . 'wp-admin/includes/image.php';
+							require_once ABSPATH . 'wp-admin/includes/file.php';
+							require_once ABSPATH . 'wp-admin/includes/media.php';
+						}
+						$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $upload_file['file'] );
+						wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+						$thumbnail_list[] = $preview_attachment_id;
+						update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
+						update_post_meta( $preview_attachment_id, 'video_id', $video_id );
+					}
+				}
+			}
+			remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+			remove_action( 'intermediate_image_sizes_advanced', 'bp_video_disable_thumbnail_images' );
+			bp_core_remove_temp_directory( $upload_dir );
+
+			if ( $thumbnail_list ) {
+				update_post_meta( $video['id'], 'video_preview_thumbnails', implode( ',', $thumbnail_list ) );
+				update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', current( $thumbnail_list ) );
+			}
+
+			// $transcode_dir       = $upload['basedir'];
+			// $original_video      = get_attached_file( $video['id'] );
+			// $file_type           = wp_check_filetype( wp_get_attachment_url( $video['id'] ) );
+			// $video_attachment_id = $video['id'];
+
+			// Create temp folder.
+			// $upload_dir = $transcode_dir . '/' . $video['id'] . '-video-transcoder-' . time();
+
+			// If folder not exists then create.
+			// if ( ! is_dir( $upload_dir ) ) {
+			//
+			// Create temp folder.
+			// wp_mkdir_p( $upload_dir );
+			// chmod( $upload_dir, 0777 );
+			//
+			// }
+
+			// if ( $bitrate && ! empty( $resolutions ) ) {
+			// foreach ( $resolutions as $key => $value ) {
+			// Checks if the resolution is supported, if it is not passed to the next.
+			// if ( ! $value['support'] ) {
+			// continue;
+			// }
+			//
+			// $file_path = $upload_dir;
+			//
+			// Creates quality folder in question.
+			// if ( ! is_dir( $file_path . DIRECTORY_SEPARATOR . $key ) ) {
+			//
+			// Create temp folder.
+			// wp_mkdir_p( $file_path . DIRECTORY_SEPARATOR . $key );
+			// chmod( $file_path . DIRECTORY_SEPARATOR . $key, 0777 );
+			//
+			// }
+			//
+			// $format = new \FFMpeg\Format\Video\X264();
+			// $format->setAudioCodec( 'libmp3lame' );
+			// Checks if the original bitrate of the video is less than that of quality, if it is less it is used less, otherwise the resolution.
+			// $format->setKiloBitrate( ( $bitrate < $value['kilo_bitrate'] ) ? $bitrate : $value['kilo_bitrate'] );
+			//
+			// $video = $ffmpeg->open( get_attached_file( $video_attachment_id ) );
+			// $video->save( $format, $file_path . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . $key . '.' . $file_type['ext'] );
+			// }
+			// }
+			//
+			// if ( $bitrate && ! empty( $resolutions ) ) {
+			//
+			// $format = new \FFMpeg\Format\Video\X264();
+			//
+			// Parameters to generate the HLS list every 10 seconds of video.
+			// $format->setAdditionalParameters(
+			// array(
+			// '-g',
+			// '60',
+			// '-hls_time',
+			// '10',
+			// '-hls_list_size',
+			// '0',
+			// )
+			// );
+			// $format->setAudioCodec( 'libmp3lame' );
+			//
+			// $file_path = $upload_dir;
+			//
+			// foreach ( $resolutions as $key => $value ) {
+			// Checks if the resolution is supported, if it is not passed to the next.
+			// if ( ! $value['support'] ) {
+			// continue;
+			// }
+			//
+			// $filename = $key;
+			//
+			// List of quality list files.
+			// $paths[] = $file_path . DIRECTORY_SEPARATOR . $key;
+			//
+			// Checks whether the video is proportional.
+			// $prop = round( ( $value['heightR'] * 16 ) / $value['widthR'] ) === 9;
+			//
+			// $width  = $value['width'];
+			// $height = $value['height'];
+			//
+			// If the dimensions of the video are not proportional, check which measurement is larger and use it as a base.
+			// if ( ! $prop ) {
+			// if ( $value['widthR'] === $value['heightR'] ) {
+			// $width  = $value['height'];
+			// $height = $value['height'];
+			// } elseif ( $value['widthR'] > $value['heightR'] ) {
+			// $height = round( ( $value['widthR'] / 16 ) * 9 );
+			// } else {
+			// $width = round( ( $value['heightR'] / 9 ) * 16 );
+			// }
+			// }
+			//
+			// Checks if the original bitrate of the video is less than that of quality, if it is less it is used less, otherwise the resolution.
+			// $format->setKiloBitrate( ( $bitrate < $value['kilo_bitrate'] ) ? $bitrate : $value['kilo_bitrate'] );
+			//
+			// Checks whether measures are divisible (to avoid conversion errors).
+			// $width  = ( 0 === $width % 2 ) ? $width : $width + 1;
+			// $height = ( 0 === $height % 2 ) ? $height : $height + 1;
+			//
+			// Creates quality folder in question.
+			// if ( ! is_dir( $file_path . DIRECTORY_SEPARATOR . $key ) ) {
+			//
+			// Create temp folder.
+			// wp_mkdir_p( $file_path . DIRECTORY_SEPARATOR . $key );
+			// chmod( $file_path . DIRECTORY_SEPARATOR . $key, 0777 );
+			//
+			// }
+			//
+			// $video = $ffmpeg->open( get_attached_file( $video_attachment_id ) );
+			//
+			// $video->filters()->resize( new \FFMpeg\Coordinate\Dimension( $width, $height ), \FFMpeg\Filters\Video\ResizeFilter::RESIZEMODE_INSET, true )->synchronize();
+			//
+			// $video->save( $format, $file_path . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . $filename . '.m3u8' );
+			//
+			// Adds the supported resolution list generated previously to the video's general list.
+			// $ext  = '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=' . $value['bandwidth'] . ',NAME="' . $key . '"' . "\n";
+			// $ext .= $filename . '/' . $key . '/' . $filename . '.m3u8' . "\n";
+			//
+			// file_put_contents( $file_path . DIRECTORY_SEPARATOR . $filename . '.m3u8', $ext, FILE_APPEND );
+			// }
+			// }
+		}
+	}
 }
 
 /**
