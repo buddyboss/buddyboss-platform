@@ -643,18 +643,22 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 
 				if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 
-				    global $bp_background_updater;
+					$thumbnails   = get_post_meta( $video['id'], 'video_preview_thumbnails', true );
+					$thumbnail_id = get_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', true );
 
+					if ( ! $thumbnails && ! $thumbnail_id ) {
+						global $bp_background_updater;
 
+						$bp_background_updater->push_to_queue(
+							array(
+								'callback' => 'bp_video_background_create_thumbnail',
+								'args'     => array( $video_id, $video ),
+							)
+						);
 
+						$bp_background_updater->save()->schedule_event();
 
-					$bp_background_updater->push_to_queue(
-						array(
-							'callback' => 'bp_video_background_create_thumbnail',
-							'args'     => array( $video_id, $video ),
-						)
-					);
-
+					}
 				}
 			}
 
@@ -675,6 +679,12 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 	return apply_filters( 'bp_video_add_handler', $video_ids, (array) $videos );
 }
 
+/**
+ * Generate the video thumbnail.
+ *
+ * @param int   $video_id video id.
+ * @param array $video data of video.
+ */
 function bp_video_background_create_thumbnail( $video_id, $video ) {
 
 	$error = '';
@@ -862,22 +872,22 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 				update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', current( $thumbnail_list ) );
 			}
 
-			$transcode_dir       = $upload['basedir'];
-			$original_video      = get_attached_file( $video['id'] );
-			$file_type           = wp_check_filetype( wp_get_attachment_url( $video['id'] ) );
-			$video_attachment_id = $video['id'];
+			// $transcode_dir       = $upload['basedir'];
+			// $original_video      = get_attached_file( $video['id'] );
+			// $file_type           = wp_check_filetype( wp_get_attachment_url( $video['id'] ) );
+			// $video_attachment_id = $video['id'];
 
 			// Create temp folder.
-			$upload_dir = $transcode_dir . '/' . $video['id'] . '-video-transcoder-' . time();
+			// $upload_dir = $transcode_dir . '/' . $video['id'] . '-video-transcoder-' . time();
 
 			// If folder not exists then create.
-			if ( ! is_dir( $upload_dir ) ) {
-
-				// Create temp folder.
-				wp_mkdir_p( $upload_dir );
-				chmod( $upload_dir, 0777 );
-
-			}
+			// if ( ! is_dir( $upload_dir ) ) {
+			//
+			// Create temp folder.
+			// wp_mkdir_p( $upload_dir );
+			// chmod( $upload_dir, 0777 );
+			//
+			// }
 
 			// if ( $bitrate && ! empty( $resolutions ) ) {
 			// foreach ( $resolutions as $key => $value ) {
