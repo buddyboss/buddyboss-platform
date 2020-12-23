@@ -263,7 +263,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			return buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 		}
 
 		return $retval;
@@ -287,7 +287,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
 			}
 		}
