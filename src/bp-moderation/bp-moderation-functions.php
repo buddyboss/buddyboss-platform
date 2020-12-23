@@ -1062,17 +1062,7 @@ function bp_moderation_item_count( $args = array() ) {
 		'count_total' => true,
 	);
 
-	if ( 'content' === $args['type'] ) {
-		$moderation_request_args['exclude_types'] = array( BP_Moderation_Members::$moderation_type );
-	} else {
-		$moderation_request_args['in_types'] = array( BP_Moderation_Members::$moderation_type );
-	}
-
-	if ( 'unsuspended' === $args['status'] || 'active' === $args['status'] ) {
-		$moderation_request_args['hidden'] = 0;
-	} elseif ( 'suspended' === $args['status'] || 'hidden' === $args['status'] ) {
-		$moderation_request_args['hidden'] = 1;
-	}
+	$moderation_request_args = wp_parse_args( $args, $moderation_request_args );
 
 	$result = BP_Moderation::get( $moderation_request_args );
 
