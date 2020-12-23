@@ -1428,6 +1428,12 @@ ul.bb-albums-list {
 
 }
 
+#buddypress .bb-photo-list li.load-more,
+#buddypress .bb-video-list li.load-more {
+	margin: 20px auto 10px;
+	text-align: center;
+}
+
 .bb-album-list-item {
 
 	.bs-cover-wrap {
