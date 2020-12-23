@@ -3925,17 +3925,17 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{content.type}} has been automatically hidden from your network as it has been reported {{content.timesreported}} time(s).", 'buddyboss' ),
+			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}'>View reports</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{content.type}} has been automatically hidden from your network as it has been reported {{content.timesreported}} time(s).", 'buddyboss' ),
+			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View reports: {{reportlink}}", 'buddyboss' ),
 		),
 		'user-moderation-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{user.name}} has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s).", 'buddyboss' ),
+			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}'>View reports</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{user.name}} has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s).", 'buddyboss' ),
+			'post_excerpt' => __( "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n\n View reports: {{reportlink}}", 'buddyboss' ),
 		),
 	);
 

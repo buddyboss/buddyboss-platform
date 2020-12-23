@@ -1011,10 +1011,10 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
 		$email,
 		array(
 			'tokens' => array(
-				'user.name'         => $tokens['user_name'],
-				'user.timesblocked' => $tokens['times_blocked'],
-				'user.link'         => $tokens['member_link'],
-				'user.reportlink'   => $tokens['report_link'],
+				'user.name'    => $tokens['user_name'],
+				'timesblocked' => $tokens['times_blocked'],
+				'user.link'    => $tokens['member_link'],
+				'reportlink'   => $tokens['report_link'],
 			),
 		)
 	);
@@ -1036,12 +1036,11 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 		$email,
 		array(
 			'tokens' => array(
-				'content.excerpt'       => $tokens['content_excerpt'],
-				'content.type'          => $tokens['content_type'],
-				'content.owner'         => $tokens['content_owner'],
-				'content.timesreported' => $tokens['content_timesreported'],
-				'content.link'          => $tokens['content_link'],
-				'content.reportlink'    => $tokens['content_reportlink'],
+				'content.type'    => $tokens['content_type'],
+				'content.owner'   => $tokens['content_owner'],
+				'timesreported'   => $tokens['content_timesreported'],
+				'content.link'    => $tokens['content_link'],
+				'reportlink'      => $tokens['content_reportlink'],
 			),
 		)
 	);

@@ -250,6 +250,12 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
 
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $restrict;
+		}
+
 		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
 			return false;
 		}

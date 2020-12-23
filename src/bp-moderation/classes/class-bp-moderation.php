@@ -1177,18 +1177,20 @@ class BP_Moderation {
 				'fields' => 'ID',
 			)
 		);
+
 		if ( ! empty( $admins ) ) {
+
+			$_GET['username_visible'] = true;
 			foreach ( $admins as $admin ) {
 				if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
-
-					$tokens = array(
+					$tokens    = array(
 						'user_name'     => bp_core_get_user_displayname( $this->item_id ),
 						'times_blocked' => $this->count,
-						'member_link'   => '',
+						'member_link'   => BP_Moderation_Members::get_permalink( $this->item_id ),
 						'report_link'   => add_query_arg(
 							array(
 								'page'         => 'bp-moderation',
-								'mid'          => $this->id,
+								'mid'          => $this->item_id,
 								'content_type' => $this->item_type,
 								'action'       => 'view',
 							),
@@ -1197,7 +1199,6 @@ class BP_Moderation {
 					);
 
 					return bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
-
 				} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 
 					$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
@@ -1215,15 +1216,14 @@ class BP_Moderation {
 					}
 
 					$tokens = array(
-						'content_excerpt'       => '',
 						'content_type'          => bp_moderation_get_content_type( $this->item_type ),
 						'content_owner'         => implode( ', ', $content_owner ),
 						'content_timesreported' => $this->count,
-						'content_link'          => '',
+						'content_link'          => bp_moderation_get_permalink( $this->item_id, $this->item_type ),
 						'content_reportlink'    => add_query_arg(
 							array(
 								'page'         => 'bp-moderation',
-								'mid'          => $this->id,
+								'mid'          => $this->item_id,
 								'content_type' => $this->item_type,
 								'action'       => 'view',
 							),
@@ -1234,6 +1234,8 @@ class BP_Moderation {
 					return bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
 				}
 			}
+
+			unset( $_GET['username_visible'] );
 		}
 	}
 

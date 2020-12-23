@@ -137,6 +137,12 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $post, $output ) {
 
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $post;
+		}
+
 		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
 
 		if ( $this->is_content_hidden( (int) $post_id ) ) {

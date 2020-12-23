@@ -552,7 +552,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string
 	 */
 	public function bp_core_get_user_domain( $domain, $user_id ) {
-		if ( bp_moderation_is_user_suspended( $user_id ) ) {
+
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( empty( $username_visible ) && bp_moderation_is_user_suspended( $user_id ) ) {
 			return '';
 		}
 

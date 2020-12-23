@@ -234,6 +234,12 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 */
 	public function restrict_single_item( $post, $output ) {
 
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $post;
+		}
+
 		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
 
 		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {

@@ -140,6 +140,12 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $group ) {
 
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $restrict;
+		}
+
 		if ( bp_moderation_is_content_hidden( (int) $group->id, self::$moderation_type ) ) {
 			return false;
 		}

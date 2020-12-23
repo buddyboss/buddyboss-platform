@@ -140,6 +140,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
 
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $restrict;
+		}
+
 		if ( 'activity_comment' !== $activity->type && $this->is_content_hidden( (int) $activity->id ) ) {
 			return false;
 		}
