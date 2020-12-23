@@ -42,6 +42,7 @@ window.bp = window.bp || {};
 
 			var bodySelector = $( 'body' );
 
+			this.current_page = 1;
 			this.video_dropzone_obj         = null;
 			this.video_thumb_dropzone_obj   = [];
 			this.dropzone_video             = [];
