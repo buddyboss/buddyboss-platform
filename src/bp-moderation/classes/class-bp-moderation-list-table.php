@@ -308,12 +308,16 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$total_count = count( $moderation_views['reported-content'] );
 				$count       = 1;
 				foreach ( $moderation_views['reported-content'] as $key => $moderation_view ) {
-					$record_count = bp_moderation_item_count(
-						array(
-							'type'   => 'content',
-							'status' => $key,
-						)
+
+					$moderation_args = array(
+						'exclude_types' => array( BP_Moderation_Members::$moderation_type ),
 					);
+
+					if ( 'all' !== $key ) {
+						$moderation_args['hidden'] = ( 'active' === $key ) ? 0 : 1;
+					}
+
+					$record_count = bp_moderation_item_count( $moderation_args );
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
 						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
@@ -339,12 +343,17 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$total_count = count( $moderation_views['blocked-members'] );
 				$count       = 1;
 				foreach ( $moderation_views['blocked-members'] as $key => $moderation_view ) {
-					$record_count = bp_moderation_item_count(
-						array(
-							'type'   => 'user',
-							'status' => $key,
-						)
+
+					$moderation_args = array(
+						'in_types' => array( BP_Moderation_Members::$moderation_type ),
+						'reported' => false,
 					);
+
+					if ( 'all' !== $key ) {
+						$moderation_args['hidden'] = ( 'unsuspended' === $key ) ? 0 : 1;
+					}
+
+					$record_count = bp_moderation_item_count( $moderation_args );
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
 						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
