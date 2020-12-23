@@ -49,8 +49,8 @@ function bp_nouveau_video_enqueue_scripts() {
 			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_style( 'bp-media-videojs-css' );
 			wp_enqueue_script( 'bp-media-videojs' );
-			wp_enqueue_script( 'bp-media-videojs-java' );
-			wp_enqueue_script( 'bp-media-videojs-vlc' );
+			//wp_enqueue_script( 'bp-media-videojs-java' );
+			//wp_enqueue_script( 'bp-media-videojs-vlc' );
 			wp_enqueue_script( 'bp-media-videojs-flv' );
 			wp_enqueue_script( 'bp-media-videojs-flash' );
 			wp_enqueue_script( 'bp-nouveau-video' );
@@ -111,6 +111,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_video'                     => bp_is_messages_video_support_enabled(),
 		'dropzone_video_message'             => __( 'Drop videos here to upload', 'buddyboss' ),
+		'dropzone_video_thumbnail_message'   => __( 'Drop video thumbnail here to upload', 'buddyboss' ),
 		'video_select_error'                 => __( 'This file type is not supported for video uploads.', 'buddyboss' ),
 		'empty_video_type'                   => __( 'Empty video file will not be uploaded.', 'buddyboss' ),
 		'invalid_video_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
@@ -143,6 +144,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
 		'no_videos_found'      => __( 'Sorry, no videos were found', 'buddyboss' ),
 		'upload'               => __( 'Upload', 'buddyboss' ),
+		'upload_thumb'         => __( 'Add Thumbnail', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Videos in this album will also be deleted.', 'buddyboss' ),

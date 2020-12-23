@@ -24,10 +24,6 @@ add_action( 'bp_groups_posted_update', 'bp_video_groups_activity_update_video_me
 add_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_video_delete_activity_video' ); // Delete activity videos.
-add_action( 'bp_activity_after_delete', 'bp_video_delete_activity_gif' ); // Delete activity gif.
-add_filter( 'bp_get_activity_content_body', 'bp_video_activity_embed_gif', 20, 2 );
-add_action( 'bp_activity_after_comment_content', 'bp_video_comment_embed_gif', 20, 1 );
-add_action( 'bp_activity_after_save', 'bp_video_activity_save_gif_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bp_video_activity_update_video_privacy', 2 );
 add_filter( 'bp_activity_get_edit_data', 'bp_video_get_edit_activity_data' );
 
@@ -39,23 +35,14 @@ add_action( 'edit_post', 'bp_video_forums_new_post_video_save', 999 );
 
 add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
 add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
-add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_gif', 98, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_gif', 98, 2 );
 
 // Messages..
 add_action( 'messages_message_sent', 'bp_video_attach_video_to_message' );
-add_action( 'messages_message_sent', 'bp_video_messages_save_gif_data' );
-add_action( 'messages_message_sent', 'bp_video_messages_save_group_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_video_messages_delete_attached_video', 10, 2 ); // Delete thread videos.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_video_user_messages_delete_attached_video', 10, 4 ); // Delete messages videos.
-add_action( 'bp_messages_thread_after_delete', 'bp_video_messages_delete_gif_data', 10, 2 ); // Delete thread gifs.
-add_action( 'bp_messages_thread_messages_after_update', 'bp_video_user_messages_delete_attached_gif', 10, 4 ); // Delete messages gifs.
 add_filter( 'bp_messages_message_validated_content', 'bp_video_message_validated_content', 10, 3 );
-add_filter( 'bp_messages_message_validated_content', 'bp_video_gif_message_validated_content', 10, 3 );
 
 // Core tools.
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_video_get_tools_video_settings_admin_tabs', 20, 1 );
-add_action( 'bp_core_activation_notice', 'bp_video_activation_notice' );
 add_filter( 'bp_repair_list', 'bp_video_add_admin_repair_items' );
 
 // Download Video.
@@ -145,6 +132,7 @@ function bp_video_activity_entry() {
 		?>
 			">
 			<?php
+			bp_get_template_part( 'video/add-video-thumbnail' );
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/activity-entry' );
@@ -462,32 +450,6 @@ function bp_video_delete_activity_video( $activities ) {
 }
 
 /**
- * Delete video gif when related activity is deleted.
- *
- * @since BuddyBoss 1.4.9
- *
- * @param array $activities Array of activities.
- */
-function bp_video_delete_activity_gif( $activities ) {
-	if ( ! empty( $activities ) ) {
-		foreach ( $activities as $activity ) {
-			$activity_id  = $activity->id;
-			$activity_gif = bp_activity_get_meta( $activity_id, '_gif_data', true );
-
-			if ( ! empty( $activity_gif ) ) {
-				if ( ! empty( $activity_gif['still'] ) ) {
-					wp_delete_attachment( (int) $activity_gif['still'], true );
-				}
-
-				if ( ! empty( $activity_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $activity_gif['mp4'], true );
-				}
-			}
-		}
-	}
-}
-
-/**
  * Update video privacy according to album's privacy
  *
  * @since BuddyBoss 1.6.0
@@ -674,52 +636,6 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 }
 
 /**
- * Embed topic or reply gif in a post
- *
- * @since BuddyBoss 1.6.0
- * @param $content
- * @param $id
- *
- * @return string
- */
-function bp_video_forums_embed_gif( $content, $id ) {
-
-	// check if forums gif support enabled.
-	if ( ! bp_is_forums_gif_support_enabled() ) {
-		return $content;
-	}
-
-	$gif_data = get_post_meta( $id, '_gif_data', true );
-
-	if ( empty( $gif_data ) ) {
-		return $content;
-	}
-
-	$preview_url = wp_get_attachment_url( $gif_data['still'] );
-	$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
-
-	ob_start();
-	?>
-	<div class="activity-attached-gif-container">
-		<div class="gif-image-container">
-			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted playsinline>
-					<source src="<?php echo $video_url; ?>" type="video/mp4">
-				</video>
-				<a href="#" class="gif-play-button">
-					<span class="bb-icon-play-thin"></span>
-				</a>
-				<span class="gif-icon"></span>
-			</div>
-		</div>
-	</div>
-	<?php
-	$content .= ob_get_clean();
-
-	return $content;
-}
-
-/**
  * save gif data for forum, topic, reply
  *
  * @since BuddyBoss 1.6.0
@@ -842,98 +758,6 @@ function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids,
 }
 
 /**
- * Delete gif attached to thread messages.
- *
- * @since BuddyBoss 1.2.9
- *
- * @param int   $thread_id   ID of the thread being deleted.
- * @param array $message_ids IDs of messages being deleted.
- */
-function bp_video_messages_delete_gif_data( $thread_id, $message_ids ) {
-
-	if ( ! empty( $message_ids ) ) {
-		foreach ( $message_ids as $message_id ) {
-			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
-
-			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) ) {
-					wp_delete_attachment( (int) $message_gif['still'], true );
-				}
-
-				if ( ! empty( $message_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $message_gif['mp4'], true );
-				}
-			}
-
-			bp_messages_delete_meta( $message_id, '_gif_data' );
-			bp_messages_delete_meta( $message_id, '_gif_raw_data' );
-		}
-	}
-}
-
-/**
- * Delete gif attached to messages.
- *
- * @since BuddyBoss 1.4.9
- *
- * @param int   $thread_id          ID of the thread being deleted.
- * @param array $message_ids        IDs of messages being deleted.
- * @param int   $user_id            ID of the user the threads messages update for.
- * @param array $update_message_ids IDs of messages being updated.
- */
-function bp_video_user_messages_delete_attached_gif( $thread_id, $message_ids, $user_id, $update_message_ids ) {
-
-	if ( ! empty( $update_message_ids ) ) {
-		foreach ( $update_message_ids as $message_id ) {
-			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
-
-			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) ) {
-					wp_delete_attachment( (int) $message_gif['still'], true );
-				}
-
-				if ( ! empty( $message_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $message_gif['mp4'], true );
-				}
-			}
-
-			bp_messages_delete_meta( $message_id, '_gif_data' );
-			bp_messages_delete_meta( $message_id, '_gif_raw_data' );
-		}
-	}
-}
-
-/**
- * Save gif data into messages meta key "_gif_data"
- *
- * @since BuddyBoss 1.6.0
- *
- * @param $message
- */
-function bp_video_messages_save_gif_data( &$message ) {
-
-	if ( ! bp_is_messages_gif_support_enabled() || empty( $_POST['gif_data'] ) ) {
-		return;
-	}
-
-	$gif_data = $_POST['gif_data'];
-
-	$still = bp_video_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-	$mp4   = bp_video_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
-
-	bp_messages_update_meta(
-		$message->id,
-		'_gif_data',
-		array(
-			'still' => $still,
-			'mp4'   => $mp4,
-		)
-	);
-
-	bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
-}
-
-/**
  * Validate message if video is not empty.
  *
  * @param bool         $validated_content Boolean from filter.
@@ -947,25 +771,6 @@ function bp_video_messages_save_gif_data( &$message ) {
 function bp_video_message_validated_content( $validated_content, $content, $post ) {
 	// check if video is enabled in messages or not and empty video in object request or not.
 	if ( bp_is_messages_video_support_enabled() && ! empty( $post['video'] ) ) {
-		$validated_content = true;
-	}
-	return $validated_content;
-}
-
-/**
- * Validate message if video is not empty.
- *
- * @param bool         $validated_content Boolean from filter.
- * @param string       $content           Message content.
- * @param array|object $post              Request object.
- *
- * @return bool
- *
- * @since BuddyBoss 1.5.1
- */
-function bp_video_gif_message_validated_content( $validated_content, $content, $post ) {
-	// check if gif data is enabled in messages or not and empty gif data in object request or not.
-	if ( bp_is_messages_gif_support_enabled() && ! empty( $post['gif_data'] ) ) {
 		$validated_content = true;
 	}
 	return $validated_content;
@@ -1015,174 +820,6 @@ function bp_video_activity_embed_gif_content( $activity_id ) {
 }
 
 /**
- * Embed gif in activity content
- *
- * @param $content
- * @param $activity
- *
- * @since BuddyBoss 1.6.0
- *
- * @return string
- */
-function bp_video_activity_embed_gif( $content, $activity ) {
-
-	// check if profile and groups activity gif support enabled.
-	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
-		return $content;
-	}
-
-	$gif_content = bp_video_activity_embed_gif_content( $activity->id );
-
-	if ( ! empty( $gif_content ) ) {
-		$content .= $gif_content;
-	}
-
-	return $content;
-}
-
-/**
- * Embed gif in activity comment content
- *
- * @param $content
- * @param $activity
- *
- * @since BuddyBoss 1.6.0
- *
- * @return string
- */
-function bp_video_comment_embed_gif( $comment_id ) {
-	global $activities_template;
-
-	// check if profile and groups comments gif support enabled.
-	if ( ! empty( $activities_template ) ) {
-		$parent_activity_id = $activities_template->activity->current_comment->item_id;
-	} else {
-		$comment            = new BP_Activity_Activity( $comment_id );
-		$parent_activity_id = $comment->item_id;
-	}
-
-	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
-	$component       = $parent_activity->component;
-
-	if ( ( buddypress()->activity->id === $component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! bp_is_groups_gif_support_enabled() ) ) {
-		return false;
-	}
-
-	$gif_content = bp_video_activity_embed_gif_content( $comment_id );
-
-	if ( ! empty( $gif_content ) ) {
-		echo $gif_content;
-	}
-}
-
-/**
- * Save gif data into activity meta key "_gif_attachment_id"
- *
- * @since BuddyBoss 1.6.0
- *
- * @param $activity
- */
-function bp_video_activity_save_gif_data( $activity ) {
-	global $bp_activity_edit;
-
-	if ( ! ( $bp_activity_edit && isset( $_POST['edit'] ) ) && empty( $_POST['gif_data'] ) ) {
-		return;
-	}
-
-	$gif_data     = ! empty( $_POST['gif_data'] ) ? $_POST['gif_data'] : array();
-	$gif_old_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
-
-	// if edit activity then delete attachment and clear activity meta.
-	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) ) {
-		if ( ! empty( $gif_old_data ) ) {
-			wp_delete_attachment( $gif_old_data['still'], true );
-			wp_delete_attachment( $gif_old_data['mp4'], true );
-		}
-
-		bp_activity_delete_meta( $activity->id, '_gif_data' );
-		bp_activity_delete_meta( $activity->id, '_gif_raw_data' );
-	}
-
-	if ( ! empty( $gif_data ) && ! isset( $gif_data['bp_gif_current_data'] ) ) {
-		$still = bp_video_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-		$mp4   = bp_video_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
-
-		bp_activity_update_meta(
-			$activity->id,
-			'_gif_data',
-			array(
-				'still' => $still,
-				'mp4'   => $mp4,
-			)
-		);
-
-		bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
-	}
-}
-
-function bp_video_get_tools_video_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page' => 'bp-video-import',
-					'tab'  => 'bp-video-import',
-				),
-				'admin.php'
-			)
-		),
-		'name' => __( 'Import Video', 'buddyboss' ),
-		'slug' => 'bp-video-import',
-	);
-
-	return $tabs;
-}
-
-/**
- * Hook to display admin notices when video component is active
- *
- * @since BuddyBoss 1.6.0
- */
-function bp_video_activation_notice() {
-	global $wpdb;
-	global $bp;
-
-	if ( ! empty( $_GET['page'] ) && 'bp-video-import' === $_GET['page'] ) {
-		return;
-	}
-
-	$bp_video_import_status = get_option( 'bp_video_import_status' );
-
-	if ( 'done' !== $bp_video_import_status ) {
-
-		$buddyboss_video_table        = $bp->table_prefix . 'buddyboss_media';
-		$buddyboss_video_albums_table = $bp->table_prefix . 'buddyboss_video_albums';
-
-		if ( ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_video_table}' ;" ) ) && ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_video_albums_table}' ;" ) ) ) {
-
-			$admin_url = bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-video-import',
-						'tab'  => 'bp-video-import',
-					),
-					'admin.php'
-				)
-			);
-			$notice    = sprintf(
-				'%1$s <a href="%2$s">%3$s</a>',
-				__( 'We have found some video uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own video component. You should  import the video into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss' ),
-				esc_url( $admin_url ),
-				__( 'Import Video', 'buddyboss' )
-			);
-
-			bp_core_add_admin_notice( $notice );
-		}
-	}
-}
-
-/**
  * Delete video entries attached to the attachment
  *
  * @since BuddyBoss 1.2.0
@@ -1229,89 +866,6 @@ function bp_video_activity_update_video_privacy( $activity ) {
 			}
 		}
 	}
-}
-
-/**
- * Save group message meta.
- *
- * @since BuddyBoss 1.2.9
- *
- * @param $message
- */
-function bp_video_messages_save_group_data( &$message ) {
-
-	if ( false === bp_disable_group_messages() ) {
-		return;
-	}
-
-	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id.
-	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual.
-	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private.
-	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list.
-	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply.
-
-	if ( '' === $message_meta_users_list && isset( $group ) && '' !== $group ) {
-		$args = array(
-			'per_page'            => 99999999999999,
-			'group'               => $group,
-			'exclude'             => array( bp_loggedin_user_id() ),
-			'exclude_admins_mods' => false,
-		);
-
-		$group_members           = groups_get_group_members( $args );
-		$members                 = wp_list_pluck( $group_members['members'], 'ID' );
-		$message_meta_users_list = implode( ',', $members );
-	}
-
-	if ( isset( $group ) && '' !== $group ) {
-		$thread_key = 'group_message_thread_id_' . $message->thread_id;
-		bp_messages_update_meta( $message->id, 'group_id', $group );
-		bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
-		bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
-		bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
-		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
-		bp_messages_update_meta( $message->id, $thread_key, $group );
-		bp_messages_update_meta( $message->id, 'message_from', 'group' );
-		bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
-		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
-		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
-	} else {
-
-		$args = array(
-			'thread_id' => $message->thread_id,
-			'per_page'  => 99999999999999,
-		);
-
-		if ( bp_thread_has_messages( $args ) ) {
-			while ( bp_thread_messages() ) :
-				bp_thread_the_message();
-
-				$message_id    = bp_get_the_thread_message_id();
-				$group         = bp_messages_get_meta( $message_id, 'group_id', true );
-				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true );
-				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true );
-				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true );
-
-				if ( $group ) {
-					break;
-				}
-			endwhile;
-		}
-
-		if ( $group ) {
-
-			$thread_key = 'group_message_thread_id_' . $message->thread_id;
-			bp_messages_update_meta( $message->id, 'group_id', $group );
-			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
-			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
-			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
-			bp_messages_update_meta( $message->id, $thread_key, $group );
-			bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
-			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
-			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
-		}
-	}
-
 }
 
 /**

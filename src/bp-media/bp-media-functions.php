@@ -62,7 +62,7 @@ function bp_media_upload() {
  */
 function bp_media_allowed_mimes( $mime_types ) {
 
-	// Creating a new array will reset the allowed filetypes
+	// Creating a new array will reset the allowed filetypes.
 	$mime_types = array(
 		'jpg|jpeg|jpe' => 'image/jpeg',
 		'gif'          => 'image/gif',
@@ -129,7 +129,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		return $aid;
 	}
 
-	// Image rotation fix
+	// Image rotation fix.
 	do_action( 'bp_media_attachment_uploaded', $aid );
 
 	$attachment = get_post( $aid );
