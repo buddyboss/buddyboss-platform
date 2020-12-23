@@ -103,8 +103,6 @@ class BP_Core_Suspend {
 				'item_id'   => $args['item_id'],
 				'item_type' => $args['item_type'],
 			);
-			unset( $args['item_id'] );
-			unset( $args['item_type'] );
 
 			$wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {
@@ -252,8 +250,6 @@ class BP_Core_Suspend {
 				'item_id'   => $args['item_id'],
 				'item_type' => $args['item_type'],
 			);
-			unset( $args['item_id'] );
-			unset( $args['item_type'] );
 
 			if ( ! empty( $member ) && empty( $action_suspend ) ) {
 				self::remove_suspend_details(
