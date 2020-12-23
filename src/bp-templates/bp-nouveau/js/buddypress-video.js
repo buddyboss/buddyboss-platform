@@ -1186,6 +1186,7 @@ window.bp = window.bp || {};
 					},
 					success: function ( response ) {
 						if ( response.success ) {
+							$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).html( response.data.video_data );
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
 							$( window ).scroll();

@@ -1016,7 +1016,7 @@ function bp_nouveau_object_template_results_albums_existing_video_query( $querys
  */
 function bp_nouveau_ajax_video_get_video_description() {
 
-	$video_description = '';
+	$video_description = $video_data = '';
 
 	$response = array(
 		'feedback' => sprintf(
@@ -1119,11 +1119,27 @@ function bp_nouveau_ajax_video_get_video_description() {
 		<?php
 		$video_description = ob_get_contents();
 		ob_end_clean();
+
+		if ( ! empty( $video_id ) ) {
+			$args = array(
+				'include' => $video_id,
+			);
+			ob_start();
+			if ( bp_has_video( $args ) ) {
+				while ( bp_video() ) {
+					bp_the_video();
+					bp_get_template_part( 'video/single-video' );
+				}
+			}
+			$video_data = ob_get_contents();
+			ob_end_clean();
+		}
 	}
 
 	wp_send_json_success(
 		array(
 			'description' => $video_description,
+			'video_data'  => $video_data,
 		)
 	);
 }
