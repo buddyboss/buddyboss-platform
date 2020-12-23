@@ -26,13 +26,24 @@ style="display: none">
 		</div>
 
 		<div class="bp-hello-title">
-			<h1 id="bp-hello-title" tabindex="-1">Modeartion</h1>
+			<h1 id="bp-hello-title" tabindex="-1">Notice</h1>
 		</div>
 	</div>
 
 	<div class="bp-hello-content">
 		<?php
-		esc_html_e( 'For making user spam you need to activate the moderation component.', 'buddyboss' );
+		$component_link = bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page' => 'bp-components'
+				),
+				'admin.php'
+			)
+		);
+		printf(
+			__( 'Please activate moderation module <a href="%s" >here</a> to mark member spam/suspend.', 'buddyboss' ), 
+			$component_link
+		);
 		?>
 	</div>
 </div>
