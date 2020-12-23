@@ -1834,7 +1834,7 @@ window.bp = window.bp || {};
 				$.post( BP_Nouveau.ajaxurl, data, function ( response ) {
 					if ( response.success ) {
 						_this.resetReportPopup();
-						_this.changeReportButtonStatus( response.data.button );
+						_this.changeReportButtonStatus( response.data );
 						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 						$( '.mfp-close' ).trigger( 'click' );
 					} else {
@@ -1860,7 +1860,7 @@ window.bp = window.bp || {};
 				$.post( BP_Nouveau.ajaxurl, data, function ( response ) {
 					if ( response.success ) {
 						_this.resetReportPopup();
-						_this.changeReportButtonStatus( response.data.button );
+						_this.changeReportButtonStatus( response.data );
 						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
 						$( '.mfp-close' ).trigger( 'click' );
 						if ( response.data.redirect ) {
@@ -1881,16 +1881,16 @@ window.bp = window.bp || {};
 			mf_content.find( '.bp-nonce' ).val( '' );
 			mf_content.find( '.bp-report-form-err' ).empty();
 		},
-		changeReportButtonStatus: function ( button ) {
-			var btn_report = $( '#' + button.button_attr.id );
+		changeReportButtonStatus: function ( data ) {
+			$( '[data-bp-content-id=' + data.moderation.item_id + '][data-bp-content-type=' + data.moderation.item_type + ']' ).each ( function () {
+				$( this ).removeAttr ( 'href' );
+				$( this ).removeAttr ( 'data-bp-content-id' );
+				$( this ).removeAttr ( 'data-bp-content-type' );
+				$( this ).removeAttr ( 'data-bp-nonce' );
 
-			btn_report.removeAttr( 'href' );
-			btn_report.removeAttr( 'data-bp-content-id' );
-			btn_report.removeAttr( 'data-bp-content-type' );
-			btn_report.removeAttr( 'data-bp-nonce' );
-
-			btn_report.html( button.link_text );
-			btn_report.attr( 'class', button.button_attr.class );
+				$( this ).html ( data.button.link_text );
+				$( this ).attr ( 'class', data.button.button_attr.class );
+			} );
 		},
 		handleReportError: function ( errors, target ) {
 			var message = '';
