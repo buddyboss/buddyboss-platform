@@ -1018,7 +1018,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			if ( bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id ) ) {
 				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Hidden content from suspended member.', 'buddyboss' );
 			} elseif ( bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id ) ) {
-				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Hidden content from blocked member.', 'buddyboss' );
+				$threads->threads[ $i ]['excerpt'] = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 			}
 		}
 
@@ -2089,9 +2089,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
 
 			if ( bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() ) ) {
-				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'Hidden content from suspended member.', 'buddyboss' ) . '</p>';
+				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) . '</p>';
 			} elseif ( bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() ) ) {
-				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'Hidden content from blocked member.', 'buddyboss' ) . '</p>';
+				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) . '</p>';
 			}
 		}
 

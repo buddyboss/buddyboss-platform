@@ -105,9 +105,9 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
-				$comment_text = esc_html__( 'Hidden content from blocked member.', 'buddyboss' );
+				$comment_text = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 			} else {
-				$comment_text = esc_html__( 'Hidden content from site admin.', 'buddyboss' );
+				$comment_text = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
 			}
 		}
 

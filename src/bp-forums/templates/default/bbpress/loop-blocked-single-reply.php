@@ -36,11 +36,11 @@ if ( bp_is_active( 'moderation' ) ) {
 			<?php do_action( 'bbp_theme_before_reply_content' ); ?>
 
 			<?php if ( $is_user_suspended ) {
-				esc_html_e( 'Hidden content from suspended member.', 'buddyboss' );
+				esc_html_e( 'This content has been hidden as the member is suspended.', 'buddyboss' );
 			} else if ( $is_user_blocked ) {
-				esc_html_e( 'Hidden content from blocked member.', 'buddyboss' );
+				esc_html_e( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 			} else {
-				esc_html_e( 'Hidden content from site admin.', 'buddyboss' );
+				esc_html_e( 'This content has been hidden from site admin.', 'buddyboss' );
 			} ?>
 
 			<?php do_action( 'bbp_theme_after_reply_content' ); ?>
