@@ -236,23 +236,26 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$( document ).on(
-				'click',
-				'#item-body #group-messages-container .bb-groups-messages-left .last #bp-group-messages-next-page',
-				function() {
-					page 	 = page + 1;
+
+			var membersDiv = document.getElementById('members-list');
+
+			membersDiv.addEventListener('scroll', function () {
+				if (membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight) {
+
+					page = page + 1;
+
 					var type = '';
-					if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
+					if ($('#bp-group-message-switch-checkbox').is(':checked')) {
 						type = 'all';
 					} else {
 						type = 'individual';
 					}
 					var data = {
 						'action': 'groups_get_group_members_listing',
-						'nonce' : BP_Nouveau.group_messages.nonces.retrieve_group_members,
-						'group' : BP_Nouveau.group_messages.group_id,
-						'type'  : type,
-						'page'  : page
+						'nonce': BP_Nouveau.group_messages.nonces.retrieve_group_members,
+						'group': BP_Nouveau.group_messages.group_id,
+						'type': type,
+						'page': page
 					};
 					$.ajax(
 						{
@@ -260,28 +263,29 @@ window.bp = window.bp || {};
 							url: BP_Nouveau.ajaxurl,
 							data: data,
 							success: function (response) {
-								if ( response.success && 'no_member' !== response.data.results ) {
-									$( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).remove();
-									memberListUl.append( response.data.results );
-									memberListUlLast.html( '' );
-									memberListUlLast.html( response.data.pagination );
-									$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
-									if ( 'all' === type ) {
-										$( '.group-messages-members-listing #members-list li .action' ).hide();
+
+								if (response.success && 'no_member' !== response.data.results) {
+									$('#group-messages-container .group-messages-members-listing #members-list li.load-more').remove();
+									memberListUl.append(response.data.results);
+									memberListUlLast.html('');
+									memberListUlLast.html(response.data.pagination);
+									// page = response.data.page;
+									$('#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback').hide();
+									if ('all' === type) {
+										$('.group-messages-members-listing #members-list li .action').hide();
 									} else {
-										$( '.group-messages-members-listing #members-list li .action' ).show();
+										$('.group-messages-members-listing #members-list li .action').show();
 									}
 								} else {
-									memberListUl.html( '' );
-									memberListUlLast.html( '' );
-									$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
-									feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
+
+									$('#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback').addClass('error');
+									feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_messages.no_member);
 								}
 							}
 						}
 					);
 				}
-			);
+			});
 
 			$( document ).on(
 				'click',
