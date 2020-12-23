@@ -226,9 +226,8 @@ window.bp = window.bp || {};
 						success: function ( response ) {
 							if ( response.success ) {
 
-			if ( $( '#bp-media-single-album' ).length ){
-			//Prepend in Single Album
-
+								if ( $( '#bp-media-single-album' ).length ){
+								//Prepend in Single Album
 
 									if ( !$( '#media-stream ul.media-list' ).length ) {
 										$( '#media-stream' ).html( $( '<ul></ul>' ).
@@ -240,7 +239,6 @@ window.bp = window.bp || {};
 									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.video, 'prepend' );
 
 								} else {
-
 
 									// It's the very first media, let's make sure the container can welcome it!
 									if ( !$( '#video-stream ul.video-list' ).length ) {
