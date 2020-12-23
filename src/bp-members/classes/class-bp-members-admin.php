@@ -1282,7 +1282,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		/**
 		 * Render the fallback metabox in case a user has been marked as a suspended.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param WP_User|null $user The WP_User object to be edited.
 		 */
@@ -1493,7 +1493,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		/**
 		 * Process changes from the profile type metabox.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
  		 *
  		 * @param string $doaction
 		 */

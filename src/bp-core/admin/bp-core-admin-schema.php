@@ -1111,7 +1111,7 @@ function bp_core_install_invitations() {
 /**
  * Install database tables for the Suspend
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  bp_core_set_charset()
  * @uses  bp_core_get_table_prefix()
@@ -1153,7 +1153,7 @@ function bp_core_install_suspend() {
 /**
  * Install database tables for the Moderation
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  bp_core_set_charset()
  * @uses  bp_core_get_table_prefix()
@@ -1191,7 +1191,7 @@ function bp_core_install_moderation() {
 /**
  * Add moderation emails.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_core_install_moderation_emails() {
 
@@ -1236,7 +1236,7 @@ function bp_core_install_moderation_emails() {
 	/**
 	 * Fires after BuddyPress adds the posts for its bbp emails.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	do_action( 'bp_core_install_moderation_emails' );
 }

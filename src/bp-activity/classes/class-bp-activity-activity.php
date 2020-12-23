@@ -200,7 +200,7 @@ class BP_Activity_Activity {
 		/**
 		 * Pre validate the activity before fetch.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param boolean $validate Whether to check the activity is valid or not.
 		 * @param object  $row      Activity object.
@@ -1616,7 +1616,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 2.0.0
+                 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $from Activity Comment from query
 				 *
@@ -1626,7 +1626,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL Where query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 2.0.0
+                 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $where Activity Comment from query
 				 *

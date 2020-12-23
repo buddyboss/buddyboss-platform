@@ -5,7 +5,7 @@
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * List table class for the Moderation component admin page.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_List_Table extends WP_List_Table {
 
@@ -24,7 +24,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * E.g. "all", "active", "hidden", "blocked"...
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var string $view
 	 */
 	public $view = 'all';
@@ -32,7 +32,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Constructor
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -49,7 +49,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Get an array of all the columns on the page.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return array Column headers.
 	 */
@@ -72,7 +72,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Get name of default primary column
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return string
 	 */
@@ -86,7 +86,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Display a message on screen when no items are found (e.g. no search matches).
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function no_items() {
 		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
@@ -102,7 +102,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Set up items for display in the list table.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * Handles filtering of data, sorting, pagination, and any other data
 	 * manipulation required prior to rendering.
@@ -172,7 +172,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Output the Moderation data table.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function display() {
 		$this->display_tablenav( 'top' ); ?>
@@ -209,7 +209,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Get the table column titles.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return array Array of column titles.
 	 * @see   WP_List_Table::single_row_columns()
@@ -236,7 +236,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		/**
 		 * Filters the titles for the columns for the moderation list table.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $value Array of slugs and titles for the columns.
 		 */
@@ -246,7 +246,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Generate content for a single row of the table.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param object $item The current item.
 	 */
@@ -384,7 +384,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Get bulk actions.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return array Key/value pairs for the bulk actions dropdown.
 	 */
@@ -416,7 +416,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		/**
 		 * Filters the default bulk actions so plugins can add custom actions.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $actions Default available actions for bulk operations.
 		 */
@@ -429,7 +429,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * Basically a duplicate of the row_actions() method, but removes the
 	 * unnecessary <button> addition.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $actions        The list of actions.
 	 * @param bool  $always_visible Whether the actions should be always visible.
@@ -459,7 +459,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Checkbox column markup.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $item A singular item (one full row).
 	 *
@@ -473,7 +473,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Function to show content type
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $item loop item.
 	 */
@@ -555,7 +555,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Function to blocked member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $item loop ite.
 	 */
@@ -593,7 +593,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Function to content owner
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $item loop item.
 	 */
@@ -611,7 +611,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Function to show reported count
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $item loop item.
 	 */
@@ -623,7 +623,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Function to blocked count
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $item loop item.
 	 */
@@ -635,7 +635,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Allow plugins to add their custom column.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array  $item        Information about the current row.
 	 * @param string $column_name The column name.
@@ -647,7 +647,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		/**
 		 * Filters a string to allow plugins to add custom column content.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $value       Empty string.
 		 * @param string $column_name Name of the column being rendered.

@@ -154,6 +154,8 @@ class BP_REST_Document_Details_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $tabs_items ) ) {
 			foreach ( $tabs_items as $key => $item ) {
+				$key = $item['slug'];
+
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
 			}

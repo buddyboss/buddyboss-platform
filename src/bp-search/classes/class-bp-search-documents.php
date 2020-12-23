@@ -105,7 +105,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the document Search query.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -142,7 +142,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the document Search query.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.

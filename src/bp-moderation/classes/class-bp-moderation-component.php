@@ -4,7 +4,7 @@
  *
  * An moderation component, for users, groups moderation.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Moderation Class.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Component extends BP_Component {
 
 	/**
 	 * Start the Moderation component setup process.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 		parent::start(
@@ -37,7 +37,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Include component files.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $includes See BP_Component::includes() for a description.
 	 *
@@ -65,7 +65,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -81,7 +81,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up component global variables.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args See BP_Component::setup_globals() for a description.
 	 *
@@ -128,7 +128,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function setup_title() {
 		// Adjust title based on view.
@@ -146,7 +146,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Setup cache moderation.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function setup_cache_groups() {
 	}
@@ -154,7 +154,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up taxonomies.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function register_taxonomies() {
 		// Group Type.
@@ -227,7 +227,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
 	 */

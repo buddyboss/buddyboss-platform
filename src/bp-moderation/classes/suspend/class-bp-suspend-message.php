@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Message Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Member.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Message extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Member constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -53,7 +53,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked group's media ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
 	 *
@@ -77,7 +77,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * Prepare message Join SQL query to filter blocked message
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Folder Join sql.
 	 * @param array  $args     Query arguments.
@@ -101,7 +101,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden message Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    Current class object.
@@ -114,7 +114,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * Prepare message Where SQL query to filter blocked message
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Folder Where sql.
 	 * @param array $args             Query arguments.
@@ -134,7 +134,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden message Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's folder.
 		 * @param array $class current class object.
@@ -155,7 +155,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of message
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $message_id    message thread id.
 	 * @param int|null $hide_sitewide Item hidden sitewide or user specific.
@@ -196,7 +196,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of message
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $message_id     message thread id.
 	 * @param int|null $hide_sitewide Item hidden sitewide or user specific.
@@ -250,7 +250,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * Get Related data
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $member_id member id.
 	 * @param array $args      parent args.
@@ -264,7 +264,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	/**
 	 * Delete moderation data when actual message thread is deleted
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int thread_id deleted thread id.
 	 */

@@ -1250,7 +1250,7 @@ function bp_nouveau_ajax_delete_thread() {
 		/**
 		 * Fires after message thread deleted.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 */
 		do_action( 'bp_messages_message_delete_thread', $thread_id );
 	}

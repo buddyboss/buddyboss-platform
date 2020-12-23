@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Activity Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Activity.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Activity constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -65,7 +65,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $activity_id activity id.
 	 *
@@ -80,7 +80,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $activity_id Activity id.
 	 *
@@ -95,7 +95,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -110,7 +110,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Update where query Remove hidden/blocked user's Activities
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where   Activity Where sql.
 	 * @param object $suspend Suspend object.
@@ -131,7 +131,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Validate the activity is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $activity Current activity object.
@@ -150,7 +150,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify button sub item
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $item_id Item id.
 	 *
@@ -202,7 +202,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the activity is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.

@@ -2,7 +2,7 @@
 /**
  * Filters related to the Moderation component.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -45,7 +45,7 @@ if ( bp_is_active( 'messages' ) ) {
 /**
  * Update modebypass Param
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param Array $params Array of key/value pairs for AJAX usage.
  */
@@ -60,7 +60,7 @@ add_filter( 'bp_core_get_js_strings', 'bp_moderation_js_strings' );
 /**
  * Update modebypass Param for wp redirect
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param Array $location Url to redirect
  */
@@ -86,7 +86,7 @@ add_filter( 'wp_redirect', 'bp_moderation_wp_redirect' );
 /**
  * Function to handle frontend report form submission.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_content_report() {
 	$response = array(
@@ -197,7 +197,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_content_report', 'bp_moderation_conten
 /**
  * Function to handle frontend block member form submission.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_block_member() {
 	$response = array(
@@ -295,7 +295,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_block_member', 'bp_moderation_block_me
 /**
  * Function to handle frontend unblock user request.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_unblock_user() {
 	$response = array(
@@ -352,7 +352,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_unblock_user', 'bp_moderation_unblock_
 /**
  * Function to handle moderation request from Backend.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_content_actions_request() {
 	$response = array(
@@ -418,7 +418,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_content_actions_request', 'bp_moderati
 /**
  * Function to handle moderation request for user from backend.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_user_actions_request() {
 	$response = array(
@@ -471,7 +471,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
 /**
  * Function to Popup markup for moderation content report
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bb_moderation_content_report_popup() {
 	include BP_PLUGIN_DIR . 'src/bp-moderation/screens/content-report-form.php';
@@ -483,7 +483,7 @@ add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
 /**
  * Function to add the block user button in customizer section
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $buttons buttons array.
  *
@@ -503,7 +503,7 @@ add_filter( 'bp_nouveau_customizer_user_profile_actions', 'bp_moderation_block_u
 /**
  * Removed Moderation report entries after the suspend record delete.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param object $recode Suspended record object.
  */

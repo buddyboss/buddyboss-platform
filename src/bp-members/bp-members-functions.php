@@ -4650,7 +4650,7 @@ add_action( 'bp_before_register_page', 'bp_register_page_content' );
 /**
  * Return the link to report Member
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args Arguments
  *
@@ -4683,7 +4683,7 @@ function bp_member_get_report_link( $args = array() ) {
 	/**
 	 * Filter to update Member report link
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	return apply_filters( 'bp_member_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
 }

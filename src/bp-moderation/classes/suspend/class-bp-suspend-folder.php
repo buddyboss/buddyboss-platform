@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Document Folder Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Document Folder.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Folder constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -59,7 +59,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's  folder ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id Member id.
 	 *
@@ -87,7 +87,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked group's  folder ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id Group id.
 	 *
@@ -115,7 +115,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Prepare folder Join SQL query to filter blocked folder
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Folder Join sql.
 	 * @param array  $args     Query arguments.
@@ -133,7 +133,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden folder Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    Current class object.
@@ -146,7 +146,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Prepare folder Where SQL query to filter blocked folder
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Folder Where sql.
 	 * @param array $args             Query arguments.
@@ -164,7 +164,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden folder Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's folder.
 		 * @param array $class current class object.
@@ -181,7 +181,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of folder
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $folder_id     Folder id.
 	 * @param int|null $hide_sitewide Item hidden sitewide or user specific.
@@ -222,7 +222,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of folder
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $folder_id     Folder id.
 	 * @param int|null $hide_sitewide Item hidden sitewide or user specific.
@@ -276,7 +276,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Get Folder's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $folder_id Folder id.
 	 * @param array $args      Parent args.
@@ -290,7 +290,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Document_Folder $document_folder Current instance of document folder item being saved. Passed by reference.
 	 */
@@ -320,7 +320,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the folder.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $folders Array of document folders.
 	 */

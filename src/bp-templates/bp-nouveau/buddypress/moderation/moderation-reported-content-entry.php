@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Moderation Reported Content entry
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  * @package BuddyBoss\Core
  */
 $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : false;

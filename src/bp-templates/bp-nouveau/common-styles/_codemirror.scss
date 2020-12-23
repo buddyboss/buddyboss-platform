@@ -349,3 +349,27 @@ div.CodeMirror-dragcursors {
 
 /* Help users use markselection to safely style text background */
 span.CodeMirror-selectedtext { background: none; }
+
+html[dir="rtl"] .theme-editor-php,
+html[dir="rtl"] .widgets-php,
+html[dir="rtl"] .wp-customizer {
+  .CodeMirror-sizer {
+    border-right: 0;
+  }
+  .CodeMirror-scroll {
+    margin-right: 0;
+  }
+  .CodeMirror-gutters {
+    left: initial;
+  }
+  .CodeMirror-line{
+    text-align: right;
+  }
+  .CodeMirror-vscrollbar {
+    right: inherit;
+  }
+}
+
+html[dir="rtl"] .theme-editor-php .CodeMirror-code {
+  margin-right: 20px;
+}

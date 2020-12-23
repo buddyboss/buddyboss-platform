@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Document Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Document.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Document extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Document constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -59,7 +59,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's document ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id member id.
 	 *
@@ -87,7 +87,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked group's document ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
 	 *
@@ -115,7 +115,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Get Document ids of blocked item [ Forums/topics/replies/activity etc ] from meta
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
@@ -144,7 +144,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Prepare document Join SQL query to filter blocked Document
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Document Join sql.
 	 * @param array  $args     Query arguments.
@@ -162,7 +162,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden document Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -175,7 +175,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Prepare document Where SQL query to filter blocked Document
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Document Where sql.
 	 * @param array $args             Query arguments.
@@ -193,7 +193,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden document Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's document.
 		 * @param array $class current class object.
@@ -210,7 +210,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of document
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $document_id   document id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -251,7 +251,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of document
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $document_id   document id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -305,7 +305,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Get Document's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $document_id Document id.
 	 * @param array $args        parent args.
@@ -319,7 +319,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Document $document Current instance of document item being saved. Passed by reference.
 	 */
@@ -349,7 +349,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the document.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $documents Array of document.
 	 */

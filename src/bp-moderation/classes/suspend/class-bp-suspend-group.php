@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Group Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Group.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Group extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Group constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -75,7 +75,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's group ids [ Check with group organiser ]
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id member id.
 	 *
@@ -101,7 +101,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Prepare group Join SQL query to filter blocked Group
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Group Join sql.
 	 * @param array  $args     Query arguments.
@@ -124,7 +124,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden Group Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -137,7 +137,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Prepare group Where SQL query to filter blocked Group
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Group Where sql.
 	 * @param array $args             Query arguments.
@@ -155,7 +155,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden group Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's group.
 		 * @param array $class current class object.
@@ -172,7 +172,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Restrict Single item.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $group    Current group object.
@@ -191,7 +191,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of group
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $group_id      group id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -234,7 +234,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of group
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $group_id      group id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -291,7 +291,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $group_id group id.
 	 * @param array $args     parent args.
@@ -329,7 +329,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new group created.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
 	 */
@@ -359,7 +359,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the group.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Groups_Group $group Current instance of the group item being deleted. Passed by reference.
 	 */
@@ -375,7 +375,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Short-circuits updating metadata of a specific type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param null|bool $check      Whether to allow updating metadata for the given type.
 	 * @param int       $object_id  ID of the object metadata is for.
@@ -415,7 +415,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Fires immediately before updating metadata of a specific type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $meta_id     ID of the metadata entry to update.
 	 * @param int    $object_id   ID of the object metadata is for.

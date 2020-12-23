@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Document Folder Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Document Folder.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Folder extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Folder constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -53,7 +53,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 	/**
 	 * Get permalink.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $folder_id folder id.
 	 *
@@ -66,7 +66,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $folder_id Folder id.
 	 *
@@ -79,7 +79,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 	/**
 	 * Remove hidden/blocked user's folders
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where   folders Where sql.
 	 * @param object $suspend suspend object.
@@ -100,7 +100,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the document folder is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.

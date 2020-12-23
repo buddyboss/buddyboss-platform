@@ -148,23 +148,42 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				$_POST['message_meta_users_list'] = $message_users_ids;
 
 				$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
+				$is_deleted                   = false;
 				$group_thread_id              = '';
 				$_POST['message_thread_type'] = '';
 
 				if ( '' !== $group_thread ) {
-					$total_threads = BP_Messages_Thread::get(
-						array(
-							'include_threads' => array( $group_thread ),
-							'per_page'        => 1,
-							'count_total'     => true,
-							'is_deleted'      => 1,
-						)
-					);
+					if ( messages_is_valid_thread( $group_thread ) ) {
+						$first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-					$is_deleted = ! empty( $total_threads['total'] );
+						if ( ! empty( $first_thread_message ) ) {
+							$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+							$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+							$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
 
-					if ( $is_deleted || empty( $total_threads['recipients'] ) ) {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
+								$_POST['message_thread_type'] = 'new';
+							}
+						}
+
+						if ( empty( $_POST['message_thread_type'] ) ) {
+							$total_threads = BP_Messages_Thread::get(
+								array(
+									'include_threads' => array( $group_thread ),
+									'per_page'        => 1,
+									'count_total'     => true,
+									'is_deleted'      => 1,
+								)
+							);
+
+							$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
+
+							if ( $is_deleted ) {
+								// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+								$_POST['message_thread_type'] = 'new';
+							}
+						}
+					} else {
 						$_POST['message_thread_type'] = 'new';
 					}
 				}
@@ -208,6 +227,19 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 						while ( bp_message_threads() ) {
 							bp_message_thread();
 							$thread_id = bp_get_message_thread_id();
+
+							// Check the first message meta to check for all users and open type when missed entries found into DB.
+							$first_thread_message = BP_Messages_Thread::get_first_message( $thread_id );
+
+							if ( ! empty( $first_thread_message ) ) {
+								$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+								$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+								$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+
+								if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
+									$thread_id = 0;
+								}
+							}
 
 							if ( $thread_id ) {
 								break;

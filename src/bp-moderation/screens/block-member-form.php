@@ -2,7 +2,7 @@
 /**
  * Block Member form
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss
  */
 

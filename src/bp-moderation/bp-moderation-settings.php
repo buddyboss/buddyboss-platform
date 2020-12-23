@@ -3,7 +3,7 @@
  * Moderation Settings
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the Moderation settings sections.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  * @return array
  */
 function bp_moderation_get_settings_sections() {
@@ -36,7 +36,7 @@ function bp_moderation_get_settings_sections() {
 /**
  * Get all of the settings fields.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  * @return array
  */
 function bp_moderation_get_settings_fields() {
@@ -112,7 +112,7 @@ function bp_moderation_get_settings_fields() {
 /**
  * Get settings fields by section.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $section_id Section id.
  *
@@ -134,7 +134,7 @@ function bp_moderation_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Return Moderation settings API option
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $option  Option name.
  * @param string $default Default value.
@@ -161,7 +161,7 @@ function bp_moderation_get_setting( $option, $default = '' ) {
 /**
  * Output Moderation settings API option
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $option  Option name.
  * @param string $default Default value.
@@ -173,7 +173,7 @@ function bp_moderation_setting( $option, $default = '' ) {
 /**
  * Moderation blocking Member blocking setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -191,7 +191,7 @@ function bpm_blocking_settings_callback_member_blocking() {
 /**
  * Moderation blocking auto suspend setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -215,7 +215,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 /**
  * Moderation blocking auto suspend threshold setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -228,7 +228,7 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
 /**
  * Moderation blocking auto suspend setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -249,7 +249,7 @@ function bpm_blocking_settings_callback_email_notification() {
 /**
  * Moderation blocking Member blocking setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -293,7 +293,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 /**
  * Moderation reporting auto suspend threshold setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $content_type content type.
  *
@@ -310,7 +310,7 @@ function bpm_reporting_settings_callback_auto_hide_threshold( $content_type = ''
 /**
  * Moderation reporting auto suspend setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -327,7 +327,7 @@ function bpm_reporting_settings_callback_email_notification() {
 /**
  * Moderation reporting reproting categories
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bpm_reporting_settings_callback_categories() {
 	printf(
