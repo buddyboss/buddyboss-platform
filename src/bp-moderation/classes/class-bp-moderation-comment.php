@@ -35,13 +35,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ), 11 );
 
-		/**
-		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
-		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() || ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
-			return;
-		}
-
 		add_filter( 'comment_text', array( $this, 'blocked_comment_text' ), 10, 2 );
 		add_filter( 'get_comment_author_link', array( $this, 'blocked_get_comment_author_link' ), 10, 3 );
 		add_filter( 'get_comment_author', array( $this, 'blocked_get_comment_author' ), 10, 2 );
@@ -50,6 +43,13 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		add_filter( 'get_comment_time', array( $this, 'blocked_get_comment_time' ), 10, 5 );
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
+
+		/**
+		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
+		 */
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() || ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+			return;
+		}
 
 		// button class.
 		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
