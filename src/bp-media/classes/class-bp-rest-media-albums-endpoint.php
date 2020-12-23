@@ -157,6 +157,10 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			$args['album_ids'] = $request['include'];
 		}
 
+		if ( ! empty( $request['all'] ) ) {
+			$args['per_page'] = 0;
+		}
+
 		$privacy   = array();
 		$privacy[] = $args['privacy'];
 		if ( is_user_logged_in() ) {

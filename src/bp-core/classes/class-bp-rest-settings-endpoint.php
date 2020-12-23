@@ -369,6 +369,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_media_group_albums_support']   = bp_is_group_albums_support_enabled();
 			$results['bp_media_messages_media_support'] = bp_is_messages_media_support_enabled();
 			$results['bp_media_forums_media_support']   = bp_is_forums_media_support_enabled();
+			$results['bp_media_allowed_size']           = bp_media_allowed_upload_media_size();
+			$results['bp_media_allowed_per_batch']      = bp_media_allowed_upload_media_per_batch();
 
 			// Emoji.
 			$results['bp_media_profiles_emoji_support'] = bp_is_profiles_emoji_support_enabled();
@@ -391,6 +393,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_media_group_document_support']       = bp_is_group_document_support_enabled();
 				$results['bp_media_messages_document_support']    = bp_is_messages_document_support_enabled();
 				$results['bp_is_forums_document_support_enabled'] = bp_is_forums_document_support_enabled();
+				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
+				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
 			}
 		}
 
