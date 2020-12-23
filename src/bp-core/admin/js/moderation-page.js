@@ -1,4 +1,4 @@
-/* global Bp_Moderation */
+/* global Bp_Moderation, BP_ADMIN */
 jQuery(document).ready(function ($) {
 
     /**
