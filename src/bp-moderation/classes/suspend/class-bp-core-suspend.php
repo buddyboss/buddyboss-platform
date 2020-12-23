@@ -255,7 +255,12 @@ class BP_Core_Suspend {
 				);
 			}
 
-			return $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
+			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
+
+			// Remove suspend record if item is not hidden
+			self::maybe_delete( $where['item_id'], $where['item_type'] );
+
+			return $flag;
 		}
 
 		return 1;
@@ -277,6 +282,49 @@ class BP_Core_Suspend {
 		$table_name = "{$bp->table_prefix}bp_suspend_details";
 
 		return $wpdb->delete( $table_name, $where ); // phpcs:ignore
+	}
+
+	/**
+	 * Function to delete suspend recode if entry is empty.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
+	 *
+	 * @return bool
+	 */
+	public static function maybe_delete( $item_id, $item_type ) {
+		$recode = self::get_recode( $item_id, $item_type );
+
+		if ( ! empty( $recode ) ) {
+			$hide_sitewide  = (int) $recode->hide_sitewide;
+			$hide_parent    = (int) $recode->hide_parent;
+			$user_suspended = (int) $recode->user_suspended;
+
+			if ( empty( $hide_sitewide ) && empty( $hide_parent ) && empty( $user_suspended ) ) {
+				$exist = self::check_suspend_details_exist( $recode->id );
+				if ( empty( $exist ) ) {
+					self::delete_suspend( $item_id, $item_type );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Check whether suspend details exist or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $suspend_id suspend id.
+	 *
+	 * @return bool
+	 */
+	public static function check_suspend_details_exist( $suspend_id ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		return $wpdb->get_var( $wpdb->prepare( "SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id=%d limit 1", (int) $suspend_id ) ); // phpcs:ignore
 	}
 
 	/**
