@@ -330,7 +330,15 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	}
 
 	// Determine groups of user.
-	$groups = groups_get_user_groups( $user_id );
+	$groups = groups_get_groups(
+		array(
+			'fields'      => 'ids',
+			'per_page'    => - 1,
+			'user_id'     => $user_id,
+			'show_hidden' => true,
+		)
+	);
+
 	if ( empty( $groups['groups'] ) ) {
 		$groups = array( 'groups' => array() );
 	}
