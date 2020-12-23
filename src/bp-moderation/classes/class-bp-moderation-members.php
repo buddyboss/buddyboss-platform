@@ -220,7 +220,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( ! bp_moderation_is_user_suspended( $user_id ) && bp_moderation_is_user_blocked( $user_id ) ) {
-			return esc_html__( 'Blocked User', 'buddyboss' );
+			return esc_html__( 'Blocked Member', 'buddyboss' );
 		}
 
 		return $value;

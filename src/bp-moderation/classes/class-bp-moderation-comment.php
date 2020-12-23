@@ -129,7 +129,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
 		if ( $this->is_content_hidden( $comment_id ) ) {
-			$return = esc_html__( 'Blocked User', 'buddyboss' );
+			$return = esc_html__( 'Blocked Member', 'buddyboss' );
 		}
 
 		return $return;
