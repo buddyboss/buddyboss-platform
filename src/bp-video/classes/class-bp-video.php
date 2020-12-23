@@ -620,7 +620,7 @@ class BP_Video {
 			$get_video_thumb_id  = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 
 			$attachment_data->meta            = (object) wp_get_attachment_metadata( $video->attachment_id );
-			$attachment_data->meta->mime_type = get_post_mime_type( $video->attachment_id );
+			$attachment_data->meta->mime_type = mime_content_type( get_attached_file( $video->attachment_id ) );
 			if ( $get_video_thumb_id ) {
 				$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
 				$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
@@ -637,10 +637,10 @@ class BP_Video {
 					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
 				}
 			} else {
-				$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-				$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-				$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-				$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
+				$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpeg';
+				$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpeg';
+				$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpeg';
+				$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpeg';
 			}
 
 			$video->attachment_data = $attachment_data;
@@ -1045,7 +1045,7 @@ class BP_Video {
 			}
 		}
 
-		// delete related activity
+		// delete related activity.
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
 
 			foreach ( $activity_ids as $activity_id ) {

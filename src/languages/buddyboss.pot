@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-23 06:52:59+00:00\n"
+"POT-Creation-Date: 2020-12-23 07:19:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -759,7 +759,7 @@ msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:2311
-#: bp-groups/bp-groups-activity.php:468
+#: bp-groups/bp-groups-activity.php:476
 msgid ""
 "Allowed time for editing this activity is passed already, you can not edit "
 "now."
@@ -999,7 +999,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:85
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:59
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:14
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:48
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:50
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:46
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:555
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:556
@@ -13697,7 +13697,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:44
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:51
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:45
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:47
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:43
 msgid "Move"
 msgstr ""
@@ -15288,7 +15288,7 @@ msgstr ""
 msgid "%1$s created the group %2$s"
 msgstr ""
 
-#: bp-groups/bp-groups-activity.php:140 bp-groups/bp-groups-activity.php:620
+#: bp-groups/bp-groups-activity.php:140 bp-groups/bp-groups-activity.php:628
 #: cli/components/activity.php:957
 msgid "%1$s joined the group %2$s"
 msgstr ""
@@ -23020,7 +23020,7 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:42
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:44
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:40
 #: bp-templates/bp-nouveau/includes/video/functions.php:145

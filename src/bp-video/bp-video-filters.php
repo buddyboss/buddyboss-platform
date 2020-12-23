@@ -615,10 +615,10 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 	) ) {
 			ob_start();
 		?>
-			<div class="bb-activity-video-wrap forums-video-wrap
+			<div class="bb-activity-media-wrap forums-video-wrap
 		<?php
-			echo 'bb-video-length-' . $video_template->video_count;
-			echo $video_template->video_count > 5 ? ' bb-video-length-more' : '';
+			echo 'bb-media-length-' . $video_template->video_count;
+			echo $video_template->video_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
 				<?php
