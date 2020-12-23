@@ -125,15 +125,26 @@
 		}
 
 		.comment-item.suspended-comment-item {
-			pointer-events: none;
-			opacity: 0.7;
 
-			.item-avatar {
+			> .item-avatar {
 				position: relative;
+				pointer-events: none;
+				opacity: 0.7;
 			}
 
-			.activity-time-since {
-				display: none;
+			> .acomment-content {
+				pointer-events: none;
+				opacity: 0.7;
+			}
+
+			> .acomment-meta {
+				pointer-events: none;
+				opacity: 0.7;
+
+				.activity-time-since {
+					display: none;
+				}
+
 			}
 		}
 

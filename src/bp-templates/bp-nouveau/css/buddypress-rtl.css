@@ -3889,16 +3889,23 @@ span.dashicons.dashicons-admin-file:before {
   color: #5087e5;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar {
+  position: relative;
   pointer-events: none;
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .item-avatar {
-  position: relative;
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-content {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item .activity-time-since {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta .activity-time-since {
   display: none;
 }
 
