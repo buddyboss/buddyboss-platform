@@ -562,7 +562,7 @@
 	display: block;
 
 	&:before {
-		content: '';
+		content: "";
 		background: url(../images/video-play.svg) !important;
 		background-color: #fff !important;
 		height: 52px;
@@ -708,17 +708,17 @@
 		border-radius: 4px;
 		overflow: hidden;
 
-			.vjs-control-bar {
-				bottom: 15px;
-				background-color: transparent;
+		.vjs-control-bar {
+			bottom: 15px;
+			background-color: transparent;
 
 			.vjs-time-control {
 				font-size: 1.2em;
 				line-height: 30px;
 			}
-			
+
 			.vjs-slider {
-				background-color: rgba(255,255,255,0.6);
+				background-color: rgba(255, 255, 255, 0.6);
 			}
 
 			.vjs-time-tooltip {
@@ -763,19 +763,27 @@
 
 }
 
+.bp-single-message-wrap .bb-activity-video-wrap .bb-activity-video-elem .bb-item-cover-wrap {
+	padding-top: 100%;
+}
+
+.bp-single-message-content .bb-activity-video-elem {
+	min-width: 20%;
+}
+
 .bb-activity-video-wrap {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    flex-flow: row wrap;
-    margin: 0 -3px;
-    align-items: flex-start;
-    position: relative;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0 -3px;
+	align-items: flex-start;
+	position: relative;
 
 	.bb-activity-video-elem {
 		padding: 3px;
-	
+
 		.bb-item-cover-wrap {
 			padding-top: 38.56%;
 
@@ -820,11 +828,10 @@
 		&.act-grid-1-2 .bb-item-cover-wrap {
 			padding-top: 82.56%;
 		}
-	
+
 	}
 
 }
-
 
 
 .bb-action-check-wrap {

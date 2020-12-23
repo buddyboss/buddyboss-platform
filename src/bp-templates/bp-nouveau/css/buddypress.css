@@ -13064,7 +13064,7 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-item-cover-wrap:before {
-  content: '';
+  content: "";
   background: url(../images/video-play.svg) !important;
   background-color: #fff !important;
   height: 52px;
@@ -13266,6 +13266,14 @@ body.login .login-popup .mfp-close:hover {
 .bb-video-thumb .video-js .vjs-control-bar button > .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar button:hover > .vjs-icon-placeholder:before {
   line-height: 1;
+}
+
+.bp-single-message-wrap .bb-activity-video-wrap .bb-activity-video-elem .bb-item-cover-wrap {
+  padding-top: 100%;
+}
+
+.bp-single-message-content .bb-activity-video-elem {
+  min-width: 20%;
 }
 
 .bb-activity-video-wrap {

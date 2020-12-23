@@ -1157,7 +1157,7 @@ window.bp = window.bp || {};
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: {
-						action: 'media_get_media_description',
+						action: 'video_get_video_description',
 						id: self.current_video.id,
 						attachment_id: self.current_video.attachment_id,
 						nonce: BP_Nouveau.nonces.video

@@ -1073,7 +1073,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 
 				<div class="activity-header">
 					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
-					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo wp_kses( $time_since ); ?></a></p>
+					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 				</div>
 			</div>
 			<div class="activity-video-description">

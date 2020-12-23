@@ -379,7 +379,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	// Get the message by pretending we're in the message loop.
-	global $thread_template, $media_template, $document_template;
+	global $thread_template, $media_template, $document_template, $video_template;
 
 	$bp           = buddypress();
 	$reset_action = $bp->current_action;
@@ -468,6 +468,36 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'full'          => bp_get_media_attachment_image(),
 					'meta'          => $media_template->media->attachment_data->meta,
 					'privacy'       => bp_get_media_privacy(),
+				);
+			}
+		}
+	}
+
+	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+		$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
+
+		if ( ! empty( $video_ids ) && bp_has_video(
+			array(
+				'include'  => $video_ids,
+				'privacy'  => array( 'message' ),
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			)
+		) ) {
+			$reply['video'] = array();
+			while ( bp_video() ) {
+				bp_the_video();
+
+				$reply['video'][] = array(
+					'id'            => bp_get_video_id(),
+					'title'         => bp_get_video_title(),
+					'message_id'    => bp_get_the_thread_message_id(),
+					'thread_id'     => bp_get_the_thread_id(),
+					'attachment_id' => bp_get_video_attachment_id (),
+					'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
+					'full'          => bp_get_video_attachment_image(),
+					'meta'          => $video_template->video->attachment_data->meta,
+					'privacy'       => bp_get_video_privacy(),
 				);
 			}
 		}
@@ -1574,7 +1604,7 @@ add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients
  * @return stdClass|void
  */
 function bp_nouveau_get_thread_messages( $thread_id, $post ) {
-	global $thread_template, $media_template, $wpdb, $document_template;
+	global $thread_template, $media_template, $wpdb, $document_template, $video_template;
 
 	if ( ! $thread_id ) {
 		return;
@@ -2054,6 +2084,37 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'full'          => bp_get_media_attachment_image(),
 						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'       => bp_get_media_privacy(),
+					);
+				}
+			}
+		}
+
+		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
+
+			if ( ! empty( $video_ids ) && bp_has_video(
+				array(
+					'include'  => $video_ids,
+					'privacy'  => array( 'message' ),
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+					'user_id'  => false,
+				)
+			) ) {
+				$thread->messages[ $i ]['video'] = array();
+				while ( bp_video() ) {
+					bp_the_video();
+
+					$thread->messages[ $i ]['video'][] = array(
+						'id'            => bp_get_video_id(),
+						'message_id'    => bp_get_the_thread_message_id(),
+						'thread_id'     => bp_get_the_thread_id(),
+						'title'         => bp_get_video_title(),
+						'attachment_id' => bp_get_video_attachment_id(),
+						'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
+						'full'          => bp_get_video_attachment_image(),
+						'meta'          => $video_template->video->attachment_data->meta,
+						'privacy'       => bp_get_video_privacy(),
 					);
 				}
 			}
