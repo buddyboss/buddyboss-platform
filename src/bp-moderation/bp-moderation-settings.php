@@ -237,7 +237,7 @@ function bpm_blocking_settings_callback_email_notification() {
 	<label for="bpm_blocking_email_notification">
 		<input name="bpm_blocking_email_notification" id="bpm_blocking_email_notification" type="checkbox" value="1"
 			<?php checked( bp_is_moderation_blocking_email_notification_enable( false ) ); ?> />
-		<?php esc_html_e( 'Notify administrators when members have been auto-suspended.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Notify administrators when members have been automatically suspended.', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -319,7 +319,7 @@ function bpm_reporting_settings_callback_email_notification() {
 	<label for="bpm_reporting_email_notification">
 		<input name="bpm_reporting_email_notification" id="bpm_reporting_email_notification" type="checkbox" value="1"
 			<?php checked( bp_is_moderation_reporting_email_notification_enable( false ) ); ?> />
-		<?php esc_html_e( 'Notify administrators when content has been auto-hidden.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Notify administrators when content has automatically hidden.', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -333,7 +333,7 @@ function bpm_reporting_settings_callback_categories() {
 	printf(
 		'<label>%s</label>',
 		sprintf(
-			__( '<a href="%s">Manage</a> categories for members to report content in the frontend.', 'buddyboss' ),
+			__( '<a href="%s">Manage</a> the categories members see when reporting content in the frontend.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
 					array(

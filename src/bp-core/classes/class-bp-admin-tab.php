@@ -120,8 +120,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						),
 					),
 					'moderation' => array(
-						'suspend_confirm_message'   => esc_js( __( 'Are you sure? Suspending selected member will kill their existing login session, not allow them to login anymore and their generated content will be hidden site wide in few minutes', 'buddyboss' ) ),
-						'unsuspend_confirm_message' => esc_js( __( 'Are you sure? Unsuspending selected member will allow them to login again and their generated content will be visible back again in few minutes', 'buddyboss' ) ),
+						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, their content will not be hidden anymmore from members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 					)
 				) );
 		}
