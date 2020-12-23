@@ -41,7 +41,7 @@ style="display: none">
 			)
 		);
 		printf(
-			__( 'Please activate moderation module <a href="%s" >here</a> to mark member spam/suspend.', 'buddyboss' ), 
+			__( 'To suspend members who are creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), 
 			$component_link
 		);
 		?>

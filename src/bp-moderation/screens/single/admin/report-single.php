@@ -122,7 +122,7 @@ $admins            = array_map( 'intval', get_users(
 														'<a href="%s" title="%s"> %s </a>',
 														esc_url( bp_moderation_get_permalink( $moderation_request_data->item_id, $moderation_request_data->item_type ) ),
 														esc_attr__( 'View', 'buddyboss' ),
-														esc_html__( 'Click here to View Content', 'buddyboss' )
+														esc_html__( 'View Content', 'buddyboss' )
 													)
 												);
 												?>
@@ -133,14 +133,14 @@ $admins            = array_map( 'intval', get_users(
 												<strong><label>
 														<?php
 														/* translators: accessibility text */
-														esc_html_e( 'Reported (Count)', 'buddyboss' );
+														esc_html_e( 'Number of Reports', 'buddyboss' );
 														?>
 													</label></strong>
 											</td>
 											<td>
 												<?php
 												/* translators: accessibility text */
-												printf( esc_html( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ) ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												printf( esc_html( number_format_i18n( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>

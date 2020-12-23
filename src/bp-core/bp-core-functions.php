@@ -2652,14 +2652,14 @@ function bp_core_get_components( $type = 'all' ) {
 			),
 			'default'              => false,
 			'deactivation_confirm' => true,
-			'deactivation_message' => __( '<p>Are you sure you want to deactivate Moderation component?</p>
+			'deactivation_message' => __( '<p>Please confirm you want to deactivate the Moderation component.</p>
 			<h4>On Deactivation:</h4>
 			<ul>
-			<li>- All suspended members will be allowed to login and content will be open.</li>
-			<li>- Members on the network will not be able to block each other. Blocked member will be open again for members on the network.</li>
-			<li>- Hidden content will start to show.</li>
+			<li>- All suspended members will regain permission to login and their content will be unhidden</li>
+			<li>- Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.</li>
+			<li>- All hidden content will be unhidden.</li>
 			</ul>
-			<p>Note: Moderation data will not be deleted. Activate component again to enable suspension, block and hide content again.</p>', 'buddyboss' ),
+			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
 		),
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
@@ -3923,19 +3923,19 @@ function bp_email_get_schema() {
 		),
 		'content-moderation-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Content auto-hidden on reporting', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{content.type}} has been auto-hidden because it has been reported {{content.timesreported}} time(s) by the members on the network.", 'buddyboss' ),
+			'post_content' => __( "{{content.type}} has been automatically hidden from your network as it has been reported {{content.timesreported}} time(s).", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{content.type}} has been auto-hidden because it has been reported {{content.timesreported}} time(s) by the members on the network.", 'buddyboss' ),
+			'post_excerpt' => __( "{{content.type}} has been automatically hidden from your network as it has been reported {{content.timesreported}} time(s).", 'buddyboss' ),
 		),
 		'user-moderation-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Member suspended on blocking', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{user.name}} has been auto-suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
+			'post_content' => __( "{{user.name}} has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s).", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{user.name}} has been auto-suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
+			'post_excerpt' => __( "{{user.name}} has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s).", 'buddyboss' ),
 		),
 	);
 
@@ -4119,12 +4119,12 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$content_moderation_email = array(
-		'description' => __( 'Content auto-hidden on reporting from members on the network.', 'buddyboss' ), //Todo: Add proper description of email.
+		'description' => __( 'When content is automatically hidden due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
 	$user_moderation_email = array(
-		'description' => __( 'Member suspended on blocking from other members on the network.', 'buddyboss' ), //Todo: Add proper description of email.
+		'description' => __( 'When a member has been automatically suspended due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 

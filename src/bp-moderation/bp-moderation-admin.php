@@ -41,8 +41,8 @@ function bp_moderation_admin_scripts( $hook ) {
 			'Bp_Moderation',
 			array(
 				'strings' => array(
-					'confirm_msg'            => esc_js( __( 'Are you sure? It will hide selected content for everybody in the network', 'buddyboss' ) ),
-					'unhide_confirm_msg'     => esc_js( __( 'Are you sure? It will unhide selected content for everybody in the network', 'buddyboss' ) ),
+					'confirm_msg'            => esc_js( __( 'Please confirm you want to hide this content. It will be hidden from all members in your network.', 'buddyboss' ) ),
+					'unhide_confirm_msg'     => esc_js( __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' ) ),
 					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
 					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
 					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
