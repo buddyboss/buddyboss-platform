@@ -2411,7 +2411,7 @@ function bp_activity_video_add( $video ) {
 
 			$args = array(
 				'hide_sitewide' => true,
-				'privacy'       => 'media',
+				'privacy'       => 'video',
 			);
 
 			// Create activity only if not created previously.
@@ -2427,14 +2427,14 @@ function bp_activity_video_add( $video ) {
 
 			if ( $activity_id ) {
 
-				// save video activity id in video
+				// save video activity id in video.
 				$video->activity_id = $activity_id;
 				$video->save();
 
-				// update activity meta
+				// update activity meta.
 				bp_activity_update_meta( $activity_id, 'bp_video_activity', '1' );
 
-				// save attachment meta for activity
+				// save attachment meta for activity.
 				update_post_meta( $video->attachment_id, 'bp_video_activity_id', $activity_id );
 
 				if ( $parent_activity_id ) {
@@ -2450,11 +2450,11 @@ function bp_activity_video_add( $video ) {
 		} else {
 			if ( $parent_activity_id ) {
 
-				// save video activity id in video
+				// save video activity id in video.
 				$video->activity_id = $parent_activity_id;
 				$video->save();
 
-				// save parent activity id in attachment meta
+				// save parent activity id in attachment meta.
 				update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
 			}
 		}
