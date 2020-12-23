@@ -1100,7 +1100,7 @@
 			// Show the moderation activate popup when admin click spam user link.
 			$( document ).on( 'click', '.bp-show-moderation-alert', function () {
 				$( '#bp-hello-backdrop' ).show();
-				$( '#bp-hello-container' ).show();
+				$( '#bp-hello-container' ).show().addClass('deactivation-popup');
 			} );
 
 			// Show the confirmation popup when user clicks single BB component disable link.
