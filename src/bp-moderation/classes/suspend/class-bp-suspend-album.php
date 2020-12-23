@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Media Album Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Media Album.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Album extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Album constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -59,7 +59,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's album ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id member id.
 	 *
@@ -87,7 +87,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked group's album ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
 	 *
@@ -115,7 +115,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Prepare album Join SQL query to filter blocked album
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Album Join sql.
 	 * @param array  $args     Query arguments.
@@ -133,7 +133,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden album Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -146,7 +146,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Prepare album Where SQL query to filter blocked album
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Album Where sql.
 	 * @param array $args             Query arguments.
@@ -164,7 +164,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden album Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's album.
 		 * @param array $class current class object.
@@ -181,7 +181,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of album
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $album_id      album id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -222,7 +222,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of album
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $album_id      album id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -276,7 +276,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Get album's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $album_id album id.
 	 * @param array $args     parent args.
@@ -290,7 +290,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Media_Album $album Current instance of album being saved. Passed by reference.
 	 */
@@ -320,7 +320,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the album.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $albums Array of media albums.
 	 */

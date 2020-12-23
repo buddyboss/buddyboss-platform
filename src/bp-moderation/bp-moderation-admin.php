@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation component admin screen.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -22,7 +22,7 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
 /**
  * Function to hook the admin screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $hook page name.
  */
@@ -60,7 +60,7 @@ add_action( 'admin_enqueue_scripts', 'bp_moderation_admin_scripts' );
 /**
  * Register the Moderation component admin screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_add_admin_menu() {
 
@@ -87,7 +87,7 @@ add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
  * which all appear together in the middle of the Dashboard menu. This function
  * adds the Moderation page to the array of these menu items.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $custom_menus The list of top-level BP menu items.
  *
@@ -105,7 +105,7 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
 /**
  * Set up the Moderation admin page.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin_load() {
 	global $bp_moderation_list_table;
@@ -146,7 +146,7 @@ function bp_moderation_admin_load() {
 		/**
 		 * Fires at top of Moderation admin page.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $doaction Current $_GET action being performed in admin screen.
 		 */
@@ -213,7 +213,7 @@ function bp_moderation_admin_load() {
 		/**
 		 * Filters list of IDs being hide/unhide.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $moderation_ids Activity IDs to spam/un-spam/delete.
 		 */
@@ -278,7 +278,7 @@ function bp_moderation_admin_load() {
 		 *
 		 * Passes an moderation array counts how many were hide, unhide, and IDs that were errors.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array  $value          Array holding hide, unhide, error IDs.
 		 * @param string $redirect_to    URL to redirect to.
@@ -314,7 +314,7 @@ function bp_moderation_admin_load() {
 		/**
 		 * Filters redirect URL after moderation hide/unhide.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $redirect_to URL to redirect to.
 		 */
@@ -325,7 +325,7 @@ function bp_moderation_admin_load() {
 	/**
 	 * Fires at top of Moderation admin page.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $doaction Current $_GET action being performed in admin screen.
 	 */
@@ -366,7 +366,7 @@ function bp_moderation_admin_load() {
 /**
  * Select the appropriate Moderation admin screen, and output it.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin() {
 	// Added navigation tab on top.
@@ -407,7 +407,7 @@ function bp_moderation_admin() {
  *
  * This screen contains a list of all BuddyBoss Moderation requests.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @global BP_Moderation_List_Table $bp_moderation_list_table Moderation screen list table.
  * @global string                   $plugin_page              Currently viewed plugin page.
@@ -482,7 +482,7 @@ function bp_moderation_admin_index() {
 /**
  * Handle save/update of screen options for the Moderation component admin screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $value     Will always be false unless another plugin filters it first.
  * @param string $option    Screen option name.
@@ -508,7 +508,7 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
 /**
  * Display the single moderation edit screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin_view() {
 
@@ -549,7 +549,7 @@ function bp_moderation_admin_view() {
 	/**
 	 * Fires before moderation edit form is displays so plugins can modify the activity.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $value Array holding single activity object that was passed by reference.
 	 */
@@ -561,7 +561,7 @@ function bp_moderation_admin_view() {
 /**
  * Add Navigation tab on top of the page BuddyBoss > Moderation > Reporting Categories
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin_category_listing_add_tab() {
 	global $pagenow, $current_screen;

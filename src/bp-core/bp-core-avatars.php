@@ -738,7 +738,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	/**
 	 * Filters a gravatar avatar URL.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $avatar_url URL for a gravatar.
 	 * @param array  $params     Array of parameters for the request.

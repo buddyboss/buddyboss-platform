@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Activity Comment Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Activity comment.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Activity_Comment constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -58,7 +58,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's activity ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id member id.
 	 *
@@ -91,7 +91,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Prepare activity Join SQL query to filter blocked Activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Activity Join sql.
 	 * @param array  $args     Query arguments.
@@ -109,7 +109,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden activity Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -122,7 +122,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Prepare activity comment Where SQL query to filter blocked Activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Activity Where sql.
 	 * @param array $args             Query arguments.
@@ -140,7 +140,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden activity comment Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's activity comment.
 		 * @param array $class current class object.
@@ -157,7 +157,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of activity comment
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $acomment_id   activity comment id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -198,7 +198,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $acomment_id   activity comment id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -252,7 +252,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update blocked comment template
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $template_names Template name.
 	 *
@@ -282,7 +282,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $acomment_id activity comment id.
 	 * @param array $args        parent args.
@@ -312,7 +312,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $activity_id Activity id.
 	 *
@@ -334,7 +334,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Activity_Activity $activity Current instance of activity item being saved. Passed by reference.
 	 */
@@ -368,7 +368,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete an activity.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $activities Array of activities.
 	 */

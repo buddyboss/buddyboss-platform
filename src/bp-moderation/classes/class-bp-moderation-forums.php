@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Forums Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Forums.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Forums constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -64,7 +64,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $forum_id forum id.
 	 *
@@ -79,7 +79,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $forum_id Forum id.
 	 *
@@ -92,7 +92,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -107,7 +107,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Update where query remove hidden/blocked user's forums
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where forums Where sql.
 	 * @param object $suspend suspend object.
@@ -128,7 +128,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Validate the forum is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param object $post   Current forum object.
 	 * @param string $output Optional. OBJECT, ARRAY_A, or ARRAY_N. Default = OBJECT.
@@ -149,7 +149,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify the button args
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args    Button args.
 	 * @param int   $item_id Item id.
@@ -169,7 +169,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the forum is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.

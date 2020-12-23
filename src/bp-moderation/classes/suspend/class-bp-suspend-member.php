@@ -3,7 +3,7 @@
  * BuddyBoss Suspend Member Classes
  *
  * @package BuddyBoss\Suspend
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Member.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Member extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Member constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -74,7 +74,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Suspend User
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -91,7 +91,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Add related content of reported item into hidden list
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -110,7 +110,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Un-suspend User
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -127,7 +127,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Remove related content of reported item from hidden list.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -148,7 +148,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Prepare member Join SQL query to filter blocked Member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Member Join sql.
 	 * @param string $uid_name User ID field name.
@@ -162,7 +162,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -175,7 +175,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Prepare member Where SQL query to filter blocked Member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Member Where sql.
 	 * @param array $args             Query arguments.
@@ -190,7 +190,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's member.
 		 * @param array $class current class object.
@@ -207,7 +207,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $member_id     member id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -260,7 +260,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $member_id     member id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -317,7 +317,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * When a user logs in, check if they have been marked as a Suspended. If yes
 	 * then simply redirect them to the home page and stop them from logging in.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param WP_User|WP_Error $user Either the WP_User object or the WP_Error
 	 *                               object, as passed to the 'authenticate' filter.
@@ -359,7 +359,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * This is important as the $bp->loggedin_user object is setup at priority 4.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function bp_stop_live_suspended() {
 		// If we're on the login page, stop now to prevent redirect loop.
@@ -408,7 +408,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Show a custom error message when a logged-in user is marked as a suspended.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function bp_live_suspended_login_error() {
 		global $error;
@@ -422,7 +422,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * If the displayed user is marked as a suspended, Show 404.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
@@ -437,7 +437,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $member_id     member id.
 	 * @param int   $hide_sitewide item hidden sitewide or user specific.
@@ -465,7 +465,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $member_id member id.
 	 * @param array $args      parent args.
@@ -508,7 +508,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Delete moderation data when actual user is deleted
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id of the user that is being deleted.
 	 */
@@ -524,7 +524,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Migrate existing spammer as suspended user
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function migrate_spam_users() {
 		global $wpdb;
@@ -544,7 +544,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Restrict User domain of suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $domain  User domain link.
 	 * @param int    $user_id User id.
@@ -562,7 +562,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Restrict User meta of suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $value   User meta.
 	 * @param int    $user_id User id.
@@ -580,7 +580,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Restrict User meta name of suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $value   User meta.
 	 * @param int    $user_id User id.
@@ -604,7 +604,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Remove Profile photo for suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $retval       The URL of the avatar.
 	 * @param mixed  $id_or_email  The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
@@ -648,7 +648,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Get dummy URL from DB for Group and User
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $avatar_url URL for a locally uploaded avatar.
 	 * @param array  $params     Array of parameters for the request.

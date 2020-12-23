@@ -36,7 +36,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the topic Search query.
 			 *
-             * @since BuddyBoss 2.0.0
+             * @since BuddyBoss 1.5.6
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -117,7 +117,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the forum topic Search query.
 			 *
-             * @since BuddyBoss 2.0.0
+             * @since BuddyBoss 1.5.6
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 */

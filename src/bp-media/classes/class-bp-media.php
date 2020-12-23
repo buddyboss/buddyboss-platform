@@ -1111,7 +1111,7 @@ class BP_Media {
 		/**
 		 * Filters the MySQL WHERE conditions for the Media items get method.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array $args             array of arguments.
@@ -1123,7 +1123,7 @@ class BP_Media {
 		/**
 		 * Filter the MySQL JOIN clause for the main media query.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $join_sql JOIN clause.
 		 * @param array  $args     array of arguments.

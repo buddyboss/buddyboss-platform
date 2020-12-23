@@ -5,7 +5,7 @@
  * This class calls all other classes associated with Suspend functionality.
  *
  * @package BuddyBoss\Suspend
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ class BP_Core_Suspend {
 	/**
 	 * BP_Core_Suspend constructor.
 	 *
-	 * @since   BuddyBoss 2.0.0
+	 * @since   BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 		$this->load_on_bp_dependency();
@@ -32,7 +32,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to load all the dependencies of Suspend classes.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function load_on_bp_dependency() {
 		new BP_Suspend_Member();
@@ -73,7 +73,7 @@ class BP_Core_Suspend {
 	 *
 	 * @param array $args suspend arguments.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool|int
 	 */
@@ -126,7 +126,7 @@ class BP_Core_Suspend {
 		/**
 		 * Hook fire when item suspended
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param int $item_id item id.
 		 */
@@ -138,7 +138,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to get suspend entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -157,7 +157,7 @@ class BP_Core_Suspend {
 	/**
 	 * Get Suspend details entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $suspend_id suspend id.
 	 *
@@ -178,7 +178,7 @@ class BP_Core_Suspend {
 	 *
 	 * @param array $args suspend arguments.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool|int
 	 */
@@ -202,7 +202,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to get suspend entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $suspend_id Suspend id.
 	 * @param int $user_id    User id.
@@ -221,7 +221,7 @@ class BP_Core_Suspend {
 	/**
 	 * Remove Suspend user/content entry.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args suspend arguments.
 	 *
@@ -272,7 +272,7 @@ class BP_Core_Suspend {
 			/**
 			 * Hook fire when item unsuspended
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param int $item_id item id.
 			 */
@@ -287,7 +287,7 @@ class BP_Core_Suspend {
 	/**
 	 * Remove Suspend details entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where arguments.
 	 *
@@ -305,7 +305,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to delete suspend recode if entry is empty.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -332,7 +332,7 @@ class BP_Core_Suspend {
 	/**
 	 * Check whether suspend details exist or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $suspend_id suspend id.
 	 *
@@ -352,7 +352,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether content is hide or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -371,7 +371,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether content is related to blocked member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -395,7 +395,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether content is hide as suspend user's content or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -414,7 +414,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether user is suspend or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -432,7 +432,7 @@ class BP_Core_Suspend {
 	/**
 	 * Delete Suspend user/content entry.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -465,7 +465,7 @@ class BP_Core_Suspend {
 			/**
 			 * Hook to fire after the suspend record delete.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param object $recode Suspended record object.
 			 */

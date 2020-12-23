@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Forum Topic Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Forum Topic.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Forum_Topic constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -64,7 +64,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's topic ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id Member id.
 	 *
@@ -97,7 +97,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Get forum topics ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $forum_id forums id.
 	 *
@@ -130,7 +130,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Prepare forum topic Join SQL query to filter blocked Forum Topic
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Forum Topic Join sql.
 	 * @param object $wp_query WP_Query object.
@@ -148,7 +148,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			/**
 			 * Filters the hidden Forum Topic Where SQL statement.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array $join_sql Join sql query
 			 * @param array $class    current class object.
@@ -164,7 +164,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 				/**
 				 * Filters the hidden Forum Topic Where SQL statement.
 				 *
-				 * @since BuddyBoss 2.0.0
+				 * @since BuddyBoss 1.5.6
 				 *
 				 * @param array $join_sql Join sql query
 				 * @param array $class    current class object.
@@ -179,7 +179,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Prepare forum topic Where SQL query to filter blocked Forum Topic
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array       $where_conditions Forum Topic Where sql.
 	 * @param object|null $wp_query         WP_Query object.
@@ -204,7 +204,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden forum topic Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's forum topic.
 		 * @param array $class current class object.
@@ -225,7 +225,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Restrict Single item.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param object $post   Current topic object.
 	 * @param string $output Optional. OBJECT, ARRAY_A, or ARRAY_N. Default = OBJECT.
@@ -246,7 +246,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of forum topic
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $topic_id      forum topic id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -287,7 +287,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of topic
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $topic_id      topic id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -341,7 +341,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $topic_id topic id.
 	 * @param array $args     parent args.
@@ -374,7 +374,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
@@ -405,7 +405,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete a topic.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.

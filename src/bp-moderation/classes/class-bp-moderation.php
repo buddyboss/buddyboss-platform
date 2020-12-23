@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  * Instance methods are available for creating/editing an moderation,
  * static methods for querying moderations.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation {
 
 	/**
 	 * ID of the moderation.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $id = null;
@@ -29,7 +29,7 @@ class BP_Moderation {
 	/**
 	 * ID of the moderation data.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $report_id = null;
@@ -37,7 +37,7 @@ class BP_Moderation {
 	/**
 	 * User ID who reported moderation item recently.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $user_id = null;
@@ -45,7 +45,7 @@ class BP_Moderation {
 	/**
 	 * ID of the moderation report item.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $item_id = null;
@@ -53,7 +53,7 @@ class BP_Moderation {
 	/**
 	 * The description for the Moderation report.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var string
 	 */
 	public $content = '';
@@ -61,7 +61,7 @@ class BP_Moderation {
 	/**
 	 * Moderation report item type, eg 'moderation, group, message etc'.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var string
 	 */
 	public $item_type = '';
@@ -69,7 +69,7 @@ class BP_Moderation {
 	/**
 	 * The date the Moderation report was recorded or updated, in 'Y-m-d h:i:s' format.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var string
 	 */
 	public $last_updated = '';
@@ -77,7 +77,7 @@ class BP_Moderation {
 	/**
 	 * The date the Moderation report was recorded or updated, in 'Y-m-d h:i:s' format.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var string
 	 */
 	public $date_created = '';
@@ -85,7 +85,7 @@ class BP_Moderation {
 	/**
 	 * Whether the Moderation report item should be hidden sitewide.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $hide_sitewide = 0;
@@ -93,7 +93,7 @@ class BP_Moderation {
 	/**
 	 * Report category id for Moderation report.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $category_id = 0;
@@ -101,7 +101,7 @@ class BP_Moderation {
 	/**
 	 * Blog id for Moderation report.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $blog_id = 0;
@@ -109,7 +109,7 @@ class BP_Moderation {
 	/**
 	 * Reported count for Moderation report.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 * @var int
 	 */
 	public $count = 0;
@@ -117,7 +117,7 @@ class BP_Moderation {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @var WP_Error
 	 */
@@ -126,7 +126,7 @@ class BP_Moderation {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @var string
 	 */
@@ -135,7 +135,7 @@ class BP_Moderation {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool $item_id   Moderation item id.
 	 * @param bool $item_type Moderation item type.
@@ -165,7 +165,7 @@ class BP_Moderation {
 	/**
 	 * Check moderation item report exist or not
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $item_id   Moderation item id.
 	 * @param int $item_type Moderation item type.
@@ -185,7 +185,7 @@ class BP_Moderation {
 	/**
 	 * Populate the object with data about the specific moderation report.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function populate() {
 		global $wpdb;
@@ -228,7 +228,7 @@ class BP_Moderation {
 	/**
 	 * Get moderation items, as specified by parameters.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args              {
 	 *                                 An array of arguments. All items are optional.
@@ -420,7 +420,7 @@ class BP_Moderation {
 		/**
 		 * Filters the MySQL WHERE conditions for the Moderation items get method.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into method.
@@ -436,7 +436,7 @@ class BP_Moderation {
 		/**
 		 * Filter the MySQL JOIN clause for the main Moderation query.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -468,7 +468,7 @@ class BP_Moderation {
 		/**
 		 * Filters the paged moderations MySQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $moderation_ids_sql MySQL statement used to query for Moderation IDs.
 		 * @param array  $r                  Array of arguments passed into method.
@@ -527,7 +527,7 @@ class BP_Moderation {
 			/**
 			 * Filters the total moderations MySQL statement.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param string $value     MySQL statement used to query for total moderations.
 			 * @param string $where_sql MySQL WHERE statement portion.
@@ -557,7 +557,7 @@ class BP_Moderation {
 	/**
 	 * Create filter SQL clauses.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $filter_array  {
 	 *                             Fields and values to filter by.
@@ -597,7 +597,7 @@ class BP_Moderation {
 	/**
 	 * Create SQL IN clause for filter queries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string     $field The database field.
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
@@ -641,7 +641,7 @@ class BP_Moderation {
 	 * WP_Query, we have to alter the return value (stripping the leading
 	 * AND keyword from the 'where' clause).
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $meta_query An array of meta_query filters. See the
 	 *                          documentation for WP_Meta_Query for details.
@@ -682,7 +682,7 @@ class BP_Moderation {
 	 * WP_Query, we have to alter the return value (stripping the leading AND
 	 * keyword from the query).
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $date_query An array of date_query parameters. See the
 	 *                          documentation for the first parameter of WP_Date_Query.
@@ -704,7 +704,7 @@ class BP_Moderation {
 	/**
 	 * Convert moderation IDs to moderation objects, as expected in template loop.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $moderation_ids Array of moderation IDs.
 	 *
@@ -759,7 +759,7 @@ class BP_Moderation {
 	/**
 	 * Append moderation reported users to their associated moderation report.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $moderations moderation array.
 	 * @param array $args        arguments.
@@ -789,7 +789,7 @@ class BP_Moderation {
 	/**
 	 * Get reporters that are associated with a specific moderation ID.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $moderation_id Moderation id.
 	 * @param array $args          Argument to filter data.
@@ -835,7 +835,7 @@ class BP_Moderation {
 	/**
 	 * Append xProfile fullnames to an moderation/moderation data array.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array  $moderations Moderations/Moderations data array.
 	 * @param string $user_key    User key name.
@@ -874,7 +874,7 @@ class BP_Moderation {
 	 * components, such as bp-activity and bp-groups, to hook in and prime
 	 * their own caches at the beginning of an Moderation loop.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $moderations Array of moderations.
 	 *
@@ -885,7 +885,7 @@ class BP_Moderation {
 		/**
 		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with moderation item.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $moderations Array of moderations.
 		 */
@@ -895,7 +895,7 @@ class BP_Moderation {
 	/**
 	 * Get specific moderation item id
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $item_id   Moderation item id.
 	 * @param int $item_type Moderation item type.
@@ -917,7 +917,7 @@ class BP_Moderation {
 	/**
 	 * Hide Moderation entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function hide() {
 
@@ -933,7 +933,7 @@ class BP_Moderation {
 		/**
 		 * Fires after an moderation report item has been hide
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param BP_Moderation $this current class object.
 		 */
@@ -944,7 +944,7 @@ class BP_Moderation {
 	/**
 	 * Save the moderation report to the database.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return WP_Error|bool True on success.
 	 */
@@ -967,7 +967,7 @@ class BP_Moderation {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param BP_Moderation $this Current instance of the moderation item being saved. Passed by reference.
 		 */
@@ -1057,7 +1057,7 @@ class BP_Moderation {
 		/**
 		 * Fires after an moderation report item has been saved to the database.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param BP_Moderation $this Current instance of moderation item being saved. Passed by reference.
 		 */
@@ -1069,7 +1069,7 @@ class BP_Moderation {
 	/**
 	 * Check moderation data exist for specific user or not
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $moderation_id Moderation report id.
 	 * @param int $user_id       Moderation reporter id.
@@ -1089,7 +1089,7 @@ class BP_Moderation {
 	/**
 	 * Store Moderation entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -1133,7 +1133,7 @@ class BP_Moderation {
 	/**
 	 * Store Moderation report entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return false
 	 */
@@ -1165,7 +1165,7 @@ class BP_Moderation {
 	/**
 	 * Function to send email as per moderation settings
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool|BP_Email|WP_Error
 	 */
@@ -1240,13 +1240,13 @@ class BP_Moderation {
 	/**
 	 * Hide related content of report entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function hide_related_content() {
 		/**
 		 * Add related content of reported item into hidden list
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -1257,7 +1257,7 @@ class BP_Moderation {
 	/**
 	 * Unhide Moderation entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function unhide() {
 		$this->hide_sitewide = 0;
@@ -1273,7 +1273,7 @@ class BP_Moderation {
 		/**
 		 * Fires after an moderation report item has been unhide
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param BP_Moderation $this current class object.
 		 */
@@ -1283,7 +1283,7 @@ class BP_Moderation {
 	/**
 	 * Function to delete Moderation.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool $force_all Should delete all reported entry.
 	 *
@@ -1323,7 +1323,7 @@ class BP_Moderation {
 	/**
 	 * Function to delete Moderation report.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool $force_all Should delete all reported entry.
 	 *
@@ -1356,7 +1356,7 @@ class BP_Moderation {
 	/**
 	 * Unction to delete Moderation meta.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $moderation_id Moderation Report ID.
 	 *
@@ -1379,7 +1379,7 @@ class BP_Moderation {
 	/**
 	 * Un-hide related content of report entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool $force_all Should delete all reported entry.
 	 */
@@ -1388,7 +1388,7 @@ class BP_Moderation {
 		/**
 		 * Remove related content of reported item from hidden list.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -1400,7 +1400,7 @@ class BP_Moderation {
 	/**
 	 * Delete record by moderation_id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $moderation_id Moderation moderation_id.
 	 */

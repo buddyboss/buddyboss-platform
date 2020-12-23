@@ -5,7 +5,7 @@
  * This template is used by bp_activity_comments() functions to show
  * each activity.
  *
- * @version BuddyBoss 2.0.0
+ * @version BuddyBoss 1.5.6
  */
 $is_user_blocked = $is_user_suspended = false;
 if ( bp_is_active( 'moderation' ) ) {

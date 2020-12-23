@@ -5456,7 +5456,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 /**
  * Return the link to report activity
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args Arguments
  *
@@ -5484,7 +5484,7 @@ function bp_activity_get_report_link( $args = array() ) {
 	/**
 	 * Filter Activity report link
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	return apply_filters( 'bp_activity_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
 }
@@ -5492,7 +5492,7 @@ function bp_activity_get_report_link( $args = array() ) {
 /**
  * Return the link to report activity activity
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args Arguments
  *
@@ -5520,7 +5520,7 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 	/**
 	 * Filter Activity comment report link
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
 }

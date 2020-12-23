@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Groups Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Groups.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 		parent::$moderation[ self::$moderation_type ] = self::class;
@@ -63,7 +63,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
 	 *
@@ -80,7 +80,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner ids.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $group_id Group id.
 	 *
@@ -95,7 +95,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -110,7 +110,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Update where query remove hidden/blocked user's groups
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where groups Where sql.
 	 * @param object $suspend suspend object.
@@ -131,7 +131,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Validate the group is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $group    Current group object.
@@ -150,7 +150,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Function to restrict private group report button for it's member only.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args    report button arguments.
 	 * @param int   $item_id group id.
@@ -172,7 +172,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the group is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.

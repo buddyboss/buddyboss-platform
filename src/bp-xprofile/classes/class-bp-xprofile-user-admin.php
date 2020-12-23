@@ -492,7 +492,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		/**
 		 * Render the fallback metabox in case a user has been marked as a suspended.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param WP_User|null $user The WP_User object for the user being edited.
 		 */

@@ -450,7 +450,7 @@ class BP_Invitation {
 		/**
 		 * Filters the Where SQL statement for group invitation .
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
@@ -785,7 +785,7 @@ class BP_Invitation {
 		/**
 		 * Filters the join SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r        Array of parsed arguments for the get method.
 		 * @param array $from_sql form  SQL statement.
@@ -858,7 +858,7 @@ class BP_Invitation {
 		/**
 		 * Filters the join SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r        Array of parsed arguments for the get method.
 		 * @param array $from_sql form  SQL statement.

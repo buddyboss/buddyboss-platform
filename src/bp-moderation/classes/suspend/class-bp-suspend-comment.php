@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Comment Class
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Comment.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Comment constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 		$this->item_type = self::$type;
@@ -62,7 +62,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id Member id.
 	 *
@@ -85,7 +85,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $comment_id    comment id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -126,7 +126,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $comment_id    comment id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -180,7 +180,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment text for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string          $comment_text Text of the current comment.
 	 * @param WP_Comment|null $comment      The comment object. Null if not found.
@@ -202,7 +202,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment author link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $return     The HTML-formatted comment author link.
 	 *                           Empty for an invalid URL.
@@ -223,7 +223,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment author for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $author     The comment author's username.
 	 * @param int    $comment_id The comment ID.
@@ -242,7 +242,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string     $link    The comment permalink with '#comment-$id' appended.
 	 * @param WP_Comment $comment The current comment object.
@@ -265,7 +265,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment date for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string|int $date    Formatted date string or Unix timestamp.
 	 * @param string     $format  The format of the date.
@@ -289,7 +289,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment time for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string|int $date      The comment time, formatted as a date string or Unix timestamp.
 	 * @param string     $format    Date format.
@@ -315,7 +315,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment reply link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string     $link    The HTML markup for the comment reply link.
 	 * @param array      $args    An array of arguments overriding the defaults.
@@ -339,7 +339,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment edit link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $link       Anchor tag for the edit link.
 	 * @param int    $comment_id Comment ID.
@@ -358,7 +358,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $comment_id Comment ID.
 	 * @param array $args       parent args.
@@ -380,7 +380,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Fires immediately after a comment is inserted into the database.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int        $comment_id       The comment ID.
 	 * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
@@ -412,7 +412,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the post comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $comment_id The comment ID.
 	 */

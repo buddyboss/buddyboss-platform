@@ -3687,7 +3687,7 @@ function bp_document_is_activity_comment_document( $document ) {
 /**
  * Function to get document report link
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args button arguments.
  *

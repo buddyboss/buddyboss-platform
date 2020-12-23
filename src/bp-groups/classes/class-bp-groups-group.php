@@ -232,7 +232,7 @@ class BP_Groups_Group {
 		/**
 		 * Pre validate the group before fetch.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param boolean $validate Whether to check the group is valid or not.
 		 * @param object  $group    Group object.
@@ -1354,7 +1354,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-         * @since BuddyBoss 2.0.0
+         * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
@@ -1370,7 +1370,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the From SQL statement.
 		 *
-         * @since BuddyBoss 2.0.0
+         * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r    Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.

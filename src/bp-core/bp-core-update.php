@@ -1132,7 +1132,7 @@ function bp_update_to_1_5_5() {
 /**
  * Create Moderation emails.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bb_update_to_1_5_6() {
 	bp_core_install_moderation_emails();

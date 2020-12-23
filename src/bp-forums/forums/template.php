@@ -1023,7 +1023,7 @@ function bbp_get_forum_subscription_link( $args = array() ) {
 /**
  * Output the forum report link
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  bbp_get_forum_report_link()
  */
@@ -1034,7 +1034,7 @@ function bbp_forum_report_link( $args = array() ) {
 /**
  * Get the forum report link
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  bbp_parse_args()
  * @uses  apply_filters() Calls 'bbp_get_forum_report_link'
