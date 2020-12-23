@@ -11294,6 +11294,10 @@ h2.bbp-form-title.entry-title {
   opacity: 0.7;
 }
 
+.bs-reply-header.bs-reply-suspended-header .bp-suspended-avatar {
+  min-width: 48px;
+}
+
 .bbp-reply-content.bs-forum-suspended-content {
   opacity: 0.7;
 }
