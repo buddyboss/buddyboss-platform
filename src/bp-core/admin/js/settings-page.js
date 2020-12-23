@@ -1106,6 +1106,7 @@
 			// Show the confirmation popup when user clicks single BB component disable link.
 			$( document ).on( 'click', '.bp-show-deactivate-popup a', function ( event ) {
 				event.preventDefault();
+				$( '#bp-hello-container' ).find( '.bp-hello-content' ).empty();
 				$( '#bp-hello-backdrop' ).show();
 				$( '#bp-hello-container' ).show().addClass('deactivation-popup');
 				$( '#bp-hello-container' ).find( '.component-deactivate' ).attr( 'data-redirect', $( this ).attr( 'href' ) );
