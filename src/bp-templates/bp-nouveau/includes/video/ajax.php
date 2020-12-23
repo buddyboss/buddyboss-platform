@@ -110,6 +110,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'video_thumbnail_save' => array(
+					'function' => 'bp_nouveau_ajax_video_thumbnail_save',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1335,4 +1341,51 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 		)
 	);
 
+}
+
+
+/**
+ * Save the video thumbnail.
+ */
+function bp_nouveau_ajax_video_thumbnail_save() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_video';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$thumbnail           = filter_input( INPUT_POST, 'video_thumbnail', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
+	$pre_selected_id     = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
+
+	if ( $video_attachment_id && $thumbnail ) {
+		$pre_selected_id = current( $thumbnail );
+		$pre_selected_id = $pre_selected_id['id'];
+		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
+	} elseif ( $video_attachment_id && $thumbnail ) {
+		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
+	}
+
+	$thumbnail_url = wp_get_attachment_image_url( $pre_selected_id, 'full' );
+
+	wp_send_json_success(
+		array(
+			'thumbnail' => $thumbnail_url,
+		)
+	);
 }
