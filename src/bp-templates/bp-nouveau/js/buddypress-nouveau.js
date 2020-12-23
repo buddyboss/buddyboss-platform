@@ -1762,40 +1762,42 @@ window.bp = window.bp || {};
 			}
 		},
 		reportPopUp: function () {
-			var _this = this;
-			$( '.report-content, .block-member' ).magnificPopup( {
-				type: 'inline',
-				midClick: true,
-				callbacks: {
-					open: function () {
-						var contentId = this.currItem.el.data( 'bp-content-id' );
-						var contentType = this.currItem.el.data( 'bp-content-type' );
-						var nonce = this.currItem.el.data( 'bp-nonce' );
-						if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
-							$( document ).find( '.bp-report-form-err' ).empty();
-							_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
-						}
-					}
-				}
-			} );
-
-			$( '.mass-block-member' ).magnificPopup( {
-				type: 'inline',
-				midClick: true,
-				callbacks: {
-					change: function () {
-						var _self = this;
-						setTimeout( function () {
-							var contentId = _self.currItem.el.data( 'bp-content-id' );
-							var contentType = _self.currItem.el.data( 'bp-content-type' );
-							var nonce = _self.currItem.el.data( 'bp-nonce' );
+			if( $('.report-content, .block-member, .mass-block-member').length > 0 ) {
+				var _this = this;
+				$( '.report-content, .block-member' ).magnificPopup( {
+					type: 'inline',
+					midClick: true,
+					callbacks: {
+						open: function () {
+							var contentId = this.currItem.el.data( 'bp-content-id' );
+							var contentType = this.currItem.el.data( 'bp-content-type' );
+							var nonce = this.currItem.el.data( 'bp-nonce' );
 							if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+								$( document ).find( '.bp-report-form-err' ).empty();
 								_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
 							}
-						}, 1 );
+						}
 					}
-				}
-			} );
+				} );
+
+				$( '.mass-block-member' ).magnificPopup( {
+					type: 'inline',
+					midClick: true,
+					callbacks: {
+						change: function () {
+							var _self = this;
+							setTimeout( function () {
+								var contentId = _self.currItem.el.data( 'bp-content-id' );
+								var contentType = _self.currItem.el.data( 'bp-content-type' );
+								var nonce = _self.currItem.el.data( 'bp-nonce' );
+								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+								}
+							}, 1 );
+						}
+					}
+				} );
+			}
 		},
 		reportActions: function () {
 			var _this = this;
