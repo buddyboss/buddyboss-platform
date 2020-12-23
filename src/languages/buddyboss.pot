@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-18 05:38:51+00:00\n"
+"POT-Creation-Date: 2020-12-23 08:58:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -755,7 +755,7 @@ msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:2311
-#: bp-groups/bp-groups-activity.php:468
+#: bp-groups/bp-groups-activity.php:476
 msgid ""
 "Allowed time for editing this activity is passed already, you can not edit "
 "now."
@@ -15170,7 +15170,7 @@ msgstr ""
 msgid "%1$s created the group %2$s"
 msgstr ""
 
-#: bp-groups/bp-groups-activity.php:140 bp-groups/bp-groups-activity.php:620
+#: bp-groups/bp-groups-activity.php:140 bp-groups/bp-groups-activity.php:628
 #: cli/components/activity.php:957
 msgid "%1$s joined the group %2$s"
 msgstr ""
@@ -21355,21 +21355,22 @@ msgstr ""
 msgid "View all"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:370
+#: bp-search/classes/class-bp-search.php:373
+#. translators: %s: search term
 msgid "Nothing found for '%s'"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:596
+#: bp-search/classes/class-bp-search.php:602
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-search/classes/class-bp-search.php:612
+#: bp-search/classes/class-bp-search.php:618
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:850
+#: bp-search/classes/class-bp-search.php:856
 msgid "All Results"
 msgstr ""
 
