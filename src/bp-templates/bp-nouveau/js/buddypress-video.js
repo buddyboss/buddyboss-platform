@@ -45,6 +45,11 @@ window.bp = window.bp || {};
 			this.video_dropzone_obj = null;
 			this.dropzone_video     = [];
 			this.video_album_id     = typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
+
+			if ( ! this.video_album_id && parseInt( BP_Nouveau.media.current_album ) > 0 ) {
+				this.video_album_id = parseInt( BP_Nouveau.media.current_album );
+			}
+
 			this.video_group_id     = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 			this.current_tab        = bodySelector.hasClass( 'single-topic' ) || bodySelector.hasClass( 'single-forum' ) ? false : 'bp-video-dropzone-content';
 
@@ -203,14 +208,32 @@ window.bp = window.bp || {};
 						success: function ( response ) {
 							if ( response.success ) {
 
-								// It's the very first media, let's make sure the container can welcome it!
-								if ( ! $( '#video-stream ul.video-list' ).length ) {
-									$( '#video-stream' ).html( $( '<ul></ul>' ).addClass( 'video-list item-list bp-list bb-video-list grid' ) );
-									$( '.bb-videos-actions' ).show();
-								}
+								if ( $( '#bp-media-single-album' ).length ){
+									//Prepend in Single Album
 
-								// Prepend the activity.
-								bp.Nouveau.inject( '#video-stream ul.video-list', response.data.video, 'prepend' );
+									if ( !$( '#media-stream ul.media-list' ).length ) {
+										$( '#media-stream' ).html( $( '<ul></ul>' ).
+											addClass( 'media-list item-list bp-list bb-photo-list grid' ) );
+										$( '.bb-videos-actions' ).show();
+									}
+
+									// Prepend the activity.
+									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.video, 'prepend' );
+
+								} else {
+
+
+									// It's the very first media, let's make sure the container can welcome it!
+									if ( !$( '#video-stream ul.video-list' ).length ) {
+										$( '#video-stream' ).html( $( '<ul></ul>' ).
+											addClass( 'video-list item-list bp-list bb-video-list grid' ) );
+										$( '.bb-videos-actions' ).show();
+									}
+
+									// Prepend the activity.
+									bp.Nouveau.inject( '#video-stream ul.video-list', response.data.video, 'prepend' );
+
+								}
 
 								for ( var i = 0; i < self.dropzone_video.length; i++ ) {
 									self.dropzone_video[ i ].saved = true;
