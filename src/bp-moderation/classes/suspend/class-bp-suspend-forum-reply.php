@@ -422,6 +422,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * @param int     $post_id Post ID.
 	 */
 	public function sync_moderation_data_on_delete( $post_id ) {
+
 		if ( empty( $post_id ) ) {
 			return;
 		}
