@@ -422,7 +422,11 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
 	 */
-	public function sync_moderation_data_on_delete( $post_id, $post ) {
+	public function sync_moderation_data_on_delete( $post_id, $post = null ) {
+
+		if ( empty( $post ) ) {
+			$post = get_post( $post_id );
+		}
 
 		if ( empty( $post_id ) || bbp_get_reply_post_type() !== $post->post_type ) {
 			return;
