@@ -128,8 +128,7 @@ window.bp = window.bp || {};
 		submitVideoThumbnail: function ( event ) {
 			var self = this,
 				target = $( event.currentTarget ),
-				data,
-				currentPopup = $( event.currentTarget ).closest( '.bp-video-thumbnail-uploader' );
+				data;
 			event.preventDefault();
 
 			if ( target.hasClass( 'saving' ) ) {

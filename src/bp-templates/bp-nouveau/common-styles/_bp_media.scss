@@ -707,6 +707,7 @@
 	.video-js {
 		border-radius: 4px;
 		overflow: hidden;
+		max-width: 100%;
 
 		.vjs-control-bar {
 			bottom: 15px;
