@@ -26,19 +26,22 @@
 						</a>
 					</header>
 
-					<div class="bb-dropzone-wrap bp-video-thumbnail-upload-tab-content bp-upload-tab-content bp-video-thumbnail-dropzone-content" id="">
-						<div class="bb-field-wrap">
-							<div class="video-thumbnail-uploader-wrapper">
-								<div class="dropzone video-thumbnail-uploader-dropzone-select" id=""></div>
+					<div class="video-thumbnail-content">
+
+						<div class="bb-dropzone-wrap bp-video-thumbnail-upload-tab-content bp-upload-tab-content bp-video-thumbnail-dropzone-content" id="">
+							<div class="bb-field-wrap">
+								<div class="video-thumbnail-uploader-wrapper">
+									<div class="dropzone video-thumbnail-uploader-dropzone-select" id=""></div>
+								</div>
 							</div>
 						</div>
+
+
+						<div class="bp-video-thumbnail-auto-generated">
+							<ul class="video-thumb-list loading"></ul>
+						</div>
+
 					</div>
-
-
-					<div class="bp-video-thumbnail-auto-generated">
-						<ul class="video-thumb-list"></ul>
-					</div>
-
 
 					<input type="hidden" value="" class="video-edit-thumbnail-hidden-video-id">
 					<input type="hidden" value="" class="video-edit-thumbnail-hidden-attachment-id">
