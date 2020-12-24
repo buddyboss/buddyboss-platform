@@ -232,5 +232,11 @@ class BP_Moderation_Component extends BP_Component {
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
 	 */
 	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init(
+			array(
+				'BP_REST_Moderation_Endpoint',
+				'BP_REST_Moderation_Report_Endpoint',
+			)
+		);
 	}
 }
