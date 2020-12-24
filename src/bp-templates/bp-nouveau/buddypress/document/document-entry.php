@@ -290,7 +290,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 						    if ( $is_comment_doc ) {
 							    ?>
                                 <li class="move_file disabled-move" data-balloon-pos="down"
-	                                data-balloon="Documents added in comment cannot be moved">
+	                                data-balloon="<?php esc_html_e( 'Documents added in comment cannot be moved', 'buddyboss' ); ?>">
                                     <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
                                 </li>
 							    <?php
