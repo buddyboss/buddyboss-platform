@@ -58,7 +58,7 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 							if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 								if ( $is_comment_pic ) {
 									?>
-										<li class="move_file media-action-class move-disabled" data-balloon-pos="down" data-balloon="Photos added in comment cannot be moved">
+										<li class="move_file media-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photos added in comment cannot be moved', 'buddyboss' ); ?>">
 											<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 										</li>
 										<?php
