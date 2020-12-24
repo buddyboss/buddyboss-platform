@@ -472,6 +472,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			'type' => array(
 				'description'       => __( 'Filter by.. active(Last Active), popular(Most Members), newest(Newly Created), alphabetical(Alphabetical)', 'buddyboss' ),
 				'type'              => 'string',
+				'default'           => 'active',
 				'enum'              => array( 'active', 'popular', 'newest', 'alphabetical' ),
 				'validate_callback' => 'rest_validate_request_arg',
 			),
