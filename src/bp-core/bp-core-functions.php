@@ -2655,9 +2655,9 @@ function bp_core_get_components( $type = 'all' ) {
 			'deactivation_message' => __( '<p>Please confirm you want to deactivate the Moderation component.</p>
 			<h4>On Deactivation:</h4>
 			<ul>
-			<li>- All suspended members will regain permission to login and their content will be unhidden</li>
-			<li>- Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.</li>
-			<li>- All hidden content will be unhidden.</li>
+				<li>All suspended members will regain permission to login and their content will be unhidden</li>
+				<li>Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.</li>
+				<li>All hidden content will be unhidden.</li>
 			</ul>
 			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
 		),
@@ -3925,7 +3925,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}'>View Reports</a>", 'buddyboss' ),
+			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}' style='color: #007CFF;font-size: 14px;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px;display: inline-block;'>View Reports</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
 		),
@@ -3933,7 +3933,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}'>View Reports</a>", 'buddyboss' ),
+			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}' style='font-size: 14px;color: #007CFF;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px;display: inline-block;'>View Reports</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
 		),

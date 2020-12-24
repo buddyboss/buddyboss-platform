@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-23 14:33:46+00:00\n"
+"POT-Creation-Date: 2020-12-24 03:43:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -541,7 +541,7 @@ msgstr ""
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:45
 #: bp-forums/replies/template.php:1842 bp-groups/bp-groups-admin.php:1054
 #: bp-members/classes/class-bp-members-admin.php:2515
-#: bp-moderation/screens/block-member-form.php:77
+#: bp-moderation/screens/block-member-form.php:75
 #: bp-moderation/screens/content-report-form.php:60
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:77
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
@@ -4412,8 +4412,8 @@ msgstr ""
 
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:44
 msgid ""
-"Please activate moderation module <a href=\"%s\" >here</a> to mark member "
-"spam/suspend."
+"To suspend members who are creating spam in your network, activate the <a "
+"href=\"%s\" >Moderation</a> component."
 msgstr ""
 
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:35
@@ -5153,17 +5153,19 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2655
 msgid ""
-"<p>Are you sure you want to deactivate Moderation component?</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
-"\t\t\t<li>- All suspended members will be allowed to login and content will "
-"be open.</li>\n"
-"\t\t\t<li>- Members on the network will not be able to block each other. "
-"Blocked member will be open again for members on the network.</li>\n"
-"\t\t\t<li>- Hidden content will start to show.</li>\n"
-"\t\t\t</ul>\n"
-"\t\t\t<p>Note: Moderation data will not be deleted. Activate component "
-"again to enable suspension, block and hide content again.</p>"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
+"\t\t\t\t<li>All suspended members will regain permission to login and their "
+"content will be unhidden</li>\r\n"
+"\t\t\t\t<li>Members on the network will no longer be able to block other "
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
+"\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
+"Moderation component. On reactivation, members who have previously been "
+"suspended or blocked will once again have their access removed or limited. "
+"Content that was previously unhidden will be hidden again.</p>"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2665 bp-search/bp-search-settings.php:24
@@ -5869,26 +5871,50 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:3926
 #. translators: do not remove {} brackets or translate its contents.
-msgid "[{{{site.name}}}] Content auto-hidden on reporting"
+msgid "[{{{site.name}}}] Content has been automatically hidden"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3928 bp-core/bp-core-functions.php:3930
+#: bp-core/bp-core-functions.php:3928
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{content.type}} has been auto-hidden because it has been reported "
-"{{content.timesreported}} time(s) by the members on the network."
+"<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically "
+"hidden from your network as it has been reported {{timesreported}} time(s). "
+"\n"
+"\n"
+" <a href='{{{reportlink}}}'>View Reports</a>"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:3930
+#. translators: do not remove {} brackets or translate its contents.
+msgid ""
+"{{content.type}} [{{content.link}}] has been automatically hidden from your "
+"network as it has been reported {{timesreported}} time(s). \n"
+"\n"
+" View Reports: {{reportlink}}"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3934
 #. translators: do not remove {} brackets or translate its contents.
-msgid "[{{{site.name}}}] Member suspended on blocking"
+msgid "[{{{site.name}}}] {{user.name}} has been suspended"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3936 bp-core/bp-core-functions.php:3938
+#: bp-core/bp-core-functions.php:3936
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{user.name}} has been auto-suspended because they have been blocked by "
-"other members at least {{user.timesblocked}} time(s)."
+"<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically "
+"suspended from your network as they have been reported {{timesblocked}} "
+"time(s). \n"
+"\n"
+" <a href='{{{reportlink}}}'>View Reports</a>"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:3938
+#. translators: do not remove {} brackets or translate its contents.
+msgid ""
+"{{user.name}} [{{user.link}}] has been automatically suspended from your "
+"network as they have been reported {{user.timesblocked}} time(s). \n"
+"\n"
+" View Reports: {{reportlink}}"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3974
@@ -6040,11 +6066,15 @@ msgid "You will no longer receive emails when someone sends you a group message.
 msgstr ""
 
 #: bp-core/bp-core-functions.php:4122
-msgid "Content auto-hidden on reporting from members on the network."
+msgid ""
+"When content is automatically hidden due to reaching the reporting "
+"threshold."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:4127
-msgid "Member suspended on blocking from other members on the network."
+msgid ""
+"When a member has been automatically suspended due to reaching the "
+"reporting threshold."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:4187 bp-core/bp-core-functions.php:4193
@@ -6736,15 +6766,18 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:123
 msgid ""
-"Are you sure? Suspending selected member will kill their existing login "
-"session, not allow them to login anymore and their generated content will "
-"be hidden site wide in few minutes"
+"Please confirm you want to suspend this member. Members who are suspended "
+"will be logged out and not allowed to login again. Their content will be "
+"hidden from all members in your network. Please allow a few minutes for "
+"this process to complete."
 msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:124
 msgid ""
-"Are you sure? Unsuspending selected member will allow them to login again "
-"and their generated content will be visible back again in few minutes"
+"Please confirm you want to unsuspend this member. Members who are "
+"unsuspended will be allowed to login again, their content will not be "
+"hidden anymmore from members in your network. Please allow a few minutes "
+"for this process to complete."
 msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:314
@@ -7834,13 +7867,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -14312,11 +14345,11 @@ msgid "You must be logged in to create new discussions."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:39
+#: bp-moderation/classes/class-bp-moderation-comment.php:110
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:196
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:42
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1019
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2092
-msgid "Hidden content from suspended member."
+msgid "This content has been hidden as the member is suspended."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:41
@@ -14324,13 +14357,12 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:44
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1021
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2094
-msgid "Hidden content from blocked member."
+msgid "This content has been hidden as you have blocked this member."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:43
-#: bp-moderation/classes/class-bp-moderation-comment.php:110
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:46
-msgid "Hidden content from site admin."
+msgid "This content has been hidden from site admin."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-search-forum.php:15
@@ -19936,7 +19968,7 @@ msgid "(less than 24 hours ago)"
 msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:2514
-#: bp-moderation/screens/block-member-form.php:78
+#: bp-moderation/screens/block-member-form.php:76
 msgid "Confirm"
 msgstr ""
 
@@ -21294,11 +21326,15 @@ msgid "Messages <span class=\"%1$s\">%2$s</span>"
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:44
-msgid "Are you sure? It will hide selected content for everybody in the network"
+msgid ""
+"Please confirm you want to hide this content. It will be hidden from all "
+"members in your network."
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:45
-msgid "Are you sure? It will unhide selected content for everybody in the network"
+msgid ""
+"Please confirm you want to unhide this content. It will be open for all "
+"members in your network."
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:46
@@ -21468,6 +21504,7 @@ msgid "Block"
 msgstr ""
 
 #: bp-moderation/bp-moderation-functions.php:242
+#: bp-moderation/screens/content-report-form.php:61
 msgid "Report"
 msgstr ""
 
@@ -21528,7 +21565,7 @@ msgid ""
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:240
-msgid "Notify administrators when members have been auto-suspended."
+msgid "Notify administrators when members have been automatically suspended."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:260
@@ -21541,13 +21578,13 @@ msgid "Auto hide %s after %s reports."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:322
-msgid "Notify administrators when content has been auto-hidden."
+msgid "Notify administrators when content has automatically hidden."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:336
 msgid ""
-"<a href=\"%s\">Manage</a> categories for members to report content in the "
-"frontend."
+"<a href=\"%s\">Manage</a> the categories members see when reporting content "
+"in the frontend."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-abstract.php:133
@@ -21564,7 +21601,7 @@ msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-comment.php:132
 #: bp-moderation/classes/class-bp-moderation-list-table.php:231
-#: bp-moderation/classes/class-bp-moderation-members.php:224
+#: bp-moderation/classes/class-bp-moderation-members.php:226
 #: bp-moderation/screens/single/admin/report-single.php:26
 #: bp-moderation/screens/single/admin/report-single.php:153
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:12
@@ -21740,12 +21777,12 @@ msgid "View Reports"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:518
+#: bp-moderation/screens/single/admin/report-single.php:125
 msgid "View Content"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:620
 #: bp-moderation/classes/class-bp-moderation-list-table.php:632
-#: bp-moderation/screens/single/admin/report-single.php:143
 #: bp-moderation/screens/single/admin/report-single.php:175
 #. translators: accessibility text
 msgid "%s time"
@@ -21786,7 +21823,7 @@ msgstr ""
 
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:217
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:236
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:598
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:601
 msgid "Suspended Member"
 msgstr ""
 
@@ -21802,7 +21839,7 @@ msgid "Block Member"
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:22
-msgid "Are you sure you want to block selected member?"
+msgid "Please confirm you want to block this member."
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:24
@@ -21814,45 +21851,37 @@ msgid "See blocked member's posts"
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:36
-msgid "Mention blocked member"
+msgid "Mention this member in posts"
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:42
-msgid "Invite blocked member in groups"
+msgid "Invite this member to groups"
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:49
-msgid "Message blocked member"
+msgid "Message this member"
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:56
-msgid "Add blocked member in your connection"
+msgid "Add this member as a connection"
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:63
-msgid "Note: "
+msgid "Please note: "
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:67
 msgid ""
-"If you're connected, this action will remove connection with the blocked "
-"member."
+"This action will also remove this member from your connections and send a "
+"report to the site admin."
 msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:71
-msgid "All member specific content will be hidden for you in a few mins."
-msgstr ""
-
-#: bp-moderation/screens/block-member-form.php:73
-msgid "This will also send block report to site admin of the site."
+msgid "Please allow a few minutes for this process to complete."
 msgstr ""
 
 #: bp-moderation/screens/content-report-form.php:16
 msgid "Report Content"
-msgstr ""
-
-#: bp-moderation/screens/content-report-form.php:61
-msgid "Send Report"
 msgstr ""
 
 #: bp-moderation/screens/single/admin/report-single.php:76
@@ -21865,13 +21894,9 @@ msgstr ""
 msgid "Permalink"
 msgstr ""
 
-#: bp-moderation/screens/single/admin/report-single.php:125
-msgid "Click here to View Content"
-msgstr ""
-
 #: bp-moderation/screens/single/admin/report-single.php:136
 #. translators: accessibility text
-msgid "Reported (Count)"
+msgid "Number of Reports"
 msgstr ""
 
 #: bp-moderation/screens/single/admin/report-single.php:262
@@ -25210,6 +25235,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1010
 msgid "sent a gif"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1019
+msgid "Hidden content from suspended member."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1143

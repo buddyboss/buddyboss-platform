@@ -2271,6 +2271,15 @@ body .section-repair_community .settings fieldset .checkbox label code {
 		height: auto;
 		padding: 20px 23px;
 
+		h4 {
+			margin-bottom: 0;
+		}
+
+		ul {
+			margin-left: 17px;
+			list-style-type: disc;
+		}
+
 		> p:first-child {
 			margin-top: 0;
 		}

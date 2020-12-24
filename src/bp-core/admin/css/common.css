@@ -2152,6 +2152,15 @@ body .section-repair_community .settings fieldset .checkbox label code {
   padding: 20px 23px;
 }
 
+#bp-hello-container.deactivation-popup .bp-hello-content h4 {
+  margin-bottom: 0;
+}
+
+#bp-hello-container.deactivation-popup .bp-hello-content ul {
+  margin-left: 17px;
+  list-style-type: disc;
+}
+
 #bp-hello-container.deactivation-popup .bp-hello-content > p:first-child {
   margin-top: 0;
 }
