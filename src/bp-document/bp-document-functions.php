@@ -6,8 +6,8 @@
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss\Document\Functions
  * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Document\Functions
  */
 
 // Exit if accessed directly.
@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                            for all objects, ignoring the specified object_id. Otherwise,
  *                            only delete matching metadata entries for the specified
  *                            document item. Default: false.
+ *
  * @return bool True on success, false on failure.
  */
 function bp_document_delete_meta( $document_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
@@ -181,7 +182,7 @@ function bp_document_folder_delete_meta( $folder_id, $meta_key = '', $meta_value
  *
  * @since BuddyBoss 1.4.0
  *
- * @param int    $folder_id ID of the document folder item whose metadata is being requested.
+ * @param int    $folder_id   ID of the document folder item whose metadata is being requested.
  * @param string $meta_key    Optional. If present, only the metadata matching
  *                            that meta key will be returned. Otherwise, all metadata for the
  *                            document folder item will be fetched.
@@ -200,10 +201,10 @@ function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = 
 	 *
 	 * @since BuddyBoss 1.4.0
 	 *
-	 * @param mixed  $retval      The meta values for the document folder item.
+	 * @param mixed  $retval    The meta values for the document folder item.
 	 * @param int    $folder_id ID of the document folder item.
-	 * @param string $meta_key    Meta key for the value being requested.
-	 * @param bool   $single      Whether to return one matched meta key row or all.
+	 * @param string $meta_key  Meta key for the value being requested.
+	 * @param bool   $single    Whether to return one matched meta key row or all.
 	 */
 	return apply_filters( 'bp_document_folder_get_meta', $retval, $folder_id, $meta_key, $single );
 }
@@ -213,7 +214,7 @@ function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = 
  *
  * @since BuddyBoss 1.4.0
  *
- * @param int    $folder_id ID of the document folder item whose metadata is being updated.
+ * @param int    $folder_id   ID of the document folder item whose metadata is being updated.
  * @param string $meta_key    Key of the metadata being updated.
  * @param mixed  $meta_value  Value to be set.
  * @param mixed  $prev_value  Optional. If specified, only update existing metadata entries
@@ -235,7 +236,7 @@ function bp_document_folder_update_meta( $folder_id, $meta_key, $meta_value, $pr
  *
  * @since BuddyBoss 1.4.0
  *
- * @param int    $folder_id ID of the document folder item.
+ * @param int    $folder_id   ID of the document folder item.
  * @param string $meta_key    Metadata key.
  * @param mixed  $meta_value  Metadata value.
  * @param bool   $unique      Optional. Whether to enforce a single metadata value for the
@@ -358,6 +359,7 @@ function bp_document_get( $args = '' ) {
 
 			'meta_query_document' => false,         // Filter by activity meta. See WP_Meta_Query for format.
 			'meta_query_folder'   => false,          // Filter by activity meta. See WP_Meta_Query for format.
+			'moderation_query'    => true,         // Filter for exclude moderation query.
 		),
 		'document_get'
 	);
@@ -382,6 +384,7 @@ function bp_document_get( $args = '' ) {
 			'user_directory'      => $r['user_directory'],
 			'meta_query_document' => $r['meta_query_document'],
 			'meta_query_folder'   => $r['meta_query_folder'],
+			'moderation_query'    => $r['moderation_query'],
 		)
 	);
 
@@ -3681,4 +3684,33 @@ function bp_document_is_activity_comment_document( $document ) {
 
 	return $is_comment_document;
 
+}
+
+/**
+ * Function to get document report link
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args button arguments.
+ *
+ * @return mixed|void
+ */
+function bp_document_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$report_btn = bp_moderation_get_report_button( array(
+		'id'                => 'document_report',
+		'component'         => 'moderation',
+		'must_be_logged_in' => true,
+		'button_attr'       => array(
+			'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
+			'data-bp-content-type' => BP_Moderation_Document::$moderation_type,
+		),
+	),
+		true );
+
+	return apply_filters( 'bp_document_get_report_link', $report_btn, $args );
 }
