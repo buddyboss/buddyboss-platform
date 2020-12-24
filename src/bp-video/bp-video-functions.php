@@ -837,7 +837,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 				try {
 					$saved = $thumb_frame->save( $thumbnail );
 				} catch ( Exception $saved ) {
-					$error = $saved->message;
+					$error = 'error';
 				}
 
 				unset( $thumb_ffmpeg );
@@ -3179,5 +3179,44 @@ function bp_video_upload_dir_script( $pathdata ) {
 function bp_video_disable_thumbnail_images( $sizes ) {
 
 	return array_intersect_key( $sizes, array_flip( array( 'bp-video-thumbnail', 'bp-activity-video-thumbnail' ) ) );
+
+}
+
+/**
+ * Check given video is activity comment video.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param $video
+ *
+ * @return bool
+ */
+function bp_video_is_activity_comment_video( $video ) {
+
+	$is_comment_video = false;
+	if ( is_object( $video ) ) {
+		$video_activity_id = $video->activity_id;
+	} else {
+		$video             = new BP_Video( $video );
+		$video_activity_id = $video->activity_id;
+	}
+
+	if ( bp_is_active( 'activity' ) ) {
+		$activity = new BP_Activity_Activity( $video_activity_id );
+
+		if ( $activity ) {
+			if ( $activity->secondary_item_id ) {
+				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+				if ( $load_parent_activity ) {
+					if ( 'activity_comment' === $load_parent_activity->type ) {
+						$is_comment_video = true;
+					}
+				}
+			}
+		}
+	} elseif ( $video_activity_id ) {
+		$is_comment_video = true;
+	}
+	return $is_comment_video;
 
 }

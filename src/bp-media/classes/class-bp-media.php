@@ -959,6 +959,9 @@ class BP_Media {
 			$where_args[] = $wpdb->prepare( 'date_created = %s', $r['date_created'] );
 		}
 
+		// Delete the photo.
+		$where_args[] = $wpdb->prepare( 'type = %s', 'photo' );
+
 		// Bail if no where arguments.
 		if ( empty( $where_args ) ) {
 			return false;
@@ -1032,7 +1035,7 @@ class BP_Media {
 			}
 		}
 
-		// delete related activity
+		// delete related activity.
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
 
 			foreach ( $activity_ids as $activity_id ) {
