@@ -14,7 +14,7 @@
 				<div class="modal-container">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Block Member', 'buddyboss' ); ?></h4>
-						<button title="Close (Esc)" type="button" class="mfp-close"></button>
+						<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 					</header>
 
 					<div class="bb-report-type-wrp">

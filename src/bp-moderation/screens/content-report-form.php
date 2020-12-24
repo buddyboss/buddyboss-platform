@@ -14,7 +14,7 @@
 			<div class="modal-container">
 				<header class="bb-model-header">
 					<h4><?php esc_html_e( 'Report Content', 'buddyboss' ); ?></h4>
-					<button title="Close (Esc)" type="button" class="mfp-close"></button>
+					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 				</header>
 				<?php
 				$reports_terms = get_terms(
