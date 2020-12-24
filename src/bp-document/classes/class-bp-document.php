@@ -420,7 +420,7 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$where_conditions = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
+		$where_conditions = apply_filters( 'bp_document_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
 		if ( empty( $where_conditions ) ) {
 			$where_conditions['2'] = '2';
@@ -444,7 +444,7 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$join_sql = apply_filters( 'bp_document_get_join_sql_document', $join_sql, $r, $select_sql, $from_sql, $where_sql );
+		$join_sql = apply_filters( 'bp_document_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
 		// Sanitize page and per_page parameters.
 		$page     = absint( $r['page'] );
@@ -967,8 +967,8 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
-		$where_conditions_folder   = apply_filters( 'bp_document_get_where_conditions_folder', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
+		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
+		$where_conditions_folder   = apply_filters( 'bp_document_folder_get_where_conditions', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
 
 		// Join the where conditions together for document.
 		if ( ! empty( $scope_query_document['sql'] ) ) {
@@ -998,8 +998,8 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$join_sql_folder   = apply_filters( 'bp_document_get_join_sql_folder', $join_sql_folder, $r, $select_sql_folder, $from_sql_folder, $where_sql_folder );
-		$join_sql_document = apply_filters( 'bp_document_get_join_sql_document', $join_sql_document, $r, $select_sql_document, $from_sql_document, $where_sql_document );
+		$join_sql_folder   = apply_filters( 'bp_document_folder_get_join_sql', $join_sql_folder, $r, $select_sql_folder, $from_sql_folder, $where_sql_folder );
+		$join_sql_document = apply_filters( 'bp_document_get_join_sql', $join_sql_document, $r, $select_sql_document, $from_sql_document, $where_sql_document );
 
 		$retval = array(
 			'documents'      => null,
