@@ -1525,19 +1525,10 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 		// If spammed, create unspam link.
 		if ( ! bp_is_active( 'moderation' ) ) {
 			if ( bp_is_user_spammer( $user_id ) ) {
-				$url            = add_query_arg( array(
-						'action' => 'ham',
-						'user'   => $user_id,
-				),
-						$url );
-				$unspam_link    = wp_nonce_url( $url, 'bp-spam-user' );
-				$actions['ham'] = sprintf( '<a href="%1$s">%2$s</a>',
-						esc_url( $unspam_link ),
-						esc_html__( 'Not Spam', 'buddyboss' ) );
-
+				$actions['ham'] = sprintf( '<a class="bp-show-moderation-alert" href="javascript:void(0);" data-action="not-spam">%1$s</a>', esc_html__( 'Not Spam', 'buddyboss' ) );
 				// If not already spammed, create spam link.
 			} else {
-				$actions['spam'] = sprintf( '<a class="submitdelete bp-show-moderation-alert" href="javascript:void(0)">%1$s</a>', esc_html__( 'Spam', 'buddyboss' ) );
+				$actions['spam'] = sprintf( '<a class="submitdelete bp-show-moderation-alert" href="javascript:void(0);" data-action="spam">%1$s</a>', esc_html__( 'Spam', 'buddyboss' ) );
 			}
 		} else {
 			if ( bp_moderation_is_user_suspended( $user_id ) ) {
