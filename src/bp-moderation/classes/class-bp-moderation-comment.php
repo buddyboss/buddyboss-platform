@@ -261,7 +261,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$link = '';
-		} else {
+		} else if ( ! empty( $link ) ) {
 			$link .= bp_moderation_get_report_button(
 				array(
 					'id'                => 'comment_report',

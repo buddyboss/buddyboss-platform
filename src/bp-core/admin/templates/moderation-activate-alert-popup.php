@@ -13,8 +13,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="bp-hello-backdrop" style="display: none"></div>
-<div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title"
-style="display: none">
+<div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
 			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="left"
@@ -30,7 +29,7 @@ style="display: none">
 		</div>
 	</div>
 
-	<div class="bp-hello-content">
+    <div class="bp-hello-content">
 		<?php
 		$component_link = bp_get_admin_url(
 			add_query_arg(
@@ -40,10 +39,16 @@ style="display: none">
 				'admin.php'
 			)
 		);
-		printf(
-			__( 'To suspend members who are creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), 
-			$component_link
-		);
 		?>
-	</div>
+        <div class="bp-spam-action-msg" style="display: none">
+			<?php
+			printf( __( 'To suspend members who are creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
+			?>
+        </div>
+        <div class="bp-not-spam-action-msg" style="display: none;">
+	        <?php
+	        printf( __( 'To unsuspend members who were creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
+	        ?>
+        </div>
+    </div>
 </div>

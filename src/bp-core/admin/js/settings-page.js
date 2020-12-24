@@ -1099,7 +1099,15 @@
 
 			// Show the moderation activate popup when admin click spam user link.
 			$( document ).on( 'click', '.bp-show-moderation-alert', function () {
+				var ActionType = $(this).attr('data-action');
 				$( '#bp-hello-backdrop' ).show();
+				$( '#bp-hello-container' ).find( '.bp-spam-action-msg' ).hide();
+				$( '#bp-hello-container' ).find( '.bp-not-spam-action-msg' ).hide();
+				if( 'spam' === ActionType ){
+					$( '#bp-hello-container' ).find( '.bp-spam-action-msg' ).show();
+				}else if( 'not-spam' === ActionType ){
+					$( '#bp-hello-container' ).find( '.bp-not-spam-action-msg' ).show();
+				}
 				$( '#bp-hello-container' ).show().addClass('deactivation-popup');
 			} );
 
