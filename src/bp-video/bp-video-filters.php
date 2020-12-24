@@ -212,7 +212,7 @@ function bp_video_activity_append_video( $content, $activity ) {
 			?>
 				">
 				<?php
-				bp_get_template_part( 'media/media-move' );
+				bp_get_template_part( 'video/video-move' );
 				while ( bp_video() ) {
 					bp_the_video();
 					bp_get_template_part( 'video/activity-entry' );

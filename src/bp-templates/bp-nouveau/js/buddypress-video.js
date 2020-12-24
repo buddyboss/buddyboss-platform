@@ -1199,6 +1199,8 @@ window.bp = window.bp || {};
 
 			if ( $( event.currentTarget ).closest( '.activity-inner' ).length > 0 ) {
 				video_move_popup = $( event.currentTarget ).closest( '.activity-inner' );
+			} else if ( $( event.currentTarget ).closest( '#media-stream.media' ).length > 0 ) {
+				video_move_popup = $( event.currentTarget ).closest( '#media-stream.media' );
 			} else if ( $( event.currentTarget ).closest( '#video-stream.video' ).length > 0 ) {
 				video_move_popup = $( event.currentTarget ).closest( '#video-stream.video' );
 			} else if ( $( event.currentTarget ).closest( '.comment-item' ).length > 0 ) {
