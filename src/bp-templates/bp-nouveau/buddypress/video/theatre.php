@@ -8,7 +8,7 @@
  */
 
 ?>
-<div class="bb-media-model-wrapper bb-internal-model video media-theatre" style="display: none;"  id="buddypress">
+<div class="bb-media-model-wrapper bb-internal-model video video-theatre" style="display: none;"  id="buddypress">
 
 	<a data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Close', 'buddyboss' ); ?>" class="bb-close-media-theatre bb-close-model" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7"/></svg></a>
 

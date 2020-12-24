@@ -2823,6 +2823,7 @@ span.dashicons.dashicons-admin-file:before {
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list,
+#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list,
 #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list {
   position: relative;
   float: left;
@@ -2830,6 +2831,7 @@ span.dashicons.dashicons-admin-file:before {
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
 #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
   padding-bottom: 40px;
   max-height: 90vh;
@@ -2838,8 +2840,13 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .download-video,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media {
+#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video,
+#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-media,
+#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-video,
+#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
+#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video {
   position: absolute;
   bottom: 0;
   z-index: 999999;
@@ -2853,38 +2860,60 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
-.activity-media-description {
+.activity-media-description,
+.activity-video-description {
   margin-bottom: 10px;
 }
 
-.activity-media-description .bp-add-media-activity-description.show-edit {
+.activity-media-description .bp-add-media-activity-description.show-edit,
+.activity-media-description .bp-add-video-activity-description.show-edit,
+.activity-video-description .bp-add-media-activity-description.show-edit,
+.activity-video-description .bp-add-video-activity-description.show-edit {
   display: inline-block;
   margin-left: 10px;
 }
 
-.activity-media-description .bp-add-media-activity-description.show-edit .add {
+.activity-media-description .bp-add-media-activity-description.show-edit .add,
+.activity-media-description .bp-add-video-activity-description.show-edit .add,
+.activity-video-description .bp-add-media-activity-description.show-edit .add,
+.activity-video-description .bp-add-video-activity-description.show-edit .add {
   display: none;
 }
 
-.activity-media-description .bp-add-media-activity-description.show-edit .edit {
+.activity-media-description .bp-add-media-activity-description.show-edit .edit,
+.activity-media-description .bp-add-video-activity-description.show-edit .edit,
+.activity-video-description .bp-add-media-activity-description.show-edit .edit,
+.activity-video-description .bp-add-video-activity-description.show-edit .edit {
   display: inline-block;
 }
 
-.activity-media-description .bp-add-media-activity-description.show-add {
+.activity-media-description .bp-add-media-activity-description.show-add,
+.activity-media-description .bp-add-video-activity-description.show-add,
+.activity-video-description .bp-add-media-activity-description.show-add,
+.activity-video-description .bp-add-video-activity-description.show-add {
   display: inline-block;
   margin-left: 10px;
 }
 
-.activity-media-description .bp-add-media-activity-description.show-add .add {
+.activity-media-description .bp-add-media-activity-description.show-add .add,
+.activity-media-description .bp-add-video-activity-description.show-add .add,
+.activity-video-description .bp-add-media-activity-description.show-add .add,
+.activity-video-description .bp-add-video-activity-description.show-add .add {
   display: inline-block;
   margin-bottom: 10px;
 }
 
-.activity-media-description .bp-add-media-activity-description.show-add .edit {
+.activity-media-description .bp-add-media-activity-description.show-add .edit,
+.activity-media-description .bp-add-video-activity-description.show-add .edit,
+.activity-video-description .bp-add-media-activity-description.show-add .edit,
+.activity-video-description .bp-add-video-activity-description.show-add .edit {
   display: none;
 }
 
-.activity-media-description .bp-media-activity-description {
+.activity-media-description .bp-media-activity-description,
+.activity-media-description .bp-video-activity-description,
+.activity-video-description .bp-media-activity-description,
+.activity-video-description .bp-video-activity-description {
   margin-bottom: 10px;
   font-size: 14px;
   line-height: 1.5;
@@ -13800,6 +13829,52 @@ a.bb-close-model {
 }
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit #bp-activity-description-new-reset:hover {
+  color: #000;
+}
+
+.bb-media-info-section .activity-video-description .bp-add-video-activity-description > span {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.bb-media-info-section .activity-video-description .bp-edit-video-activity-description #add-activity-description {
+  width: 100%;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  overflow: auto;
+  min-height: 75px;
+}
+
+.bb-media-info-section .activity-video-description .bp-edit-video-activity-description #add-activity-description:focus {
+  -webkit-box-shadow: 0 0 6px #d6d6d6;
+  -moz-box-shadow: 0 0 6px #d6d6d6;
+  box-shadow: 0 0 6px #d6d6d6;
+}
+
+.bb-media-info-section .activity-video-description .bp-edit-video-activity-description .description-new-submit {
+  margin-bottom: 17px;
+}
+
+.bb-media-info-section .activity-video-description .bp-edit-video-activity-description .description-new-submit #bp-activity-description-new-submit {
+  padding: 7px 20px;
+  height: auto;
+  min-height: 10px;
+  line-height: 1;
+}
+
+.bb-media-info-section .activity-video-description .bp-edit-video-activity-description .description-new-submit #bp-activity-description-new-reset {
+  background: 100% 0;
+  box-shadow: none;
+  border: 0;
+  font-size: 14px;
+  color: #a3a5a9;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 10px;
+  width: auto;
+}
+
+.bb-media-info-section .activity-video-description .bp-edit-video-activity-description .description-new-submit #bp-activity-description-new-reset:hover {
   color: #000;
 }
 
