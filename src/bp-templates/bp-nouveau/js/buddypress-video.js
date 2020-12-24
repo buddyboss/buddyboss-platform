@@ -1226,7 +1226,7 @@ window.bp = window.bp || {};
 			$( currentTarget ).find( '.bp-document-move' ).attr( 'id', $( event.currentTarget ).closest( '.document-activity' ).attr( 'data-id' ) );
 
 			// Change if this is not from Activity Page.
-			if ( $( event.currentTarget ).closest( '.video-list' ).length > 0 ) {
+			if ( $( event.currentTarget ).closest( '.media-list' ).length > 0 ) {
 				currentTarget = '.bp-video-move-file';
 			}
 
