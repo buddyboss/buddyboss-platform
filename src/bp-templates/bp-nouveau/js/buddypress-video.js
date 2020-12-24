@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 		selectAllVideo: function ( event ) {
 			event.preventDefault();
 
-			$( '#buddypress' ).find( '#video-stream > li' ).find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
+			$( '#buddypress' ).find( '#video-stream li' ).find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
 				function () {
 					$( this ).prop( 'checked', true );
 					$( this ).closest( '.bb-item-thumb' ).addClass( 'selected' );
@@ -213,7 +213,7 @@ window.bp = window.bp || {};
 		deselectAllVideo: function ( event ) {
 			event.preventDefault();
 
-			$( '#buddypress' ).find( '#video-stream > li' ).find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
+			$( '#buddypress' ).find( '#video-stream li' ).find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
 				function () {
 					$( this ).prop( 'checked', false );
 					$( this ).closest( '.bb-item-thumb' ).removeClass( 'selected' );

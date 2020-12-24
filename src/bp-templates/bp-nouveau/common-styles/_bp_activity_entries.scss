@@ -1327,6 +1327,25 @@ span.dashicons.dashicons-admin-file:before {
 		}
 	}
 
+	&.no_more_option {
+
+		.item-action-wrap,
+		.bb-item-cover-wrap:before,
+		.bb-video-duration {
+			display: none;
+		}
+
+	}
+
+	&.is-visible {
+
+		.bb-item-cover-wrap:before,
+		.bb-video-duration {
+			display: none;
+		}
+
+	}
+
 	/* smartphones, touchscreens */
 	@media (hover: none) and (pointer: coarse) {
 

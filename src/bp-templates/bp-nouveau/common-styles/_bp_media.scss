@@ -561,23 +561,6 @@
 	padding-top: 100%;
 	display: block;
 
-	&:before {
-		content: "";
-		background: url(../images/video-play.svg) !important;
-		background-color: #fff !important;
-		height: 52px;
-		width: 52px;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 1111;
-		opacity: 0.8;
-		border: 0;
-		transition: all ease 0.3s !important;
-		border-radius: 50%;
-	}
-
 	&:hover:before {
 		opacity: 1;
 	}
@@ -614,6 +597,23 @@
 	}
 }
 
+.bb-video-cover-wrap:before {
+	content: "";
+	background: url(../images/video-play.svg) !important;
+	background-color: #fff !important;
+	height: 52px;
+	width: 52px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1111;
+	opacity: 0.8;
+	border: 0;
+	transition: all ease 0.3s !important;
+	border-radius: 50%;
+}
+
 .bb-item-thumb {
 	position: relative;
 	z-index: 1;
@@ -635,7 +635,8 @@
 }
 
 .bb-activity-video-elem,
-.bb-video-thumb {
+.bb-video-thumb,
+.bb-media-section {
 
 	.bb-video-duration {
 		font-size: 13px;
@@ -716,6 +717,9 @@
 			.vjs-time-control {
 				font-size: 1.2em;
 				line-height: 30px;
+				padding-left: 0;
+				padding-right: 0;
+				text-align: center;
 			}
 
 			.vjs-slider {
@@ -734,12 +738,6 @@
 				width: auto;
 			}
 
-			.vjs-time-control {
-				padding-left: 0.5em;
-				padding-right: 0.5em;
-				text-align: center;
-			}
-
 			.vjs-volume-panel-horizontal.vjs-hover {
 				width: auto;
 			}
@@ -755,14 +753,11 @@
 				> .vjs-icon-placeholder:before {
 					line-height: 1;
 				}
-
 			}
-
 		}
-
 	}
-
 }
+
 
 .bp-single-message-wrap .bb-activity-video-wrap .bb-activity-video-elem .bb-item-cover-wrap {
 	padding-top: 100%;
@@ -2810,6 +2805,66 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	.bb-media-info-section .bb-icon-loader {
 		font-size: 20px;
+	}
+
+}
+
+.bb-media-model-wrapper.video {
+
+	.bb-media-section {
+
+		figure.loading {
+			text-align: center;
+
+			.bb-icon-loader {
+				font-size: 30px;
+				color: #fff;
+				text-align: center;
+			}
+
+		}
+
+		.vjs-big-play-button {
+			background: url(../images/video-play.svg) !important;
+			background-color: #fff !important;
+			height: 52px;
+			width: 52px;
+			opacity: 0.8;
+			border: 0;
+			transition: all ease 0.3s !important;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 1111;
+
+			.vjs-icon-placeholder {
+				display: none;
+			}
+
+		}
+
+		.vjs-controls-disabled .vjs-big-play-button,
+		.vjs-using-native-controls .vjs-big-play-button,
+		.vjs-error .vjs-big-play-button {
+			display: none;
+		}
+
+		a.theater-command {
+			width: auto;
+			display: flex;
+			padding: 0;
+			height: auto;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 10px;
+		}
+
+		a.theater-command.bb-next-media {
+			left: inherit;
+			right: 10px;
+		}
+
 	}
 
 }

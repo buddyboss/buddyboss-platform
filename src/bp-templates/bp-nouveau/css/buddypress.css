@@ -3526,6 +3526,27 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
+#video-stream.video .bb-item-thumb.no_more_option .item-action-wrap,
+#video-stream.video .bb-item-thumb.no_more_option .bb-item-cover-wrap:before,
+#video-stream.video .bb-item-thumb.no_more_option .bb-video-duration,
+#media-stream.media .bb-video-thumb.no_more_option .item-action-wrap,
+#media-stream.media .bb-video-thumb.no_more_option .bb-item-cover-wrap:before,
+#media-stream.media .bb-video-thumb.no_more_option .bb-video-duration,
+.bb-activity-video-wrap .bb-activity-video-elem.no_more_option .item-action-wrap,
+.bb-activity-video-wrap .bb-activity-video-elem.no_more_option .bb-item-cover-wrap:before,
+.bb-activity-video-wrap .bb-activity-video-elem.no_more_option .bb-video-duration {
+  display: none;
+}
+
+#video-stream.video .bb-item-thumb.is-visible .bb-item-cover-wrap:before,
+#video-stream.video .bb-item-thumb.is-visible .bb-video-duration,
+#media-stream.media .bb-video-thumb.is-visible .bb-item-cover-wrap:before,
+#media-stream.media .bb-video-thumb.is-visible .bb-video-duration,
+.bb-activity-video-wrap .bb-activity-video-elem.is-visible .bb-item-cover-wrap:before,
+.bb-activity-video-wrap .bb-activity-video-elem.is-visible .bb-video-duration {
+  display: none;
+}
+
 @media (hover: none) and (pointer: coarse) {
   #video-stream.video .bb-item-thumb .item-action-wrap,
   #media-stream.media .bb-video-thumb .item-action-wrap,
@@ -13291,23 +13312,6 @@ body.login .login-popup .mfp-close:hover {
   display: block;
 }
 
-.bb-item-cover-wrap:before {
-  content: "";
-  background: url(../images/video-play.svg) !important;
-  background-color: #fff !important;
-  height: 52px;
-  width: 52px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1111;
-  opacity: 0.8;
-  border: 0;
-  transition: all ease 0.3s !important;
-  border-radius: 50%;
-}
-
 .bb-item-cover-wrap:hover:before {
   opacity: 1;
 }
@@ -13343,6 +13347,23 @@ body.login .login-popup .mfp-close:hover {
   opacity: 0;
 }
 
+.bb-video-cover-wrap:before {
+  content: "";
+  background: url(../images/video-play.svg) !important;
+  background-color: #fff !important;
+  height: 52px;
+  width: 52px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1111;
+  opacity: 0.8;
+  border: 0;
+  transition: all ease 0.3s !important;
+  border-radius: 50%;
+}
+
 .bb-item-thumb {
   position: relative;
   z-index: 1;
@@ -13361,7 +13382,8 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-activity-video-elem .bb-video-duration,
-.bb-video-thumb .bb-video-duration {
+.bb-video-thumb .bb-video-duration,
+.bb-media-section .bb-video-duration {
   font-size: 13px;
   margin: 0;
   background-color: #000;
@@ -13378,7 +13400,9 @@ body.login .login-popup .mfp-close:hover {
 .bb-activity-video-elem .video-js .vjs-big-play-button,
 .bb-activity-video-elem .bb-video-play,
 .bb-video-thumb .video-js .vjs-big-play-button,
-.bb-video-thumb .bb-video-play {
+.bb-video-thumb .bb-video-play,
+.bb-media-section .video-js .vjs-big-play-button,
+.bb-media-section .bb-video-play {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -13386,29 +13410,35 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-activity-video-elem .video-js ~ .bb-video-play,
-.bb-video-thumb .video-js ~ .bb-video-play {
+.bb-video-thumb .video-js ~ .bb-video-play,
+.bb-media-section .video-js ~ .bb-video-play {
   pointer-events: none;
 }
 
 .bb-activity-video-elem .video-js.vjs-playing ~ .bb-video-play,
 .bb-activity-video-elem .video-js.vjs-playing ~ .bb-video-duration,
 .bb-video-thumb .video-js.vjs-playing ~ .bb-video-play,
-.bb-video-thumb .video-js.vjs-playing ~ .bb-video-duration {
+.bb-video-thumb .video-js.vjs-playing ~ .bb-video-duration,
+.bb-media-section .video-js.vjs-playing ~ .bb-video-play,
+.bb-media-section .video-js.vjs-playing ~ .bb-video-duration {
   display: none;
 }
 
 .bb-activity-video-elem .video-js.vjs-playing .vjs-big-play-button,
-.bb-video-thumb .video-js.vjs-playing .vjs-big-play-button {
+.bb-video-thumb .video-js.vjs-playing .vjs-big-play-button,
+.bb-media-section .video-js.vjs-playing .vjs-big-play-button {
   display: none;
 }
 
 .bb-activity-video-elem .video-js.vjs-has-started ~ .bb-video-duration,
-.bb-video-thumb .video-js.vjs-has-started ~ .bb-video-duration {
+.bb-video-thumb .video-js.vjs-has-started ~ .bb-video-duration,
+.bb-media-section .video-js.vjs-has-started ~ .bb-video-duration {
   display: none;
 }
 
 .bb-activity-video-elem .video-js .vjs-big-play-button,
-.bb-video-thumb .video-js .vjs-big-play-button {
+.bb-video-thumb .video-js .vjs-big-play-button,
+.bb-media-section .video-js .vjs-big-play-button {
   background: url(../images/video-play.svg) !important;
   background-color: #fff !important;
   height: 52px;
@@ -13419,70 +13449,78 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-activity-video-elem .video-js .vjs-big-play-button:hover,
-.bb-video-thumb .video-js .vjs-big-play-button:hover {
+.bb-video-thumb .video-js .vjs-big-play-button:hover,
+.bb-media-section .video-js .vjs-big-play-button:hover {
   opacity: 1;
 }
 
 .bb-activity-video-elem .video-js .vjs-big-play-button .vjs-icon-placeholder,
-.bb-video-thumb .video-js .vjs-big-play-button .vjs-icon-placeholder {
+.bb-video-thumb .video-js .vjs-big-play-button .vjs-icon-placeholder,
+.bb-media-section .video-js .vjs-big-play-button .vjs-icon-placeholder {
   display: none;
 }
 
 .bb-activity-video-elem .video-js,
-.bb-video-thumb .video-js {
+.bb-video-thumb .video-js,
+.bb-media-section .video-js {
   border-radius: 4px;
   overflow: hidden;
   max-width: 100%;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar,
-.bb-video-thumb .video-js .vjs-control-bar {
+.bb-video-thumb .video-js .vjs-control-bar,
+.bb-media-section .video-js .vjs-control-bar {
   bottom: 15px;
   background-color: transparent;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-time-control,
-.bb-video-thumb .video-js .vjs-control-bar .vjs-time-control {
+.bb-video-thumb .video-js .vjs-control-bar .vjs-time-control,
+.bb-media-section .video-js .vjs-control-bar .vjs-time-control {
   font-size: 1.2em;
   line-height: 30px;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-slider,
-.bb-video-thumb .video-js .vjs-control-bar .vjs-slider {
+.bb-video-thumb .video-js .vjs-control-bar .vjs-slider,
+.bb-media-section .video-js .vjs-control-bar .vjs-slider {
   background-color: rgba(255, 255, 255, 0.6);
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-time-tooltip,
-.bb-video-thumb .video-js .vjs-control-bar .vjs-time-tooltip {
+.bb-video-thumb .video-js .vjs-control-bar .vjs-time-tooltip,
+.bb-media-section .video-js .vjs-control-bar .vjs-time-tooltip {
   font-size: 1.3em;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-progress-control .vjs-progress-holder,
-.bb-video-thumb .video-js .vjs-control-bar .vjs-progress-control .vjs-progress-holder {
+.bb-video-thumb .video-js .vjs-control-bar .vjs-progress-control .vjs-progress-holder,
+.bb-media-section .video-js .vjs-control-bar .vjs-progress-control .vjs-progress-holder {
   border-radius: 2px;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-volume-panel,
-.bb-video-thumb .video-js .vjs-control-bar .vjs-volume-panel {
+.bb-video-thumb .video-js .vjs-control-bar .vjs-volume-panel,
+.bb-media-section .video-js .vjs-control-bar .vjs-volume-panel {
   width: auto;
 }
 
-.bb-activity-video-elem .video-js .vjs-control-bar .vjs-time-control,
-.bb-video-thumb .video-js .vjs-control-bar .vjs-time-control {
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  text-align: center;
-}
-
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-volume-panel-horizontal.vjs-hover,
-.bb-video-thumb .video-js .vjs-control-bar .vjs-volume-panel-horizontal.vjs-hover {
+.bb-video-thumb .video-js .vjs-control-bar .vjs-volume-panel-horizontal.vjs-hover,
+.bb-media-section .video-js .vjs-control-bar .vjs-volume-panel-horizontal.vjs-hover {
   width: auto;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar button,
 .bb-activity-video-elem .video-js .vjs-control-bar button:hover,
 .bb-video-thumb .video-js .vjs-control-bar button,
-.bb-video-thumb .video-js .vjs-control-bar button:hover {
+.bb-video-thumb .video-js .vjs-control-bar button:hover,
+.bb-media-section .video-js .vjs-control-bar button,
+.bb-media-section .video-js .vjs-control-bar button:hover {
   background-color: transparent;
   padding: 0;
   border: 0;
@@ -13493,7 +13531,9 @@ body.login .login-popup .mfp-close:hover {
 .bb-activity-video-elem .video-js .vjs-control-bar button > .vjs-icon-placeholder:before,
 .bb-activity-video-elem .video-js .vjs-control-bar button:hover > .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar button > .vjs-icon-placeholder:before,
-.bb-video-thumb .video-js .vjs-control-bar button:hover > .vjs-icon-placeholder:before {
+.bb-video-thumb .video-js .vjs-control-bar button:hover > .vjs-icon-placeholder:before,
+.bb-media-section .video-js .vjs-control-bar button > .vjs-icon-placeholder:before,
+.bb-media-section .video-js .vjs-control-bar button:hover > .vjs-icon-placeholder:before {
   line-height: 1;
 }
 
@@ -15444,6 +15484,56 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .bb-document-theater .bb-media-info-section .bb-icon-loader {
   font-size: 20px;
+}
+
+.bb-media-model-wrapper.video .bb-media-section figure.loading {
+  text-align: center;
+}
+
+.bb-media-model-wrapper.video .bb-media-section figure.loading .bb-icon-loader {
+  font-size: 30px;
+  color: #fff;
+  text-align: center;
+}
+
+.bb-media-model-wrapper.video .bb-media-section .vjs-big-play-button {
+  background: url(../images/video-play.svg) !important;
+  background-color: #fff !important;
+  height: 52px;
+  width: 52px;
+  opacity: 0.8;
+  border: 0;
+  transition: all ease 0.3s !important;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1111;
+}
+
+.bb-media-model-wrapper.video .bb-media-section .vjs-big-play-button .vjs-icon-placeholder {
+  display: none;
+}
+
+.bb-media-model-wrapper.video .bb-media-section .vjs-controls-disabled .vjs-big-play-button,
+.bb-media-model-wrapper.video .bb-media-section .vjs-using-native-controls .vjs-big-play-button,
+.bb-media-model-wrapper.video .bb-media-section .vjs-error .vjs-big-play-button {
+  display: none;
+}
+
+.bb-media-model-wrapper.video .bb-media-section a.theater-command {
+  width: auto;
+  display: flex;
+  padding: 0;
+  height: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+}
+
+.bb-media-model-wrapper.video .bb-media-section a.theater-command.bb-next-media {
+  left: inherit;
+  right: 10px;
 }
 
 .search-document-list .media-folder_items,

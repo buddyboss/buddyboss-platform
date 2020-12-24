@@ -45,7 +45,7 @@ if ( 'video' === $media_template->media->type ) {
 	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 		<div class="bb-video-thumb bb-item-thumb">
 			<div class="video-action-wrap item-action-wrap">
-				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions' ); ?>">
+				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
 				</a>
 				<div class="video-action_list item-action_list">
