@@ -2294,6 +2294,17 @@ function bp_is_document_component() {
 }
 
 /**
+ * Check whether the current page is part of the Moderation component.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @return bool True if the current page is part of the Moderation component.
+ */
+function bp_is_moderation_component() {
+	return (bool) bp_is_current_component( 'moderation' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2785,6 +2796,19 @@ function bp_is_user_media() {
  */
 function bp_is_user_document() {
 	return (bool) ( bp_is_user() && bp_is_document_component() );
+}
+
+/**
+ * Is this a user's moderation page?
+ *
+ * Eg http://example.com/members/joe/moderation/ (or a subpage thereof).
+ *
+ * @since BuddyPress 2.0.0
+ *
+ * @return bool True if the current page is a user's moderation page.
+ */
+function bp_is_user_moderation() {
+	return (bool) ( bp_is_user() && bp_is_moderation_component() );
 }
 
 

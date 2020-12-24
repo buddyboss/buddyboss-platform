@@ -2782,6 +2782,31 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 						font-size: 15px;
 					}
 
+					&.report_file a {
+						background-color: transparent;
+						text-align: left;
+						font-weight: 400;
+						box-shadow: none;
+						border-radius: 0;
+						min-height: auto;
+
+						&:before {
+							content: "\e8ea";
+							font-size: 14px;
+							vertical-align: middle;
+						}
+
+						&:hover {
+							background-color: #f5f5f5;
+						}
+
+						&.reported-content {
+							opacity: 0.8 !important;
+							pointer-events: none;
+						}
+
+					}
+
 					&.download_file a:before {
 						content: "\e890";
 					}
@@ -4311,4 +4336,238 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	> #bp-ajax-loader {
 		margin: 20px;
 	}
+}
+
+
+.moderation-popup .modal-container {
+	max-height: 95vh;
+	overflow: auto;
+
+	.bb-model-header {
+		margin-bottom: 25px;
+
+		h4 {
+			font-size: 17px;
+			font-weight: 500;
+		}
+
+	}
+
+	.bb-model-footer {
+		text-align: right;
+
+		.button {
+			width: auto;
+
+			&.report-submit.loading {
+				pointer-events: none;
+				opacity: 0.9;
+
+				&:after {
+					font: normal normal 400 14px/1 bb-icons;
+					speak: none;
+					display: inline-block;
+					margin: 0 0 0 6px;
+					text-decoration: inherit;
+					text-transform: none;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					content: "\E838";
+					animation: spin 2s infinite linear;
+				}
+
+			}
+
+			&.bb-cancel-report-content {
+				color: #a5a7ab;
+				background-color: transparent;
+				box-shadow: none;
+				margin: 0 20px 0 0;
+				padding: 0;
+				min-width: inherit;
+			}
+		}
+
+	}
+
+	#bb-block-member,
+	#bb-report-content {
+		margin-bottom: 0;
+	}
+
+	.form-item {
+		margin-bottom: 10px;
+		text-align: left;
+
+		> span {
+			font-size: 14px;
+			padding-left: 28px;
+			display: inline-block;
+			line-height: 1.4;
+		}
+
+		label {
+			margin-bottom: 0;
+
+			> input[type="radio"] {
+				margin-right: 10px;
+				vertical-align: middle;
+				height: 15px;
+				width: 15px;
+			}
+
+			> span {
+				font-size: 16px;
+				font-weight: 500;
+				vertical-align: middle;
+			}
+
+			> textarea {
+				margin-left: 28px;
+				width: calc(100% - 26px);
+			}
+
+		}
+
+	}
+
+	.bp-report-form-err {
+		display: flex;
+		color: #ef3e46;
+		flex-flow: row nowrap;
+		align-items: stretch;
+		padding: 10px 0;
+		background: #fff;
+		-webkit-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+		-moz-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+		margin: 10px 0 20px;
+		position: relative;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+
+		&:empty {
+			display: none;
+		}
+
+		&:before {
+			content: "\f534";
+			background-color: #d33;
+			color: #fff;
+			display: flex;
+			align-items: center;
+			font-family: dashicons;
+			left: 0;
+			margin: -10px 10px -10px 0;
+			position: relative;
+			padding: 0 0.5em;
+			border-radius: 3px 0 0 3px;
+		}
+
+	}
+
+}
+
+.moderation_notice.is_hidden {
+	display: none;
+}
+
+.moderation-popup .bb-report-type-wrp {
+	font-size: 15px;
+	text-align: left;
+
+	p {
+		margin-bottom: 10px;
+
+		&:last-child {
+			margin-bottom: 10px;
+		}
+
+	}
+
+	ul {
+		margin-bottom: 10px;
+	}
+
+	.bb-model-footer {
+		margin-top: 15px;
+
+		[dir="rtl"] & {
+			text-align: left;
+		}
+
+	}
+
+}
+
+.mass-user-block-list.moderation-popup {
+
+	.bb-model-header {
+		position: relative;
+
+		.mfp-close {
+			top: 7px;
+			right: 25px;
+			box-shadow: none;
+
+			&:before {
+				content: "\e828";
+				color: #939597;
+				letter-spacing: -0.24px;
+				line-height: 24px;
+				font-family: 'bb-icons'; /* stylelint-disable-line */
+				font-size: 22px;
+			}
+
+		}
+
+	}
+
+	.bb-report-type-wrp .user-item-wrp {
+		display: flex;
+		align-items: center;
+		margin: 15px 0;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		.user-avatar {
+			max-height: 40px;
+			max-width: 40px;
+			overflow: hidden;
+			border-radius: 100%;
+		}
+
+		.user-name {
+			min-width: calc(100% - 180px);
+			margin: 0 25px;
+		}
+
+	}
+
+	@media (max-width: 480px) {
+
+		.bb-report-type-wrp .user-item-wrp {
+			flex-wrap: wrap;
+
+			.user-name {
+				min-width: calc(100% - 100px);
+				margin: 0 0 0 25px;
+			}
+
+			.user-actions {
+				width: 100%;
+				margin: 10px 0;
+
+				.button {
+					width: 100%;
+				}
+
+			}
+
+		}
+
+	}
+
 }

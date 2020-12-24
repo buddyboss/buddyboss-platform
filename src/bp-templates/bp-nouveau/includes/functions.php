@@ -1013,6 +1013,14 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 		),
+		'moderation-block-member-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading blocked members. Please wait.', 'buddyboss' ),
+		),
+		'moderation-requests-none' => array(
+			'type'    => 'info',
+			'message' => __( 'No blocked members found.', 'buddyboss' ),
+		)
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {
