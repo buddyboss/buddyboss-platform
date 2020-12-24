@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
         </div>
         <div class="bp-not-spam-action-msg" style="display: none;">
 	        <?php
-	        printf( __( 'To unsuspend members who were creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
+	        printf( __( 'To unsuspend members who are not creating spam anymore in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
 	        ?>
         </div>
     </div>
