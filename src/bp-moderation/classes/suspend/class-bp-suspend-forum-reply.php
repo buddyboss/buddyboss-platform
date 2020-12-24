@@ -41,7 +41,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		add_action( "save_post_{$reply_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
 		// Delete moderation data when actual reply deleted.
-		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
+		add_action( 'delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -420,11 +420,16 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
 	 */
-	public function sync_moderation_data_on_delete( $post_id, $post ) {
+	public function sync_moderation_data_on_delete( $post_id ) {
 
-		if ( empty( $post_id ) || bbp_get_reply_post_type() !== $post->post_type ) {
+		if ( empty( $post_id ) ) {
+			return;
+		}
+
+		$post = get_post( $post_id );
+
+		if ( ! isset( $post->post_type ) || bbp_get_reply_post_type() !== $post->post_type ) {
 			return;
 		}
 
