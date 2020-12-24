@@ -1022,7 +1022,8 @@ function bp_nouveau_object_template_results_albums_existing_video_query( $querys
  */
 function bp_nouveau_ajax_video_get_video_description() {
 
-	$video_description = $video_data = '';
+	$video_description = '';
+	$video_data        = '';
 
 	$response = array(
 		'feedback' => sprintf(
@@ -1051,9 +1052,9 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$content = get_post_field( 'post_content', $attachment_id );
 
 	$video_privacy    = bp_video_user_can_manage_video( $video_id, bp_loggedin_user_id() );
-	$can_download_btn = ( true === (bool) $video_privacy['can_download'] ) ? true : false;
-	$can_manage_btn   = ( true === (bool) $video_privacy['can_manage'] ) ? true : false;
-	$can_view         = ( true === (bool) $video_privacy['can_view'] ) ? true : false;
+	$can_download_btn = true === (bool) $video_privacy['can_download'];
+	$can_manage_btn   = true === (bool) $video_privacy['can_manage'];
+	$can_view         = true === (bool) $video_privacy['can_view'];
 
 	$video        = new BP_Video( $video_id );
 	$user_domain  = bp_core_get_user_domain( $video->user_id );
@@ -1078,7 +1079,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 				</div>
 
 				<div class="activity-header">
-					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an video', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 				</div>
 			</div>

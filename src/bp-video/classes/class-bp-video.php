@@ -972,6 +972,9 @@ class BP_Video {
 			$where_args[] = $wpdb->prepare( 'date_created = %s', $r['date_created'] );
 		}
 
+		// Delete the video.
+		$where_args[] = $wpdb->prepare( 'type = %s', 'video' );
+
 		// Bail if no where arguments.
 		if ( empty( $where_args ) ) {
 			return false;

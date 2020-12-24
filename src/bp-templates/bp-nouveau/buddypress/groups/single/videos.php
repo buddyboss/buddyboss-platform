@@ -6,7 +6,7 @@
  */
 ?>
 
-<div class="bb-video-container group-video">
+<div class="bb-video-container bb-media-container group-video">
 	<?php bp_get_template_part( 'video/theatre' ); ?>
 <?php
 
@@ -23,7 +23,7 @@ switch ( bp_current_action() ) :
 		bp_get_template_part( 'video/actions' );
 
 		?>
-		<div id="video-stream" class="media" data-bp-list="video">
+		<div id="video-stream" class="video" data-bp-list="video">
 
 			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-video-loading' ); ?></div>
 

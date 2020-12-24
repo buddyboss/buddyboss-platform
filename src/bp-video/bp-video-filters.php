@@ -133,6 +133,7 @@ function bp_video_activity_entry() {
 			">
 			<?php
 			bp_get_template_part( 'video/add-video-thumbnail' );
+			bp_get_template_part( 'video/video-move' );
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/activity-entry' );
@@ -211,6 +212,7 @@ function bp_video_activity_append_video( $content, $activity ) {
 			?>
 				">
 				<?php
+				bp_get_template_part( 'video/video-move' );
 				while ( bp_video() ) {
 					bp_the_video();
 					bp_get_template_part( 'video/activity-entry' );
@@ -286,6 +288,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		?>
 		">
 				<?php
+				bp_get_template_part( 'video/video-move' );
 				while ( bp_video() ) {
 					bp_the_video();
 					bp_get_template_part( 'video/activity-entry' );
