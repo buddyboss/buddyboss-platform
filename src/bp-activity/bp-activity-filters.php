@@ -549,7 +549,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 */
 	$maybe_truncate_text = apply_filters(
 		'bp_activity_maybe_truncate_entry',
-		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type, array(), true )
+		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type, array( 'new_blog_post' ), true )
 	);
 
 	// The full text of the activity update should always show on the single activity screen.
@@ -578,13 +578,8 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * been truncated), add the "Read More" link. Note that bp_create_excerpt() is stripping
 	 * shortcodes, so we have strip them from the $text before the comparison.
 	 */
-	if ( in_array( $activities_template->activity->type, array( 'new_blog_post', 'new_blog_comment' ), true ) ) {
-		$excerpt_link = 'new_blog_post' === $activities_template->activity->type ? get_the_permalink( $activities_template->activity->secondary_item_id ) : bp_get_activity_thread_permalink();
-
-		$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, $excerpt_link, $append_text );
-	} elseif ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, __( '&hellip;', 'buddyboss' ) ) ) {
-		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
-
+	if ( strlen( $excerpt ) < strlen( strip_shortcodes( $text ) ) ) {
+		$id      = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>', $excerpt, $id, bp_get_activity_thread_permalink(), $append_text );
 	}
 
@@ -1681,6 +1676,7 @@ function bp_activity_media_add( $media ) {
 
 				// update activity meta
 				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+				bp_activity_update_meta( $activity_id, 'bp_media_id', $media->id );
 
 				// save attachment meta for activity
 				update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
@@ -1721,7 +1717,7 @@ function bp_activity_media_add( $media ) {
 function bp_activity_create_parent_media_activity( $media_ids ) {
 	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
 
-	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) {
+	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$added_media_ids = $media_ids;
 		$content         = false;
@@ -1741,6 +1737,14 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		$group_id = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
 		$album_id = false;
 
+		// added fall back to get group_id from media.
+		if ( empty( $group_id ) && ! empty( $added_media_ids ) ) {
+			$media_object = new BP_Media( current( (array) $added_media_ids ) );
+			if ( ! empty( $media_object->group_id ) ) {
+				$group_id = $media_object->group_id;
+			}
+		}
+
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
 			$activity_id = groups_post_update(
 				array(
@@ -1752,34 +1756,34 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
 
-		// save media meta for activity
+		// save media meta for activity.
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
 
 			foreach ( (array) $added_media_ids as $media_id ) {
 				$media = new BP_Media( $media_id );
 
-				// get one of the media's privacy for the activity privacy
+				// get one of the media's privacy for the activity privacy.
 				$privacy = $media->privacy;
 
-				// get media album id
+				// get media album id.
 				if ( ! empty( $media->album_id ) ) {
 					$album_id = $media->album_id;
 				}
 
 				if ( 1 === $bp_media_upload_count ) {
-					// save media activity id in media
+					// save media activity id in media.
 					$media->activity_id = $activity_id;
 					$media->save();
 				}
 
-				// save parent activity id in attachment meta
+				// save parent activity id in attachment meta.
 				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $activity_id );
 			}
 
 			bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $added_media_ids ) );
 
-			// if media is from album then save album id in activity media
+			// if media is from album then save album id in activity media.
 			if ( ! empty( $album_id ) ) {
 				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $album_id );
 			}
@@ -1850,6 +1854,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 						// update activity meta to tell it is media activity.
 						bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+						bp_activity_update_meta( $activity_id, 'bp_media_id', $old_media->id );
 
 						// save attachment meta for activity.
 						update_post_meta( $old_media->attachment_id, 'bp_media_activity_id', $activity_id );
@@ -1995,12 +2000,12 @@ function bp_activity_document_add( $document ) {
 
 				// update activity meta.
 				bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+				bp_activity_update_meta( $activity_id, 'bp_document_id', $document->id );
 
 				// save attachment meta for activity.
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 				if ( ! empty( $parent_activity_id ) ) {
-
 					$document_activity                    = new BP_Activity_Activity( $activity_id );
 					$document_activity->secondary_item_id = $parent_activity_id;
 					$document_activity->save();
@@ -2034,7 +2039,7 @@ function bp_activity_document_add( $document ) {
 function bp_activity_create_parent_document_activity( $document_ids ) {
 	global $bp_document_upload_count, $bp_activity_post_update, $bp_document_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
 
-	if ( ! empty( $document_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) {
+	if ( ! empty( $document_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$added_document_ids = $document_ids;
 		$content            = false;
@@ -2053,6 +2058,14 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 
 		$group_id  = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
 		$folder_id = false;
+
+		// added fall back to get group_id from document.
+		if ( empty( $group_id ) && ! empty( $added_document_ids ) ) {
+			$document_object = new BP_Document( current( (array) $added_document_ids ) );
+			if ( ! empty( $document_object->group_id ) ) {
+				$group_id = $document_object->group_id;
+			}
+		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
 			$activity_id = groups_post_update(
@@ -2081,7 +2094,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 				}
 
 				if ( 1 === $bp_document_upload_count ) {
-					// save media activity id in media
+					// save media activity id in media.
 					$document->activity_id = $activity_id;
 					$document->group_id    = $group_id;
 					$document->save();
@@ -2164,6 +2177,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 						// update activity meta to tell it is document activity.
 						bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+						bp_activity_update_meta( $activity_id, 'bp_document_id', $old_document->id );
 
 						// save attachment meta for activity.
 						update_post_meta( $old_document->attachment_id, 'bp_document_activity_id', $activity_id );
@@ -2242,4 +2256,118 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 
 	return $buttons;
 
+}
+
+add_action( 'bp_before_activity_activity_content', 'bp_blogs_activity_content_set_temp_content' );
+
+/**
+ * Function which set the temporary content on the blog post activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_blogs_activity_content_set_temp_content() {
+
+	global $activities_template;
+
+	$activity = $activities_template->activity;
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) &&  'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$content = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if ( is_a( $content, 'WP_Post' ) ) {
+			$activities_template->activity->content = '&#8203;';
+		}
+	}
+
+}
+
+add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 9999, 2 );
+
+/**
+ * Function which set the content on activity blog post.
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_blogs_activity_content_with_read_more( $content, $activity ) {
+
+	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$blog_post = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if( is_a( $blog_post, 'WP_Post' ) ) {
+			$content = bp_create_excerpt( html_entity_decode( $blog_post->post_content ) );
+			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
+				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
+				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
+				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+					$iframe  = $matches[0];
+					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
+					$content .= $iframe;
+				} else {
+					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
+					if( isset( $src[0] ) ) {
+						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+					}
+				}
+
+			} else {
+				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
+				$content = strip_tags( $content, '<a><iframe>' );
+				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
+				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+					$content = $content;
+				} else {
+					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
+					if( isset( $src[0] ) ) {
+						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+					}
+				}
+			}
+		}
+
+	}
+
+	return $content;
+
+}
+
+add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_read_more', 9999, 2 );
+
+/**
+ * Function which set the content on activity blog post comment.
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ * @since BuddyBoss 1.5.5
+ */
+function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
+
+	if( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+		// Get activity object.
+		$comment_activity = new BP_Activity_Activity( $activity->item_id );
+		if( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+			$comment_post_type = $comment_activity->secondary_item_id;
+			$get_post_type     = get_post_type( $comment_post_type );
+			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
+			if( $comment_id ) {
+				$comment = get_comment( $comment_id );
+				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+				if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+				}
+			}
+		}
+	}
+
+	return $content;
 }

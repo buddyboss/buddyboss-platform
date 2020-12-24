@@ -227,8 +227,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						$field    = $fields_endpoint->assemble_response_data( $field, $request );
 						$fields[] = array(
 							'id'          => 'field_' . $field['id'],
-							'label'       => $field['name'],
-							'description' => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'label'       => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'description' => $field['description']['rendered'],
 							'type'        => $field['type'],
 							'required'    => $field['is_required'],
 							'options'     => $field['options'],
@@ -601,7 +601,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			? bp_get_signup_username_value()
 			: (
 				isset( $_POST['signup_username'] )
-				? filter_input( INPUT_POST, 'signup_username' )
+				? sanitize_text_field( wp_unslash( $_POST['signup_username'] ) )
 				: ''
 			)
 		);
@@ -610,7 +610,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			? bp_get_signup_email_value()
 			: (
 				isset( $_POST['signup_email'] )
-				? filter_input( INPUT_POST, 'signup_email' )
+				? sanitize_text_field( wp_unslash( $_POST['signup_email'] ) )
 				: ''
 			)
 		);
@@ -825,7 +825,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		} else {
 			$wp_user_id = bp_core_signup_user(
 				$user_name,
-				filter_input( INPUT_POST, 'signup_password' ),
+				sanitize_text_field( wp_unslash( $_POST['signup_password'] ) ),
 				$user_email,
 				$usermeta
 			);

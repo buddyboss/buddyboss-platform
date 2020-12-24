@@ -157,6 +157,43 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			$args['album_ids'] = $request['include'];
 		}
 
+		if ( ! empty( $request['all'] ) ) {
+			$args['per_page'] = 0;
+		}
+
+		$privacy   = array();
+		$privacy[] = $args['privacy'];
+		if ( is_user_logged_in() ) {
+			$privacy[]       = 'loggedin';
+			$current_user_id = ( isset( $args['user_id'] ) && ! empty( $args['user_id'] ) ? $args['user_id'] : 0 );
+			if ( bp_is_active( 'friends' ) ) {
+
+				// get the login user id.
+
+				// check if the login user is friends of the display user.
+				$is_friend = friends_check_friendship( $current_user_id, bp_loggedin_user_id() );
+
+				/**
+				 * Check if the login user is friends of the display user
+				 * OR check if the login user and the display user is the same
+				 */
+				if ( $is_friend || ! empty( $current_user_id ) && bp_loggedin_user_id() === $current_user_id ) {
+					$privacy[] = 'friends';
+				}
+			}
+
+			if ( bp_loggedin_user_id() === $current_user_id ) {
+				$privacy[] = 'onlyme';
+			}
+		}
+
+		if ( isset( $args['group_id'] ) && ! empty( $args['group_id'] ) ) {
+			$args['user_id'] = false;
+			$privacy         = array( 'grouponly' );
+		}
+
+		$args['privacy'] = $privacy;
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -446,7 +483,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
 				! bp_is_active( 'groups' )
-				|| groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] ) ) {
+				|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
 					__( 'You don\'t have a permission to create an album inside this group.', 'buddyboss' ),
@@ -608,7 +646,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
 				! bp_is_active( 'groups' )
-				|| groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+				|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -871,7 +909,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'title'         => $album->title,
 			'privacy'       => $album->privacy,
 			'media'         => $album->media,
-			'user_email'    => $album->user_email,
+			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
+			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
 			'user_nicename' => $album->user_nicename,
 			'user_login'    => $album->user_login,
 			'display_name'  => $album->display_name,
@@ -956,9 +995,15 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'user_email'    => array(
+				'group_name'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The user\'s email id to create a media.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the Album.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
+				'visibility'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Visibility of the Album.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1044,6 +1089,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 
 		$params['privacy'] = array(
 			'description'       => __( 'The privacy of album.', 'buddyboss' ),
+			'default'           => 'public',
 			'enum'              => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -1161,29 +1207,29 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_check_album_privacy_restriction( $album ) {
 		return (
-			       'onlyme' === $album->privacy
-			       && bp_loggedin_user_id() !== $album->user_id
-		       )
-		       || (
-			       'loggedin' === $album->privacy
-			       && empty( bp_loggedin_user_id() )
-		       )
-		       || (
-			       bp_is_active( 'groups' )
-			       && 'grouponly' === $album->privacy
-			       && ! empty( $album->group_id )
-			       && 'public' !== bp_get_group_status( groups_get_group( $album->group_id ) )
-			       && empty( groups_is_user_admin( bp_loggedin_user_id(), $album->group_id ) )
-			       && empty( groups_is_user_mod( bp_loggedin_user_id(), $album->group_id ) )
-			       && empty( groups_is_user_member( bp_loggedin_user_id(), $album->group_id ) )
-		       )
-		       || (
-			       bp_is_active( 'friends' )
-			       && 'friends' === $album->privacy
-			       && ! empty( $album->user_id )
-			       && bp_loggedin_user_id() !== $album->user_id
-			       && 'is_friend' !== friends_check_friendship_status( $album->user_id, bp_loggedin_user_id() )
-		       );
+				'onlyme' === $album->privacy
+				&& bp_loggedin_user_id() !== $album->user_id
+			)
+			|| (
+				'loggedin' === $album->privacy
+				&& empty( bp_loggedin_user_id() )
+			)
+			|| (
+				bp_is_active( 'groups' )
+				&& 'grouponly' === $album->privacy
+				&& ! empty( $album->group_id )
+				&& 'public' !== bp_get_group_status( groups_get_group( $album->group_id ) )
+				&& empty( groups_is_user_admin( bp_loggedin_user_id(), $album->group_id ) )
+				&& empty( groups_is_user_mod( bp_loggedin_user_id(), $album->group_id ) )
+				&& empty( groups_is_user_member( bp_loggedin_user_id(), $album->group_id ) )
+			)
+			|| (
+				bp_is_active( 'friends' )
+				&& 'friends' === $album->privacy
+				&& ! empty( $album->user_id )
+				&& bp_loggedin_user_id() !== $album->user_id
+				&& 'is_friend' !== friends_check_friendship_status( $album->user_id, bp_loggedin_user_id() )
+			);
 	}
 }
 

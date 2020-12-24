@@ -298,6 +298,11 @@ div.bbp-reply-header {
 	padding: 0;
 }
 
+#bbpress-forums div.bbp-reply-content a.gif-play-button {
+	margin-left: -40px;
+	margin-top: -40px;
+}
+
 #bbpress-forums div.bbp-topic-content h1,
 #bbpress-forums div.bbp-reply-content h1,
 #bbpress-forums div.bbp-topic-content h2,
@@ -1322,4 +1327,26 @@ h2.bbp-form-title.entry-title {
 .bbp-forum-title-label span {
 	opacity: 0.6;
 	font-size: 14px;
+}
+
+.bs-reply-suspended-block {
+	pointer-events: none;
+
+	.bbp-author-role {
+		display: none;
+	}
+
+}
+
+.bs-reply-header.bs-reply-suspended-header {
+	opacity: 0.7;
+
+	.bp-suspended-avatar {
+		min-width: 48px;
+	}
+
+}
+
+.bbp-reply-content.bs-forum-suspended-content {
+	opacity: 0.7;
 }

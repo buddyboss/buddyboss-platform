@@ -60,16 +60,17 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url						: BP_Nouveau.ajaxurl,
-				timeout					: 3 * 60 * 60 * 1000,
-				dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage 		: BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles			: 'image/*',
-				autoProcessQueue		: true,
-				addRemoveLinks			: true,
-				uploadMultiple			: false,
-				maxFiles				: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize				: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				url                 : BP_Nouveau.ajaxurl,
+				timeout             : 3 * 60 * 60 * 1000,
+				dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles       : 'image/*',
+				autoProcessQueue    : true,
+				addRemoveLinks      : true,
+				uploadMultiple      : false,
+				maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 			};
 
 			// if defined, add custom dropzone options.
@@ -85,18 +86,19 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_document_options = {
-				url						: BP_Nouveau.ajaxurl,
-				timeout					: 3 * 60 * 60 * 1000,
-				dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-				acceptedFiles			: BP_Nouveau.media.document_type,
-				createImageThumbnails 	: false,
-				dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
-				autoProcessQueue		: true,
-				addRemoveLinks			: true,
-				uploadMultiple			: false,
-				maxFiles				: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-				maxFilesize				: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
+				url                  : BP_Nouveau.ajaxurl,
+				timeout              : 3 * 60 * 60 * 1000,
+				dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
+				acceptedFiles        : BP_Nouveau.media.document_type,
+				createImageThumbnails: false,
+				dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
+				autoProcessQueue     : true,
+				addRemoveLinks       : true,
+				uploadMultiple       : false,
+				maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+				maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+				dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+				dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 			};
 
 		},
@@ -376,6 +378,8 @@ window.bp = window.bp || {};
 				sender_name   : '',
 				sender_link   : '',
 				sender_avatar : '',
+				is_user_blocked   : false,
+				is_user_suspended   : false,
 				count         : 0,
 				date          : 0,
 				display_date  : '',
@@ -405,6 +409,8 @@ window.bp = window.bp || {};
 				sender_id     : 0,
 				sender_name   : '',
 				sender_link   : '',
+				is_user_blocked   : false,
+				is_user_suspended   : false,
 				sender_avatar : '',
 				date          : 0,
 				display_date  : ''
@@ -462,6 +468,8 @@ window.bp = window.bp || {};
 						resp.threads[index].sender_name   = value.sender_name;
 						resp.threads[index].sender_link   = value.sender_link;
 						resp.threads[index].sender_avatar = value.sender_avatar;
+						resp.threads[index].is_user_blocked = value.is_user_blocked;
+						resp.threads[index].is_user_suspended = value.is_user_suspended;
 						resp.threads[index].count         = value.count;
 						resp.threads[index].date          = new Date( value.date );
 						resp.threads[index].display_date  = value.display_date;
@@ -576,6 +584,8 @@ window.bp = window.bp || {};
 						resp.messages[index].sender_name   = value.sender_name;
 						resp.messages[index].sender_link   = value.sender_link;
 						resp.messages[index].sender_avatar = value.sender_avatar;
+						resp.messages[index].is_user_blocked = value.is_user_blocked;
+						resp.messages[index].is_user_suspended = value.is_user_suspended;
 						resp.messages[index].date          = new Date( value.date );
 						resp.messages[index].display_date  = value.display_date;
 						resp.messages[index].star_link     = value.star_link;
@@ -589,6 +599,12 @@ window.bp = window.bp || {};
 					this.options.recipients     = resp.thread.recipients;
 				}
 
+				setTimeout(
+					function () { // Waiting to load dummy image
+						bp.Nouveau.reportPopUp();
+					},
+					1000
+				);
 				return resp.messages;
 			}
 		}
@@ -851,7 +867,9 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
-							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							if(!jQuery('.message-media-error-popup').length) {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
+							}
 							this.removeFile(file);
 						}
 					}
@@ -865,7 +883,9 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							if(!jQuery('.message-media-error-popup').length) {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							}
 							this.removeFile(file);
 						}
 					}
@@ -1022,7 +1042,9 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							if(!jQuery('.document-error-popup').length) {
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							}
 							this.removeFile(file);
 						}
 					}
@@ -2615,16 +2637,16 @@ window.bp = window.bp || {};
 					}
 				}
 
-			if ( this.firstFetch ) {
-				$('#bp-message-thread-list').animate({ scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 100);
-				this.firstFetch = false;
-			} else {
-				$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
-			}
+				if ( this.firstFetch ) {
+					$('#bp-message-thread-list').animate({ scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 100);
+					this.firstFetch = false;
+				} else {
+					$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
+				}
 
-			if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
-				$('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
-			}
+				if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
+					$('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
+				}
 
 				$( '#bp-message-load-more' ).removeClass( 'loading' );
 

@@ -343,7 +343,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && isset( $forum->post_type ) ) {
+		if ( true === $retval && is_user_logged_in() && isset( $forum->post_type ) ) {
 			$post_type = get_post_type_object( $forum->post_type );
 
 			if ( ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {
@@ -552,8 +552,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$data['featured_media']['thumb'] = (string) (
 			function_exists( 'bbp_get_forum_thumbnail_src' )
-			? bbp_get_forum_thumbnail_src( $forum->ID, 'large', 'large' )
-			: get_the_post_thumbnail_url( $forum->ID, 'large' )
+			? bbp_get_forum_thumbnail_src( $forum->ID, 'thumbnail', 'large' )
+			: get_the_post_thumbnail_url( $forum->ID, 'thumbnail' )
 		);
 
 		$data['title'] = array(

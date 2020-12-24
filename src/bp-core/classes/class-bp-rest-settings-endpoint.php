@@ -329,13 +329,14 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'activity' ) ) {
 			// Activity Settings.
 			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
-			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( -1 );
+			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( - 1 );
 			$results['bp_enable_heartbeat_refresh']     = bp_is_activity_heartbeat_active();
 			$results['bp_enable_activity_autoload']     = bp_is_activity_autoload_active();
 			$results['bp_enable_activity_tabs']         = bp_is_activity_tabs_active();
 			$results['bp_enable_activity_follow']       = bp_is_activity_follow_active();
 			$results['bp_enable_activity_like']         = bp_is_activity_like_active();
 			$results['bp_enable_activity_link_preview'] = bp_is_activity_link_preview_active();
+			$results['bp_enable_relevant_feed']         = ( function_exists( 'bp_is_relevant_feed_enabled' ) ? bp_is_relevant_feed_enabled() : false );
 
 			// Posts in Activity Feeds.
 			$results['bp-feed-platform-new_avatar']            = bp_platform_is_feed_enable( 'bp-feed-platform-new_avatar' );
@@ -353,7 +354,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $custom_post_types ) ) {
 				foreach ( $custom_post_types as $single_post ) {
 					// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
-					$enabled = bp_is_post_type_feed_enable( $single_post );
+					$enabled                                               = bp_is_post_type_feed_enable( $single_post );
 					$results[ 'bp-feed-custom-post-type-' . $single_post ] = $enabled;
 				}
 			}
@@ -368,6 +369,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_media_group_albums_support']   = bp_is_group_albums_support_enabled();
 			$results['bp_media_messages_media_support'] = bp_is_messages_media_support_enabled();
 			$results['bp_media_forums_media_support']   = bp_is_forums_media_support_enabled();
+			$results['bp_media_allowed_size']           = bp_media_allowed_upload_media_size();
+			$results['bp_media_allowed_per_batch']      = bp_media_allowed_upload_media_per_batch();
 
 			// Emoji.
 			$results['bp_media_profiles_emoji_support'] = bp_is_profiles_emoji_support_enabled();
@@ -390,6 +393,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_media_group_document_support']       = bp_is_group_document_support_enabled();
 				$results['bp_media_messages_document_support']    = bp_is_messages_document_support_enabled();
 				$results['bp_is_forums_document_support_enabled'] = bp_is_forums_document_support_enabled();
+				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
+				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
 			}
 		}
 
@@ -407,7 +412,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$member_types = bp_get_active_member_types();
 			if ( isset( $member_types ) && ! empty( $member_types ) ) {
 				foreach ( $member_types as $member_type_id ) {
-					$option_name = bp_get_member_type_key( $member_type_id );
+					$option_name                                                    = bp_get_member_type_key( $member_type_id );
 					$results[ 'bp-enable-send-invite-member-type-' . $option_name ] = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false );
 				}
 			}
@@ -422,9 +427,15 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_search_number_of_results'] = get_option( 'bp_search_number_of_results', '5' );
 		}
 
+		$bp_pages = bp_core_get_directory_page_ids();
+		$terms    = isset( $bp_pages['terms'] ) ? $bp_pages['terms'] : '';
+		$privacy  = isset( $bp_pages['privacy'] ) ? $bp_pages['privacy'] : '';
+
 		// Additional.
 		$results['enable_friendship_connections'] = bp_is_active( 'friends' );
 		$results['enable_messages']               = bp_is_active( 'messages' );
+		$results['bp_page_privacy']               = $privacy;
+		$results['bp_page_terms']                 = $terms;
 
 		return $results;
 	}
