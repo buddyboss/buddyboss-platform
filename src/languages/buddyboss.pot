@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-24 03:43:28+00:00\n"
+"POT-Creation-Date: 2020-12-24 06:09:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5153,15 +5153,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2655
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
-"\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
-"\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
+"\t\t\t<li>- All suspended members will regain permission to login and their "
+"content will be unhidden</li>\n"
+"\t\t\t<li>- Members on the network will no longer be able to block other "
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t<li>- All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -21838,6 +21838,16 @@ msgstr ""
 msgid "Block Member"
 msgstr ""
 
+#: bp-moderation/screens/block-member-form.php:17
+#: bp-moderation/screens/content-report-form.php:17
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:165
+#: bp-templates/bp-nouveau/includes/template-tags.php:2585
+#: bp-templates/bp-nouveau/includes/template-tags.php:2602
+#: bp-templates/bp-nouveau/includes/template-tags.php:2620
+#: bp-templates/bp-nouveau/includes/template-tags.php:2628
+msgid "Close (Esc)"
+msgstr ""
+
 #: bp-moderation/screens/block-member-form.php:22
 msgid "Please confirm you want to block this member."
 msgstr ""
@@ -22842,6 +22852,11 @@ msgstr ""
 msgid "Copy Download Link"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:139
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:293
+msgid "Documents added in comment cannot be moved"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/document/add-document.php:19
 #: bp-templates/bp-nouveau/buddypress/document/add-document.php:27
 #: bp-templates/bp-nouveau/buddypress/document/index.php:45
@@ -23266,6 +23281,11 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/requests-loop.php:13
 msgid "Manage Membership Requests"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:61
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:46
+msgid "Photos added in comment cannot be moved"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:109
@@ -25407,13 +25427,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/template-tags.php:2577
 #: bp-templates/bp-nouveau/includes/template-tags.php:2594
 msgid "By creating an account you are agreeing to the %s."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/template-tags.php:2585
-#: bp-templates/bp-nouveau/includes/template-tags.php:2602
-#: bp-templates/bp-nouveau/includes/template-tags.php:2620
-#: bp-templates/bp-nouveau/includes/template-tags.php:2628
-msgid "Close (Esc)"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/template-tags.php:2585
