@@ -20,7 +20,7 @@ if ( $group_id > 0 ) {
 	$move_id   = bp_get_video_user_id();
 	$move_type = 'profile';
 }
-$more_video = $video_template->video_count > 5 ? true : false;
+$more_video = $video_template->video_count > 3 ? true : false;
 ?>
 
 <div class="bb-activity-video-elem
