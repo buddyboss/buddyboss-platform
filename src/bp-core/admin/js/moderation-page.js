@@ -10,12 +10,12 @@ jQuery(document).ready(function ($) {
         var curObj = $(this);
         var sub_action = curObj.attr('data-action');
 
-        if ( 'hide'===sub_action ) {
-            if ( ! confirm ( Bp_Moderation.strings.confirm_msg ) ) {
+        if ('hide'===sub_action) {
+            if (!confirm(Bp_Moderation.strings.confirm_msg)) {
                 return false;
             }
-        } else if ( 'unhide'===sub_action ) {
-            if ( ! confirm ( Bp_Moderation.strings.unhide_confirm_msg ) ) {
+        } else if ('unhide'===sub_action) {
+            if (!confirm(Bp_Moderation.strings.unhide_confirm_msg)) {
                 return false;
             }
         }
@@ -83,12 +83,12 @@ jQuery(document).ready(function ($) {
         var curObj = $(this);
         var sub_action = curObj.attr('data-action');
 
-        if ( 'suspend'===sub_action ) {
-            if ( ! confirm ( BP_ADMIN.moderation.suspend_confirm_message ) ) {
+        if ('suspend'===sub_action) {
+            if (!confirm(BP_ADMIN.moderation.suspend_confirm_message)) {
                 return false;
             }
-        } else if ( 'unsuspend'===sub_action ) {
-            if ( ! confirm ( BP_ADMIN.moderation.unsuspend_confirm_message ) ) {
+        } else if ('unsuspend'===sub_action) {
+            if (!confirm(BP_ADMIN.moderation.unsuspend_confirm_message)) {
                 return false;
             }
         }
@@ -113,24 +113,24 @@ jQuery(document).ready(function ($) {
             var hideArg = '';
             if (true===response.success) {
                 var url = window.location.href;
-                if ( 'suspend'===sub_action ) {
-                    curObj.attr ( 'data-action', 'unsuspend' );
-                    if ( curObj.hasClass ( 'content-author' ) ) {
-                        curObj.text ( Bp_Moderation.strings.unsuspend_author_label );
-                        curObj.attr ( 'title', Bp_Moderation.strings.unsuspend_author_label );
+                if ('suspend'===sub_action) {
+                    curObj.attr('data-action', 'unsuspend');
+                    if (curObj.hasClass('content-author')) {
+                        curObj.text(Bp_Moderation.strings.unsuspend_author_label);
+                        curObj.attr('title', Bp_Moderation.strings.unsuspend_author_label);
                     } else {
-                        curObj.text ( Bp_Moderation.strings.unsuspend_label );
-                        curObj.attr ( 'title', Bp_Moderation.strings.unsuspend_label );
+                        curObj.text(Bp_Moderation.strings.unsuspend_label);
+                        curObj.attr('title', Bp_Moderation.strings.unsuspend_label);
                     }
                     hideArg = 'suspended';
-                } else if ( 'unsuspend'===sub_action ) {
-                    curObj.attr ( 'data-action', 'suspend' );
-                    if ( curObj.hasClass ( 'content-author' ) ) {
-                        curObj.text ( Bp_Moderation.strings.suspend_author_label );
-                        curObj.attr ( 'title', Bp_Moderation.strings.suspend_author_label );
+                } else if ('unsuspend'===sub_action) {
+                    curObj.attr('data-action', 'suspend');
+                    if (curObj.hasClass('content-author')) {
+                        curObj.text(Bp_Moderation.strings.suspend_author_label);
+                        curObj.attr('title', Bp_Moderation.strings.suspend_author_label);
                     } else {
-                        curObj.text ( Bp_Moderation.strings.suspend_label );
-                        curObj.attr ( 'title', Bp_Moderation.strings.suspend_label );
+                        curObj.text(Bp_Moderation.strings.suspend_label);
+                        curObj.attr('title', Bp_Moderation.strings.suspend_label);
                     }
                     hideArg = 'unsuspended';
                 }
