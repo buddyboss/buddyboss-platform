@@ -14,7 +14,7 @@
 			<div class="modal-wrapper">
 				<div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php esc_html_e( 'Move Video to...', 'buddyboss' ); ?></span></h4>
 					</header>
 					<div class="bb-field-wrap">
 						<?php bp_get_template_part( 'video/location-move' ); ?>

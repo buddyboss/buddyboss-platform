@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-24 16:09:03+00:00\n"
+"POT-Creation-Date: 2020-12-24 17:26:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1002,7 +1002,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:60
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:133
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:14
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:50
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:68
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:46
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:559
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:560
@@ -13702,7 +13702,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:118
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:125
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:47
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:62
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:43
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:26
 msgid "Move"
@@ -22607,7 +22607,7 @@ msgid "Enter Album Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:54
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:44
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:59
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:40
 #: bp-templates/bp-nouveau/includes/video/functions.php:145
@@ -22636,7 +22636,6 @@ msgid "Album Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:17
-#: bp-templates/bp-nouveau/buddypress/video/video-move.php:17
 msgid "Move Photo to..."
 msgstr ""
 
@@ -23044,7 +23043,7 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:67
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:89
 msgid "More Videos"
 msgstr ""
 
@@ -23067,6 +23066,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:34
 msgid "Write something about your videos, to be shown on your timeline"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/video/video-move.php:17
+msgid "Move Video to..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress-functions.php:595

@@ -21,6 +21,12 @@ if ( $group_id > 0 ) {
 	$move_type = 'profile';
 }
 $more_video = $video_template->video_count > 3 ? true : false;
+
+$media_privacy = bp_media_user_can_manage_media( bp_get_video_id(), bp_loggedin_user_id() );
+$can_manage    = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
+$can_move      = ( true === (bool) $media_privacy['can_add'] ) ? true : false;
+$db_privacy    = bp_get_video_privacy();
+
 ?>
 
 <div class="bb-activity-video-elem
@@ -35,22 +41,38 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 ?>
 ">
 	<div class="video-action-wrap item-action-wrap">
-		<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="More actions">
-			<i class="bb-icon-menu-dots-v"></i>
-		</a>
-		<div class="video-action_list item-action_list">
-			<ul>
-				<li class="edit_thumbnail_video">
-					<a href="#" data-action="video" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
-				</li>
-				<li class="move_video">
-					<a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-				</li>
-				<li class="delete_file">
-					<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
-				</li>
-			</ul>
-		</div>
+
+		<?php if ( $can_manage ) { ?>
+			<?php
+			$item_id = 0;
+			if ( bp_loggedin_user_id() === bp_get_video_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
+					?>
+				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="More actions">
+					<i class="bb-icon-menu-dots-v"></i>
+				</a>
+				<div class="video-action_list item-action_list">
+					<ul>
+						<?php
+							if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+								?>
+								<li class="edit_thumbnail_video">
+									<a href="#" data-action="video" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+								</li>
+								<li class="move_video">
+									<a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
+
+							<?php } ?>
+
+						<li class="delete_file">
+							<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+						</li>
+					</ul>
+				</div>
+
+			<?php } ?>
+		<?php } ?>
+
 	</div>
 	<?php if ( 1 === $video_template->video_count ) { ?>
 		<video id="video-<?php bp_video_id(); ?>" class="video-js" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }'>
