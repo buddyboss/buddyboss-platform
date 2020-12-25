@@ -57,6 +57,12 @@ add_action(
 				),
 			),
 			array(
+				'video_move' => array(
+					'function' => 'bp_nouveau_ajax_video_move',
+					'nopriv'   => true,
+				),
+			),
+			array(
 				'video_move_to_album' => array(
 					'function' => 'bp_nouveau_ajax_video_move_to_album',
 					'nopriv'   => true,

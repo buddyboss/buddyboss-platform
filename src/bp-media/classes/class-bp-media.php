@@ -312,6 +312,7 @@ class BP_Media {
 				'album_id'     => false,           // Album ID.
 				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'count_total'  => false,           // Whether or not to use count_total.
+				'video'        => false,            // Whether to include videos.
 			)
 		);
 
@@ -357,7 +358,7 @@ class BP_Media {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
 
@@ -400,9 +401,9 @@ class BP_Media {
 		}
 
 		// existing-media check to query media which has no albums assigned.
-		if ( ! empty( $r['album_id'] ) && 'existing-media' != $r['album_id'] ) {
+		if ( ! empty( $r['album_id'] ) && 'existing-media' !== $r['album_id'] ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
-		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' == $r['album_id'] ) {
+		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' === $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
@@ -417,6 +418,10 @@ class BP_Media {
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+		}
+
+		if ( ! $r['video'] ) {
+			$where_conditions['type'] = 'm.type = "photo"';
 		}
 
 		/**
@@ -439,8 +444,8 @@ class BP_Media {
 		// Join the where conditions together.
 		if ( ! empty( $scope_query['sql'] ) ) {
 			$where_sql = 'WHERE ' .
-			             ( ! empty( $where_conditions ) ? '( ' . join( ' AND ', $where_conditions ) . ' ) AND ' : '' )  .
-			             ' ( ' . $scope_query['sql'] . ' )';
+						 ( ! empty( $where_conditions ) ? '( ' . join( ' AND ', $where_conditions ) . ' ) AND ' : '' ) .
+						 ' ( ' . $scope_query['sql'] . ' )';
 		} else {
 			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
 		}
@@ -619,7 +624,7 @@ class BP_Media {
 			$media->attachment_data          = $attachment_data;
 
 			$group_name = '';
-			if ( bp_is_active( 'groups') && $media->group_id > 0 ) {
+			if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
 				$group      = groups_get_group( $media->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
@@ -629,7 +634,7 @@ class BP_Media {
 					$visibility = ucfirst( $status );
 				}
 			} else {
-				$visibility       = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
+				$visibility = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
 			}
 			$media->group_name = $group_name;
 			$media->visibility = $visibility;
@@ -882,7 +887,7 @@ class BP_Media {
 	 * @string    $privacy           Optional. The privacy to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
-	 * @param bool $from Context of deletion from. ex. attachment, activity etc.
+	 * @param bool  $from Context of deletion from. ex. attachment, activity etc.
 	 *
 	 * @return array|bool An array of deleted media IDs on success, false on failure.
 	 */
@@ -1053,12 +1058,14 @@ class BP_Media {
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 
-					// Deleting an activity.
+						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete( array(
+						if ( 'activity' !== $from && bp_activity_delete(
+							array(
 								'id'      => $activity->id,
 								'user_id' => $activity->user_id,
-							) ) ) {
+							)
+						) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}

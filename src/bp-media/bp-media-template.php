@@ -144,6 +144,10 @@ function bp_has_media( $args = '' ) {
 		$album_id = ( isset( $args['album_id'] ) ? $args['album_id'] : false );
 	}
 
+	if ( $album_id ) {
+		$args['video'] = true;
+	}
+
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
@@ -188,6 +192,7 @@ function bp_has_media( $args = '' ) {
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
 			'privacy'      => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'video'        => false,            // Whether to include videos.
 
 		// Searching.
 			'search_terms' => $search_terms_default,
