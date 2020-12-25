@@ -402,6 +402,8 @@ window.bp = window.bp || {};
 				sender_name   : '',
 				sender_link   : '',
 				sender_avatar : '',
+				is_user_blocked   : false,
+				is_user_suspended   : false,
 				count         : 0,
 				date          : 0,
 				display_date  : '',
@@ -431,6 +433,8 @@ window.bp = window.bp || {};
 				sender_id     : 0,
 				sender_name   : '',
 				sender_link   : '',
+				is_user_blocked   : false,
+				is_user_suspended   : false,
 				sender_avatar : '',
 				date          : 0,
 				display_date  : ''
@@ -488,6 +492,8 @@ window.bp = window.bp || {};
 						resp.threads[index].sender_name   = value.sender_name;
 						resp.threads[index].sender_link   = value.sender_link;
 						resp.threads[index].sender_avatar = value.sender_avatar;
+						resp.threads[index].is_user_blocked = value.is_user_blocked;
+						resp.threads[index].is_user_suspended = value.is_user_suspended;
 						resp.threads[index].count         = value.count;
 						resp.threads[index].date          = new Date( value.date );
 						resp.threads[index].display_date  = value.display_date;
@@ -602,6 +608,8 @@ window.bp = window.bp || {};
 						resp.messages[index].sender_name   = value.sender_name;
 						resp.messages[index].sender_link   = value.sender_link;
 						resp.messages[index].sender_avatar = value.sender_avatar;
+						resp.messages[index].is_user_blocked = value.is_user_blocked;
+						resp.messages[index].is_user_suspended = value.is_user_suspended;
 						resp.messages[index].date          = new Date( value.date );
 						resp.messages[index].display_date  = value.display_date;
 						resp.messages[index].star_link     = value.star_link;
@@ -615,6 +623,12 @@ window.bp = window.bp || {};
 					this.options.recipients     = resp.thread.recipients;
 				}
 
+				setTimeout(
+					function () { // Waiting to load dummy image
+						bp.Nouveau.reportPopUp();
+					},
+					1000
+				);
 				return resp.messages;
 			}
 		}

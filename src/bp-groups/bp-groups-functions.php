@@ -869,6 +869,7 @@ function groups_get_groups( $args = '' ) {
 		'order'              => 'DESC',         // 'ASC' or 'DESC'
 		'orderby'            => 'date_created', // date_created, last_activity, total_member_count, name, random, meta_id.
 		'user_id'            => false,          // Pass a user_id to limit to only groups that this user is a member of.
+		'creator_id'         => false,          // Pass a creator_id to limit to only groups which created by creator_id.
 		'include'            => false,          // Only include these specific groups (group_ids).
 		'exclude'            => false,          // Do not include these specific groups (group_ids).
 		'parent_id'          => null,           // Get groups that are children of the specified group(s).
@@ -886,6 +887,7 @@ function groups_get_groups( $args = '' ) {
 		'update_meta_cache'  => true,           // Pre-fetch groupmeta for queried groups.
 		'update_admin_cache' => false,
 		'fields'             => 'all',          // Return BP_Groups_Group objects or a list of ids.
+		'moderation_query'   => 'false',        // Remove moderation query.
 	);
 
 	$r = bp_parse_args( $args, $defaults, 'groups_get_groups' );
@@ -894,6 +896,7 @@ function groups_get_groups( $args = '' ) {
 		array(
 			'type'               => $r['type'],
 			'user_id'            => $r['user_id'],
+			'creator_id'         => $r['creator_id'],
 			'include'            => $r['include'],
 			'exclude'            => $r['exclude'],
 			'slug'               => $r['slug'],
@@ -913,6 +916,7 @@ function groups_get_groups( $args = '' ) {
 			'order'              => $r['order'],
 			'orderby'            => $r['orderby'],
 			'fields'             => $r['fields'],
+			'moderation_query'   => $r['moderation_query'],
 		)
 	);
 

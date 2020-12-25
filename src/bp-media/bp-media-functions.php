@@ -259,45 +259,47 @@ function bp_media_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,        // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,        // results per page
-			'sort'         => 'DESC',       // sort ASC or DESC
-			'order_by'     => false,        // order by
+			'max'              => false,        // Maximum number of results to return.
+			'fields'           => 'all',
+			'page'             => 1,            // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,        // results per page
+			'sort'             => 'DESC',       // sort ASC or DESC
+			'order_by'         => false,        // order by
 
-			'scope'        => false,
+			'scope'            => false,
 
 			// want to limit the query.
-			'user_id'      => false,
-			'activity_id'  => false,
-			'album_id'     => false,
-			'group_id'     => false,
-			'search_terms' => false,        // Pass search terms as a string
-			'privacy'      => false,        // privacy of media
-			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'  => false,
+			'user_id'          => false,
+			'activity_id'      => false,
+			'album_id'         => false,
+			'group_id'         => false,
+			'search_terms'     => false,        // Pass search terms as a string
+			'privacy'          => false,        // privacy of media
+			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
+			'count_total'      => false,
+			'moderation_query' => true,         // Filter for exclude moderation query
 		),
 		'media_get'
 	);
 
 	$media = BP_Media::get(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'activity_id'  => $r['activity_id'],
-			'album_id'     => $r['album_id'],
-			'group_id'     => $r['group_id'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'order_by'     => $r['order_by'],
-			'search_terms' => $r['search_terms'],
-			'scope'        => $r['scope'],
-			'privacy'      => $r['privacy'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
+			'page'             => $r['page'],
+			'per_page'         => $r['per_page'],
+			'user_id'          => $r['user_id'],
+			'activity_id'      => $r['activity_id'],
+			'album_id'         => $r['album_id'],
+			'group_id'         => $r['group_id'],
+			'max'              => $r['max'],
+			'sort'             => $r['sort'],
+			'order_by'         => $r['order_by'],
+			'search_terms'     => $r['search_terms'],
+			'scope'            => $r['scope'],
+			'privacy'          => $r['privacy'],
+			'exclude'          => $r['exclude'],
+			'count_total'      => $r['count_total'],
+			'fields'           => $r['fields'],
+			'moderation_query' => $r['moderation_query'],
 		)
 	);
 
@@ -911,36 +913,37 @@ function bp_album_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,                    // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,                    // results per page
-			'sort'         => 'DESC',                   // sort ASC or DESC
-
-			'search_terms' => false,           // Pass search terms as a string
-			'exclude'      => false,           // Comma-separated list of activity IDs to exclude.
+			'max'              => false,            // Maximum number of results to return.
+			'fields'           => 'all',
+			'page'             => 1,                // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,            // results per page.
+			'sort'             => 'DESC',           // sort ASC or DESC.
+			'search_terms'     => false,            // Pass search terms as a string.
+			'exclude'          => false,            // Comma-separated list of activity IDs to exclude.
 			// want to limit the query.
-			'user_id'      => false,
-			'group_id'     => false,
-			'privacy'      => false,                    // privacy of album
-			'count_total'  => false,
+			'user_id'          => false,
+			'group_id'         => false,
+			'privacy'          => false,            // privacy of album.
+			'count_total'      => false,
+			'moderation_query' => true,             // Filter for exclude moderation query.
 		),
 		'album_get'
 	);
 
 	$album = BP_Media_Album::get(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'group_id'     => $r['group_id'],
-			'privacy'      => $r['privacy'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'search_terms' => $r['search_terms'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
+			'page'             => $r['page'],
+			'per_page'         => $r['per_page'],
+			'user_id'          => $r['user_id'],
+			'group_id'         => $r['group_id'],
+			'privacy'          => $r['privacy'],
+			'max'              => $r['max'],
+			'sort'             => $r['sort'],
+			'search_terms'     => $r['search_terms'],
+			'exclude'          => $r['exclude'],
+			'count_total'      => $r['count_total'],
+			'fields'           => $r['fields'],
+			'moderation_query' => $r['moderation_query'],
 		)
 	);
 
@@ -3309,4 +3312,33 @@ function bp_media_is_activity_comment_photo( $photo ) {
 	}
 	return $is_comment_photo;
 
+}
+
+/**
+ * Function to get media report link
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args button arguments.
+ *
+ * @return mixed|void
+ */
+function bp_media_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$report_btn = bp_moderation_get_report_button( array(
+		'id'                => 'media_report',
+		'component'         => 'moderation',
+		'must_be_logged_in' => true,
+		'button_attr'       => array(
+			'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
+			'data-bp-content-type' => BP_Moderation_Media::$moderation_type,
+		),
+	),
+		true );
+
+	return apply_filters( 'bp_media_get_report_link', $report_btn, $args );
 }

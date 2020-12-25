@@ -229,6 +229,21 @@ class BP_Groups_Group {
 			return;
 		}
 
+		/**
+		 * Pre validate the group before fetch.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param boolean $validate Whether to check the group is valid or not.
+		 * @param object  $group    Group object.
+		 */
+		$validate = apply_filters( 'bp_groups_group_pre_validate', true, $group );
+
+		if ( empty( $validate ) ) {
+			$this->id = 0;
+			return;
+		}
+
 		// Group found so setup the object variables.
 		$this->id           = (int) $group->id;
 		$this->creator_id   = (int) $group->creator_id;
@@ -1029,6 +1044,8 @@ class BP_Groups_Group {
 	 *                                            Default: null (no limit).
 	 *     @type int          $user_id            Optional. If provided, results will be limited to groups
 	 *                                            of which the specified user is a member. Default: null.
+	 *     @type int          $creator_id         Optional. If provided, results will be limited to groups
+	 *                                            of which the created by given user. Default: null.
 	 *     @type array|string $slug               Optional. Array or comma-separated list of group slugs to limit
 	 *                                            results to.
 	 *                                            Default: false.
@@ -1102,6 +1119,7 @@ class BP_Groups_Group {
 			'per_page'           => null,
 			'page'               => null,
 			'user_id'            => 0,
+			'creator_id'         => 0,
 			'slug'               => array(),
 			'search_terms'       => false,
 			'search_columns'     => array(),
@@ -1243,6 +1261,10 @@ class BP_Groups_Group {
 			$where_conditions['user'] = $wpdb->prepare( 'm.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $r['user_id'] );
 		}
 
+		if ( ! empty( $r['creator_id'] ) ) {
+			$where_conditions['creator'] = $wpdb->prepare( "g.creator_id = %d", $r['creator_id'] );
+		}
+
 		if ( ! empty( $r['include'] ) ) {
 			$include                     = implode( ',', wp_parse_id_list( $r['include'] ) );
 			$where_conditions['include'] = "g.id IN ({$include})";
@@ -1335,11 +1357,31 @@ class BP_Groups_Group {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
 
+		/**
+		 * Filters the Where SQL statement.
+		 *
+         * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$where_conditions = apply_filters( 'bp_groups_get_where_conditions', $where_conditions, $r );
+
 		$where = '';
 		if ( ! empty( $where_conditions ) ) {
 			$sql['where'] = implode( ' AND ', $where_conditions );
 			$where        = "WHERE {$sql['where']}";
 		}
+
+		/**
+		 * Filters the From SQL statement.
+		 *
+         * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $r    Array of parsed arguments for the get method.
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['from'] = apply_filters( 'bp_groups_get_join_sql', $sql['from'], $r );
 
 		$paged_groups_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
