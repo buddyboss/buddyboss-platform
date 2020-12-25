@@ -964,8 +964,8 @@ window.bp = window.bp || {};
 										if ( $( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).length ) {
 											$( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).remove();
 										}
-										if ( $( 'body .bb-activity-video-elem.video-activity.' + value ).length ) {
-											$( 'body .bb-activity-video-elem.video-activity.' + value ).remove();
+										if ( $( 'body .bb-activity-video-elem.' + value ).length ) {
+											$( 'body .bb-activity-video-elem.' + value ).remove();
 										}
 									}
 								);
