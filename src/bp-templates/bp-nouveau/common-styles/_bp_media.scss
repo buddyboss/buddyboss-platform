@@ -767,6 +767,7 @@
 	min-width: 20%;
 }
 
+.forums-video-wrap,
 .bb-activity-video-wrap {
 	display: -webkit-box;
 	display: -webkit-flex;
@@ -782,12 +783,11 @@
 
 		.bb-item-cover-wrap {
 			padding-top: 38.56%;
+		}
 
-			&:hover:after {
-				visibility: visible;
-				opacity: 1;
-			}
-
+		&:hover .bb-item-cover-wrap:after {
+			visibility: visible;
+			opacity: 1;
 		}
 
 		.bb-videos-length {
