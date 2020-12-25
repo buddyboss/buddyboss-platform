@@ -4311,7 +4311,7 @@ window.bp = window.bp || {};
 										}
 									} else {
 										// Prepend the activity.
-										!hasNotAlbum ? bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend') : '';
+										hasNotAlbum ? bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend') : '';
 									}
 								} else {
 									location.reload(true);
