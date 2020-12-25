@@ -70,7 +70,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 * @return string|void
 	 */
 	public static function get_permalink( $document_id ) {
-		return '';
+		$document = new BP_Document( $document_id );
+		return wp_get_attachment_url( $document->attachment_id );
 	}
 
 	/**

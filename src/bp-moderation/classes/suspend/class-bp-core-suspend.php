@@ -315,8 +315,9 @@ class BP_Core_Suspend {
 			$hide_sitewide  = (int) $recode->hide_sitewide;
 			$hide_parent    = (int) $recode->hide_parent;
 			$user_suspended = (int) $recode->user_suspended;
+			$reported       = (int) $recode->reported;
 
-			if ( empty( $hide_sitewide ) && empty( $hide_parent ) && empty( $user_suspended ) ) {
+			if ( empty( $hide_sitewide ) && empty( $hide_parent ) && empty( $user_suspended ) && empty( $reported ) ) {
 				$exist = self::check_suspend_details_exist( $recode->id );
 				if ( empty( $exist ) ) {
 					self::delete_suspend( $item_id, $item_type );
