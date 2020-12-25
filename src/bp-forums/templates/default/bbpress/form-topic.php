@@ -96,7 +96,7 @@
 						?>
 
 						<p>
-							<input type="hidden" value="<?php echo $get_the_tags; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<input type="hidden" value="<?php echo esc_attr( $get_the_tags ); ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
 							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
 								<?php
 								if( isset($get_the_tags) && !empty($get_the_tags) ){
@@ -104,7 +104,7 @@
 									foreach($get_the_tags as $single_tag){
 										$single_tag = trim($single_tag);
 										?>
-										<option selected="selected" value="<?php echo $single_tag; ?>"><?php echo $single_tag; ?></option>
+										<option selected="selected" value="<?php echo esc_attr( $single_tag ); ?>"><?php echo esc_html( $single_tag ); ?></option>
 										<?php
 									}
 								}
