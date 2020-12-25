@@ -152,6 +152,7 @@ class BP_Media_Template {
 			'album_id'     => false,
 			'group_id'     => false,
 			'privacy'      => false,
+			'video'        => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
 		extract( $r );
@@ -197,6 +198,7 @@ class BP_Media_Template {
 					'group_id'     => $group_id,
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
+					'video'        => $video,
 				)
 			);
 		}

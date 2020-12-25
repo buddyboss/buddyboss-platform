@@ -262,9 +262,9 @@ function bp_media_get( $args = '' ) {
 			'max'              => false,        // Maximum number of results to return.
 			'fields'           => 'all',
 			'page'             => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'         => false,        // results per page
-			'sort'             => 'DESC',       // sort ASC or DESC
-			'order_by'         => false,        // order by
+			'per_page'         => false,        // results per page.
+			'sort'             => 'DESC',       // sort ASC or DESC.
+			'order_by'         => false,        // order by.
 
 			'scope'            => false,
 
@@ -273,11 +273,12 @@ function bp_media_get( $args = '' ) {
 			'activity_id'      => false,
 			'album_id'         => false,
 			'group_id'         => false,
-			'search_terms'     => false,        // Pass search terms as a string
-			'privacy'          => false,        // privacy of media
+			'search_terms'     => false,        // Pass search terms as a string.
+			'privacy'          => false,        // privacy of media.
 			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'      => false,
-			'moderation_query' => true,         // Filter for exclude moderation query
+			'moderation_query' => true,         // Filter for exclude moderation query.
+			'video'            => false,         // Whether to include videos.
 		),
 		'media_get'
 	);
@@ -300,6 +301,7 @@ function bp_media_get( $args = '' ) {
 			'count_total'      => $r['count_total'],
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
+			'video'            => $r['video'],
 		)
 	);
 
@@ -3329,16 +3331,18 @@ function bp_media_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$report_btn = bp_moderation_get_report_button( array(
-		'id'                => 'media_report',
-		'component'         => 'moderation',
-		'must_be_logged_in' => true,
-		'button_attr'       => array(
-			'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
-			'data-bp-content-type' => BP_Moderation_Media::$moderation_type,
+	$report_btn = bp_moderation_get_report_button(
+		array(
+			'id'                => 'media_report',
+			'component'         => 'moderation',
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
+				'data-bp-content-type' => BP_Moderation_Media::$moderation_type,
+			),
 		),
-	),
-		true );
+		true
+	);
 
 	return apply_filters( 'bp_media_get_report_link', $report_btn, $args );
 }

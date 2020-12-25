@@ -280,11 +280,11 @@ function bp_nouveau_ajax_media_save() {
 		bp_has_media( bp_ajax_querystring( 'media' ) );
 		$media_personal_count = $GLOBALS['media_template']->total_media_count;
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
-    }
+	}
 
-    if ( bp_is_group_media() ) {
-	    $media_group_count = bp_media_get_total_group_media_count();
-    }
+	if ( bp_is_group_media() ) {
+		$media_group_count = bp_media_get_total_group_media_count();
+	}
 
 	wp_send_json_success(
 		array(
@@ -363,9 +363,9 @@ function bp_nouveau_ajax_media_delete() {
 	$response = array();
 	if ( $activity_id ) {
 		$response = bp_media_get_activity_media( $_POST['activity_id'] );
-    }
+	}
 
-	$delete_box = false;
+	$delete_box       = false;
 	$activity_content = '';
 	if ( 'activity' === $from_where ) {
 		// Get activity object.
@@ -377,7 +377,7 @@ function bp_nouveau_ajax_media_delete() {
 			ob_start();
 			if ( bp_has_activities(
 				array(
-					'include'     => $activity_id,
+					'include' => $activity_id,
 				)
 			) ) {
 				while ( bp_activities() ) {
@@ -388,17 +388,17 @@ function bp_nouveau_ajax_media_delete() {
 			$activity_content = ob_get_contents();
 			ob_end_clean();
 		}
-    }
+	}
 
 	$media_personal_count = 0;
 	$media_group_count    = 0;
-	if( bp_is_user_media() ) {
+	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 		bp_has_media( bp_ajax_querystring( 'media' ) );
 		$media_personal_count = $GLOBALS['media_template']->total_media_count;
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 	}
-	if( bp_is_group_media() ) {
+	if ( bp_is_group_media() ) {
 		$media_group_count = bp_media_get_total_group_media_count();
 	}
 
@@ -600,12 +600,12 @@ function bp_nouveau_ajax_media_album_save() {
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( ! empty( $medias ) ) {
-		// set album id for media
+		// set album id for media.
 		foreach ( $medias as $key => $media ) {
 			$medias[ $key ]['album_id'] = $album_id;
 		}
 
-		// save all media uploaded
+		// save all media uploaded.
 		bp_media_add_handler( $medias, $privacy );
 	}
 
