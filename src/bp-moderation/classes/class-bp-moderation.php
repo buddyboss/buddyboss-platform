@@ -1181,58 +1181,64 @@ class BP_Moderation {
 		if ( ! empty( $admins ) ) {
 
 			$_GET['username_visible'] = true;
-			foreach ( $admins as $admin ) {
-				if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
-					$tokens    = array(
-						'user_name'     => bp_core_get_user_displayname( $this->item_id ),
-						'times_blocked' => $this->count,
-						'member_link'   => BP_Moderation_Members::get_permalink( $this->item_id ),
-						'report_link'   => add_query_arg(
-							array(
-								'page'         => 'bp-moderation',
-								'mid'          => $this->item_id,
-								'content_type' => $this->item_type,
-								'action'       => 'view',
-							),
-							bp_get_admin_url( 'admin.php' )
+
+			if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
+
+				$tokens = array(
+					'user_name'     => bp_core_get_user_displayname( $this->item_id ),
+					'times_blocked' => $this->count,
+					'member_link'   => BP_Moderation_Members::get_permalink( $this->item_id ),
+					'report_link'   => add_query_arg(
+						array(
+							'page'         => 'bp-moderation',
+							'mid'          => $this->item_id,
+							'content_type' => $this->item_type,
+							'action'       => 'view',
 						),
-					);
+						bp_get_admin_url( 'admin.php' )
+					),
+				);
 
-					return bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
-				} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
-
-					$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
-
-					$user_ids = bp_moderation_get_content_owner_id( $this->item_id, $this->item_type );
-					if ( ! is_array( $user_ids ) ) {
-						$user_ids = array( $user_ids );
-					}
-
-					$content_owner = array();
-					if ( ! empty( $user_ids ) ) {
-						foreach ( $user_ids as $user_id ) {
-							$content_owner[] = bp_core_get_user_displayname( $user_id );
-						}
-					}
-
-					$tokens = array(
-						'content_type'          => bp_moderation_get_content_type( $this->item_type ),
-						'content_owner'         => implode( ', ', $content_owner ),
-						'content_timesreported' => $this->count,
-						'content_link'          => bp_moderation_get_permalink( $this->item_id, $this->item_type ),
-						'content_reportlink'    => add_query_arg(
-							array(
-								'page'         => 'bp-moderation',
-								'mid'          => $this->item_id,
-								'content_type' => $this->item_type,
-								'action'       => 'view',
-							),
-							$content_report_link
-						),
-					);
-
-					return bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
+				foreach ( $admins as $admin ) {
+					bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
 				}
+
+			} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
+
+				$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
+
+				$user_ids = bp_moderation_get_content_owner_id( $this->item_id, $this->item_type );
+				if ( ! is_array( $user_ids ) ) {
+					$user_ids = array( $user_ids );
+				}
+
+				$content_owner = array();
+				if ( ! empty( $user_ids ) ) {
+					foreach ( $user_ids as $user_id ) {
+						$content_owner[] = bp_core_get_user_displayname( $user_id );
+					}
+				}
+
+				$tokens = array(
+					'content_type'          => bp_moderation_get_content_type( $this->item_type ),
+					'content_owner'         => implode( ', ', $content_owner ),
+					'content_timesreported' => $this->count,
+					'content_link'          => bp_moderation_get_permalink( $this->item_id, $this->item_type ),
+					'content_reportlink'    => add_query_arg(
+						array(
+							'page'         => 'bp-moderation',
+							'mid'          => $this->item_id,
+							'content_type' => $this->item_type,
+							'action'       => 'view',
+						),
+						$content_report_link
+					),
+				);
+
+				foreach ( $admins as $admin ) {
+					bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
+				}
+
 			}
 
 			unset( $_GET['username_visible'] );
