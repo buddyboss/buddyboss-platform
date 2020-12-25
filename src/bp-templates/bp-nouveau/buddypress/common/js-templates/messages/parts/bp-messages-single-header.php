@@ -166,7 +166,6 @@
 							</header>
 							<div class="bb-report-type-wrp">
 								<# _.reject(other_recipients, function(item) {
-                                console.log(item.avatar);
 	                            if( false == item.can_be_blocked ) {
 	                                return false;
 	                            } #>
