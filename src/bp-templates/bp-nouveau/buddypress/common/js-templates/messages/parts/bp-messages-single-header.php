@@ -171,7 +171,7 @@
 	                            } #>
 								<div class="user-item-wrp">
 									<div class="user-avatar">
-										<img src="{{item.avatar}}" alt="{{item.user_name}}">
+										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
 									</div>
 									<div class="user-name">
 										{{item.user_name}}
