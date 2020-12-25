@@ -16775,7 +16775,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container {
-  max-height: 95vh;
+  max-height: 80vh;
   overflow: auto;
 }
 
