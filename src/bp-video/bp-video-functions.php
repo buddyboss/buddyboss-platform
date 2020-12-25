@@ -803,7 +803,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 			// Generate 3 random images for video cover.
 			$numbers = range( 1, (int) $duration );
 			shuffle( $numbers );
-			$random_seconds = array_slice( $numbers, 0, 3 );
+			$random_seconds = array_slice( $numbers, 0, 2 );
 
 			// Get Upload directory.
 			$upload     = wp_upload_dir();

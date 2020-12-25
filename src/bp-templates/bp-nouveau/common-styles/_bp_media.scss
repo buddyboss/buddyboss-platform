@@ -4971,11 +4971,11 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .video-thumbnail-content {
 	display: flex;
-	padding: 30px 0 0 0;
+	padding: 25px 0 0 0;
 
 	.bb-dropzone-wrap {
-		flex-basis: 25%;
-		width: 25%;
+		flex-basis: 33.333334%;
+		width: 33.333334%;
 		padding: 0;
 
 		.bb-field-wrap {
@@ -4991,6 +4991,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			.dz-default {
 				margin: 0;
 				padding: 15px 0;
+				min-height: auto;
 
 				.dz-button,
 				.dz-button:hover {
@@ -5020,8 +5021,14 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 
 	.bp-video-thumbnail-auto-generated {
-		flex-basis: 75%;
-		width: 75%;
+		flex-basis: 66.666667%;
+		width: 66.666667%;
+
+		&.disabled {
+			opacity: 0.7;
+			pointer-events: none;
+			user-select: none;
+		}
 
 		.video-thumb-list {
 			margin: 0;
@@ -5047,9 +5054,9 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			}
 
 			li {
-				width: 33.33%;
-				flex: 0 0 33%;
-				max-width: 33%;
+				width: 50%;
+				flex: 0 0 50%;
+				max-width: 50%;
 				height: 100%;
 				padding: 0 0 0 10px;
 				margin: 0;
@@ -5100,7 +5107,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .bp-video-thumbnail-uploader {
 
-	.bp-video-thumbnail-submit {
+	.modal-container > p {
+		margin-top: 25px;
+		margin-bottom: 0;
+
+		.activity-list .activity-item .activity-content & {
+			margin-top: 25px;
+			margin-bottom: 0;
+		}
+
+	}
+
+	.button.bp-video-thumbnail-submit {
 		margin-top: 25px;
 	}
 
