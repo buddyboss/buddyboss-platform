@@ -520,6 +520,8 @@ window.bp = window.bp || {};
 				popupSelector = $( event.currentTarget ).closest( '.activity-inner' );
 			} else if ( $( event.currentTarget ).closest( '#video-stream.video' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '#video-stream.video' );
+			} else if ( $( event.currentTarget ).closest( '#media-stream.media' ).length > 0 ) {
+				popupSelector = $( event.currentTarget ).closest( '#media-stream.media' );
 			} else if ( $( event.currentTarget ).closest( '.comment-item' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '.comment-item' );
 			}

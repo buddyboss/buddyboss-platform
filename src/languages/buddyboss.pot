@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-25 04:35:10+00:00\n"
+"POT-Creation-Date: 2020-12-25 04:46:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22594,7 +22594,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:90
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:48
-#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:27
+#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:68
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:41
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:48
@@ -25760,7 +25760,7 @@ msgid "Drop videos here to upload"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:112
-msgid "Drop video thumbnail here to upload"
+msgid "Upload thumbnail"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:113
