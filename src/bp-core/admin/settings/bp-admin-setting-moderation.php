@@ -95,6 +95,9 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
 				}
 			}
+
+			// Moderation Settings Tutorial
+			$this->add_field( 'bp-moderation-setting-tutorial', '', 'bp_admin_moderation_setting_tutorial' );
 		}
 
 		/**
