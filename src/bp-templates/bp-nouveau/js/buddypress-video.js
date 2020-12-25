@@ -1387,13 +1387,13 @@ window.bp = window.bp || {};
 			target.addClass( 'loading' );
 
 			var activityId = '';
-			activityId = $( document ).find( 'a[data-video-id="' + video_id + '"]' ).attr( 'data-parent-activity-id' );
+			activityId = $( document ).find( 'li.move_video a[data-video-id="' + video_id + '"]' ).attr( 'data-parent-activity-id' );
 
 			var groupId = parseInt( self.group_id );
 			if ( !groupId ) {
 				groupId = false;
-				if ( 'group' === $( document ).find( 'a[data-video-id="' + video_id + '"]' ).attr( 'data-type' ) ) {
-					groupId = $( document ).find( 'a[data-video-id="' + video_id + '"]' ).attr( 'id' );
+				if ( 'group' === $( document ).find( 'li.move_video a[data-video-id="' + video_id + '"]' ).attr( 'data-type' ) ) {
+					groupId = $( document ).find( 'li.move_video a[data-video-id="' + video_id + '"]' ).attr( 'id' );
 				}
 			}
 
