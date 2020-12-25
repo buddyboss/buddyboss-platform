@@ -319,7 +319,7 @@ function bpm_reporting_settings_callback_email_notification() {
 	<label for="bpm_reporting_email_notification">
 		<input name="bpm_reporting_email_notification" id="bpm_reporting_email_notification" type="checkbox" value="1"
 			<?php checked( bp_is_moderation_reporting_email_notification_enable( false ) ); ?> />
-		<?php esc_html_e( 'Notify administrators when content has automatically hidden.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Notify administrators when content has been automatically hidden.', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
