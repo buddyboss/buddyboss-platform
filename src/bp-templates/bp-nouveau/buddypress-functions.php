@@ -522,7 +522,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-	    if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
+		if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) || bp_is_active( 'moderation' ) ) {
 		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
 	    }
 

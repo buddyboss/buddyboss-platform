@@ -2,7 +2,7 @@
 /**
  * Activity Template tags
  *
- * @since BuddyPress 3.0.0
+ * @since   BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -267,7 +267,8 @@ function bp_nouveau_activity_state() {
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<a href="javascript:void(0);" class="activity-state-likes">
-			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>"><?php echo $like_text ?: ''; ?></span>
+            <span class="like-text hint--bottom hint--medium hint--multiline"
+                  data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>"><?php echo $like_text ?: ''; ?></span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
 		<a href="#" class="activity-state-comments">
@@ -318,11 +319,11 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
-	/**
-	 * Get the action buttons inside an Activity Loop,
-	 *
-	 * @todo This function is too large and needs refactoring and reviewing.
-	 * @since BuddyPress 3.0.0
+/**
+ * Get the action buttons inside an Activity Loop,
+ *
+ * @since BuddyPress 3.0.0
+ * @todo  This function is too large and needs refactoring and reviewing.
 	 */
 function bp_nouveau_get_activity_entry_buttons( $args ) {
 	$buttons = array();
@@ -380,7 +381,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				'parent_attr'    => $parent_attr,
 				'button_element' => $button_element,
 				'link_class'     => 'button fav bp-secondary-action',
-				// 'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
+				//'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
 				'link_text'      => __( 'Like', 'buddyboss' ),
 				'aria-pressed'   => 'false',
 				'link_attr'      => bp_get_activity_favorite_link(),
@@ -392,7 +393,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				'parent_attr'    => $parent_attr,
 				'button_element' => $button_element,
 				'link_class'     => 'button unfav bp-secondary-action',
-				// 'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
+				//'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
 				'link_text'      => __( 'Unlike', 'buddyboss' ),
 				'aria-pressed'   => 'true',
 				'link_attr'      => bp_get_activity_unfavorite_link(),
@@ -411,7 +412,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'button_attr'       => array(
 				$key           => $fav_args['link_attr'],
 				'class'        => $fav_args['link_class'],
-				// 'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
+				//'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
 				'aria-pressed' => $fav_args['aria-pressed'],
 			),
 		);
@@ -538,14 +539,14 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		$delete_args = wp_parse_args(
 			$delete_args,
 			array(
-				'link_text'   => '',
-				'button_attr' => array(
-					'link_id'         => '',
-					'link_href'       => '',
-					'link_class'      => '',
-					'link_rel'        => 'nofollow',
-					'data_bp_tooltip' => '',
-				),
+			'link_text'   => '',
+			'button_attr' => array(
+				'link_id'         => '',
+				'link_href'       => '',
+				'link_class'      => '',
+				'link_rel'        => 'nofollow',
+				'data_bp_tooltip' => '',
+			),
 			)
 		);
 	}
@@ -571,6 +572,14 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		}
 	}
 
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_report'] = bp_activity_get_report_link( array(
+						'parent_element' => $parent_element,
+						'parent_attr'    => $parent_attr,
+						'button_element' => $button_element,
+				) );
+	}
+
 	$buttons['activity_delete'] = array(
 		'id'                => 'activity_delete',
 		'position'          => 35,
@@ -583,7 +592,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'id'            => $delete_args['link_id'],
 			'href'          => $delete_args['link_href'],
 			'class'         => $delete_args['link_class'],
-			// 'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
+			//'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
 			'data-bp-nonce' => $delete_args['data-attr'],
 		),
 		'link_text'         => sprintf(
@@ -606,11 +615,11 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'button_attr'       => array(
 				'class'               => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
 				'id'                  => 'activity_make_spam_' . $activity_id,
-				// 'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
+				//'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
 				'data-bp-tooltip-pos' => 'up',
 			),
 			'link_text'         => sprintf(
-				/** @todo: use a specific css rule for this */
+			/** @todo: use a specific css rule for this ************************************************************ */
 				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
 				esc_html__( 'Spam', 'buddyboss' ),
 				esc_html__( 'Spam', 'buddyboss' )
@@ -832,7 +841,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	 */
 	do_action( 'bp_activity_comment_options' );
 
-	$output     .= ob_get_clean();
+	$output      .= ob_get_clean();
 	$has_content = trim( $output, ' ' );
 	if ( ! $has_content ) {
 		return;
@@ -845,15 +854,15 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
-	/**
-	 * Get the action buttons for the activity comments
-	 *
-	 * @since BuddyPress 3.0.0
-	 *
-	 * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
-	 *
-	 * @return array
-	 */
+/**
+ * Get the action buttons for the activity comments
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ *
+ * @return array
+ */
 function bp_nouveau_get_activity_comment_buttons( $args ) {
 	$buttons = array();
 
@@ -895,8 +904,9 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$button_element = 'a';
 	}
 
-	$buttons = array(
-		'activity_comment_reply'  => array(
+	$buttons = array();
+
+	$buttons['activity_comment_reply'] = array(
 			'id'                => 'activity_comment_reply',
 			'position'          => 5,
 			'component'         => 'activity',
@@ -909,8 +919,17 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 				'class' => 'acomment-reply bp-primary-action',
 				'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
 			),
-		),
-		'activity_comment_delete' => array(
+	);
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link( array(
+						'parent_element' => $parent_element,
+						'parent_attr'    => $parent_attr,
+						'button_element' => $button_element,
+				) );
+	}
+
+	$buttons['activity_comment_delete'] = array(
 			'id'                => 'activity_comment_delete',
 			'position'          => 15,
 			'component'         => 'activity',
@@ -923,7 +942,6 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 				'class' => 'delete acomment-delete confirm bp-secondary-action',
 				'rel'   => 'nofollow',
 			),
-		),
 	);
 
 	// If button element set add nonce link to data-attr attr
@@ -1027,7 +1045,11 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	 * @param int   $activity_comment_id The current activity comment ID.
 	 * @param int   $activity_id         The current activity ID.
 	 */
-	do_action_ref_array( 'bp_nouveau_return_activity_comment_buttons', array( &$return, $activity_comment_id, $activity_id ) );
+	do_action_ref_array( 'bp_nouveau_return_activity_comment_buttons', array(
+		&$return,
+		$activity_comment_id,
+		$activity_id
+	) );
 
 	return $return;
 }
@@ -1212,43 +1234,55 @@ function bp_nouveau_activity_privacy() {
 
 		if ( ( $media_activity || $video_activity ) && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
 			?>
-			<div class="bb-media-privacy-wrap">
-			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
-			<ul class="activity-privacy">
+            <div class="bb-media-privacy-wrap">
+            <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
+                  data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span
+                        class="privacy selected <?php echo $privacy; ?>"></span></span>
+            <ul class="activity-privacy">
 				<?php if ( $album_id && ! empty( $album_url ) ) : ?>
-					<li class="bb-edit-privacy" data-value="<?php echo $album_url; ?>" >
-						<a href="<?php echo $album_url; ?>" data-value="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a></li>
+                    <li class="bb-edit-privacy" data-value="<?php echo $album_url; ?>">
+                        <a href="<?php echo $album_url; ?>"
+                           data-value="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a>
+                    </li>
 				<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-					<li class="bb-edit-privacy" data-value="<?php echo $parent_activity_permalink; ?>" >
-						<a href="<?php echo $parent_activity_permalink; ?>" data-value="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
-					</li>
+                    <li class="bb-edit-privacy" data-value="<?php echo $parent_activity_permalink; ?>">
+                        <a href="<?php echo $parent_activity_permalink; ?>"
+                           data-value="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+                    </li>
 				<?php endif; ?>
-			</ul>
+            </ul>
 			</div>
 			<?php
 		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
 			?>
-			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
-				<ul class="activity-privacy">
+            <div class="bb-media-privacy-wrap">
+            <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
+                  data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span
+                        class="privacy selected <?php echo $privacy; ?>"></span></span>
+            <ul class="activity-privacy">
 					<?php
 					if ( $folder_id && ! empty( $folder_url ) ) :
 						$folder_url = $folder_url . '#openEditFolder';
 						?>
 						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
-							<a data-value="<?php echo $folder_url; ?>" href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
-					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-						<li data-value="<?php echo $parent_activity_permalink; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
-							<a data-value="<?php echo $parent_activity_permalink; ?>" href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
-						</li>
-					<?php endif; ?>
-				</ul>
+                        <a data-value="<?php echo $folder_url; ?>"
+                           href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
+				<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+                    <li data-value="<?php echo $parent_activity_permalink; ?>"
+                        class="bb-edit-privacy <?php echo $privacy; ?>">
+                        <a data-value="<?php echo $parent_activity_permalink; ?>"
+                           href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+                    </li>
+				<?php endif; ?>
+            </ul>
 			</div>
 			<?php
 		} else {
 			?>
-			<div class="bb-media-privacy-wrap">
-			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+            <div class="bb-media-privacy-wrap">
+            <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
+                  data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span
+                        class="privacy selected <?php echo $privacy; ?>"></span></span>
 			<?php
 			$class = 'activity-privacy';
 			if ( $media_activity ) {
@@ -1257,15 +1291,14 @@ function bp_nouveau_activity_privacy() {
 				$class = 'document-privacy';
 			}
 			?>
-			<ul class="<?php echo esc_attr( $class ); ?>">
+            <ul class="<?php echo esc_attr( $class ); ?>">
 				<?php
 				foreach ( $privacy_items as $item_key => $privacy_item ) {
 					?>
-					<li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li>
-					<?php
-				}
-				?>
-			</ul>
+                    <li data-value="<?php echo $item_key; ?>"
+                        class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li><?php
+				} ?>
+            </ul>
 			</div>
 			<?php
 		}
@@ -1275,12 +1308,14 @@ function bp_nouveau_activity_privacy() {
 /**
  * Get log is edited activity.
  *
- * @param int  $activity_id
+ * @since BuddyBoss 1.5.0
+ *
  * @param bool $echo
+ *
+ * @param int  $activity_id
  *
  * @return mixed
  *
- * @since BuddyBoss 1.5.0
  */
 function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 
@@ -1313,9 +1348,10 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 /**
  * Fetch and update the media description.
  *
+ * @since BuddyBoss 1.3.5
+ *
  * @param int $activity_id The current activity ID.
  *
- * @since BuddyBoss 1.3.5
  */
 function bp_nouveau_activity_description( $activity_id = 0 ) {
 	if ( empty( $activity_id ) ) {
@@ -1376,10 +1412,10 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 			$download_url = bp_media_download_link( $attachment_id, $media_id );
 			if ( $download_url ) {
 				?>
-				<a class="download-media"
-				   href="<?php echo esc_url( $download_url ); ?>">
+                <a class="download-media"
+                   href="<?php echo esc_url( $download_url ); ?>">
 					<?php _e( 'Download', 'buddyboss' ); ?>
-				</a>
+                </a>
 				<?php
 			}
 		}
@@ -1389,9 +1425,10 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 /**
  * Fetch and update the document description.
  *
+ * @since BuddyBoss 1.3.5
+ *
  * @param int $activity_id The current activity ID.
  *
- * @since BuddyBoss 1.3.5
  */
 function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	if ( empty( $activity_id ) ) {
@@ -1452,10 +1489,10 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 			$download_url = bp_document_download_link( $attachment_id, $document_id );
 			if ( $download_url ) {
 				?>
-				<a class="download-document"
-					href="<?php echo esc_url( $download_url ); ?>">
+                <a class="download-document"
+                   href="<?php echo esc_url( $download_url ); ?>">
 					<?php _e( 'Download', 'buddyboss' ); ?>
-				</a>
+                </a>
 				<?php
 			}
 		}
@@ -1465,11 +1502,13 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 /**
  * Clear activity body content
  *
- * @param integer              $content  Activity Content
+ * @since BuddyBoss 1.4.0
+ *
  * @param BP_Activity_Activity $activity Activity object.
  *
+ * @param integer              $content  Activity Content
+ *
  * @return bool
- * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_clear_activity_content_body( $content, $activity ) {
 	return false;

@@ -2,8 +2,8 @@
 /**
  * BuddyPress DB schema.
  *
+ * @since   BuddyPress 2.3.0
  * @package BuddyBoss\Core\Administration
- * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -87,6 +87,11 @@ function bp_core_install( $active_components = false ) {
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
+	}
+
+	if ( ! empty( $active_components['moderation'] ) ) {
+		bp_core_install_suspend();
+		bp_core_install_moderation();
 	}
 
 	do_action( 'bp_core_install', $active_components );
@@ -740,7 +745,6 @@ function bp_core_install_document() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
-
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_document (
 		id bigint(20) NOT NULL AUTO_INCREMENT ,
 		blog_id bigint(20) NULL DEFAULT NULL,
@@ -770,7 +774,6 @@ function bp_core_install_document() {
 				KEY document_id (document_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
-
 
 	dbDelta( $sql );
 }
@@ -827,9 +830,9 @@ function bp_core_install_signups() {
  *
  * @since BuddyPress 2.0.1
  *
- * @see pre_schema_upgrade()
- * @link https://core.trac.wordpress.org/ticket/27855 WordPress Trac Ticket
- * @link https://buddypress.trac.wordpress.org/ticket/5563 BuddyPress Trac Ticket
+ * @see   pre_schema_upgrade()
+ * @link  https://core.trac.wordpress.org/ticket/27855 WordPress Trac Ticket
+ * @link  https://buddypress.trac.wordpress.org/ticket/5563 BuddyPress Trac Ticket
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
@@ -1064,15 +1067,15 @@ function bp_core_install_group_message_email() {
  *
  * @since BuddyPress 5.0.0
  *
- * @uses bp_core_set_charset()
- * @uses bp_core_get_table_prefix()
- * @uses dbDelta()
+ * @uses  bp_core_set_charset()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
  */
 function bp_core_install_invitations() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 	$bp_prefix       = bp_core_get_table_prefix();
-	$sql[] = "CREATE TABLE {$bp_prefix}bp_invitations (
+	$sql[]           = "CREATE TABLE {$bp_prefix}bp_invitations (
 		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		user_id bigint(20) NOT NULL,
 		inviter_id bigint(20) NOT NULL,
@@ -1103,4 +1106,138 @@ function bp_core_install_invitations() {
 	 * @since BuddyPress 5.0.0
 	 */
 	do_action( 'bp_core_install_invitations' );
+}
+
+/** Suspend *********************************************************/
+/**
+ * Install database tables for the Suspend
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @uses  bp_core_set_charset()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bp_core_install_suspend() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   item_id bigint(20) NOT NULL,
+	   item_type varchar(20) NOT NULL,
+	   hide_sitewide tinyint(1) NOT NULL,
+	   hide_parent tinyint(1) NOT NULL,
+	   user_suspended tinyint(1) NOT NULL,
+	   reported tinyint(1) NOT NULL,
+	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   blog_id bigint(20) NOT NULL,
+	   PRIMARY KEY  (id),
+	   KEY suspend_item_id (item_id,item_type,blog_id),
+	   KEY suspend_item (item_id,item_type),
+	   KEY item_id (item_id)
+    ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   suspend_id bigint(20) NOT NULL,
+	   user_id bigint(20) NOT NULL,
+	   PRIMARY KEY  (id),
+	   KEY suspend_details_id (suspend_id,user_id)
+    ) {$charset_collate};";
+
+	dbDelta( $sql );
+}
+
+/** Moderation *********************************************************/
+/**
+ * Install database tables for the Moderation
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @uses  bp_core_set_charset()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bp_core_install_moderation() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   moderation_id bigint(20) NOT NULL,
+	   user_id bigint(20) NOT NULL,
+	   content longtext NOT NULL,
+	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   category_id bigint(20) NOT NULL,
+	   PRIMARY KEY  (id),
+	   KEY moderation_report_id (moderation_id,user_id),
+	   KEY user_id (user_id)
+   	) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_meta (
+		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		moderation_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		KEY moderation_id (moderation_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
+
+	dbDelta( $sql );
+}
+
+/**
+ * Add moderation emails.
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_core_install_moderation_emails() {
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$emails       = bp_email_get_schema();
+	$descriptions = bp_email_get_type_schema( 'description' );
+
+	// Add these emails to the database.
+	foreach ( $emails as $id => $email ) {
+
+		if ( strpos( $id, 'content-moderation-', 0 ) === false && strpos( $id, 'user-moderation-', 0 ) === false ) {
+			continue;
+		}
+
+		// Some emails are multisite-only.
+		if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
+		}
+	}
+
+	/**
+	 * Fires after BuddyPress adds the posts for its bbp emails.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	do_action( 'bp_core_install_moderation_emails' );
 }
