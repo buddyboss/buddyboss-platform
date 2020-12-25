@@ -1376,7 +1376,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var video_id = target.attr( 'id' );
-			var album_id = target.closest( '.bp-vidoe-move-file' ).find( '.bb-album-selected-id' ).val();
+			var album_id = target.closest( '.bp-video-move-file' ).find( '.bb-album-selected-id' ).val();
 
 			if ( '' === video_id || '' === album_id ) {
 				target.closest( '.modal-container' ).find( '.location-album-list' ).addClass( 'has-error' );
@@ -1398,9 +1398,9 @@ window.bp = window.bp || {};
 			}
 
 			var data = {
-				'action': 'media_move',
+				'action': 'video_move',
 				'_wpnonce': BP_Nouveau.nonces.video,
-				'media_id': video_id,
+				'video_id': video_id,
 				'album_id': album_id,
 				'group_id': groupId,
 				'activity_id': activityId
