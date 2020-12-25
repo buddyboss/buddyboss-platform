@@ -5677,8 +5677,6 @@ window.bp = window.bp || {};
 						$(event.currentTarget).closest( '.bb-activity-video-elem' ).addClass( 'is-visible' );
 					}
 
-					$(event.currentTarget).closest( '.bb-activity-video-elem' ).toggleClass( 'is-visible' );
-
 				} else {
 					$(event.currentTarget).closest( '.bb-video-thumb' ).toggleClass('is-visible').parent().siblings().find('.bb-video-thumb').removeClass('is-visible');
 				}
