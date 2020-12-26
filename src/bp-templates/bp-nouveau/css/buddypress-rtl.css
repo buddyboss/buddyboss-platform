@@ -2336,7 +2336,7 @@ input.search-query-input {
   content: "\e8ea";
   position: relative;
   top: -1px;
-  font-size: 15px;
+  font-size: 14px;
   width: 22px;
   display: inline-block;
   height: auto;
@@ -15088,6 +15088,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   box-shadow: none;
   border-radius: 0;
   min-height: auto;
+  font-weight: 400;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before,
@@ -16964,6 +16965,15 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
   min-width: calc(100% - 200px);
   margin: 0 25px;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
+  min-width: 90px;
+  text-align: left;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
+  min-width: 90px;
 }
 
 @media (max-width: 480px) {
