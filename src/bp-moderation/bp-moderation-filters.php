@@ -219,7 +219,7 @@ function bp_moderation_block_member() {
 	}
 
 	if ( (int) bp_loggedin_user_id() === (int) $item_id ) {
-		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not able to block him self.', 'buddyboss' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not allowed to block yourself.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -228,7 +228,7 @@ function bp_moderation_block_member() {
 	if ( false === (bool) $user_can ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_invalid_access',
-			esc_html__( 'Sorry, you can not able to block this member.', 'buddyboss' )
+			esc_html__( 'Sorry, you are not allowed to block this member.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}

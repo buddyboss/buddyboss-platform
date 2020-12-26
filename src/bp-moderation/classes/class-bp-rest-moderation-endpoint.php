@@ -484,7 +484,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! empty( $user->roles ) && in_array( 'administrator', $user->roles, true ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you can not able to block admin users.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to block admin members.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -494,7 +494,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && (int) bp_loggedin_user_id() === (int) $item_id ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you can not able to block him self.', 'buddyboss' ),
+				__( 'Sorry, you can not allowed to block yourself.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
