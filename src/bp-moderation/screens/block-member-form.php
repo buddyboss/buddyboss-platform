@@ -20,7 +20,8 @@
 					<div class="bb-report-type-wrp">
 						<p>
 							<?php esc_html_e( 'Please confirm you want to block this member.', 'buddyboss' ); ?>
-							<br/>
+						</p>
+						<p>
 							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
 						</p>
 						<ul>
@@ -58,14 +59,11 @@
 							</li>
 							<?php endif; ?>
 						</ul>
-						<p>
 						
-							<?php esc_html_e( 'Please note: ', 'buddyboss' ); ?>
-							<br/>
-
+						<p>
 							<?php if ( bp_is_active( 'friends' ) ): ?>
+								<strong><?php esc_html_e( 'Please note: ', 'buddyboss' ); ?></strong>
 								<?php esc_html_e( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' ); ?>
-								<br/>
 							<?php endif; ?>
 
 							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss' ); ?>
