@@ -332,13 +332,15 @@
 
 			.reported-content:before,
 			.report-content:before {
-				content: "\e8ea";
+				content: " ";
+				background-image: url(http://localhost/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/bp-core/images/flag-icon.png);
+				background-repeat: no-repeat;
+				background-size: 12px;
+				width: 17px;
+				height: 18px;
 				position: relative;
-				top: -1px;
-				font-size: 15px;
-				width: 22px;
+				margin-top: 2px;
 				display: inline-block;
-				height: auto;
 				line-height: 1;
 			}
 
