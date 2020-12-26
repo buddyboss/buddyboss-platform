@@ -16835,7 +16835,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .moderation-popup .modal-container .form-item > span {
   font-size: 14px;
-  padding-left: 28px;
+  padding-left: 30px;
   display: inline-block;
   line-height: 1.4;
 }
@@ -16858,8 +16858,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container .form-item label > textarea {
-  margin-left: 28px;
-  width: calc(100% - 26px);
+  margin-left: 30px;
+  width: calc(100% - 28px);
 }
 
 .moderation-popup .modal-container .bp-report-form-err {
