@@ -312,14 +312,14 @@ function bp_moderation_unblock_user() {
 	}
 
 	if ( ! bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Moderation reported not found.', 'buddyboss' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Reported content was not found.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
 	$moderation = new BP_Moderation( $item_id, BP_Moderation_Members::$moderation_type );
 
 	if ( empty( $moderation ) || is_wp_error( $moderation ) || true === $moderation->hide_sitewide ) {
-		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you can not unblock suspended member.', 'buddyboss' ) );
+		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you can not unblock a suspended member.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
