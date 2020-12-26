@@ -21468,7 +21468,7 @@ msgstr ""
 #: bp-moderation/bp-moderation-filters.php:137
 #: bp-moderation/bp-moderation-filters.php:376
 #: bp-moderation/bp-moderation-filters.php:442
-msgid "Sorry, you can not able to report this item."
+msgid "Sorry, you are not able to report this item."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:153
