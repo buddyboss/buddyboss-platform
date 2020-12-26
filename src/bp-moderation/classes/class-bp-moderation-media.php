@@ -99,7 +99,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Photo', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Photos', 'buddyboss' );
 
 		return $content_types;
 	}
