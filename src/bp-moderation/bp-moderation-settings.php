@@ -99,7 +99,7 @@ function bp_moderation_get_settings_fields() {
 		),
 
 		'bpm_reporting_categories'  => array(
-			'title'             => __( 'Reporting Category', 'buddyboss' ),
+			'title'             => __( 'Reporting Categories', 'buddyboss' ),
 			'callback'          => 'bpm_reporting_settings_callback_categories',
 			'sanitize_callback' => '',
 			'args'              => array(),
