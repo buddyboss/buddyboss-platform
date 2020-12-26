@@ -16963,7 +16963,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
-  min-width: calc(100% - 180px);
+  min-width: calc(100% - 200px);
   margin: 0 25px;
 }
 
