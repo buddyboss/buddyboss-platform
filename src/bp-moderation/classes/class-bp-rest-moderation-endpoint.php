@@ -233,7 +233,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+				__( 'Please login to view blocked members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -315,7 +315,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
+				__( 'Please login to view blocked members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -369,7 +369,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Already reported this item.', 'buddyboss' ),
+				__( 'Content already reported.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -387,7 +387,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) && empty( $moderation->report_id ) && ! empty( $moderation->errors ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_moderation',
-				__( 'Sorry, something goes wrong please try again.', 'buddyboss' ),
+				__( 'Something went wrong. Please try again.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -580,7 +580,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $moderation_deleted->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_block_error',
-				__( 'Sorry, Something happened wrong', 'buddyboss' ),
+				__( 'Sorry something went wrong. Please try again.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
