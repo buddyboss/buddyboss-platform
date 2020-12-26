@@ -6390,7 +6390,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content a:before,
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread a:before,
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
-  content: "\e8ea";
+  content: "\e8c9";
   vertical-align: middle;
 }
 
