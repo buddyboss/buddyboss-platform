@@ -2,7 +2,7 @@
 /**
  * Groups Ajax functions
  *
- * @since BuddyPress 3.0.0
+ * @since   BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -98,8 +98,8 @@ add_action(
 /**
  * Join or leave a group when clicking the "join/leave" button via a POST request.
  *
- * @return string HTML
  * @since BuddyPress 3.0.0
+ * @return string HTML
  */
 function bp_nouveau_ajax_joinleave_group() {
 	$response = array(
@@ -197,9 +197,9 @@ function bp_nouveau_ajax_joinleave_group() {
 				);
 			} else {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss' ) ),
-					'type'     => 'success',
-					'is_user'  => bp_is_user(),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss' ) ),
+					'type'      => 'success',
+					'is_user'   => bp_is_user(),
 					'group_url' => bp_get_group_permalink( $group ),
 				);
 			}
@@ -233,27 +233,32 @@ function bp_nouveau_ajax_joinleave_group() {
 			}
 			break;
 
-        case 'groups_request_membership' :
-            if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $group->id ) ) ) {
-                $response = array(
-                    'feedback' => sprintf(
-                        '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-                        esc_html__( 'Error requesting membership.', 'buddyboss' )
-                    ),
-                    'type'     => 'error',
-                );
-            } else {
-                // Request is pending
-                $group->is_pending = '1';
+		case 'groups_request_membership':
+			if ( ! groups_send_membership_request(
+				array(
+					'user_id'  => bp_loggedin_user_id(),
+					'group_id' => $group->id,
+				)
+			) ) {
+				$response = array(
+					'feedback' => sprintf(
+						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+						esc_html__( 'Error requesting membership.', 'buddyboss' )
+					),
+					'type'     => 'error',
+				);
+			} else {
+				// Request is pending
+				$group->is_pending = '1';
 
-	            $response = array(
-		            'contents'  => bp_get_group_join_button( $group ),
-		            'is_group'  => bp_is_group(),
-		            'type'      => 'success',
-		            'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
-	            );
-            }
-            break;
+				$response = array(
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => bp_is_group(),
+					'type'      => 'success',
+					'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+				);
+			}
+			break;
 
 		case 'groups_leave_group':
 			if ( ! groups_leave_group( $group->id ) ) {
@@ -553,8 +558,10 @@ function bp_nouveau_ajax_get_users_to_invite() {
 								<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
 								<?php foreach ( $user['invited_by'] as $inviter ) { ?>
 									<li>
-										<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
-											<img src="<?php echo $inviter['avatar']; ?>" width="30px" class="avatar mini" alt="<?php echo $inviter['name']; ?>">
+										<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip"
+										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
+											<img src="<?php echo $inviter['avatar']; ?>" width="30px"
+												 class="avatar mini" alt="<?php echo $inviter['name']; ?>">
 										</a>
 									</li>
 								<?php } ?>
@@ -575,7 +582,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			</div>
 			<div class="action">
 				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
-					<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
+					<button data-bp-user-id="<?php echo $user['id']; ?>"
+							data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
@@ -605,21 +613,29 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
 					if ( 'invited' === $request['scope'] ) {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button remove-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+						<button data-bp-user-id="<?php echo $user['id']; ?>"
+								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+								class="button remove-button group-remove-invite-button bp-tooltip bp-icons"
+								data-bp-tooltip-pos="left"
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
 							<span class=" icons" aria-hidden="true"></span>
 							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
 						</button>
 						<?php
 					} else {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+						<button data-bp-user-id="<?php echo $user['id']; ?>"
+								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+								class="button invite-button group-remove-invite-button bp-tooltip bp-icons"
+								data-bp-tooltip-pos="left"
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
 							<span class=" icons" aria-hidden="true"></span>
 							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
 						</button>
 						<?php
 					}
 					?>
-					<?php } ?>
+				<?php } ?>
 			</div>
 		</li>
 		<?php
@@ -646,7 +662,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	if ( $total_page > 1 ) {
 		if ( 1 !== $page ) {
 			?>
-			<a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+			<a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip"
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
 				<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
 				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
 			<?php
@@ -655,7 +672,9 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		if ( $total_page !== $page ) {
 			$page = $page + 1;
 			?>
-			<a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+			<a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip"
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
+						class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
 				<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 			<?php
 		}
@@ -664,10 +683,10 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$paginate = ob_get_contents();
 	ob_clean();
 
-	// Set a message to explain use of the current scope
+	// Set a message to explain use of the current scope.
 	$potential_invites->feedback = $message;
 
-	// Set a pagination
+	// Set a pagination.
 	$potential_invites->pagination = $paginate;
 	$potential_invites->page       = $page;
 
@@ -689,7 +708,7 @@ function bp_nouveau_ajax_send_group_invites() {
 		'type'     => 'error',
 	);
 
-	// Verify nonce
+	// Verify nonce.
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_send_invites' ) ) {
 		wp_send_json_error( $response );
 	}
@@ -710,11 +729,11 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
-	// For feedback
+	// For feedback.
 	$invited = array();
 
 	foreach ( (array) $_POST['users'] as $user_id ) {
-		$user_id = (int) $user_id;
+		$user_id             = (int) $user_id;
 		$invited[ $user_id ] = groups_invite_user(
 			array(
 				'user_id'  => $user_id,
@@ -780,18 +799,20 @@ function bp_nouveau_ajax_remove_group_invite() {
 		'type'     => 'error',
 	);
 
-	// Verify nonce
+	// Verify nonce.
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// Verify that a sent invite exists.
-	$inviter_ids = groups_get_invites( array(
-		'user_id'     => $user_id,
-		'item_id'     => $group_id,
-		'invite_sent' => 'sent',
-		'fields'      => 'inviter_ids'
-	) );
+	$inviter_ids = groups_get_invites(
+		array(
+			'user_id'     => $user_id,
+			'item_id'     => $group_id,
+			'invite_sent' => 'sent',
+			'fields'      => 'inviter_ids',
+		)
+	);
 
 	if ( empty( $inviter_ids ) ) {
 		wp_send_json_error( $response );
@@ -925,7 +946,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 					</div>
 				</div>
 				<div class="action">
-					<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+					<button type="button"
+							class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
+							data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
+							data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
+							data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
 						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 							<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
 						</span>
@@ -954,7 +979,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			if ( 1 !== (int) $_POST['page'] ) {
 				?>
-				<a href="javascript:void(0);" id="bp-group-messages-prev-page" class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+				<a href="javascript:void(0);" id="bp-group-messages-prev-page"
+				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
+				   data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
 					<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
 					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
 				<?php
@@ -963,7 +990,10 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			if ( $total_page !== (int) $_POST['page'] ) {
 				$page = $page + 1;
 				?>
-				<a href="javascript:void(0);" id="bp-group-messages-next-page" class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+				<a href="javascript:void(0);" id="bp-group-messages-next-page"
+				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
+				   data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
+							class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
 					<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 				<?php
 			}
@@ -1018,20 +1048,26 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'send_messages_users' ) ) {
+	$wp_nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+
+	if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'send_messages_users' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $_POST['gif_data'] ) && '' !== $_POST['gif_data'] ) {
-		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $_POST['gif_data'] ), true );
+	$gif_data = filter_input( INPUT_POST, 'gif_data', FILTER_DEFAULT );
+	$media    = filter_input( INPUT_POST, 'media', FILTER_DEFAULT );
+	$document = filter_input( INPUT_POST, 'document', FILTER_DEFAULT );
+
+	if ( isset( $gif_data ) && '' !== $gif_data ) {
+		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
 	}
 
-	if ( isset( $_POST['media'] ) && '' !== $_POST['media'] ) {
-		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST['media'] ), true );
+	if ( isset( $media ) && '' !== $media ) {
+		$_POST['media'] = json_decode( wp_kses_stripslashes( $media ), true );
 	}
 
-	if ( isset( $_POST['document'] ) && '' !== $_POST['document'] ) {
-		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
+	if ( isset( $document ) && '' !== $document ) {
+		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
 	}
 
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
@@ -1057,36 +1093,32 @@ function bp_nouveau_ajax_groups_send_message() {
 		$content = '&nbsp;';
 	}
 
+	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
+	$message_users = filter_input( INPUT_POST, 'users', FILTER_SANITIZE_STRING ); // all - individual.
+	$message_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ); // open - private.
+
 	// Get Members list if "All Group Members" selected.
-	if ( 'all' === $_POST['users'] ) {
-
+	if ( 'all' === $message_users ) {
 		// Fetch all the group members.
-		$args = array(
-			'per_page'            => 9999999999999999999,
-			'group_id'            => trim( $_POST['group'] ),
-			'exclude'             => array( bp_loggedin_user_id() ),
-			'exclude_admins_mods' => false,
-		);
+		$members = BP_Groups_Member::get_group_member_ids( (int) $group );
 
-		$group_members = groups_get_group_members( $args );
-		$members       = wp_list_pluck( $group_members['members'], 'ID' );
+		// Exclude logged-in user ids from the members list.
+		if ( in_array( bp_loggedin_user_id(), $members ) ) {
+			$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+		}
 
 		// We get members array from $_POST['users_list'] because user already selected them.
 	} else {
-		$members = $_POST['users_list'];
+		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	}
 
 	if ( empty( $members ) ) {
-		$response['feedback'] = 'No Members Selected.';
+		$response['feedback'] = __( 'No Members Selected.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
-	$group         = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id
-	$message_users = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual
-	$message_type  = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private
-
 	if ( empty( $group ) ) {
-		$response['feedback'] = 'No group Selected.';
+		$response['feedback'] = __( 'No group Selected.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -1122,15 +1154,16 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 
 					if ( empty( $_POST['message_thread_type'] ) ) {
-					    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, Squiz.Commenting.InlineComment.InvalidEndChar
-						$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
+						$total_threads = BP_Messages_Thread::get(
+							array(
+								'include_threads' => array( $group_thread ),
+								'per_page'        => 1,
+								'count_total'     => true,
+								'is_deleted'      => 1,
+							)
+						);
 
-						foreach ( $total_threads as $thread ) {
-							if ( 1 === (int) $thread->is_deleted ) {
-								$is_deleted = true;
-								break;
-							}
-						}
+						$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
 
 						if ( $is_deleted ) {
 							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
@@ -1285,7 +1318,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 						// Store thread recipients to $previous_ids array.
 						foreach ( $thread_recipients as $thread_recipient ) {
-							if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+							if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 								$previous_thread_recipients[] = $thread_recipient->user_id;
 							}
 						}
@@ -1323,7 +1356,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 					// Store thread recipients to $previous_ids array.
 					foreach ( $thread_recipients as $thread_recipient ) {
-						if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+						if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 							$previous_thread_recipients[] = $thread_recipient->user_id;
 						}
 					}
@@ -1366,7 +1399,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 									// Store thread recipients to $previous_ids array.
 									foreach ( $thread_recipients as $thread_recipient ) {
-										if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+										if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 											$previous_thread_recipients[] = $thread_recipient->user_id;
 										}
 									}
@@ -1432,7 +1465,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 								// Store thread recipients to $previous_ids array.
 								foreach ( $thread_recipients as $thread_recipient ) {
-									if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+									if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 										$previous_thread_recipients[] = $thread_recipient->user_id;
 									}
 								}
@@ -1453,7 +1486,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$message_ids  = wp_list_pluck( $thread->messages, 'id' );
 								$add_existing = true;
 								foreach ( $message_ids as $id ) {
-									// group_message_users not open
+									// group_message_users not open.
 									$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 									if ( 'all' === $message_users ) {
 										$add_existing = false;
@@ -1501,7 +1534,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							// Store thread recipients to $previous_ids array.
 							foreach ( $thread_recipients as $thread_recipient ) {
-								if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+								if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 									$previous_thread_recipients[] = $thread_recipient->user_id;
 								}
 							}
@@ -1522,7 +1555,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$message_ids  = wp_list_pluck( $thread->messages, 'id' );
 							$add_existing = true;
 							foreach ( $message_ids as $id ) {
-								// group_message_users not open
+								// group_message_users not open.
 								$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 								if ( 'all' === $message_users ) {
 									$add_existing = false;
@@ -1619,7 +1652,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 						// Store thread recipients to $previous_ids array.
 						foreach ( $thread_recipients as $thread_recipient ) {
-							if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+							if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 								$previous_thread_recipients[] = $thread_recipient->user_id;
 							}
 						}
@@ -1684,7 +1717,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 								// Store thread recipients to $previous_ids array.
 								foreach ( $thread_recipients as $thread_recipient ) {
-									if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+									if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 										$previous_thread_recipients[] = $thread_recipient->user_id;
 									}
 								}
@@ -1704,7 +1737,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 								$first_message = BP_Messages_Thread::get_first_message( $thread->thread_id );
 								$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
-								$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
+								$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 								// check both previous and current recipients are same.
 								$is_recipient_match = ( $previous_thread_recipients == $members );
@@ -1784,7 +1817,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							// Store thread recipients to $previous_ids array.
 							foreach ( $thread_recipients as $thread_recipient ) {
-								if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+								if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 									$previous_thread_recipients[] = $thread_recipient->user_id;
 								}
 							}
@@ -1865,7 +1898,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$response['feedback'] = $message->get_error_message();
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
-			if ( 'all' !== $_POST['users'] ) {
+			if ( 'all' !== $message_users ) {
 				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
 			} else {
 				$response['feedback'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
@@ -1881,23 +1914,24 @@ function bp_nouveau_ajax_groups_send_message() {
 /**
  * Create New Group Message.
  *
- * @param array|string $args {
- *     Array of arguments.
- *     @type int    $sender_id     Optional. ID of the user who is sending the
+ * @param array|string $args         {
+ *                                   Array of arguments.
+ *
+ * @type int           $sender_id    Optional. ID of the user who is sending the
  *                                 message. Default: ID of the logged-in user.
- *     @type int    $thread_id     Optional. ID of the parent thread. Leave blank to
+ * @type int           $thread_id    Optional. ID of the parent thread. Leave blank to
  *                                 create a new thread for the message.
- *     @type array  $recipients    IDs or usernames of message recipients. If this
+ * @type array         $recipients   IDs or usernames of message recipients. If this
  *                                 is an existing thread, it is unnecessary to pass a $recipients
  *                                 argument - existing thread recipients will be assumed.
- *     @type string $subject       Optional. Subject line for the message. For
+ * @type string        $subject      Optional. Subject line for the message. For
  *                                 existing threads, the existing subject will be used. For new
  *                                 threads, 'No Subject' will be used if no $subject is provided.
- *     @type string $content       Content of the message. Cannot be empty.
- *     @type string $date_sent     Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
- *     @type bool   $is_hidden     Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
- *     @type bool   $mark_visible  Optional. Whether to mark thread visible to all other participants. Default: false.
- *     @type string $error_type    Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * @type string        $content      Content of the message. Cannot be empty.
+ * @type string        $date_sent    Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
+ * @type bool          $is_hidden    Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
+ * @type bool          $mark_visible Optional. Whether to mark thread visible to all other participants. Default: false.
+ * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  *
  * @return int|bool|WP_Error ID of the message thread on success, false on failure.

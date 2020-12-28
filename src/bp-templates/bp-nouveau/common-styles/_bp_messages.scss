@@ -359,6 +359,24 @@
 			li.delete_thread a:before {
 				content: "\e937";
 			}
+
+			li.reported-content a,
+			li.reported_thread a,
+			li.report_thread a {
+
+				&:before {
+					content: "\e8c9";
+					vertical-align: middle;
+				}
+
+			}
+
+			li.reported-content,
+			li.reported_thread {
+				pointer-events: none;
+				opacity: 0.9;
+			}
+
 		}
 	}
 

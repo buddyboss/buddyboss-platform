@@ -599,6 +599,20 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 			unset( bp_nouveau()->members->button_args );
 		}
 
+		if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+			$buttons['member_report'] = bp_member_get_report_link(
+				array(
+					'parent_element' => $parent_element,
+					'parent_attr'    => array(
+						'id'    => $button_args['wrapper_id'],
+						'class' => $parent_class,
+					),
+					'button_element' => $button_element,
+					'position'       => 29,
+				)
+			);
+		}
+
 		//}
 
 		/**

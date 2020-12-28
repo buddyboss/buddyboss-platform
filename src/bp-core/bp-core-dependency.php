@@ -533,10 +533,10 @@ function bp_add_permastructs() {
  * @since BuddyBoss 1.0.0
  */
 function bp_init_background_updater() {
-	global $background_updater;
+	global $bp_background_updater;
 
 	include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
-	$background_updater = new BP_Background_Updater();
+	$bp_background_updater = new BP_Background_Updater();
 
 	/**
 	 * Fires inside the 'bp_init_background_updater' function, where BP updates data.
