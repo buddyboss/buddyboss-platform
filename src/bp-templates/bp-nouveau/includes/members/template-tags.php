@@ -608,6 +608,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'class' => $parent_class,
 					),
 					'button_element' => $button_element,
+					'position'       => 29,
 				)
 			);
 		}
@@ -783,6 +784,10 @@ function bp_nouveau_member_template_part() {
 			$template = 'media';
 		} elseif ( bp_is_user_document() ) {
 			$template = 'document';
+		} elseif ( bp_is_user_followers() ) {
+			$template = 'followers';
+		} elseif ( bp_is_user_following() ) {
+			$template = 'following';
 		}
 
 		bp_nouveau_member_get_template_part( $template );

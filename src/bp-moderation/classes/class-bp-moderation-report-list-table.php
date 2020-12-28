@@ -78,9 +78,9 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	public function no_items() {
 		$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
-			esc_html_e( 'Sorry, no reported content report was found.', 'buddyboss' );
+			esc_html_e( 'Sorry, no reported content found.', 'buddyboss' );
 		} else {
-			esc_html_e( 'Sorry, no blocked members report were found.', 'buddyboss' );
+			esc_html_e( 'Sorry, no blocked members found.', 'buddyboss' );
 		}
 	}
 

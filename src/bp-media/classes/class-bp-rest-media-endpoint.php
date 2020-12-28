@@ -702,7 +702,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( empty( (int) $moved_media_id ) || is_wp_error( $moved_media_id ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_move_with_album',
-					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this media along with the album.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)

@@ -6390,7 +6390,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content a:before,
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread a:before,
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
-  content: "\e8ea";
+  content: "\e8c9";
   vertical-align: middle;
 }
 
@@ -15085,7 +15085,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a {
   background-color: transparent;
   text-align: left;
-  font-weight: 400;
   box-shadow: none;
   border-radius: 0;
   min-height: auto;
@@ -16835,7 +16834,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .moderation-popup .modal-container .form-item > span {
   font-size: 14px;
-  padding-left: 28px;
+  padding-left: 30px;
   display: inline-block;
   line-height: 1.4;
 }
@@ -16858,8 +16857,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container .form-item label > textarea {
-  margin-left: 28px;
-  width: calc(100% - 26px);
+  margin-left: 30px;
+  width: calc(100% - 28px);
 }
 
 .moderation-popup .modal-container .bp-report-form-err {
@@ -16963,7 +16962,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
-  min-width: calc(100% - 180px);
+  min-width: calc(100% - 200px);
   margin: 0 25px;
 }
 

@@ -197,7 +197,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+				__( 'Please login to view blocked members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -273,7 +273,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Sorry, Already reported this item.', 'buddyboss' ),
+				__( 'Content already reported.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -288,7 +288,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( empty( $report->id ) || empty( $report->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_report_error',
-				__( 'Sorry, something goes wrong please try again.', 'buddyboss' ),
+				__( 'Something went wrong. Please try again.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -674,7 +674,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 				),
 				'user_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported user ID.', 'buddyboss' ),
+					'description' => __( 'Reported member ID.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),

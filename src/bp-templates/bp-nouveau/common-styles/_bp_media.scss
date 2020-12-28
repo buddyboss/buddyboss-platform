@@ -2785,7 +2785,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 					&.report_file a {
 						background-color: transparent;
 						text-align: left;
-						font-weight: 400;
 						box-shadow: none;
 						border-radius: 0;
 						min-height: auto;
@@ -4401,7 +4400,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 		> span {
 			font-size: 14px;
-			padding-left: 28px;
+			padding-left: 30px;
 			display: inline-block;
 			line-height: 1.4;
 		}
@@ -4423,8 +4422,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			}
 
 			> textarea {
-				margin-left: 28px;
-				width: calc(100% - 26px);
+				margin-left: 30px;
+				width: calc(100% - 28px);
 			}
 
 		}
@@ -4540,7 +4539,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		}
 
 		.user-name {
-			min-width: calc(100% - 180px);
+			min-width: calc(100% - 200px);
 			margin: 0 25px;
 		}
 

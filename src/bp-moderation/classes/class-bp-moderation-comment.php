@@ -86,7 +86,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Blog Comment', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Blog Comments', 'buddyboss' );
 
 		return $content_types;
 	}
