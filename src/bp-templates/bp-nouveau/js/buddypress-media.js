@@ -6348,6 +6348,10 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"><h3>' + target_text + '</h3><div class="document-audio"><audio src="' + self.current_document.mp3 + '" controls controlsList="nodownload"></audio></div></div>' );
+			} else if ( $.inArray( '.' + self.current_document.extension, BP_Nouveau.video.video_type.split( ',' ) ) !== -1 ) {
+
+				console.log( self.current_document );
+
 			} else {
 				if ( self.current_document.preview ) {
 					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
