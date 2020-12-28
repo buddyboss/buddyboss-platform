@@ -6240,6 +6240,7 @@ window.bp = window.bp || {};
 							author: document_element.data( 'author' ),
 							download: document_element.attr( 'href' ),
 							mp3: document_element.data( 'mp3-preview' ),
+							video: document_element.data( 'video-preview' ),
 							is_forum: false
 						};
 
@@ -6350,7 +6351,11 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"><h3>' + target_text + '</h3><div class="document-audio"><audio src="' + self.current_document.mp3 + '" controls controlsList="nodownload"></audio></div></div>' );
 			} else if ( $.inArray( '.' + self.current_document.extension, BP_Nouveau.video.video_type.split( ',' ) ) !== -1 ) {
 
-				console.log( self.current_document );
+
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
+				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"><h3>' + target_text + '</h3><div class="document-video"> <video id="video-" class="video-js" controls poster="" data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' type="video/mp4"><source src="' + self.current_document.video + '"></source></video> </div></div>' );
 
 			} else {
 				if ( self.current_document.preview ) {
