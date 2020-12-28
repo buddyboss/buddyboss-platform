@@ -3104,7 +3104,7 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a:before,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a:before {
   content: "\e8ea";
-  font-size: 14px;
+  font-size: 15px;
   vertical-align: middle;
 }
 
@@ -15092,7 +15092,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before {
   content: "\e8ea";
-  font-size: 14px;
+  font-size: 15px;
   vertical-align: middle;
 }
 
@@ -16961,17 +16961,17 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
-  min-width: calc(100% - 200px);
+  min-width: calc(100% - 190px);
   margin: 0 25px;
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
-  min-width: 90px;
+  min-width: 95px;
   text-align: left;
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
-  min-width: 90px;
+  min-width: 95px;
 }
 
 @media (max-width: 480px) {

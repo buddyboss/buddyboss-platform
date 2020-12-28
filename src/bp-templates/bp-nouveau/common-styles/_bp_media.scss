@@ -2792,7 +2792,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 						&:before {
 							content: "\e8ea";
-							font-size: 14px;
+							font-size: 15px;
 							vertical-align: middle;
 						}
 
@@ -4540,16 +4540,16 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		}
 
 		.user-name {
-			min-width: calc(100% - 200px);
+			min-width: calc(100% - 190px);
 			margin: 0 25px;
 		}
 
 		.user-actions {
-			min-width: 90px;
+			min-width: 95px;
 			text-align: right;
 
 			.button {
-				min-width: 90px;
+				min-width: 95px;
 			}
 
 		}
