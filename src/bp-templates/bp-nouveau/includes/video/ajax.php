@@ -1314,7 +1314,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 							<img src="<?php echo esc_url( $attachment_url ); ?>" class=""/>
 						</a>
 						<div class="bb-action-check-wrap">
-							<input id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
+							<input <?php checked( $preview_thumbnail_id, $auto_generated_thumbnail ); ?> id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
 							<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>"><span class="bb-icon bb-icon-check"></span></label>
 						</div>
 					</div>
@@ -1384,7 +1384,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		$pre_selected_id = current( $thumbnail );
 		$pre_selected_id = $pre_selected_id['id'];
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
-	} elseif ( $video_attachment_id && $thumbnail ) {
+	} elseif ( $video_attachment_id && $pre_selected_id ) {
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 	}
 
