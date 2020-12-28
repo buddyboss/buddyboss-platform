@@ -1655,6 +1655,12 @@ ul.bb-albums-list {
 			align-items: center;
 			border-radius: 4px 4px 0 8px;
 
+			&.bb-video-preview .document-preview,
+			&.bb-video-preview .document-preview .video-js {
+				min-height: 50vh;
+				max-height: 50vh;
+			}
+
 			.img-section {
 				max-height: 50vh;
 				height: auto;
@@ -2679,6 +2685,17 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		.document-preview {
 			width: 100%;
+		}
+
+		&.bb-video-preview .document-preview {
+			height: 100%;
+
+			.video-js {
+				height: 100% !important;
+				padding: 0;
+				border-radius: 3px 0 0 3px;
+			}
+
 		}
 
 		.theater-command {

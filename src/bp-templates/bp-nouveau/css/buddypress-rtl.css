@@ -14647,6 +14647,11 @@ ul.bb-albums-list .load-more {
     align-items: center;
     border-radius: 4px 4px 8px 0;
   }
+  #buddypress .bb-document-theater .bb-media-section.bb-video-preview .document-preview,
+  #buddypress .bb-document-theater .bb-media-section.bb-video-preview .document-preview .video-js {
+    min-height: 50vh;
+    max-height: 50vh;
+  }
   #buddypress .bb-document-theater .bb-media-section .img-section {
     max-height: 50vh;
     height: auto;
@@ -15617,6 +15622,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .bb-document-theater .bb-media-section .document-preview {
   width: 100%;
+}
+
+.bb-document-theater .bb-media-section.bb-video-preview .document-preview {
+  height: 100%;
+}
+
+.bb-document-theater .bb-media-section.bb-video-preview .document-preview .video-js {
+  height: 100% !important;
+  padding: 0;
+  border-radius: 0 3px 3px 0;
 }
 
 .bb-document-theater .bb-media-section .theater-command {
