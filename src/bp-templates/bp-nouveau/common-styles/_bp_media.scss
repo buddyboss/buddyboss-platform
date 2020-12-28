@@ -2805,6 +2805,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 							pointer-events: none;
 						}
 
+						&.report-content,
+						&.reported-content {
+							border: 0;
+							-webkit-font-smoothing: auto;
+						}
+
 					}
 
 					&.download_file a:before {

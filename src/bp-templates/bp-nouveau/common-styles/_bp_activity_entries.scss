@@ -1140,6 +1140,12 @@ span.dashicons.dashicons-admin-file:before {
 							pointer-events: none;
 						}
 
+						&.report-content,
+						&.reported-content {
+							border: 0;
+							-webkit-font-smoothing: auto;
+						}
+
 					}
 
 					&.privacy_file a:before {

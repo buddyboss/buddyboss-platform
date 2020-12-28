@@ -3119,6 +3119,13 @@ span.dashicons.dashicons-admin-file:before {
   pointer-events: none;
 }
 
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.report-content, #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.reported-content,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a.report-content,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a.reported-content {
+  border: 0;
+  -webkit-font-smoothing: auto;
+}
+
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.privacy_file a:before,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.privacy_file a:before {
   content: "\e90d";
@@ -15105,6 +15112,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content {
   opacity: 0.8 !important;
   pointer-events: none;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.report-content, .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.report-content,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content {
+  border: 0;
+  -webkit-font-smoothing: auto;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before,
