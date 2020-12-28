@@ -8,7 +8,7 @@
  * true or false on success or failure.
  *
  * @package BuddyBoss\Media\Functions
- * @since BuddyBoss 1.0.0
+ * @since   BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -17,9 +17,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Create and upload the media file
  *
- * @since BuddyBoss 1.0.0
- *
  * @return array|null|WP_Error|WP_Post
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_upload() {
 	/**
@@ -56,10 +55,10 @@ function bp_media_upload() {
 /**
  * Mine type for uploader allowed by buddyboss media for security reason
  *
- * @param  Array $mime_types carry mime information
- * @since BuddyBoss 1.0.0
+ * @param Array $mime_types carry mime information
  *
  * @return Array
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_allowed_mimes( $mime_types ) {
 
@@ -79,9 +78,8 @@ function bp_media_allowed_mimes( $mime_types ) {
  *
  * @param string $file_id
  *
- * @since BuddyBoss 1.0.0
- *
  * @return array|int|null|WP_Error|WP_Post
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_upload_handler( $file_id = 'file' ) {
 
@@ -139,6 +137,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	if ( ! empty( $attachment ) ) {
 		update_post_meta( $attachment->ID, 'bp_media_upload', true );
 		update_post_meta( $attachment->ID, 'bp_media_saved', '0' );
+
 		return $attachment;
 	}
 
@@ -149,13 +148,12 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 /**
  * Compress the image
  *
- * @param $source
- * @param $destination
+ * @param     $source
+ * @param     $destination
  * @param int         $quality
  *
- * @since BuddyBoss 1.0.0
- *
  * @return mixed
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_compress_image( $source, $destination, $quality = 90 ) {
 
@@ -179,9 +177,8 @@ function bp_media_compress_image( $source, $destination, $quality = 90 ) {
  *
  * @param bool $post_string
  *
- * @since BuddyBoss 1.0.0
- *
  * @return string
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_file_upload_max_size() {
 
@@ -198,12 +195,11 @@ function bp_media_file_upload_max_size() {
 /**
  * Format file size units
  *
- * @param $bytes
+ * @param      $bytes
  * @param bool  $post_string
  *
- * @since BuddyBoss 1.0.0
- *
  * @return string
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_format_size_units( $bytes, $post_string = false, $type = 'bytes' ) {
 
@@ -250,68 +246,70 @@ function bp_media_format_size_units( $bytes, $post_string = false, $type = 'byte
  * the default for the bp_media_get()).
  *   - 'per_page' (false)
  *
+ * @param array|string $args See BP_Media::get() for description.
+ *
+ * @return array $media See BP_Media::get() for description.
  * @since BuddyBoss 1.0.0
  *
- * @see BP_Media::get() For more information on accepted arguments
+ * @see   BP_Media::get() For more information on accepted arguments
  *      and the format of the returned value.
- *
- * @param array|string $args See BP_Media::get() for description.
- * @return array $media See BP_Media::get() for description.
  */
 function bp_media_get( $args = '' ) {
 
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,        // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,        // results per page
-			'sort'         => 'DESC',       // sort ASC or DESC
-			'order_by'     => false,       // order by
+			'max'              => false,        // Maximum number of results to return.
+			'fields'           => 'all',
+			'page'             => 1,            // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,        // results per page
+			'sort'             => 'DESC',       // sort ASC or DESC
+			'order_by'         => false,        // order by
 
-			'scope'        => false,
+			'scope'            => false,
 
 			// want to limit the query.
-			'user_id'      => false,
-			'activity_id'  => false,
-			'album_id'     => false,
-			'group_id'     => false,
-			'search_terms' => false,        // Pass search terms as a string
-			'privacy'      => false,        // privacy of media
-			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'  => false,
+			'user_id'          => false,
+			'activity_id'      => false,
+			'album_id'         => false,
+			'group_id'         => false,
+			'search_terms'     => false,        // Pass search terms as a string
+			'privacy'          => false,        // privacy of media
+			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
+			'count_total'      => false,
+			'moderation_query' => true,         // Filter for exclude moderation query
 		),
 		'media_get'
 	);
 
 	$media = BP_Media::get(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'activity_id'  => $r['activity_id'],
-			'album_id'     => $r['album_id'],
-			'group_id'     => $r['group_id'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'order_by'     => $r['order_by'],
-			'search_terms' => $r['search_terms'],
-			'scope'        => $r['scope'],
-			'privacy'      => $r['privacy'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
+			'page'             => $r['page'],
+			'per_page'         => $r['per_page'],
+			'user_id'          => $r['user_id'],
+			'activity_id'      => $r['activity_id'],
+			'album_id'         => $r['album_id'],
+			'group_id'         => $r['group_id'],
+			'max'              => $r['max'],
+			'sort'             => $r['sort'],
+			'order_by'         => $r['order_by'],
+			'search_terms'     => $r['search_terms'],
+			'scope'            => $r['scope'],
+			'privacy'          => $r['privacy'],
+			'exclude'          => $r['exclude'],
+			'count_total'      => $r['count_total'],
+			'fields'           => $r['fields'],
+			'moderation_query' => $r['moderation_query'],
 		)
 	);
 
 	/**
 	 * Filters the requested media item(s).
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @param BP_Media $media Requested media object.
+	 * @param array    $r     Arguments used for the media query.
 	 *
-	 * @param BP_Media  $media Requested media object.
-	 * @param array     $r     Arguments used for the media query.
+	 * @since BuddyBoss 1.0.0
 	 */
 	return apply_filters_ref_array( 'bp_media_get', array( &$media, &$r ) );
 }
@@ -319,17 +317,17 @@ function bp_media_get( $args = '' ) {
 /**
  * Fetch specific media items.
  *
- * @since BuddyBoss 1.0.0
- *
- * @see BP_Media::get() For more information on accepted arguments.
- *
  * @param array|string $args {
- *     All arguments and defaults are shared with BP_Media::get(),
- *     except for the following:
- *     @type string|int|array Single media ID, comma-separated list of IDs,
+ *                           All arguments and defaults are shared with BP_Media::get(),
+ *                           except for the following:
+ *
+ * @type string|int|array Single media ID, comma-separated list of IDs,
  *                            or array of IDs.
  * }
  * @return array $activity See BP_Media::get() for description.
+ * @since BuddyBoss 1.0.0
+ *
+ * @see   BP_Media::get() For more information on accepted arguments.
  */
 function bp_media_get_specific( $args = '' ) {
 
@@ -341,10 +339,10 @@ function bp_media_get_specific( $args = '' ) {
 			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
 			'per_page'  => false,      // Results per page.
 			'sort'      => 'DESC',     // Sort ASC or DESC.
-			'order_by'  => false,     // Sort ASC or DESC.
-			'privacy'   => false,     // privacy to filter.
-			'album_id'  => false,     // Album ID.
-			'user_id'   => false,     // User ID.
+			'order_by'  => false,      // Sort ASC or DESC.
+			'privacy'   => false,      // privacy to filter.
+			'album_id'  => false,      // Album ID.
+			'user_id'   => false,      // User ID.
 		),
 		'media_get_specific'
 	);
@@ -364,11 +362,11 @@ function bp_media_get_specific( $args = '' ) {
 	/**
 	 * Filters the requested specific media item.
 	 *
-	 * @since BuddyBoss
+	 * @param BP_Media $media    Requested media object.
+	 * @param array    $args     Original passed in arguments.
+	 * @param array    $get_args Constructed arguments used with request.
 	 *
-	 * @param BP_Media      $media    Requested media object.
-	 * @param array         $args     Original passed in arguments.
-	 * @param array         $get_args Constructed arguments used with request.
+	 * @since BuddyBoss
 	 */
 	return apply_filters( 'bp_media_get_specific', BP_Media::get( $get_args ), $args, $get_args );
 }
@@ -376,29 +374,28 @@ function bp_media_get_specific( $args = '' ) {
 /**
  * Add an media item.
  *
- * @since BuddyBoss 1.0.0
+ * @param array|string $args         {
+ *                                   An array of arguments.
  *
- * @param array|string $args {
- *     An array of arguments.
- *     @type int|bool $id                Pass an media ID to update an existing item, or
+ * @type int|bool      $id           Pass an media ID to update an existing item, or
  *                                       false to create a new item. Default: false.
- *     @type int|bool $blog_id           ID of the blog Default: current blog id.
- *     @type int|bool $attchment_id      ID of the attachment Default: false
- *     @type int|bool $user_id           Optional. The ID of the user associated with the activity
+ * @type int|bool      $blog_id      ID of the blog Default: current blog id.
+ * @type int|bool      $attchment_id ID of the attachment Default: false
+ * @type int|bool      $user_id      Optional. The ID of the user associated with the activity
  *                                       item. May be set to false or 0 if the item is not related
  *                                       to any user. Default: the ID of the currently logged-in user.
- *     @type string   $title             Optional. The title of the media item.
-
- *     @type int      $album_id          Optional. The ID of the associated album.
- *     @type int      $group_id          Optional. The ID of a associated group.
- *     @type int      $activity_id       Optional. The ID of a associated activity.
- *     @type string   $privacy           Optional. Privacy of the media Default: public
- *     @type int      $menu_order        Optional. Menu order the media Default: false
- *     @type string   $date_created      Optional. The GMT time, in Y-m-d h:i:s format, when
+ * @type string        $title        Optional. The title of the media item.
+ * @type int           $album_id     Optional. The ID of the associated album.
+ * @type int           $group_id     Optional. The ID of a associated group.
+ * @type int           $activity_id  Optional. The ID of a associated activity.
+ * @type string        $privacy      Optional. Privacy of the media Default: public
+ * @type int           $menu_order   Optional. Menu order the media Default: false
+ * @type string        $date_created Optional. The GMT time, in Y-m-d h:i:s format, when
  *                                       the item was recorded. Defaults to the current time.
- *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  * @return WP_Error|bool|int The ID of the media on success. False on error.
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_add( $args = '' ) {
 
@@ -435,7 +432,7 @@ function bp_media_add( $args = '' ) {
 	$media->date_created  = $r['date_created'];
 	$media->error_type    = $r['error_type'];
 
-	// groups document always have privacy to `grouponly`.
+	// groups media always have privacy to `grouponly`.
 	if ( ! empty( $media->privacy ) && ( in_array( $media->privacy, array( 'forums', 'message' ), true ) ) ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
@@ -448,7 +445,7 @@ function bp_media_add( $args = '' ) {
 	}
 
 	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) {
-		$media->privacy ='message';
+		$media->privacy = 'message';
 	}
 
 	// save media.
@@ -460,15 +457,15 @@ function bp_media_add( $args = '' ) {
 		return false;
 	}
 
-	//media is saved for attachment.
+	// media is saved for attachment.
 	update_post_meta( $media->attachment_id, 'bp_media_saved', true );
 
 	/**
 	 * Fires at the end of the execution of adding a new media item, before returning the new media item ID.
 	 *
-	 * @since BuddyBoss 1.0.0
-	 *
 	 * @param object $media Media object.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_media_add', $media );
 
@@ -478,15 +475,14 @@ function bp_media_add( $args = '' ) {
 /**
  * Media add handler function
  *
- * @since BuddyBoss 1.2.0
- *
- * @param array $medias
+ * @param array  $medias
  * @param string $privacy
  * @param string $content
- * @param int $group_id
- * @param int $album_id
+ * @param int    $group_id
+ * @param int    $album_id
  *
  * @return mixed|void
+ * @since BuddyBoss 1.2.0
  */
 function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_media_upload_count, $bp_media_upload_activity_content;
@@ -510,30 +506,34 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 				$bp_media = new BP_Media( $media['media_id'] );
 
 				if ( ! empty( $bp_media->id ) ) {
-					$media_id = bp_media_add( array(
-						'id'            => $bp_media->id,
-						'blog_id'       => $bp_media->blog_id,
-						'attachment_id' => $bp_media->attachment_id,
-						'user_id'       => $bp_media->user_id,
-						'title'         => $bp_media->title,
-						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
-						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
-						'activity_id'   => $bp_media->activity_id,
-						'privacy'       => $bp_media->privacy,
-						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
-						'date_created'  => $bp_media->date_created,
-					) );
+					$media_id = bp_media_add(
+						array(
+							'id'            => $bp_media->id,
+							'blog_id'       => $bp_media->blog_id,
+							'attachment_id' => $bp_media->attachment_id,
+							'user_id'       => $bp_media->user_id,
+							'title'         => $bp_media->title,
+							'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+							'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+							'activity_id'   => $bp_media->activity_id,
+							'privacy'       => $bp_media->privacy,
+							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+							'date_created'  => $bp_media->date_created,
+						)
+					);
 				}
 			} else {
 
-				$media_id = bp_media_add( array(
-					'attachment_id' => $media['id'],
-					'title'         => $media['name'],
-					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
-					'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
-					'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
-					'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
-				) );
+				$media_id = bp_media_add(
+					array(
+						'attachment_id' => $media['id'],
+						'title'         => $media['name'],
+						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+						'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
+					)
+				);
 			}
 
 			if ( $media_id ) {
@@ -545,10 +545,10 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 	/**
 	 * Fires at the end of the execution of adding saving a media item, before returning the new media items in ajax response.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param array $media_ids Media IDs.
-	 * @param array $medias Array of media from POST object or in function parameter.
+	 * @param array $medias    Array of media from POST object or in function parameter.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	return apply_filters( 'bp_media_add_handler', $media_ids, (array) $medias );
 }
@@ -556,40 +556,43 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 /**
  * Delete media.
  *
- * @since BuddyBoss 1.0.0
- * @since BuddyBoss 1.2.0
- *
  * @param array|string $args To delete specific media items, use
  *                           $args = array( 'id' => $ids ); Otherwise, to use
  *                           filters for item deletion, the argument format is
  *                           the same as BP_Media::get().
  *                           See that method for a description.
- * @param bool $from Context of deletion from. ex. attachment, activity etc.
+ * @param bool         $from Context of deletion from. ex. attachment, activity etc.
  *
  * @return bool|int The ID of the media on success. False on error.
+ * @since BuddyBoss 1.2.0
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_delete( $args = '', $from = false ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'blog_id'       => false,
-		'attachment_id' => false,
-		'user_id'       => false,
-		'title'         => false,
-		'album_id'      => false,
-		'activity_id'   => false,
-		'group_id'      => false,
-		'privacy'       => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'            => false,
+			'blog_id'       => false,
+			'attachment_id' => false,
+			'user_id'       => false,
+			'title'         => false,
+			'album_id'      => false,
+			'activity_id'   => false,
+			'group_id'      => false,
+			'privacy'       => false,
+			'date_created'  => false,
+		)
+	);
 
 	/**
 	 * Fires before an media item proceeds to be deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param array $args Array of arguments to be used with the media deletion.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	do_action( 'bp_before_media_delete', $args );
 
@@ -601,18 +604,18 @@ function bp_media_delete( $args = '', $from = false ) {
 	/**
 	 * Fires after the media item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param array $args Array of arguments used with the media deletion.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	do_action( 'bp_media_delete', $args );
 
 	/**
 	 * Fires after the media item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param array $media_ids_deleted Array of affected media item IDs.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	do_action( 'bp_media_deleted_medias', $media_ids_deleted );
 
@@ -622,10 +625,10 @@ function bp_media_delete( $args = '', $from = false ) {
 /**
  * Completely remove a user's media data.
  *
- * @since BuddyBoss 1.2.0
- *
  * @param int $user_id ID of the user whose media is being deleted.
+ *
  * @return bool
+ * @since BuddyBoss 1.2.0
  */
 function bp_media_remove_all_user_data( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
@@ -641,30 +644,30 @@ function bp_media_remove_all_user_data( $user_id = 0 ) {
 	/**
 	 * Fires after the removal of all of a user's media data.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param int $user_id ID of the user being deleted.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	do_action( 'bp_media_remove_all_user_data', $user_id );
 }
-add_action( 'wpmu_delete_user',  'bp_media_remove_all_user_data' );
-add_action( 'delete_user',       'bp_media_remove_all_user_data' );
+
+add_action( 'wpmu_delete_user', 'bp_media_remove_all_user_data' );
+add_action( 'delete_user', 'bp_media_remove_all_user_data' );
 
 /**
  * Get media visibility levels out of the $bp global.
  *
- * @since BuddyBoss 1.2.3
- *
  * @return array
+ * @since BuddyBoss 1.2.3
  */
 function bp_media_get_visibility_levels() {
 
 	/**
 	 * Filters the media visibility levels out of the $bp global.
 	 *
-	 * @since BuddyBoss 1.2.3
-	 *
 	 * @param array $visibility_levels Array of visibility levels.
+	 *
+	 * @since BuddyBoss 1.2.3
 	 */
 	return apply_filters( 'bp_media_get_visibility_levels', buddypress()->media->visibility_levels );
 }
@@ -672,12 +675,12 @@ function bp_media_get_visibility_levels() {
 /**
  * Return the media activity.
  *
- * @param $activity_id
- * @since BuddyBoss 1.0.0
- *
- * @global object $media_template {@link BP_Media_Template}
+ * @param         $activity_id
  *
  * @return object|boolean The media activity object or false.
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_get_media_activity( $activity_id ) {
 
@@ -698,9 +701,9 @@ function bp_media_get_media_activity( $activity_id ) {
 	/**
 	 * Filters the media activity object being displayed.
 	 *
-	 * @since BuddyBoss 1.0.0
-	 *
 	 * @param object $activity The media activity.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 */
 	return apply_filters( 'bp_media_get_media_activity', $result['activities'][0] );
 }
@@ -708,9 +711,8 @@ function bp_media_get_media_activity( $activity_id ) {
 /**
  * Get the media count of a user.
  *
- * @since BuddyBoss 1.0.0
- *
  * @return int media count of the user.
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_get_total_media_count() {
 
@@ -722,9 +724,9 @@ function bp_media_get_total_media_count() {
 	/**
 	 * Filters the total media count for a given user.
 	 *
-	 * @since BuddyBoss 1.0.0
-	 *
 	 * @param int $count Total media count for a given user.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 */
 	return apply_filters( 'bp_media_get_total_media_count', (int) $count );
 }
@@ -755,10 +757,10 @@ function bp_media_get_user_total_group_media_count() {
 /**
  * Get the media count of a given group.
  *
- * @since BuddyBoss 1.0.0
- *
  * @param int $group_id ID of the group whose media are being counted.
+ *
  * @return int media count of the group.
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_get_total_group_media_count( $group_id = 0 ) {
 	if ( empty( $group_id ) && bp_get_current_group_id() ) {
@@ -775,9 +777,9 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
 	/**
 	 * Filters the total media count for a given group.
 	 *
-	 * @since BuddyBoss 1.0.0
-	 *
 	 * @param int $count Total media count for a given group.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 */
 	return apply_filters( 'bp_media_get_total_group_media_count', (int) $count );
 }
@@ -785,10 +787,10 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
 /**
  * Get the album count of a given group.
  *
- * @since BuddyBoss 1.2.0
- *
  * @param int $group_id ID of the group whose album are being counted.
+ *
  * @return int album count of the group.
+ * @since BuddyBoss 1.2.0
  */
 function bp_media_get_total_group_album_count( $group_id = 0 ) {
 	if ( empty( $group_id ) && bp_get_current_group_id() ) {
@@ -805,9 +807,9 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 	/**
 	 * Filters the total album count for a given group.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param int $count Total album count for a given group.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	return apply_filters( 'bp_media_get_total_group_album_count', (int) $count );
 }
@@ -815,9 +817,8 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 /**
  * Return the total media count in your BP instance.
  *
- * @since BuddyBoss 1.0.0
- *
  * @return int Media count.
+ * @since BuddyBoss 1.0.0
  */
 function bp_get_total_media_count() {
 
@@ -829,9 +830,9 @@ function bp_get_total_media_count() {
 	/**
 	 * Filters the total number of media.
 	 *
-	 * @since BuddyBoss 1.0.0
-	 *
 	 * @param int $count Total number of media.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 */
 	return apply_filters( 'bp_get_total_media_count', (int) $count );
 }
@@ -850,6 +851,7 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 	$querystring['per_page']    = 1;
 	$querystring['user_id']     = 0;
 	$querystring['count_total'] = true;
+
 	return http_build_query( $querystring );
 }
 
@@ -898,59 +900,60 @@ function bp_media_object_template_results_media_groups_scope( $querystring ) {
  * the default for the bp_album_get()).
  *   - 'per_page' (false)
  *
+ * @param array|string $args See BP_Media_Album::get() for description.
+ *
+ * @return array $activity See BP_Media_Album::get() for description.
  * @since BuddyBoss 1.0.0
  *
- * @see BP_Media_Album::get() For more information on accepted arguments
+ * @see   BP_Media_Album::get() For more information on accepted arguments
  *      and the format of the returned value.
- *
- * @param array|string $args See BP_Media_Album::get() for description.
- * @return array $activity See BP_Media_Album::get() for description.
  */
 function bp_album_get( $args = '' ) {
 
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,                    // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,                    // results per page
-			'sort'         => 'DESC',                   // sort ASC or DESC
-
-			'search_terms' => false,           // Pass search terms as a string
-			'exclude'      => false,           // Comma-separated list of activity IDs to exclude.
-		// want to limit the query.
-			'user_id'      => false,
-			'group_id'     => false,
-			'privacy'      => false,                    // privacy of album
-			'count_total'  => false,
+			'max'              => false,            // Maximum number of results to return.
+			'fields'           => 'all',
+			'page'             => 1,                // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,            // results per page.
+			'sort'             => 'DESC',           // sort ASC or DESC.
+			'search_terms'     => false,            // Pass search terms as a string.
+			'exclude'          => false,            // Comma-separated list of activity IDs to exclude.
+			// want to limit the query.
+			'user_id'          => false,
+			'group_id'         => false,
+			'privacy'          => false,            // privacy of album.
+			'count_total'      => false,
+			'moderation_query' => true,             // Filter for exclude moderation query.
 		),
 		'album_get'
 	);
 
 	$album = BP_Media_Album::get(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'group_id'     => $r['group_id'],
-			'privacy'      => $r['privacy'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'search_terms' => $r['search_terms'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
+			'page'             => $r['page'],
+			'per_page'         => $r['per_page'],
+			'user_id'          => $r['user_id'],
+			'group_id'         => $r['group_id'],
+			'privacy'          => $r['privacy'],
+			'max'              => $r['max'],
+			'sort'             => $r['sort'],
+			'search_terms'     => $r['search_terms'],
+			'exclude'          => $r['exclude'],
+			'count_total'      => $r['count_total'],
+			'fields'           => $r['fields'],
+			'moderation_query' => $r['moderation_query'],
 		)
 	);
 
 	/**
 	 * Filters the requested album item(s).
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @param BP_Media $album Requested media object.
+	 * @param array    $r     Arguments used for the album query.
 	 *
-	 * @param BP_Media  $album Requested media object.
-	 * @param array     $r     Arguments used for the album query.
+	 * @since BuddyBoss 1.0.0
 	 */
 	return apply_filters_ref_array( 'bp_album_get', array( &$album, &$r ) );
 }
@@ -958,17 +961,17 @@ function bp_album_get( $args = '' ) {
 /**
  * Fetch specific albums.
  *
- * @since BuddyBoss 1.0.0
- *
- * @see BP_Media_Album::get() For more information on accepted arguments.
- *
  * @param array|string $args {
- *     All arguments and defaults are shared with BP_Media_Album::get(),
- *     except for the following:
- *     @type string|int|array Single album ID, comma-separated list of IDs,
+ *                           All arguments and defaults are shared with BP_Media_Album::get(),
+ *                           except for the following:
+ *
+ * @type string|int|array Single album ID, comma-separated list of IDs,
  *                            or array of IDs.
  * }
  * @return array $albums See BP_Media_Album::get() for description.
+ * @since BuddyBoss 1.0.0
+ *
+ * @see   BP_Media_Album::get() For more information on accepted arguments.
  */
 function bp_album_get_specific( $args = '' ) {
 
@@ -998,11 +1001,11 @@ function bp_album_get_specific( $args = '' ) {
 	/**
 	 * Filters the requested specific album item.
 	 *
-	 * @since BuddyBoss
+	 * @param BP_Media $album    Requested media object.
+	 * @param array    $args     Original passed in arguments.
+	 * @param array    $get_args Constructed arguments used with request.
 	 *
-	 * @param BP_Media      $album    Requested media object.
-	 * @param array         $args     Original passed in arguments.
-	 * @param array         $get_args Constructed arguments used with request.
+	 * @since BuddyBoss
 	 */
 	return apply_filters( 'bp_album_get_specific', BP_Media_Album::get( $get_args ), $args, $get_args );
 }
@@ -1010,23 +1013,23 @@ function bp_album_get_specific( $args = '' ) {
 /**
  * Add album item.
  *
- * @since BuddyBoss 1.0.0
+ * @param array|string $args         {
+ *                                   An array of arguments.
  *
- * @param array|string $args {
- *     An array of arguments.
- *     @type int|bool $id                Pass an activity ID to update an existing item, or
+ * @type int|bool      $id           Pass an activity ID to update an existing item, or
  *                                       false to create a new item. Default: false.
- *     @type int|bool $user_id           Optional. The ID of the user associated with the album
+ * @type int|bool      $user_id      Optional. The ID of the user associated with the album
  *                                       item. May be set to false or 0 if the item is not related
  *                                       to any user. Default: the ID of the currently logged-in user.
- *     @type int      $group_id          Optional. The ID of the associated group.
- *     @type string   $title             The title of album.
- *     @type string   $privacy           The privacy of album.
- *     @type string   $date_created      Optional. The GMT time, in Y-m-d h:i:s format, when
+ * @type int           $group_id     Optional. The ID of the associated group.
+ * @type string        $title        The title of album.
+ * @type string        $privacy      The privacy of album.
+ * @type string        $date_created Optional. The GMT time, in Y-m-d h:i:s format, when
  *                                       the item was recorded. Defaults to the current time.
- *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  * @return WP_Error|bool|int The ID of the album on success. False on error.
+ * @since BuddyBoss 1.0.0
  */
 function bp_album_add( $args = '' ) {
 
@@ -1034,11 +1037,11 @@ function bp_album_add( $args = '' ) {
 		$args,
 		array(
 			'id'           => false,                  // Pass an existing album ID to update an existing entry.
-			'user_id'      => bp_loggedin_user_id(),                     // User ID
+			'user_id'      => bp_loggedin_user_id(),  // User ID.
 			'group_id'     => false,                  // attachment id.
 			'title'        => '',                     // title of album being added.
-			'privacy'      => 'public',                  // Optional: privacy of the media e.g. public.
-			'date_created' => bp_core_current_time(), // The GMT time that this media was recorded
+			'privacy'      => 'public',               // Optional: privacy of the media e.g. public.
+			'date_created' => bp_core_current_time(), // The GMT time that this media was recorded.
 			'error_type'   => 'bool',
 		),
 		'album_add'
@@ -1068,9 +1071,9 @@ function bp_album_add( $args = '' ) {
 	/**
 	 * Fires at the end of the execution of adding a new album item, before returning the new album item ID.
 	 *
-	 * @since BuddyBoss 1.0.0
-	 *
 	 * @param object $album Album object.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_album_add', $album );
 
@@ -1080,8 +1083,6 @@ function bp_album_add( $args = '' ) {
 /**
  * Delete album item.
  *
- * @since BuddyBoss 1.0.0
- *
  * @param array|string $args To delete specific album items, use
  *                           $args = array( 'id' => $ids ); Otherwise, to use
  *                           filters for item deletion, the argument format is
@@ -1089,23 +1090,27 @@ function bp_album_add( $args = '' ) {
  *                           See that method for a description.
  *
  * @return bool True on Success. False on error.
+ * @since BuddyBoss 1.0.0
  */
 function bp_album_delete( $args ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'user_id'       => false,
-		'group_id'      => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'           => false,
+			'user_id'      => false,
+			'group_id'     => false,
+			'date_created' => false,
+		)
+	);
 
 	/**
 	 * Fires before an album item proceeds to be deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param array $args Array of arguments to be used with the album deletion.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	do_action( 'bp_before_album_delete', $args );
 
@@ -1117,18 +1122,18 @@ function bp_album_delete( $args ) {
 	/**
 	 * Fires after the album item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param array $args Array of arguments used with the album deletion.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	do_action( 'bp_album_delete', $args );
 
 	/**
 	 * Fires after the album item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
-	 *
 	 * @param array $album_ids_deleted Array of affected album item IDs.
+	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	do_action( 'bp_albums_deleted_albums', $album_ids_deleted );
 
@@ -1142,10 +1147,10 @@ function bp_album_delete( $args ) {
  * of instantiating BP_Media_Album directly, so that you will inherit cache
  * support and pass through the albums_get_album filter.
  *
- * @since BuddyBoss 1.0.0
- *
  * @param int $album_id ID of the album.
+ *
  * @return BP_Media_Album $album The album object.
+ * @since BuddyBoss 1.0.0
  */
 function albums_get_album( $album_id ) {
 
@@ -1154,9 +1159,9 @@ function albums_get_album( $album_id ) {
 	/**
 	 * Filters a single album object.
 	 *
-	 * @since BuddyBoss 1.0.0
-	 *
 	 * @param BP_Media_Album $album Single album object.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 */
 	return apply_filters( 'albums_get_album', $album );
 }
@@ -1164,10 +1169,10 @@ function albums_get_album( $album_id ) {
 /**
  * Check album access for current user or guest
  *
- * @since BuddyBoss 1.0.0
  * @param $album_id
  *
  * @return bool
+ * @since BuddyBoss 1.0.0
  */
 function albums_check_album_access( $album_id ) {
 
@@ -1223,7 +1228,7 @@ function bp_media_delete_orphaned_attachments() {
 	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
 
 	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach( $orphaned_attachment_query->posts as $a_id ) {
+		foreach ( $orphaned_attachment_query->posts as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
@@ -1232,11 +1237,10 @@ function bp_media_delete_orphaned_attachments() {
 /**
  * Download an image from the specified URL and attach it to a post.
  *
- * @since BuddyBoss 1.0.0
- *
  * @param string $file The URL of the image to download
  *
  * @return int|void
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_sideload_attachment( $file ) {
 	if ( empty( $file ) ) {
@@ -1282,12 +1286,11 @@ function bp_media_sideload_attachment( $file ) {
 /**
  * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
  *
- * @since BuddyBoss 1.0.0
- *
  * @param array $file_array Array similar to a {@link $_FILES} upload array
  * @param array $post_data  allows you to overwrite some of the attachment
  *
  * @return int|object The ID of the attachment or a WP_Error on failure
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_handle_sideload( $file_array, $post_data = array() ) {
 
@@ -1856,7 +1859,7 @@ function bp_media_import_reset_media_albums() {
 							do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 							// Deleting an activity comment.
-							if ( 'activity_comment' == $activity->type ) {
+							if ( 'activity_comment' === $activity->type ) {
 								if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 									/** This action is documented in bp-activity/bp-activity-actions.php */
 									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -1925,7 +1928,7 @@ function bp_media_import_reset_media() {
 				do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 				// Deleting an activity comment.
-				if ( 'activity_comment' == $activity->type ) {
+				if ( 'activity_comment' === $activity->type ) {
 					if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 						/** This action is documented in bp-activity/bp-activity-actions.php */
 						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -2175,10 +2178,10 @@ add_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
 /**
  * Get media id for the attachment.
  *
- * @since BuddyBoss 1.3.5
  * @param integer $attachment_id
  *
  * @return array|bool
+ * @since BuddyBoss 1.3.5
  */
 function bp_get_attachment_media_id( $attachment_id = 0 ) {
 	global $bp, $wpdb;
@@ -2245,7 +2248,7 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	if (
 		bp_is_group()
 		|| ( bp_is_active( 'groups' ) && ! empty( $group_id ) )
-		|| ( !empty( $scope ) && 'groups' === $scope )
+		|| ( ! empty( $scope ) && 'groups' === $scope )
 	) {
 		$privacy = array( 'grouponly' );
 	}
@@ -2287,11 +2290,10 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
 /**
  * Get default scope for the media.
  *
- * @since BuddyBoss 1.4.4
- *
  * @param string $scope Default scope.
  *
  * @return string
+ * @since BuddyBoss 1.4.4
  */
 function bp_media_default_scope( $scope ) {
 
@@ -2306,12 +2308,11 @@ function bp_media_default_scope( $scope ) {
 		$allowed_scopes[] = 'groups';
 	}
 
-	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+	if ( ( is_user_logged_in() || bp_is_user() ) && bp_is_profile_media_support_enabled() ) {
 		$allowed_scopes[] = 'personal';
 	}
 
 	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_media_directory() ) {
-
 		$new_scope[] = 'public';
 
 		if ( bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
@@ -2325,7 +2326,6 @@ function bp_media_default_scope( $scope ) {
 		if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
 			$new_scope[] = 'personal';
 		}
-
 	} elseif ( bp_is_user_media() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
 	}
@@ -2401,20 +2401,20 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 
 				if ( $manage ) {
 					if ( $media->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
+						$can_manage = true;
+						$can_add    = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2453,7 +2453,6 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'friends':
-
 			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $media->user_id, $user_id ) : false;
 			if ( $media->user_id === $user_id ) {
 				$can_manage   = true;
@@ -2473,7 +2472,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'forums':
-			$args       = array(
+			$args = array(
 				'user_id'         => $user_id,
 				'forum_id'        => bp_media_get_forum_id( $media_id ),
 				'check_ancestors' => false,
@@ -2492,7 +2491,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_add      = false;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_manage   = true;
+					$can_manage = true;
 				}
 				$can_view     = true;
 				$can_download = true;
@@ -2500,7 +2499,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'message':
-			$thread_id = bp_media_get_thread_id( $media_id );
+			$thread_id  = bp_media_get_thread_id( $media_id );
 			$has_access = messages_check_thread_access( $thread_id, $user_id );
 			if ( ! is_user_logged_in() ) {
 				$can_manage   = false;
@@ -2565,7 +2564,7 @@ function bp_media_get_thread_id( $media_id ) {
 		);
 
 		// Check if there is already previously individual group thread created.
-		if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+		if( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
 			while ( bp_message_threads() ) {
 				bp_message_thread();
 				$thread_id = bp_get_message_thread_id();
@@ -2575,6 +2574,7 @@ function bp_media_get_thread_id( $media_id ) {
 			}
 		}
 	}
+
 	return apply_filters( 'bp_media_get_thread_id', $thread_id, $media_id );
 
 }
@@ -2626,6 +2626,7 @@ function bp_media_download_url_file() {
  * IE bug prevents download via SSL when Cache Control and Pragma no-cache headers set.
  *
  * @param array $headers HTTP headers.
+ *
  * @return array
  */
 function bp_media_ie_nocache_headers_fix( $headers ) {
@@ -2633,12 +2634,13 @@ function bp_media_ie_nocache_headers_fix( $headers ) {
 		$headers['Cache-Control'] = 'private';
 		unset( $headers['Pragma'] );
 	}
+
 	return $headers;
 }
 
 function bp_media_get_forum_id( $media_id ) {
 
-	$forum_id = 0;
+	$forum_id           = 0;
 	$forums_media_query = new WP_Query(
 		array(
 			'post_type'      => bbp_get_forum_post_type(),
@@ -2671,7 +2673,8 @@ function bp_media_get_forum_id( $media_id ) {
 	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
-		$topics_media_query = new WP_Query( array(
+		$topics_media_query = new WP_Query(
+			array(
 				'post_type'      => bbp_get_topic_post_type(),
 				'fields'         => 'ids',
 				'posts_per_page' => - 1,
@@ -2682,7 +2685,8 @@ function bp_media_get_forum_id( $media_id ) {
 						'compare' => 'LIKE',
 					),
 				),
-			) );
+			)
+		);
 
 		if ( ! empty( $topics_media_query->found_posts ) && ! empty( $topics_media_query->posts ) ) {
 
@@ -2702,7 +2706,8 @@ function bp_media_get_forum_id( $media_id ) {
 	}
 
 	if ( ! $forum_id ) {
-		$reply_media_query = new WP_Query( array(
+		$reply_media_query = new WP_Query(
+			array(
 				'post_type'      => bbp_get_reply_post_type(),
 				'fields'         => 'ids',
 				'posts_per_page' => - 1,
@@ -2713,7 +2718,8 @@ function bp_media_get_forum_id( $media_id ) {
 						'compare' => 'LIKE',
 					),
 				),
-			) );
+			)
+		);
 
 		if ( ! empty( $reply_media_query->found_posts ) && ! empty( $reply_media_query->posts ) ) {
 
@@ -2733,7 +2739,6 @@ function bp_media_get_forum_id( $media_id ) {
 		}
 		wp_reset_postdata();
 	}
-
 
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
@@ -2786,20 +2791,20 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 				$is_mod   = groups_is_user_mod( $user_id, $album->group_id );
 				if ( $manage ) {
 					if ( $album->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
+						$can_manage = true;
+						$can_add    = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2878,4 +2883,462 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_media_user_can_manage_album', $data, $album_id, $user_id );
+}
+
+
+/**
+ * Return the breadcrumbs.
+ *
+ * @param int $user_id
+ * @param int $group_id
+ *
+ * @return string
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
+
+	global $wpdb, $bp;
+
+	$media_album_table = $bp->media->table_name_albums;
+
+	if ( 0 === $group_id ) {
+		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
+	}
+
+    $media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+
+	// db call ok; no-cache ok;
+	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
+
+	// Build array of item references.
+	foreach ( $data as $key => &$item ) {
+		$items_by_reference[ $item['id'] ] = &$item;
+		// Children array.
+		$items_by_reference[ $item['id'] ]['children'] = array();
+		// Empty data class (so that json_encode adds "data: {}" ).
+		$items_by_reference[ $item['id'] ]['data'] = new StdClass();
+	}
+
+	// Set items as children of the relevant parent item.
+	foreach ( $data as $key => &$item ) {
+		if ( isset( $item['parent'] ) && $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
+			$items_by_reference[ $item['parent'] ]['children'][] = &$item;
+		}
+	}
+
+	// Remove items that were added to parents elsewhere.
+	foreach ( $data as $key => &$item ) {
+		if ( isset( $item['parent'] ) && $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
+			unset( $data[ $key ] );
+		}
+	}
+
+	return bp_media_album_recursive_li_list( $data, false );
+
+}
+
+/**
+ * This function will give the breadcrumbs ul li html.
+ *
+ * @param      $array
+ * @param bool  $first
+ *
+ * @return string
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_album_recursive_li_list( $array, $first = false ) {
+
+	// Base case: an empty array produces no list.
+	if ( empty( $array ) ) {
+		return '';
+	}
+
+	// Recursive Step: make a list with child lists.
+	if ( $first ) {
+		$output = '<ul class="">';
+	} else {
+		$output = '<ul class="location-album-list">';
+	}
+
+	foreach ( $array as $item ) {
+		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+	}
+	$output .= '</ul>';
+
+	return $output;
+}
+
+/**
+ * This function will media into the album.
+ *
+ * @param int $media_id media id.
+ * @param int $album_id album id.
+ * @param int $group_id group id.
+ *
+ * @return bool|int
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id = 0 ) {
+
+	global $wpdb, $bp;
+
+	if ( 0 === $media_id ) {
+		return false;
+	}
+
+	if ( (int) $media_id > 0 ) {
+		$has_access = bp_media_user_can_edit( $media_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
+	if ( (int) $album_id > 0 ) {
+		$has_access = bp_album_user_can_edit( $album_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
+	if ( ! $group_id ) {
+		$get_media = new BP_Media( $media_id );
+		if ( $get_media->group_id > 0 ) {
+			$group_id = $get_media->group_id;
+		}
+	}
+
+	if ( $group_id > 0 ) {
+		$destination_privacy = 'public';
+	} elseif ( $album_id > 0 ) {
+		$destination_album = BP_Media_Album::get_album_data( array( $album_id ) );
+		$destination_album = ( ! empty( $destination_album ) ) ? current( $destination_album ) : array();
+		if ( empty( $destination_album ) ) {
+			return false;
+		}
+		$destination_privacy = $destination_album->privacy;
+		// Update modify date for destination album.
+		$destination_album_update               = new BP_Media_Album( $album_id );
+		$destination_album_update->date_created = bp_core_current_time();
+		$destination_album_update->save();
+	} else {
+		// Keep the destination privacy same as the previous privacy.
+		$media_object        = new BP_Media( $media_id );
+		$destination_privacy = $media_object->privacy;
+	}
+
+	if ( empty( $destination_privacy ) ) {
+		$destination_privacy = 'loggedin';
+	}
+
+	$media               = new BP_Media( $media_id );
+	$media->album_id     = $album_id;
+	$media->group_id     = $group_id;
+	$media->date_created = bp_core_current_time();
+	$media->privacy      = ( $group_id > 0 ) ? 'grouponly' : $destination_privacy;
+	$media->menu_order   = 0;
+	$media->save();
+
+	// Update media activity privacy.
+	if ( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
+
+		$media_attachment   = $media->attachment_id;
+		$parent_activity_id = get_post_meta( $media_attachment, 'bp_media_parent_activity_id', true );
+
+		// If found need to make this activity to main activity.
+		$child_activity_id = get_post_meta( $media_attachment, 'bp_media_activity_id', true );
+
+		if ( bp_is_active( 'activity' ) ) {
+
+			// Single media upload.
+			if ( empty( $child_activity_id ) ) {
+				$activity = new BP_Activity_Activity( (int) $parent_activity_id );
+				// Update activity data.
+				if ( bp_activity_user_can_delete( $activity ) ) {
+					// Make the activity media own.
+					$activity->hide_sitewide     = 0;
+					$activity->secondary_item_id = 0;
+					$activity->privacy           = $destination_privacy;
+					$activity->save();
+				}
+
+				// Delete the meta if uploaded to root so no need bp_media_album_activity meta.
+				bp_activity_delete_meta( (int) $parent_activity_id, 'bp_media_album_activity' );
+
+				if ( $album_id > 0 ) {
+					// Update to moved album id.
+					bp_activity_update_meta( (int) $parent_activity_id, 'bp_media_album_activity', (int) $album_id );
+				}
+
+				// We have to change child activity privacy when we move the media while at a time multiple media uploaded.
+			} else {
+
+				$parent_activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
+
+				// Get the parent activity.
+				$parent_activity = new BP_Activity_Activity( (int) $parent_activity_id );
+
+				if ( bp_activity_user_can_delete( $parent_activity ) && ! empty( $parent_activity_media_ids ) ) {
+					$parent_activity_media_ids = explode( ',', $parent_activity_media_ids );
+
+					// Do the changes if only one media is attached to a activity.
+					if ( 1 === count( $parent_activity_media_ids ) ) {
+
+						// Get the media object.
+						$media = new BP_Media( $media_id );
+
+						// Need to delete child activity.
+						$need_delete = $media->activity_id;
+
+						$media_album = (int) $media->album_id;
+
+						// Update media activity id to parent activity id.
+						$media->activity_id  = $parent_activity_id;
+						$media->date_created = bp_core_current_time();
+						$media->save();
+
+						bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', $media_id );
+
+						// Update attachment meta.
+						delete_post_meta( $media->attachment_id, 'bp_media_activity_id' );
+						update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
+						update_post_meta( $media->attachment_id, 'bp_media_upload', 1 );
+						update_post_meta( $media->attachment_id, 'bp_media_saved', 1 );
+
+						bp_activity_delete_meta( $parent_activity_id, 'bp_media_album_activity' );
+						if ( $media_album > 0 ) {
+							bp_activity_update_meta( $parent_activity_id, 'bp_media_album_activity', $media_album );
+						}
+
+						// Update the activity meta first otherwise it will delete the media.
+						bp_activity_update_meta( $need_delete, 'bp_media_ids', '' );
+
+						// Delete child activity no need anymore because assigned all the data to parent activity.
+						bp_activity_delete( array( 'id' => $need_delete ) );
+
+						// Update parent activity privacy to destination privacy.
+						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->save();
+
+					} elseif ( count( $parent_activity_media_ids ) > 1 ) {
+
+						// Get the child activity.
+						$activity = new BP_Activity_Activity( (int) $child_activity_id );
+
+						// Update activity data.
+						if ( bp_activity_user_can_delete( $activity ) ) {
+
+							// Make the activity media own.
+							$activity->hide_sitewide     = 0;
+							$activity->secondary_item_id = 0;
+							$activity->privacy           = $destination_privacy;
+							$activity->save();
+
+							bp_activity_update_meta( (int) $child_activity_id, 'bp_media_ids', $media_id );
+
+							// Update attachment meta.
+							delete_post_meta( $media_attachment, 'bp_media_activity_id' );
+							update_post_meta( $media_attachment, 'bp_media_parent_activity_id', $child_activity_id );
+							update_post_meta( $media_attachment, 'bp_media_upload', 1 );
+							update_post_meta( $media_attachment, 'bp_media_saved', 1 );
+
+							// Make the child activity as parent activity.
+							bp_activity_delete_meta( $child_activity_id, 'bp_media_activity' );
+
+							bp_activity_delete_meta( (int) $child_activity_id, 'bp_media_album_activity' );
+							if ( $album_id > 0 ) {
+								bp_activity_update_meta( (int) $child_activity_id, 'bp_media_album_activity', (int) $album_id );
+							}
+
+							// Remove the media id from the parent activity meta.
+							$key = array_search( $media_id, $parent_activity_media_ids );
+							if ( false !== $key ) {
+								unset( $parent_activity_media_ids[ $key ] );
+							}
+
+							// Update the activity meta.
+							if ( ! empty( $parent_activity_media_ids ) ) {
+								$activity_media_ids = implode( ',', $parent_activity_media_ids );
+								bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', $activity_media_ids );
+							} else {
+								bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', '' );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return $media_id;
+}
+
+/**
+ * Get the activity media.
+ *
+ * @param int $activity_id activity id.
+ *
+ * @return array|void
+ * @since BuddyBoss 1.5.6
+ */
+function bp_media_get_activity_media( $activity_id ) {
+
+	$media_content      = '';
+	$media_activity_ids = '';
+	$response           = array();
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
+
+		$media_activity_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+
+		global $media_template;
+		// Add Media to single activity page..
+		$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+		if ( bp_is_single_activity() && ! empty( $media_activity ) && '1' === $media_activity && empty( $media_activity_ids ) ) {
+			$media_ids = BP_Media::get_activity_media_id( $activity_id );
+		} else {
+			$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+		}
+
+		if ( empty( $media_ids ) ) {
+			return;
+		}
+
+		$args = array(
+			'include'  => $media_ids,
+			'order_by' => 'menu_order',
+			'sort'     => 'ASC',
+			'user_id'  => false,
+		);
+
+		$activity = new BP_Activity_Activity( (int) $activity_id );
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			if ( bp_is_group_media_support_enabled() ) {
+				$args['privacy'] = array( 'grouponly' );
+				if ( ! bp_is_group_albums_support_enabled() ) {
+					$args['album_id'] = 'existing-media';
+				}
+			} else {
+				$args['privacy']  = array( '0' );
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+			if ( ! bp_is_profile_media_support_enabled() ) {
+				$args['user_id'] = 'null';
+			}
+			if ( ! bp_is_profile_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		}
+
+		$is_forum_activity = false;
+		if ( bp_is_active( 'forums' ) && in_array(
+			$activity->type,
+			array(
+				'bbp_forum_create',
+				'bbp_topic_create',
+				'bbp_reply_create',
+			),
+			true
+		) && bp_is_forums_media_support_enabled() ) {
+			$is_forum_activity = true;
+			$args['privacy'][] = 'forums';
+		}
+
+		if ( bp_has_media( $args ) ) {
+
+			ob_start();
+			?>
+			<div class="bb-activity-media-wrap
+			<?php
+			echo esc_attr( 'bb-media-length-' . $media_template->media_count );
+			echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
+			echo true === $is_forum_activity ? esc_attr( ' forums-media-wrap' ) : '';
+			?>
+			">
+				<?php
+				bp_get_template_part( 'media/media-move' );
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
+				?>
+			</div>
+			<?php
+			$media_content = ob_get_contents();
+			ob_end_clean();
+		}
+	}
+
+	$response['content']            = $media_content;
+	$response['media_activity_ids'] = $media_activity_ids;
+
+	return $response;
+}
+
+/**
+ * Check given photo is activity comment photo.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param $photo
+ *
+ * @return bool
+ */
+function bp_media_is_activity_comment_photo( $photo ) {
+
+	$is_comment_photo = false;
+	if( is_object( $photo ) ) {
+		$photo_activity_id = $photo->activity_id;
+	} else {
+		$photo             = new BP_Media( $photo );
+		$photo_activity_id = $photo->activity_id;
+	}
+
+	if ( bp_is_active( 'activity' ) ) {
+		$activity = new BP_Activity_Activity( $photo_activity_id );
+
+		if( $activity ) {
+			if( $activity->secondary_item_id ) {
+				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id  );
+				if( $load_parent_activity ) {
+					if( 'activity_comment' === $load_parent_activity->type ) {
+						$is_comment_photo = true;
+					}
+				}
+			}
+		}
+	} elseif( $photo_activity_id ) {
+		$is_comment_photo = true;
+	}
+	return $is_comment_photo;
+
+}
+
+/**
+ * Function to get media report link
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args button arguments.
+ *
+ * @return mixed|void
+ */
+function bp_media_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$report_btn = bp_moderation_get_report_button( array(
+		'id'                => 'media_report',
+		'component'         => 'moderation',
+		'must_be_logged_in' => true,
+		'button_attr'       => array(
+			'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
+			'data-bp-content-type' => BP_Moderation_Media::$moderation_type,
+		),
+	),
+		true );
+
+	return apply_filters( 'bp_media_get_report_link', $report_btn, $args );
 }

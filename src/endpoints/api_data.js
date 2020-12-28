@@ -1372,8 +1372,7 @@ define({ "api": [
               "loggedin",
               "friends",
               "onlyme",
-              "grouponly",
-              "message"
+              "grouponly"
             ],
             "optional": true,
             "field": "privacy",
@@ -1655,9 +1654,7 @@ define({ "api": [
               "loggedin",
               "friends",
               "onlyme",
-              "grouponly",
-              "message",
-              "forums"
+              "grouponly"
             ],
             "optional": true,
             "field": "privacy",
@@ -1947,13 +1944,19 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Document Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
             "allowedValues": [
               "public",
               "loggedin",
               "onlyme",
               "friends",
-              "grouponly",
-              "message"
+              "grouponly"
             ],
             "optional": true,
             "field": "privacy",
@@ -3870,6 +3873,64 @@ define({ "api": [
     "groupTitle": "Groups"
   },
   {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/groups/invites/multiple",
+    "title": "Create Group Invite",
+    "name": "CreateBBGroupsMultipleInvites",
+    "group": "Groups",
+    "description": "<p>Create Multiple group invitation.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>The ID of the users who is invited to join the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "inviter_id",
+            "description": "<p>The ID of the user who made the invite.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "group_id",
+            "description": "<p>The ID of the group to which the user has been invited.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "message",
+            "description": "<p>The optional message to send to the invited user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "send_invite",
+            "defaultValue": "true",
+            "description": "<p>Whether the invite should be sent to the invitee.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-groups/classes/class-bp-rest-group-invites-endpoint.php",
+    "groupTitle": "Groups"
+  },
+  {
     "type": "DELETE",
     "url": "/wp-json/buddyboss/v1/groups/:id",
     "title": "Delete Group",
@@ -5498,8 +5559,7 @@ define({ "api": [
               "loggedin",
               "onlyme",
               "friends",
-              "grouponly",
-              "message"
+              "grouponly"
             ],
             "optional": true,
             "field": "privacy",
@@ -5904,8 +5964,7 @@ define({ "api": [
               "loggedin",
               "onlyme",
               "friends",
-              "grouponly",
-              "message"
+              "grouponly"
             ],
             "optional": true,
             "field": "privacy",
@@ -6054,8 +6113,7 @@ define({ "api": [
               "loggedin",
               "onlyme",
               "friends",
-              "grouponly",
-              "message"
+              "grouponly"
             ],
             "optional": true,
             "field": "privacy",
@@ -7020,6 +7078,276 @@ define({ "api": [
     },
     "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
     "groupTitle": "Messages"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/moderation",
+    "title": "Block a Member",
+    "name": "CreateBBReportMember",
+    "group": "Moderation",
+    "description": "<p>Block a Member.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "item_id",
+            "description": "<p>User ID which needs to be blocked.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/moderation:id",
+    "title": "Unblock Member",
+    "name": "DeleteBBReportMember",
+    "group": "Moderation",
+    "description": "<p>Unblock Member.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the moderation.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/moderation/report",
+    "title": "Get Report Form",
+    "name": "GetBBReportForm",
+    "group": "Moderation",
+    "description": "<p>Retrieve Report Form</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/moderation/report",
+    "title": "Report a item",
+    "name": "GetBBReportItem",
+    "group": "Moderation",
+    "description": "<p>Report a Item from components.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "item_id",
+            "description": "<p>Unique identifier for the content to report.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "activity",
+              "activity_comment",
+              "groups",
+              "forum",
+              "forum_topic",
+              "forum_reply",
+              "document",
+              "media"
+            ],
+            "optional": false,
+            "field": "item_type",
+            "description": "<p>Component type to report.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "report_category",
+            "description": "<p>Reasoned category for report.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "note",
+            "description": "<p>User Notes for the other type of report.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/moderation/:id",
+    "title": "Get Reported Member",
+    "name": "GetBBReportedMember",
+    "group": "Moderation",
+    "description": "<p>Retrieve Reported Member</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Moderation.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/moderation",
+    "title": "Get Reported Members",
+    "name": "GetBBReportedMembers",
+    "group": "Moderation",
+    "description": "<p>Retrieve Reported Members</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Get the result by reported item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "item_type",
+              "item_id",
+              "last_updated",
+              "hide_sitewide"
+            ],
+            "optional": true,
+            "field": "order_by",
+            "defaultValue": "last_updated",
+            "description": "<p>Column name to order the results by.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "include",
+            "description": "<p>Ensure result set includes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "reporters",
+            "defaultValue": "false",
+            "description": "<p>Whether to show the reporter or not.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "status",
+            "description": "<p>Whether to show the blocked or suspended. 0-Blocked, 1-Suspended</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "blog_id",
+            "description": "<p>Limit result set to items created by a specific site.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
   },
   {
     "type": "POST",
@@ -8483,6 +8811,66 @@ define({ "api": [
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
+    "groupTitle": "Profile_Fields"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/xprofile/repeater/order/:id",
+    "title": "Reorder xProfile Repeater",
+    "name": "UpdateBBxProfileRepeaterFields",
+    "group": "Profile_Fields",
+    "description": "<p>Reorder the order of the repeater.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the group of profile fields.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "fields",
+            "description": "<p>Fields array with order of field set with field ID and value to reorder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "fetch_fields",
+            "defaultValue": "true",
+            "description": "<p>Whether to fetch the fields for each group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "fetch_field_data",
+            "defaultValue": "true",
+            "description": "<p>Whether to fetch data for each field. Requires a $user_id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "fetch_visibility_level",
+            "defaultValue": "true",
+            "description": "<p>Whether to fetch the visibility level for each field.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {

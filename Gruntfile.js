@@ -238,6 +238,7 @@ module.exports = function (grunt) {
 					'**/bp-document/**',
 					'**/bp-members/**',
 					'**/bp-messages/**',
+					'**/bp-moderation/**',
 					'**/bp-notifications/**',
 					'**/bp-settings/**',
 					'**/bp-xprofile/**',
@@ -271,6 +272,7 @@ module.exports = function (grunt) {
 					'!**/bp-document/**',
 					'!**/bp-members/**',
 					'!**/bp-messages/**',
+					'!**/bp-moderation/**',
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**',
@@ -414,6 +416,7 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
+	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
     grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);

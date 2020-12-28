@@ -83,16 +83,17 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url						: BP_Nouveau.ajaxurl,
-				timeout					: 3 * 60 * 60 * 1000,
-				dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage 		: BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles			: 'image/*',
-				autoProcessQueue		: true,
-				addRemoveLinks			: true,
-				uploadMultiple			: false,
-				maxFiles				: ! _.isUndefined( BP_Nouveau.media.maxFiles ) ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize				: ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
+				url                 : BP_Nouveau.ajaxurl,
+				timeout             : 3 * 60 * 60 * 1000,
+				dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles       : 'image/*',
+				autoProcessQueue    : true,
+				addRemoveLinks      : true,
+				uploadMultiple      : false,
+				maxFiles            : !_.isUndefined(BP_Nouveau.media.maxFiles) ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize         : !_.isUndefined(BP_Nouveau.media.max_upload_size) ? BP_Nouveau.media.max_upload_size : 2,
+				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 			};
 
 			// if defined, add custom dropzone options.
@@ -270,6 +271,10 @@ window.bp = window.bp || {};
 				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 				self.postForm.$el.removeClass('loading');
 
+				//Wrap content section for better scroll
+				$( '#whats-new-content, #whats-new-attachments' ).wrapAll('<div class="edit-activity-content-wrap"></div>');
+
+
 				// Make selected current privacy.
 				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
 
@@ -387,6 +392,11 @@ window.bp = window.bp || {};
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+
+			//unwrap hw wrapped content section
+			if( $( '#whats-new-content').parent().is( '.edit-activity-content-wrap' ) ) {
+				$( '#whats-new-content').unwrap();
+			}
 
 			$activityFormPlaceholder.hide();
 
@@ -659,7 +669,9 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							if(!jQuery('.activity-media-error-popup').length) {
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -673,7 +685,9 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							if(!jQuery('.activity-media-error-popup').length) {
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -766,18 +780,19 @@ window.bp = window.bp || {};
 				self.destroyDocument();
 
 				var dropzone_options = {
-					url						: BP_Nouveau.ajaxurl,
-					timeout					: 3 * 60 * 60 * 1000,
-					dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-					acceptedFiles			: BP_Nouveau.media.document_type,
-					createImageThumbnails 	: false,
-					dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
-					autoProcessQueue		: true,
-					addRemoveLinks			: true,
-					uploadMultiple			: false,
-					maxFiles				: ! _.isUndefined( BP_Nouveau.document.maxFiles ) ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize				: ! _.isUndefined( BP_Nouveau.document.max_upload_size ) ? BP_Nouveau.document.max_upload_size : 2,
-					dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
+					url                  : BP_Nouveau.ajaxurl,
+					timeout              : 3 * 60 * 60 * 1000,
+					dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
+					acceptedFiles        : BP_Nouveau.media.document_type,
+					createImageThumbnails: false,
+					dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
+					autoProcessQueue     : true,
+					addRemoveLinks       : true,
+					uploadMultiple       : false,
+					maxFiles             : !_.isUndefined(BP_Nouveau.document.maxFiles) ? BP_Nouveau.document.maxFiles : 10,
+					maxFilesize          : !_.isUndefined(BP_Nouveau.document.max_upload_size) ? BP_Nouveau.document.max_upload_size : 2,
+					dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+					dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-document-uploader', dropzone_options );
@@ -864,7 +879,9 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							if(!jQuery('.document-error-popup').length) {
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -1628,7 +1645,7 @@ window.bp = window.bp || {};
 												],
 												cleanAttrs: ['class', 'style', 'dir', 'id'],
 												cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-												unwrapTags: []
+												unwrapTags: [ 'ul', 'ol', 'li' ]
 											},
 											imageDragging: false
 										  }

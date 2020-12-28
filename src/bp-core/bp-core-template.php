@@ -2294,6 +2294,17 @@ function bp_is_document_component() {
 }
 
 /**
+ * Check whether the current page is part of the Moderation component.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @return bool True if the current page is part of the Moderation component.
+ */
+function bp_is_moderation_component() {
+	return (bool) bp_is_current_component( 'moderation' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2562,6 +2573,19 @@ function bp_is_user_groups() {
 }
 
 /**
+ * Is the current page part of a user's Groups invite page?
+ *
+ * Eg http://example.com/members/joe/groups/invites/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.5.3
+ *
+ * @return bool True if the current page is a user's Groups invite page.
+ */
+function bp_is_user_groups_invites() {
+	return (bool) ( bp_is_user_groups() && bp_is_current_action( 'invites' ) );
+}
+
+/**
  * Is the current page part of a user's Blogs page?
  *
  * Eg http://example.com/members/joe/blogs/ (or a subpage thereof).
@@ -2772,6 +2796,19 @@ function bp_is_user_media() {
  */
 function bp_is_user_document() {
 	return (bool) ( bp_is_user() && bp_is_document_component() );
+}
+
+/**
+ * Is this a user's moderation page?
+ *
+ * Eg http://example.com/members/joe/moderation/ (or a subpage thereof).
+ *
+ * @since BuddyPress 2.0.0
+ *
+ * @return bool True if the current page is a user's moderation page.
+ */
+function bp_is_user_moderation() {
+	return (bool) ( bp_is_user() && bp_is_moderation_component() );
 }
 
 
@@ -3012,7 +3049,7 @@ function bp_is_group_subgroups() {
  * @return bool True if the current page is part of a group forum topic.
  */
 function bp_is_group_forum_topic() {
-	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) && bp_is_action_variable( 'topic', 0 ) );
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( 'topic', 0 ) );
 }
 
 /**
@@ -3024,7 +3061,7 @@ function bp_is_group_forum_topic() {
  * @return bool True if the current page is part of a group forum topic edit page.
  */
 function bp_is_group_forum_topic_edit() {
-	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) && bp_is_action_variable( 'topic', 0 ) && bp_is_action_variable( 'edit', 2 ) );
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( 'topic', 0 ) && bp_is_action_variable( 'edit', 2 ) );
 }
 
 /**
@@ -3203,7 +3240,7 @@ function bp_is_group_albums() {
 function bp_is_group_document() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled' ) && ! bp_is_group_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -3224,7 +3261,7 @@ function bp_is_group_document() {
 function bp_is_group_folders() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled' ) && ! bp_is_group_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -3245,7 +3282,7 @@ function bp_is_group_folders() {
 function bp_is_user_folders() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component') && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component' ) && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
 		$retval = true;
 	}
 
@@ -4158,6 +4195,23 @@ function bp_is_group_messages() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a user's album page?
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @return bool True if the current page is a album page.
+ */
+function bp_is_user_albums() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && bp_is_media_component() && bp_is_current_action( 'albums' ) ) {
 		$retval = true;
 	}
 
