@@ -764,7 +764,7 @@
 }
 
 .bp-single-message-content .bb-activity-video-elem {
-	min-width: 20%;
+	min-width: 30%;
 }
 
 .forums-video-wrap,
@@ -785,6 +785,7 @@
 			padding-top: 38.56%;
 		}
 
+		&.is-visible .bb-item-cover-wrap:after,
 		&:hover .bb-item-cover-wrap:after {
 			visibility: visible;
 			opacity: 1;
@@ -822,6 +823,18 @@
 		}
 
 		&.act-grid-1-2 .bb-item-cover-wrap {
+			padding-top: 82.56%;
+		}
+
+	}
+
+	&.bb-video-length-2 .bb-activity-video-elem.act-grid-1-1 {
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+
+		.bb-item-cover-wrap {
 			padding-top: 82.56%;
 		}
 

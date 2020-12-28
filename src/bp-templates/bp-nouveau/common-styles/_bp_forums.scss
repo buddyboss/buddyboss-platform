@@ -1390,6 +1390,18 @@ h2.bbp-form-title.entry-title {
 
 	}
 
+	&.bb-media-length-2 .bb-activity-video-elem.act-grid-1-1 {
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+
+		.bb-item-cover-wrap {
+			padding-top: 82.56%;
+		}
+
+	}
+
 	&.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + div + div {
 		position: relative;
 		right: inherit;
