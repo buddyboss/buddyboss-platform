@@ -24,17 +24,9 @@
                             <# if ( other_recipients[i].is_deleted ) { #>
                                 {{other_recipients[i].user_name}}
                              <# } else { #>
-                                <# if( other_recipients[i].user_link ) { #>
-                                    <a href="{{other_recipients[i].user_link}}">
-                                        {{other_recipients[i].user_name}}
-                                    </a>
-                                <# } else { #>
+                                <# if( other_recipients[i].user_link ) { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } else { #>
                                     {{other_recipients[i].user_name}}
-                                <# } #>
-                            <# } #>
-                            <# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #>
-                                <?php _e( ',', 'buddyboss' ); ?>
-                            <# } #>
+                                <# } #><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #><?php _e( ',', 'buddyboss' ); ?><# } #>
                         </span>
                     <# } #>
 
