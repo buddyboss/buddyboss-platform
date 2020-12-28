@@ -426,22 +426,22 @@ function bp_moderation_admin_index() {
 
 		if ( $hidden > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
+			$messages[] = __( 'Content hidden successfully.', 'buddyboss' );
 		}
 
 		if ( $unhide > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
+			$messages[] = __( 'Content unhidden successfully.', 'buddyboss' );
 		}
 
 		if ( $suspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
+			$messages[] = _n( 'Member suspended successfully', 'Members suspended successfully', $suspended, 'buddyboss' );
 		}
 
 		if ( $unsuspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
+			$messages[] = _n( 'Member unsuspended successfully.', 'Members unsuspended successfully.', $unsuspended, 'buddyboss' );
 		}
 	}
 
@@ -523,22 +523,22 @@ function bp_moderation_admin_view() {
 
 		if ( $hidden > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
+			$messages[] = __( 'Content hidden successfully.', 'buddyboss' );
 		}
 
 		if ( $unhide > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
+			$messages[] = __( 'Content unhidden successfully.', 'buddyboss' );
 		}
 
 		if ( $suspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
+			$messages[] = _n( 'Member suspended successfully', 'Members suspended successfully', $suspended, 'buddyboss' );
 		}
 
 		if ( $unsuspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
+			$messages[] = _n( 'Member unsuspended successfully', 'Members suspended successfully', $unsuspended, 'buddyboss' );
 		}
 	}
 

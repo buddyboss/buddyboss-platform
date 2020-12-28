@@ -43,7 +43,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 						if ( $can_manage ) {
 							if ( $is_comment_pic ) {
 								?>
-								<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photos added in comment cannot be moved', 'buddyboss' ); ?>">
+								<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 								</li>
 								<?php

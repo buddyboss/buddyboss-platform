@@ -1309,3 +1309,28 @@ function bp_admin_setting_callback_group_messages() {
 	<label for="bp-disable-group-messages"><?php _e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }
+
+
+
+/**
+ * Link to Moderation tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_moderation_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 86158, /* Update documentation article id here */
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}

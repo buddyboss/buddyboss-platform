@@ -798,7 +798,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( empty( (int) $moved_document_id ) || is_wp_error( $moved_document_id ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_move_with_folder',
-					__( 'Sorry, you are not allowed to move this document with folder.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this document along with the folder.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -1537,7 +1537,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				),
 				'count'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Count of the child documents and folders of the folder.', 'buddyboss' ),
+					'description' => __( 'Count of documents and folders inside folder.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),

@@ -99,7 +99,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Standalone Forum', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Standalone Forums', 'buddyboss' );
 
 		return $content_types;
 	}
