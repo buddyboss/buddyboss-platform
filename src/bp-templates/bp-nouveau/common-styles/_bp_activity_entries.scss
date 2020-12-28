@@ -332,13 +332,11 @@
 
 			.reported-content:before,
 			.report-content:before {
-				content: "\e8ea";
+				content: "\e972";
 				position: relative;
-				top: -1px;
-				font-size: 14px;
+				font-size: 19px;
 				width: 22px;
 				display: inline-block;
-				height: auto;
 				line-height: 1;
 			}
 
