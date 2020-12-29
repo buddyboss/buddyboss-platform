@@ -2951,21 +2951,33 @@ span.dashicons.dashicons-admin-file:before {
   line-height: 1.5;
 }
 
+.bb-activity-media-wrap,
 .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner {
   overflow: initial;
 }
 
+.bb-activity-media-wrap .no_more_option .media-action-wrap,
 .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .no_more_option .media-action-wrap {
   display: none;
 }
 
 @media screen and (max-width: 544px) {
+  .bb-activity-media-wrap .bb-activity-media-elem,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem {
-    flex: 0 0 100%;
-    max-width: 100%;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
   }
+  .bb-activity-media-wrap .bb-activity-media-elem .entry-img,
+  .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem .entry-img {
+    padding-top: 55.56% !important;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.hideact-grid-1-2,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem.hideact-grid-1-2 {
     flex: 0;
+  }
+  .bb-activity-media-wrap .bb-media-length-1 .bb-activity-media-elem .entry-img,
+  .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-media-length-1 .bb-activity-media-elem .entry-img {
+    padding-top: 0;
   }
 }
 
@@ -13903,6 +13915,25 @@ body.login .login-popup .mfp-close:hover {
 .forums-video-wrap.bb-video-length-2 .bb-activity-video-elem.act-grid-1-1 .bb-item-cover-wrap,
 .bb-activity-video-wrap.bb-video-length-2 .bb-activity-video-elem.act-grid-1-1 .bb-item-cover-wrap {
   padding-top: 82.56%;
+}
+
+@media screen and (max-width: 544px) {
+  .forums-video-wrap .bb-activity-video-elem,
+  .bb-activity-video-wrap .bb-activity-video-elem {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .forums-video-wrap .bb-activity-video-elem.act-grid-1-1, .forums-video-wrap .bb-activity-video-elem.act-grid-1-2,
+  .bb-activity-video-wrap .bb-activity-video-elem.act-grid-1-1,
+  .bb-activity-video-wrap .bb-activity-video-elem.act-grid-1-2 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  .forums-video-wrap .bb-activity-video-elem.act-grid-1-1 .bb-item-cover-wrap, .forums-video-wrap .bb-activity-video-elem.act-grid-1-2 .bb-item-cover-wrap,
+  .bb-activity-video-wrap .bb-activity-video-elem.act-grid-1-1 .bb-item-cover-wrap,
+  .bb-activity-video-wrap .bb-activity-video-elem.act-grid-1-2 .bb-item-cover-wrap {
+    padding-top: 82.56% !important;
+  }
 }
 
 .bb-action-check-wrap {

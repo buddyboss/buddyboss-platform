@@ -958,6 +958,7 @@ span.dashicons.dashicons-admin-file:before {
 	}
 }
 
+.bb-activity-media-wrap,
 .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner {
 	overflow: initial;
 
@@ -968,13 +969,22 @@ span.dashicons.dashicons-admin-file:before {
 	@media screen and (max-width: 544px) {
 
 		.bb-activity-media-elem {
-			flex: 0 0 100%;
-			max-width: 100%;
+			flex: 0 0 100% !important;
+			max-width: 100% !important;
+
+			.entry-img {
+				padding-top: 55.56% !important;
+			}
 
 			&.hideact-grid-1-2 {
 				flex: 0;
 			}
 		}
+
+		.bb-media-length-1 .bb-activity-media-elem .entry-img {
+			padding-top: 0;
+		}
+
 	}
 }
 
@@ -1217,7 +1227,6 @@ span.dashicons.dashicons-admin-file:before {
 			display: none;
 		}
 	}
-
 }
 
 #video-stream.video .video-list li:hover {

@@ -860,6 +860,26 @@
 
 	}
 
+	@media screen and (max-width: 544px) {
+
+		.bb-activity-video-elem {
+			flex: 0 0 100%;
+			max-width: 100%;
+
+			&.act-grid-1-1,
+			&.act-grid-1-2 {
+				flex: 0 0 100% !important;
+				max-width: 100% !important;
+
+				.bb-item-cover-wrap {
+					padding-top: 82.56% !important;
+				}
+
+			}
+		}
+
+	}
+
 }
 
 
