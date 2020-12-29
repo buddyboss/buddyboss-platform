@@ -738,6 +738,25 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Just in time manipulation of reply terms before being edited
 	$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
+	// remove deleted terms
+	$existing_terms = bbp_get_topic_tag_names( $topic_id );
+
+	if ( !empty( $existing_terms ) ) {
+		$deleted_terms = [];
+		$existing_terms = explode( ',', $existing_terms );
+		$existing_terms = array_map( function ( $single ) {
+			return trim( $single );
+		}, $existing_terms );
+
+		if ( !empty( $terms ) ) {
+			$terms_array = explode( ',', $terms );
+			$deleted_terms = array_diff( $existing_terms, $terms_array );
+		}
+		if ( !empty( $deleted_terms ) ) {
+			wp_remove_object_terms( $topic_id, $deleted_terms, bbp_get_topic_tag_tax_id() );
+		}
+	}
+
 	// Insert terms
 	$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
 
