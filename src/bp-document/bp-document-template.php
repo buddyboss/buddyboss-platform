@@ -2327,6 +2327,11 @@ function bp_get_document_preview_music_extensions() {
 	return apply_filters( 'bp_get_document_preview_music_extensions', array( 'mp3', 'wav', 'ogg' ) );
 }
 
+function bp_get_document_preview_video_extensions() {
+
+	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4') );
+}
+
 /**
  * Return the extensions list which need the doc preview.
  *

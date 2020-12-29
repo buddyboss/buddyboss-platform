@@ -1181,6 +1181,35 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );
 }
 
+
+/**
+ * Return the video url of the file.
+ *
+ * @param $document_id
+ * @param $extension
+ * @param $attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.6
+ */
+
+function bp_document_get_preview_video_url( $document_id, $extension, $attachment_id ) {
+	$attachment_url = '';
+
+	if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
+		$passed_attachment_id = $attachment_id;
+		$document_id          = 'forbidden_' . $document_id;
+		$attachment_id        = 'forbidden_' . $attachment_id;
+		$output_file_src      = get_attached_file( $passed_attachment_id );
+		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src ) ) {
+			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		}
+	}
+
+	return apply_filters( 'bp_document_get_preview_video_url', $attachment_url, $document_id, $extension );
+}
+
 /**
  * Edit button alter when document activity other than activity page.
  *
