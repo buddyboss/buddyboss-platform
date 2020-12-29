@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-29 06:57:02+00:00\n"
+"POT-Creation-Date: 2020-12-29 07:11:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3719,7 +3719,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1659 bp-forums/admin/tools.php:1661
 #: bp-forums/admin/tools.php:1733 bp-forums/admin/tools.php:1735
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1770
-#: bp-video/bp-video-filters.php:1024
+#: bp-video/bp-video-filters.php:1049
 msgid "Complete!"
 msgstr ""
 
@@ -4122,7 +4122,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:22
 #: bp-document/bp-document-functions.php:1967
-#: bp-video/bp-video-functions.php:2684
+#: bp-video/bp-video-functions.php:2686
 msgid "Video"
 msgstr ""
 
@@ -8894,7 +8894,7 @@ msgid "Download"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:1053 bp-media/bp-media-filters.php:1865
-#: bp-video/bp-video-filters.php:1116
+#: bp-video/bp-video-filters.php:1141
 msgid "File not found"
 msgstr ""
 
@@ -8921,7 +8921,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-document/bp-document-filters.php:1631 bp-media/bp-media-filters.php:2282
-#: bp-video/bp-video-filters.php:1511
+#: bp-video/bp-video-filters.php:1536
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -8940,48 +8940,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1922
-#: bp-video/bp-video-functions.php:2639
+#: bp-video/bp-video-functions.php:2641
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1927
-#: bp-video/bp-video-functions.php:2644
+#: bp-video/bp-video-functions.php:2646
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1932
-#: bp-video/bp-video-functions.php:2649
+#: bp-video/bp-video-functions.php:2651
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1937
-#: bp-video/bp-video-functions.php:2654
+#: bp-video/bp-video-functions.php:2656
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1942
-#: bp-video/bp-video-functions.php:2659
+#: bp-video/bp-video-functions.php:2661
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1947
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2664
+#: bp-video/bp-video-functions.php:2666
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1952
-#: bp-video/bp-video-functions.php:2669
+#: bp-video/bp-video-functions.php:2671
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1957
-#: bp-video/bp-video-functions.php:2674
+#: bp-video/bp-video-functions.php:2676
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1962
-#: bp-video/bp-video-functions.php:2679
+#: bp-video/bp-video-functions.php:2681
 msgid "Text"
 msgstr ""
 
@@ -23481,7 +23481,7 @@ msgid "Enter Album Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:54
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:59
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:56
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:40
 #: bp-templates/bp-nouveau/includes/video/functions.php:146
@@ -23936,7 +23936,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:41
-#: bp-video/bp-video-filters.php:1506
+#: bp-video/bp-video-filters.php:1531
 #. translators: videos
 msgid "%s video"
 msgid_plural "%s videos"
@@ -25867,31 +25867,31 @@ msgstr ""
 msgid "Matroska"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:914
+#: bp-video/bp-video-filters.php:939
 msgid "Repair video on the site."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:919
+#: bp-video/bp-video-filters.php:944
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:973
+#: bp-video/bp-video-filters.php:998
 msgid "%s video updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:983
+#: bp-video/bp-video-filters.php:1008
 msgid "Video update complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1012
+#: bp-video/bp-video-filters.php:1037
 msgid "%s Forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1020
+#: bp-video/bp-video-filters.php:1045
 msgid "Forums video privacy updated %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1133
+#: bp-video/bp-video-filters.php:1158
 msgid "Go to video"
 msgstr ""
 
