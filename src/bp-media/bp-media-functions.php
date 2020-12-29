@@ -3342,3 +3342,28 @@ function bp_media_get_report_link( $args = array() ) {
 
 	return apply_filters( 'bp_media_get_report_link', $report_btn, $args );
 }
+
+/**
+ * Whether user can show the media upload button.
+ *
+ * @param int $user_id  given user id.
+ * @param int $group_id given group id.
+ *
+ * @return bool
+ */
+function bp_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
+
+	if ( ( empty( $user_id ) && empty( $group_id ) ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_group_media_support_enabled() && groups_can_user_manage_media( $user_id, $group_id ) ) {
+		return true;
+	}
+
+	if ( bp_is_profile_media_support_enabled() && bp_user_can_create_media() ) {
+		return true;
+	}
+
+	return false;
+}
