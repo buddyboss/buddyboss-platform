@@ -2788,10 +2788,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 						box-shadow: none;
 						border-radius: 0;
 						min-height: auto;
+						font-weight: 400;
 
 						&:before {
 							content: "\e8ea";
-							font-size: 14px;
+							font-size: 15px;
 							vertical-align: middle;
 						}
 
@@ -2802,6 +2803,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 						&.reported-content {
 							opacity: 0.8 !important;
 							pointer-events: none;
+						}
+
+						&.report-content,
+						&.reported-content {
+							border: 0;
+							-webkit-font-smoothing: auto;
 						}
 
 					}
@@ -4539,8 +4546,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		}
 
 		.user-name {
-			min-width: calc(100% - 200px);
+			min-width: calc(100% - 190px);
 			margin: 0 25px;
+		}
+
+		.user-actions {
+			min-width: 95px;
+			text-align: right;
+
+			.button {
+				min-width: 95px;
+			}
+
 		}
 
 	}

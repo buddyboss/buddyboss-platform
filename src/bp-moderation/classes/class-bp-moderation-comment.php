@@ -37,6 +37,9 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		add_filter( 'comment_reply_link', array( $this, 'add_report_button' ), 999, 3 );
 
+		// Update report button.
+		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
+
 		/**
 		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
 		 */
@@ -305,6 +308,27 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Function to modify the button class
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param array  $button      Button args.
+	 * @param string $is_reported Item reported.
+	 *
+	 * @return string
+	 */
+	public function update_button( $button, $is_reported ) {
+
+		if ( $is_reported ) {
+			$button['button_attr']['class'] = 'reported-content';
+		} else {
+			$button['button_attr']['class'] = 'report-content';
+		}
+
+		return $button;
 	}
 
 	/**
