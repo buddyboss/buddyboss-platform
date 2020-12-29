@@ -18288,7 +18288,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .group-messages-members-listing #members-list {
-  max-height: 60vh;
+  max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 -20px;
