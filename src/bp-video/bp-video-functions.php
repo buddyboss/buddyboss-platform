@@ -1981,8 +1981,10 @@ function bp_video_default_scope( $scope ) {
 		if ( is_user_logged_in() && bp_is_profile_video_support_enabled() ) {
 			$new_scope[] = 'personal';
 		}
-	} elseif ( bp_is_user_video() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_video_support_enabled() ) {
+	} elseif ( bp_is_user_video() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
 	}
 
 	if ( empty( $new_scope ) ) {
