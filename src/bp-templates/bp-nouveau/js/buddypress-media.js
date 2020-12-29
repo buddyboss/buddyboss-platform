@@ -6355,7 +6355,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"><h3>' + target_text + '</h3><div class="document-video"> <video id="video-" class="video-js" controls poster="" data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' type="video/mp4"><source src="' + self.current_document.video + '"></source></video> </div></div>' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"><h3>' + target_text + '</h3><div class="document-video"> <video id="video-" class="video-js" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video> </div></div>' );
 
 			} else {
 				if ( self.current_document.preview ) {

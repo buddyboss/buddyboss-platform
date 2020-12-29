@@ -15702,7 +15702,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   border-radius: 0 0 4px 0;
 }
 
-.bb-document-theater .bb-media-section .document-audio {
+.bb-document-theater .bb-media-section .document-audio,
+.bb-document-theater .bb-media-section .document-video {
   display: flex;
   height: 100%;
   width: 100%;
@@ -15713,7 +15714,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   border-radius: 4px;
 }
 
-.bb-document-theater .bb-media-section .document-audio audio {
+.bb-document-theater .bb-media-section .document-audio audio,
+.bb-document-theater .bb-media-section .document-video audio {
   outline: 0;
   min-width: 80%;
 }

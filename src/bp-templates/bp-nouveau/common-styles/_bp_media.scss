@@ -2788,7 +2788,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			border-radius: 0 0 0 4px;
 		}
 
-		.document-audio {
+		.document-audio,
+		.document-video {
 			display: flex;
 			height: 100%;
 			width: 100%;
