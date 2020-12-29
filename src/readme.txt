@@ -58,7 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.5.6 =
-* Moderation - New Moderation component added
+* Moderation - New Moderation Component added
 * Moderation - Added option to allow members Block each other
 * Moderation - Added option to allow members Report other members content
 * Groups - Fixed activity access for hidden social groups
