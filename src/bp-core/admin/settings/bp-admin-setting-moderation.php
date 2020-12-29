@@ -97,7 +97,12 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 			}
 
 			// Moderation Settings Tutorial
-			$this->add_field( 'bp-moderation-setting-tutorial', '', 'bp_admin_moderation_setting_tutorial' );
+			if( $section_id == 'bp_moderation_settings_blocking' ){
+				$this->add_field( 'bp-moderation-setting-tutorial', '', 'bp_admin_moderation_block_setting_tutorial' );
+			}else if( $section_id == 'bp_moderation_settings_reporting' ){
+				$this->add_field( 'bp-moderation-setting-tutorial', '', 'bp_admin_moderation_report_setting_tutorial' );
+			}
+			
 		}
 
 		/**
