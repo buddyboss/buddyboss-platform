@@ -25,12 +25,6 @@
 						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter Album Title', 'buddyboss' ); ?>" />
 					</div>
 
-					<div class="bb-field-wrap">
-						<div class="video-uploader-wrapper">
-                            <div class="dropzone" id="video-album-uploader"></div>
-						</div>
-					</div>
-
 					<footer class="bb-model-footer">
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">
