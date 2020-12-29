@@ -157,10 +157,7 @@ class BP_Messages_Thread {
 			$order = 'DESC';
 		}
 
-		$user_id =
-			bp_displayed_user_id() ?
-				bp_displayed_user_id() :
-				bp_loggedin_user_id();
+		$user_id = bp_loggedin_user_id() ? bp_loggedin_user_id() : bp_displayed_user_id();
 
 		// Merge $args with our defaults.
 		$r = wp_parse_args(
