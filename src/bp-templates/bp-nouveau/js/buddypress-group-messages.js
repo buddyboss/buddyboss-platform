@@ -242,8 +242,9 @@ window.bp = window.bp || {};
 
 			
 			var membersDiv = document.getElementById('members-list');
-
+                        $('.bb-icon-loader').hide();
 			membersDiv.addEventListener('scroll', function () {
+                                $('.bb-icon-loader').show();
 				if (membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight) {
 
 					page = page + 1;
@@ -285,6 +286,7 @@ window.bp = window.bp || {};
 									$('#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback').addClass('error');
 									feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_messages.no_member);
 								}
+                                                                $('.bb-icon-loader').hide();
 							}
 						}
 					);
