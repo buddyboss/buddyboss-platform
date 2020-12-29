@@ -639,10 +639,7 @@ class BP_Video {
 				}
 			}
 
-			$attachment_data->meta            = (object) wp_get_attachment_metadata( $video->attachment_id );
-			$finfo                            = finfo_open( FILEINFO_MIME_TYPE );
-			$real_mime                        = finfo_file( $finfo, get_attached_file( $video->attachment_id ) );
-			$attachment_data->meta->mime_type = $real_mime;
+			$attachment_data->meta->mime_type = get_post_mime_type( $video->attachment_id );
 			if ( $get_video_thumb_id ) {
 				$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
 				$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
