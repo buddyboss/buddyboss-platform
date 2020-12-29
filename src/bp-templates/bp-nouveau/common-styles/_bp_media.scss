@@ -411,6 +411,7 @@
 	float: right;
 }
 
+#bbpress-forums div.bbp-reply-content .bb-model-header,
 .bb-model-header {
 	background: #fbfbfc;
 	box-shadow: 0 1px 0 0 #eef0f3;
@@ -555,6 +556,25 @@
 	}
 }
 
+.buddypress-wrap .bp-subnavs .component-navigation.video-nav,
+.buddypress-wrap .bp-subnavs .component-navigation.document-nav,
+.buddypress-wrap .bp-subnavs .component-navigation.media-nav {
+
+	li.selected.loading a:after {
+		content: "\e838";
+		font-family: "bb-icons"; /* stylelint-disable-line */
+		font-size: 16px;
+		line-height: 1;
+		margin-left: 5px;
+		text-align: center;
+		display: inline-block;
+		vertical-align: middle;
+		-webkit-animation: spin 3s infinite linear;
+		animation: spin 3s infinite linear;
+	}
+
+}
+
 .bb-item-cover-wrap {
 	position: relative;
 	overflow: hidden;
@@ -607,7 +627,7 @@
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	z-index: 1111;
+	z-index: 11;
 	opacity: 0.8;
 	border: 0;
 	transition: all ease 0.3s !important;
@@ -2166,7 +2186,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 #bp-video-dropzone-content,
 #forums-post-video-uploader,
 #messages-post-video-uploader,
-#bp-group-messages-post-video-uploader {
+#bp-group-messages-post-video-uploader,
+#boss-video-create-album-popup {
 
 	.dz-preview.dz-file-preview .dz-image {
 		padding-top: 0;
@@ -2443,7 +2464,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader,
 .activity_update .activity-comments .ac-reply-content .dropzone,
 #activity-post-video-uploader,
-#bp-video-dropzone-content {
+#bp-video-dropzone-content,
+#forums-post-video-uploader,
+#messages-post-video-uploader,
+#bp-group-messages-post-video-uploader,
+#boss-video-create-album-popup {
 
 	.dz-success-mark,
 	.dz-progress,
@@ -2899,7 +2924,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			text-align: center;
 
 			.bb-icon-loader {
-				font-size: 30px;
+				font-size: 26px;
 				color: #fff;
 				text-align: center;
 			}
@@ -5077,8 +5102,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 					display: inline-block;
 					font-size: 24px;
 					animation: spin 2s infinite linear;
-					width: 24px;
-					height: 24px;
 				}
 
 			}
