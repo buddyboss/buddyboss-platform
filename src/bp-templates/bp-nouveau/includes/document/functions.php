@@ -1181,6 +1181,19 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );
 }
 
+
+/**
+ * Return the video url of the file.
+ *
+ * @param $document_id
+ * @param $extension
+ * @param $attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.6
+ */
+
 function bp_document_get_preview_video_url( $document_id, $extension, $attachment_id ) {
 	$attachment_url = '';
 
