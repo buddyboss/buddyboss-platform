@@ -6333,6 +6333,7 @@ window.bp = window.bp || {};
 			var document_elements = $( document ).find( '.document-theatre' );
 			var extension = self.current_document.extension;
 			var mirror_text_display = self.current_document.mirror_text;
+			document_elements.find( '.bb-document-section' ).removeClass( 'bb-video-preview' );
 			if ( $.inArray( self.current_document.extension, [ 'css', 'txt', 'js', 'html', 'htm', 'csv' ] ) !== -1 ) {
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
@@ -6350,12 +6351,11 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"><h3>' + target_text + '</h3><div class="document-audio"><audio src="' + self.current_document.mp3 + '" controls controlsList="nodownload"></audio></div></div>' );
 			} else if ( $.inArray( '.' + self.current_document.extension, BP_Nouveau.video.video_type.split( ',' ) ) !== -1 ) {
-
-
+				document_elements.find( '.bb-document-section' ).addClass( 'bb-video-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"><h3>' + target_text + '</h3><div class="document-video"> <video id="video-" class="video-js" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video> </div></div>' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-" class="video-js" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.text_preview + '" type="video/' + self.current_document.extension + '" ></source></video>' );
 
 			} else {
 				if ( self.current_document.preview ) {
