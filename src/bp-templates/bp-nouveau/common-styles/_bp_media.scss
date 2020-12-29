@@ -4242,6 +4242,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
+.bp-video-move-file,
 .bp-media-move-file,
 .bp-media-move-folder {
 
@@ -4264,11 +4265,13 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			}
 
 			&.ac-document-close-button,
-			&.ac-folder-close-button {
+			&.ac-folder-close-button,
+			&.ac-video-close-button {
 				color: #a5a7ab;
 			}
 
 			&.bp-document-open-create-popup-folder,
+			&.bp-video-open-create-popup-folder,
 			&.bp-media-open-create-popup-folder {
 				float: left;
 				margin-top: 7px;

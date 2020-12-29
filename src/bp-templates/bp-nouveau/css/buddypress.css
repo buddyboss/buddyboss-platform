@@ -17117,11 +17117,13 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   opacity: 0.5;
 }
 
+.bp-video-move-file.move-folder-popup-group .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .breadcrumb .item,
 .bp-media-move-file.move-folder-popup-group .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .breadcrumb .item,
 .bp-media-move-folder.move-folder-popup-group .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .breadcrumb .item {
   padding: 2px 0 22px;
 }
 
+.bp-video-move-file .bb-model-footer,
 .bp-media-move-file .bb-model-footer,
 .bp-media-move-folder .bb-model-footer {
   display: inline-block;
@@ -17129,6 +17131,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   text-align: right;
 }
 
+.bp-video-move-file .bb-model-footer a,
 .bp-media-move-file .bb-model-footer a,
 .bp-media-move-folder .bb-model-footer a {
   display: inline-block;
@@ -17136,25 +17139,35 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   margin: 0 20px 0 0;
 }
 
+.bp-video-move-file .bb-model-footer a:last-child,
 .bp-media-move-file .bb-model-footer a:last-child,
 .bp-media-move-folder .bb-model-footer a:last-child {
   margin-right: 0;
 }
 
-.bp-media-move-file .bb-model-footer a.ac-document-close-button, .bp-media-move-file .bb-model-footer a.ac-folder-close-button,
+.bp-video-move-file .bb-model-footer a.ac-document-close-button, .bp-video-move-file .bb-model-footer a.ac-folder-close-button, .bp-video-move-file .bb-model-footer a.ac-video-close-button,
+.bp-media-move-file .bb-model-footer a.ac-document-close-button,
+.bp-media-move-file .bb-model-footer a.ac-folder-close-button,
+.bp-media-move-file .bb-model-footer a.ac-video-close-button,
 .bp-media-move-folder .bb-model-footer a.ac-document-close-button,
-.bp-media-move-folder .bb-model-footer a.ac-folder-close-button {
+.bp-media-move-folder .bb-model-footer a.ac-folder-close-button,
+.bp-media-move-folder .bb-model-footer a.ac-video-close-button {
   color: #a5a7ab;
 }
 
-.bp-media-move-file .bb-model-footer a.bp-document-open-create-popup-folder, .bp-media-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
+.bp-video-move-file .bb-model-footer a.bp-document-open-create-popup-folder, .bp-video-move-file .bb-model-footer a.bp-video-open-create-popup-folder, .bp-video-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
+.bp-media-move-file .bb-model-footer a.bp-document-open-create-popup-folder,
+.bp-media-move-file .bb-model-footer a.bp-video-open-create-popup-folder,
+.bp-media-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
 .bp-media-move-folder .bb-model-footer a.bp-document-open-create-popup-folder,
+.bp-media-move-folder .bb-model-footer a.bp-video-open-create-popup-folder,
 .bp-media-move-folder .bb-model-footer a.bp-media-open-create-popup-folder {
   float: left;
   margin-top: 7px;
   text-transform: capitalize;
 }
 
+.bp-video-move-file .close-create-popup-album,
 .bp-media-move-file .close-create-popup-album,
 .bp-media-move-folder .close-create-popup-album {
   display: inline-block;
@@ -17162,6 +17175,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   margin: 0 20px 0 0;
 }
 
+.bp-video-move-file .bb-model-header p,
 .bp-media-move-file .bb-model-header p,
 .bp-media-move-folder .bb-model-header p {
   font-size: 17px;
@@ -17170,6 +17184,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 @media screen and (max-width: 520px) {
+  .bp-video-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
+  .bp-video-move-file .bb-model-footer a.bp-document-open-create-popup-folder,
   .bp-media-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
   .bp-media-move-file .bb-model-footer a.bp-document-open-create-popup-folder,
   .bp-media-move-folder .bb-model-footer a.bp-media-open-create-popup-folder,
@@ -17181,6 +17197,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   }
 }
 
+.bp-video-move-file .ac-media-close-button,
+.bp-video-move-file .close-create-popup-album,
 .bp-media-move-file .ac-media-close-button,
 .bp-media-move-file .close-create-popup-album,
 .bp-media-move-folder .ac-media-close-button,
