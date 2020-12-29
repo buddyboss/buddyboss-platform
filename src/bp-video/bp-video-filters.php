@@ -563,6 +563,30 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 			);
 
 			if ( ! is_wp_error( $video_id ) ) {
+
+				if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+
+					$thumbnails   = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+					$thumbnail_id = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
+
+					$video_arr = array(
+						'id' => $attachment_id,
+					);
+					if ( ! $thumbnails && ! $thumbnail_id ) {
+						global $bp_background_updater;
+
+						$bp_background_updater->push_to_queue(
+							array(
+								'callback' => 'bp_video_background_create_thumbnail',
+								'args'     => array( $video_id, $video_arr ),
+							)
+						);
+
+						$bp_background_updater->save()->schedule_event();
+
+					}
+				}
+
 				$video_ids[] = $video_id;
 
 				// save video is saved in attachment.
@@ -625,6 +649,7 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 		?>
 		">
 				<?php
+				bp_get_template_part( 'video/add-video-thumbnail' );
 				while ( bp_video() ) {
 					bp_the_video();
 					bp_get_template_part( 'video/activity-entry' );
