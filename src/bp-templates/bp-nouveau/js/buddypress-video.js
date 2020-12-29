@@ -163,6 +163,14 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						if ( response.success ) {
+							if( $( '.bb-activity-video-elem a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).length ) {
+								$( '.bb-activity-video-elem a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).attr( 'src', response.data.thumbnail );
+							}
+							if( $( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( '.vjs-poster' ).length ) {
+								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).attr( 'poster', response.data.thumbnail );
+								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find('video').attr( 'poster', response.data.thumbnail );
+								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
+							}
 							for ( var i = 0; i < self.dropzone_video_thumb.length; i++ ) {
 								self.dropzone_video_thumb[ i ].saved = true;
 							}
