@@ -619,6 +619,27 @@ class BP_Video {
 			$get_video_thumb_ids = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 			$get_video_thumb_id  = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 
+
+			if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+
+				$video_arr = array(
+					'id' => $video->attachment_id,
+				);
+				if ( ! $get_video_thumb_ids && ! $get_video_thumb_id ) {
+					global $bp_background_updater;
+
+					$bp_background_updater->push_to_queue(
+						array(
+							'callback' => 'bp_video_background_create_thumbnail',
+							'args'     => array( $video->id, $video_arr ),
+						)
+					);
+
+					$bp_background_updater->save()->schedule_event();
+
+				}
+			}
+
 			$attachment_data->meta            = (object) wp_get_attachment_metadata( $video->attachment_id );
 			$attachment_data->meta->mime_type = mime_content_type( get_attached_file( $video->attachment_id ) );
 			if ( $get_video_thumb_id ) {

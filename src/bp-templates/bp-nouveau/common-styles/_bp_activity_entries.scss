@@ -992,6 +992,11 @@ span.dashicons.dashicons-admin-file:before {
 			visibility: visible;
 		}
 
+		.bb-item-cover-wrap:after {
+			visibility: visible;
+			opacity: 1;
+		}
+
 	}
 
 	&.is-visible {

@@ -699,7 +699,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 		$ff_probe = FFMpeg\FFProbe::create();
 		$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 		// $bitrate    = round( $ff_probe->format( get_attached_file( $video['id'] ) )->get( 'bit_rate' ) / 1024 );
-		$dimension = $ffmpeg->getFFProbe()->streams( get_attached_file( $video['id'] ) )->videos()->first()->getDimensions();
+		// $dimension = $ffmpeg->getFFProbe()->streams( get_attached_file( $video['id'] ) )->videos()->first()->getDimensions();
 		// $dimensions = array(
 		// 'width'  => $dimension->getWidth(),
 		// 'height' => $dimension->getHeight(),
@@ -844,28 +844,30 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 				unset( $video_thumb );
 				unset( $thumb_frame );
 
-				$upload_file = wp_upload_bits( $file_name, null, file_get_contents( $thumbnail ) );
-				if ( ! $upload_file['error'] ) {
-					$wp_filetype = wp_check_filetype( $file_name, null );
-					$attachment  = array(
-						'post_mime_type' => $wp_filetype['type'],
-						'post_title'     => sanitize_file_name( $image_name ),
-						'post_content'   => '',
-						'post_status'    => 'inherit',
-					);
+				if ( file_exists( $thumbnail ) ) {
+					$upload_file = wp_upload_bits( $file_name, null, file_get_contents( $thumbnail ) );
+					if ( ! $upload_file['error'] ) {
+						$wp_filetype = wp_check_filetype( $file_name, null );
+						$attachment  = array(
+							'post_mime_type' => $wp_filetype['type'],
+							'post_title'     => sanitize_file_name( $image_name ),
+							'post_content'   => '',
+							'post_status'    => 'inherit',
+						);
 
-					$preview_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-					if ( ! is_wp_error( $preview_attachment_id ) ) {
-						if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-							require_once ABSPATH . 'wp-admin/includes/image.php';
-							require_once ABSPATH . 'wp-admin/includes/file.php';
-							require_once ABSPATH . 'wp-admin/includes/media.php';
+						$preview_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+						if ( ! is_wp_error( $preview_attachment_id ) ) {
+							if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+								require_once ABSPATH . 'wp-admin/includes/image.php';
+								require_once ABSPATH . 'wp-admin/includes/file.php';
+								require_once ABSPATH . 'wp-admin/includes/media.php';
+							}
+							$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $upload_file['file'] );
+							wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+							$thumbnail_list[] = $preview_attachment_id;
+							update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
+							update_post_meta( $preview_attachment_id, 'video_id', $video_id );
 						}
-						$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $upload_file['file'] );
-						wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-						$thumbnail_list[] = $preview_attachment_id;
-						update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
-						update_post_meta( $preview_attachment_id, 'video_id', $video_id );
 					}
 				}
 			}
