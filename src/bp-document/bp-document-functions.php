@@ -3729,8 +3729,8 @@ function bp_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
 		return false;
 	}
 
-	if ( ! empty( $group_id ) && bp_is_group_document_support_enabled() && groups_can_user_manage_document( $user_id, $group_id ) ) {
-		return true;
+	if ( ! empty( $group_id ) && bp_is_group_document_support_enabled() ) {
+		return groups_can_user_manage_document( $user_id, $group_id );
 	}
 
 	if ( bp_is_profile_document_support_enabled() && bp_user_can_create_document() ) {
