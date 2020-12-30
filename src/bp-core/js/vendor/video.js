@@ -323,7 +323,7 @@
         args[_key3] = arguments[_key3];
       }
 
-      return logByType('warn', level, args);
+      // return logByType('warn', level, args);
     };
     /**
      * Logs debug messages. Similar to `console.debug`, but may also act as a comparable
@@ -27412,13 +27412,13 @@
       this.addClass('vjs-error'); // log the name of the error type and any message
       // IE11 logs "[object object]" and required you to expand message to see error object
 
-      log.error("(CODE:" + this.error_.code + " " + MediaError.errorTypes[this.error_.code] + ")", this.error_.message, this.error_);
+      // log.error("(CODE:" + this.error_.code + " " + MediaError.errorTypes[this.error_.code] + ")", this.error_.message, this.error_);
       /**
        * @event Player#error
        * @type {EventTarget~Event}
        */
 
-      this.trigger('error');
+      // this.trigger('error');
       return;
     }
       /**
