@@ -70,7 +70,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 * @return string|void
 	 */
 	public static function get_permalink( $document_id ) {
-		return '';
+		$document = new BP_Document( $document_id );
+		return bp_document_download_link( $document->attachment_id, $document_id );
 	}
 
 	/**
@@ -98,7 +99,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Document', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Documents', 'buddyboss' );
 
 		return $content_types;
 	}

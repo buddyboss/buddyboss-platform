@@ -2785,14 +2785,14 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 					&.report_file a {
 						background-color: transparent;
 						text-align: left;
-						font-weight: 400;
 						box-shadow: none;
 						border-radius: 0;
 						min-height: auto;
+						font-weight: 400;
 
 						&:before {
 							content: "\e8ea";
-							font-size: 14px;
+							font-size: 15px;
 							vertical-align: middle;
 						}
 
@@ -2803,6 +2803,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 						&.reported-content {
 							opacity: 0.8 !important;
 							pointer-events: none;
+						}
+
+						&.report-content,
+						&.reported-content {
+							border: 0;
+							-webkit-font-smoothing: auto;
 						}
 
 					}
@@ -4340,7 +4346,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 
 .moderation-popup .modal-container {
-	max-height: 95vh;
+	max-height: 80vh;
 	overflow: auto;
 
 	.bb-model-header {
@@ -4401,7 +4407,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 		> span {
 			font-size: 14px;
-			padding-left: 28px;
+			padding-left: 30px;
 			display: inline-block;
 			line-height: 1.4;
 		}
@@ -4423,8 +4429,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			}
 
 			> textarea {
-				margin-left: 28px;
-				width: calc(100% - 26px);
+				margin-left: 30px;
+				width: calc(100% - 28px);
 			}
 
 		}
@@ -4540,8 +4546,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		}
 
 		.user-name {
-			min-width: calc(100% - 180px);
+			min-width: calc(100% - 190px);
 			margin: 0 25px;
+		}
+
+		.user-actions {
+			min-width: 95px;
+			text-align: right;
+
+			.button {
+				min-width: 95px;
+			}
+
 		}
 
 	}
