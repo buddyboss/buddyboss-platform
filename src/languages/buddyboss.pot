@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
+"Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-29 11:34:19+00:00\n"
+"POT-Creation-Date: 2020-12-30 09:20:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1308,9 +1308,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:278
 #: bp-forums/classes/class-bp-forums-component.php:329
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:49
-#: bp-media/bp-media-filters.php:1311 bp-media/bp-media-settings.php:208
-#: bp-media/bp-media-settings.php:215 bp-media/bp-media-settings.php:222
-#: bp-media/bp-media-settings.php:229
+#: bp-media/bp-media-filters.php:1313 bp-media/bp-media-settings.php:234
+#: bp-media/bp-media-settings.php:241 bp-media/bp-media-settings.php:248
+#: bp-media/bp-media-settings.php:255 bp-media/bp-media-settings.php:262
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1122
 #: bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:202
@@ -1573,11 +1573,11 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-details-endpoint.php:267
 #: bp-groups/classes/class-bp-groups-component.php:583
 #: bp-groups/classes/class-bp-groups-component.php:617
-#: bp-groups/classes/class-bp-groups-component.php:1012
-#: bp-groups/classes/class-bp-groups-component.php:1052
+#: bp-groups/classes/class-bp-groups-component.php:1040
+#: bp-groups/classes/class-bp-groups-component.php:1080
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:535
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1063
-#: bp-templates/bp-nouveau/includes/document/functions.php:171
+#: bp-templates/bp-nouveau/includes/document/functions.php:172
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 #: bp-templates/bp-nouveau/includes/groups/functions.php:590
 #: bp-templates/bp-nouveau/includes/media/functions.php:221
@@ -2653,11 +2653,11 @@ msgstr ""
 msgid "Suspend"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1617
+#: bp-core/admin/bp-core-admin-functions.php:1622
 msgid "Member suspended."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1619
+#: bp-core/admin/bp-core-admin-functions.php:1624
 msgid "Member unsuspended."
 msgstr ""
 
@@ -2918,7 +2918,7 @@ msgstr ""
 msgid "Forum Import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3180
+#: bp-core/admin/bp-core-admin-functions.php:3185
 #: bp-moderation/bp-moderation-admin.php:384
 #: bp-moderation/bp-moderation-admin.php:460
 #: bp-settings/classes/class-bp-settings-component.php:187
@@ -3427,7 +3427,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-component.php:313
 #: bp-document/classes/class-bp-document-theme-compat.php:163
 #: bp-groups/classes/class-bp-groups-component.php:799
-#: bp-media/bp-media-settings.php:29 bp-media/bp-media-settings.php:1313
+#: bp-media/bp-media-settings.php:29 bp-media/bp-media-settings.php:1370
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1199
 #: bp-moderation/classes/class-bp-moderation-document.php:102
 #: bp-search/bp-search-settings.php:800
@@ -3546,8 +3546,9 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:1011
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:219
-#: bp-media/bp-media-settings.php:134 bp-media/bp-media-settings.php:141
-#: bp-media/bp-media-settings.php:159 bp-media/bp-media-settings.php:166
+#: bp-media/bp-media-settings.php:146 bp-media/bp-media-settings.php:153
+#: bp-media/bp-media-settings.php:169 bp-media/bp-media-settings.php:178
+#: bp-media/bp-media-settings.php:185
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:929
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1057
 #: bp-moderation/classes/class-bp-moderation-groups.php:105
@@ -4094,8 +4095,9 @@ msgid "Media"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-messages.php:21
-#: bp-media/bp-media-settings.php:177 bp-media/bp-media-settings.php:184
-#: bp-media/bp-media-settings.php:191 bp-media/bp-media-settings.php:198
+#: bp-media/bp-media-settings.php:196 bp-media/bp-media-settings.php:203
+#: bp-media/bp-media-settings.php:210 bp-media/bp-media-settings.php:217
+#: bp-media/bp-media-settings.php:224
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:995
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1001
 #: bp-messages/bp-messages-notifications.php:30
@@ -5256,15 +5258,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\n"
+"content will be unhidden</li>\r\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
-"\t\t\t</ul>\n"
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -5306,8 +5308,8 @@ msgstr ""
 msgid "Site Notices"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2832
-#: bp-groups/classes/class-bp-groups-component.php:1031
+#: bp-core/bp-core-functions.php:2848
+#: bp-groups/classes/class-bp-groups-component.php:1059
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1079
 msgid "Create Group"
 msgstr ""
@@ -5316,7 +5318,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-component.php:321
 #: bp-document/classes/class-bp-document-component.php:342
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1205
-#: bp-templates/bp-nouveau/includes/document/functions.php:159
+#: bp-templates/bp-nouveau/includes/document/functions.php:160
 msgid "My Documents"
 msgstr ""
 
@@ -5324,7 +5326,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:338
 #: bp-media/classes/class-bp-media-component.php:369
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1174
-#: bp-templates/bp-nouveau/includes/media/functions.php:211
+#: bp-templates/bp-nouveau/includes/media/functions.php:209
 msgid "My Photos"
 msgstr ""
 
@@ -5339,7 +5341,7 @@ msgstr ""
 msgid "My  %s"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2926 bp-members/bp-members-adminbar.php:185
+#: bp-core/bp-core-functions.php:2946 bp-members/bp-members-adminbar.php:185
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:878
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:885
 #: bp-settings/classes/class-bp-settings-component.php:213
@@ -6358,7 +6360,7 @@ msgstr ""
 msgid "Activate Your Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3514 bp-groups/bp-groups-template.php:4364
+#: bp-core/bp-core-template.php:3586 bp-groups/bp-groups-template.php:4364
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:545
 #: bp-templates/bp-nouveau/includes/groups/functions.php:603
 msgid "Create a Group"
@@ -7987,13 +7989,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -12111,9 +12113,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1380
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1415
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1448
-#: bp-forums/templates/default/bbpress-functions.php:645
-#: bp-forums/templates/default/bbpress-functions.php:713
-#: bp-forums/templates/default/bbpress-functions.php:781
+#: bp-forums/templates/default/bbpress-functions.php:759
+#: bp-forums/templates/default/bbpress-functions.php:827
+#: bp-forums/templates/default/bbpress-functions.php:895
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -12580,7 +12582,7 @@ msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:434
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:847
-#: bp-forums/replies/functions.php:1363 bp-forums/replies/template.php:602
+#: bp-forums/replies/functions.php:1369 bp-forums/replies/template.php:602
 #: bp-forums/templates/default/bbpress/form-reply.php:28
 #: bp-forums/topics/functions.php:1377 bp-forums/topics/functions.php:1749
 #. translators: Topic Title.
@@ -12686,8 +12688,8 @@ msgid "Favorites are no longer active."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1333
-#: bp-forums/templates/default/bbpress-functions.php:631
-#: bp-forums/templates/default/bbpress-functions.php:767
+#: bp-forums/templates/default/bbpress-functions.php:745
+#: bp-forums/templates/default/bbpress-functions.php:881
 msgid "Subscriptions are no longer active."
 msgstr ""
 
@@ -16435,7 +16437,7 @@ msgid "Search Groups&hellip;"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:419
-#: bp-groups/classes/class-bp-groups-component.php:892
+#: bp-groups/classes/class-bp-groups-component.php:920
 msgid "Photo"
 msgstr ""
 
@@ -16508,7 +16510,7 @@ msgstr ""
 msgid "Manage"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:984
+#: bp-groups/classes/class-bp-groups-component.php:1012
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1069
 msgid "No Pending Invites"
 msgstr ""
@@ -21679,7 +21681,7 @@ msgstr ""
 msgid "Member has been successfully unsuspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:495
+#: bp-moderation/bp-moderation-filters.php:500
 #: bp-moderation/bp-moderation-functions.php:239
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:156
 msgid "Block"
@@ -22236,10 +22238,10 @@ msgstr ""
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:135
-#: bp-templates/bp-nouveau/includes/template-tags.php:2585
-#: bp-templates/bp-nouveau/includes/template-tags.php:2602
-#: bp-templates/bp-nouveau/includes/template-tags.php:2620
-#: bp-templates/bp-nouveau/includes/template-tags.php:2628
+#: bp-templates/bp-nouveau/includes/template-tags.php:2589
+#: bp-templates/bp-nouveau/includes/template-tags.php:2606
+#: bp-templates/bp-nouveau/includes/template-tags.php:2624
+#: bp-templates/bp-nouveau/includes/template-tags.php:2632
 msgid "Close (Esc)"
 msgstr ""
 
@@ -23689,7 +23691,7 @@ msgid "Manage Membership Requests"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:61
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:46
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:120
 msgid "Photo inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
 
@@ -24183,6 +24185,10 @@ msgid "%s video"
 msgid_plural "%s videos"
 msgstr[0] ""
 msgstr[1] ""
+
+#: bp-templates/bp-nouveau/buddypress/video/location-move.php:12
+msgid "You have not created any album yet to move this photo into."
+msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:33
 msgid "Write something about your videos, to be shown on the group feed"
@@ -25831,7 +25837,7 @@ msgstr ""
 msgid "You can't message suspended member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1685
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1715
 msgid "You can't message a blocked member."
 msgstr ""
 
@@ -27371,7 +27377,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:892
+#: class-buddypress.php:893
 msgid "BuddyPress Nouveau"
 msgstr ""
 
