@@ -332,13 +332,11 @@
 
 			.reported-content:before,
 			.report-content:before {
-				content: "\e8ea";
+				content: "\e972";
 				position: relative;
-				top: -1px;
-				font-size: 15px;
+				font-size: 19px;
 				width: 22px;
 				display: inline-block;
-				height: auto;
 				line-height: 1;
 			}
 
@@ -1129,7 +1127,7 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:before {
 							content: "\e8ea";
-							font-size: 14px;
+							font-size: 15px;
 							vertical-align: middle;
 						}
 
@@ -1140,6 +1138,12 @@ span.dashicons.dashicons-admin-file:before {
 						&.reported-content {
 							opacity: 0.8 !important;
 							pointer-events: none;
+						}
+
+						&.report-content,
+						&.reported-content {
+							border: 0;
+							-webkit-font-smoothing: auto;
 						}
 
 					}

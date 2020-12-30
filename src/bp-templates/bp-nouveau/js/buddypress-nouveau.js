@@ -1897,7 +1897,7 @@ window.bp = window.bp || {};
 			mf_content.find( '.bp-report-form-err' ).empty();
 		},
 		changeReportButtonStatus: function ( data ) {
-			$( '[data-bp-content-id=' + data.moderation.item_id + '][data-bp-content-type=' + data.moderation.item_type + ']' ).each ( function () {
+			$( '[data-bp-content-id=' + data.button.button_attr.item_id + '][data-bp-content-type=' + data.button.button_attr.item_type + ']' ).each ( function () {
 				$( this ).removeAttr ( 'href' );
 				$( this ).removeAttr ( 'data-bp-content-id' );
 				$( this ).removeAttr ( 'data-bp-content-type' );
