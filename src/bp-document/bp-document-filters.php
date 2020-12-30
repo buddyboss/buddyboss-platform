@@ -66,6 +66,8 @@ add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
 
 add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email_content' );
 
+add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
+
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
@@ -264,7 +266,11 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
-	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+
+	$documents = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$actions   = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+
+	if ( ! isset( $documents ) || empty( $documents ) ) {
 
 		// delete document ids and meta for activity if empty document in request.
 		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
@@ -289,9 +295,9 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $actions ) && 'new_activity_comment' === $actions ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
-		if ( $parent_activity->component === 'groups' ) {
+		if ( 'groups' === $parent_activity->component ) {
 			$_POST['privacy'] = 'grouponly';
 		} elseif ( ! empty( $parent_activity->privacy ) ) {
 			$_POST['privacy'] = $parent_activity->privacy;
@@ -303,7 +309,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler( $_POST['document'], $_POST['privacy'] );
+	$document_ids = bp_document_add_handler( $documents, $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -312,7 +318,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
-		// Delete document if not exists in current document ids
+		// Delete document if not exists in current document ids.
 		if ( isset( $_POST['edit'] ) ) {
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
@@ -1633,6 +1639,7 @@ function bp_document_activity_after_email_content( $activity ) {
 	}
 }
 
+
 /**
  * Adds activity document data for the edit activity
  *
@@ -1657,11 +1664,12 @@ function bp_document_get_edit_activity_data( $activity ) {
 			foreach( $document_ids as $document_id ) {
 				$document = new BP_Document( $document_id );
 
-				$file = get_attached_file( ( $document->attachment_id ) );
 				$size = 0;
+				$file = get_attached_file( $document->attachment_id );
 				if ( $file && file_exists( $file ) ) {
-					$size = filesize( $file );
+				    $size = filesize( $file );
                 }
+
 				$activity['document'][] = array(
 					'id'          => $document_id,
 					'doc_id'      => $document->attachment_id,
@@ -1680,6 +1688,28 @@ function bp_document_get_edit_activity_data( $activity ) {
 	}
 
 	return $activity;
+}
+
+/**
+ * Added activity entry class for media.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param string $class class.
+ *
+ * @return string
+ */
+function bp_document_activity_entry_css_class( $class ) {
+
+	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
+		$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+		if ( ! empty( $document_ids ) ) {
+			$class .= ' document-activity';
+		}
+	}
+
+	return $class;
+
 }
 
 /**

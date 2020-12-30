@@ -64,7 +64,6 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
 			global $wpdb, $bp;
-			$query_placeholder = array();
 
 			$user_groups = array();
 			if ( bp_is_active( 'groups' ) ) {
@@ -108,22 +107,32 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 				array_push( $friends, bp_loggedin_user_id() );
 			}
 
-			$sql = ' SELECT ';
+			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT m.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT m.id ) ';
 			} else {
-				$sql .= $wpdb->prepare( " DISTINCT m.id, 'photos' as type, m.title LIKE %s AS relevance, m.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT m.id, 'photos' as type, m.title LIKE %s AS relevance, m.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql .= " FROM {$bp->media->table_name} m WHERE";
+			$sql['from'] = " FROM {$bp->media->table_name} m";
+
+			/**
+			 * Filter the MySQL JOIN clause for the media Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$sql['from'] = apply_filters( 'bp_media_search_join_sql_photo', $sql['from'] );
 
 			$privacy = array( 'public' );
 			if ( is_user_logged_in() ) {
 				$privacy[] = 'loggedin';
 			}
 
-			$sql .= $wpdb->prepare(
+			$where_conditions   = array( '1=1' );
+			$where_conditions[] = $wpdb->prepare(
 				" (
 					(
 						m.title LIKE %s
@@ -138,6 +147,21 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
+
+			/**
+			 * Filters the MySQL WHERE conditions for the media Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $search_term      Search Term.
+			 */
+			$where_conditions = apply_filters( 'bp_media_search_where_conditions_photo', $where_conditions, $search_term );
+
+			// Join the where conditions together.
+			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
 			return apply_filters(
 				'bp_search_photos_sql',
@@ -155,16 +179,16 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		 * @param string $template_type Template type.
 		 */
 		protected function generate_html( $template_type = '' ) {
-			$document_ids = array();
+			$media_ids = array();
 			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
-				$document_ids[] = $item_id;
+				$media_ids[] = $item_id;
 			}
 
 			// now we have all the posts.
 			// lets do a media loop.
 			$args = array(
-				'include'      => implode( ',', $document_ids ),
-				'per_page'     => count( $document_ids ),
+				'include'      => implode( ',', $media_ids ),
+				'per_page'     => count( $media_ids ),
 				'search_terms' => false,
 			);
 

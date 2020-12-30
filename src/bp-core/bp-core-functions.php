@@ -488,6 +488,7 @@ function bp_core_get_packaged_component_ids() {
 		'settings',
 		'notifications',
 		'search',
+        'moderation'
 	);
 
 	return $components;
@@ -787,6 +788,7 @@ function bp_core_get_directory_page_default_titles() {
 		'new_forums_page' => __( 'Forums', 'buddyboss' ),
 		'terms'           => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
+		'moderation'      => __( 'Moderation', 'buddyboss' ),
 	);
 
 	/**
@@ -2636,6 +2638,29 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
+		'moderation'    => array(
+			'title'                => __( 'Moderation', 'buddyboss' ),
+			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
+			'settings'             => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-moderation',
+					),
+					'admin.php'
+				)
+			),
+			'default'              => false,
+			'deactivation_confirm' => true,
+			'deactivation_message' => __( '<p>Please confirm you want to deactivate the Moderation component.</p>
+			<h4>On Deactivation:</h4>
+			<ul>
+				<li>All suspended members will regain permission to login and their content will be unhidden</li>
+				<li>Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.</li>
+				<li>All hidden content will be unhidden.</li>
+			</ul>
+			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
+		),
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -3896,6 +3921,22 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
+		'content-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}' style='color: #007CFF;font-size: 14px;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px; display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
+		),
+		'user-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}' style='font-size: 14px;color: #007CFF;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px;display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
+		),
 	);
 
 	/**
@@ -4077,6 +4118,16 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		),
 	);
 
+	$content_moderation_email = array(
+		'description' => __( 'When content is automatically hidden due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
+	);
+
+	$user_moderation_email = array(
+		'description' => __( 'When a member has been automatically suspended due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
+	);
+
 	$types = array(
 		'activity-comment'                   => $activity_comment,
 		'activity-comment-author'            => $activity_comment_author,
@@ -4098,6 +4149,8 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
 		'group-message-email'                => $group_message_email,
+		'content-moderation-email'           => $content_moderation_email,
+		'user-moderation-email'              => $user_moderation_email,
 	);
 
 	/**

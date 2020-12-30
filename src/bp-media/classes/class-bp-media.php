@@ -1092,14 +1092,46 @@ class BP_Media {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $group_id
+	 * @param int $group_id group id to get the photos count.
 	 *
 	 * @return array|bool|int
 	 */
 	public static function total_group_media_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}" );
+		$select_sql = 'SELECT COUNT(*)';
+
+		$from_sql = " FROM {$bp->media->table_name} m";
+
+		// Where conditions.
+		$where_conditions = array();
+
+		$where_conditions['group_sql'] = $wpdb->prepare( 'm.group_id = %s', $group_id );
+
+		/**
+		 * Filters the MySQL WHERE conditions for the Media items get method.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
+		 * @param array $args             array of arguments.
+		 */
+		$where_conditions = apply_filters( 'bp_media_get_where_count_conditions', $where_conditions, array( 'group_id' => $group_id ) );
+
+		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+		/**
+		 * Filter the MySQL JOIN clause for the main media query.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param string $join_sql JOIN clause.
+		 * @param array  $args     array of arguments.
+		 */
+		$from_sql = apply_filters( 'bp_media_get_join_count_sql', $from_sql, array( 'group_id' => $group_id ) );
+
+		$media_ids_sql = "{$select_sql} {$from_sql} {$where_sql}";
+		$total_count   = (int) $wpdb->get_var( $media_ids_sql ); // phpcs:ignore.
 
 		return $total_count;
 	}
@@ -1167,7 +1199,23 @@ class BP_Media {
 			return false;
 		}
 
-		$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+		$activity_media_id = false;
+
+		// Check activity component enabled or not.
+		if ( bp_is_active( 'activity' ) ) {
+			$activity_media_id = bp_activity_get_meta( $activity_id, 'bp_media_id', true );
+		}
+
+		if ( empty( $activity_media_id ) ) {
+			$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+
+			if ( bp_is_active( 'activity' ) ) {
+				$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+				if ( ! empty( $media_activity ) && ! empty( $activity_media_id ) ) {
+					bp_activity_update_meta( $activity_id, 'bp_media_id', $activity_media_id );
+				}
+			}
+		}
 
 		return $activity_media_id;
 	}
