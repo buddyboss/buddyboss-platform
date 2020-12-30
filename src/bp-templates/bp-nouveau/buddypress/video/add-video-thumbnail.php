@@ -40,7 +40,7 @@
 
 
 						<div class="bp-video-thumbnail-auto-generated">
-							<ul class="video-thumb-list loading"></ul>
+							<ul class="video-thumb-list"></ul>
 						</div>
 
 					</div>
