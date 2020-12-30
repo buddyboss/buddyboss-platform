@@ -217,6 +217,22 @@ function bp_search_get_settings_fields() {
 				'class' => 'bp-search-child-field',
 			),
 		);
+		$fields['bp_search_settings_community']['bp_search_videos'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_videos',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		);
+		$fields['bp_search_settings_community']['bp_search_video_albums'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_video_albums',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-child-field',
+			),
+		);
 	}
 
 	if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
@@ -783,6 +799,50 @@ function bp_search_settings_callback_albums() {
 /**
  * Allow Post Type search setting field
  *
+ * @since BuddyBoss 1.8.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_videos() {
+	?>
+	<input
+			name="bp_search_videos"
+			id="bp_search_videos"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_videos_enable( false ) ); ?>
+	/>
+	<label for="bp_search_videos">
+		<?php esc_html_e( 'Videos', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.8.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_video_albums() {
+	?>
+	<input
+			name="bp_search_video_albums"
+			id="bp_search_video_albums"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_video_albums_enable( false ) ); ?>
+	/>
+	<label for="bp_search_video_albums">
+		<?php esc_html_e( 'Albums', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
  * @since BuddyBoss 1.4.0
  *
  * @uses checked() To display the checked attribute
@@ -861,6 +921,32 @@ function bp_is_search_photos_enable( $default = 0 ) {
  */
 function bp_is_search_albums_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_albums_enable', (bool) get_option( 'bp_search_albums', $default ) );
+}
+
+/**
+ * Checks if video search is enabled.
+ *
+ * @since BuddyBoss 1.8.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is video media search enabled or not
+ */
+function bp_is_search_videos_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_videos_enable', (bool) get_option( 'bp_search_videos', $default ) );
+}
+
+/**
+ * Checks if video albums search is enabled.
+ *
+ * @since BuddyBoss 1.8.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is video albums search enabled or not
+ */
+function bp_is_search_video_albums_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_video_albums_enable', (bool) get_option( 'bp_search_video_albums', $default ) );
 }
 
 /**
