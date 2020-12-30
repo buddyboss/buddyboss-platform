@@ -1230,7 +1230,7 @@ function bp_nouveau_activity_privacy() {
 				<?php endif; ?>
             </ul>
             </div><?php
-		} else {
+		} elseif ( bp_user_can_create_activity() ) {
 			?>
             <div class="bb-media-privacy-wrap">
             <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
