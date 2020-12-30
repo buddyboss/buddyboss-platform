@@ -529,6 +529,12 @@ ul.medium-editor-toolbar-actions {
 		font-size: 24px;
 		width: auto;
 		height: auto;
+
+		&.bb-icon-video-alt {
+			font-size: 22px;
+			min-width: 24px;
+			text-align: center;
+		}
 	}
 
 	.emojionearea .emojionearea-button:before {
@@ -1150,6 +1156,15 @@ span.dashicons.dashicons-admin-file:before {
 						font-size: 15px;
 					}
 
+					&.edit_thumbnail_video a:before {
+						content: "\e9cb";
+						font-size: 20px;
+						display: inline-block;
+						vertical-align: middle;
+						max-height: 15px;
+						margin-top: -8px;
+					}
+
 					&.report_file a {
 						background-color: transparent;
 						text-align: left;
@@ -1372,9 +1387,22 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						a:before {
-							content: "\e959";
-							font-size: 13px;
+							content: "\e9cc";
+							vertical-align: middle;
+							font-size: 20px;
+							max-height: 15px;
+							margin-top: -8px;
+							display: inline-block;
 						}
+					}
+
+					&.edit_thumbnail_video a:before {
+						content: "\e9cb";
+						font-size: 20px;
+						display: inline-block;
+						vertical-align: middle;
+						max-height: 15px;
+						margin-top: -8px;
 					}
 
 					&.delete_file a:before {

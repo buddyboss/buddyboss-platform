@@ -2496,6 +2496,14 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   height: auto;
 }
 
+.ac-reply-toolbar .bb-icon.bb-icon-video-alt,
+#whats-new-toolbar .bb-icon.bb-icon-video-alt,
+#whats-new-messages-toolbar .bb-icon.bb-icon-video-alt {
+  font-size: 22px;
+  min-width: 24px;
+  text-align: center;
+}
+
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
 #whats-new-toolbar .emojionearea .emojionearea-button:before,
 #whats-new-messages-toolbar .emojionearea .emojionearea-button:before {
@@ -3311,6 +3319,26 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.edit_thumbnail_video a:before,
+#media-stream.media .bb-photo-thumb .media-action-wrap .video-action_list ul li.edit_thumbnail_video a:before,
+#media-stream.media .bb-photo-thumb .video-action-wrap .media-action_list ul li.edit_thumbnail_video a:before,
+#media-stream.media .bb-photo-thumb .video-action-wrap .video-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .video-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap .media-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap .video-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap .media-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap .video-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li.edit_thumbnail_video a:before {
+  content: "\e9cb";
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 15px;
+  margin-top: -8px;
+}
+
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a,
 #media-stream.media .bb-photo-thumb .media-action-wrap .video-action_list ul li.report_file a,
 #media-stream.media .bb-photo-thumb .video-action-wrap .media-action_list ul li.report_file a,
@@ -3659,8 +3687,23 @@ span.dashicons.dashicons-admin-file:before {
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.move_video a:before,
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.move_video a:before,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.move_video a:before {
-  content: "\e959";
-  font-size: 13px;
+  content: "\e9cc";
+  vertical-align: middle;
+  font-size: 20px;
+  max-height: 15px;
+  margin-top: -8px;
+  display: inline-block;
+}
+
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.edit_thumbnail_video a:before,
+#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.edit_thumbnail_video a:before,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.edit_thumbnail_video a:before {
+  content: "\e9cb";
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 15px;
+  margin-top: -8px;
 }
 
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.delete_file a:before,

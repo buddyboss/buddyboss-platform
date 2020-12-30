@@ -49,7 +49,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 						</div>
 						<div class="post-elements-buttons-item post-video video-support">
 							<a href="#" id="ac-reply-video-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
-								<i class="bb-icon bb-icon-video"></i>
+								<i class="bb-icon bb-icon-video-alt"></i>
 							</a>
 						</div>
 						<div class="post-elements-buttons-item post-media document-support">

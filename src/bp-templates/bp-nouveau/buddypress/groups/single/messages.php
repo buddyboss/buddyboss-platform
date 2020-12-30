@@ -141,7 +141,7 @@ $group_members = groups_get_group_members( $args );
 								?>
 								<div class="post-elements-buttons-item post-video video-support">
 									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">
-										<i class="bb-icon bb-icon-video"></i>
+										<i class="bb-icon bb-icon-video-alt"></i>
 									</a>
 								</div>
 							<?php endif; ?>

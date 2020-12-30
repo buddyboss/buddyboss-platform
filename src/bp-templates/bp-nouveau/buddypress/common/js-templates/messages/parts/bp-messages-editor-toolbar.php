@@ -37,7 +37,7 @@
 			?>
 			<div class="post-elements-buttons-item post-video">
 				<a href="#" id="messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">
-					<i class="bb-icon bb-icon-video"></i>
+					<i class="bb-icon bb-icon-video-alt"></i>
 				</a>
 			</div>
 		<?php endif; ?>

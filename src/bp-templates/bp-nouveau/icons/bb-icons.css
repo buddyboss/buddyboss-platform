@@ -434,6 +434,9 @@
 .bb-icon-link-tilt:before { content: '\e9a2'; }
 .bb-icon-paragraph-bullet:before { content: '\e9c9'; }
 .bb-icon-paragraph-numbers:before { content: '\e9ca'; }
+.bb-icon-video-album:before { content: '\e9cb'; }
+.bb-icon-video-albums:before { content: '\e9cc'; }
+.bb-icon-video-alt:before { content: '\e9cd'; }
 .bb-icon-quotes:before { content: '\e961'; }
 .bb-icon-file-7z:before { content: '\e9a6'; }
 .bb-icon-file-hlsm:before { content: '\e9a7'; }
