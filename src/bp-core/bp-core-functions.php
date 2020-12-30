@@ -5289,26 +5289,6 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 
 }
 
-/**
- * Schedule a bp cron.
- *
- * @param string $hook_function Action hook to execute when the event is run.
- * @param string $recurrence    How often the event should subsequently recur. See bp_core_cron_schedules() for accepted values.
- *
- * @since BuddyBoss 1.5.7
- */
-function bp_core_schedule_cron( $hook_function, $recurrence = 'bb_schedule_5min' ) {
-	// Check if recurrence is good to go for bb or not.
-	if ( ! in_array( $recurrence, bp_core_cron_schedules(), true ) ) {
-		return;
-	}
-
-	// Schedule if not scheduled already.
-	if ( ! wp_next_scheduled( $hook_function ) ) {
-		wp_schedule_event( time(), $recurrence, $hook_function );
-	}
-}
-
 function bp_core_is_empty_directory( $dir ) {
 	$handle = opendir( $dir );
 	while( false !== ( $entry = readdir( $handle ) ) ) {
