@@ -49,7 +49,7 @@
 					<input type="hidden" value="" class="video-edit-thumbnail-hidden-attachment-id">
 
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="button push-right bp-video-thumbnail-submit" id="" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
+						<a class="button push-right bp-video-thumbnail-submit" id="" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
 					</footer>
 
 				</div>
