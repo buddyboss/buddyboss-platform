@@ -610,7 +610,8 @@ class BP_Video {
 			}
 
 			// fetch video thumbnail attachment data.
-			$attachment_data = new stdClass();
+			$attachment_data        = new stdClass();
+			$attachment_data->meta  = new stdClass();
 
 			$attachment_data->full           = '';
 			$attachment_data->thumb          = '';
