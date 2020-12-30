@@ -31,33 +31,49 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 
 	<div class="bb-photo-thumb">
 		<div class="media-action-wrap">
-			<?php if ( $can_manage ) { ?>
+			<?php
+			$report_btn = bp_media_get_report_link( array( 'id' => bp_get_media_id() ) );
+			if ( $can_manage || $report_btn ) { ?>
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
 				</a>
 				<div class="media-action_list">
 					<ul>
 						<?php
-						if ( $is_comment_pic ) {
-							?>
-							<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="Photos added in comment cannot be moved">
-								<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-							</li>
-							<?php
-						} else {
-							if ( $can_move ) {
+						if ( $can_manage ) {
+							if ( $is_comment_pic ) {
 								?>
-								<li class="move_file">
-									<a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 								</li>
 								<?php
+							} else {
+								if ( $can_move ) {
+									?>
+									<li class="move_file">
+										<a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+									</li>
+									<?php
+								}
 							}
 						}
 						?>
 
-						<li class="delete_file">
-							<a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
-						</li>
+						<?php
+						if ( $report_btn ) {
+							?>
+							<li class="report_file">
+								<?php echo $report_btn; ?>
+							</li>
+							<?php
+						}
+						?>
+
+						<?php if ( $can_manage ) { ?>
+							<li class="delete_file">
+								<a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+							</li>
+						<?php } ?>
 					</ul>
 				</div>
 			<?php } ?>

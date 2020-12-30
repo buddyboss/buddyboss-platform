@@ -269,6 +269,20 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		);
 
+		if ( bp_is_active( 'moderation' ) ) {
+			// Blocking Settings.
+			$results['bpm_blocking_member_blocking']        = bp_is_moderation_member_blocking_enable( false );
+			$results['bpm_blocking_auto_suspend']           = bp_is_moderation_auto_suspend_enable( false );
+			$results['bpm_blocking_auto_suspend_threshold'] = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
+			$results['bpm_blocking_email_notification']     = bp_is_moderation_blocking_email_notification_enable( false );
+
+			// Reporting Settings.
+			$results['bpm_reporting_content_reporting']   = $this->bp_rest_reporting_content_type();
+			$results['bpm_reporting_auto_hide']           = $this->bp_rest_reporting_auto_hide();
+			$results['bpm_reporting_auto_hide_threshold'] = $this->bp_rest_reporting_auto_hide_threshold();
+			$results['bpm_reporting_email_notification']  = bp_is_moderation_reporting_email_notification_enable( false );
+		}
+
 		// Groups settings.
 		if ( bp_is_active( 'groups' ) ) {
 			// Group Settings.
@@ -369,6 +383,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_media_group_albums_support']   = bp_is_group_albums_support_enabled();
 			$results['bp_media_messages_media_support'] = bp_is_messages_media_support_enabled();
 			$results['bp_media_forums_media_support']   = bp_is_forums_media_support_enabled();
+			$results['bp_media_allowed_size']           = bp_media_allowed_upload_media_size();
+			$results['bp_media_allowed_per_batch']      = bp_media_allowed_upload_media_per_batch();
 
 			// Emoji.
 			$results['bp_media_profiles_emoji_support'] = bp_is_profiles_emoji_support_enabled();
@@ -391,6 +407,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_media_group_document_support']       = bp_is_group_document_support_enabled();
 				$results['bp_media_messages_document_support']    = bp_is_messages_document_support_enabled();
 				$results['bp_is_forums_document_support_enabled'] = bp_is_forums_document_support_enabled();
+				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
+				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
 			}
 		}
 
@@ -526,5 +544,74 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		);
 
 		return $results;
+	}
+
+	/**
+	 * Get the list of Reporting content types.
+	 *
+	 * @return array|mixed|void
+	 */
+	protected function bp_rest_reporting_content_type() {
+		if ( ! function_exists( 'bp_moderation_content_types' ) ) {
+			return array();
+		}
+
+		$content_types = bp_moderation_content_types();
+
+		if ( class_exists( 'BP_Moderation_Members' ) && array_key_exists( BP_Moderation_Members::$moderation_type, $content_types ) ) {
+			unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+		}
+
+		foreach ( $content_types as $slug => $type ) {
+			$content_types[ $slug ] = bp_is_moderation_content_reporting_enable( false, $slug );
+		}
+
+		return $content_types;
+	}
+
+	/**
+	 * Get the list of Reporting Auto Hide.
+	 *
+	 * @return array|mixed|void
+	 */
+	protected function bp_rest_reporting_auto_hide() {
+		if ( ! function_exists( 'bp_moderation_content_types' ) ) {
+			return array();
+		}
+
+		$content_types = bp_moderation_content_types();
+
+		if ( class_exists( 'BP_Moderation_Members' ) && array_key_exists( BP_Moderation_Members::$moderation_type, $content_types ) ) {
+			unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+		}
+
+		foreach ( $content_types as $slug => $type ) {
+			$content_types[ $slug ] = bp_is_moderation_auto_hide_enable( false, $slug );
+		}
+
+		return $content_types;
+	}
+
+	/**
+	 * Get the list of Reporting Auto Hide threshold.
+	 *
+	 * @return array|mixed|void
+	 */
+	protected function bp_rest_reporting_auto_hide_threshold() {
+		if ( ! function_exists( 'bp_moderation_content_types' ) ) {
+			return array();
+		}
+
+		$content_types = bp_moderation_content_types();
+
+		if ( class_exists( 'BP_Moderation_Members' ) && array_key_exists( BP_Moderation_Members::$moderation_type, $content_types ) ) {
+			unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+		}
+
+		foreach ( $content_types as $slug => $type ) {
+			$content_types[ $slug ] = bp_moderation_reporting_auto_hide_threshold( '5', $slug );
+		}
+
+		return $content_types;
 	}
 }

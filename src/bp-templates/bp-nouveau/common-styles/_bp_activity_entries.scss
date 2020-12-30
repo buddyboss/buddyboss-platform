@@ -330,6 +330,21 @@
 				content: "\eaea";
 			}
 
+			.reported-content:before,
+			.report-content:before {
+				content: "\e972";
+				position: relative;
+				font-size: 19px;
+				width: 22px;
+				display: inline-block;
+				line-height: 1;
+			}
+
+			.reported-content {
+				opacity: 0.8 !important;
+				pointer-events: none;
+			}
+
 			.spam-activity:before {
 				content: "\e8c9";
 			}
@@ -355,6 +370,27 @@
 		}
 
 		// close .activity-meta
+
+	}
+
+	.comment-item .bp-generic-meta.action a.report-content.button,
+	.comment-item .bp-generic-meta.action a.reported-content.button {
+
+		&:hover span,
+		span {
+
+			#buddypress & {
+				font-weight: 500;
+				font-size: 12px;
+				color: #939597;
+				vertical-align: middle;
+			}
+
+		}
+
+		&:before {
+			display: none;
+		}
 
 	}
 
@@ -1079,6 +1115,37 @@ span.dashicons.dashicons-admin-file:before {
 					&.delete_file a:before {
 						content: "\e937";
 						font-size: 15px;
+					}
+
+					&.report_file a {
+						background-color: transparent;
+						text-align: left;
+						font-weight: 400;
+						box-shadow: none;
+						border-radius: 0;
+						min-height: auto;
+
+						&:before {
+							content: "\e8ea";
+							font-size: 15px;
+							vertical-align: middle;
+						}
+
+						&:hover {
+							background-color: #f5f5f5;
+						}
+
+						&.reported-content {
+							opacity: 0.8 !important;
+							pointer-events: none;
+						}
+
+						&.report-content,
+						&.reported-content {
+							border: 0;
+							-webkit-font-smoothing: auto;
+						}
+
 					}
 
 					&.privacy_file a:before {
@@ -1809,4 +1876,8 @@ span.dashicons.dashicons-admin-file:before {
 			font-size: 12px;
 		}
 	}
+}
+
+.mfp-wrap.mfp-wrap {
+	z-index: 999999;
 }
