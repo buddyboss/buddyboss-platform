@@ -14909,7 +14909,8 @@ ul.bb-albums-list .load-more {
   overflow: auto;
 }
 
-.modal-container .bp-existing-media-wrap .media-list li .media-action-wrap {
+.modal-container .bp-existing-media-wrap .media-list li .media-action-wrap,
+.modal-container .bp-existing-media-wrap .media-list li .video-action-wrap {
   display: none;
 }
 
@@ -15338,6 +15339,81 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     margin-bottom: 0;
   }
   body.groups #buddypress .bp-media-document-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+    display: inline-block !important;
+    margin-top: 0;
+  }
+}
+
+#buddypress .bp-video-uploader .video-uploader-wrapper {
+  margin-bottom: 5px;
+}
+
+#buddypress .bp-video-uploader #bp-video-prev,
+#buddypress .bp-video-uploader #bp-video-next {
+  display: none;
+}
+
+#buddypress .bp-video-uploader #bp-video-next {
+  text-align: center;
+}
+
+#buddypress .bp-video-uploader #bp-video-next > i {
+  margin-right: 5px;
+  font-size: 15px;
+}
+
+#buddypress .bp-video-uploader #bp-video-prev {
+  font-size: 15px;
+  float: right;
+  margin: 8px 20px 0 0;
+  color: #a5a7ab;
+}
+
+#buddypress .bp-video-uploader .video-uploader-footer .bb-dropdown-wrap {
+  float: left;
+  margin-bottom: 0;
+}
+
+#buddypress .bp-video-uploader .video-uploader-footer .bp-video-open-create-popup-album {
+  display: block;
+  margin-bottom: 15px;
+  clear: both;
+  text-transform: capitalize;
+}
+
+#buddypress .bp-video-uploader .video-uploader-footer .bp-video-open-create-popup-album > i {
+  margin-right: 5px;
+  font-size: 15px;
+}
+
+#buddypress .bp-video-uploader .video-uploader-footer #bp-video-submit {
+  float: right;
+}
+
+@media screen and (max-width: 480px) {
+  #buddypress .bp-video-uploader .video-uploader-footer {
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+  #buddypress .bp-video-uploader .video-uploader-footer .bb-dropdown-wrap {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  #buddypress .bp-video-uploader .video-uploader-footer .bb-dropdown-wrap select {
+    width: 100%;
+  }
+  #buddypress .bp-video-uploader .video-uploader-footer #bp-video-submit {
+    width: 100%;
+  }
+  #buddypress .bp-video-uploader .video-uploader-footer #bp-video-prev {
+    text-align: center;
+    margin: 10px 0 0 0;
+    width: 100%;
+  }
+  body.groups #buddypress .bp-video-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+    margin-bottom: 0;
+  }
+  body.groups #buddypress .bp-video-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-video-next {
     display: inline-block !important;
     margin-top: 0;
   }
@@ -17155,12 +17231,12 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   color: #a5a7ab;
 }
 
-.bp-video-move-file .bb-model-footer a.bp-document-open-create-popup-folder, .bp-video-move-file .bb-model-footer a.bp-video-open-create-popup-folder, .bp-video-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
+.bp-video-move-file .bb-model-footer a.bp-document-open-create-popup-folder, .bp-video-move-file .bb-model-footer a.bp-video-open-create-popup-album, .bp-video-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
 .bp-media-move-file .bb-model-footer a.bp-document-open-create-popup-folder,
-.bp-media-move-file .bb-model-footer a.bp-video-open-create-popup-folder,
+.bp-media-move-file .bb-model-footer a.bp-video-open-create-popup-album,
 .bp-media-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
 .bp-media-move-folder .bb-model-footer a.bp-document-open-create-popup-folder,
-.bp-media-move-folder .bb-model-footer a.bp-video-open-create-popup-folder,
+.bp-media-move-folder .bb-model-footer a.bp-video-open-create-popup-album,
 .bp-media-move-folder .bb-model-footer a.bp-media-open-create-popup-folder {
   float: left;
   margin-top: 7px;
@@ -17206,12 +17282,14 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   color: #a5a7ab;
 }
 
+.bp-video-uploader .bb-model-header p,
 .bp-media-photo-uploader .bb-model-header p {
   font-size: 17px;
   font-weight: 500;
   margin: 0;
 }
 
+.bp-video-uploader .close-create-popup-album,
 .bp-media-photo-uploader .close-create-popup-album {
   display: inline-block;
   vertical-align: middle;

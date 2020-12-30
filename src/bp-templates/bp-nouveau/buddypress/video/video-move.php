@@ -21,7 +21,7 @@
 						<?php bp_get_template_part( 'video/video-create-album' ); ?>
 					</div>
 					<footer class="bb-model-footer">
-						<a href="#" class="bp-video-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-video-open-create-popup-album"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
 						<a class="ac-video-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="button bp-video-move bp-video-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 					</footer>
