@@ -1619,9 +1619,9 @@ function bp_core_admin_user_manage_spammers() {
 	if ( ! empty( $updated ) && in_array( $updated, array( 'marked-suspend', 'marked-unsuspend' ) ) ) {
 
 		if ( 'marked-suspend' === $updated ) {
-			$notice = __( 'User suspended.', 'buddyboss' );
+			$notice = __( 'Member suspended.', 'buddyboss' );
 		} else {
-			$notice = __( 'User unsuspended.', 'buddyboss' );
+			$notice = __( 'Member unsuspended.', 'buddyboss' );
 		}
 
 		bp_core_add_admin_notice( $notice );

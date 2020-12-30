@@ -604,6 +604,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'class' => $parent_class,
 					),
 					'button_element' => $button_element,
+					'position'       => 29,
 				)
 			);
 		}

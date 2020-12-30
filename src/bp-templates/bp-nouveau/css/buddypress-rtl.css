@@ -2333,13 +2333,11 @@ input.search-query-input {
 
 .activity-list .activity-item .bp-generic-meta.action .reported-content:before,
 .activity-list .activity-item .bp-generic-meta.action .report-content:before {
-  content: "\e8ea";
+  content: "\e972";
   position: relative;
-  top: -1px;
-  font-size: 15px;
+  font-size: 19px;
   width: 22px;
   display: inline-block;
-  height: auto;
   line-height: 1;
 }
 
@@ -3346,7 +3344,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul li.report_file a:before,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li.report_file a:before {
   content: "\e8ea";
-  font-size: 14px;
+  font-size: 15px;
   vertical-align: middle;
 }
 
@@ -3379,6 +3377,13 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li.report_file a.reported-content {
   opacity: 0.8 !important;
   pointer-events: none;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.report-content, #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.reported-content,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a.report-content,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a.reported-content {
+  border: 0;
+  -webkit-font-smoothing: auto;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.privacy_file a:before,
@@ -6933,7 +6938,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content a:before,
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread a:before,
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
-  content: "\e8ea";
+  content: "\e8c9";
   vertical-align: middle;
 }
 
@@ -16315,16 +16320,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a {
   background-color: transparent;
   text-align: right;
-  font-weight: 400;
   box-shadow: none;
   border-radius: 0;
   min-height: auto;
+  font-weight: 400;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before {
   content: "\e8ea";
-  font-size: 14px;
+  font-size: 15px;
   vertical-align: middle;
 }
 
@@ -16337,6 +16342,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content {
   opacity: 0.8 !important;
   pointer-events: none;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.report-content, .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.report-content,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content {
+  border: 0;
+  -webkit-font-smoothing: auto;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before,
@@ -18047,7 +18059,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container {
-  max-height: 95vh;
+  max-height: 80vh;
   overflow: auto;
 }
 
@@ -18107,7 +18119,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .moderation-popup .modal-container .form-item > span {
   font-size: 14px;
-  padding-right: 28px;
+  padding-right: 30px;
   display: inline-block;
   line-height: 1.4;
 }
@@ -18130,8 +18142,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container .form-item label > textarea {
-  margin-right: 28px;
-  width: calc(100% - 26px);
+  margin-right: 30px;
+  width: calc(100% - 28px);
 }
 
 .moderation-popup .modal-container .bp-report-form-err {
@@ -18235,8 +18247,17 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
-  min-width: calc(100% - 180px);
+  min-width: calc(100% - 190px);
   margin: 0 25px;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
+  min-width: 95px;
+  text-align: left;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
+  min-width: 95px;
 }
 
 @media (max-width: 480px) {
@@ -19710,7 +19731,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .group-messages-members-listing #members-list {
-  max-height: 60vh;
+  max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 -20px;
