@@ -3092,6 +3092,9 @@ function bp_core_get_suggestions( $args ) {
 		return new WP_Error( 'missing_parameter' );
 	}
 
+	//Remove action for remove search against xprofile fields
+	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+
 	$suggestions = new $class( $args );
 	$validation  = $suggestions->validate();
 
@@ -3101,6 +3104,9 @@ function bp_core_get_suggestions( $args ) {
 		$retval = $suggestions->get_suggestions();
 	}
 
+	//Add action again for search against xprofile fields
+	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+	
 	/**
 	 * Filters the available type of at-mentions.
 	 *
