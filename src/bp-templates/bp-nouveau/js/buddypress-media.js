@@ -5376,7 +5376,7 @@ window.bp = window.bp || {};
 			this.previousLink = $('.bb-prev-media');
 			this.activity_ajax = false;
 			this.group_id = typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-			this.manage_activity = typeof BP_Nouveau.activity.params.user_can_post !== 'undefined' ? BP_Nouveau.activity.params.user_can_post : false;
+			this.manage_activity = typeof BP_Nouveau.activity !== 'undefined' && typeof BP_Nouveau.activity.params.user_can_post !== 'undefined' ? BP_Nouveau.activity.params.user_can_post : false;
 		},
 
 		/**
