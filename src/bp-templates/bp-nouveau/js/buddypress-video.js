@@ -303,12 +303,27 @@ window.bp = window.bp || {};
 			if ( self.current_tab === 'bp-video-dropzone-content' ) {
 
 				var post_content = $( '#bp-video-post-content' ).val();
+
+				var targetPopup = $( event.currentTarget ).closest( '.open-popup' );
+				var selectedAlbum = targetPopup.find( '.bb-album-selected-id' ).val();
+				var hasNotAlbum = true;
+				if ( selectedAlbum.length && parseInt( selectedAlbum ) > 0 ) {
+					hasNotAlbum = false;
+					selectedAlbum = selectedAlbum;
+					for ( var i = 0; i < self.dropzone_video.length; i++ ) {
+						self.dropzone_video[ i ].album_id = selectedAlbum;
+					}
+
+				} else {
+					selectedAlbum = self.album_id;
+				}
+
 				data             = {
 					'action': 'video_save',
 					'_wpnonce': BP_Nouveau.nonces.video,
 					'videos': self.dropzone_video,
 					'content': post_content,
-					'album_id': self.video_album_id,
+					'album_id': selectedAlbum,
 					'group_id': self.video_group_id,
 					'privacy': privacy.val()
 				};
