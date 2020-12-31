@@ -1704,7 +1704,7 @@ img.emojioneemoji {
 	position: absolute;
 	top: 20px;
 	right: 20px;
-	z-index: 11;
+	z-index: 111;
 
 	.privacy {
 		border: 1px solid;
@@ -1720,6 +1720,7 @@ img.emojioneemoji {
 		display: inline-block;
 	}
 
+	.document-privacy,
 	.media-privacy {
 		display: none;
 		margin: 0;
@@ -1772,11 +1773,13 @@ img.emojioneemoji {
 		}
 	}
 
+	.document-privacy.bb-open,
 	.media-privacy.bb-open {
 		display: block;
 	}
 }
 
+.document-privacy,
 .media-privacy {
 
 	> li {

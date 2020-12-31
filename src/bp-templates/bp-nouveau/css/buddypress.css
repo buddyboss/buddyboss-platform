@@ -1612,15 +1612,18 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   font-size: 16px;
 }
 
+.bb-document-privacy-wrap,
 .bb-media-privacy-wrap {
   display: inline-block;
   position: relative;
 }
 
+.bb-document-privacy-wrap .privacy-wrap,
 .bb-media-privacy-wrap .privacy-wrap {
   display: inline-block;
 }
 
+.bb-document-privacy-wrap .privacy,
 .bb-media-privacy-wrap .privacy {
   display: flex;
   align-items: center;
@@ -1628,6 +1631,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   line-height: 1;
 }
 
+.bb-document-privacy-wrap .privacy:before,
 .bb-media-privacy-wrap .privacy:before {
   content: "\e960";
   font-family: 'bb-icons';
@@ -1637,6 +1641,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   display: inline-block;
 }
 
+.bb-document-privacy-wrap .privacy:after,
 .bb-media-privacy-wrap .privacy:after {
   content: "\e826";
   font-family: 'bb-icons';
@@ -1647,27 +1652,33 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   line-height: 1;
 }
 
+.bb-document-privacy-wrap .privacy.no-change:after,
 .bb-media-privacy-wrap .privacy.no-change:after {
   display: none;
 }
 
+.bb-document-privacy-wrap .privacy.onlyme:before,
 .bb-media-privacy-wrap .privacy.onlyme:before {
   content: "\e95f";
 }
 
+.bb-document-privacy-wrap .privacy.loggedin:before,
 .bb-media-privacy-wrap .privacy.loggedin:before {
   content: "\e95d";
 }
 
+.bb-document-privacy-wrap .privacy.friends:before,
 .bb-media-privacy-wrap .privacy.friends:before {
   content: "\e95e";
 }
 
+.bb-document-privacy-wrap .privacy.loading:before,
 .bb-media-privacy-wrap .privacy.loading:before {
   content: "\e838";
   animation: spin 2s infinite linear;
 }
 
+.bb-document-privacy-wrap .activity-privacy,
 .bb-media-privacy-wrap .activity-privacy {
   display: none;
   margin: 0;
@@ -1682,6 +1693,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   z-index: 119;
 }
 
+.bb-document-privacy-wrap .activity-privacy:before,
 .bb-media-privacy-wrap .activity-privacy:before {
   content: " ";
   position: absolute;
@@ -1701,6 +1713,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   z-index: 1002;
 }
 
+.bb-document-privacy-wrap .activity-privacy li,
 .bb-media-privacy-wrap .activity-privacy li {
   cursor: pointer;
   line-height: 1;
@@ -1712,14 +1725,17 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   margin-bottom: 1px;
 }
 
+.bb-document-privacy-wrap .activity-privacy li:hover,
 .bb-media-privacy-wrap .activity-privacy li:hover {
   background: #f5f5f5;
 }
 
+.bb-document-privacy-wrap .activity-privacy .selected,
 .bb-media-privacy-wrap .activity-privacy .selected {
   background: #f5f5f5;
 }
 
+.bb-document-privacy-wrap .activity-privacy.bb-open,
 .bb-media-privacy-wrap .activity-privacy.bb-open {
   display: block;
 }
@@ -13993,7 +14009,7 @@ img.emojioneemoji {
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 11;
+  z-index: 111;
 }
 
 .bb-media-only-privacy .privacy {
@@ -14010,6 +14026,7 @@ img.emojioneemoji {
   display: inline-block;
 }
 
+.bb-media-only-privacy .document-privacy,
 .bb-media-only-privacy .media-privacy {
   display: none;
   margin: 0;
@@ -14024,6 +14041,7 @@ img.emojioneemoji {
   z-index: 11;
 }
 
+.bb-media-only-privacy .document-privacy:before,
 .bb-media-only-privacy .media-privacy:before {
   content: " ";
   position: absolute;
@@ -14043,6 +14061,7 @@ img.emojioneemoji {
   z-index: 1002;
 }
 
+.bb-media-only-privacy .document-privacy li,
 .bb-media-only-privacy .media-privacy li {
   cursor: pointer;
   line-height: 1;
@@ -14054,18 +14073,22 @@ img.emojioneemoji {
   margin-bottom: 1px;
 }
 
+.bb-media-only-privacy .document-privacy li:hover,
 .bb-media-only-privacy .media-privacy li:hover {
   background: #f5f5f5;
 }
 
+.bb-media-only-privacy .document-privacy .selected,
 .bb-media-only-privacy .media-privacy .selected {
   background: #f5f5f5;
 }
 
+.bb-media-only-privacy .document-privacy.bb-open,
 .bb-media-only-privacy .media-privacy.bb-open {
   display: block;
 }
 
+.document-privacy > li:before,
 .media-privacy > li:before {
   content: "\f11f";
   font-family: dashicons;
@@ -14077,14 +14100,17 @@ img.emojioneemoji {
   text-align: center;
 }
 
+.document-privacy > li.onlyme:before,
 .media-privacy > li.onlyme:before {
   content: "\f160";
 }
 
+.document-privacy > li.loggedin:before,
 .media-privacy > li.loggedin:before {
   content: "\f307";
 }
 
+.document-privacy > li.friends:before,
 .media-privacy > li.friends:before {
   content: "\f110";
 }
