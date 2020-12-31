@@ -91,8 +91,8 @@ window.bp = window.bp || {};
 				autoProcessQueue    : true,
 				addRemoveLinks      : true,
 				uploadMultiple      : false,
-				maxFiles            : !_.isUndefined(BP_Nouveau.media.maxFiles) ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize         : !_.isUndefined(BP_Nouveau.media.max_upload_size) ? BP_Nouveau.media.max_upload_size : 2,
+				maxFiles            : ! _.isUndefined( BP_Nouveau.media.maxFiles ) ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize         : ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
 				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 			};
 
@@ -229,6 +229,9 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-media-button' ) ) {
 							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
+						if ( tool_box.find( '#activity-video-button' ) ) {
+							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
 						if ( tool_box.find( '#activity-media-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
 						}
@@ -338,8 +341,6 @@ window.bp = window.bp || {};
 							}
 
 						}
-
-
 
 					}
 
@@ -756,7 +757,7 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
-							if(!jQuery('.activity-media-error-popup').length) {
+							if ( ! jQuery( '.activity-media-error-popup' ).length) {
 								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
@@ -772,7 +773,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							if(!jQuery('.activity-media-error-popup').length) {
+							if ( ! jQuery( '.activity-media-error-popup' ).length) {
 								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
@@ -879,8 +880,8 @@ window.bp = window.bp || {};
 					autoProcessQueue     : true,
 					addRemoveLinks       : true,
 					uploadMultiple       : false,
-					maxFiles             : !_.isUndefined(BP_Nouveau.document.maxFiles) ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize          : !_.isUndefined(BP_Nouveau.document.max_upload_size) ? BP_Nouveau.document.max_upload_size : 2,
+					maxFiles             : ! _.isUndefined( BP_Nouveau.document.maxFiles ) ? BP_Nouveau.document.maxFiles : 10,
+					maxFilesize          : ! _.isUndefined( BP_Nouveau.document.max_upload_size ) ? BP_Nouveau.document.max_upload_size : 2,
 					dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
 					dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 				};
@@ -972,7 +973,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							if(!jQuery('.document-error-popup').length) {
+							if ( ! jQuery( '.document-error-popup' ).length) {
 								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
@@ -1070,7 +1071,7 @@ window.bp = window.bp || {};
 				}
 				self.destroyVideo();
 
-				var dropzone_options = {
+				this.dropzone_options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
 					dictFileTooBig: BP_Nouveau.video.dictFileTooBig,
@@ -1083,9 +1084,10 @@ window.bp = window.bp || {};
 					maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 					dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
+					dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
 				};
 
-				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', dropzone_options );
+				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', this.dropzone_options );
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'addedfile',
@@ -1127,8 +1129,8 @@ window.bp = window.bp || {};
 							// Set the folder_id and group_id if activity belongs to any folder and group in edit activity on new uploaded media id.
 							if ( ! bp.privacyEditable ) {
 								response.data.album_id = bp.album_id;
-								response.data.group_id  = bp.group_id;
-								response.data.privacy   = bp.privacy;
+								response.data.group_id = bp.group_id;
+								response.data.privacy  = bp.privacy;
 							}
 
 							file.id                  = response.data.id;
@@ -1172,7 +1174,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							if(!jQuery('.video-error-popup').length) {
+							if ( ! jQuery( '.video-error-popup' ).length) {
 								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
@@ -2341,7 +2343,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-media.media-suppot' ).show();
 						}
 
-						// check media is enable in groups or not.
+						// check document is enable in groups or not.
 						if ( BP_Nouveau.media.group_document === false ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).hide();
 							var documentCloseEvent = new Event( 'activity_document_close' );
@@ -2386,7 +2388,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
-						// check media is enable in profile or not.
+						// check document is enable in profile or not.
 						if ( BP_Nouveau.media.profile_document === false ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).hide();
 							var documentEvent = new Event( 'activity_document_close' );
