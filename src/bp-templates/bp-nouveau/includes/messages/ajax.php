@@ -1020,6 +1020,19 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			}
 		}
 
+		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+			$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
+
+			if ( ! empty( $video_ids ) ) {
+				$video_ids = explode( ',', $video_ids );
+				if ( sizeof( $video_ids ) < 2 ) {
+					$threads->threads[ $i ]['excerpt'] = __( 'sent a video', 'buddyboss' );
+				} else {
+					$threads->threads[ $i ]['excerpt'] = __( 'sent some videos', 'buddyboss' );
+				}
+			}
+		}
+
 		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 			$document_ids = bp_messages_get_meta( $last_message_id, 'bp_document_ids', true );
 
