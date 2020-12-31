@@ -1054,7 +1054,9 @@ window.bp = window.bp || {};
 			$( '#bp-video-uploader' ).hide();
 			$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload );
 			$( '#bp-video-uploader-modal-status-text' ).text( '' );
-			this.video_dropzone_obj.destroy();
+			if ( this.video_dropzone_obj ) {
+				this.video_dropzone_obj.destroy();
+			}
 			this.dropzone_video = [];
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
