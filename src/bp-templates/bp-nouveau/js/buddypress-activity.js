@@ -1095,9 +1095,18 @@ window.bp = window.bp || {};
 					}
 				}
 
-				// add media data if enabled or uploaded.
+				// add document data if enabled or uploaded.
 				if ( this.dropzone_document.length ) {
 					comment_data.document = this.dropzone_document;
+
+					if ( _.isEmpty( comment_data.content ) ) {
+						comment_data.content = '&#8203;';
+					}
+				}
+
+				// add video data if enabled or uploaded.
+				if ( this.dropzone_video.length ) {
+					comment_data.video = this.dropzone_video;
 
 					if ( _.isEmpty( comment_data.content ) ) {
 						comment_data.content = '&#8203;';
@@ -1152,6 +1161,9 @@ window.bp = window.bp || {};
 									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ) ) {
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+									}
 									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ) ) {
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
 									}
@@ -1188,10 +1200,17 @@ window.bp = window.bp || {};
 								}
 							}
 
-							// keep the dropzone media saved so it wont remove its attachment when destroyed.
+							// keep the dropzone document saved so it wont remove its attachment when destroyed.
 							if ( self.dropzone_document.length ) {
 								for ( var d = 0; d < self.dropzone_document.length; d++ ) {
 									self.dropzone_document[d].saved = true;
+								}
+							}
+
+							// keep the dropzone video saved so it wont remove its attachment when destroyed.
+							if ( self.dropzone_video.length ) {
+								for ( var v = 0; v < self.dropzone_video.length; v++ ) {
+									self.dropzone_video[v].saved = true;
 								}
 							}
 
@@ -1204,6 +1223,7 @@ window.bp = window.bp || {};
 
 						self.destroyCommentMediaUploader( activity_id );
 						self.destroyCommentDocumentUploader( activity_id );
+						self.destroyCommentVideoUploader( activity_id );
 
 						target.prop( 'disabled', false );
 						comment_content.prop( 'disabled', false );
