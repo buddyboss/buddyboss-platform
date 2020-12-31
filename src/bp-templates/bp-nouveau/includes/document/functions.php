@@ -146,7 +146,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 		'li_class'  => array(),
 		'link'      => bp_get_document_directory_permalink(),
 		'text'      => __( 'All Documents', 'buddyboss' ),
-		//'count'     => bp_get_total_document_count(),
+		// 'count'     => bp_get_total_document_count(),
 		'position'  => 5,
 	);
 
@@ -157,7 +157,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
 			'text'      => __( 'My Documents', 'buddyboss' ),
-			//'count'     => bp_document_get_total_document_count(),
+			// 'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
 	}
@@ -169,7 +169,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-document/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
-			//'count'     => bp_document_get_total_document_count(),
+			// 'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
 	}
@@ -266,7 +266,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_10'  => array(
+		'bb_doc_10' => array(
 			'extension'   => '.csv',
 			'mime_type'   => 'text/csv',
 			'description' => __( 'CSV', 'buddyboss' ),
@@ -274,7 +274,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_11'  => array(
+		'bb_doc_11' => array(
 			'extension'   => '.doc',
 			'mime_type'   => 'application/msword',
 			'description' => __( 'Word Document', 'buddyboss' ),
@@ -282,7 +282,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_12'  => array(
+		'bb_doc_12' => array(
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.ms-word.document.macroenabled.12',
 			'description' => __( 'Word Document (Macro Enabled)', 'buddyboss' ),
@@ -839,10 +839,10 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$allowed_for_download             = array();
 		$allowed_file_type_with_mime_type = array();
 		foreach ( $all_extensions as $extension ) {
-			if ( isset( $extension[ 'is_active' ] ) && true === (bool) $extension[ 'is_active' ] ) {
-				$extension_name                                      = ltrim( $extension[ 'extension' ], '.' );
+			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+				$extension_name                                      = ltrim( $extension['extension'], '.' );
 				$allowed_for_download[]                              = $extension_name;
-				$allowed_file_type_with_mime_type[ $extension_name ] = $extension[ 'mime_type' ];
+				$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
 			}
 		}
 
@@ -856,8 +856,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		}
 
 		$file_new_name = $file_name;
-		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] ) ? $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] : '';
-		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension[ 'extension' ] );
+		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
+		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
 
 		bp_document_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	} else {
@@ -867,7 +867,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		// Get Upload directory.
 		$upload     = wp_upload_dir();
-		$upload_dir = $upload[ 'basedir' ];
+		$upload_dir = $upload['basedir'];
 
 		// Create temp folder.
 		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time();
@@ -945,7 +945,6 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 	if ( 0 === $folder_id ) {
 		return;
 	}
-
 
 	$query_where            = "find_in_set(parent, @pv) and length(@pv := concat(@pv, ',', id))";
 	$query_from             = $wpdb->prepare( "( select * from {$document_folder_table} order by parent, id) folder_sorted, (select @pv := %d) initialisation", $folder_id );
@@ -1067,24 +1066,20 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
 	$attachment_url = '';
 
-	if( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 		$get_preview           = $preview_attachment_id;
 		$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
-		if( ! $preview_attachment_id ) {
+		if ( ! $preview_attachment_id ) {
 			$preview_attachment_id = $get_preview;
 		}
 		$document_id     = 'forbidden_' . $document_id;
 		$attachment_id   = 'forbidden_' . $preview_attachment_id;
 		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
+
+		if ( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+			return wp_get_attachment_url( $preview_attachment_id );
+		} elseif ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
 			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
-		// WP OFFLOAD MEDIA Support.
-		} elseif( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-			$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-			$is_image                   = wp_get_attachment_url( $preview_attachment_id );
-			if( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] && $is_image && @getimagesize($is_image) ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ) . '&id2=' . base64_encode( 'aws' );
-			}
 		}
 	}
 
@@ -1098,8 +1093,8 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
  * @since BuddyBoss 1.4.1
  */
 function bp_document_scaled_image_path( $attachment_id ) {
-	$is_image = wp_attachment_is_image( $attachment_id );
-	$img_url  = get_attached_file( $attachment_id );
+	$is_image         = wp_attachment_is_image( $attachment_id );
+	$img_url          = get_attached_file( $attachment_id );
 	$meta             = wp_get_attachment_metadata( $attachment_id );
 	$img_url_basename = wp_basename( $img_url );
 	if ( ! $is_image ) {
@@ -1117,12 +1112,12 @@ function bp_document_scaled_image_path( $attachment_id ) {
  * @param $path
  * @since BuddyBoss 1.4.1
  */
-function bp_document_chmod_r($path) {
-	$dir = new DirectoryIterator($path);
-	foreach ($dir as $item) {
-		chmod($item->getPathname(), 0777);
-		if ($item->isDir() && !$item->isDot()) {
-			bp_document_chmod_r($item->getPathname());
+function bp_document_chmod_r( $path ) {
+	$dir = new DirectoryIterator( $path );
+	foreach ( $dir as $item ) {
+		chmod( $item->getPathname(), 0777 );
+		if ( $item->isDir() && ! $item->isDot() ) {
+			bp_document_chmod_r( $item->getPathname() );
 		}
 	}
 }
@@ -1139,7 +1134,7 @@ function bp_document_mirror_text( $attachment_id ) {
 	$mirror_text = '';
 
 	$extension = bp_document_extension( $attachment_id );
-	if ( isset( $extension ) && !empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
+	if ( isset( $extension ) && ! empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
 		$words = 8000;
 		$more  = '...';
 		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
@@ -1173,12 +1168,12 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$passed_attachment_id   = $attachment_id;
-		$document_id            = 'forbidden_' . $document_id;
-		$attachment_id          = 'forbidden_' . $attachment_id;
-		$output_file_src         = get_attached_file( $passed_attachment_id );
-		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src) ) {
-			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		$passed_attachment_id = $attachment_id;
+		$document_id          = 'forbidden_' . $document_id;
+		$attachment_id        = 'forbidden_' . $attachment_id;
+		$output_file_src      = get_attached_file( $passed_attachment_id );
+		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src ) ) {
+			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
 		}
 	}
 
@@ -1199,7 +1194,7 @@ function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'document' !== $activity->privacy ) {
-			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
+			$buttons['activity_edit']['button_attr']['href'] = bp_activity_get_permalink( $activity_id ) . 'edit';
 
 			$classes  = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
 			$edit_key = array_search( 'edit', $classes, true );
