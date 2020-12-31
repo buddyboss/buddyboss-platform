@@ -821,6 +821,7 @@ window.bp = window.bp || {};
 						}
 						if ( ! self.video_thumb_dropzone_obj.getAcceptedFiles().length ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( '' );
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-submit' ).hide();
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).removeClass( 'disabled' );
 						} else {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) ).show();
@@ -916,6 +917,7 @@ window.bp = window.bp || {};
 			this.dropzone_video_thumb = [];
 			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).hide();
 			$( '.bp-video-thumbnail-uploader' ).removeClass( 'opened-edit-thumbnail' );
+			$( '.bp-video-thumbnail-uploader' ).find( '.video-thumb-list' ).html( '' );
 			$( window ).scroll();
 		},
 
