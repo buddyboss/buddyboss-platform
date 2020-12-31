@@ -621,6 +621,9 @@ class BP_Video {
 			$get_video_thumb_id  = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 
 			$attachment_data->meta->mime_type = get_post_mime_type( $video->attachment_id );
+			$length_formatted = wp_get_attachment_metadata( $video->attachment_id );
+			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+
 			if ( $get_video_thumb_id ) {
 				$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
 				$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
