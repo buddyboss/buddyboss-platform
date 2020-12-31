@@ -1327,8 +1327,9 @@ ul.bb-albums-list {
 				padding: 5px 0;
 
 				.img-block-wrap {
-					height: auto;
+					height: 48vh;
 					padding-bottom: 0;
+					padding-top: 0;
 
 					img {
 						max-height: calc(50vh - 80px);
@@ -1705,6 +1706,19 @@ img.emojioneemoji {
 	top: 20px;
 	right: 20px;
 	z-index: 111;
+
+	/*For Document Popup*/
+	.bb-document-section & {
+		top: 0;
+		right: 385px;
+		background-color: #fff;
+		padding: 6px 0 0 10px;
+
+		@media (max-width: 767px) {
+			right: 6px;
+		}
+
+	}
 
 	.privacy {
 		border: 1px solid;

@@ -13708,8 +13708,9 @@ ul.bb-albums-list .bb-more-photos strong {
     padding: 5px 0;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap {
-    height: auto;
+    height: 48vh;
     padding-bottom: 0;
+    padding-top: 0;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap img {
     max-height: calc(50vh - 80px);
@@ -14010,6 +14011,20 @@ img.emojioneemoji {
   top: 20px;
   left: 20px;
   z-index: 111;
+  /*For Document Popup*/
+}
+
+.bb-document-section .bb-media-only-privacy {
+  top: 0;
+  left: 385px;
+  background-color: #fff;
+  padding: 6px 10px 0 0;
+}
+
+@media (max-width: 767px) {
+  .bb-document-section .bb-media-only-privacy {
+    left: 6px;
+  }
 }
 
 .bb-media-only-privacy .privacy {
