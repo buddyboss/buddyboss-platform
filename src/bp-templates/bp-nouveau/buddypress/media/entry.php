@@ -32,9 +32,9 @@ if ( 'video' === $media_template->media->type ) {
 
 	$length_formatted = wp_get_attachment_metadata( $attachment_id );
 	$poster_id        = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
-	$poster_full      = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpeg';
-	$poster_default   = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpeg';
-	$poster_thumb     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpeg';
+	$poster_full      = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
+	$poster_default   = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
+	$poster_thumb     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
 
 	if ( $poster_id ) {
 		$poster_full  = wp_get_attachment_image_url( $poster_id, 'full' );
