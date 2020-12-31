@@ -1549,15 +1549,31 @@ function bp_nouveau_ajax_document_activity_delete() {
 	$delete_box = false;
 
 	// Get activity object.
-	$activity = new BP_Activity_Activity( $activity_id );
+	$activity         = new BP_Activity_Activity( $activity_id );
+	$activity_content = '';
 	if ( empty( $activity->id ) ) {
 		$delete_box = true;
-	}
+	} else {
+		ob_start();
+		if ( bp_has_activities(
+			array(
+				'include'     => $activity_id,
+			)
+		) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				bp_get_template_part( 'activity/entry' );
+			}
+		}
+		$activity_content = ob_get_contents();
+		ob_end_clean();
+    }
 
 	wp_send_json_success(
 		array(
-			'message'         => 'success',
-			'delete_activity' => $delete_box,
+			'message'          => 'success',
+			'delete_activity'  => $delete_box,
+			'activity_content' => $activity_content,
 		)
 	);
 }

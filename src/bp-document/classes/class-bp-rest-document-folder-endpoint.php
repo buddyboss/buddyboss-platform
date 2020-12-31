@@ -95,9 +95,14 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			'/' . $this->rest_base . '/tree',
 			array(
 				'args' => array(
-					'group_id' => array(
+					'group_id'     => array(
 						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 						'type'        => 'integer',
+					),
+					'hierarchical' => array(
+						'description' => __( 'Whether to retrieve as a hierarchical or not.', 'buddyboss' ),
+						'type'        => 'boolean',
+						'default'     => true,
 					),
 				),
 				array(
@@ -570,6 +575,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			$args['parent']  = $request['parent'];
 			$parent_folder   = new BP_Document_Folder( $args['parent'] );
 			$args['privacy'] = $parent_folder->privacy;
+		} elseif ( isset( $request['parent'] ) && 0 === (int) $request['parent'] ) {
+			$args['parent'] = $request['parent'];
 		}
 
 		/**
@@ -634,13 +641,18 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 
 		$updated_folder_id = bp_folder_add( $args );
 
-		$status = true;
 		if ( is_wp_error( $updated_folder_id ) ) {
 			return $updated_folder_id;
 		}
 
-		if ( empty( $updated_folder_id ) ) {
-			$status = false;
+		if ( ! is_numeric( $updated_folder_id ) ) {
+			return new WP_Error(
+				'bp_rest_user_cannot_update_folder',
+				__( 'Cannot update existing folder.', 'buddyboss' ),
+				array(
+					'status' => 500,
+				)
+			);
 		}
 
 		$folders = $this->assemble_response_data( array( 'folder_ids' => array( $updated_folder_id ) ) );
@@ -656,13 +668,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			$this->document_endpoint->prepare_item_for_response( $folder, $request )
 		);
 
-		$response = new WP_REST_Response();
-		$response->set_data(
-			array(
-				'updated' => $status,
-				'data'    => $retval,
-			)
-		);
+		$response = rest_ensure_response( $retval );
 
 		/**
 		 * Fires after an document folder is updated via the REST API.
@@ -905,29 +911,32 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		// phpcs:ignore
 		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok.
 
-		if ( ! empty( $data ) ) {
-			// Build array of item references.
-			foreach ( $data as $key => &$item ) {
-				$items_by_reference[ $item['id'] ] = &$item;
-				// Children array.
-				$items_by_reference[ $item['id'] ]['children'] = array();
-			}
-		}
+		if ( isset( $request['hierarchical'] ) && false !== $request['hierarchical'] ) {
 
-		if ( ! empty( $data ) ) {
-			// Set items as children of the relevant parent item.
-			foreach ( $data as $key => &$item ) {
-				if ( $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
-					$items_by_reference [ $item['parent'] ]['children'][] = &$item;
+			if ( ! empty( $data ) ) {
+				// Build array of item references.
+				foreach ( $data as $key => &$item ) {
+					$items_by_reference[ $item['id'] ] = &$item;
+					// Children array.
+					$items_by_reference[ $item['id'] ]['children'] = array();
 				}
 			}
-		}
 
-		if ( ! empty( $data ) ) {
-			// Remove items that were added to parents elsewhere.
-			foreach ( $data as $key => &$item ) {
-				if ( $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
-					unset( $data[ $key ] );
+			if ( ! empty( $data ) ) {
+				// Set items as children of the relevant parent item.
+				foreach ( $data as $key => &$item ) {
+					if ( $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
+						$items_by_reference[ $item['parent'] ]['children'][] = &$item;
+					}
+				}
+			}
+
+			if ( ! empty( $data ) ) {
+				// Remove items that were added to parents elsewhere.
+				foreach ( $data as $key => &$item ) {
+					if ( $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
+						unset( $data[ $key ] );
+					}
 				}
 			}
 		}
