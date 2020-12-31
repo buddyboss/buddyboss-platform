@@ -474,7 +474,7 @@ window.bp = window.bp || {};
 					} else {
 						parentsOpen = 0;
 					}
-					if ( '' !== this.moveToIdPopup ) { 
+					if ( '' !== this.moveToIdPopup ) {
 						$.ajax(
 							{
 								url: BP_Nouveau.ajaxurl,
@@ -604,7 +604,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( !jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-video-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -653,7 +653,7 @@ window.bp = window.bp || {};
 				self.video_dropzone_obj.on(
 					'removedfile',
 					function ( file ) {
-						
+
 						if ( self.dropzone_video.length ) {
 							for ( var i in self.dropzone_video ) {
 								if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
@@ -667,7 +667,7 @@ window.bp = window.bp || {};
 								}
 							}
 						}
-						
+
 						if ( ! self.video_dropzone_obj.getAcceptedFiles().length ) {
 							$( '#bp-video-uploader-modal-status-text' ).text( '' );
 							$( '#bp-video-next' ).hide();
@@ -678,7 +678,7 @@ window.bp = window.bp || {};
 						}
 					}
 				);
-				
+
 			}
 		},
 
@@ -757,7 +757,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( !jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-video-move-popup" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}

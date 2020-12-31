@@ -537,7 +537,7 @@ window.bp = window.bp || {};
 
 	/** Models ****************************************************************/
 
-	// The Activity to post
+	// The Activity to post.
 	bp.Models.Activity = Backbone.Model.extend(
 		{
 			defaults: {
@@ -724,6 +724,9 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
+						if ( tool_box.find( '#activity-video-button' ) ) {
+							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
 							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
@@ -796,6 +799,9 @@ window.bp = window.bp || {};
 							var tool_box = self.$el.parents( '#whats-new-form' );
 							if ( tool_box.find( '#activity-document-button' ) ) {
 								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#activity-video-button' ) ) {
+								tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#activity-gif-button' ) ) {
 								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
@@ -904,6 +910,9 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-gif-button' ) ) {
 							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
+						if ( tool_box.find( '#activity-video-button' ) ) {
+							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
 						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
@@ -990,6 +999,9 @@ window.bp = window.bp || {};
 							var tool_box = self.$el.parents( '#whats-new-form' );
 							if ( tool_box.find( '#activity-media-button' ) ) {
 								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
+							}
+							if ( tool_box.find( '#activity-video-button' ) ) {
+								tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
 							if ( tool_box.find( '#activity-gif-button' ) ) {
 								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
@@ -1099,7 +1111,10 @@ window.bp = window.bp || {};
 							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-document-button' ) ) {
-							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#activity-video-button' ) ) {
+							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
 					}
 				);
@@ -1111,14 +1126,14 @@ window.bp = window.bp || {};
 
 							// Set the folder_id and group_id if activity belongs to any folder and group in edit activity on new uploaded media id.
 							if ( ! bp.privacyEditable ) {
-								response.data.folder_id = bp.folder_id;
+								response.data.album_id = bp.album_id;
 								response.data.group_id  = bp.group_id;
 								response.data.privacy   = bp.privacy;
 							}
 
 							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
-							response.data.group_id   = ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.group_id ) ? BP_Nouveau.media.group_id : false;
+							response.data.group_id   = ! _.isUndefined( BP_Nouveau.video ) && ! _.isUndefined( BP_Nouveau.video.group_id ) ? BP_Nouveau.video.group_id : false;
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.video.push( response.data );
@@ -1142,7 +1157,7 @@ window.bp = window.bp || {};
 					'accept',
 					function ( file, done ) {
 						if ( file.size == 0 ) {
-							done( BP_Nouveau.media.empty_video_type );
+							done( BP_Nouveau.video.empty_video_type );
 						} else {
 							done();
 						}
@@ -1157,7 +1172,9 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-video-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-video-create-album-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							if(!jQuery('.video-error-popup').length) {
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -1188,6 +1205,9 @@ window.bp = window.bp || {};
 							}
 							if ( tool_box.find( '#activity-document-button' ) ) {
 								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
+							}
+							if ( tool_box.find( '#activity-video-button' ) ) {
+								tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
 						}
 					}
