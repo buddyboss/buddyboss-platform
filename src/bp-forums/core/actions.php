@@ -258,6 +258,7 @@ add_action( 'bbp_new_topic_post_extras', 'bbp_clean_post_cache' );
 add_action( 'bbp_new_reply_pre_extras', 'bbp_clean_post_cache' );
 add_action( 'bbp_new_reply_post_extras', 'bbp_clean_post_cache' );
 
+add_action( 'bbp_new_reply_post_extras', 'bbp_get_forums_reply_last_page' );
 /**
  * Forums needs to redirect the user around in a few different circumstances:
  *

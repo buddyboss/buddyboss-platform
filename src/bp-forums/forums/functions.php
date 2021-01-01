@@ -2563,3 +2563,25 @@ function bbp_get_forums_per_page( $default = 15 ) {
 	// Filter and return
 	return (int) apply_filters( 'bbp_get_forums_per_page', $retval, $default );
 }
+
+
+/**
+ * Return the last per page URL
+ *
+ * @since bbPress (r3540)
+ *
+ * @param int $default Default replies per page (15)
+ * @uses bbp_get_topics_per_page() To get the per page
+ * @uses bbp_has_replies() To find total post and its counts
+ * @return string
+ */
+function bbp_get_forums_reply_last_page($default = 15) {
+    global $redirect_url;
+    $topic_per_page = bbp_get_topics_per_page();
+    bbp_has_replies($args = '');
+    $bbp = bbpress();
+    $walker = new BBP_Walker_Reply();
+    $total_pages = ceil((int) $walker->get_number_of_root_elements($bbp->reply_query->posts) / (int) $topic_per_page);
+    $redirect_url =  get_permalink() . 'page/' . $total_pages;
+    return $redirect_url;
+}
