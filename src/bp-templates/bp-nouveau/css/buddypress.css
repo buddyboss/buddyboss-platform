@@ -3757,11 +3757,8 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 #video-stream.video .bb-item-thumb.is-visible .bb-item-cover-wrap:before,
-#video-stream.video .bb-item-thumb.is-visible .bb-video-duration,
 #media-stream.media .bb-video-thumb.is-visible .bb-item-cover-wrap:before,
-#media-stream.media .bb-video-thumb.is-visible .bb-video-duration,
-.bb-activity-video-wrap .bb-activity-video-elem.is-visible .bb-item-cover-wrap:before,
-.bb-activity-video-wrap .bb-activity-video-elem.is-visible .bb-video-duration {
+.bb-activity-video-wrap .bb-activity-video-elem.is-visible .bb-item-cover-wrap:before {
   display: none;
 }
 
