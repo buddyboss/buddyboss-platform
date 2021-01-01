@@ -63,7 +63,9 @@ if ( 'video' === $media_template->media->type ) {
 					</ul>
 				</div>
 			</div>
+			<?php if ( ! empty( esc_html ( $length_formatted['length_formatted'] ) ) ) { ?>
 			<p class="bb-video-duration"><?php echo esc_html( $length_formatted['length_formatted'] ); ?></p>
+			<?php } ?>
 			<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="<?php bp_media_id(); ?>" data-attachment-full="<?php echo esc_url( $poster_full ); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-privacy="<?php bp_media_privacy(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-album-id="<?php bp_media_album_id(); ?>" data-group-id="<?php bp_media_group_id(); ?>" data-attachment-id="<?php bp_media_attachment_id(); ?>" href="#">
 				<img src="<?php echo esc_url( $poster_default ); ?>" data-src="<?php echo esc_url( $poster_thumb ); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 			</a>
