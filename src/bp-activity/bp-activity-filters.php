@@ -2258,7 +2258,7 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 
 	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, 1 ) ) {
 		$activity = new BP_Activity_Activity( $activity_id );
-		if ( in_array( $activity->privacy, array( 'document', 'media' ), 1 ) ) {
+		if ( in_array( $activity->privacy, array( 'document', 'media', 'video' ), 1 ) ) {
 			unset( $buttons['activity_edit'] );
 		}
 	}
