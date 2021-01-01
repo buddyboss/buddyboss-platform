@@ -1738,7 +1738,7 @@ window.bp = window.bp || {};
 						url                  : BP_Nouveau.ajaxurl,
 						timeout              : 3 * 60 * 60 * 1000,
 						dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
-						acceptedFiles        : BP_Nouveau.video.document_type,
+						acceptedFiles        : BP_Nouveau.video.video_type,
 						createImageThumbnails: false,
 						dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
 						autoProcessQueue     : true,
@@ -1914,6 +1914,7 @@ window.bp = window.bp || {};
 			$gifPickerEl.toggleClass( 'open' );
 			this.destroyCommentMediaUploader( activityID );
 			this.destroyCommentDocumentUploader( activityID );
+			this.destroyCommentVideoUploader( activityID );
 		},
 
 		toggleMultiMediaOptions: function(form,target) {
@@ -1933,6 +1934,13 @@ window.bp = window.bp || {};
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
+					}
+
+					// check video is enable in groups or not.
+					if (BP_Nouveau.video.group_video === false) {
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
+					} else {
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 					}
 
 					// check gif is enable in groups or not.
@@ -1962,6 +1970,13 @@ window.bp = window.bp || {};
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
+					}
+
+					// check video is enable in groups or not.
+					if (BP_Nouveau.video.profile_video === false) {
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
+					} else {
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 					}
 
 					// check gif is enable sin groups or not.

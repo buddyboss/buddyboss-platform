@@ -1,14 +1,14 @@
-# Copyright (C) 2020 BuddyBoss
+# Copyright (C) 2021 BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-31 13:02:53+00:00\n"
+"POT-Creation-Date: 2021-01-01 09:26:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: en\n"
@@ -1581,7 +1581,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 #: bp-templates/bp-nouveau/includes/groups/functions.php:590
 #: bp-templates/bp-nouveau/includes/media/functions.php:221
-#: bp-templates/bp-nouveau/includes/video/functions.php:195
+#: bp-templates/bp-nouveau/includes/video/functions.php:196
 msgid "My Groups"
 msgstr ""
 
@@ -2597,7 +2597,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:15
 #: bp-templates/bp-nouveau/includes/media/functions.php:169
-#: bp-templates/bp-nouveau/includes/video/functions.php:142
+#: bp-templates/bp-nouveau/includes/video/functions.php:143
 msgid "Select All"
 msgstr ""
 
@@ -4704,7 +4704,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:18
 #: bp-templates/bp-nouveau/includes/media/functions.php:172
-#: bp-templates/bp-nouveau/includes/video/functions.php:145
+#: bp-templates/bp-nouveau/includes/video/functions.php:146
 msgid "Upload"
 msgstr ""
 
@@ -5332,7 +5332,7 @@ msgid "My Photos"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2913
-#: bp-templates/bp-nouveau/includes/video/functions.php:183
+#: bp-templates/bp-nouveau/includes/video/functions.php:184
 #: bp-video/classes/class-bp-video-component.php:332
 #: bp-video/classes/class-bp-video-component.php:363
 msgid "My Videos"
@@ -20957,7 +20957,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:65
 #: bp-templates/bp-nouveau/includes/media/functions.php:167
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1318
-#: bp-templates/bp-nouveau/includes/video/functions.php:140
+#: bp-templates/bp-nouveau/includes/video/functions.php:141
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -23728,7 +23728,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:56
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:40
-#: bp-templates/bp-nouveau/includes/video/functions.php:146
+#: bp-templates/bp-nouveau/includes/video/functions.php:147
 msgid "Add Thumbnail"
 msgstr ""
 
@@ -24624,6 +24624,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/functions.php:85
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
+#: bp-templates/bp-nouveau/includes/video/functions.php:129
 msgid "Please upload only the following file types: "
 msgstr ""
 
@@ -25684,12 +25685,12 @@ msgid "You are allowed to upload only %s photos at a time."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:168
-#: bp-templates/bp-nouveau/includes/video/functions.php:141
+#: bp-templates/bp-nouveau/includes/video/functions.php:142
 msgid "Unselect"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:170
-#: bp-templates/bp-nouveau/includes/video/functions.php:143
+#: bp-templates/bp-nouveau/includes/video/functions.php:144
 msgid "Unselect All"
 msgstr ""
 
@@ -25698,12 +25699,12 @@ msgid "Sorry, no photos were found"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:173
-#: bp-templates/bp-nouveau/includes/video/functions.php:147
+#: bp-templates/bp-nouveau/includes/video/functions.php:148
 msgid "Uploading"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:174
-#: bp-templates/bp-nouveau/includes/video/functions.php:148
+#: bp-templates/bp-nouveau/includes/video/functions.php:149
 msgid "%1$d out of %2$d uploaded"
 msgstr ""
 
@@ -25714,7 +25715,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:176
-#: bp-templates/bp-nouveau/includes/video/functions.php:150
+#: bp-templates/bp-nouveau/includes/video/functions.php:151
 msgid "There was a problem deleting the album."
 msgstr ""
 
@@ -26039,83 +26040,83 @@ msgstr ""
 msgid "You are allowed to upload only %s videos at a time."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:144
+#: bp-templates/bp-nouveau/includes/video/functions.php:145
 msgid "Sorry, no videos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:149
+#: bp-templates/bp-nouveau/includes/video/functions.php:150
 msgid ""
 "Are you sure you want to delete this album? Videos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:151
+#: bp-templates/bp-nouveau/includes/video/functions.php:152
 msgid "Are you sure you want to delete this video?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:172
+#: bp-templates/bp-nouveau/includes/video/functions.php:173
 msgid "All Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:280
+#: bp-templates/bp-nouveau/includes/video/functions.php:281
 msgid "Flash"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:288
+#: bp-templates/bp-nouveau/includes/video/functions.php:289
 msgid "MPEG-4"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:296
+#: bp-templates/bp-nouveau/includes/video/functions.php:297
 msgid "iPhone Index"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:304
+#: bp-templates/bp-nouveau/includes/video/functions.php:305
 msgid "iPhone Segment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:312
+#: bp-templates/bp-nouveau/includes/video/functions.php:313
 msgid "3GP Mobile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:320
+#: bp-templates/bp-nouveau/includes/video/functions.php:321
 msgid "QuickTime"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:328
+#: bp-templates/bp-nouveau/includes/video/functions.php:329
 msgid "A/V Interleave"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:336
+#: bp-templates/bp-nouveau/includes/video/functions.php:337
 msgid "Windows Media"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:344
+#: bp-templates/bp-nouveau/includes/video/functions.php:345
 msgid "Open Web Media Project"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:352
+#: bp-templates/bp-nouveau/includes/video/functions.php:353
 msgid "M4v"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:360
+#: bp-templates/bp-nouveau/includes/video/functions.php:361
 msgid "Quicktime"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:368
+#: bp-templates/bp-nouveau/includes/video/functions.php:369
 msgid "MPEG"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:376
+#: bp-templates/bp-nouveau/includes/video/functions.php:377
 msgid "Microsoft Advanced Systems Format (ASF)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:384
-#: bp-templates/bp-nouveau/includes/video/functions.php:392
-#: bp-templates/bp-nouveau/includes/video/functions.php:400
+#: bp-templates/bp-nouveau/includes/video/functions.php:385
+#: bp-templates/bp-nouveau/includes/video/functions.php:393
+#: bp-templates/bp-nouveau/includes/video/functions.php:401
 msgid "VOB"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:408
+#: bp-templates/bp-nouveau/includes/video/functions.php:409
 msgid "Matroska"
 msgstr ""
 
