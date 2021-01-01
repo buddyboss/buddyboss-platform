@@ -277,13 +277,37 @@ window.bp = window.bp || {};
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function( event ) {
 
+			jQuery(this).focus();
+
 			jQuery(this).on('keydown', function (e) {
 				// Check backspace key down event
 				if(e.keyCode == 8){
-					jQuery(this).find('.atwho-inserted:last-child').each(function (  ){
+
+					jQuery(this).find('.atwho-inserted').each(function (  ){
 						jQuery(this).removeAttr('contenteditable');
 					});
+
+				}else{
+					jQuery(this).find('.atwho-inserted').each(function (  ){
+						jQuery(this).attr('contenteditable',false);
+					});
 				}
+			});
+
+			/**
+			 * Remove all remaining element ( if there is any ) if no text remaining in the
+			 * what's new text box.
+			 */
+			jQuery(this).on('keyup', function (e) {
+
+				if(e.keyCode == 8){
+
+					if ( null == jQuery(this).text() || '' == jQuery(this).text() ) {
+						jQuery(this).empty();
+					}
+
+				}
+
 			});
 
 			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
