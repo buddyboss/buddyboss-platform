@@ -18678,12 +18678,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   opacity: 0;
 }
 
-.bb-activity-video-wrap .bb-activity-video-elem .video-js:hover:after {
+.bb-activity-video-wrap .bb-activity-video-elem .video-js:not(.vjs-playing):hover:after {
   visibility: visible;
   opacity: 1;
 }
 
-.bb-activity-video-wrap .bb-activity-video-elem .video-js:hover .vjs-big-play-button {
+.bb-activity-video-wrap .bb-activity-video-elem .video-js:not(.vjs-playing):hover .vjs-big-play-button {
   opacity: 1;
 }
 

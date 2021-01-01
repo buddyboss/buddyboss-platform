@@ -182,7 +182,7 @@
 		opacity: 0;
 	}
 
-	&:hover {
+	&:not(.vjs-playing):hover {
 
 		&:after {
 			visibility: visible;
