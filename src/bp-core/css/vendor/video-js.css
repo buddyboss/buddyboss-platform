@@ -1662,12 +1662,18 @@ video::-webkit-media-text-track-display {
 .js-focus-visible .video-js *:focus:not(.focus-visible) {
   outline: none;
   background: none;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
 }
 
 .video-js *:focus:not(:focus-visible),
 .video-js .vjs-menu *:focus:not(:focus-visible) {
   outline: none;
   background: none;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
 }
 
 .bb-media-model-wrapper.video .bb-media-section figure {
