@@ -1675,18 +1675,3 @@ video::-webkit-media-text-track-display {
   background-position: 50% 50%;
   background-size: cover;
 }
-
-.bb-media-model-wrapper.video .bb-media-section figure {
-  max-height: 90vh;
-  width: 100% !important;
-  height: 100% !important;
-  vertical-align: middle;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-.bb-media-model-wrapper.video .bb-media-section figure .video-js {
-  height: 100% !important;
-  padding: 0;
-}
