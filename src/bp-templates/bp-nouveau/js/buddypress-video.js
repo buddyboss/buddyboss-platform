@@ -674,7 +674,7 @@ window.bp = window.bp || {};
 								if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
 
 									if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && ! self.dropzone_video[ i ].saved ) {
-										self.removeAttachment( self.dropzone_video[ i ].id );
+										self.removeVideoAttachment( self.dropzone_video[ i ].id );
 									}
 
 									self.dropzone_video.splice( i, 1 );
@@ -1029,7 +1029,7 @@ window.bp = window.bp || {};
 								if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
 
 									if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && ! self.dropzone_video[ i ].saved ) {
-										self.removeAttachment( self.dropzone_video[ i ].id );
+										self.removeVideoAttachment( self.dropzone_video[ i ].id );
 									}
 
 									self.dropzone_video.splice( i, 1 );
@@ -1046,6 +1046,22 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+
+		removeVideoAttachment: function ( id ) {
+			var data = {
+				'action': 'media_delete_attachment',
+				'_wpnonce': BP_Nouveau.nonces.media,
+				'id': id
+			};
+
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data
+				}
+			);
 		},
 
 		removeVideoThumbnailAttachment: function ( id ) {
