@@ -244,7 +244,7 @@ window.bp = window.bp || {};
 					 * @since BuddyBoss 1.2.9
 					 */
 					beforeInsert: function( value ) {
-						value += ' ';
+						value += '&nbsp;';
 						return value;
 					}
 				},
@@ -277,9 +277,8 @@ window.bp = window.bp || {};
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function( event ) {
 
-			jQuery(this).focus();
-
 			jQuery(this).on('keydown', function (e) {
+
 				// Check backspace key down event
 				if(e.keyCode == 8){
 
@@ -288,28 +287,13 @@ window.bp = window.bp || {};
 					});
 
 				}else{
+
 					jQuery(this).find('.atwho-inserted').each(function (  ){
 						jQuery(this).attr('contenteditable',false);
 					});
-				}
-			});
-
-			/**
-			 * Remove all remaining element ( if there is any ) if no text remaining in the
-			 * what's new text box.
-			 */
-			jQuery(this).on('keyup', function (e) {
-
-				if(e.keyCode == 8){
-
-					if ( null == jQuery(this).text() || '' == jQuery(this).text() ) {
-						jQuery(this).empty();
-					}
 
 				}
-
 			});
-
 			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
 				var i = 0;
 				if ( typeof window.forums_medium_reply_editor !== 'undefined' ) {
@@ -337,6 +321,54 @@ window.bp = window.bp || {};
 					}
 				}
 			}
+
+			jQuery(this).focus();
+
+		});
+
+		/**
+		 * Remove all remaining element ( if there is any ) if no text remaining in the
+		 * what's new text box.
+		 */
+		this.on('keyup', function (e) {
+
+			var old_length = localStorage.getItem('charCount'),
+			    old_length = ! old_length ? 0 : parseInt(old_length);
+
+			/**
+			 * Removing the "contenteditable" in android devices.
+			 * It was preventing the backspace somehow. So whenever
+			 * we try to backspace, keyboard was automatically closed.
+			 */
+			if (isAndroid()) {
+
+				var new_length = jQuery(this).text().length; // Get the new text length.
+				localStorage.setItem('charCount', new_length); // Set length to local storage.
+
+				// Remove the "contenteditable".
+				jQuery(this).find('.atwho-inserted').each(function (){
+					jQuery(this).removeAttr('contenteditable');
+				});
+
+			}
+
+			// When we do backspace.
+			if(e.keyCode == 8 || ( isAndroid() && ( new_length < old_length ) ) ){
+
+				// Make the box empty, if no text is there.
+				if(null == jQuery(this).text() || '' == jQuery(this).text()){
+					jQuery(this).empty();
+				}
+
+				if(isAndroid()){
+
+					// Remove the attribute for android device when backspace.
+					jQuery(this).find('.atwho-inserted').each(function (){
+						jQuery(this).removeAttr('contenteditable');
+					});
+				}
+
+			}
 		});
 
 		var opts = $.extend( true, {}, suggestionsDefaults, mentionsDefaults, options );
@@ -345,6 +377,10 @@ window.bp = window.bp || {};
 
 	$( document ).ready(
 		function() {
+
+			// Reset counter for textbox character length.
+			localStorage.setItem('charCount', 0);
+
 			$( document ).on(
 				'focus',
 				BP_Mentions_Options.selectors.join( ',' ) ,
@@ -373,4 +409,14 @@ window.bp = window.bp || {};
 				.bp_mentions( bp.mentions.users );
 		}
 	};
+
+	// Auto-suggestion field.
+	window.isAndroid = function() {
+
+		userAgent = navigator.userAgent.toLowerCase();
+
+		return userAgent.indexOf("android") > -1;
+
+	};
+
 })( bp, jQuery );
