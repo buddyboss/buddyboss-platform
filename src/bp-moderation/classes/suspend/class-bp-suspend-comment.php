@@ -399,14 +399,14 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 
 		if ( empty( $suspended_record ) ) {
-			$suspended_record = BP_Core_Suspend::get_recode( $commentdata->user_id, BP_Moderation_Members::$moderation_type );
+			$suspended_record = BP_Core_Suspend::get_recode( $commentdata['user_id'], BP_Moderation_Members::$moderation_type );
 		}
 
 		if ( empty( $suspended_record ) ) {
 			return;
 		}
 
-		self::handle_new_suspend_entry( $suspended_record, $comment_id, $commentdata->user_id );
+		self::handle_new_suspend_entry( $suspended_record, $comment_id, $commentdata['user_id'] );
 	}
 
 	/**
