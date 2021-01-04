@@ -7,7 +7,7 @@
  */
 
 $album_privacy = '';
-if ( bp_is_user_media() || bp_is_user_albums() ) {
+if ( bp_is_user_video() || bp_is_user_albums() ) {
 	$album_id = (int) bp_action_variable( 0 );
 	$album    = new BP_Media_Album( $album_id );
 	if ( ! empty( $album ) ) {
@@ -20,7 +20,7 @@ if ( bp_is_user_media() || bp_is_user_albums() ) {
 	<div class="bb-dropdown-wrap">
 		<select id="bb-album-privacy">
 			<?php
-			foreach ( bp_media_get_visibility_levels() as $key => $privacy ) :
+			foreach ( bp_video_get_visibility_levels() as $key => $privacy ) :
 				if ( 'grouponly' === $key ) {
 					continue;
 				}
