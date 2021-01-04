@@ -2674,6 +2674,72 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 								}
 							}
 						}
+
+						/**
+						 * For add the new profile type roles
+						 **/
+						if ( !$error ) {
+							// Get post id of selected profile type.
+							$post_id = bp_member_type_post_by_type( $new_type );
+							
+							// Get selected profile type role.
+							$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+							$member_type_role    = sanitize_text_field( $selected_member_type_wp_roles[0] );
+							$member_type_role    = ( isset( $member_type_role ) ) ? $member_type_role : '';
+							if ( $user_id === get_current_user_id() ) {
+
+								if ( isset( $member_type_role ) && 'administrator' !== $member_type_role ) {
+
+									if ( empty( $selected_member_type_wp_roles ) ) {
+
+										/*
+										 * If an invalid profile type is passed, someone's doing something
+										 * fishy with the POST request, so we can fail silently.
+										 */
+										if ( bp_set_member_type( $user_id, $member_type ) ) {
+											// @todo Success messages can't be posted because other stuff happens on the page load.
+										}
+									} else {
+										$bp_error_message_string = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss' );
+										$error_message           = apply_filters( 'bp_invalid_role_selection_extended_profile', $bp_error_message_string );
+										// Define the settings error to display
+										add_settings_error(
+											'bp-invalid-role-selection-extended-profile',
+											'bp-invalid-role-selection-extended-profile',
+											$error_message,
+											'error'
+										);
+										set_transient( 'bp_invalid_role_selection_extended_profile', get_settings_errors(), 30 );
+
+										return;
+									}
+								} else {
+									
+									if ( isset( $member_type_role ) && 'none' !== $member_type_role ) {
+
+										$bp_current_user = new WP_User( get_current_user_id() );
+
+										// Remove role
+										$bp_current_user->remove_role( $bp_current_user->roles[0] );
+
+										// Add role
+										$bp_current_user->add_role( $member_type_role );
+									}
+								}
+							} else {
+
+								if ( isset( $member_type_role ) && 'none' !== $member_type_role ) {
+							
+									// Remove the old role
+									$bp_user = new WP_User( $user_id );
+
+									// Remove role
+									$bp_user->remove_role( $bp_user->roles[0] );
+								
+									$bp_user->add_role( $member_type_role );
+								}
+							}
+						}
 					}
 				}
 			}
