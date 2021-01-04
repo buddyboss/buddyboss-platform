@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-04 03:50:20+00:00\n"
+"POT-Creation-Date: 2021-01-04 04:01:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5209,8 +5209,9 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2593
 msgid ""
-"Allow members to upload photos, emojis and animated GIFs, and to organize "
-"photos into albums."
+"Allow members to upload photos, documents, videos, emojis and animated "
+"GIFs, and to organize photos and videos into albums and documents into "
+"folders."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2597
