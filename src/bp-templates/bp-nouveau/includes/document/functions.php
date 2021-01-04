@@ -1079,6 +1079,37 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
 		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
 			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+
+			$encode_id    = $attachment_id;
+			$encode_id1   = $document_id;
+			$explode_arr  = explode( 'forbidden_', $encode_id );
+			$explode_arr1 = explode( 'forbidden_', $encode_id1 );
+
+			if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 ] ) && (int) $explode_arr[ 1 ] > 0 &&
+			     isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[ 1 ] ) && (int) $explode_arr1[ 1 ] > 0 ) {
+				$id               = (int) $explode_arr[ 1 ];
+				$id1              = (int) $explode_arr1[ 1 ];
+				$document_privacy = ( function_exists( 'bp_document_user_can_manage_document' ) ) ? bp_document_user_can_manage_document( $id1, bp_loggedin_user_id() ) : true;
+				$can_view         = ( true === (bool) $document_privacy[ 'can_view' ] ) ? true : false;
+				if ( $can_view && wp_attachment_is_image( $id ) ) {
+					$type            = get_post_mime_type( $id );
+					$output_file_src = bp_document_scaled_image_path( $id );
+
+					if ( ! file_exists( $output_file_src ) ) {
+						echo '// Silence is golden.';
+						exit();
+					}
+					header( "Content-Type: $type" );
+					readfile( "$output_file_src" );
+				} else {
+					echo '// Silence is golden.';
+					exit();
+				}
+			} else {
+				echo '// Silence is golden.';
+				exit();
+			}
+
 		}
 	}
 

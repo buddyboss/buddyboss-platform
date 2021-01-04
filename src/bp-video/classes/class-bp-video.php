@@ -1254,7 +1254,23 @@ class BP_Video {
 			return false;
 		}
 
-		$activity_video_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->video->table_name} m WHERE m.activity_id = {$activity_id}" );
+		$activity_video_id = false;
+
+		// Check activity component enabled or not.
+		if ( bp_is_active( 'activity' ) ) {
+			$activity_video_id = bp_activity_get_meta( $activity_id, 'bp_video_id', true );
+		}
+
+		if ( empty( $activity_video_id ) ) {
+			$activity_video_id = (int) $wpdb->get_var( "SELECT DISTINCT v.id FROM {$bp->video->table_name} v WHERE v.activity_id = {$activity_id} AND v.type='video' " ); //phpcs:ignore
+
+			if ( bp_is_active( 'activity' ) ) {
+				$video_activity = bp_activity_get_meta( $activity_id, 'bp_video_activity', true );
+				if ( ! empty( $video_activity ) && ! empty( $activity_video_id ) ) {
+					bp_activity_update_meta( $activity_id, 'bp_video_id', $activity_video_id );
+				}
+			}
+		}
 
 		return $activity_video_id;
 	}

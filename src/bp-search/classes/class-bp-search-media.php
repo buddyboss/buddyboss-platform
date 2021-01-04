@@ -163,8 +163,6 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
-			error_log( $sql );
-
 			return apply_filters(
 				'bp_search_photos_sql',
 				$sql,
