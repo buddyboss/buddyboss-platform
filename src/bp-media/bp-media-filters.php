@@ -2334,6 +2334,9 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 			$activity['gif'] = $gif_raw_data;
 		}
+
+		$activity['profile_media'] = bp_is_profile_media_support_enabled() && bp_media_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_media']   = bp_is_group_media_support_enabled() && bp_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 	}
 
 	return $activity;

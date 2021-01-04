@@ -261,19 +261,18 @@ window.bp = window.bp || {};
 						};
 
 						if ( self.dropzone ) {
-
 							self.dropzone.files.push( doc_file );
 							self.dropzone.emit( 'addedfile', doc_file );
 							self.dropzone.emit( 'complete', doc_file );
 						}
 					}
 				}
+
 				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 				self.postForm.$el.removeClass('loading');
 
 				//Wrap content section for better scroll
 				$( '#whats-new-content, #whats-new-attachments' ).wrapAll('<div class="edit-activity-content-wrap"></div>');
-
 
 				// Make selected current privacy.
 				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
@@ -283,6 +282,39 @@ window.bp = window.bp || {};
 				var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
 				if ( ! _.isUndefined( privacy ) ) {
 					$activityPrivacySelect.val( privacy );
+				}
+
+				if ( !_.isUndefined( activity_data ) ) {
+					if ( !_.isUndefined( activity_data.object ) && !_.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
+
+						if ( !_.isUndefined( activity_data.group_media ) && activity_data.group_media === false ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+						} else {
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
+						}
+
+						// check media is enable in groups or not.
+						if ( !_.isUndefined( activity_data.group_document ) && activity_data.group_document === false ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+						} else {
+							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+
+					} else {
+						// check media is enable in profile or not.
+						if ( !_.isUndefined( activity_data.profile_media ) && activity_data.profile_media === false ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+						} else {
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
+						}
+
+						// check media is enable in profile or not.
+						if ( !_.isUndefined( activity_data.profile_document ) && activity_data.profile_document === false ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+						} else {
+							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+					}
 				}
 
 				// Do not allow the edit privacy if activity is belongs to any folder/album.
@@ -301,7 +333,6 @@ window.bp = window.bp || {};
 		 *
 		 * @param activity_data
 		 */
-
 		displayEditActivityForm : function( activity_data ) {
 			var self = this;
 
@@ -309,7 +340,7 @@ window.bp = window.bp || {};
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
 
-			if ( $singleActivityFormWrap.length ){
+			if ( $singleActivityFormWrap.length ) {
 				$singleActivityFormWrap.show();
 			}
 
@@ -1760,6 +1791,25 @@ window.bp = window.bp || {};
 					this.model.clear();
 				} else {
 					this.model.set( 'selected', true );
+					var model_attributes = this.model.attributes;
+
+					// check media is enable in groups or not.
+					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
+						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+						var mediaCloseEvent = new Event( 'activity_media_close' );
+						document.dispatchEvent( mediaCloseEvent );
+					} else {
+						$( '#whats-new-toolbar .post-media.media-support' ).show();
+					}
+
+					// check media is enable in groups or not.
+					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
+						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+						var documentCloseEvent = new Event( 'activity_document_close' );
+						document.dispatchEvent( documentCloseEvent );
+					} else {
+						$( '#whats-new-toolbar .post-media.document-support' ).show();
+					}
 				}
 			}
 		}
@@ -2019,7 +2069,7 @@ window.bp = window.bp || {};
 							var mediaCloseEvent = new Event( 'activity_media_close' );
 							document.dispatchEvent( mediaCloseEvent );
 						} else {
-							$( '#whats-new-toolbar .post-media.media-suppot' ).show();
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
 						// check media is enable in groups or not.
@@ -2615,6 +2665,7 @@ window.bp = window.bp || {};
 					);
 				}
 
+				this.updateMultiMediaOptions();
 			},
 
 			resetForm: function () {
@@ -2949,6 +3000,87 @@ window.bp = window.bp || {};
 						self.model.set( 'errors', { type: 'error', value: response.message } );
 					}
 				);
+			},
+
+			updateMultiMediaOptions: function () {
+
+				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
+
+					if ( 'user' !== this.model.get( 'object' ) ) {
+
+						// check media is enable in groups or not.
+						if ( BP_Nouveau.media.group_media === false ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+							var mediaCloseEvent = new Event( 'activity_media_close' );
+							document.dispatchEvent( mediaCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
+						}
+
+						// check media is enable in groups or not.
+						if ( BP_Nouveau.media.group_document === false ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+							var documentCloseEvent = new Event( 'activity_document_close' );
+							document.dispatchEvent( documentCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+
+						// check gif is enable in groups or not.
+						if ( BP_Nouveau.media.gif.groups === false ) {
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
+							var gifCloseEvent = new Event( 'activity_gif_close' );
+							document.dispatchEvent( gifCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-gif' ).show();
+						}
+
+						// check emoji is enable in groups or not.
+						if ( BP_Nouveau.media.emoji.groups === false ) {
+							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
+							$( '#whats-new-toolbar .post-emoji' ).hide();
+						} else {
+							$( '#whats-new-toolbar .post-emoji' ).show();
+						}
+					} else {
+
+						// check media is enable in profile or not.
+						if ( BP_Nouveau.media.profile_media === false ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+							var event = new Event( 'activity_media_close' );
+							document.dispatchEvent( event );
+						} else {
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
+						}
+
+						// check media is enable in profile or not.
+						if ( BP_Nouveau.media.profile_document === false ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+							var documentEvent = new Event( 'activity_document_close' );
+							document.dispatchEvent( documentEvent );
+						} else {
+							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+
+						// check gif is enable in profile or not.
+						if ( BP_Nouveau.media.gif.profile === false ) {
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
+							var gifCloseEvent2 = new Event( 'activity_gif_close' );
+							document.dispatchEvent( gifCloseEvent2 );
+						} else {
+							$( '#whats-new-toolbar .post-gif' ).show();
+						}
+
+						// check emoji is enable in profile or not.
+						if ( BP_Nouveau.media.emoji.profile === false ) {
+							$( '#whats-new-toolbar .post-emoji' ).hide();
+							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
+						} else {
+							$( '#whats-new-toolbar .post-emoji' ).show();
+						}
+					}
+					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+				}
 			}
 		}
 	);
