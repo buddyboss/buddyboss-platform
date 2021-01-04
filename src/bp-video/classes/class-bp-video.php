@@ -648,6 +648,22 @@ class BP_Video {
 
 			$video->attachment_data = $attachment_data;
 
+			$group_name = '';
+			if ( bp_is_active( 'groups' ) && $video->group_id > 0 ) {
+				$group      = groups_get_group( $video->group_id );
+				$group_name = bp_get_group_name( $group );
+				$status     = bp_get_group_status( $group );
+				if ( 'hidden' === $status || 'private' === $status ) {
+					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				} else {
+					$visibility = ucfirst( $status );
+				}
+			} else {
+				$visibility = isset( $media_privacy[ $video->privacy ] ) ? $media_privacy[ $video->privacy ] : $video->privacy;
+			}
+			$video->group_name = $group_name;
+			$video->visibility = $visibility;
+
 			$video->video_link = wp_get_attachment_url( $video->attachment_id );
 
 			$videos[] = $video;
@@ -1135,9 +1151,42 @@ class BP_Video {
 	 * @return array|bool|int
 	 */
 	public static function total_group_video_count( $group_id = 0 ) {
+
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name} WHERE group_id = {$group_id}" );
+		$select_sql = 'SELECT COUNT(*)';
+
+		$from_sql = " FROM {$bp->video->table_name} v";
+
+		// Where conditions.
+		$where_conditions = array();
+
+		$where_conditions['group_sql'] = $wpdb->prepare( 'v.group_id = %s', $group_id );
+
+		/**
+		 * Filters the MySQL WHERE conditions for the Video items get method.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
+		 * @param array $args             array of arguments.
+		 */
+		$where_conditions = apply_filters( 'bp_video_get_where_count_conditions', $where_conditions, array( 'group_id' => $group_id ) );
+
+		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+		/**
+		 * Filter the MySQL JOIN clause for the main video query.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param string $join_sql JOIN clause.
+		 * @param array  $args     array of arguments.
+		 */
+		$from_sql = apply_filters( 'bp_video_get_join_count_sql', $from_sql, array( 'group_id' => $group_id ) );
+
+		$video_ids_sql = "{$select_sql} {$from_sql} {$where_sql}";
+		$total_count   = (int) $wpdb->get_var( $video_ids_sql ); // phpcs:ignore.
 
 		return $total_count;
 	}

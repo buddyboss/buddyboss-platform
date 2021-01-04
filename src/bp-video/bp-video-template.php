@@ -1755,3 +1755,69 @@ function bp_get_video_auto_generated_thumbnail_ids() {
 	 */
 	return apply_filters( 'bp_get_video_auto_generated_thumbnail_ids', $thumbnail_ids );
 }
+
+/**
+ * Output the video visibility.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_video_visibility() {
+	echo bp_get_video_visibility(); //phpcs:ignore
+}
+
+/**
+ * Return the video visibility.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @global object $media_template {@link BP_Video_Template}
+ *
+ * @return string The video visibility.
+ */
+function bp_get_video_visibility() {
+	global $video_template;
+
+	/**
+	 * Filters the video privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param string $id The video privacy.
+	 */
+	return apply_filters( 'bp_get_video_visibility', $video_template->video->visibility );
+}
+
+/**
+ * Output the Video author name.
+ *
+ * @since BuddyBoss 1.5.3
+ */
+function bp_video_author() {
+	echo bp_get_video_author();
+}
+
+/**
+ * Return the Video author name.
+ *
+ * @since BuddyBoss 1.5.3
+ *
+ * @global object $video_template {@link \BP_Video_Template}
+ *
+ * @return int The Media author name.
+ */
+function bp_get_video_author() {
+	global $video_template;
+
+	if ( isset( $video_template ) && isset( $video_template->video ) && isset( $video_template->video->user_id ) ) {
+		$author = bp_core_get_user_displayname( $video_template->video->user_id );
+	}
+
+	/**
+	 * Filters the Video author name being displayed.
+	 *
+	 * @since BuddyBoss 1.5.3
+	 *
+	 * @param int $id The Video author id.
+	 */
+	return apply_filters( 'bp_get_video_author', $author );
+}

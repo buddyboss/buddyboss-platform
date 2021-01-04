@@ -16,6 +16,7 @@ $move_id       = '';
 $move_type     = '';
 $video_privacy = bp_video_user_can_manage_video( bp_get_video_id(), bp_loggedin_user_id() );
 $can_manage    = true === (bool) $video_privacy['can_manage'];
+$can_move      = true === (bool) $video_privacy['can_add'];
 
 if ( $group_id > 0 ) {
 	$move_id   = $group_id;
@@ -25,29 +26,65 @@ if ( $group_id > 0 ) {
 	$move_type = 'profile';
 }
 
+$is_comment_vid = bp_video_is_activity_comment_video( $video_template->video );
+
 
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_video_id(); ?>" data-date-created="<?php bp_video_date_created(); ?>">
 
 	<div class="bb-video-thumb bb-item-thumb">
 		<div class="video-action-wrap item-action-wrap">
-			<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="More actions">
-				<i class="bb-icon-menu-dots-v"></i>
-			</a>
-			<div class="video-action_list item-action_list">
-				<ul>
-					<li class="edit_thumbnail_video">
-						<a href="#" data-action="video" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
-					</li>
-					<li class="move_video">
-						<a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-					</li>
-					<li class="delete_file">
-						<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="video" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
-					</li>
+			<?php
+			$report_btn = bp_video_get_report_link( array( 'id' => bp_get_video_id() ) );
+			if ( $can_manage || $report_btn ) {
+				?>
+				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+					<i class="bb-icon-menu-dots-v"></i>
+				</a>
+				<div class="video-action_list item-action_list">
+					<ul>
+						<li class="edit_thumbnail_video">
+							<a href="#" data-action="video" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+						</li>
+						<?php
+						if ( $can_manage ) {
+							if ( $is_comment_vid ) {
+								?>
+								<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
+								<?php
+							} else {
+								if ( $can_move ) {
+									?>
+									<li class="move_video">
+										<a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+									</li>
+									<?php
+								}
+							}
+						}
+						?>
 
-				</ul>
-			</div>
+						<?php
+						if ( $report_btn ) {
+							?>
+							<li class="report_file">
+								<?php echo $report_btn; ?>
+							</li>
+							<?php
+						}
+						?>
+
+						<?php if ( $can_manage ) { ?>
+							<li class="delete_file">
+								<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="video" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+							</li>
+						<?php } ?>
+
+					</ul>
+				</div>
+			<?php } ?>
 		</div>
 		<?php if ( ! empty( bp_get_video_length() ) ) { ?>
 		<p class="bb-video-duration"><?php bp_video_length(); ?></p>

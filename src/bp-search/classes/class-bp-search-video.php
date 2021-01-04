@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Media Search Class
+ * BuddyBoss Video Search Class
  *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.5.0
@@ -9,19 +9,19 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Media' ) ) :
+if ( ! class_exists( 'Bp_Search_Video' ) ) :
 
 	/**
-	 * BuddyPress Global Search  - search media class
+	 * BuddyPress Global Search  - search video class
 	 */
-	class Bp_Search_Media extends Bp_Search_Type {
+	class Bp_Search_Video extends Bp_Search_Type {
 
 		/**
 		 * Search item type name
 		 *
 		 * @var string
 		 */
-		private $type = 'photos';
+		private $type = 'videos';
 
 		/**
 		 * Insures that only one instance of Class exists in memory at any
@@ -29,7 +29,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		 *
 		 * @since BuddyBoss 1.5.0
 		 *
-		 * @return object Bp_Search_Media
+		 * @return object Bp_Search_Video
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication.
@@ -37,7 +37,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Media();
+				$instance = new Bp_Search_Video();
 			}
 
 			// Always return the instance.
@@ -54,7 +54,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		}
 
 		/**
-		 * Prepare SQL query for media search.
+		 * Prepare SQL query for video search.
 		 *
 		 * @param string $search_term Search terms.
 		 * @param false  $only_totalrow_count Total row count.
@@ -110,21 +110,21 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql['select'] .= ' COUNT( DISTINCT m.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT v.id ) ';
 			} else {
-				$sql['select'] .= $wpdb->prepare( " DISTINCT m.id, 'photos' as type, m.title LIKE %s AS relevance, m.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT v.id, 'videos' as type, v.title LIKE %s AS relevance, v.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql['from'] = " FROM {$bp->media->table_name} m";
+			$sql['from'] = " FROM {$bp->video->table_name} v";
 
 			/**
-			 * Filter the MySQL JOIN clause for the media Search query.
+			 * Filter the MySQL JOIN clause for the video Search query.
 			 *
 			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
-			$sql['from'] = apply_filters( 'bp_media_search_join_sql_photo', $sql['from'] );
+			$sql['from'] = apply_filters( 'bp_video_search_join_sql_video', $sql['from'] );
 
 			$privacy = array( 'public' );
 			if ( is_user_logged_in() ) {
@@ -135,38 +135,36 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 			$where_conditions[] = $wpdb->prepare(
 				" (
 					(
-						m.title LIKE %s
+						v.title LIKE %s
 					)
 					AND
 					(
-							( m.type='photo' AND m.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( m.type='photo' AND m.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND m.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( m.type='photo' AND m.user_id IN ( '" . implode( "','", $friends ) . "' ) AND m.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( is_user_logged_in() ? " OR ( m.type='photo' AND m.user_id = '" . bp_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( v.type = 'video' AND v.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( v.type = 'video' AND v.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND v.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( v.type = 'video' AND v.user_id IN ( '" . implode( "','", $friends ) . "' ) AND v.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( is_user_logged_in() ? " OR ( v.type = 'video' AND v.user_id = '" . bp_loggedin_user_id() . "' AND v.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					')
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
 
 			/**
-			 * Filters the MySQL WHERE conditions for the media Search query.
+			 * Filters the MySQL WHERE conditions for the video Search query.
 			 *
 			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
 			 */
-			$where_conditions = apply_filters( 'bp_media_search_where_conditions_photo', $where_conditions, $search_term );
+			$where_conditions = apply_filters( 'bp_video_search_where_conditions_video', $where_conditions, $search_term );
 
 			// Join the where conditions together.
 			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
 
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
-			error_log( $sql );
-
 			return apply_filters(
-				'bp_search_photos_sql',
+				'bp_search_videos_sql',
 				$sql,
 				array(
 					'search_term'         => $search_term,
@@ -176,47 +174,47 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		}
 
 		/**
-		 * Generare Html for media search
+		 * Generare Html for video search
 		 *
 		 * @param string $template_type Template type.
 		 */
 		protected function generate_html( $template_type = '' ) {
-			$media_ids = array();
+			$video_ids = array();
 			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
-				$media_ids[] = $item_id;
+				$video_ids[] = $item_id;
 			}
 
 			// now we have all the posts.
-			// lets do a media loop.
+			// lets do a video loop.
 			$args = array(
-				'include'      => implode( ',', $media_ids ),
-				'per_page'     => count( $media_ids ),
+				'include'      => implode( ',', $video_ids ),
+				'per_page'     => count( $video_ids ),
 				'search_terms' => false,
 			);
 
-			do_action( 'bp_before_search_photos_html' );
+			do_action( 'bp_before_search_videos_html' );
 
-			if ( bp_has_media( $args ) ) {
+			if ( bp_has_video( $args ) ) {
 
-				while ( bp_media() ) :
-					bp_the_media();
+				while ( bp_video() ) :
+					bp_the_video();
 
 					$result = array(
-						'id'    => bp_get_media_id(),
+						'id'    => bp_get_video_id(),
 						'type'  => $this->type,
-						'title' => bp_get_media_title(),
-						'html'  => bp_search_buffer_template_part( 'loop/photos', $template_type, false ),
+						'title' => bp_get_video_title(),
+						'html'  => bp_search_buffer_template_part( 'loop/videos', $template_type, false ),
 					);
 
-					$this->search_results['items'][ bp_get_media_id() ] = $result;
+					$this->search_results['items'][ bp_get_video_id() ] = $result;
 				endwhile;
 			}
 
-			do_action( 'bp_after_search_photos_html' );
+			do_action( 'bp_after_search_videos_html' );
 		}
 	}
 
-	// End class Bp_Search_Media.
+	// End class Bp_Search_Video.
 
 endif;
 
