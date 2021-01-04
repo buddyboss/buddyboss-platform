@@ -105,6 +105,8 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 					// 'subscriptions' action
 				} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) && bp_loggedin_user_id() === $user_id ) {
 					$profile_url = $this->get_subscriptions_permalink( '', $user_id );
+				} else {
+					$profile_url = bp_core_get_user_domain( $user_id );
 				}
 
 				// Not in users' forums area.
