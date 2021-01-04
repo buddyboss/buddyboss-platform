@@ -103,7 +103,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 					$profile_url = $this->get_favorites_permalink( '', $user_id );
 
 					// 'subscriptions' action
-				} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
+				} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) && bp_loggedin_user_id() === $user_id ) {
 					$profile_url = $this->get_subscriptions_permalink( '', $user_id );
 				}
 
