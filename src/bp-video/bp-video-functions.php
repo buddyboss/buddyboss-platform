@@ -2063,13 +2063,13 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 						$can_manage = true;
 						$can_add    = false;
-					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+					} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 						$can_manage = true;
 						$can_add    = false;
-					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+					} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 						$can_manage = true;
 						$can_add    = false;
-					} elseif ( 'admins' == $status && $is_admin ) {
+					} elseif ( 'admins' === $status && $is_admin ) {
 						$can_manage = true;
 						$can_add    = false;
 					}
@@ -2251,7 +2251,7 @@ function bp_video_download_link( $attachment_id, $video_id ) {
 		return;
 	}
 
-	$link = site_url() . '/?attachment_id=' . $attachment_id . '&media_type=video&download_video_file=1&video_file=' . $video_id;
+	$link = site_url() . '/?attachment_id=' . $attachment_id . '&video_type=video&download_video_file=1&video_file=' . $video_id;
 
 	return apply_filters( 'bp_video_download_link', $link, $attachment_id );
 
@@ -2271,7 +2271,7 @@ function bp_video_download_url_file() {
 	$can_download_btn    = false;
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		if ( 'folder' !== $video_type ) {
+		if ( 'album' !== $video_type ) {
 			$video_privacy    = bp_video_user_can_manage_video( $video_file, bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
 		}
@@ -3222,5 +3222,25 @@ function bp_video_is_activity_comment_video( $video ) {
 		$is_comment_video = true;
 	}
 	return $is_comment_video;
+
+}
+
+/**
+ * Return download link of the album.
+ *
+ * @param $album_id
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.4.0
+ */
+function bp_video_album_download_link( $album_id ) {
+
+	if ( empty( $album_id ) ) {
+		return;
+	}
+
+	$link = site_url() . '/?attachment=' . $album_id . '&video_type=album&download_video_file=1&video_file=' . $album_id;
+
+	return apply_filters( 'bp_video_album_download_link', $link, $album_id );
 
 }

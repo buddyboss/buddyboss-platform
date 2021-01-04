@@ -88,9 +88,9 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	 */
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 
 	if ( ! function_exists( 'media_handle_upload' ) ) {
@@ -1263,9 +1263,9 @@ function bp_media_sideload_attachment( $file ) {
 	$file = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
 
 	if ( ! function_exists( 'download_url' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 	$file_array['tmp_name'] = download_url( $file );
 
@@ -3345,4 +3345,24 @@ function bp_media_get_report_link( $args = array() ) {
 	);
 
 	return apply_filters( 'bp_media_get_report_link', $report_btn, $args );
+}
+
+/**
+ * Return download link of the album.
+ *
+ * @param $album_id
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.4.0
+ */
+function bp_media_album_download_link( $album_id ) {
+
+	if ( empty( $album_id ) ) {
+		return;
+	}
+
+	$link = site_url() . '/?attachment=' . $album_id . '&media_type=album&download_media_file=1&media_file=' . $album_id;
+
+	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
+
 }

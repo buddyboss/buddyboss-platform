@@ -2043,9 +2043,9 @@ class BP_Document {
 
 					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
 					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+						require_once ABSPATH . 'wp-admin/includes/image.php';
+						require_once ABSPATH . 'wp-admin/includes/file.php';
+						require_once ABSPATH . 'wp-admin/includes/media.php';
 					}
 					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
@@ -2185,9 +2185,9 @@ class BP_Document {
 						}
 					}
 					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+						require_once ABSPATH . 'wp-admin/includes/image.php';
+						require_once ABSPATH . 'wp-admin/includes/file.php';
+						require_once ABSPATH . 'wp-admin/includes/media.php';
 					}
 					// Generate new intermediate thumbnails.
 					$meta = wp_generate_attachment_metadata( $id, $file );
@@ -2260,9 +2260,9 @@ class BP_Document {
 
 							$preview_attachment_id = wp_insert_attachment( $attachment, $file );
 							if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-								require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-								require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-								require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+								require_once ABSPATH . 'wp-admin/includes/image.php';
+								require_once ABSPATH . 'wp-admin/includes/file.php';
+								require_once ABSPATH . 'wp-admin/includes/media.php';
 							}
 							$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 							wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
