@@ -15471,6 +15471,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .bb-document-theater .bb-media-section.bb-video-preview .document-preview {
   height: 100%;
+  background-color: #000;
 }
 
 .bb-document-theater .bb-media-section.bb-video-preview .document-preview .video-js {
