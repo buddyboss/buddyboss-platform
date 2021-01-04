@@ -2015,7 +2015,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).hide();
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
 							var mediaCloseEvent = new Event( 'activity_media_close' );
 							document.dispatchEvent( mediaCloseEvent );
 						} else {
@@ -2024,7 +2024,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).hide();
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 							var documentCloseEvent = new Event( 'activity_document_close' );
 							document.dispatchEvent( documentCloseEvent );
 						} else {
@@ -2033,7 +2033,7 @@ window.bp = window.bp || {};
 
 						// check gif is enable in groups or not.
 						if ( BP_Nouveau.media.gif.groups === false ) {
-							$( '#whats-new-toolbar .post-gif' ).hide();
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
 							var gifCloseEvent = new Event( 'activity_gif_close' );
 							document.dispatchEvent( gifCloseEvent );
 						} else {
@@ -2051,7 +2051,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).hide();
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
 							var event = new Event( 'activity_media_close' );
 							document.dispatchEvent( event );
 						} else {
@@ -2060,7 +2060,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).hide();
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 							var documentEvent = new Event( 'activity_document_close' );
 							document.dispatchEvent( documentEvent );
 						} else {
@@ -2069,7 +2069,7 @@ window.bp = window.bp || {};
 
 						// check gif is enable in profile or not.
 						if ( BP_Nouveau.media.gif.profile === false ) {
-							$( '#whats-new-toolbar .post-gif' ).hide();
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
 							var gifCloseEvent2 = new Event( 'activity_gif_close' );
 							document.dispatchEvent( gifCloseEvent2 );
 						} else {
