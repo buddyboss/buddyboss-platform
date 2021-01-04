@@ -860,6 +860,7 @@ window.bp = window.bp || {};
 
 							// Inform other scripts.
 							$( document ).trigger( 'bp_activity_ajax_delete_request', $.extend( ajaxData, { response: response } ) );
+							$( document ).trigger( 'bp_activity_ajax_delete_request_video', $.extend( ajaxData, { response: response } ) );
 						}
 					}
 				);
