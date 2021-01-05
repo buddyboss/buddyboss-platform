@@ -378,7 +378,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 
 				foreach ( $old_video_ids as $video_id ) {
 
-					if ( ! in_array( $video_id, $video_ids, true ) ) {
+					if ( ! in_array( $video_id, $video_ids ) ) {
 						bp_video_delete( array( 'id' => $video_id ) );
 					}
 				}
