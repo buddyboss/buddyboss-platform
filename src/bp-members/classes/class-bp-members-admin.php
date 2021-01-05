@@ -2684,8 +2684,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							
 							// Get selected profile type role.
 							$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
-							$member_type_role    = sanitize_text_field( $selected_member_type_wp_roles[0] );
-							$member_type_role    = ( isset( $member_type_role ) ) ? $member_type_role : '';
+							$member_type_role = sanitize_text_field( $selected_member_type_wp_roles[0] );
+							$member_type_role = isset( $member_type_role ) ? $member_type_role : '';
 							if ( $user_id === get_current_user_id() ) {
 
 								if ( isset( $member_type_role ) && 'administrator' !== $member_type_role ) {
