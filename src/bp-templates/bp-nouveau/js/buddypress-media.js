@@ -89,6 +89,7 @@ window.bp = window.bp || {};
 				maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
+				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
