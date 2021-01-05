@@ -2027,6 +2027,7 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 
 	$can_manage   = false;
 	$can_view     = false;
+	$can_move     = false;
 	$can_download = false;
 	$can_add      = false;
 	$video        = new BP_Video( $video_id );
@@ -2040,13 +2041,16 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+				$can_move     = bp_is_profile_albums_support_enabled();
 			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = false;
+				$can_move     = false;
 			} else {
 				$can_manage   = false;
+				$can_move     = false;
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -2064,18 +2068,23 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 					if ( $video->user_id === $user_id ) {
 						$can_manage = true;
 						$can_add    = true;
+						$can_move   = bp_is_group_albums_support_enabled();
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 						$can_manage = true;
 						$can_add    = false;
+						$can_move   = false;
 					} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 						$can_manage = true;
 						$can_add    = false;
+						$can_move   = false;
 					} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 						$can_manage = true;
 						$can_add    = false;
+						$can_move   = false;
 					} elseif ( 'admins' === $status && $is_admin ) {
 						$can_manage = true;
 						$can_add    = false;
+						$can_move   = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2096,18 +2105,22 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 				$can_view     = false;
 				$can_download = false;
 				$can_add      = false;
+				$can_move     = false;
 			} elseif ( $video->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+				$can_move     = bp_is_profile_albums_support_enabled();
 			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = false;
+				$can_move     = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
+				$can_move     = false;
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -2120,13 +2133,16 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+				$can_move     = bp_is_profile_albums_support_enabled();
 			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = false;
+				$can_move     = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
+				$can_move     = false;
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -2145,6 +2161,7 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+				$can_move     = false;
 			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 				$can_manage   = true;
 				$can_view     = true;
@@ -2156,6 +2173,7 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 				}
 				$can_view     = true;
 				$can_download = true;
+				$can_move     = false;
 			}
 			break;
 
@@ -2166,24 +2184,29 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 				$can_manage   = false;
 				$can_view     = false;
 				$can_download = false;
+				$can_move     = false;
 			} elseif ( ! $thread_id ) {
 				$can_manage   = false;
 				$can_view     = false;
 				$can_download = false;
+				$can_move     = false;
 			} elseif ( $video->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+				$can_move     = false;
 			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = false;
+				$can_move     = false;
 			} elseif ( $has_access > 0 ) {
 				$can_manage   = false;
 				$can_view     = true;
 				$can_download = true;
+				$can_move     = false;
 			}
 			break;
 
@@ -2193,11 +2216,13 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+				$can_move     = bp_is_profile_albums_support_enabled();
 			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = false;
+				$can_move     = false;
 			}
 			break;
 
@@ -2207,6 +2232,7 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
 	$data['can_add']      = $can_add;
+	$data['can_move']     = $can_move;
 
 	return apply_filters( 'bp_video_user_can_manage_video', $data, $video_id, $user_id );
 }

@@ -16,7 +16,7 @@ $move_id       = '';
 $move_type     = '';
 $video_privacy = bp_video_user_can_manage_video( bp_get_video_id(), bp_loggedin_user_id() );
 $can_manage    = true === (bool) $video_privacy['can_manage'];
-$can_move      = true === (bool) $video_privacy['can_add'];
+$can_move      = true === (bool) $video_privacy['can_move'];
 
 if ( $group_id > 0 ) {
 	$move_id   = $group_id;
