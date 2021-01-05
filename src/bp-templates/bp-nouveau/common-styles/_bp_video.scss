@@ -611,7 +611,7 @@
 		}
 
 		.video-thumb-list {
-			margin: 0;
+			margin: 0 !important;
 			display: flex;
 			height: 100%;
 
@@ -637,7 +637,7 @@
 				height: 100%;
 				padding: 0 0 0 10px;
 				margin: 0;
-				list-style: none;
+				list-style: none !important;
 
 				.bb-action-check-wrap {
 					visibility: visible;
