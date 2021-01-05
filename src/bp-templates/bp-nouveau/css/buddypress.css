@@ -16079,21 +16079,25 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   }
 }
 
+.search-video-list .item,
 .search-media-list .item {
   width: 100%;
 }
 
+.search-video-list .media-album_items,
 .search-media-list .media-album_items {
   display: flex;
   align-items: center;
   width: 100%;
 }
 
+.search-video-list .media-album_thumb,
 .search-media-list .media-album_thumb {
   width: 100px;
   padding: 0 15px 0 10px;
 }
 
+.search-video-list .media-album_thumb img,
 .search-media-list .media-album_thumb img {
   border-radius: 4px !important;
   width: 95px;
@@ -16101,15 +16105,18 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   object-fit: cover;
 }
 
+.search-video-list .media-album_details,
 .search-media-list .media-album_details {
   width: calc(35% - 107px);
   line-height: 1;
 }
 
-.bp-search-ac-header .search-media-list .media-album_details {
+.bp-search-ac-header .search-video-list .media-album_details, .bp-search-ac-header
+.search-media-list .media-album_details {
   width: calc(35% - 90px);
 }
 
+.search-video-list .media-album_details .media-album_name,
 .search-media-list .media-album_details .media-album_name {
   color: #122b46;
   overflow: hidden;
@@ -16119,6 +16126,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   max-width: 90%;
 }
 
+.search-video-list .media-album_details .media-photo_count,
 .search-media-list .media-album_details .media-photo_count {
   color: #939597;
   font-size: 13px;
@@ -16127,10 +16135,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   margin-top: 4px;
 }
 
+.search-video-list .media-album_modified,
 .search-media-list .media-album_modified {
   width: 20%;
 }
 
+.search-video-list .media-album_modified .media-album_details__bottom,
 .search-media-list .media-album_modified .media-album_details__bottom {
   display: block;
   font-size: 14px;
@@ -16138,21 +16148,26 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #4d5c6d;
 }
 
+.search-video-list .media-album_modified .media-album_details__bottom .media-album_date,
 .search-media-list .media-album_modified .media-album_details__bottom .media-album_date {
   display: inset-block;
   vertical-align: middle;
 }
 
+.search-video-list .media-album_modified .media-album_details__bottom .media-album_author,
 .search-media-list .media-album_modified .media-album_details__bottom .media-album_author {
   display: block;
   font-size: 13px;
   color: #939597;
 }
 
+.search-video-list .media-album_modified .media-album_details__bottom .media-album_author a,
 .search-media-list .media-album_modified .media-album_details__bottom .media-album_author a {
   color: #939597;
 }
 
+.search-video-list .media-album_group,
+.search-video-list .media-album_visibility,
 .search-media-list .media-album_group,
 .search-media-list .media-album_visibility {
   width: 20%;
@@ -16162,10 +16177,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #4d5c6d;
 }
 
+.search-video-list .media-album_group_name a,
 .search-media-list .media-album_group_name a {
   color: #4d5c6d;
 }
 
+.search-video-list .media-album_status,
 .search-media-list .media-album_status {
   display: block;
   font-size: 13px;
@@ -16173,19 +16190,27 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 @media screen and (max-width: 540px) {
+  .search-video-list .media-album_items,
   .search-media-list .media-album_items {
     flex-flow: column;
   }
+  .search-video-list .media-album_thumb,
   .search-media-list .media-album_thumb {
     margin-bottom: 15px;
     padding: 0;
   }
+  .search-video-list .media-album_thumb img,
   .search-media-list .media-album_thumb img {
     width: 100%;
     height: auto;
     max-height: 220px;
     object-fit: cover;
   }
+  .search-video-list .media-album_thumb,
+  .search-video-list .media-album_details,
+  .search-video-list .media-album_modified,
+  .search-video-list .media-album_group,
+  .search-video-list .media-album_visibility,
   .search-media-list .media-album_thumb,
   .search-media-list .media-album_details,
   .search-media-list .media-album_modified,
@@ -16196,6 +16221,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     width: 100% !important;
     line-height: inherit;
   }
+  .search-video-list .media-album_details .media-photo_count,
   .search-media-list .media-album_details .media-photo_count {
     margin-top: 0;
     margin-bottom: 10px;
