@@ -55,6 +55,12 @@ function groups_screen_group_admin_settings() {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
+		$allowed_video_status = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
+		$video_status         = isset( $_POST['group-video-status'] ) && in_array( $_POST['group-video-status'], (array) $allowed_video_status ) ? $_POST['group-video-status'] : 'members';
+
+
+		// Checked against a whitelist for security.
+		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
 		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
 
@@ -95,7 +101,7 @@ function groups_screen_group_admin_settings() {
 			bp_groups_set_group_type( bp_get_current_group_id(), $current_types );
 		}
 
-		if ( ! groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $album_status, $message_status ) ) {
+		if ( ! groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
 			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss' ) );

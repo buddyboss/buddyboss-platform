@@ -14,9 +14,13 @@ switch ( bp_current_action() ) :
 
 	// Home/Video.
 	case 'videos':
-		if ( bp_is_group_video() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
+		if ( bp_is_group_video() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
 			bp_get_template_part( 'video/add-video' );
-		endif;
+        } else {
+			?>
+            <h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
+			<?php
+        }
 
 		bp_nouveau_group_hook( 'before', 'video_content' );
 

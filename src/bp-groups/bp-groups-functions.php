@@ -351,12 +351,16 @@ function groups_edit_base_group_details( $args = array() ) {
  * @param int|bool    $parent_id Parent group ID.
  * @param string|bool $media_status Optional. Who is allowed to manage media
  *                                   to the group. 'members', 'mods', or 'admins'.
+ * @param string|bool $document_status Optional. Who is allowed to manage document
+ *                                   to the group. 'members', 'mods', or 'admins'.
+ * @param string|bool $video_status Optional. Who is allowed to manage video
+ *                                   to the group. 'members', 'mods', or 'admins'.
  * @param string|bool $album_status Optional. Who is allowed to manage albums if media is enabled with album support.
  *                                   to the group. 'members', 'mods', or 'admins'.
  *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $album_status = false, $message_status = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $video_status = false, $album_status = false, $message_status = false ) {
 
 	$group               = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -365,7 +369,7 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	 * Before we potentially switch the group status, if it has been changed to public
 	 * from private and there are outstanding membership requests, auto-accept those requests.
 	 */
-	if ( 'private' == $group->status && 'public' == $status ) {
+	if ( 'private' == $group->status && 'public' === $status ) {
 		groups_accept_all_pending_membership_requests( $group->id );
 	}
 
@@ -399,6 +403,11 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the document status.
 	if ( $document_status ) {
 		groups_update_groupmeta( $group->id, 'document_status', $document_status );
+	}
+
+	// Set the video status.
+	if ( $video_status ) {
+		groups_update_groupmeta( $group->id, 'video_status', $video_status );
 	}
 
 	// Set the album status.
@@ -4306,7 +4315,7 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 		return false;
 	}
 
-	$status   = bp_group_get_media_status( $group_id );
+	$status   = bp_group_get_video_status( $group_id );
 	$is_admin = groups_is_user_admin( $user_id, $group_id );
 	$is_mod   = groups_is_user_mod( $user_id, $group_id );
 

@@ -265,7 +265,7 @@ function bp_groups_admin_load() {
 		wp_style_add_data( 'bp_groups_admin_css', 'suffix', $min );
 	}
 
-	if ( $doaction && 'save' == $doaction ) {
+	if ( $doaction && 'save' === $doaction ) {
 		// Get group ID.
 		$group_id = isset( $_REQUEST['gid'] ) ? (int) $_REQUEST['gid'] : '';
 
@@ -364,7 +364,7 @@ function bp_groups_admin_load() {
 		$media_status         = in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
 
 		/**
-		 * Filters the allowed media status values for the group.
+		 * Filters the allowed document status values for the group.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
@@ -374,6 +374,16 @@ function bp_groups_admin_load() {
 		$document_status         = in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
 
 		/**
+		 * Filters the allowed video status values for the group.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $value Array of allowed media statuses.
+		 */
+		$allowed_video_status = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
+		$video_status         = in_array( $_POST['group-video-status'], (array) $allowed_video_status ) ? $_POST['group-video-status'] : 'members';
+
+		/**
 		 * Filters the allowed album status values for the group.
 		 *
 		 * @since BuddyBoss 1.0.0
@@ -381,7 +391,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed album statuses.
 		 */
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
-		$album_status         = in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -393,7 +403,7 @@ function bp_groups_admin_load() {
 		$allowed_message_status = apply_filters( 'groups_allowed_group_message_status', array( 'members', 'mods', 'admins' ) );
 		$message_status         = in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'members';
 
-		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $document_status, $album_status, $message_status ) ) {
+		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
 			$error = $group_id;
 		}
 
@@ -713,7 +723,8 @@ function bp_groups_admin_edit() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						), bp_get_admin_url( 'admin.php' )
+						),
+						bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -735,7 +746,8 @@ function bp_groups_admin_edit() {
 								'page'   => 'bp-groups',
 								'create' => 'create-from-admin',
 								'action' => 'edit',
-							), bp_get_admin_url( 'admin.php' )
+							),
+							bp_get_admin_url( 'admin.php' )
 						)
 					);
 					?>
@@ -967,7 +979,8 @@ function bp_process_create_group_admin() {
 				'page'   => 'bp-groups',
 				'gid'    => $new_group_id,
 				'action' => 'edit',
-			), bp_get_admin_url( 'admin.php' )
+			),
+			bp_get_admin_url( 'admin.php' )
 		)
 	);
 	exit();
@@ -1110,7 +1123,8 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						), bp_get_admin_url( 'admin.php' )
+						),
+						bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -1137,7 +1151,8 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						), bp_get_admin_url( 'admin.php' )
+						),
+						bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -1184,6 +1199,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	$media_status         = bp_group_get_media_status( $item->id );
 	$album_status         = bp_group_get_album_status( $item->id );
 	$document_status      = bp_group_get_document_status( $item->id );
+	$video_status         = bp_group_get_video_status( $item->id );
 	$message_status       = bp_group_get_message_status( $item->id );
 	?>
 
@@ -1251,6 +1267,18 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 				<label for="bp-group-document-status-admins"><input type="radio" name="group-document-status" id="bp-group-document-status-admins" value="admins" <?php checked( $document_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
 			</fieldset>
 		</div>
+	<?php endif; ?>
+
+	<?php if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) : ?>
+        <div class="bp-groups-settings-section" id="bp-groups-settings-section-video-status">
+            <fieldset>
+                <legend><?php _e( 'Who can manage videos in this group?', 'buddyboss' ); ?></legend>
+
+                <label for="bp-group-video-status-members"><input type="radio" name="group-video-status" id="bp-group-video-status-members" value="members" <?php checked( $video_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
+                <label for="bp-group-video-status-mods"><input type="radio" name="group-video-status" id="bp-group-video-status-mods" value="mods" <?php checked( $video_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+                <label for="bp-group-video-status-admins"><input type="radio" name="group-video-status" id="bp-group-video-status-admins" value="admins" <?php checked( $video_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+            </fieldset>
+        </div>
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) : ?>
@@ -1569,10 +1597,10 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 			<?php
 
 			foreach ( $types as $type ) :
-				if ( isset( $type->labels['singular_name'] ) && !empty( $type->labels['singular_name'] ) ) :
-				?>
+				if ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) :
+					?>
 					<option value="<?php echo esc_attr( $type->name ); ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
-				<?php
+					<?php
 				endif;
 			endforeach;
 
@@ -2308,7 +2336,7 @@ function bp_group_type_show_data( $column, $post_id ) {
 
 		case 'total_groups':
 			$group_key      = bp_group_get_group_type_key( $post_id );
-			$group_type_url = bp_get_admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
+			$group_type_url = bp_get_admin_url() . 'admin.php?page=bp-groups&bp-group-type=' . $group_key;
 			printf(
 				__( '<a href="%1$s">%2$s</a>', 'buddyboss' ),
 				esc_url( $group_type_url ),

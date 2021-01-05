@@ -175,7 +175,7 @@ function groups_action_create_group() {
 			groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $media_status );
 
 			/**
-			 * Filters the allowed media statuses.
+			 * Filters the allowed document statuses.
 			 *
 			 * @since BuddyBoss 1.0.0
 			 *
@@ -187,6 +187,20 @@ function groups_action_create_group() {
 			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'document_status', $document_status );
+
+			/**
+			 * Filters the allowed video statuses.
+			 *
+			 * @since BuddyBoss 1.0.0
+			 *
+			 * @param array $value Array of statuses allowed.
+			 *                     Possible values are 'members,
+			 *                     'mods', and 'admins'.
+			 */
+			$allowed_video_status = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
+			$video_status         = ! empty( $_POST['group-video-status'] ) && in_array( $_POST['group-video-status'], (array) $allowed_video_status ) ? $_POST['group-video-status'] : 'members';
+
+			groups_update_groupmeta( $bp->groups->new_group_id, 'video_status', $video_status );
 
 			/**
 			 * Filters the allowed album statuses.

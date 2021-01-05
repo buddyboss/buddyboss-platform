@@ -2664,6 +2664,25 @@ function bp_group_show_document_status_setting( $setting, $group = false ) {
 }
 
 /**
+ * Output the 'checked' value, if needed, for a given document_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_video_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$video_status = bp_group_get_video_status( $group_id );
+
+	if ( $setting === $video_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
  * Get the media status of a group.
  *
  * This function can be used either in or out of the loop.
