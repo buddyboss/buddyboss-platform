@@ -2661,6 +2661,20 @@ function bp_core_get_components( $type = 'all' ) {
 			</ul>
 			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
 		),
+		'performance'       => array(
+			'title'       => __( 'API Caching', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-performance',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss' ),
+			'default'     => false,
+		),
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
