@@ -589,14 +589,25 @@ function bp_video_link() {
 function bp_get_video_link() {
 	global $video_template;
 
+	if ( ! empty( $video_template->video->group_id ) ) {
+		$group = buddypress()->groups->current_group;
+		if ( ! isset( $group->id ) || $group->id !== $video_template->video->group_id ) {
+			$group = groups_get_group( $video_template->videoa->group_id );
+		}
+		$group_link = bp_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . bp_get_media_slug() );
+	} else {
+		$url = trailingslashit( bp_core_get_user_domain( bp_get_video_user_id() ) . bp_get_video_slug() );
+	}
+
 	/**
 	 * Filters the video ID being displayed.
 	 *
-	 * @param int $id The video attachment ID.
+	 * @param string $url The video url ID.
 	 *
 	 * @since BuddyBoss 1.6.0
 	 */
-	return apply_filters( 'bp_get_video_link', $video_template->video->video_link );
+	return apply_filters( 'bp_get_video_link', $url );
 }
 
 /**
