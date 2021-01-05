@@ -23,7 +23,7 @@ $class = ''; // used.
 if ( $attachment_id && bp_get_video_activity_id() ) {
 	$class = ''; // used.
 }
-$video_link    = bp_get_video_link();
+$video_link    = bp_get_videos_link();
 $video_created = bp_get_video_date_created();
 ?>
 

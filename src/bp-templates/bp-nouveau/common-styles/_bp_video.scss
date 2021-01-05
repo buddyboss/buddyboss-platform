@@ -99,6 +99,7 @@
 		width: 52px;
 		opacity: 0.8;
 		border: 0;
+		border-radius: 100%;
 		transition: all ease 0.3s !important;
 		z-index: 1;
 
@@ -611,7 +612,7 @@
 		}
 
 		.video-thumb-list {
-			margin: 0;
+			margin: 0 !important;
 			display: flex;
 			height: 100%;
 
@@ -637,7 +638,7 @@
 				height: 100%;
 				padding: 0 0 0 10px;
 				margin: 0;
-				list-style: none;
+				list-style: none !important;
 
 				.bb-action-check-wrap {
 					visibility: visible;

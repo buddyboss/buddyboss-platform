@@ -11966,6 +11966,7 @@ h2.bbp-form-title.entry-title {
   -ms-flex: 0 0 50%;
   flex: 0 0 50%;
   max-width: 50%;
+  position: static;
 }
 
 #bbpress-forums .bb-activity-media-wrap.forums-video-wrap .bb-activity-video-elem.act-grid-1-2 .bb-item-cover-wrap {
@@ -18597,6 +18598,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: 52px;
   opacity: 0.8;
   border: 0;
+  border-radius: 100%;
   transition: all ease 0.3s !important;
   z-index: 1;
 }
@@ -19080,7 +19082,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list {
-  margin: 0;
+  margin: 0 !important;
   display: flex;
   height: 100%;
 }
@@ -19107,7 +19109,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   height: 100%;
   padding: 0 0 0 10px;
   margin: 0;
-  list-style: none;
+  list-style: none !important;
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap {

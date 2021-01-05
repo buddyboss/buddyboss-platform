@@ -570,7 +570,7 @@ function bp_get_video_attachment_id() {
 }
 
 /**
- * Output the video attachment ID.
+ * Output the video url.
  *
  * @since BuddyBoss 1.6.0
  */
@@ -589,16 +589,7 @@ function bp_video_link() {
 function bp_get_video_link() {
 	global $video_template;
 
-	if ( ! empty( $video_template->video->group_id ) ) {
-		$group = buddypress()->groups->current_group;
-		if ( ! isset( $group->id ) || $group->id !== $video_template->video->group_id ) {
-			$group = groups_get_group( $video_template->videoa->group_id );
-		}
-		$group_link = bp_get_group_permalink( $group );
-		$url        = trailingslashit( $group_link . bp_get_media_slug() );
-	} else {
-		$url = trailingslashit( bp_core_get_user_domain( bp_get_video_user_id() ) . bp_get_video_slug() );
-	}
+	$url = $video_template->video->video_link;
 
 	/**
 	 * Filters the video ID being displayed.
@@ -1831,4 +1822,45 @@ function bp_get_video_author() {
 	 * @param int $id The Video author id.
 	 */
 	return apply_filters( 'bp_get_video_author', $author );
+}
+
+/**
+ * Output the video url.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_videos_link() {
+	echo bp_get_videos_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Return the video attachment ID.
+ *
+ * @return int The video attachment ID.
+ * @global object $video_template {@link BP_Video_Template}
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_get_videos_link() {
+	global $video_template;
+
+	if ( ! empty( $video_template->video->group_id ) ) {
+		$group = buddypress()->groups->current_group;
+		if ( ! isset( $group->id ) || $group->id !== $video_template->video->group_id ) {
+			$group = groups_get_group( $video_template->videoa->group_id );
+		}
+		$group_link = bp_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . bp_get_media_slug() );
+	} else {
+		$url = trailingslashit( bp_core_get_user_domain( bp_get_video_user_id() ) . bp_get_video_slug() );
+	}
+
+	/**
+	 * Filters the video ID being displayed.
+	 *
+	 * @param string $url The video url ID.
+	 *
+	 * @since BuddyBoss 1.6.0
+	 */
+	return apply_filters( 'bp_get_videos_link', $url );
 }

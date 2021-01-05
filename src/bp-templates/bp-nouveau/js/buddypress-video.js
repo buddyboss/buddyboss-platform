@@ -931,7 +931,7 @@ window.bp = window.bp || {};
 			this.dropzone_video_thumb = [];
 			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).hide();
 			$( '.bp-video-thumbnail-uploader' ).removeClass( 'opened-edit-thumbnail' );
-			$( '.bp-video-thumbnail-uploader' ).find( '.video-thumb-list' ).html( '' );
+			$( '.bp-video-thumbnail-uploader' ).find( '.video-thumb-list' ).addClass( 'loading' ).html( '' );
 			$( window ).scroll();
 		},
 
@@ -1899,6 +1899,7 @@ window.bp = window.bp || {};
 				self.getVideosDescription();
 			}
 
+			$( '.bb-media-model-wrapper.media' ).hide();
 			$( '.bb-media-model-wrapper.document' ).hide();
 			$( '.bb-media-model-wrapper.video' ).show();
 			self.is_open_video = true;
@@ -1964,7 +1965,7 @@ window.bp = window.bp || {};
 							is_forum: false
 						};
 
-						if ( video_element.closest( '.forums-media-wrap' ).length ) {
+						if ( video_element.closest( '.forums-video-wrap' ).length ) {
 							m.is_forum = true;
 						}
 
