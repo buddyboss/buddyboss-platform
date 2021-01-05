@@ -117,7 +117,6 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.ac-video-move', this.openVideoMove.bind( this ) );
 			$( document ).on( 'change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$( document ).on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
-			$( document ).on( 'click', '.video-action_list .edit_video', this.editVideo.bind( this ) );
 			$( document ).on( 'click', '.video-action_list .video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 
 			// Video Album, Video Directory.
@@ -1119,13 +1118,6 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-		},
-
-		editVideo: function ( e ) {
-			e.preventDefault();
-
-			// ToDo: Open Edit Popup here
-			console.log( 'Open Edit Popup here' );
 		},
 
 		deleteVideo: function ( event ) {
