@@ -931,7 +931,7 @@ window.bp = window.bp || {};
 			this.dropzone_video_thumb = [];
 			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).hide();
 			$( '.bp-video-thumbnail-uploader' ).removeClass( 'opened-edit-thumbnail' );
-			$( '.bp-video-thumbnail-uploader' ).find( '.video-thumb-list' ).html( '' );
+			$( '.bp-video-thumbnail-uploader' ).find( '.video-thumb-list' ).addClass( 'loading' ).html( '' );
 			$( window ).scroll();
 		},
 

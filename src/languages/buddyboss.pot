@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-05 12:31:47+00:00\n"
+"POT-Creation-Date: 2021-01-05 14:04:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -923,7 +923,7 @@ msgstr ""
 #: bp-document/bp-document-template.php:327
 #: bp-document/bp-document-template.php:1334 bp-media/bp-media-template.php:320
 #: bp-media/bp-media-template.php:1329 bp-video/bp-video-template.php:324
-#: bp-video/bp-video-template.php:1285
+#: bp-video/bp-video-template.php:1276
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
@@ -4136,7 +4136,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:22
 #: bp-document/bp-document-functions.php:1967
-#: bp-video/bp-video-functions.php:2718
+#: bp-video/bp-video-functions.php:2724
 msgid "Video"
 msgstr ""
 
@@ -5265,15 +5265,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
+"content will be unhidden</li>\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -7996,13 +7996,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8959,48 +8959,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1922
-#: bp-video/bp-video-functions.php:2673
+#: bp-video/bp-video-functions.php:2679
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1927
-#: bp-video/bp-video-functions.php:2678
+#: bp-video/bp-video-functions.php:2684
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1932
-#: bp-video/bp-video-functions.php:2683
+#: bp-video/bp-video-functions.php:2689
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1937
-#: bp-video/bp-video-functions.php:2688
+#: bp-video/bp-video-functions.php:2694
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1942
-#: bp-video/bp-video-functions.php:2693
+#: bp-video/bp-video-functions.php:2699
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1947
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2698
+#: bp-video/bp-video-functions.php:2704
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1952
-#: bp-video/bp-video-functions.php:2703
+#: bp-video/bp-video-functions.php:2709
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1957
-#: bp-video/bp-video-functions.php:2708
+#: bp-video/bp-video-functions.php:2714
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1962
-#: bp-video/bp-video-functions.php:2713
+#: bp-video/bp-video-functions.php:2719
 msgid "Text"
 msgstr ""
 
