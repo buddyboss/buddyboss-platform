@@ -110,12 +110,12 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql['select'] .= ' COUNT( DISTINCT v.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT m.id ) ';
 			} else {
-				$sql['select'] .= $wpdb->prepare( " DISTINCT v.id, 'videos' as type, v.title LIKE %s AS relevance, v.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT m.id, 'videos' as type, m.title LIKE %s AS relevance, m.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql['from'] = " FROM {$bp->video->table_name} v";
+			$sql['from'] = " FROM {$bp->video->table_name} m";
 
 			/**
 			 * Filter the MySQL JOIN clause for the video Search query.
@@ -135,14 +135,14 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 			$where_conditions[] = $wpdb->prepare(
 				" (
 					(
-						v.title LIKE %s
+						m.title LIKE %s
 					)
 					AND
 					(
-							( v.type = 'video' AND v.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( v.type = 'video' AND v.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND v.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( v.type = 'video' AND v.user_id IN ( '" . implode( "','", $friends ) . "' ) AND v.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( is_user_logged_in() ? " OR ( v.type = 'video' AND v.user_id = '" . bp_loggedin_user_id() . "' AND v.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( m.type = 'video' AND m.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( m.type = 'video' AND m.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND m.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( m.type = 'video' AND m.user_id IN ( '" . implode( "','", $friends ) . "' ) AND m.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( is_user_logged_in() ? " OR ( m.type = 'video' AND m.user_id = '" . bp_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					')
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
