@@ -4449,7 +4449,7 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	if ( ! post_type_supports( $post->post_type, 'buddypress-activity' ) ) {
 		return;
 	}
-
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 	/**
 	 * Fires before post type transition catch in activity
 	 *
@@ -4539,6 +4539,7 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		 */
 		do_action( 'bp_activity_post_type_transition_status_' . $post->post_type, $post, $new_status, $old_status );
 	}
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 }
 add_action( 'transition_post_status', 'bp_activity_catch_transition_post_type_status', 10, 3 );
 
