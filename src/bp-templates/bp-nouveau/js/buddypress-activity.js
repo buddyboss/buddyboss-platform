@@ -999,14 +999,15 @@ window.bp = window.bp || {};
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
-				$.scrollTo(
+                /* Disable comments links page scroll
+                $.scrollTo(
 					form,
 					500,
 					{
 						offset:-100,
 						easing:'swing'
 					}
-				);
+				);*/
 
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
