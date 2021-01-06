@@ -340,6 +340,7 @@ function bp_video_settings_callback_video_allowed_per_batch() {
 	   name="bp_video_allowed_per_batch"
 	   id="bp_video_allowed_per_batch"
 	   value="<?php echo esc_attr( bp_video_allowed_upload_video_per_batch() ); ?>"
+	   class="small-text"
 />
 
 	<?php

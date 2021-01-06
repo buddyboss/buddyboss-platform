@@ -19184,7 +19184,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li > div,
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li > div a {
   height: 100%;
-  display: flex;
+  display: flex !important;
   position: relative;
 }
 
