@@ -3716,22 +3716,17 @@ function bp_document_get_report_link( $args = array() ) {
 }
 
 /**
- * Normally these filters allow you to change the default Access Control List (ACL)
- * permission for an original file and its thumbnails when offloaded to bucket.
- * However, MinIO doesn't do ACLs and defaults to private. So while this filter handler
- * doesn't change anything in the bucket, it does tell WP Offload Media it needs sign URLs.
- * In this handler we're just accepting the ACL and not bothering with any other params
- * from the two filters.
+ * Make all the document to private signed URL if someone using the offload media to store in AWS.
  *
  * @handles `as3cf_upload_acl`
  * @handles `as3cf_upload_acl_sizes`
  *
- * @param string $acl defaults to 'public-read'
+ * @param string $acl defaults to 'public-read'.
  *
- * @return string
+ * @return string $acl make the document to private with signed url.
  *
- * Note: Only enable this if you are happy with signed URLs and haven't changed the bucket's policy to "Read Only" or similar.
  */
 function bp_document_private_upload_acl( $acl ) {
-	return 'private';
+	$acl = 'private';
+	return $acl;
 }

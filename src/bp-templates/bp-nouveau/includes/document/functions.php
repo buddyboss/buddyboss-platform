@@ -1072,15 +1072,9 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		if ( ! $preview_attachment_id ) {
 			$preview_attachment_id = $get_preview;
 		}
-		$document_id     = 'forbidden_' . $document_id;
-		$attachment_id   = 'forbidden_' . $preview_attachment_id;
-		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-
-		if ( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-			return wp_get_attachment_url( $preview_attachment_id );
-		} elseif ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
-		}
+		$document_id    = 'forbidden_' . $document_id;
+		$attachment_id  = 'forbidden_' . $preview_attachment_id;
+		$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ); //phpcs:ignore
 	}
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
