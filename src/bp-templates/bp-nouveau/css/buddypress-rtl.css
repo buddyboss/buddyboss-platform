@@ -18620,6 +18620,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   letter-spacing: 0.2px;
 }
 
+.bb-activity-video-elem .vjs-menu-button-popup .vjs-menu-content li,
+.bb-video-thumb .vjs-menu-button-popup .vjs-menu-content li,
+.bb-media-section .vjs-menu-button-popup .vjs-menu-content li {
+  list-style-type: none !important;
+}
+
 .bb-activity-video-elem .video-js.vjs-has-started ~ .bb-video-duration,
 .bb-video-thumb .video-js.vjs-has-started ~ .bb-video-duration,
 .bb-media-section .video-js.vjs-has-started ~ .bb-video-duration {
