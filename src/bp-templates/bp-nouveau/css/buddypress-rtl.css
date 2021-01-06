@@ -18617,6 +18617,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: 0.2px;
 }
 
 .bb-activity-video-elem .video-js.vjs-has-started ~ .bb-video-duration,
@@ -18717,7 +18718,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 0;
   border: 0;
   width: 4em;
+  font-size: 10px;
   line-height: 1.3;
+  box-shadow: none;
+  text-shadow: none;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar button > .vjs-icon-placeholder:before,
@@ -18726,7 +18730,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js .vjs-control-bar button:hover > .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar button > .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar button:hover > .vjs-icon-placeholder:before {
-  line-height: 1;
+  line-height: 1.6;
 }
 
 .bb-activity-video-wrap .bb-activity-video-elem .video-js:after {
