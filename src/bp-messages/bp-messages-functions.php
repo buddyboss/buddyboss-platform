@@ -859,6 +859,10 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		);
 
 		$group      = bp_messages_get_meta( $id, 'group_id', true );
+		$post_group = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT );
+		if ( ! $group && isset( $post_group ) ) {
+			$group = $post_group;
+		}
 		$group_name = bp_get_group_name( groups_get_group( $group ) );
 
 		bp_send_email(
