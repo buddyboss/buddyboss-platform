@@ -18583,6 +18583,42 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
+.bb-activity-video-elem .video-js.vjs-error:after,
+.bb-activity-video-elem .video-js.vjs-error .vjs-big-play-button,
+.bb-video-thumb .video-js.vjs-error:after,
+.bb-video-thumb .video-js.vjs-error .vjs-big-play-button,
+.bb-media-section .video-js.vjs-error:after,
+.bb-media-section .video-js.vjs-error .vjs-big-play-button {
+  display: none;
+}
+
+.bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog,
+.bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog,
+.bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before,
+.bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before,
+.bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before {
+  color: #fff;
+  content: "\f534";
+  font-size: 25px;
+  font-family: "dashicons";
+  /* stylelint-disable-line */
+  text-shadow: none;
+  margin-top: -45px;
+}
+
+.bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content,
+.bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content,
+.bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .bb-activity-video-elem .video-js.vjs-has-started ~ .bb-video-duration,
 .bb-video-thumb .video-js.vjs-has-started ~ .bb-video-duration,
 .bb-media-section .video-js.vjs-has-started ~ .bb-video-duration {
