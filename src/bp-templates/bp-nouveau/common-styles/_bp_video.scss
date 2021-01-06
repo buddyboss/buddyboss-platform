@@ -114,6 +114,10 @@
 
 	}
 
+	.vjs-menu-button-popup .vjs-menu-content li {
+		list-style-type: none !important;
+	}
+
 	.video-js.vjs-has-started {
 
 		~ .bb-video-duration {
