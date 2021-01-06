@@ -806,6 +806,10 @@ window.bp = window.bp || {};
 								return window.location.href = response.data.redirect;
 							}
 
+							if ( response.data.parent_activity_id && response.data.activity ) {
+								$( '#buddypress #activity-stream ul.activity-list li#activity-' +  response.data.parent_activity_id ).replaceWith( response.data.activity );
+							}
+
 							if ( activity_comment_id ) {
 								deleted_comments_count = 1;
 
