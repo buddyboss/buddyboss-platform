@@ -27418,7 +27418,7 @@
        * @type {EventTarget~Event}
        */
 
-      // this.trigger('error');
+      this.trigger('error');
       return;
     }
       /**
