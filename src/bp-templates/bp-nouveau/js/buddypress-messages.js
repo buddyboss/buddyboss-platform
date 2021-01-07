@@ -52,6 +52,10 @@ window.bp = window.bp || {};
 					root: BP_Nouveau.messages.rootUrl
 				}
 			);
+
+			// Listen to events ("Add hooks!").
+			this.addListeners();
+
 		},
 
 		dropzoneView: function() {
@@ -160,6 +164,21 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+		},
+
+		/**
+		 * [addListeners description]
+		 */
+		addListeners: function () {
+
+			$( document ).on( 'click', '.closeModalErrorPopup', this.closeModalPopup.bind( this ) );
+
+		},
+
+		closeModalPopup: function ( event ) {
+			event.preventDefault();
+
+			$( '.open-popup' ).remove();
 		},
 
 		removeTinyMCE: function() {
@@ -1137,8 +1156,6 @@ window.bp = window.bp || {};
 			template: bp.template( 'messages-video' ),
 			video : [],
 
-
-
 			initialize: function () {
 				this.model.set( 'video', this.video );
 				document.addEventListener( 'messages_video_toggle', this.toggle_video_uploader.bind( this ) );
@@ -1247,7 +1264,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							this.removeFile( file );
 						}
 					}
