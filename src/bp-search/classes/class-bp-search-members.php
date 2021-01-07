@@ -267,6 +267,34 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$WHERE[] = '(' . implode( ' OR ', $where_fields ) . ')';
 			}
 
+			/**
+			 * Exlude the hide profile type users
+			 */
+			$bp_member_type_ids = bp_get_removed_member_types();
+			if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+				
+				$types = [];
+				foreach ( $bp_member_type_ids as $single ) {
+					$types[] = $single['name'];
+				}
+
+				$tax_query = new WP_Tax_Query(
+					array(
+						array(
+							'taxonomy' => bp_get_member_type_tax_name(),
+							'field'    => 'name',
+							'operator' => 'NOT IN',
+							'terms'    => $types,
+						),
+					)
+				);
+
+				$sql_clauses = $tax_query->get_sql( 'u', 'ID' );
+				if ( isset( $sql_clauses['where'] ) ) {
+					$WHERE[] = preg_replace( '/^\s*AND\s*/', '', $sql_clauses['where'] );;
+				}
+			}
+
 			// other conditions
 			// $WHERE[] = " a.component = 'members' ";
 			// $WHERE[] = " a.type = 'last_activity' ";
