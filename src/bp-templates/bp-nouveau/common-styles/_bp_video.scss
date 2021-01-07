@@ -645,6 +645,12 @@
 				&.dz-complete .dz-remove {
 					background: #fd4343 !important;
 					color: #fff !important;
+
+					&:after {
+						top: -1px;
+						left: -1px;
+					}
+
 				}
 
 			}
