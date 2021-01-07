@@ -577,6 +577,39 @@ function bp_nouveau_ajax_post_update() {
 		$status  = groups_get_current_group()->status;
 	}
 
+	if (
+		bp_is_active( 'media' ) &&
+		! empty( $_POST['media'] )
+	) {
+		$group_id = ( 'group' === $object ) ? $item_id : 0;
+		if ( ! bp_media_user_can_upload( bp_loggedin_user_id(), $group_id ) ) {
+			$message = sprintf(
+			/* translators: 1: string or media and medias. 2: group text. */
+				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
+				_n( 'media', 'medias', count( $_POST['media'] ), 'buddyboss' ),
+				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss' ) : '' )
+			);
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+	}
+
+	if (
+		bp_is_active( 'document' ) &&
+		! empty( $_POST['document'] )
+	) {
+		$group_id = ( 'group' === $object ) ? $item_id : 0;
+		if ( ! bp_document_user_can_upload( bp_loggedin_user_id(), $group_id ) ) {
+			$message = sprintf(
+			/* translators: 1: string or media and medias. 2: group text. */
+				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
+				_n( 'document', 'documents', count( $_POST['document'] ), 'buddyboss' ),
+				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss' ) : '' )
+			);
+
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+	}
+
 	$privacy = 'public';
 	if ( ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ) ) ) {
 		$privacy = $_POST['privacy'];
