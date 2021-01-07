@@ -163,6 +163,9 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						if ( response.success ) {
+							if( $( '.bb-video-thumb a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).length ) {
+								$( '.bb-video-thumb a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).attr( 'src', response.data.thumbnail );
+							}
 							if( $( '.bb-activity-video-elem a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).length ) {
 								$( '.bb-activity-video-elem a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).attr( 'src', response.data.thumbnail );
 							}
