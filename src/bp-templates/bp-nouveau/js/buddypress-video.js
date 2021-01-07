@@ -930,6 +930,7 @@ window.bp = window.bp || {};
 			this.video_thumb_dropzone_obj.destroy();
 			this.dropzone_video_thumb = [];
 			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).hide();
+			$( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).hide();
 			$( '.bp-video-thumbnail-uploader' ).removeClass( 'opened-edit-thumbnail' );
 			$( '.bp-video-thumbnail-uploader' ).find( '.video-thumb-list' ).addClass( 'loading' ).html( '' );
 			$( window ).scroll();
