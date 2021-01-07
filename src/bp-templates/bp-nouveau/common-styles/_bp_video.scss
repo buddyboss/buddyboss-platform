@@ -607,6 +607,8 @@
 		}
 
 		.dropzone {
+			max-height: 120px;
+			overflow: hidden;
 
 			&.dz-started {
 				margin: 0;
@@ -616,6 +618,7 @@
 				margin: 0;
 				padding: 15px 0;
 				min-height: auto;
+				height: 120px;
 
 				.dz-button,
 				.dz-button:hover {
@@ -627,7 +630,7 @@
 
 			}
 
-			.dz-processing {
+			.dz-preview {
 				margin: 0;
 				width: 100%;
 

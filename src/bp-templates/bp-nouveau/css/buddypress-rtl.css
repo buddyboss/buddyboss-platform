@@ -19093,6 +19093,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-bottom: 0;
 }
 
+.video-thumbnail-content .bb-dropzone-wrap .dropzone {
+  max-height: 120px;
+  overflow: hidden;
+}
+
 .video-thumbnail-content .bb-dropzone-wrap .dropzone.dz-started {
   margin: 0;
 }
@@ -19101,6 +19106,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin: 0;
   padding: 15px 0;
   min-height: auto;
+  height: 120px;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-default .dz-button,
@@ -19111,27 +19117,27 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   background-position: center 6px !important;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-processing {
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview {
   margin: 0;
   width: 100%;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-processing .dz-image {
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image {
   height: 120px;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-processing .dz-image img {
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image img {
   max-width: inherit;
   object-fit: cover;
   width: 100%;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-processing.dz-complete .dz-remove {
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove {
   background: #fd4343 !important;
   color: #fff !important;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-processing.dz-complete .dz-remove:after {
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove:after {
   top: -1px;
   right: -1px;
 }
