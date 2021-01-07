@@ -85,28 +85,39 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					self::mu_is_plugin_active( 'buddypress/bp-loader.php' )
 				) {
 
-					if ( self::mu_is_component_active( 'groups' ) ) {
-						require_once dirname( __FILE__ ) . '/integrations/class-bb-groups.php';
+					$group_integration = dirname( __FILE__ ) . '/integrations/class-bb-groups.php';
+					if ( self::mu_is_component_active( 'groups' ) && file_exists( $group_integration ) ) {
+						require_once $group_integration;
 						BB_Groups::instance();
 					}
-					if ( self::mu_is_component_active( 'members' ) ) {
-						require_once dirname( __FILE__ ) . '/integrations/class-bb-members.php';
+
+					$members_integration = dirname( __FILE__ ) . '/integrations/class-bb-groups.php';
+					if ( self::mu_is_component_active( 'members' ) && file_exists( $members_integration ) ) {
+						require_once $members_integration;
 						BB_Members::instance();
 					}
-					if ( self::mu_is_component_active( 'activity' ) ) {
-						require_once dirname( __FILE__ ) . '/integrations/class-bb-activity.php';
+
+					$activity_integration = dirname( __FILE__ ) . '/integrations/class-bb-activity.php';
+					if ( self::mu_is_component_active( 'activity' ) && file_exists( $activity_integration ) ) {
+						require_once $activity_integration;
 						BB_Activity::instance();
 					}
-					if ( self::mu_is_component_active( 'friends' ) ) {
-						require_once dirname( __FILE__ ) . '/integrations/class-bb-friends.php';
+
+					$friends_integration = dirname( __FILE__ ) . '/integrations/class-bb-friends.php';
+					if ( self::mu_is_component_active( 'friends' ) && file_exists( $friends_integration ) ) {
+						require_once $friends_integration;
 						BB_Friends::instance();
 					}
-					if ( self::mu_is_component_active( 'notifications' ) ) {
-						require_once dirname( __FILE__ ) . '/integrations/class-bb-notifications.php';
+
+					$notifications_integration = dirname( __FILE__ ) . '/integrations/class-bb-notifications.php';
+					if ( self::mu_is_component_active( 'notifications' ) && file_exists( $notifications_integration ) ) {
+						require_once $notifications_integration;
 						BB_Notifications::instance();
 					}
-					if ( self::mu_is_component_active( 'messages' ) ) {
-						require_once dirname( __FILE__ ) . '/integrations/class-bb-messages.php';
+
+					$messages_integration = dirname( __FILE__ ) . '/integrations/class-bb-messages.php';
+					if ( self::mu_is_component_active( 'messages' ) && file_exists( $messages_integration ) ) {
+						require_once $messages_integration;
 						BB_Messages::instance();
 					}
 				}
@@ -120,13 +131,22 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					self::mu_is_plugin_active( 'bbpress/bbpress.php' )
 				) {
 
-					require_once dirname( __FILE__ ) . '/integrations/class-bb-forums.php';
-					require_once dirname( __FILE__ ) . '/integrations/class-bb-topics.php';
-					require_once dirname( __FILE__ ) . '/integrations/class-bb-replies.php';
+					$forum_integration = dirname( __FILE__ ) . '/integrations/class-bb-forums.php';
+					$topic_integration = dirname( __FILE__ ) . '/integrations/class-bb-topics.php';
+					$reply_integration = dirname( __FILE__ ) . '/integrations/class-bb-replies.php';
 
-					BB_Forums::instance();
-					BB_Topics::instance();
-					BB_Replies::instance();
+					if ( file_exists( $forum_integration ) ) {
+						require_once $forum_integration;
+						BB_Forums::instance();
+					}
+					if ( file_exists( $topic_integration ) ) {
+						require_once $topic_integration;
+						BB_Topics::instance();
+					}
+					if ( file_exists( $reply_integration ) ) {
+						require_once $reply_integration;
+						BB_Replies::instance();
+					}
 				}
 
 				/**
