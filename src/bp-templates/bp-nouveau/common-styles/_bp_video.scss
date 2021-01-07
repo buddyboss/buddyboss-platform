@@ -627,14 +627,24 @@
 
 			}
 
-			.dz-preview {
+			.dz-processing {
 				margin: 0;
 				width: 100%;
 
-				.dz-image img {
-					max-width: inherit;
-					object-fit: cover;
-					width: 100%;
+				.dz-image {
+					height: 120px;
+
+					img {
+						max-width: inherit;
+						object-fit: cover;
+						width: 100%;
+					}
+
+				}
+
+				&.dz-complete .dz-remove {
+					background: #fd4343 !important;
+					color: #fff !important;
 				}
 
 			}
@@ -682,6 +692,7 @@
 				padding: 0 0 0 10px;
 				margin: 0;
 				list-style: none !important;
+				display: flex;
 
 				.bb-action-check-wrap {
 					visibility: visible;
