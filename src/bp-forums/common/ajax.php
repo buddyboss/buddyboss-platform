@@ -93,6 +93,7 @@ function bbp_do_ajax() {
 function bbp_ajax_response( $success = false, $content = '', $status = -1, $extras = array() ) {
 
 	// Set status to 200 if setting response as successful
+	global $redirect_url;
 	if ( ( true === $success ) && ( -1 === $status ) ) {
 		$status = 200;
 	}
@@ -107,6 +108,10 @@ function bbp_ajax_response( $success = false, $content = '', $status = -1, $extr
 	// Merge extra response parameters in
 	if ( ! empty( $extras ) && is_array( $extras ) ) {
 		$response = array_merge( $response, $extras );
+	}
+
+	if ( isset( $redirect_url ) ) {
+		$response['redirect_url'] = $redirect_url;
 	}
 
 	// Send back the JSON
