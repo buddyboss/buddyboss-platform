@@ -993,6 +993,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 				'type'    => 'info',
 				'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 			),
+			'media-video-loop-none'             => array(
+				'type'    => 'info',
+				'message' => __( 'Sorry, no photos & videos were found.', 'buddyboss' ),
+			),
 			'video-loop-none'                   => array(
 				'type'    => 'info',
 				'message' => __( 'Sorry, no videos were found.', 'buddyboss' ),
@@ -1045,14 +1049,14 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 				'type'    => 'loading',
 				'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 			),
-			'moderation-block-member-loading' => array(
+			'moderation-block-member-loading'   => array(
 				'type'    => 'loading',
 				'message' => __( 'Loading blocked members. Please wait.', 'buddyboss' ),
 			),
-			'moderation-requests-none' => array(
+			'moderation-requests-none'          => array(
 				'type'    => 'info',
 				'message' => __( 'No blocked members found.', 'buddyboss' ),
-			)
+			),
 		)
 	);
 

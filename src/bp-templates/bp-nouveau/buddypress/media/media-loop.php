@@ -37,7 +37,11 @@ if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 
 else :
 
-	bp_nouveau_user_feedback( 'media-loop-none' );
+	if ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) {
+		bp_nouveau_user_feedback( 'media-video-loop-none' );
+	} else {
+		bp_nouveau_user_feedback( 'media-loop-none' );
+	}
 
 endif;
 
