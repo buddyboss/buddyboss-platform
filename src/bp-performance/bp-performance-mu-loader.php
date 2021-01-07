@@ -18,7 +18,9 @@ if ( ! function_exists( 'bp_performance_loaded' ) ) {
 	 */
 	function bp_performance_loaded() {
 		require_once dirname( __FILE__ ) . '/classes/class-performance.php';
-		$performance = \BuddyBoss\Performance\Performance::instance();
-		$performance->start();
+		if ( class_exists( 'BuddyBoss\Performance\Performance' ) ) {
+			$performance = \BuddyBoss\Performance\Performance::instance();
+			$performance->start();
+		}
 	}
 }

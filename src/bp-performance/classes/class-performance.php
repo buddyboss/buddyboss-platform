@@ -91,7 +91,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 						BB_Groups::instance();
 					}
 
-					$members_integration = dirname( __FILE__ ) . '/integrations/class-bb-groups.php';
+					$members_integration = dirname( __FILE__ ) . '/integrations/class-bb-members.php';
 					if ( self::mu_is_component_active( 'members' ) && file_exists( $members_integration ) ) {
 						require_once $members_integration;
 						BB_Members::instance();
