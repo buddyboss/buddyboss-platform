@@ -1675,3 +1675,5 @@ video::-webkit-media-text-track-display {
   background-position: 50% 50%;
   background-size: cover;
 }
+
+.single-activity-video.video-js .vjs-fullscreen-control { display: none; }

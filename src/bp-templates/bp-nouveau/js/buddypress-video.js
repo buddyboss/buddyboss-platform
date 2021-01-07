@@ -2308,6 +2308,8 @@ window.bp = window.bp || {};
 		 */
 		setupGlobals: function () {
 
+			this.player = [];
+
 			// Video File Activity Preview.
 			bp.Nouveau.Video.Player.openPlayer();
 
@@ -2331,13 +2333,15 @@ window.bp = window.bp || {};
 
 		openPlayer: function () {
 
+			var player = this.player;
+
 			$( '.video-js:not(.loaded)' ).each(
 				function () {
 
 					var self    = this;
 					var options = {};
 
-					videojs(
+					player[ $( this ).attr('id') ] = videojs(
 						self,
 						options,
 					function onPlayerReady() {
@@ -2349,6 +2353,15 @@ window.bp = window.bp || {};
 					}
 					);
 
+					if( $( self ).hasClass( 'single-activity-video') ) {
+						var ele_id 		= $( this ).attr( 'id' );
+						var cus_button 	= player[ $( this ).attr( 'id' ) ].controlBar.addChild( 'button' );
+						cus_button.addClass( 'vjs-icon-square' );
+						cus_button.on( 'click', function() {
+							player[ele_id].pause();
+							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
+						} );
+					}
 					$( this ).addClass( 'loaded' );
 				}
 			);
