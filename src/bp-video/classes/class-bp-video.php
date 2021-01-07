@@ -1156,12 +1156,12 @@ class BP_Video {
 
 		$select_sql = 'SELECT COUNT(*)';
 
-		$from_sql = " FROM {$bp->video->table_name} v";
+		$from_sql = " FROM {$bp->video->table_name} m";
 
 		// Where conditions.
 		$where_conditions = array();
 
-		$where_conditions['group_sql'] = $wpdb->prepare( 'v.group_id = %s', $group_id );
+		$where_conditions['group_sql'] = $wpdb->prepare( 'm.group_id = %s', $group_id );
 
 		/**
 		 * Filters the MySQL WHERE conditions for the Video items get method.
