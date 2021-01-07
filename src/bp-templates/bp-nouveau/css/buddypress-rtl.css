@@ -11966,7 +11966,7 @@ h2.bbp-form-title.entry-title {
   -ms-flex: 0 0 50%;
   flex: 0 0 50%;
   max-width: 50%;
-  position: static;
+  position: relative;
 }
 
 #bbpress-forums .bb-activity-media-wrap.forums-video-wrap .bb-activity-video-elem.act-grid-1-2 .bb-item-cover-wrap {
@@ -18672,6 +18672,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-media-section .video-js .vjs-control-bar {
   bottom: 15px;
   background-color: transparent;
+  z-index: 1;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-time-control,
@@ -18739,7 +18740,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   line-height: 1.6;
 }
 
-.bb-activity-video-wrap .bb-activity-video-elem .video-js:after {
+.bb-activity-video-elem.is-visible .video-js:after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bb-activity-video-elem .video-js:after {
   content: " ";
   position: absolute;
   background: rgba(0, 0, 0, 0.35);
@@ -18753,12 +18759,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   opacity: 0;
 }
 
-.bb-activity-video-wrap .bb-activity-video-elem .video-js:not(.vjs-playing):hover:after {
+.bb-activity-video-elem:hover .video-js:not(.vjs-playing):after {
   visibility: visible;
   opacity: 1;
 }
 
-.bb-activity-video-wrap .bb-activity-video-elem .video-js:not(.vjs-playing):hover .vjs-big-play-button {
+.bb-activity-video-elem:hover .video-js:not(.vjs-playing) .vjs-big-play-button {
   opacity: 1;
 }
 

@@ -156,6 +156,7 @@
 		.vjs-control-bar {
 			bottom: 15px;
 			background-color: transparent;
+			z-index: 1;
 
 			.vjs-time-control {
 				font-size: 1.2em;
@@ -204,9 +205,14 @@
 	}
 }
 
-.bb-activity-video-wrap .bb-activity-video-elem .video-js {
+.bb-activity-video-elem.is-visible .video-js:after {
+	visibility: visible;
+	opacity: 1;
+}
 
-	&:after {
+.bb-activity-video-elem {
+
+	.video-js:after {
 		content: " ";
 		position: absolute;
 		background: rgba(0, 0, 0, 0.35);
@@ -220,7 +226,7 @@
 		opacity: 0;
 	}
 
-	&:not(.vjs-playing):hover {
+	&:hover .video-js:not(.vjs-playing) {
 
 		&:after {
 			visibility: visible;
