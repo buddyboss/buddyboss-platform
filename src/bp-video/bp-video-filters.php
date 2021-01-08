@@ -288,8 +288,6 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		?>
 		">
 				<?php
-				bp_get_template_part( 'video/video-move' );
-				bp_get_template_part( 'media/media-move' );
 				bp_get_template_part( 'video/add-video-thumbnail' );
 				while ( bp_video() ) {
 					bp_the_video();
