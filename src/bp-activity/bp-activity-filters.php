@@ -1676,7 +1676,7 @@ function bp_activity_media_add( $media ) {
 
 				// update activity meta
 				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
-				bp_activity_update_meta( $activity_id, 'bp_media_id', $media->id );
+				bp_activity_update_meta( $activity_id, 'bp_media_ids', $media->id );
 
 				// save attachment meta for activity
 				update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
@@ -1854,7 +1854,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 						// update activity meta to tell it is media activity.
 						bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
-						bp_activity_update_meta( $activity_id, 'bp_media_id', $old_media->id );
+						bp_activity_update_meta( $activity_id, 'bp_media_ids', $old_media->id );
 
 						// save attachment meta for activity.
 						update_post_meta( $old_media->attachment_id, 'bp_media_activity_id', $activity_id );
@@ -2000,7 +2000,7 @@ function bp_activity_document_add( $document ) {
 
 				// update activity meta.
 				bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
-				bp_activity_update_meta( $activity_id, 'bp_document_id', $document->id );
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', $document->id );
 
 				// save attachment meta for activity.
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
@@ -2177,7 +2177,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 						// update activity meta to tell it is document activity.
 						bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
-						bp_activity_update_meta( $activity_id, 'bp_document_id', $old_document->id );
+						bp_activity_update_meta( $activity_id, 'bp_document_ids', $old_document->id );
 
 						// save attachment meta for activity.
 						update_post_meta( $old_document->attachment_id, 'bp_document_activity_id', $activity_id );
