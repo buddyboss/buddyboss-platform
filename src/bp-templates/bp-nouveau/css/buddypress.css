@@ -18729,7 +18729,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js .vjs-control-bar button:hover,
 .bb-media-section .video-js .vjs-control-bar button,
 .bb-media-section .video-js .vjs-control-bar button:hover {
-  background-color: transparent;
+  background-color: transparent !important;
   padding: 0;
   border: 0;
   width: 4em;
