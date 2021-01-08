@@ -4454,6 +4454,7 @@ span.dashicons.dashicons-admin-file:before {
   margin-bottom: 0.5em;
 }
 
+.buddypress-wrap .activity-comments .acomment-content .bb-activity-video-wrap,
 .buddypress-wrap .activity-comments .acomment-content .bb-activity-media-wrap {
   margin: 15px 0;
 }

@@ -52,7 +52,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 				</a>
 				<div class="video-action_list item-action_list">
 					<ul>
-						<li class="edit_thumbnail_video">
+						<li class="edit_thumbnail_video video-action-class">
 							<a href="#" data-action="video" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
 						</li>
 						<?php
@@ -60,13 +60,13 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 							if ( $can_move ) {
 								if ( $is_comment_vid ) {
 									?>
-									<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+									<li class="move_video move-disabled video-action-class" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 										<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 									</li>
 									<?php
 								} else {
 									?>
-									<li class="move_video">
+									<li class="move_video video-action-class">
 										<a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 									</li>
 									<?php
@@ -74,7 +74,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 							}
 						}
 						?>
-						<li class="delete_file">
+						<li class="delete_file video-action-class">
 							<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 						</li>
 					</ul>
