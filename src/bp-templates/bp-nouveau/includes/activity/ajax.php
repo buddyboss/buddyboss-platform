@@ -583,9 +583,9 @@ function bp_nouveau_ajax_post_update() {
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
 
-		$media_ids      = BP_Media::get_activity_media_id( $activity_id );
-		$existing_media = explode( ',', $media_ids );
-		$posted_media   = wp_list_pluck( $_POST['media'], 'media_id' );
+		$media_ids      = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
+		$posted_media   = wp_list_pluck( $_POST['media'], 'media_id' ); //phpcs:ignore
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
 		if ( ! bp_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
@@ -604,7 +604,14 @@ function bp_nouveau_ajax_post_update() {
 		! empty( $_POST['document'] )
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
-		if ( ! bp_document_user_can_upload( bp_loggedin_user_id(), $group_id ) ) {
+
+		$document_ids      = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
+		$posted_document   = wp_list_pluck( $_POST['document'], 'document_id' ); //phpcs:ignore
+		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
+
+
+		if ( ! bp_document_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
 				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),

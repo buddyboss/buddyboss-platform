@@ -1204,9 +1204,6 @@ class BP_Media {
 		// Check activity component enabled or not.
 		if ( bp_is_active( 'activity' ) ) {
 			$activity_media_id = bp_activity_get_meta( $activity_id, 'bp_media_id', true );
-			if ( ! $activity_media_id ) {
-				$activity_media_id = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-			}
 		}
 
 		if ( empty( $activity_media_id ) ) {
@@ -1215,7 +1212,7 @@ class BP_Media {
 			if ( bp_is_active( 'activity' ) ) {
 				$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
 				if ( ! empty( $media_activity ) && ! empty( $activity_media_id ) ) {
-					bp_activity_update_meta( $activity_id, 'bp_media_ids', $activity_media_id );
+					bp_activity_update_meta( $activity_id, 'bp_media_id', $activity_media_id );
 				}
 			}
 		}
