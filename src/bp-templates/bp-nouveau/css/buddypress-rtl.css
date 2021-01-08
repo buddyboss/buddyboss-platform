@@ -2972,6 +2972,7 @@ span.dashicons.dashicons-admin-file:before {
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem {
     flex: 0 0 100% !important;
     max-width: 100% !important;
+    min-width: auto !important;
   }
   .bb-activity-media-wrap .bb-activity-media-elem .entry-img,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem .entry-img {
@@ -2979,11 +2980,11 @@ span.dashicons.dashicons-admin-file:before {
   }
   .bb-activity-media-wrap .bb-activity-media-elem.hideact-grid-1-2,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem.hideact-grid-1-2 {
-    flex: 0;
+    flex: 0 !important;
   }
   .bb-activity-media-wrap .bb-media-length-1 .bb-activity-media-elem .entry-img,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-media-length-1 .bb-activity-media-elem .entry-img {
-    padding-top: 0;
+    padding-top: 0 !important;
   }
 }
 
@@ -19187,7 +19188,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   max-width: 50%;
   height: 100%;
   padding: 0 10px 0 0;
-  margin: 0;
+  margin: 0 !important;
   list-style: none !important;
   display: flex;
 }
@@ -19268,11 +19269,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li {
     width: calc(33.3333334% - 6.66666667px);
     flex: calc(33.3333334% - 6.66666667px);
-    margin-right: 10px;
+    margin-right: 10px !important;
     padding-right: 0;
   }
   .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li:first-child {
-    margin-right: 0;
+    margin-right: 0 !important;
   }
 }
 
