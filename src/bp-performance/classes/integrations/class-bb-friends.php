@@ -73,8 +73,8 @@ class BB_Friends extends Integration_Abstract {
 		$purge_single_events = apply_filters( 'bbplatform_cache_bp_friends', $purge_single_events );
 		$this->purge_single_events( 'bbplatform_cache_purge_bp-friends_single', $purge_single_events );
 
-		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss' );
-		$settings            = Helper::instance()->get_app_settings( 'cache_bb_member_connections', 'buddyboss' );
+		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'appboss' );
+		$settings            = Helper::instance()->get_app_settings( 'cache_bb_member_connections', 'appboss' );
 		$cache_bb_friends    = isset( $is_component_active ) && isset( $settings ) ? ( $is_component_active && $settings ) : false;
 
 		if ( $cache_bb_friends ) {

@@ -289,7 +289,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					$bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/mu-plugins/buddyboss-api-caching-mu.php';
 					if ( file_exists( $bp_platform_mu_path ) ) {
 						$bp_mu_plugin_file_path = $bp_platform_mu_path;
-					} elseif ( file_exists( $bp_platform_mu_path ) ) {
+					} elseif ( file_exists( $bp_platform_dev_mu_path ) ) {
 						$bp_mu_plugin_file_path = $bp_platform_dev_mu_path;
 					}
 				}
@@ -334,7 +334,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 			$file_location = self::$file_location;
 			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
 
-			if ( strpos( $file_location, 'buddyboss' ) !== false ) {
+			if ( strpos( $file_location, 'buddyboss-app' ) !== false ) {
 				$download_path = admin_url( 'admin.php?page=appboss-settings&setting=cache_support&download_mu_file=' . $bp_performance_download_nonce );
 			}
 

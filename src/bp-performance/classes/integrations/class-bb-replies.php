@@ -79,8 +79,8 @@ class BB_Replies extends Integration_Abstract {
 		$purge_single_events = apply_filters( 'bbplatform_cache_bbp_replies', $purge_single_events );
 		$this->purge_single_events( 'bbplatform_cache_purge_bbp-replies_single', $purge_single_events );
 
-		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss' );
-		$settings            = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'buddyboss' );
+		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'appboss' );
+		$settings            = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'appboss' );
 		$cache_bb_replies    = isset( $is_component_active ) && isset( $settings ) ? ( $is_component_active && $settings ) : false;
 
 		if ( $cache_bb_replies ) {

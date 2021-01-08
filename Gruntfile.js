@@ -291,7 +291,7 @@ module.exports = function (grunt) {
 				src: '**',
 				options: {
 					process : function( content ) {
-						return content.replace( /\, 'appboss'/g, ', \'buddyboss\'' ).replace( /\, 'buddypress'/g, ', \'buddyboss\'' ).replace( /\, 'buddyboss-app'/g, ', \'buddyboss\'' ); // update text-domain.
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 					}
 				}
 			},
@@ -302,7 +302,7 @@ module.exports = function (grunt) {
 				src: '**',
 				options: {
 					process : function( content ) {
-						return content.replace( /\, 'appboss'/g, ', \'buddyboss\'' ).replace( /\, 'buddypress'/g, ', \'buddyboss\'' ).replace( /\, 'buddyboss-app'/g, ', \'buddyboss\'' ); // update text-domain.
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 					}
 				}
 			},

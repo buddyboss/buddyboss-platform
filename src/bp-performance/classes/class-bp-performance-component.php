@@ -53,6 +53,16 @@ class BP_Performance_Component extends BP_Component {
 			$includes[] = 'admin';
 		}
 
+		$bb_performance = dirname( __FILE__ ) . '/class-performance.php';
+		if ( file_exists( $bb_performance ) ) {
+			require_once $bb_performance;
+		}
+
+		if ( class_exists( 'BuddyBoss\Performance\Performance' ) ) {
+			$performance = \BuddyBoss\Performance\Performance::instance();
+			$performance->validate();
+		}
+
 		parent::includes( $includes );
 	}
 

@@ -94,8 +94,8 @@ class BB_Members extends Integration_Abstract {
 		$purge_single_events = apply_filters( 'bbplatform_cache_bp_members', $purge_single_events );
 		$this->purge_single_events( 'bbplatform_cache_purge_bp-members_single', $purge_single_events );
 
-		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss' );
-		$settings            = Helper::instance()->get_app_settings( 'cache_bb_members', 'buddyboss' );
+		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'appboss' );
+		$settings            = Helper::instance()->get_app_settings( 'cache_bb_members', 'appboss' );
 		$cache_bb_members    = isset( $is_component_active ) && isset( $settings ) ? ( $is_component_active && $settings ) : false;
 
 		if ( $cache_bb_members ) {

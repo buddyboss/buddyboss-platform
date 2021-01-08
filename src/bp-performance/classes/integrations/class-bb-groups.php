@@ -83,8 +83,8 @@ class BB_Groups extends Integration_Abstract {
 		$purge_single_events = apply_filters( 'bbplatform_cache_bp_groups', $purge_single_events );
 		$this->purge_single_events( 'bbplatform_cache_purge_bp-groups_single', $purge_single_events );
 
-		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss' );
-		$settings            = Helper::instance()->get_app_settings( 'cache_bb_social_groups', 'buddyboss' );
+		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'appboss' );
+		$settings            = Helper::instance()->get_app_settings( 'cache_bb_social_groups', 'appboss' );
 		$cache_bb_groups     = isset( $is_component_active ) && isset( $settings ) ? ( $is_component_active && $settings ) : false;
 
 		if ( $cache_bb_groups ) {

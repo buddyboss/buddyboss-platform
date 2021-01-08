@@ -96,8 +96,8 @@ class BB_Forums extends Integration_Abstract {
 		$purge_single_events = apply_filters( 'bbplatform_cache_bbp_forums_single', $purge_single_events );
 		$this->purge_single_events( 'bbplatform_cache_purge_bbp-forums_single', $purge_single_events );
 
-		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss' );
-		$settings            = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'buddyboss' );
+		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'appboss' );
+		$settings            = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'appboss' );
 		$cache_bb_forums     = isset( $is_component_active ) && isset( $settings ) ? ( $is_component_active && $settings ) : false;
 
 		if ( $cache_bb_forums ) {
