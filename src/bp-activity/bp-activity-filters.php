@@ -2433,6 +2433,7 @@ function bp_activity_video_add( $video ) {
 
 				// update activity meta.
 				bp_activity_update_meta( $activity_id, 'bp_video_activity', '1' );
+				bp_activity_update_meta( $activity_id, 'bp_video_id', $video->id );
 
 				// save attachment meta for activity.
 				update_post_meta( $video->attachment_id, 'bp_video_activity_id', $activity_id );
@@ -2585,7 +2586,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 					$old_video = new BP_Video( $old_video_id );
 					$args      = array(
 						'hide_sitewide' => true,
-						'privacy'       => 'media',
+						'privacy'       => 'video',
 					);
 
 					if ( ! empty( $old_video->group_id ) && bp_is_active( 'groups' ) ) {
@@ -2610,6 +2611,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 						// update activity meta to tell it is video activity.
 						bp_activity_update_meta( $activity_id, 'bp_video_activity', '1' );
+						bp_activity_update_meta( $activity_id, 'bp_video_id', $old_video->id );
 
 						// save attachment meta for activity.
 						update_post_meta( $old_video->attachment_id, 'bp_video_activity_id', $activity_id );
