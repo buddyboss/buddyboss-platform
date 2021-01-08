@@ -91,7 +91,7 @@ class BB_Groups extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/groups',
-				Cache::instance()->MONTH_IN_SECONDS * 60,
+				Cache::instance()->month_in_seconds * 60,
 				$purge_events,
 				$event_groups,
 				array(
@@ -103,7 +103,7 @@ class BB_Groups extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/groups/<id>',
-				Cache::instance()->MONTH_IN_SECONDS * 60,
+				Cache::instance()->month_in_seconds * 60,
 				array_keys( $purge_single_events ),
 				$event_groups,
 				array(),
