@@ -5,7 +5,7 @@
  * A video component, Allow your users to upload videos and create albums.
  *
  * @package BuddyBoss\Video\Loader
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-video component.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_setup_video() {
 	buddypress()->video = new BP_Video_Component();

@@ -3,7 +3,7 @@
  * BuddyBoss Video Component Class.
  *
  * @package BuddyBoss\Video\Loader
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates Video component.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Video_Component extends BP_Component {
 
 	/**
 	 * The album being currently accessed.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var BP_Video_Album
 	 */
 	// public $current_album;
@@ -27,7 +27,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Default video extension.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
@@ -36,7 +36,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Default video extension.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	public $default_extension;
@@ -44,7 +44,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Illegal video names/slugs.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var array
 	 */
 	public $forbidden_names;
@@ -62,7 +62,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Start the video component creation process.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function __construct() {
 		parent::start(
@@ -80,7 +80,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Include Video component files.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -103,7 +103,7 @@ class BP_Video_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -121,15 +121,6 @@ class BP_Video_Component extends BP_Component {
 			// Screens - User profile integration.
 			if ( bp_is_user() ) {
 				require $this->path . 'bp-video/screens/video.php';
-
-				/*
-				 * Nav items.
-				 *
-				 * 'album' is not a registered nav item, but we add a screen handler manually.
-				 */
-				// if ( bp_is_user_video() && in_array( bp_current_action(), array( 'albums' ), true ) ) {
-				// require $this->path . 'bp-video/screens/' . bp_current_action() . '.php';
-				// }
 			}
 
 			// Theme compatibility.
@@ -140,7 +131,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Set up component global data.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -188,26 +179,12 @@ class BP_Video_Component extends BP_Component {
 				'search_string'   => __( 'Search Videos&hellip;', 'buddyboss' ),
 			)
 		);
-
-		/* Single Album Globals **********************************************/
-
-		// Are we viewing a single album?
-		// if ( bp_is_video_component() && bp_is_single_video_album()
-		// && ( $album_id = BP_Video_Album::album_exists( bp_action_variable( 0 ) ) )
-		// ) {
-		// $bp->is_single_item  = true;
-		// $this->current_album = albums_get_video_album( $album_id );
-		//
-		// Set current_album to 0 to prevent debug errors.
-		// } else {
-		// $this->current_album = 0;
-		// }
 	}
 
 	/**
 	 * Set up the actions.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function setup_actions() {
 
@@ -224,7 +201,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -281,19 +258,6 @@ class BP_Video_Component extends BP_Component {
 				'position'        => 10,
 				'item_css_id'     => 'video-my-video',
 			);
-
-			// if ( bp_is_profile_albums_support_enabled() ) {
-			//
-			// Add the subnav items to the profile.
-			// $sub_nav[] = array(
-			// 'name'            => __( 'Albums', 'buddyboss' ),
-			// 'slug'            => 'albums',
-			// 'parent_url'      => $video_link,
-			// 'parent_slug'     => $slug,
-			// 'screen_function' => 'video_screen',
-			// 'position'        => 10,
-			// );
-			// }
 		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
@@ -303,7 +267,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
@@ -333,17 +297,6 @@ class BP_Video_Component extends BP_Component {
 				'href'     => $video_link,
 				'position' => 10,
 			);
-
-			// if ( bp_is_profile_albums_support_enabled() ) {
-			// Albums.
-			// $wp_admin_nav[] = array(
-			// 'parent'   => 'my-account-' . $this->id,
-			// 'id'       => 'my-account-' . $this->id . '-albums',
-			// 'title'    => __( 'My Albums', 'buddyboss' ),
-			// 'href'     => trailingslashit( $video_link . 'albums' ),
-			// 'position' => 20,
-			// );
-			// }
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
@@ -352,7 +305,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function setup_title() {
 
@@ -380,7 +333,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function setup_cache_groups() {
 
@@ -388,7 +341,6 @@ class BP_Video_Component extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp_video',
-				// 'bp_video_albums',
 			)
 		);
 
@@ -406,7 +358,6 @@ class BP_Video_Component extends BP_Component {
 		parent::rest_api_init(
 			array(
 				'BP_RESTBP_Video_Template_Endpoint',
-				// 'BP_RESTBP_Video_Template_Albums_Endpoint',
 				'BP_RESTBP_Video_Template_Details_Endpoint',
 			)
 		);

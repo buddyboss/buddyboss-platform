@@ -217,7 +217,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'component' => 'media',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-media/',
+			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/groups-media/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
 			'count'     => bp_media_get_user_total_group_media_count(),
 			'position'  => 15,

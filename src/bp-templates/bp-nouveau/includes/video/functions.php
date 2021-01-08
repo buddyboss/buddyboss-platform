@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Scripts for the Video component
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  *
  * @param array $scripts The array of scripts to register.
  *
@@ -39,7 +39,7 @@ function bp_nouveau_video_register_scripts( $scripts = array() ) {
 /**
  * Enqueue the video scripts
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_video_enqueue_scripts() {
 
@@ -158,7 +158,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 /**
  * Get the nav items for the Video directory
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  *
  * @return array An associative array of nav items.
  */
@@ -192,7 +192,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 			'component' => 'video',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-video/',
+			'link'      => bp_loggedin_user_domain() . bp_get_video_slug() . '/groups-video/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
 			'count'     => bp_video_get_user_total_group_video_count(),
 			'position'  => 15,
@@ -202,7 +202,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 	/**
 	 * Use this filter to introduce your custom nav items for the video directory.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $nav_items The list of the video directory nav items.
 	 */

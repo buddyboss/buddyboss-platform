@@ -3,10 +3,10 @@
  * BuddyBoss Video Classes
  *
  * @package BuddyBoss\Video
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an video,
  * static methods for querying video.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Video {
 
@@ -25,7 +25,7 @@ class BP_Video {
 	/**
 	 * ID of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $id;
@@ -33,7 +33,7 @@ class BP_Video {
 	/**
 	 * Blog ID of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $blog_id;
@@ -41,7 +41,7 @@ class BP_Video {
 	/**
 	 * Attachment ID of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $attachment_id;
@@ -49,7 +49,7 @@ class BP_Video {
 	/**
 	 * User ID of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $user_id;
@@ -57,7 +57,7 @@ class BP_Video {
 	/**
 	 * Title of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	var $title;
@@ -65,7 +65,7 @@ class BP_Video {
 	/**
 	 * Album ID of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $album_id;
@@ -73,7 +73,7 @@ class BP_Video {
 	/**
 	 * Activity ID of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $activity_id;
@@ -81,7 +81,7 @@ class BP_Video {
 	/**
 	 * Group ID of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $group_id;
@@ -89,7 +89,7 @@ class BP_Video {
 	/**
 	 * Privacy of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	var $privacy;
@@ -97,7 +97,7 @@ class BP_Video {
 	/**
 	 * Menu order of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $menu_order;
@@ -105,7 +105,7 @@ class BP_Video {
 	/**
 	 * Upload date of the video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	var $date_created;
@@ -113,7 +113,7 @@ class BP_Video {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @var WP_Error
 	 */
@@ -122,7 +122,7 @@ class BP_Video {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @var string
 	 */
@@ -131,7 +131,7 @@ class BP_Video {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
 	 */
@@ -148,7 +148,7 @@ class BP_Video {
 	/**
 	 * Populate the object with data about the specific video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function populate() {
 
@@ -158,7 +158,7 @@ class BP_Video {
 
 		if ( false === $row ) {
 			$bp  = buddypress();
-			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE id = %d", $this->id ) );
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE id = %d", $this->id ) ); //phpcs:ignore
 
 			wp_cache_set( $this->id, $row, 'bp_video' );
 		}
@@ -184,7 +184,7 @@ class BP_Video {
 	/**
 	 * Save the video item to the database.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @return WP_Error|bool True on success.
 	 */
@@ -211,7 +211,7 @@ class BP_Video {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param BP_Video $this Current instance of the video item being saved. Passed by reference.
 		 */
@@ -239,12 +239,12 @@ class BP_Video {
 
 		// If we have an existing ID, update the video item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { //phpcs:ignore
 			return false;
 		}
 
@@ -256,7 +256,7 @@ class BP_Video {
 		/**
 		 * Fires after an video item has been saved to the database.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param BP_Video $this Current instance of video item being saved. Passed by reference.
 		 */
@@ -270,7 +270,7 @@ class BP_Video {
 	/**
 	 * Get video items, as specified by parameters.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $args {
 	 *     An array of arguments. All items are optional.
@@ -342,7 +342,7 @@ class BP_Video {
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
-			 * @since BuddyBoss 1.6.0
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 */
@@ -357,7 +357,7 @@ class BP_Video {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( $sort != 'ASC' && $sort != 'DESC' ) { //phpcs:ignore
 			$sort = 'DESC';
 		}
 
@@ -400,9 +400,9 @@ class BP_Video {
 		}
 
 		// existing-video check to query video which has no albums assigned.
-		if ( ! empty( $r['album_id'] ) && 'existing-video' != $r['album_id'] ) {
+		if ( ! empty( $r['album_id'] ) && 'existing-video' !== $r['album_id'] ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
-		} elseif ( ! empty( $r['album_id'] ) && 'existing-video' == $r['album_id'] ) {
+		} elseif ( ! empty( $r['album_id'] ) && 'existing-video' === $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
@@ -422,7 +422,7 @@ class BP_Video {
 		/**
 		 * Filters the MySQL WHERE conditions for the Video items get method.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into method.
@@ -450,7 +450,7 @@ class BP_Video {
 		/**
 		 * Filter the MySQL JOIN clause for the main video query.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -482,7 +482,7 @@ class BP_Video {
 		/**
 		 * Filters the paged video MySQL statement.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param string $video_ids_sql    MySQL statement used to query for Video IDs.
 		 * @param array  $r                Array of arguments passed into method.
@@ -530,7 +530,7 @@ class BP_Video {
 			/**
 			 * Filters the total video MySQL statement.
 			 *
-			 * @since BuddyBoss 1.6.0
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param string $value     MySQL statement used to query for total videos.
 			 * @param string $where_sql MySQL WHERE statement portion.
@@ -560,7 +560,7 @@ class BP_Video {
 	/**
 	 * Convert video IDs to video objects, as expected in template loop.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $video_ids Array of video IDs.
 	 * @return array
@@ -585,8 +585,7 @@ class BP_Video {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from video table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->video->table_name} WHERE id IN ({$uncached_ids_sql})" );
-
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->video->table_name} WHERE id IN ({$uncached_ids_sql})" ); //phpcs:ignore
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
 			foreach ( (array) $queried_adata as $adata ) {
@@ -696,7 +695,7 @@ class BP_Video {
 	/**
 	 * Append xProfile fullnames to an video array.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $videos Videos array.
 	 * @return array
@@ -729,7 +728,7 @@ class BP_Video {
 	 * associated objects, so that inline lookups - done primarily when
 	 * building action strings - do not result in excess database queries.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $videos Array of video.
 	 * @return array $videos Array of video.
@@ -739,7 +738,7 @@ class BP_Video {
 		/**
 		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with video item.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array $videos Array of video.
 		 */
@@ -754,7 +753,7 @@ class BP_Video {
 	 *
 	 * Can handle multiple scopes.
 	 *
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param  mixed $scope  The video scope. Accepts string or array of scopes.
 	 * @param  array $r      Current activity arguments. Same as those of BP_Video::get(),
@@ -802,7 +801,7 @@ class BP_Video {
 			 *   - bp_groups_filter_video_scope() - used for 'groups' scope
 			 *   - bp_friends_filter_video_scope() - used for 'friends' scope
 			 *
-			 * @since BuddyBoss 1.1.9
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param array {
 			 *     Video query clauses.
@@ -859,7 +858,7 @@ class BP_Video {
 	/**
 	 * Create SQL IN clause for filter queries.
 	 *
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see BP_Video::get_filter_sql()
 	 *
@@ -900,7 +899,7 @@ class BP_Video {
 	 * To delete a specific video item, pass an 'id' parameter.
 	 * Otherwise use the filters.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $args {
 	 * @int    $id                Optional. The ID of a specific item to delete.
@@ -1008,7 +1007,7 @@ class BP_Video {
 		/**
 		 * Action to allow intercepting video items to be deleted.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array $videos Array of video.
 		 * @param array $r          Array of parsed arguments.
@@ -1026,7 +1025,7 @@ class BP_Video {
 		/**
 		 * Action to allow intercepting video items just deleted.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array $videos Array of video.
 		 * @param array $r          Array of parsed arguments.
@@ -1096,7 +1095,7 @@ class BP_Video {
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 					// Deleting an activity comment.
-					if ( 'activity_comment' == $activity->type ) {
+					if ( 'activity_comment' === $activity->type ) {
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -1124,7 +1123,7 @@ class BP_Video {
 	/**
 	 * Count total video for the given user
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param int $user_id
 	 *
@@ -1136,7 +1135,7 @@ class BP_Video {
 		$privacy = bp_video_query_privacy( $user_id );
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" ); //phpcs:ignore
 
 		return $total_count;
 	}
@@ -1144,7 +1143,7 @@ class BP_Video {
 	/**
 	 * Count total video for the given group
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param int $group_id
 	 *
@@ -1186,7 +1185,7 @@ class BP_Video {
 		$from_sql = apply_filters( 'bp_video_get_join_count_sql', $from_sql, array( 'group_id' => $group_id ) );
 
 		$video_ids_sql = "{$select_sql} {$from_sql} {$where_sql}";
-		$total_count   = (int) $wpdb->get_var( $video_ids_sql ); // phpcs:ignore.
+		$total_count   = (int) $wpdb->get_var( $video_ids_sql ); // phpcs:ignore
 
 		return $total_count;
 	}
@@ -1197,7 +1196,7 @@ class BP_Video {
 	 * @param int $user_id
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.4.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public static function total_user_group_video_count( $user_id = 0 ) {
 		global $bp, $wpdb;
@@ -1205,7 +1204,7 @@ class BP_Video {
 		$privacy = bp_video_query_privacy( $user_id, 0, 'groups' );
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" ); // phpcs:ignore
 
 		return $total_count;
 	}
@@ -1213,7 +1212,7 @@ class BP_Video {
 	/**
 	 * Get all video ids for the album
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @param bool $album_id
 	 *
 	 * @return array|bool
@@ -1225,12 +1224,12 @@ class BP_Video {
 			return false;
 		}
 
-		$album_video_sql = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->video->table_name} m WHERE m.album_id = %d", $album_id );
+		$album_video_sql = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->video->table_name} m WHERE m.album_id = %d", $album_id ); // phpcs:ignore
 
 		$cached = bp_core_get_incremented_cache( $album_video_sql, 'bp_video' );
 
 		if ( false === $cached ) {
-			$video_ids = $wpdb->get_col( $album_video_sql );
+			$video_ids = $wpdb->get_col( $album_video_sql ); // phpcs:ignore
 			bp_core_set_incremented_cache( $album_video_sql, 'bp_video', $video_ids );
 		} else {
 			$video_ids = $cached;
@@ -1242,7 +1241,7 @@ class BP_Video {
 	/**
 	 * Get video id for the activity.
 	 *
-	 * @since BuddyBoss 1.1.6
+	 * @since BuddyBoss 1.5.7
 	 * @param bool $activity_id
 	 *
 	 * @return array|bool
@@ -1278,10 +1277,10 @@ class BP_Video {
 	/**
 	 * Get video attachment id for the activity.
 	 *
-	 * @param integer $activity_id Activity ID
+	 * @param integer $activity_id Activity ID.
 	 *
 	 * @return integer|bool
-	 * @since BuddyBoss 1.4.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public static function get_activity_attachment_id( $activity_id = 0 ) {
 		global $bp, $wpdb;
@@ -1290,7 +1289,7 @@ class BP_Video {
 			return false;
 		}
 
-		return (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->video->table_name} m WHERE m.activity_id = {$activity_id}" );
+		return (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->video->table_name} m WHERE m.activity_id = {$activity_id}" ); // phpcs:ignore
 	}
 
 }

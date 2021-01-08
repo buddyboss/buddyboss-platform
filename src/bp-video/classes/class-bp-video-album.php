@@ -3,7 +3,7 @@
  * BuddyBoss Video Classes
  *
  * @package BuddyBoss\Video
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an video albums,
  * static methods for querying video album.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Video_Album {
 
@@ -25,7 +25,7 @@ class BP_Video_Album {
 	/**
 	 * ID of the album.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $id;
@@ -33,7 +33,7 @@ class BP_Video_Album {
 	/**
 	 * User ID of the album.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $user_id;
@@ -41,7 +41,7 @@ class BP_Video_Album {
 	/**
 	 * Group ID of the album.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	var $group_id;
@@ -49,7 +49,7 @@ class BP_Video_Album {
 	/**
 	 * Title of the album.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	var $title;
@@ -57,7 +57,7 @@ class BP_Video_Album {
 	/**
 	 * Privacy of the album.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	var $privacy;
@@ -65,7 +65,7 @@ class BP_Video_Album {
 	/**
 	 * Upload date of the album.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	var $date_created;
@@ -73,7 +73,7 @@ class BP_Video_Album {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @var WP_Error
 	 */
@@ -82,7 +82,7 @@ class BP_Video_Album {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @var string
 	 */
@@ -91,7 +91,7 @@ class BP_Video_Album {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param int|bool $id Optional. The ID of a specific video album.
 	 */
@@ -108,7 +108,7 @@ class BP_Video_Album {
 	/**
 	 * Populate the object with data about the specific album item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function populate() {
 
@@ -139,7 +139,7 @@ class BP_Video_Album {
 	/**
 	 * Save the video album to the database.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @return WP_Error|bool True on success.
 	 */
@@ -161,7 +161,7 @@ class BP_Video_Album {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param BP_Video $this Current instance of the album being saved. Passed by reference.
 		 */
@@ -173,9 +173,9 @@ class BP_Video_Album {
 
 		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->id ); //phpcs:ignore
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created ); //phpcs:ignore
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -204,7 +204,7 @@ class BP_Video_Album {
 	/**
 	 * Get albums, as specified by parameters.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $args {
 	 *     An array of arguments. All items are optional.
@@ -327,7 +327,7 @@ class BP_Video_Album {
 		/**
 		 * Filters the MySQL WHERE conditions for the albums get method.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into method.
@@ -336,8 +336,6 @@ class BP_Video_Album {
 		 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
 		 */
 		$where_conditions = apply_filters( 'bp_video_album_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
-
-		$where_conditions['type'] = "m.type = 'video'";
 
 		if ( empty( $where_conditions ) ) {
 			$where_conditions['2'] = '2';
@@ -349,7 +347,7 @@ class BP_Video_Album {
 		/**
 		 * Filter the MySQL JOIN clause for the main video query.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -428,7 +426,7 @@ class BP_Video_Album {
 			/**
 			 * Filters the total video MySQL statement.
 			 *
-			 * @since BuddyBoss 1.6.0
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param string $value     MySQL statement used to query for total videos.
 			 * @param string $where_sql MySQL WHERE statement portion.
@@ -461,7 +459,7 @@ class BP_Video_Album {
 	 * @param array $album_ids Array of video IDs.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
@@ -539,7 +537,7 @@ class BP_Video_Album {
 	/**
 	 * Get whether an album exists for a given id.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param string $id       ID to check.
 	 * @param string $type     type to check.
@@ -565,9 +563,9 @@ class BP_Video_Album {
 	}
 
 	/**
-	 * Append xProfile fullnames to an video array.
+	 * Append xProfile full names to an video array.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $albums Albums array.
 	 * @return array
@@ -620,7 +618,7 @@ class BP_Video_Album {
 	/**
 	 * Count total album for the given group
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param int $group_id
 	 *
@@ -640,7 +638,7 @@ class BP_Video_Album {
 	 * To delete a specific album, pass an 'id' parameter.
 	 * Otherwise use the filters.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $args {
 	 * @int    $id                Optional. The ID of a specific item to delete.
@@ -703,7 +701,7 @@ class BP_Video_Album {
 		/**
 		 * Action to allow intercepting albums to be deleted.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array $albums Array of video albums.
 		 * @param array $r          Array of parsed arguments.
@@ -721,7 +719,7 @@ class BP_Video_Album {
 		/**
 		 * Action to allow intercepting albums just deleted.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array $albums     Array of video albums.
 		 * @param array $r          Array of parsed arguments.
@@ -731,7 +729,7 @@ class BP_Video_Album {
 		// Pluck the video albums IDs out of the $albums array.
 		$album_ids = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
 
-		// delete the video associated with album
+		// delete the video associated with album.
 		if ( ! empty( $album_ids ) ) {
 			foreach ( $album_ids as $album_id ) {
 				bp_video_delete( array( 'album_id' => $album_id ) );

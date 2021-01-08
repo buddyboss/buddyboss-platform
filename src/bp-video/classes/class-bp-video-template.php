@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of video into a loop for display.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Video_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	public $current_video = -1;
@@ -28,7 +28,7 @@ class BP_Video_Template {
 	/**
 	 * The video count.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	public $video_count;
@@ -36,7 +36,7 @@ class BP_Video_Template {
 	/**
 	 * The total video count.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	public $total_video_count;
@@ -44,7 +44,7 @@ class BP_Video_Template {
 	/**
 	 * Array of video located by the query.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var array
 	 */
 	public $videos;
@@ -52,7 +52,7 @@ class BP_Video_Template {
 	/**
 	 * The video object currently being iterated on.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var object
 	 */
 	public $video;
@@ -60,7 +60,7 @@ class BP_Video_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -68,7 +68,7 @@ class BP_Video_Template {
 	/**
 	 * URL parameter key for video pagination. Default: 'acpage'.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	public $pag_arg;
@@ -76,7 +76,7 @@ class BP_Video_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	public $pag_page;
@@ -84,7 +84,7 @@ class BP_Video_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
 	public $pag_num;
@@ -92,7 +92,7 @@ class BP_Video_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	public $pag_links;
@@ -100,7 +100,7 @@ class BP_Video_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
 	public $full_name;
@@ -111,7 +111,7 @@ class BP_Video_Template {
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Video::get()}.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see BP_Video::get() for a description of the argument
 	 *      structure, as well as default values.
@@ -244,7 +244,7 @@ class BP_Video_Template {
 	/**
 	 * Whether there are video items available in the loop.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see bp_has_video()
 	 *
@@ -261,7 +261,7 @@ class BP_Video_Template {
 	/**
 	 * Set up the next video item and iterate index.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @return object The next video item to iterate over.
 	 */
@@ -275,7 +275,7 @@ class BP_Video_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function rewind_videos() {
 		$this->current_video = -1;
@@ -291,7 +291,7 @@ class BP_Video_Template {
 	 * that controls iteration inside the video loop, eg:
 	 *     while ( bp_video() ) { ...
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see bp_video()
 	 *
@@ -326,7 +326,7 @@ class BP_Video_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current video item.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @see bp_the_video()
 	 */
