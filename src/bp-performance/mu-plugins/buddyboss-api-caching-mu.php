@@ -9,9 +9,16 @@
  * @package BuddyBoss\Performance
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die();
+}
+
 /**
  * Load the class from Bundle BuddyBoss Platform.
  */
+// File for the build version.
+$buddyboss_platform_api = WP_PLUGIN_DIR . '/buddyboss-platform-api/buddyboss-api-mu-loader.php';
+
 // File for the build version.
 $buddyboss_performance = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/bp-performance-mu-loader.php';
 
@@ -19,7 +26,12 @@ $buddyboss_performance = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/bp-
 $buddyboss_performance_dev = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/bp-performance-mu-loader.php';
 
 // Cache [ performance ].
-if ( file_exists( $buddyboss_performance ) ) {
+if ( file_exists( $buddyboss_platform_api ) ) {
+	/**
+	 * Included File.
+	 */
+	require_once $buddyboss_platform_api;
+} elseif ( file_exists( $buddyboss_performance ) ) {
 	/**
 	 * Included File.
 	 */
@@ -44,4 +56,3 @@ if ( file_exists( $include ) ) {
 	 */
 	require_once $include;
 }
-
