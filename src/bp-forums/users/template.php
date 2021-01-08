@@ -1729,7 +1729,7 @@ function bbp_get_author_link( $args = '' ) {
 		$author_links = array();
 
 		// Get avatar
-		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+		if ( ( 'avatar' === $r['type'] || 'both' === $r['type'] ) && 1 !== $r['size'] ) {
 			$author_links[] = get_avatar( $user_id, $r['size'] );
 		}
 
