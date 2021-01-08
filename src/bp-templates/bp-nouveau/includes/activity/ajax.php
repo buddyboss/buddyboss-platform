@@ -556,7 +556,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$activity_id = ! empty( $_POST['id'] ) ? $_POST['id'] : 0;
+	$activity_id = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 	$item_id     = 0;
 	$object      = '';
 	$is_private  = false;
@@ -582,7 +582,13 @@ function bp_nouveau_ajax_post_update() {
 		! empty( $_POST['media'] )
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
-		if ( ! bp_media_user_can_upload( bp_loggedin_user_id(), $group_id ) ) {
+
+		$media_ids      = BP_Media::get_activity_media_id( $activity_id );
+		$existing_media = explode( ',', $media_ids );
+		$posted_media   = wp_list_pluck( $_POST['media'], 'media_id' );
+		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
+
+		if ( ! bp_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
 				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
@@ -624,7 +630,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$activity_id = bp_activity_post_update(
 			array(
-				'id' => $activity_id,
+				'id'      => $activity_id,
 				'content' => $content,
 				'privacy' => $privacy,
 			)
@@ -685,9 +691,9 @@ function bp_nouveau_ajax_post_update() {
 
 	wp_send_json_success(
 		array(
-			'id'           => $activity_id,
-			'message'      => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
-			'activity'     => $activity,
+			'id'                      => $activity_id,
+			'message'                 => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
+			'activity'                => $activity,
 
 			/**
 			 * Filters whether or not an AJAX post update is private.
