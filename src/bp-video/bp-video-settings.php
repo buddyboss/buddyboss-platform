@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Setting > Media > Video > Profile support
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_settings_callback_profile_video_support() {
 	?>
@@ -34,17 +34,6 @@ function bp_video_settings_callback_profile_video_support() {
 		}
 		?>
 	</label>
-<!--	<br/>-->
-<!--	<input name="bp_video_profile_albums_support"-->
-<!--	       id="bp_video_profile_albums_support"-->
-<!--	       type="checkbox"-->
-<!--	       value="1"-->
-<!--		--><?php // echo ! bp_is_profile_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
-<!--		--><?php // checked( bp_is_profile_video_albums_support_enabled() ); ?>
-<!--	/>-->
-<!--	<label for="bp_media_profile_albums_support">-->
-<!--		--><?php // _e( 'Enable Albums', 'buddyboss' ); ?>
-<!--	</label>-->
 	<?php
 }
 
@@ -54,7 +43,7 @@ function bp_video_settings_callback_profile_video_support() {
  * @param $default integer
  *
  * @return bool Is profile video support enabled or not
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_is_profile_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_video_support_enabled', (bool) get_option( 'bp_video_profile_video_support', $default ) );
@@ -66,7 +55,7 @@ function bp_is_profile_video_support_enabled( $default = 0 ) {
  * @param $default integer
  *
  * @return bool Is profile albums support enabled or not
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_is_profile_video_albums_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_video_albums_support_enabled', (bool) get_option( 'bp_video_profile_albums_support', $default ) );
@@ -75,7 +64,7 @@ function bp_is_profile_video_albums_support_enabled( $default = 0 ) {
 /**
  * Setting > Media > Video > Groups support
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_settings_callback_group_video_support() {
 	?>
@@ -94,17 +83,6 @@ function bp_video_settings_callback_group_video_support() {
 		}
 		?>
 	</label>
-<!--	<br/>-->
-<!--	<input name="bp_video_group_albums_support"-->
-<!--	       id="bp_video_group_albums_support"-->
-<!--	       type="checkbox"-->
-<!--	       value="1"-->
-<!--		--><?php // echo ! bp_is_group_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
-<!--		--><?php // checked( bp_is_group_video_albums_support_enabled() ); ?>
-<!--	/>-->
-<!--	<label for="bp_video_group_albums_support">-->
-<!--		--><?php // _e( 'Enable Albums', 'buddyboss' ); ?>
-	</label>
 	<?php
 }
 
@@ -114,7 +92,7 @@ function bp_video_settings_callback_group_video_support() {
  * @param $default integer
  *
  * @return bool Is group video support enabled or not
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_is_group_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
@@ -126,7 +104,7 @@ function bp_is_group_video_support_enabled( $default = 0 ) {
  * @param $default integer
  *
  * @return bool Is group album support enabled or not
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_is_group_video_albums_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_group_video_albums_support_enabled', (bool) get_option( 'bp_video_group_albums_support', $default ) );
@@ -135,7 +113,7 @@ function bp_is_group_video_albums_support_enabled( $default = 0 ) {
 /**
  * Setting > Media > Video > Messages support
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_settings_callback_messages_video_support() {
 	?>
@@ -163,7 +141,7 @@ function bp_video_settings_callback_messages_video_support() {
  * @param $default integer
  *
  * @return bool Is messages video support enabled or not
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_is_messages_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_video_support_enabled', (bool) get_option( 'bp_video_messages_video_support', $default ) );
@@ -172,7 +150,7 @@ function bp_is_messages_video_support_enabled( $default = 0 ) {
 /**
  * Setting > Media > Video > Forums support
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_settings_callback_forums_video_support() {
 	?>
@@ -194,7 +172,7 @@ function bp_video_settings_callback_forums_video_support() {
  * @param $default integer
  *
  * @return bool Is forums video support enabled or not
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_is_forums_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_video_support_enabled', (bool) get_option( 'bp_video_forums_video_support', $default ) );
@@ -203,7 +181,7 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
 /**
  * Link to Video Uploading tutorial
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_uploading_tutorial() {
 	?>
@@ -267,7 +245,7 @@ function bp_video_admin_setting_callback_video_section() {
 /**
  * Setting > Media > Videos > Allowed Max File Size
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_settings_callback_video_allowed_size() {
 	$max_size    = bp_core_upload_max_size();
@@ -302,7 +280,7 @@ function bp_video_settings_callback_video_allowed_size() {
  *
  * @return int Allowed upload file size for the video.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_allowed_upload_video_size() {
 	$max_size = bp_core_upload_max_size();
@@ -332,7 +310,7 @@ function bp_video_settings_callback_extension_link() {
 /**
  * Setting > Media > Photos > Allowed Per Batch
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_settings_callback_video_allowed_per_batch() {
 	?>
@@ -350,7 +328,7 @@ function bp_video_settings_callback_video_allowed_per_batch() {
  * Allowed per batch for the video.
  *
  * @return int Allowed upload per batch for the video.
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_allowed_upload_video_per_batch() {
 

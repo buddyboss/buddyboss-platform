@@ -3,7 +3,7 @@
  * BP Nouveau Video
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  * @version 1.0.0
  */
 
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Video Loader class
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Nouveau_Video {
 	/**
@@ -66,7 +66,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Register do_action() hooks
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	protected function setup_actions() {
 		// Enqueue the scripts for the new UI.
@@ -96,7 +96,7 @@ class BP_Nouveau_Video {
  *
  * @param null $bp_nouveau template.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_video( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {

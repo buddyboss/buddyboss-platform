@@ -3,7 +3,7 @@
  * Video Ajax functions
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  * @version 1.0.0
  */
 
@@ -140,7 +140,7 @@ add_action(
 /**
  * Load the template loop for the albums object.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_albums_loader() {
 	$response = array(
@@ -197,7 +197,7 @@ function bp_nouveau_ajax_albums_loader() {
 /**
  * Upload a video via a POST request.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_upload() {
 	$response = array(
@@ -236,7 +236,7 @@ function bp_nouveau_ajax_video_upload() {
 /**
  * Upload a video thumbnail via a POST request.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_thumbnail_upload() {
 	$response = array(
@@ -275,7 +275,7 @@ function bp_nouveau_ajax_video_thumbnail_upload() {
 /**
  * Delete attachment with its files
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	$response = array(
@@ -318,7 +318,7 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 /**
  * Save video
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_save() {
 	$response = array(
@@ -378,7 +378,7 @@ function bp_nouveau_ajax_video_save() {
 /**
  * Delete video
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_delete() {
 	$response = array(
@@ -443,7 +443,7 @@ function bp_nouveau_ajax_video_delete() {
 /**
  * Move video to album
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_move_to_album() {
 	$response = array(
@@ -541,7 +541,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 /**
  * Save album
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_album_save() {
 	$response = array(
@@ -646,7 +646,7 @@ function bp_nouveau_ajax_video_album_save() {
 /**
  * Delete album
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_album_delete() {
 	$response = array(
@@ -702,7 +702,7 @@ function bp_nouveau_ajax_video_album_delete() {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
 		$redirect_url = trailingslashit( $group_link . '/albums/' );
 	} else {
-		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_video_slug() . '/albums/' );
+		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' );
 	}
 
 	wp_send_json_success(
@@ -715,7 +715,7 @@ function bp_nouveau_ajax_video_album_delete() {
 /**
  * Get activity for the video
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_get_activity() {
 	$response = array(
@@ -740,8 +740,6 @@ function bp_nouveau_ajax_video_get_activity() {
 
 	// check activity is video or not.
 	$video_activity = bp_activity_get_meta( $post_id, 'bp_video_activity', true );
-
-
 
 	$video_data = array();
 	if ( ! empty( $video_id ) ) {
@@ -814,7 +812,7 @@ function bp_nouveau_ajax_video_get_activity() {
 /**
  * Delete attachment with its files
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_delete_attachment() {
 	$response = array(
@@ -976,7 +974,7 @@ add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_res
  *
  * @return mixed
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_object_template_results_video_tabs( $results, $object ) {
 	if ( 'video' !== $object ) {
@@ -1225,10 +1223,10 @@ function bp_nouveau_ajax_video_move() {
 	}
 
 	// Move video.
-	$album_id    = ! empty( $_POST['album_id'] ) ? (int) $_POST['album_id'] : 0;
-	$video_id    = ! empty( $_POST['video_id'] ) ? (int) $_POST['video_id'] : 0;
-	$group_id    = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
-	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+	$album_id    = filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
+	$video_id    = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
+	$group_id    = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $video_id ) {
 		wp_send_json_error( $response );
