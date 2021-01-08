@@ -3,10 +3,10 @@
  * BuddyBoss Video Privacy
  *
  * @package BuddyBoss\Video
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Handles video privacy information.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  * @deprecated BuddyBoss 1.2.3 No longer used by internal code and not recommended.
  */
 
@@ -40,9 +40,9 @@ class BP_Video_Privacy {
 	}
 
 	/**
-	 * get options for visibility
+	 * Get options for visibility.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @param bool $group
 	 * @return array
 	 */
@@ -65,7 +65,7 @@ class BP_Video_Privacy {
 	/**
 	 * Get visibility of video
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @param $video_id
 	 *
 	 * @return WP_Error
@@ -83,7 +83,7 @@ class BP_Video_Privacy {
 	/**
 	 * Check if video is visible or not to the logged in user
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 * @param bool $video_id
 	 *
 	 * @return bool|mixed|WP_Error
@@ -102,14 +102,14 @@ class BP_Video_Privacy {
 		if ( bp_loggedin_user_id() != $video->user_id ) {
 
 			switch ( $visibility ) {
-				// Logged in users
+				// Logged in users.
 				case 'loggedin':
 					if ( ! bp_loggedin_user_id() ) {
 						$visible = false;
 					}
 					break;
 
-				// My friends
+				// My friends.
 				case 'friends':
 					if ( bp_is_active( 'friends' ) ) {
 						$is_friend = friends_check_friendship( bp_loggedin_user_id(), $video->user_id );
@@ -119,7 +119,7 @@ class BP_Video_Privacy {
 					}
 					break;
 
-				// Only group members
+				// Only group members.
 				case 'grouponly':
 					$group_is_user_member = groups_is_user_member( bp_loggedin_user_id(), $video->activity_id );
 					if ( ! $group_is_user_member ) {
@@ -127,7 +127,7 @@ class BP_Video_Privacy {
 					}
 					break;
 
-				// Only Me
+				// Only Me.
 				case 'onlyme':
 					if ( bp_loggedin_user_id() != $video->user_id ) {
 						$visible = false;
@@ -135,7 +135,7 @@ class BP_Video_Privacy {
 					break;
 
 				default:
-					// public
+					// public.
 					break;
 			}
 		}

@@ -3,13 +3,13 @@
  * Video: Single album screen handler
  *
  * @package BuddyBoss\Video\Screens
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
 /**
  * Load an individual album screen.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  *
  * @return false|null False on failure.
  */
@@ -39,14 +39,14 @@ function video_screen_single_album() {
 	/**
 	 * Fires right before the loading of the single album view screen template file.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	do_action( 'video_screen_single_album' );
 
 	/**
 	 * Filters the template to load for the Single Album view screen.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param string $template Path to the album template to load.
 	 */

@@ -1455,7 +1455,7 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		foreach ( $media_ids as $media_id ) {
 			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
-			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly' ) ) ) {
+			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ) ) ) {
 				$media->privacy = $activity->privacy;
 				$media->save();
 			}
@@ -1640,7 +1640,7 @@ function bp_media_message_privacy_repair() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' LIMIT 20 OFFSET $offset ";
+	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET $offset ";
 	$medias      = $wpdb->get_results( $media_query );
 
 	if ( ! empty( $medias ) ) {
@@ -1680,7 +1680,7 @@ function bp_media_admin_repair_media() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
+	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET $offset ";
 	$medias      = $wpdb->get_results( $media_query );
 
 	if ( ! empty( $medias ) ) {
