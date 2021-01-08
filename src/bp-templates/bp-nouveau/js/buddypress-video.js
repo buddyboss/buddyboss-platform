@@ -87,7 +87,7 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFiles: 1,
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
+				dictMaxFilesExceeded: BP_Nouveau.video.thumb_dict_file_exceeded,
 			};
 
 			// if defined, add custom dropzone options.
