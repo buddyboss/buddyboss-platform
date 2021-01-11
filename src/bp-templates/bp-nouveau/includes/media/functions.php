@@ -224,7 +224,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		);
 	}
 
-	if ( is_user_logged_in() && bp_is_group_media_support_enabled() ) {
+	if ( is_user_logged_in() && bp_is_group_media_support_enabled() && bp_is_active('groups') ) {
 		$nav_items['group'] = array(
 			'component' => 'media',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
