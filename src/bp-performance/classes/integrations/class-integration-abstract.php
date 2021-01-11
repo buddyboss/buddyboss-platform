@@ -337,7 +337,7 @@ abstract class Integration_Abstract {
 						$server = rest_get_server();
 						$retval = $server->dispatch( $request );
 
-						if ( 200 !== $retval->status ) {
+						if ( 200 !== (int) $retval->status ) {
 							/**
 							 * Fetch Parent endpoint if single items data not found with fresh request
 							 */
@@ -387,7 +387,7 @@ abstract class Integration_Abstract {
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
 			// Here we avoid passing another user cached instead of logged in.
-			if ( get_current_user_id() !== $this->prepared_cached_user_id ) {
+			if ( get_current_user_id() !== (int) $this->prepared_cached_user_id ) {
 				header( 'HTTP/1.0 500 Internal Server Error' );
 				header( 'Content-Type: application/json' );
 				echo wp_json_encode(
