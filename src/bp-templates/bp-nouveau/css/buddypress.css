@@ -18741,6 +18741,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   opacity: 1;
 }
 
+.bb-activity-video-elem .bb-open-video-theatre.hide {
+  display: none;
+}
+
 .bp-single-message-wrap .bb-activity-video-wrap .bb-activity-video-elem .bb-item-cover-wrap {
   padding-top: 100%;
 }
