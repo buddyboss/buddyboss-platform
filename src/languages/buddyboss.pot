@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-08 10:06:17+00:00\n"
+"POT-Creation-Date: 2021-01-11 11:11:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -421,7 +421,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1543
 #: bp-templates/bp-nouveau/includes/document/ajax.php:405
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1068
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1103
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1101
 #: bp-xprofile/bp-xprofile-admin.php:915
 #: bp-xprofile/bp-xprofile-repeaters.php:777
 #: bp-xprofile/bp-xprofile-repeaters.php:779
@@ -566,7 +566,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1559
 #: bp-templates/bp-nouveau/includes/document/ajax.php:422
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1078
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1113
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1111
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
 #: bp-xprofile/classes/class-bp-xprofile-group.php:936
 msgid "Cancel"
@@ -1083,7 +1083,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:4124
 #: bp-core/admin/settings/bp-admin-setting-activity.php:95
-#: bp-templates/bp-nouveau/includes/customizer.php:324
+#: bp-templates/bp-nouveau/includes/customizer.php:327
 msgid "Follow"
 msgstr ""
 
@@ -1121,7 +1121,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:304
 #: bp-media/classes/class-bp-media-component.php:163
 #: bp-media/classes/class-bp-media-privacy.php:52
-#: bp-video/classes/class-bp-video-component.php:159
+#: bp-video/classes/class-bp-video-component.php:150
 #: bp-video/classes/class-bp-video-privacy.php:52
 #: bp-xprofile/classes/class-bp-xprofile-component.php:182
 msgid "Public"
@@ -1138,7 +1138,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:702
 #: bp-templates/bp-nouveau/includes/groups/functions.php:133
 #: bp-templates/bp-nouveau/includes/members/functions.php:27
-#: bp-video/classes/class-bp-video-component.php:160
+#: bp-video/classes/class-bp-video-component.php:151
 #: bp-video/classes/class-bp-video-privacy.php:54
 #: bp-xprofile/classes/class-bp-xprofile-component.php:186
 msgid "All Members"
@@ -1158,7 +1158,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
 #: bp-templates/bp-nouveau/includes/groups/functions.php:154
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
-#: bp-video/classes/class-bp-video-component.php:164
+#: bp-video/classes/class-bp-video-component.php:155
 #: bp-video/classes/class-bp-video-privacy.php:55
 #: bp-xprofile/classes/class-bp-xprofile-component.php:193
 msgid "My Connections"
@@ -1169,7 +1169,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-privacy.php:53
 #: bp-media/classes/class-bp-media-component.php:171
 #: bp-media/classes/class-bp-media-privacy.php:53
-#: bp-video/classes/class-bp-video-component.php:167
+#: bp-video/classes/class-bp-video-component.php:158
 #: bp-video/classes/class-bp-video-privacy.php:53
 #: bp-xprofile/classes/class-bp-xprofile-component.php:199
 msgid "Only Me"
@@ -3033,7 +3033,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
 #: bp-media/bp-media-settings.php:631 bp-media/bp-media-settings.php:658
 #: bp-media/bp-media-settings.php:815 bp-media/bp-media-settings.php:1022
-#: bp-search/bp-search-settings.php:479 bp-video/bp-video-settings.php:224
+#: bp-search/bp-search-settings.php:479 bp-video/bp-video-settings.php:202
 msgid "View Tutorial"
 msgstr ""
 
@@ -3450,10 +3450,11 @@ msgstr ""
 #: bp-search/bp-search-settings.php:816
 #: bp-templates/bp-nouveau/buddypress/groups/single/videos.php:21
 #: bp-templates/bp-nouveau/buddypress/video/add-video.php:13
+#: bp-templates/bp-nouveau/includes/customizer.php:211
 #: bp-video/classes/class-bp-video-component.php:70
-#: bp-video/classes/class-bp-video-component.php:254
-#: bp-video/classes/class-bp-video-component.php:261
-#: bp-video/classes/class-bp-video-component.php:324
+#: bp-video/classes/class-bp-video-component.php:231
+#: bp-video/classes/class-bp-video-component.php:238
+#: bp-video/classes/class-bp-video-component.php:288
 #: bp-video/classes/class-bp-video-theme-compat.php:166
 msgid "Videos"
 msgstr ""
@@ -3733,7 +3734,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1659 bp-forums/admin/tools.php:1661
 #: bp-forums/admin/tools.php:1733 bp-forums/admin/tools.php:1735
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1770
-#: bp-video/bp-video-filters.php:1049
+#: bp-video/bp-video-filters.php:961
 msgid "Complete!"
 msgstr ""
 
@@ -3843,9 +3844,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/video/ajax.php:452
 #: bp-templates/bp-nouveau/includes/video/ajax.php:550
 #: bp-templates/bp-nouveau/includes/video/ajax.php:655
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1206
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1275
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1364
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1204
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1273
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1362
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -4136,7 +4137,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:22
 #: bp-document/bp-document-functions.php:1967
-#: bp-video/bp-video-functions.php:2724
+#: bp-video/bp-video-functions.php:2723
 msgid "Video"
 msgstr ""
 
@@ -5339,8 +5340,8 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2913
 #: bp-templates/bp-nouveau/includes/video/functions.php:185
-#: bp-video/classes/class-bp-video-component.php:332
-#: bp-video/classes/class-bp-video-component.php:363
+#: bp-video/classes/class-bp-video-component.php:296
+#: bp-video/classes/class-bp-video-component.php:316
 msgid "My Videos"
 msgstr ""
 
@@ -8908,12 +8909,12 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1092
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:627
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2331
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1127
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1125
 msgid "Download"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:1053 bp-media/bp-media-filters.php:1865
-#: bp-video/bp-video-filters.php:1141
+#: bp-video/bp-video-filters.php:1053
 msgid "File not found"
 msgstr ""
 
@@ -8940,7 +8941,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-document/bp-document-filters.php:1631 bp-media/bp-media-filters.php:2282
-#: bp-video/bp-video-filters.php:1536
+#: bp-video/bp-video-filters.php:1448
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -8959,48 +8960,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1922
-#: bp-video/bp-video-functions.php:2679
+#: bp-video/bp-video-functions.php:2678
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1927
-#: bp-video/bp-video-functions.php:2684
+#: bp-video/bp-video-functions.php:2683
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1932
-#: bp-video/bp-video-functions.php:2689
+#: bp-video/bp-video-functions.php:2688
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1937
-#: bp-video/bp-video-functions.php:2694
+#: bp-video/bp-video-functions.php:2693
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1942
-#: bp-video/bp-video-functions.php:2699
+#: bp-video/bp-video-functions.php:2698
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1947
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2704
+#: bp-video/bp-video-functions.php:2703
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1952
-#: bp-video/bp-video-functions.php:2709
+#: bp-video/bp-video-functions.php:2708
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1957
-#: bp-video/bp-video-functions.php:2714
+#: bp-video/bp-video-functions.php:2713
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1962
-#: bp-video/bp-video-functions.php:2719
+#: bp-video/bp-video-functions.php:2718
 msgid "Text"
 msgstr ""
 
@@ -9041,11 +9042,11 @@ msgstr ""
 #: bp-document/classes/class-bp-document.php:710
 #: bp-document/classes/class-bp-document.php:1372
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
-#: bp-media/classes/class-bp-media-album.php:517
+#: bp-media/classes/class-bp-media-album.php:529
 #: bp-media/classes/class-bp-media-privacy.php:59
 #: bp-media/classes/class-bp-media.php:632
 #: bp-video/classes/class-bp-video-privacy.php:59
-#: bp-video/classes/class-bp-video.php:657
+#: bp-video/classes/class-bp-video.php:656
 msgid "Group Members"
 msgstr ""
 
@@ -9065,7 +9066,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document.php:722
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
 #: bp-messages/bp-messages-template.php:1455
-#: bp-templates/bp-nouveau/includes/customizer.php:333
+#: bp-templates/bp-nouveau/includes/customizer.php:336
 msgid "Message"
 msgstr ""
 
@@ -15268,7 +15269,7 @@ msgid "Remove Connection"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:460
-#: bp-templates/bp-nouveau/includes/customizer.php:320
+#: bp-templates/bp-nouveau/includes/customizer.php:323
 msgid "Connect"
 msgstr ""
 
@@ -19101,7 +19102,7 @@ msgstr ""
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1322 bp-video/bp-video-settings.php:318
+#: bp-media/bp-media-settings.php:1322 bp-video/bp-video-settings.php:296
 msgid "<a href=\"%s\">Manage</a> which file extensions are allowed to be uploaded."
 msgstr ""
 
@@ -19120,7 +19121,7 @@ msgid ""
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1455 bp-media/bp-media-settings.php:1500
-#: bp-video/bp-video-settings.php:286
+#: bp-video/bp-video-settings.php:264
 msgid "MB"
 msgstr ""
 
@@ -19755,7 +19756,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-members-switching.php:533
 #: bp-members/classes/class-bp-core-members-switching.php:576
 #: bp-members/classes/class-bp-core-members-switching.php:609
-#: bp-templates/bp-nouveau/includes/customizer.php:337
+#: bp-templates/bp-nouveau/includes/customizer.php:340
 msgid "View As"
 msgstr ""
 
@@ -20975,7 +20976,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:208
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:102
 #: bp-templates/bp-nouveau/includes/media/functions.php:167
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1321
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1319
 #: bp-templates/bp-nouveau/includes/video/functions.php:142
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
@@ -23739,6 +23740,16 @@ msgstr ""
 msgid "Add Photos"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/media/album-entry.php:21
+#: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
+#: bp-templates/bp-nouveau/buddypress/video/single-album.php:41
+#: bp-video/bp-video-filters.php:1443
+#. translators: videos
+msgid "%s video"
+msgid_plural "%s videos"
+msgstr[0] ""
+msgstr[1] ""
+
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:14
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:16
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:45
@@ -24219,15 +24230,6 @@ msgid ""
 "thumbnail stands out and draws viewer’s attention."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
-#: bp-templates/bp-nouveau/buddypress/video/single-album.php:41
-#: bp-video/bp-video-filters.php:1531
-#. translators: videos
-msgid "%s video"
-msgid_plural "%s videos"
-msgstr[0] ""
-msgstr[1] ""
-
 #: bp-templates/bp-nouveau/buddypress/video/location-move.php:12
 msgid "You have not created any album yet to move this photo into."
 msgstr ""
@@ -24302,9 +24304,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1005
 #: bp-templates/bp-nouveau/includes/video/ajax.php:284
 #: bp-templates/bp-nouveau/includes/video/ajax.php:724
-#: bp-templates/bp-nouveau/includes/video/ajax.php:823
-#: bp-templates/bp-nouveau/includes/video/ajax.php:866
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1040
+#: bp-templates/bp-nouveau/includes/video/ajax.php:821
+#: bp-templates/bp-nouveau/includes/video/ajax.php:864
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1038
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -24423,8 +24425,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:414
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1067
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1073
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1102
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1108
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1100
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1106
 msgid "Add a description"
 msgstr ""
 
@@ -24433,7 +24435,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1557
 #: bp-templates/bp-nouveau/includes/document/ajax.php:420
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1077
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1112
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1110
 msgid "Done Editing"
 msgstr ""
 
@@ -24496,31 +24498,31 @@ msgid "Profile Action Buttons"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:51
-#: bp-templates/bp-nouveau/includes/customizer.php:243
+#: bp-templates/bp-nouveau/includes/customizer.php:246
 msgid ""
 "Customize the order of the action buttons in profile headers, visible when "
 "viewing other member's profiles."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:213
+#: bp-templates/bp-nouveau/includes/customizer.php:216
 msgid "Display the profile navigation vertically."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:219
+#: bp-templates/bp-nouveau/includes/customizer.php:222
 msgid "Profile navigation order"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:220
+#: bp-templates/bp-nouveau/includes/customizer.php:223
 msgid ""
 "Set the default navigation tab when viewing a member profile. The dropdown "
 "only shows tabs that are available to all members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:228
+#: bp-templates/bp-nouveau/includes/customizer.php:231
 msgid "Reorder the primary navigation for a member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:235
+#: bp-templates/bp-nouveau/includes/customizer.php:238
 msgid "Hide the primary navigation for a member."
 msgstr ""
 
@@ -24552,7 +24554,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:481
 #: bp-templates/bp-nouveau/includes/media/ajax.php:813
 #: bp-templates/bp-nouveau/includes/video/ajax.php:302
-#: bp-templates/bp-nouveau/includes/video/ajax.php:841
+#: bp-templates/bp-nouveau/includes/video/ajax.php:839
 msgid "Please provide attachment id to delete."
 msgstr ""
 
@@ -25663,24 +25665,24 @@ msgid "Please provide media id to update."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:867
-#: bp-templates/bp-nouveau/includes/video/ajax.php:895
+#: bp-templates/bp-nouveau/includes/video/ajax.php:893
 msgid "Please provide privacy to update."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:876
-#: bp-templates/bp-nouveau/includes/video/ajax.php:904
+#: bp-templates/bp-nouveau/includes/video/ajax.php:902
 msgid "Privacy option is not valid."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:898
-#: bp-templates/bp-nouveau/includes/video/ajax.php:926
+#: bp-templates/bp-nouveau/includes/video/ajax.php:924
 msgid "There was a problem. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:916
 #: bp-templates/bp-nouveau/includes/media/ajax.php:927
-#: bp-templates/bp-nouveau/includes/video/ajax.php:944
-#: bp-templates/bp-nouveau/includes/video/ajax.php:955
+#: bp-templates/bp-nouveau/includes/video/ajax.php:942
+#: bp-templates/bp-nouveau/includes/video/ajax.php:953
 msgid "There was an error in updating a description. Please try again."
 msgstr ""
 
@@ -26046,20 +26048,20 @@ msgstr ""
 msgid "There was a problem when trying to move the video."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:884
+#: bp-templates/bp-nouveau/includes/video/ajax.php:882
 msgid "Please provide video id to update."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1091
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1089
 msgid "uploaded an video"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1181
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1179
 msgid " Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1240
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1248
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1238
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1246
 msgid "You don't have permission to move this video."
 msgstr ""
 
@@ -26173,31 +26175,31 @@ msgstr ""
 msgid "Matroska"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:939
+#: bp-video/bp-video-filters.php:851
 msgid "Repair video on the site."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:944
+#: bp-video/bp-video-filters.php:856
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:998
+#: bp-video/bp-video-filters.php:910
 msgid "%s video updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1008
+#: bp-video/bp-video-filters.php:920
 msgid "Video update complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1037
+#: bp-video/bp-video-filters.php:949
 msgid "%s Forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1045
+#: bp-video/bp-video-filters.php:957
 msgid "Forums video privacy updated %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1158
+#: bp-video/bp-video-filters.php:1070
 msgid "Go to video"
 msgstr ""
 
@@ -26223,41 +26225,41 @@ msgstr ""
 msgid "Allow members to upload videos in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:91
+#: bp-video/bp-video-settings.php:80
 msgid ""
 "Allow members to upload videos in <strong>groups</strong> and <strong>group "
 "activity</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:93
+#: bp-video/bp-video-settings.php:82
 msgid "Allow members to upload videos in <strong>groups</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:151
+#: bp-video/bp-video-settings.php:129
 msgid ""
 "Allow members to upload videos in <strong>private messages</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:153
+#: bp-video/bp-video-settings.php:131
 msgid "Allow members to upload videos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:186
+#: bp-video/bp-video-settings.php:164
 msgid "Allow members to upload videos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:291
+#: bp-video/bp-video-settings.php:269
 msgid ""
 "Set a maximum file size for video uploads, in megabytes. Your server's "
 "maximum upload size is "
 msgstr ""
 
-#: bp-video/classes/class-bp-video-component.php:188
+#: bp-video/classes/class-bp-video-component.php:179
 msgid "Search Videos&hellip;"
 msgstr ""
 
-#: bp-video/classes/class-bp-video-component.php:370
+#: bp-video/classes/class-bp-video-component.php:323
 msgid "Profile video of %s"
 msgstr ""
 
@@ -27662,7 +27664,7 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-video/bp-video-settings.php:238 bp-video/bp-video-settings.php:257
+#: bp-video/bp-video-settings.php:216 bp-video/bp-video-settings.php:235
 #. translators: 1: FFMpeg status
 msgctxt "extension notification"
 msgid ""
