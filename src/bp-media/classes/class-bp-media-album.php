@@ -472,7 +472,7 @@ class BP_Media_Album {
 		// Get BuddyPress.
 		$bp = buddypress();
 
-		// Media Privacy array
+		// Media Privacy array.
 		$media_privacy = bp_media_get_visibility_levels();
 
 		$albums       = array();
@@ -503,10 +503,22 @@ class BP_Media_Album {
 				$album->group_id = (int) $album->group_id;
 			}
 
-			$album->media = bp_media_get( array(
+			$album->media = bp_media_get(
+				array(
 					'album_id'    => $album->id,
 					'count_total' => true,
-				) );
+				)
+			);
+
+			// Add Video object in album to get count.
+			if ( ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) {
+				$album->video = bp_video_get(
+					array(
+						'album_id'    => $album->id,
+						'count_total' => true,
+					)
+				);
+			}
 
 			$group_name = '';
 			if ( bp_is_active( 'groups') && $album->group_id > 0 ) {
@@ -519,7 +531,7 @@ class BP_Media_Album {
 					$visibility = ucfirst( $status );
 				}
 			} else {
-				$visibility       = $media_privacy[ $album->privacy ];
+				$visibility = $media_privacy[ $album->privacy ];
 			}
 			$album->group_name = $group_name;
 			$album->visibility = $visibility;

@@ -16,7 +16,7 @@
  * PHP supported by WordPress.
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
@@ -54,7 +54,7 @@ $bp_is_multisite         = is_multisite();
 $bp_incompatible_plugins = array();
 
 if ( $bp_is_multisite ) {
-	// get network-activated plugins
+	// get network-activated plugins.
 	foreach ( get_site_option( 'active_sitewide_plugins', array() ) as $key => $value ) {
 		$bp_sitewide_plugins[] = $key;
 	}
@@ -62,12 +62,12 @@ if ( $bp_is_multisite ) {
 $bp_plugins   = array_merge( $bp_sitewide_plugins, get_option( 'active_plugins' ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
-// check if BuddyPress is activated
+// check if BuddyPress is activated.
 if ( in_array( $bp_plugin_file, $bp_plugins ) ) {
 	$is_bp_active = true;
 }
 
-// check if bbPress is activated
+// check if bbPress is activated.
 if ( in_array( $bb_plugin_file, $bp_plugins ) ) {
 	$is_bb_active = true;
 }
@@ -229,13 +229,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		if ( $bp_is_multisite ) {
-			// Check if Forum Component is enabled if so then add
+			// Check if Forum Component is enabled if so then add.
 			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
 				$value[ $bb_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 			}
 			$value[ $bp_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 		} else {
-			// Check if Forum Component is enabled if so then add
+			// Check if Forum Component is enabled if so then add.
 			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
 				array_push( $value, $bb_plugin_file );
 			}
@@ -347,7 +347,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	} else {
 		require dirname( __FILE__ ) . '/class-buddypress.php';
 
-		// load the member switch class so all the hook prior to bp_init can be hook in
+		// load the member switch class so all the hook prior to bp_init can be hook in.
 		require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';
 
 		/*
@@ -364,7 +364,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			// A lot of actions in bbpress require before component init,
 			// hence we grab the pure db value and load the class
-			// so all the hook prior to bp_init can be hook in
+			// so all the hook prior to bp_init can be hook in.
 			if ( $bp_forum_active ) {
 				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
 				add_action( 'plugins_loaded', 'bbpress', (int) BUDDYPRESS_LATE_LOAD );
@@ -398,7 +398,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		global $is_bp_active;
 		global $is_bb_active;
 
-		// Disable BuddyPress message
+		// Disable BuddyPress message.
 		if ( $is_bp_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
@@ -412,7 +412,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			<?php
 		}
 
-		// Disable bbPress message
+		// Disable bbPress message.
 		if ( $is_bb_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );

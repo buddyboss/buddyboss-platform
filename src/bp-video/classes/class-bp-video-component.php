@@ -248,7 +248,7 @@ class BP_Video_Component extends BP_Component {
 				'item_css_id'         => $this->id,
 			);
 
-			// Add the subnav items to the profile.
+			// Add the sub nav items to the profile.
 			$sub_nav[] = array(
 				'name'            => $nav_name,
 				'slug'            => 'my-video',

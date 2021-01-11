@@ -19,4 +19,4 @@ defined( 'ABSPATH' ) || exit;
 function bp_setup_video() {
 	buddypress()->video = new BP_Video_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_video', 5 );
+add_action( 'bp_setup_components', 'bp_setup_video', 4 );

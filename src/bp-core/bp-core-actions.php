@@ -145,7 +145,7 @@ add_action( 'bp_init', function() {
 		$component['document'] = '1';
 		bp_update_option( 'bp-active-components', $component );
 	} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-		unset($component['document']);
+		unset( $component['document'] );
 		bp_update_option( 'bp-active-components', $component );
 	}
 
@@ -154,7 +154,7 @@ add_action( 'bp_init', function() {
 		$component['video'] = '1';
 		bp_update_option( 'bp-active-components', $component );
 	} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
-		unset($component['video']);
+		unset( $component['video'] );
 		bp_update_option( 'bp-active-components', $component );
 	}
 }, 10, 2 );

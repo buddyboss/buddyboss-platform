@@ -69,7 +69,7 @@ function bp_core_admin_components_options() {
 	// Merge optional and required together.
 	$all_components = $required_components + $optional_components;
 
-	// We are not displaying document component in listing it's automatically active if media component is active.
+	// We are not displaying document & video component in listing it's automatically active if media component is active.
 	unset( $all_components['document'] );
 	unset( $all_components['video'] );
 

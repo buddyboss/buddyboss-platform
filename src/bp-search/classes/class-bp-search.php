@@ -122,10 +122,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		public function load_search_helpers() {
 			global $bp;
 
-			// load the helper type parent class
+			// load the helper type parent class.
 			require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-types.php';
 
-			// load and associate helpers one by one
+			// load and associate helpers one by one.
 			if ( bp_is_search_post_type_enable( 'post' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
 				$this->search_helpers['posts'] = new Bp_Search_Posts( 'post', 'posts' );

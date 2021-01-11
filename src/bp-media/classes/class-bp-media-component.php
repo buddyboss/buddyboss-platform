@@ -177,19 +177,19 @@ class BP_Media_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles         = bp_core_get_directory_page_default_titles();
-		$default_directory_title          = $default_directory_titles[ $this->id ];
+		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for media component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
 			array(
-				'slug'                                    => 'photos',
-				'root_slug'                               => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
-				'has_directory'                           => true,
-				'global_tables'                           => $global_tables,
-				'directory_title'                         => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-				'search_string'                           => __( 'Search Photos&hellip;', 'buddyboss' ),
+				'slug'            => 'photos',
+				'root_slug'       => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
+				'has_directory'   => true,
+				'global_tables'   => $global_tables,
+				'directory_title' => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
+				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss' ),
 			)
 		);
 
