@@ -1229,7 +1229,7 @@ function bp_video_get_total_group_video_count( $group_id = 0 ) {
 	}
 
 	$count = wp_cache_get( 'bp_total_video_for_group_' . $group_id, 'bp' );
-
+	$count = false;
 	if ( false === $count ) {
 		$count = BP_Video::total_group_video_count( $group_id );
 		wp_cache_set( 'bp_total_video_for_group_' . $group_id, $count, 'bp' );

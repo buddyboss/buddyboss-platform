@@ -609,8 +609,8 @@ class BP_Video {
 			}
 
 			// fetch video thumbnail attachment data.
-			$attachment_data        = new stdClass();
-			$attachment_data->meta  = new stdClass();
+			$attachment_data       = new stdClass();
+			$attachment_data->meta = new stdClass();
 
 			$attachment_data->full           = '';
 			$attachment_data->thumb          = '';
@@ -619,8 +619,8 @@ class BP_Video {
 			$get_video_thumb_ids = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 			$get_video_thumb_id  = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 
-			$attachment_data->meta->mime_type = get_post_mime_type( $video->attachment_id );
-			$length_formatted = wp_get_attachment_metadata( $video->attachment_id );
+			$attachment_data->meta->mime_type        = get_post_mime_type( $video->attachment_id );
+			$length_formatted                        = wp_get_attachment_metadata( $video->attachment_id );
 			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
 
 			if ( $get_video_thumb_id ) {
@@ -1160,7 +1160,8 @@ class BP_Video {
 		// Where conditions.
 		$where_conditions = array();
 
-		$where_conditions['group_sql'] = $wpdb->prepare( 'm.group_id = %s', $group_id );
+		$where_conditions['group_sql']         = $wpdb->prepare( 'm.group_id = %s', $group_id );
+		$where_conditions['group_video_count'] = $wpdb->prepare( 'm.type = %s', 'video' );
 
 		/**
 		 * Filters the MySQL WHERE conditions for the Video items get method.
