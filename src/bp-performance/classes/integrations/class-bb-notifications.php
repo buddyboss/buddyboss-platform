@@ -81,8 +81,8 @@ class BB_Notifications extends Integration_Abstract {
 		$purge_single_events = apply_filters( 'bbplatform_cache_bp_notifications_single', $purge_single_events );
 		$this->purge_single_events( 'bbplatform_cache_purge_bp-notifications_single', $purge_single_events );
 
-		$is_component_active    = Helper::instance()->get_app_settings( 'cache_component', 'appboss' );
-		$settings               = Helper::instance()->get_app_settings( 'cache_bb_notifications', 'appboss' );
+		$is_component_active    = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
+		$settings               = Helper::instance()->get_app_settings( 'cache_bb_notifications', 'buddyboss-app' );
 		$cache_bb_notifications = isset( $is_component_active ) && isset( $settings ) ? ( $is_component_active && $settings ) : false;
 
 		if ( $cache_bb_notifications ) {

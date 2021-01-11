@@ -75,8 +75,8 @@ class BB_Activity extends Integration_Abstract {
 		$purge_single_events = apply_filters( 'bbplatform_cache_bp_activity_single', $purge_single_events );
 		$this->purge_single_events( 'bbplatform_cache_purge_bp-activity_single', $purge_single_events );
 
-		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'appboss' );
-		$settings            = Helper::instance()->get_app_settings( 'cache_bb_activity_feeds', 'appboss' );
+		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
+		$settings            = Helper::instance()->get_app_settings( 'cache_bb_activity_feeds', 'buddyboss-app' );
 		$cache_bb_activity   = isset( $is_component_active ) && isset( $settings ) ? ( $is_component_active && $settings ) : false;
 
 		if ( $cache_bb_activity ) {
