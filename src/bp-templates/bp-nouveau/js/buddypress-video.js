@@ -1125,6 +1125,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteVideo: function ( event ) {
+			var self = this;
 			var target = $( event.currentTarget );
 			event.preventDefault();
 
@@ -1240,6 +1241,12 @@ window.bp = window.bp || {};
 											if ( $( '#video-stream ul.video-list li[data-id="' + value + '"]' ).length ) {
 												$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).remove();
 											}
+
+											//Remove video from the current album
+											if ( self.video_album_id && $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
+												$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
+											}
+
 										}
 									);
 									if ( $( '#buddypress' ).find( '.video-list:not(.existing-video-list)' ).find( 'li:not(.load-more)' ).length == 0 ) {
