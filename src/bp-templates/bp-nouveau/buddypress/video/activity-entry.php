@@ -39,7 +39,7 @@ echo $width > $height ? esc_attr( 'bb-horizontal-layout' ) : '';
 echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) : '';
 echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_more_option ' ) : '';
 ?>
-">
+" data-id="<?php echo esc_attr( bp_get_video_id() ); ?>">
 	<div class="video-action-wrap item-action-wrap">
 
 		<?php if ( $can_manage ) { ?>
