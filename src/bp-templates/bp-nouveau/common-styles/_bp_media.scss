@@ -1276,6 +1276,14 @@ ul.bb-albums-list {
 #buddypress .bb-video-list li.load-more {
 	margin: 20px auto 10px;
 	text-align: center;
+	-ms-flex-preferred-size: 100%;
+	flex-basis: 100%;
+	max-width: 100%;
+
+	> a {
+		max-width: 33%;
+	}
+
 }
 
 .bb-album-list-item {

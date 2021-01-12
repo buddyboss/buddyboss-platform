@@ -14345,6 +14345,14 @@ ul.bb-albums-list .load-more {
 #buddypress .bb-video-list li.load-more {
   margin: 20px auto 10px;
   text-align: center;
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+#buddypress .bb-photo-list li.load-more > a,
+#buddypress .bb-video-list li.load-more > a {
+  max-width: 33%;
 }
 
 .bb-album-list-item .bs-cover-wrap {
