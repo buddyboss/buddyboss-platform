@@ -2582,14 +2582,17 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		}
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $new_filename, bp_core_current_time(), $document_id, $attachment_document_id );
-	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
-
-	bp_document_update_meta( $document_id, 'file_name', $new_filename );
-
-	if ( false === $query ) {
+	$document = new BP_Document( $document_id );
+	if ( empty( $document->id ) ) {
 		return false;
 	}
+
+	$document->title         = $new_filename;
+	$document->date_modified = bp_core_current_time();
+	$document->attachment_id = $attachment_document_id;
+	$document->save();
+
+	bp_document_update_meta( $document_id, 'file_name', $new_filename );
 
 	$response = apply_filters(
 		'bp_document_rename_file',
@@ -2636,13 +2639,16 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 
 	$title = wp_strip_all_tags( $title );
 
-	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
-
-	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
-
-	if ( false === $q ) {
+	$folder = new BP_Document_Folder( $folder_id );
+	if ( empty( $folder->id ) ) {
 		return false;
 	}
+
+	$folder->title         = $title;
+	$folder->date_modified = bp_core_current_time();
+	$folder->save();
+
+	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
 
 	return $folder_id;
 }
