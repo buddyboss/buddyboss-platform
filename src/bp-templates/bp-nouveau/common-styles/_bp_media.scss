@@ -462,6 +462,21 @@
 	display: -ms-flexbox;
 	display: flex;
 	margin-top: 20px;
+
+	&.bb-videos-actions {
+		margin-top: 30px;
+
+		.bb-videos-meta {
+			margin-bottom: 10px;
+		}
+
+	}
+
+	+ #video-stream .grid.bp-list {
+		padding-top: 0;
+		margin-top: 20px;
+	}
+
 }
 
 .bb-media-meta {
@@ -1310,14 +1325,6 @@ ul.bb-albums-list {
 #buddypress .bb-album-content-wrap h4 {
 	margin-bottom: 12px;
 }
-
-.bbm-uploader-model-wrap {
-
-	.dropzone .dz-remove:after {
-		top: -6px;
-	}
-}
-
 
 #buddypress {
 
@@ -2207,18 +2214,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	max-width: 40px;
 }
 
-.modal-container.has-folderlocationUI .dropzone,
-.bp-media-document-uploader .dropzone .dz-preview,
-#whats-new-attachments #forums-post-document-uploader,
-#messages-post-document-uploader,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader,
-.activity_update .activity-comments .ac-reply-content .dropzone,
-#activity-post-video-uploader,
-#bp-video-dropzone-content,
-#forums-post-video-uploader,
-#messages-post-video-uploader,
-#bp-group-messages-post-video-uploader,
-#boss-video-create-album-popup {
+div.dropzone .dz-preview {
 
 	.dz-success-mark,
 	.dz-progress,

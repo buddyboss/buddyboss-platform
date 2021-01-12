@@ -96,16 +96,18 @@
 	overflow: hidden;
 }
 
-.dropzone .dz-complete .dz-remove {
+.dropzone .dz-remove {
 
 	&:after {
 		content: "\00d7";
+		position: relative;
+		top: -2px;
 		font-size: 14px;
 		line-height: 1;
 	}
 }
 
-.dropzone .dz-complete .dz-remove {
+.dropzone .dz-remove {
 	color: #fff;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 	background: #fd4343;

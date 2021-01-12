@@ -1687,7 +1687,7 @@ window.bp = window.bp || {};
 							} else {
 								if ( parseInt( BP_Nouveau.video.current_album ) > 0 ) {
 									$( '#video-stream ul.video-list li[data-id="' + video_id + '"]' ).remove();
-								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).length && ! $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).parent().hasClass( 'bb-video-length-1' ) ) {
+								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).length && ! $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).parents().hasClass( 'bb-video-length-1' ) ) {
 									$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).remove();
 									if ( activityId && activityId.length ) {
 										$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-wrap' ).remove();
@@ -2319,6 +2319,8 @@ window.bp = window.bp || {};
 		setupGlobals: function () {
 
 			this.player = [];
+			this.playerTime = 0;
+			this.playerID = '';
 
 			// Video File Activity Preview.
 			bp.Nouveau.Video.Player.openPlayer();
@@ -2362,12 +2364,25 @@ window.bp = window.bp || {};
 						);
 					}
 					);
+					//Check if Video has played before and has the same id
+					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == bp.Nouveau.Video.Player.playerID ) {
+						player[ $(self).parent().attr('id') ].currentTime( bp.Nouveau.Video.Player.playerTime );
+						player[ $(self).parent().attr('id') ].play();
+					} else {
+						bp.Nouveau.Video.Player.playerTime = 0;
+						bp.Nouveau.Video.Player.playerID = '';
+					}
 
 					if( $( self ).hasClass( 'single-activity-video') ) {
 						var ele_id 		= $( this ).attr( 'id' );
 						var cus_button 	= player[ $( this ).attr( 'id' ) ].controlBar.addChild( 'button' );
 						cus_button.addClass( 'vjs-icon-square' );
 						cus_button.on( 'click', function() {
+							//Set current time of video and id
+							if( player[ele_id].currentTime() > 0 ) {
+								bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
+								bp.Nouveau.Video.Player.playerID = $( '#' + ele_id ).parent().find('.video-js video').attr('id');
+							}
 							player[ele_id].pause();
 							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
 						} );

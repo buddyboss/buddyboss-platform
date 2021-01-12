@@ -13561,6 +13561,19 @@ body.login .login-popup .mfp-close:hover {
   margin-top: 20px;
 }
 
+.bb-member-media-header.bb-videos-actions {
+  margin-top: 30px;
+}
+
+.bb-member-media-header.bb-videos-actions .bb-videos-meta {
+  margin-bottom: 10px;
+}
+
+.bb-member-media-header + #video-stream .grid.bp-list {
+  padding-top: 0;
+  margin-top: 20px;
+}
+
 .bb-media-meta {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -14377,10 +14390,6 @@ ul.bb-albums-list .load-more {
 
 #buddypress .bb-album-content-wrap h4 {
   margin-bottom: 12px;
-}
-
-.bbm-uploader-model-wrap .dropzone .dz-remove:after {
-  top: -6px;
 }
 
 #buddypress #bp-media-single-album .bb-single-album-header {
@@ -15209,57 +15218,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   max-width: 40px;
 }
 
-.modal-container.has-folderlocationUI .dropzone .dz-success-mark,
-.modal-container.has-folderlocationUI .dropzone .dz-progress,
-.modal-container.has-folderlocationUI .dropzone .dz-error-mark,
-.bp-media-document-uploader .dropzone .dz-preview .dz-success-mark,
-.bp-media-document-uploader .dropzone .dz-preview .dz-progress,
-.bp-media-document-uploader .dropzone .dz-preview .dz-error-mark,
-#whats-new-attachments #forums-post-document-uploader .dz-success-mark,
-#whats-new-attachments #forums-post-document-uploader .dz-progress,
-#whats-new-attachments #forums-post-document-uploader .dz-error-mark,
-#messages-post-document-uploader .dz-success-mark,
-#messages-post-document-uploader .dz-progress,
-#messages-post-document-uploader .dz-error-mark,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-success-mark,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-progress,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-error-mark,
-.activity_update .activity-comments .ac-reply-content .dropzone .dz-success-mark,
-.activity_update .activity-comments .ac-reply-content .dropzone .dz-progress,
-.activity_update .activity-comments .ac-reply-content .dropzone .dz-error-mark,
-#activity-post-video-uploader .dz-success-mark,
-#activity-post-video-uploader .dz-progress,
-#activity-post-video-uploader .dz-error-mark,
-#bp-video-dropzone-content .dz-success-mark,
-#bp-video-dropzone-content .dz-progress,
-#bp-video-dropzone-content .dz-error-mark,
-#forums-post-video-uploader .dz-success-mark,
-#forums-post-video-uploader .dz-progress,
-#forums-post-video-uploader .dz-error-mark,
-#messages-post-video-uploader .dz-success-mark,
-#messages-post-video-uploader .dz-progress,
-#messages-post-video-uploader .dz-error-mark,
-#bp-group-messages-post-video-uploader .dz-success-mark,
-#bp-group-messages-post-video-uploader .dz-progress,
-#bp-group-messages-post-video-uploader .dz-error-mark,
-#boss-video-create-album-popup .dz-success-mark,
-#boss-video-create-album-popup .dz-progress,
-#boss-video-create-album-popup .dz-error-mark {
+div.dropzone .dz-preview .dz-success-mark,
+div.dropzone .dz-preview .dz-progress,
+div.dropzone .dz-preview .dz-error-mark {
   top: 70%;
 }
 
-.modal-container.has-folderlocationUI .dropzone .dz-filename,
-.bp-media-document-uploader .dropzone .dz-preview .dz-filename,
-#whats-new-attachments #forums-post-document-uploader .dz-filename,
-#messages-post-document-uploader .dz-filename,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-filename,
-.activity_update .activity-comments .ac-reply-content .dropzone .dz-filename,
-#activity-post-video-uploader .dz-filename,
-#bp-video-dropzone-content .dz-filename,
-#forums-post-video-uploader .dz-filename,
-#messages-post-video-uploader .dz-filename,
-#bp-group-messages-post-video-uploader .dz-filename,
-#boss-video-create-album-popup .dz-filename {
+div.dropzone .dz-preview .dz-filename {
   font-size: 14px;
 }
 
@@ -18776,6 +18741,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   opacity: 1;
 }
 
+.bb-activity-video-elem .bb-open-video-theatre.hide {
+  display: none;
+}
+
 .bp-single-message-wrap .bb-activity-video-wrap .bb-activity-video-elem .bb-item-cover-wrap {
   padding-top: 100%;
 }
@@ -19380,13 +19349,15 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   overflow: hidden;
 }
 
-.dropzone .dz-complete .dz-remove:after {
+.dropzone .dz-remove:after {
   content: "\00d7";
+  position: relative;
+  top: -2px;
   font-size: 14px;
   line-height: 1;
 }
 
-.dropzone .dz-complete .dz-remove {
+.dropzone .dz-remove {
   color: #fff;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   background: #fd4343;

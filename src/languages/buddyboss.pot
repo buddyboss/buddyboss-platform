@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-11 11:11:00+00:00\n"
+"POT-Creation-Date: 2021-01-12 07:10:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4137,7 +4137,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:22
 #: bp-document/bp-document-functions.php:1967
-#: bp-video/bp-video-functions.php:2723
+#: bp-video/bp-video-functions.php:2724
 msgid "Video"
 msgstr ""
 
@@ -8960,48 +8960,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1922
-#: bp-video/bp-video-functions.php:2678
+#: bp-video/bp-video-functions.php:2679
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1927
-#: bp-video/bp-video-functions.php:2683
+#: bp-video/bp-video-functions.php:2684
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1932
-#: bp-video/bp-video-functions.php:2688
+#: bp-video/bp-video-functions.php:2689
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1937
-#: bp-video/bp-video-functions.php:2693
+#: bp-video/bp-video-functions.php:2694
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1942
-#: bp-video/bp-video-functions.php:2698
+#: bp-video/bp-video-functions.php:2699
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1947
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2703
+#: bp-video/bp-video-functions.php:2704
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1952
-#: bp-video/bp-video-functions.php:2708
+#: bp-video/bp-video-functions.php:2709
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1957
-#: bp-video/bp-video-functions.php:2713
+#: bp-video/bp-video-functions.php:2714
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1962
-#: bp-video/bp-video-functions.php:2718
+#: bp-video/bp-video-functions.php:2719
 msgid "Text"
 msgstr ""
 
@@ -13297,7 +13297,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5463
 #: bp-notifications/bp-notifications-template.php:1002
-#: bp-templates/bp-nouveau/includes/template-tags.php:2167
+#: bp-templates/bp-nouveau/includes/template-tags.php:2165
 msgid "Order By:"
 msgstr ""
 
@@ -20544,7 +20544,7 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:272
-#: bp-templates/bp-nouveau/includes/template-tags.php:2407
+#: bp-templates/bp-nouveau/includes/template-tags.php:2405
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
@@ -22259,10 +22259,10 @@ msgstr ""
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:135
-#: bp-templates/bp-nouveau/includes/template-tags.php:2589
-#: bp-templates/bp-nouveau/includes/template-tags.php:2606
-#: bp-templates/bp-nouveau/includes/template-tags.php:2624
-#: bp-templates/bp-nouveau/includes/template-tags.php:2632
+#: bp-templates/bp-nouveau/includes/template-tags.php:2587
+#: bp-templates/bp-nouveau/includes/template-tags.php:2604
+#: bp-templates/bp-nouveau/includes/template-tags.php:2622
+#: bp-templates/bp-nouveau/includes/template-tags.php:2630
 msgid "Close (Esc)"
 msgstr ""
 
@@ -26001,29 +26001,29 @@ msgstr ""
 msgid "Loading Suggestions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2170
+#: bp-templates/bp-nouveau/includes/template-tags.php:2168
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2388
+#: bp-templates/bp-nouveau/includes/template-tags.php:2386
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2581
-#: bp-templates/bp-nouveau/includes/template-tags.php:2598
+#: bp-templates/bp-nouveau/includes/template-tags.php:2579
+#: bp-templates/bp-nouveau/includes/template-tags.php:2596
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2589
-#: bp-templates/bp-nouveau/includes/template-tags.php:2606
-#: bp-templates/bp-nouveau/includes/template-tags.php:2624
-#: bp-templates/bp-nouveau/includes/template-tags.php:2632
+#: bp-templates/bp-nouveau/includes/template-tags.php:2587
+#: bp-templates/bp-nouveau/includes/template-tags.php:2604
+#: bp-templates/bp-nouveau/includes/template-tags.php:2622
+#: bp-templates/bp-nouveau/includes/template-tags.php:2630
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2616
+#: bp-templates/bp-nouveau/includes/template-tags.php:2614
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 

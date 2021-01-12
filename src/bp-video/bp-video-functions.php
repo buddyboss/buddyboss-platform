@@ -552,7 +552,8 @@ function bp_video_add( $args = '' ) {
 		}
 	}
 
-	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) {
+	$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+	if ( isset( $action ) && 'groups_get_group_members_send_message' === $action ) {
 		$video->privacy = 'message';
 	}
 
@@ -1228,7 +1229,7 @@ function bp_video_get_total_group_video_count( $group_id = 0 ) {
 	}
 
 	$count = wp_cache_get( 'bp_total_video_for_group_' . $group_id, 'bp' );
-
+	$count = false;
 	if ( false === $count ) {
 		$count = BP_Video::total_group_video_count( $group_id );
 		wp_cache_set( 'bp_total_video_for_group_' . $group_id, $count, 'bp' );
@@ -2896,7 +2897,7 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 	}
 
 	if ( $group_id > 0 ) {
-		$destination_privacy = 'grouponly';
+		$destination_privacy = 'public';
 	} elseif ( $album_id > 0 ) {
 		$destination_album = BP_Video_Album::get_album_data( array( $album_id ) );
 		$destination_album = ( ! empty( $destination_album ) ) ? current( $destination_album ) : array();
