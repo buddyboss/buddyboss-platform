@@ -361,7 +361,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 */
-	public function set_additional_field_properties( $field_id = 0, WP_REST_Request $request ) {
+	public function set_additional_field_properties( $field_id, WP_REST_Request $request ) {
 		if ( ! $field_id ) {
 			return;
 		}
