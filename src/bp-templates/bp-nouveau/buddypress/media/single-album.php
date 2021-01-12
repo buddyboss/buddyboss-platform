@@ -46,12 +46,12 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						<?php
 						if ( $can_add ) {
 							?>
-						<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-							<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
-						</a>
-						<?php } ?>
+							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
+								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+							</a>
 
-						<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+						<?php } ?>
 
 						<?php if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() ) : ?>
 							<select id="bb-album-privacy">
@@ -88,6 +88,6 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 			</div>
 		</div>
-		<?php
+	<?php
 	endwhile;
 endif; ?>
