@@ -1847,7 +1847,7 @@ function bp_get_videos_link() {
 	if ( ! empty( $video_template->video->group_id ) ) {
 		$group = buddypress()->groups->current_group;
 		if ( ! isset( $group->id ) || $group->id !== $video_template->video->group_id ) {
-			$group = groups_get_group( $video_template->videoa->group_id );
+			$group = groups_get_group( $video_template->video->group_id );
 		}
 		$group_link = bp_get_group_permalink( $group );
 		$url        = trailingslashit( $group_link . bp_get_video_slug() );
