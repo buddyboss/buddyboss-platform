@@ -1162,6 +1162,7 @@ class BP_Video {
 
 		$where_conditions['group_sql']         = $wpdb->prepare( 'm.group_id = %s', $group_id );
 		$where_conditions['group_video_count'] = $wpdb->prepare( 'm.type = %s', 'video' );
+		$where_conditions['group_privacy']     = $wpdb->prepare( 'm.privacy = %s', 'grouponly' );
 
 		/**
 		 * Filters the MySQL WHERE conditions for the Video items get method.

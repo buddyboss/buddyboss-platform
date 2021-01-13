@@ -421,7 +421,7 @@ class BP_Media {
 		}
 
 		if ( ! $r['video'] ) {
-			$where_conditions['type'] = 'm.type = "photo"';
+			$where_conditions['type'] = "m.type = 'photo'";
 		}
 
 		/**
@@ -1116,7 +1116,9 @@ class BP_Media {
 		// Where conditions.
 		$where_conditions = array();
 
-		$where_conditions['group_sql'] = $wpdb->prepare( 'm.group_id = %s', $group_id );
+		$where_conditions['group_sql']         = $wpdb->prepare( 'm.group_id = %s', $group_id );
+		$where_conditions['group_media_count'] = $wpdb->prepare( 'm.type = %s', 'photo' );
+		$where_conditions['group_privacy']     = $wpdb->prepare( 'm.privacy = %s', 'grouponly' );
 
 		/**
 		 * Filters the MySQL WHERE conditions for the Media items get method.

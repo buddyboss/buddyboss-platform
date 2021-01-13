@@ -132,8 +132,6 @@ function bp_has_document( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	$privacy = false;
-
 	// folder filtering.
 	$folder_id = 0;
 	if ( ! isset( $args['folder_id'] ) && empty( $args['include'] ) ) {
@@ -146,6 +144,11 @@ function bp_has_document( $args = '' ) {
 	}
 
 	$group_id = false;
+	$privacy  = false;
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$group_id = bp_get_current_group_id();
+		$privacy  = array( 'grouponly' );
+	}
 
 	// The default scope should recognize custom slugs.
 	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
