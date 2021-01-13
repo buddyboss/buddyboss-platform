@@ -304,6 +304,9 @@ abstract class Integration_Abstract {
 		$results   = false;
 		$cache_val = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name );
 
+		$include_param = isset( $args['include_param'] ) ? $args['include_param'] : 'include';
+		$unique_id     = isset( $args['unique_id'] ) ? $args['unique_id'] : 'id';
+
 		if ( ! empty( $cache_val ) && isset( $cache_val['data'] ) && ! empty( $cache_val['data'] ) ) {
 			$results           = array();
 			$results['header'] = $cache_val['header'];
@@ -324,12 +327,21 @@ abstract class Integration_Abstract {
 					$rest_endpoint = $this->get_current_endpoint();
 
 					if ( isset( $rest_endpoint ) ) {
-						$include_param = isset( $args['include_param'] ) ? $args['include_param'] : 'include';
+
 						/**
 						 * Fetch Single item data if any single item cache is cleared
 						 */
 						$request = new WP_REST_Request( 'Get', $rest_endpoint );
-						$request->set_param( $include_param, $item_id );
+						if ( is_array( $unique_id ) ) {
+							$args = explode( '_', $item_id );
+							$args = array_combine( $unique_id, $args );
+							foreach ( $args as $key => $val ) {
+								$key = isset( $include_param[ $key ] ) ? $include_param[ $key ] : $key;
+								$request->set_param( $key, $val );
+							}
+						} else {
+							$request->set_param( $include_param, $item_id );
+						}
 						foreach ( $query_args as $key => $val ) {
 							$val = ( 'page' === $key ) ? 1 : $val;
 							$request->set_param( $key, $val );
@@ -461,10 +473,6 @@ abstract class Integration_Abstract {
 							if ( 200 === $result->status ) {
 								$cache_group = $this->integration_name;
 
-								if ( isset( $param_value ) && ! empty( $param_value ) ) {
-									$cache_group = $this->integration_name . '_' . $param_value;
-								}
-
 								// Prepare Embed links inside the request.
 								// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Recommended
 								$embed       = isset( $_GET['_embed'] ) ? rest_parse_embed_param( $_GET['_embed'] ) : false;
@@ -474,6 +482,15 @@ abstract class Integration_Abstract {
 										'data'   => $result_data,
 										'header' => $this->prepare_header( $result ),
 									);
+
+									if ( ! empty( $args['unique_id'] ) && is_array( $args['unique_id'] ) ) {
+										$data        = array_intersect_key( $result_data, array_flip( $args['unique_id'] ) );
+										$data        = array_merge( array_flip( $args['unique_id'] ), $data );
+										$cache_group = $cache_group . '_' . implode( '_', $data );
+									} elseif ( isset( $param_value ) && ! empty( $param_value ) ) {
+										$cache_group = $cache_group . '_' . $param_value;
+									}
+
 									Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $args['purge_events'], $args['event_groups'], $cache_group );
 								}
 							}
@@ -492,13 +509,28 @@ abstract class Integration_Abstract {
 	 * Store deep cache. cache store by items wise
 	 *
 	 * @param WP_HTTP_Response $results Result to send to the client. Usually a `WP_REST_Response`.
-	 * @param array            $args   Arguments.
-	 * @param WP_REST_Server   $server Server instance.
+	 * @param array            $args    Arguments.
+	 * @param WP_REST_Server   $server  Server instance.
 	 */
 	private function do_endpoint_cache_deep( $results, $args, $server ) {
 		$unique_key = isset( $args['unique_id'] ) ? $args['unique_id'] : 'id';
-		$item_ids   = array_column( $results->data, $unique_key );
-		$ids        = $item_ids;
+		if ( is_array( $unique_key ) ) {
+			$item_ids = array_map(
+				function ( $el ) use ( $unique_key ) {
+					$o = array();
+					foreach ( $unique_key as $key ) {
+						$o[ $key ] = isset( $el[ $key ] ) ? $el[ $key ] : false;
+					}
+
+					return implode( '_', $o );
+				},
+				$results->data
+			);
+		} else {
+			$item_ids = array_column( $results->data, $unique_key );
+		}
+
+		$ids = $item_ids;
 		if ( ! empty( $item_ids ) && 200 === $results->status ) {
 			$cache_val = array(
 				'data'   => $item_ids,
@@ -515,7 +547,14 @@ abstract class Integration_Abstract {
 				foreach ( $result_data as $item ) {
 					if ( ! empty( $item ) ) {
 						$purge_deep_events = ! empty( $args['purge_deep_events'] ) ? $args['purge_deep_events'] : $args['purge_events'];
-						Cache::instance()->set( $this->get_current_endpoint_cache_key(), $item, $args['expire'], $purge_deep_events, $args['event_groups'], $this->integration_name . '_' . $item[ $unique_key ] );
+						if ( is_array( $unique_key ) ) {
+							$data       = array_intersect_key( $item, array_flip( $unique_key ) );
+							$data       = array_merge( array_flip( $unique_key ), $data );
+							$group_name = implode( '_', $data );
+						} else {
+							$group_name = $item[ $unique_key ];
+						}
+						Cache::instance()->set( $this->get_current_endpoint_cache_key(), $item, $args['expire'], $purge_deep_events, $args['event_groups'], $this->integration_name . '_' . $group_name );
 					}
 				}
 			}

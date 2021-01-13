@@ -56,6 +56,7 @@ class Settings {
 		if ( ! isset( self::$purge_nonce ) ) {
 			self::$purge_nonce = wp_create_nonce( 'ab_cache_purge' );
 		}
+
 		return self::$purge_nonce;
 	}
 
@@ -142,6 +143,22 @@ class Settings {
 						'type'           => 'checkbox',
 						'value'          => false,
 					),
+					'cache_bb_media'              => array(
+						'label'          => __( 'Media Uploading', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Media photos/albums', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Media photos/albums may show expired data.', 'buddyboss' ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-media&nonce=' . self::$purge_nonce,
+						'type'           => 'checkbox',
+						'value'          => false,
+					),
+					'cache_bb_document'           => array(
+						'label'          => __( 'Documents Uploading', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Document files/folders', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Document files/folder may show expired data.', 'buddyboss' ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-document&nonce=' . self::$purge_nonce,
+						'type'           => 'checkbox',
+						'value'          => false,
+					),
 				),
 			),
 		);
@@ -160,6 +177,7 @@ class Settings {
 		if ( 'default' !== $group && empty( $group_setting ) ) {
 			$group_setting = isset( $settings['default'] ) ? $settings['default'] : array();
 		}
+
 		return $group_setting;
 	}
 
@@ -177,6 +195,7 @@ class Settings {
 			$settings = array();
 		}
 		$settings[ $group ] = $group_setting;
+
 		return update_option( self::$option, $settings );
 	}
 
@@ -204,6 +223,7 @@ class Settings {
 				);
 				break;
 		}
+
 		/**
 		 * Filter to set cache action by giving component.
 		 * It'll help us to extent it in custom code or support Appboss related group purging

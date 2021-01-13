@@ -41,6 +41,10 @@ class BB_Replies extends Integration_Abstract {
 			'bbp_post_move_reply', // When reply moved.
 			'bbp_post_split_topic', // When reply split as topic.
 			'bbp_new_reply', // When new reply created update count and last reply id and author id.
+
+			// Added moderation support.
+			'bp_suspend_forum_reply_suspended',   // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
 		);
 
 		/**
@@ -53,24 +57,28 @@ class BB_Replies extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'save_post_reply'                => 1, // When reply created.
-			'edit_post_reply'                => 1, // When reply updated.
-			'trashed_post'                   => 1, // When reply trashed.
-			'untrashed_post'                 => 1, // When reply untrashed.
-			'deleted_post'                   => 1, // When reply deleted.
-			'bbp_spammed_reply'              => 1, // When reply spammed.
-			'bbp_unspammed_reply'            => 1, // When reply unspammed.
-			'bbp_approved_reply'             => 1, // When reply approved.
-			'bbp_unapproved_reply'           => 1, // When reply unapproved.
-			'bbp_post_move_reply'            => 3, // When reply moved.
-			'bbp_post_split_topic'           => 3, // When reply split as topic.
-			'bbp_new_reply'                  => 3, // When new reply created update count and last reply id and author id.
+			'save_post_reply'                    => 1, // When reply created.
+			'edit_post_reply'                    => 1, // When reply updated.
+			'trashed_post'                       => 1, // When reply trashed.
+			'untrashed_post'                     => 1, // When reply untrashed.
+			'deleted_post'                       => 1, // When reply deleted.
+			'bbp_spammed_reply'                  => 1, // When reply spammed.
+			'bbp_unspammed_reply'                => 1, // When reply unspammed.
+			'bbp_approved_reply'                 => 1, // When reply approved.
+			'bbp_unapproved_reply'               => 1, // When reply unapproved.
+			'bbp_post_move_reply'                => 3, // When reply moved.
+			'bbp_post_split_topic'               => 3, // When reply split as topic.
+			'bbp_new_reply'                      => 3, // When new reply created update count and last reply id and author id.
+
+			// Added moderation support.
+			'bp_suspend_forum_reply_suspended'   => 1, // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended' => 1, // Any Forum Reply Unsuspended.
 
 			// Add Author Embed Support.
-			'profile_update'                 => 1, // User updated on site.
-			'deleted_user'                   => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'       => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar' => 1, // User avatar photo deleted.
+			'profile_update'                     => 1, // User updated on site.
+			'deleted_user'                       => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'           => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'     => 1, // User avatar photo deleted.
 		);
 
 		/**
@@ -108,13 +116,14 @@ class BB_Replies extends Integration_Abstract {
 		}
 	}
 
+	/****************************** Reply Events *****************************/
 	/**
 	 * When reply created
 	 *
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_save_post_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -123,7 +132,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_edit_post_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -132,7 +141,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_trashed_post( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -141,7 +150,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_untrashed_post( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -150,7 +159,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_deleted_post( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -159,7 +168,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_spammed_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -168,7 +177,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_unspammed_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -177,7 +186,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_approved_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -186,7 +195,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_unapproved_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -197,7 +206,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_move_reply( $reply_id, $source_topic_id, $destination_topic_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -208,7 +217,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_split_topic( $reply_id, $source_topic_id, $destination_topic_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
 	/**
@@ -219,9 +228,29 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $forum_id Forum ID.
 	 */
 	public function event_bbp_new_reply( $reply_id, $topic_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 	}
 
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended Forum Reply ID.
+	 *
+	 * @param int $reply_id Reply ID.
+	 */
+	public function event_bp_suspend_forum_reply_suspended( $reply_id ) {
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+	}
+
+	/**
+	 * Unsuspended Forum Reply ID.
+	 *
+	 * @param int $reply_id Reply ID.
+	 */
+	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+	}
+
+	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
 	 *
@@ -283,6 +312,7 @@ class BB_Replies extends Integration_Abstract {
 		}
 	}
 
+	/*********************************** Functions ***********************************/
 	/**
 	 * Get Activities ids from user name.
 	 *

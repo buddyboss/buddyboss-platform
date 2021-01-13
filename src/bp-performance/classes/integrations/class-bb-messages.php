@@ -37,6 +37,12 @@ class BB_Messages extends Integration_Abstract {
 			'bp_messages_thread_after_delete', // when message deleted.
 			'messages_delete_thread', // when message thread deleted.
 			'wp_ajax_messages_hide_thread', // when message thread hide.
+
+			// Added moderation support.
+			'bp_suspend_user_suspended',       // Any User Suspended.
+			'bp_suspend_user_unsuspended',     // Any User Unsuspended.
+			'bp_suspend_message_thread_suspended',       // Any Message Thread Suspended.
+			'bp_suspend_message_thread_unsuspended',     // Any Message Thread Unsuspended.
 		);
 
 		/**
@@ -49,21 +55,27 @@ class BB_Messages extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'messages_message_sent'           => 1, // when new message created.
-			'bp_messages_thread_after_delete' => 2, // when message deleted.
-			'messages_delete_thread'          => 1, // when message thread deleted.
-			'wp_ajax_messages_hide_thread'    => 1, // when message thread hide.
-			'messages_thread_mark_as_read'    => 1, // when messages mark as read.
-			'messages_thread_mark_as_unread'  => 1, // when messages mark as unread.
-			'updated_message_meta'            => 1, // when messages meta updated.
-			'add_message_meta'                => 1, // when messages meta added.
-			'delete_message_meta'             => 1, // when messages meta deleted.
+			'messages_message_sent'                 => 1, // when new message created.
+			'bp_messages_thread_after_delete'       => 2, // when message deleted.
+			'messages_delete_thread'                => 1, // when message thread deleted.
+			'wp_ajax_messages_hide_thread'          => 1, // when message thread hide.
+			'messages_thread_mark_as_read'          => 1, // when messages mark as read.
+			'messages_thread_mark_as_unread'        => 1, // when messages mark as unread.
+			'updated_message_meta'                  => 1, // when messages meta updated.
+			'add_message_meta'                      => 1, // when messages meta added.
+			'delete_message_meta'                   => 1, // when messages meta deleted.
+
+			// Added moderation support.
+			'bp_suspend_user_suspended'             => 1, // Any User Suspended.
+			'bp_suspend_user_unsuspended'           => 1, // Any User Unsuspended.
+			'bp_suspend_message_thread_suspended'   => 1, // Any Message Thread Suspended.
+			'bp_suspend_message_thread_unsuspended' => 1, // Any Message Thread Unsuspended.
 
 			// Add Author Embed Support.
-			'profile_update'                  => 1, // User updated on site.
-			'deleted_user'                    => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'        => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar'  => 1, // User avatar photo deleted.
+			'profile_update'                        => 1, // User updated on site.
+			'deleted_user'                          => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'              => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'        => 1, // User avatar photo deleted.
 		);
 
 		/**
@@ -101,6 +113,7 @@ class BB_Messages extends Integration_Abstract {
 		}
 	}
 
+	/****************************** Messages Events *****************************/
 	/**
 	 * When new message created
 	 *
@@ -198,6 +211,54 @@ class BB_Messages extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
 	}
 
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended User ID.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function event_bp_suspend_user_suspended( $user_id ) {
+		$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+		if ( ! empty( $thread_ids ) ) {
+			foreach ( $thread_ids as $thread_id ) {
+				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+			}
+		}
+	}
+
+	/**
+	 * Unsuspended User ID.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function event_bp_suspend_user_unsuspended( $user_id ) {
+		$thread_ids = $this->get_thread_ids_by_userid( $user_id );
+		if ( ! empty( $thread_ids ) ) {
+			foreach ( $thread_ids as $thread_id ) {
+				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+			}
+		}
+	}
+
+	/**
+	 * Suspended Message thread ID.
+	 *
+	 * @param int $thread_id Message thread ID.
+	 */
+	public function event_bp_suspend_message_thread_suspended( $thread_id ) {
+		Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+	}
+
+	/**
+	 * Unsuspended Message thread ID.
+	 *
+	 * @param int $thread_id Message thread ID.
+	 */
+	public function event_bp_suspend_message_thread_unsuspended( $thread_id ) {
+		Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+	}
+
+	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
 	 *
@@ -259,7 +320,7 @@ class BB_Messages extends Integration_Abstract {
 		}
 	}
 
-
+	/*********************************** Functions ***********************************/
 	/**
 	 * Get thread ids from user name.
 	 *

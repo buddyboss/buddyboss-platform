@@ -42,6 +42,10 @@ class BB_Friends extends Integration_Abstract {
 			'friends_friendship_deleted', // When friendship request deleted.
 			'friends_friendship_post_delete', // When friendship deleted.
 			'friends_friendship_withdrawn', // When friendship withdrawn.
+
+			// Added moderation support.
+			'bp_suspend_user_suspended',       // Any User Suspended.
+			'bp_suspend_user_unsuspended',     // Any User Unsuspended.
 		);
 
 		/**
@@ -65,6 +69,10 @@ class BB_Friends extends Integration_Abstract {
 			'friends_friendship_rejected'    => 2, // When friendship request rejected.
 			'friends_friendship_post_delete' => 2, // When friendship deleted.
 			'friends_friendship_withdrawn'   => 2, // When friendship withdrawn.
+
+			// Added moderation support.
+			'bp_suspend_user_suspended'      => 1, // Any User Suspended.
+			'bp_suspend_user_unsuspended'    => 1, // Any User Unsuspended.
 		);
 
 		/**
@@ -102,6 +110,7 @@ class BB_Friends extends Integration_Abstract {
 		}
 	}
 
+	/******************************** Friends Events ********************************/
 	/**
 	 * New user deleted on site
 	 *
@@ -238,6 +247,36 @@ class BB_Friends extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
 	}
 
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended User ID.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function event_bp_suspend_user_suspended( $user_id ) {
+		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+		if ( ! empty( $friendship_ids ) ) {
+			foreach ( $friendship_ids as $friendship_id ) {
+				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
+			}
+		}
+	}
+
+	/**
+	 * Unsuspended User ID.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function event_bp_suspend_user_unsuspended( $user_id ) {
+		$friendship_ids = $this->get_friendship_ids_by_userid( $user_id );
+		if ( ! empty( $friendship_ids ) ) {
+			foreach ( $friendship_ids as $friendship_id ) {
+				Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
+			}
+		}
+	}
+
+	/*********************************** Functions ***********************************/
 	/**
 	 * Get Activities ids from user name.
 	 *

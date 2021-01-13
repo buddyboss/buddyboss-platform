@@ -37,6 +37,12 @@ class BB_Activity extends Integration_Abstract {
 			'bp_activity_after_save',       // Any activity privacy update.
 			'bp_activity_delete',           // Any Activity deleted.
 			'bp_activity_delete_comment',   // Any Activity comment deleted.
+
+			// Added moderation support.
+			'bp_suspend_activity_suspended',           // Any Activity Suspended.
+			'bp_suspend_activity_comment_suspended',   // Any Activity Comment Suspended.
+			'bp_suspend_activity_unsuspended',         // Any Activity Unsuspended.
+			'bp_suspend_activity_comment_unsuspended', // Any Activity Comment Unsuspended.
 		);
 
 		/**
@@ -55,18 +61,24 @@ class BB_Activity extends Integration_Abstract {
 		 * `bp_activity_comment_posted_notification_skipped`: activity comment added without Notification
 		 */
 		$purge_single_events = array(
-			'bp_activity_add'                  => 1, // Any Activity add.
-			'bp_activity_delete'               => 1, // Any Activity deleted.
-			'bp_activity_delete_comment'       => 1, // Any Activity comment deleted.
-			'updated_activity_meta'            => 2, // Any Activity meta update.
-			'bp_activity_add_user_favorite'    => 1, // if activity added in user favorite list.
-			'bp_activity_remove_user_favorite' => 1, // if activity remove from user favorite list.
+			'bp_activity_add'                         => 1, // Any Activity add.
+			'bp_activity_delete'                      => 1, // Any Activity deleted.
+			'bp_activity_delete_comment'              => 1, // Any Activity comment deleted.
+			'updated_activity_meta'                   => 2, // Any Activity meta update.
+			'bp_activity_add_user_favorite'           => 1, // if activity added in user favorite list.
+			'bp_activity_remove_user_favorite'        => 1, // if activity remove from user favorite list.
+
+			// Added Moderation Support.
+			'bp_suspend_activity_suspended'           => 1, // Any Activity Suspended.
+			'bp_suspend_activity_comment_suspended'   => 1, // Any Activity Comment Suspended.
+			'bp_suspend_activity_unsuspended'         => 1, // Any Activity Unsuspended.
+			'bp_suspend_activity_comment_unsuspended' => 1, // Any Activity Comment Unsuspended.
 
 			// Add Author Embed Support.
-			'profile_update'                   => 1, // User updated on site.
-			'deleted_user'                     => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'         => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar'   => 1, // User avatar photo deleted.
+			'profile_update'                          => 1, // User updated on site.
+			'deleted_user'                            => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'                => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'          => 1, // User avatar photo deleted.
 		);
 
 		/**
@@ -104,6 +116,7 @@ class BB_Activity extends Integration_Abstract {
 		}
 	}
 
+	/******************************** Activity Events ********************************/
 	/**
 	 * Any Activity add
 	 *
@@ -141,7 +154,7 @@ class BB_Activity extends Integration_Abstract {
 	/**
 	 * Any Activity meta update
 	 *
-	 * @param int $meta_id Activity Meta id.
+	 * @param int $meta_id     Activity Meta id.
 	 * @param int $activity_id Activity id.
 	 */
 	public function event_updated_activity_meta( $meta_id, $activity_id ) {
@@ -166,6 +179,44 @@ class BB_Activity extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
 	}
 
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended Activity ID.
+	 *
+	 * @param int $activity_id Activity ID.
+	 */
+	public function event_bp_suspend_activity_suspended( $activity_id ) {
+		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+	}
+
+	/**
+	 * Suspended Activity Comment ID.
+	 *
+	 * @param int $activity_id Activity ID.
+	 */
+	public function event_bp_suspend_activity_comment_suspended( $activity_id ) {
+		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+	}
+
+	/**
+	 * Unsuspended Activity ID.
+	 *
+	 * @param int $activity_id Activity ID.
+	 */
+	public function event_bp_suspend_activity_unsuspended( $activity_id ) {
+		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+	}
+
+	/**
+	 * Unsuspended Activity Comment ID.
+	 *
+	 * @param int $activity_id Activity ID.
+	 */
+	public function event_bp_suspend_activity_comment_unsuspended( $activity_id ) {
+		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+	}
+
+	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
 	 *
@@ -227,7 +278,7 @@ class BB_Activity extends Integration_Abstract {
 		}
 	}
 
-
+	/*********************************** Functions ***********************************/
 	/**
 	 * Get Activities ids from user name.
 	 *

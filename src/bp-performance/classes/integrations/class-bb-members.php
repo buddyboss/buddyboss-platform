@@ -47,6 +47,10 @@ class BB_Members extends Integration_Abstract {
 			'bp_core_signup_after_delete', // when Record user signup information deleted in buddypress.
 			'friends_friendship_accepted', // when Friend added friends list should be update.
 			'friends_friendship_post_delete', // when Friend removed friends list should be update.
+
+			// Added moderation support.
+			'bp_suspend_user_suspended',       // Any User Suspended.
+			'bp_suspend_user_unsuspended',     // Any User Unsuspended.
 		);
 
 		/**
@@ -86,6 +90,10 @@ class BB_Members extends Integration_Abstract {
 			// 'updated_user_meta'=> 1, // When user meta updated. we enabled this if only required.
 			'badgeos_update_users_points'        => 1, // When user point updated using badgeos.
 			'gamipress_update_user_points'       => 1, // When user point updated using gamipress.
+
+			// Added moderation support.
+			'bp_suspend_user_suspended'          => 1, // Any User Suspended.
+			'bp_suspend_user_unsuspended'        => 1, // Any User Unsuspended.
 		);
 
 		/**
@@ -277,7 +285,6 @@ class BB_Members extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-members_' . $friend_user_id );
 	}
 
-
 	/**
 	 * When friendship request rejected
 	 *
@@ -392,6 +399,25 @@ class BB_Members extends Integration_Abstract {
 	 * @param int $user_id User ID.
 	 */
 	public function event_gamipress_update_user_points( $user_id ) {
+		Cache::instance()->purge_by_group( 'bp-members_' . $user_id );
+	}
+
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended User ID.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function event_bp_suspend_user_suspended( $user_id ) {
+		Cache::instance()->purge_by_group( 'bp-members_' . $user_id );
+	}
+
+	/**
+	 * Unsuspended User ID.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function event_bp_suspend_user_unsuspended( $user_id ) {
 		Cache::instance()->purge_by_group( 'bp-members_' . $user_id );
 	}
 }

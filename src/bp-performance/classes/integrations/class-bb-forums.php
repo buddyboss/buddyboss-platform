@@ -47,6 +47,16 @@ class BB_Forums extends Integration_Abstract {
 			'bbp_post_split_topic', // When split topic, update count and last reply id and author id.
 			'bbp_add_user_subscription', // When user subscribe forum.
 			'bbp_remove_user_subscription', // When user remove forum's subscribe.
+
+			// Added moderation support.
+			'bp_suspend_groups_suspended',        // Any Group Suspended.
+			'bp_suspend_groups_unsuspended',      // Any Group Unsuspended.
+			'bp_suspend_forum_suspended',         // Any Forum Suspended.
+			'bp_suspend_forum_unsuspended',       // Any Forum Unsuspended.
+			'bp_suspend_forum_topic_suspended',   // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended', // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended',   // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
 		);
 
 		/**
@@ -82,6 +92,16 @@ class BB_Forums extends Integration_Abstract {
 			'groups_avatar_uploaded'                => 1, // When forum Group avarar updated form Manage.
 			'groups_cover_image_uploaded'           => 1, // When forum Group cover photo uploaded form Manage.
 			'groups_cover_image_deleted'            => 1, // When forum Group cover photo deleted form Manage.
+
+			// Added moderation support.
+			'bp_suspend_groups_suspended'           => 1, // Any Group Suspended.
+			'bp_suspend_groups_unsuspended'         => 1, // Any Group Unsuspended.
+			'bp_suspend_forum_suspended'            => 1, // Any Forum Suspended.
+			'bp_suspend_forum_unsuspended'          => 1, // Any Forum Unsuspended.
+			'bp_suspend_forum_topic_suspended'      => 1, // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended'    => 1, // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended'      => 1, // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended'    => 1, // Any Forum Reply Unsuspended.
 
 			// Add Author Embed Support.
 			'profile_update'                        => 1, // User updated on site.
@@ -125,6 +145,7 @@ class BB_Forums extends Integration_Abstract {
 		}
 	}
 
+	/******************************** Forum Events ********************************/
 	/**
 	 * When forum created
 	 *
@@ -173,7 +194,7 @@ class BB_Forums extends Integration_Abstract {
 	/**
 	 * When user subscribe forum
 	 *
-	 * @param int $user_id User ID.
+	 * @param int $user_id  User ID.
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_add_user_subscription( $user_id, $forum_id ) {
@@ -183,7 +204,7 @@ class BB_Forums extends Integration_Abstract {
 	/**
 	 * When user remove forums subscribe
 	 *
-	 * @param int $user_id User ID.
+	 * @param int $user_id  User ID.
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_remove_user_subscription( $user_id, $forum_id ) {
@@ -235,8 +256,8 @@ class BB_Forums extends Integration_Abstract {
 	/**
 	 * When topic merged, update count and last reply id and author id
 	 *
-	 * @param int $destination_topic_id Destination Topic ID.
-	 * @param int $source_topic_id Source Topic ID.
+	 * @param int $destination_topic_id  Destination Topic ID.
+	 * @param int $source_topic_id       Source Topic ID.
 	 * @param int $source_topic_forum_id Source Topic Forum ID.
 	 */
 	public function event_bbp_merged_topic( $destination_topic_id, $source_topic_id, $source_topic_forum_id ) {
@@ -246,8 +267,8 @@ class BB_Forums extends Integration_Abstract {
 	/**
 	 * When reply moved, update count and last reply id and author id
 	 *
-	 * @param int $move_reply_id Move Reply ID.
-	 * @param int $source_topic_id Source Topic ID.
+	 * @param int $move_reply_id        Move Reply ID.
+	 * @param int $source_topic_id      Source Topic ID.
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_move_reply( $move_reply_id, $source_topic_id, $destination_topic_id ) {
@@ -258,8 +279,8 @@ class BB_Forums extends Integration_Abstract {
 	/**
 	 * When split topic update count and last reply id and author id
 	 *
-	 * @param int $from_reply_id From Reply ID.
-	 * @param int $source_topic_id Source Topic ID.
+	 * @param int $from_reply_id        From Reply ID.
+	 * @param int $source_topic_id      Source Topic ID.
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_split_topic( $from_reply_id, $source_topic_id, $destination_topic_id ) {
@@ -267,6 +288,7 @@ class BB_Forums extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bbp-forums_' . $destination_forum_id );
 	}
 
+	/****************************** Group Embed Support *****************************/
 	/**
 	 * When forum Group change form admin
 	 *
@@ -366,6 +388,94 @@ class BB_Forums extends Integration_Abstract {
 		}
 	}
 
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended Group ID.
+	 *
+	 * @param int $group_id Group ID.
+	 */
+	public function event_bp_suspend_groups_suspended( $group_id ) {
+		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+			}
+		}
+	}
+
+	/**
+	 * Unsuspended Group ID.
+	 *
+	 * @param int $group_id Group ID.
+	 */
+	public function event_bp_suspend_groups_unsuspended( $group_id ) {
+		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+			}
+		}
+	}
+
+	/**
+	 * Suspended Forum ID.
+	 *
+	 * @param int $forum_id Forum ID.
+	 */
+	public function event_bp_suspend_forum_suspended( $forum_id ) {
+		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+	}
+
+	/**
+	 * Unsuspended Forum ID.
+	 *
+	 * @param int $forum_id Forum ID.
+	 */
+	public function event_bp_suspend_forum_unsuspended( $forum_id ) {
+		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+	}
+
+	/**
+	 * Suspended Forum Topic ID.
+	 *
+	 * @param int $topic_id Topic ID.
+	 */
+	public function event_bp_suspend_forum_topic_suspended( $topic_id ) {
+		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+	}
+
+	/**
+	 * Unsuspended Forum Topic ID.
+	 *
+	 * @param int $topic_id Topic ID.
+	 */
+	public function event_bp_suspend_forum_topic_unsuspended( $topic_id ) {
+		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+	}
+
+	/**
+	 * Suspended Forum Reply ID.
+	 *
+	 * @param int $reply_id Reply ID.
+	 */
+	public function event_bp_suspend_forum_reply_suspended( $reply_id ) {
+		$forum_id = bbp_get_reply_forum_id( $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+	}
+
+	/**
+	 * Unsuspended Forum Reply ID.
+	 *
+	 * @param int $reply_id Reply ID.
+	 */
+	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
+		$forum_id = bbp_get_reply_forum_id( $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+	}
+
+	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
 	 *
@@ -427,7 +537,7 @@ class BB_Forums extends Integration_Abstract {
 		}
 	}
 
-
+	/*********************************** Functions ***********************************/
 	/**
 	 * Get Activities ids from user name.
 	 *

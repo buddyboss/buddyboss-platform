@@ -17,6 +17,9 @@ use BuddyBoss\Performance\Integration\BB_Messages;
 use BuddyBoss\Performance\Integration\BB_Forums;
 use BuddyBoss\Performance\Integration\BB_Topics;
 use BuddyBoss\Performance\Integration\BB_Replies;
+use BuddyBoss\Performance\Integration\BB_Media_Photos;
+use BuddyBoss\Performance\Integration\BB_Media_Albums;
+use BuddyBoss\Performance\Integration\BB_Documents;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -134,6 +137,24 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					if ( self::mu_is_component_active( 'messages' ) && file_exists( $messages_integration ) ) {
 						require_once $messages_integration;
 						BB_Messages::instance();
+					}
+
+					$media_photos_integration = dirname( __FILE__ ) . '/integrations/class-bb-media-photos.php';
+					if ( self::mu_is_component_active( 'media' ) && file_exists( $media_photos_integration ) ) {
+						require_once $media_photos_integration;
+						BB_Media_Photos::instance();
+					}
+
+					$media_albums_integration = dirname( __FILE__ ) . '/integrations/class-bb-media-albums.php';
+					if ( self::mu_is_component_active( 'media' ) && file_exists( $media_albums_integration ) ) {
+						require_once $media_albums_integration;
+						BB_Media_Albums::instance();
+					}
+
+					$documents_integration = dirname( __FILE__ ) . '/integrations/class-bb-documents.php';
+					if ( self::mu_is_component_active( 'document' ) && file_exists( $documents_integration ) ) {
+						require_once $documents_integration;
+						BB_Documents::instance();
 					}
 				}
 

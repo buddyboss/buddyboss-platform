@@ -40,6 +40,12 @@ class BB_Topics extends Integration_Abstract {
 			'deleted_post', // When topic deleted.
 			'bbp_merged_topic', // When topic merged as reply.
 			'bbp_post_split_topic', // When topic split.
+
+			// Added moderation support.
+			'bp_suspend_forum_topic_suspended', // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended', // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended', // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
 		);
 
 		/**
@@ -52,34 +58,40 @@ class BB_Topics extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'save_post_topic'                => 1, // When topic created.
-			'edit_post_topic'                => 1, // When topic updated.
-			'trashed_post'                   => 1, // When topic trashed.
-			'untrashed_post'                 => 1, // When topic untrashed.
-			'deleted_post'                   => 1, // When topic deleted.
-			'bbp_add_user_subscription'      => 2, // When topic subscription added.
-			'bbp_remove_user_subscription'   => 2, // When topic subscription removed.
-			'bbp_add_user_favorite'          => 2, // When topic favorite added.
-			'bbp_remove_user_favorite'       => 2, // When topic favorite removed.
-			'bbp_opened_topic'               => 1, // When topic opened.
-			'bbp_closed_topic'               => 1, // When topic closed.
-			'bbp_spammed_topic'              => 1, // When topic spammed.
-			'bbp_unspammed_topic'            => 1, // When topic unspammed.
-			'bbp_stick_topic'                => 1, // When topic stick.
-			'bbp_unstick_topic'              => 1, // When topic unstick.
-			'bbp_approved_topic'             => 1, // When topic approved.
-			'bbp_unapproved_topic'           => 1, // When topic unapproved.
-			'bbp_merged_topic'               => 3, // When topic merged as reply.
-			'bbp_post_split_topic'           => 3, // When topic split.
-			'bbp_new_reply'                  => 3, // When new reply created, update count and last reply id and author id.
-			'bbp_edit_reply'                 => 3, // When reply updated, update count and last reply id and author id.
-			'bbp_post_move_reply'            => 3, // When reply moved, update count and last reply id and author id.
+			'save_post_topic'                    => 1, // When topic created.
+			'edit_post_topic'                    => 1, // When topic updated.
+			'trashed_post'                       => 1, // When topic trashed.
+			'untrashed_post'                     => 1, // When topic untrashed.
+			'deleted_post'                       => 1, // When topic deleted.
+			'bbp_add_user_subscription'          => 2, // When topic subscription added.
+			'bbp_remove_user_subscription'       => 2, // When topic subscription removed.
+			'bbp_add_user_favorite'              => 2, // When topic favorite added.
+			'bbp_remove_user_favorite'           => 2, // When topic favorite removed.
+			'bbp_opened_topic'                   => 1, // When topic opened.
+			'bbp_closed_topic'                   => 1, // When topic closed.
+			'bbp_spammed_topic'                  => 1, // When topic spammed.
+			'bbp_unspammed_topic'                => 1, // When topic unspammed.
+			'bbp_stick_topic'                    => 1, // When topic stick.
+			'bbp_unstick_topic'                  => 1, // When topic unstick.
+			'bbp_approved_topic'                 => 1, // When topic approved.
+			'bbp_unapproved_topic'               => 1, // When topic unapproved.
+			'bbp_merged_topic'                   => 3, // When topic merged as reply.
+			'bbp_post_split_topic'               => 3, // When topic split.
+			'bbp_new_reply'                      => 3, // When new reply created, update count and last reply id and author id.
+			'bbp_edit_reply'                     => 3, // When reply updated, update count and last reply id and author id.
+			'bbp_post_move_reply'                => 3, // When reply moved, update count and last reply id and author id.
+
+			// Added moderation support.
+			'bp_suspend_forum_topic_suspended'   => 1, // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended' => 1, // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended'   => 1, // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended' => 1, // Any Forum Reply Unsuspended.
 
 			// Add Author Embed Support.
-			'profile_update'                 => 1, // User updated on site.
-			'deleted_user'                   => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'       => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar' => 1, // User avatar photo deleted.
+			'profile_update'                     => 1, // User updated on site.
+			'deleted_user'                       => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'           => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'     => 1, // User avatar photo deleted.
 		);
 
 		/**
@@ -117,6 +129,7 @@ class BB_Topics extends Integration_Abstract {
 		}
 	}
 
+	/****************************** Topic Events *****************************/
 	/**
 	 * When topic created
 	 *
@@ -332,6 +345,46 @@ class BB_Topics extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bbp-topics_' . $source_topic_id );
 	}
 
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended Forum Topic ID.
+	 *
+	 * @param int $topic_id Topic ID.
+	 */
+	public function event_bp_suspend_forum_topic_suspended( $topic_id ) {
+		Cache::instance()->purge_by_group( 'bbp-topics_' . $topic_id );
+	}
+
+	/**
+	 * Unsuspended Forum Topic ID.
+	 *
+	 * @param int $topic_id Topic ID.
+	 */
+	public function event_bp_suspend_forum_topic_unsuspended( $topic_id ) {
+		Cache::instance()->purge_by_group( 'bbp-topics_' . $topic_id );
+	}
+
+	/**
+	 * Suspended Forum Reply ID.
+	 *
+	 * @param int $reply_id Reply ID.
+	 */
+	public function event_bp_suspend_forum_reply_suspended( $reply_id ) {
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-topics_' . $topic_id );
+	}
+
+	/**
+	 * Unsuspended Forum Reply ID.
+	 *
+	 * @param int $reply_id Reply ID.
+	 */
+	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		Cache::instance()->purge_by_group( 'bbp-topics_' . $topic_id );
+	}
+
+	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
 	 *
@@ -393,6 +446,7 @@ class BB_Topics extends Integration_Abstract {
 		}
 	}
 
+	/*********************************** Functions ***********************************/
 	/**
 	 * Get Activities ids from user name.
 	 *

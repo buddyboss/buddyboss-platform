@@ -202,7 +202,7 @@ class Cache {
 			global $wpdb;
 
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get = $wpdb->get_row( $wpdb->prepare( "SELECT *FROM {$this->cache_table} WHERE cache_name=%s AND user_id=%s AND blog_id=%s AND cache_group=%s", $cache_name, $user_id, $blog_id, $cache_group ) );
+			$get = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->cache_table} WHERE cache_name=%s AND user_id=%s AND blog_id=%s AND cache_group=%s", $cache_name, $user_id, $blog_id, $cache_group ) );
 
 			if ( ! empty( $get ) && strtotime( $get->cache_expire ) < time() ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

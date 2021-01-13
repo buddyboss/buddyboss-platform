@@ -35,6 +35,10 @@ class BB_Groups extends Integration_Abstract {
 		$purge_events = array(
 			'bp_group_admin_edit_after',         // When Group change form admin.
 			'groups_create_group_step_complete', // When Group created from Manage.
+
+			// Added moderation support.
+			'bp_suspend_groups_suspended',       // Any Group Suspended.
+			'bp_suspend_groups_unsuspended',     // Any Group Unsuspended.
 		);
 
 		/**
@@ -70,11 +74,15 @@ class BB_Groups extends Integration_Abstract {
 			'updated_group_meta'                    => 2,  // When Group meta update. This needed for sorting by group last activity, member course.
 			'delete_group_meta'                     => 2,  // When Group meta deleted. This needed for sorting by group last activity, member course.
 
+			// Added moderation support.
+			'bp_suspend_groups_suspended'           => 1, // Any Group Suspended.
+			'bp_suspend_groups_unsuspended'         => 1, // Any Group Unsuspended.
+
 			// Add Author Embed Support.
 			'profile_update'                        => 1, // User updated on site.
 			'deleted_user'                          => 1, // User deleted on site.
 			'xprofile_avatar_uploaded'              => 1, // User avatar photo updated.
-			// 'bp_core_delete_existing_avatar' => 1, //User avatar photo deleted. Manage with group as both use same action.
+			// 'bp_core_delete_existing_avatar'     => 1, //User avatar photo deleted. Manage with group as both use same action.
 		);
 
 		/**
@@ -112,6 +120,7 @@ class BB_Groups extends Integration_Abstract {
 		}
 	}
 
+	/******************************** Group Events ********************************/
 	/**
 	 * When Group change form admin
 	 *
@@ -316,6 +325,26 @@ class BB_Groups extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
 	}
 
+	/******************************* Moderation Support ******************************/
+	/**
+	 * Suspended Group ID.
+	 *
+	 * @param int $group_id Group ID.
+	 */
+	public function event_bp_suspend_groups_suspended( $group_id ) {
+		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+	}
+
+	/**
+	 * Unsuspended Group ID.
+	 *
+	 * @param int $group_id Group ID.
+	 */
+	public function event_bp_suspend_groups_unsuspended( $group_id ) {
+		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+	}
+
+	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
 	 *
@@ -381,7 +410,7 @@ class BB_Groups extends Integration_Abstract {
 		}
 	}
 
-
+	/*********************************** Functions ***********************************/
 	/**
 	 * Get Activities ids from user name.
 	 *
