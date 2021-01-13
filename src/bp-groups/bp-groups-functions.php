@@ -3546,14 +3546,14 @@ function bp_group_get_group_type_key( $post_id ) {
 function bp_get_active_group_types( $args = array() ) {
 	$bp_active_group_types = array();
 
-	$args = bp_parse_args($args, array(
+	$args = bp_parse_args( $args, array(
         'posts_per_page' => - 1,
-        'post_type' 					=> bp_groups_get_group_type_post_type(),
-        'post_status' 			=> 'publish',
-        'orderby' 							=> 'menu_order',
-        'order' 									=> 'ASC',
-        'fields' 								=> 'ids'
-            ), 'group_types');
+        'post_type' 	 => bp_groups_get_group_type_post_type(),
+        'post_status' 	 => 'publish',
+        'orderby' 		 => 'menu_order',
+        'order' 		 => 'ASC',
+        'fields'		 => 'ids'
+            ), 'group_types' );
 
     $bp_active_group_types_query = new \WP_Query( $args );
 
