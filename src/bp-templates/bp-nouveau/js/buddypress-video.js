@@ -2377,6 +2377,9 @@ window.bp = window.bp || {};
 						var ele_id 		= $( this ).attr( 'id' );
 						var cus_button 	= player[ $( this ).attr( 'id' ) ].controlBar.addChild( 'button' );
 						cus_button.addClass( 'vjs-icon-square' );
+						var fullscreen_btn = $( this ).find('.vjs-icon-square').addClass( 'enlarge_button' );
+						fullscreen_btn.attr( 'data-balloon-pos', 'up' );
+						fullscreen_btn.attr( 'data-balloon', 'Enlarge' ); //TODO : This text should be translatable
 						cus_button.on( 'click', function() {
 							//Set current time of video and id
 							if( player[ele_id].currentTime() > 0 ) {
@@ -2387,6 +2390,13 @@ window.bp = window.bp || {};
 							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
 						} );
 					}
+
+					if( $( self ).closest( '.video-theatre').length ) {
+						var Enter_fullscreen_btn = $( this ).parent().find('.vjs-fullscreen-control');
+						Enter_fullscreen_btn.attr( 'data-balloon-pos', 'up' );
+						Enter_fullscreen_btn.attr( 'data-balloon', 'Enter fullscreen' ); //TODO : This text should be translatable
+					}
+
 					$( this ).addClass( 'loaded' );
 				}
 			);

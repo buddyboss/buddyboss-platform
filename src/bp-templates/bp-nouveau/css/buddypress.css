@@ -18721,6 +18721,75 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   line-height: 1.6;
 }
 
+.bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button,
+.bb-video-thumb .video-js .vjs-control-bar .enlarge_button,
+.bb-media-section .video-js .vjs-control-bar .enlarge_button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button:after,
+.bb-video-thumb .video-js .vjs-control-bar .enlarge_button:after,
+.bb-media-section .video-js .vjs-control-bar .enlarge_button:after {
+  left: inherit;
+  right: -30px;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
+.bb-video-thumb .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
+.bb-media-section .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before {
+  content: "\e88b";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 16px;
+}
+
+.video-theatre .bb-activity-video-elem .video-js .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
+.bb-video-thumb .video-js .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
+.bb-media-section .video-js .vjs-control-bar .vjs-fullscreen-control:after {
+  left: inherit !important;
+  right: -50px !important;
+}
+
+.video-theatre .bb-activity-video-elem .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
+.bb-video-thumb .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
+.bb-media-section .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before {
+  content: "\e88b";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:before, .video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
+.bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:before, .video-theatre
+.bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
+.bb-media-section .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:before, .video-theatre
+.bb-media-section .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:after {
+  display: none;
+}
+
+.video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
+.bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
+.bb-media-section .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before {
+  content: "\e8af";
+}
+
 .bb-activity-video-elem.is-visible .video-js:after {
   visibility: visible;
   opacity: 1;
