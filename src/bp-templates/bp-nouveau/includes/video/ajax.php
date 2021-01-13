@@ -372,7 +372,26 @@ function bp_nouveau_ajax_video_save() {
 		ob_end_clean();
 	}
 
-	wp_send_json_success( array( 'video' => $video ) );
+	$video_personal_count = 0;
+	$video_group_count    = 0;
+	if ( bp_is_user_video() ) {
+		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+		bp_has_video( bp_ajax_querystring( 'video' ) );
+		$video_personal_count = $GLOBALS['video_template']->total_video_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+	}
+
+	if ( bp_is_group_video() ) {
+		$video_group_count = bp_video_get_total_group_video_count();
+	}
+
+	wp_send_json_success(
+		array(
+			'video'                => $video,
+			'video_personal_count' => $video_personal_count,
+			'video_group_count'    => $video_group_count,
+		)
+	);
 }
 
 /**
@@ -402,7 +421,9 @@ function bp_nouveau_ajax_video_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$video = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_SANITIZE_NUMBER_INT );
+	$from_where  = filter_input( INPUT_POST, 'from_where', FILTER_SANITIZE_STRING );
 
 	if ( empty( $video ) ) {
 		$response['feedback'] = sprintf(
@@ -433,9 +454,57 @@ function bp_nouveau_ajax_video_delete() {
 		wp_send_json_error( $response );
 	}
 
+	$response = array();
+	if ( $activity_id ) {
+		$response = bp_video_get_activity_video( $activity_id );
+	}
+
+	$delete_box       = false;
+	$activity_content = '';
+	if ( 'activity' === $from_where ) {
+		// Get activity object.
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		if ( empty( $activity->id ) ) {
+			$delete_box = true;
+		} else {
+			ob_start();
+			if ( bp_has_activities(
+				array(
+					'include' => $activity_id,
+				)
+			) ) {
+				while ( bp_activities() ) {
+					bp_the_activity();
+					bp_get_template_part( 'activity/entry' );
+				}
+			}
+			$activity_content = ob_get_contents();
+			ob_end_clean();
+		}
+	}
+
+	$video_personal_count = 0;
+	$video_group_count    = 0;
+	if ( bp_is_user_video() ) {
+		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+		bp_has_video( bp_ajax_querystring( 'video' ) );
+		$video_personal_count = $GLOBALS['video_template']->total_video_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+	}
+	if ( bp_is_group_video() ) {
+		$video_group_count = bp_video_get_total_group_video_count();
+	}
+
 	wp_send_json_success(
 		array(
-			'video' => $video,
+			'video'                => $video,
+			'video_personal_count' => $video_personal_count,
+			'video_group_count'    => $video_group_count,
+			'video_ids'            => ( isset( $response['video_activity_ids'] ) ) ? $response['video_activity_ids'] : '',
+			'video_content'        => ( isset( $response['content'] ) ) ? $response['content'] : '',
+			'delete_activity'      => $delete_box,
+			'activity_content'     => $activity_content,
 		)
 	);
 }
