@@ -184,6 +184,7 @@ class BP_Moderation_Component extends BP_Component {
 				'publicly_queryable' => false,
 				'rewrite'            => false,
 				'hierarchical'       => false,
+				'show_in_nav_menus'  => false,
 			)
 		);
 
