@@ -6,7 +6,7 @@
  * @since BuddyBoss 1.5.7
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -19,18 +19,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bp_video_settings_callback_profile_video_support() {
 	?>
-	<input name="bp_video_profile_video_support"
-		   id="bp_video_profile_video_support"
-		   type="checkbox"
-		   value="1"
-		<?php checked( bp_is_profile_video_support_enabled() ); ?>
-	/>
+	<input name="bp_video_profile_video_support" id="bp_video_profile_video_support" type="checkbox" value="1" <?php checked( bp_is_profile_video_support_enabled() ); ?> />
 	<label for="bp_video_profile_video_support">
 		<?php
 		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload videos in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );
+			_e( 'Allow members to upload videos in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );  // phpcs:ignore
 		} else {
-			_e( 'Allow members to upload videos in <strong>profiles</strong>', 'buddyboss' );
+			_e( 'Allow members to upload videos in <strong>profiles</strong>', 'buddyboss' );  // phpcs:ignore
 		}
 		?>
 	</label>
@@ -40,7 +35,7 @@ function bp_video_settings_callback_profile_video_support() {
 /**
  * Checks if profile video support is enabled.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is profile video support enabled or not
  * @since BuddyBoss 1.5.7
@@ -52,7 +47,7 @@ function bp_is_profile_video_support_enabled( $default = 0 ) {
 /**
  * Checks if profile albums support is enabled.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is profile albums support enabled or not
  * @since BuddyBoss 1.5.7
@@ -68,18 +63,15 @@ function bp_is_profile_video_albums_support_enabled( $default = 0 ) {
  */
 function bp_video_settings_callback_group_video_support() {
 	?>
-	<input name="bp_video_group_video_support"
-		   id="bp_video_group_video_support"
-		   type="checkbox"
-		   value="1"
+	<input name="bp_video_group_video_support" id="bp_video_group_video_support" type="checkbox" value="1"
 		<?php checked( bp_is_group_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_group_video_support">
 		<?php
 		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload videos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
+			_e( 'Allow members to upload videos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );  // phpcs:ignore
 		} else {
-			_e( 'Allow members to upload videos in <strong>groups</strong>', 'buddyboss' );
+			_e( 'Allow members to upload videos in <strong>groups</strong>', 'buddyboss' ); // phpcs:ignore
 		}
 		?>
 	</label>
@@ -89,7 +81,7 @@ function bp_video_settings_callback_group_video_support() {
 /**
  * Checks if group video support is enabled.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is group video support enabled or not
  * @since BuddyBoss 1.5.7
@@ -101,7 +93,7 @@ function bp_is_group_video_support_enabled( $default = 0 ) {
 /**
  * Checks if group album support is enabled.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is group album support enabled or not
  * @since BuddyBoss 1.5.7
@@ -123,9 +115,9 @@ function bp_video_settings_callback_messages_video_support() {
 	<label for="bp_video_messages_video_support">
 		<?php
 		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to upload videos in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' );
+			_e( 'Allow members to upload videos in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' ); // phpcs:ignore
 		} else {
-			_e( 'Allow members to upload videos in <strong>private messages</strong>', 'buddyboss' );
+			_e( 'Allow members to upload videos in <strong>private messages</strong>', 'buddyboss' ); // phpcs:ignore
 		}
 		?>
 	</label>
