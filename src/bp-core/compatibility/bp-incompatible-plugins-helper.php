@@ -289,8 +289,8 @@ add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db
  *
  * @since 1.1.7
  *
- * @param array $taxonomies Taxonomies which are registered for the requested object or object type
- * @param array $post_type Post type
+ * @param array $taxonomies Taxonomies which are registered for the requested object or object type.
+ * @param array $post_type  Post type.
  *
  * @return array Return the names or objects of the taxonomies which are registered for the requested object or object type
  */
@@ -309,12 +309,12 @@ function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies = arra
  */
 function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
 
-	// check for BuddyPress plugin
+	// check for BuddyPress plugin.
 	if ( 'buddypress' === $section_slug ) {
 		$section_notice = '';
 	}
 
-	// check for bbPress plugin
+	// check for bbPress plugin.
 	if ( 'bbpress' === $section_slug ) {
 		$section_notice = '';
 		if ( empty( bp_is_active( 'forums' ) ) ) {
