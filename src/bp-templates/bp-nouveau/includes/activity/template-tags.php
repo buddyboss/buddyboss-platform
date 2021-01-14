@@ -1356,7 +1356,7 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 /**
  * Fetch and update the video description.
  *
- * @since BuddyBoss 1.3.5
+ * @since BuddyBoss 1.5.7
  *
  * @param int $activity_id The current activity ID.
  */
@@ -1379,32 +1379,24 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 	$content = get_post_field( 'post_content', $attachment_id );
 
 	echo '<div class="activity-media-description">' .
-		 '<div class="bp-media-activity-description">' . $content . '</div>';
+		 '<div class="bp-media-activity-description">' . $content . '</div>'; // phpcs:ignore
 
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
-		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-		   href="#">
-			   <span class="bb-icon-edit-thin"></span>
-			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
+			<span class="bb-icon-edit-thin"></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-						<textarea id="add-activity-description"
-								  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-								  class="textInput"
-								  name="caption_text"
-								  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-								  role="textbox"><?php echo $content; ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo wp_kses_post( $content ); ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
-								<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-				<input type="submit" id="bp-activity-description-new-submit" class="button small"
-					   name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-				<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
-					   value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+				<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
 		</div>
 
@@ -1414,14 +1406,12 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 	echo '</div>';
 	if ( ! empty( $video_id ) ) {
 		$video_privacy    = bp_video_user_can_manage_video( $video_id, bp_loggedin_user_id() );
-		$can_download_btn = ( true === (bool) $video_privacy['can_download'] ) ? true : false;
+		$can_download_btn = true === (bool) $video_privacy['can_download'];
 		if ( $can_download_btn ) {
 			$download_url = bp_video_download_link( $attachment_id, $video_id );
 			if ( $download_url ) {
 				?>
-				<a class="download-media"
-				   href="<?php echo esc_url( $download_url ); ?>">
-					<?php _e( 'Download', 'buddyboss' ); ?>
+				<a class="download-media" href="<?php echo esc_url( $download_url ); ?>"> <?php esc_html_e( 'Download', 'buddyboss' ); ?>
 				</a>
 				<?php
 			}
