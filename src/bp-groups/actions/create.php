@@ -191,7 +191,7 @@ function groups_action_create_group() {
 			/**
 			 * Filters the allowed video statuses.
 			 *
-			 * @since BuddyBoss 1.0.0
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param array $value Array of statuses allowed.
 			 *                     Possible values are 'members,

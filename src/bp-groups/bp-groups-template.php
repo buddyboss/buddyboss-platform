@@ -2664,9 +2664,9 @@ function bp_group_show_document_status_setting( $setting, $group = false ) {
 }
 
 /**
- * Output the 'checked' value, if needed, for a given document_status on the group create/admin screens
+ * Output the 'checked' value, if needed, for a given video_status on the group create/admin screens
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  *
  * @param string      $setting The setting you want to check against ('members',
  *                             'mods', or 'admins').
@@ -7718,7 +7718,7 @@ function bp_group_get_video_album_status( $group_id = false ) {
 	 *
 	 * Invite status in this case means who from the group can send invites.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param string $album_status Membership level needed to manage albums.
 	 * @param int    $group_id      ID of the group whose status is being checked.

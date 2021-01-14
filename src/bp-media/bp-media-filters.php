@@ -2367,7 +2367,7 @@ function bp_media_activity_entry_css_class( $class ) {
 /**
  * Added activity entry class for Video.
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.5.7
  *
  * @param string $class class.
  *

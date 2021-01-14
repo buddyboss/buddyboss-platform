@@ -29,7 +29,7 @@ function bp_media_get_settings_sections() {
 			'title'    => __( 'Documents', 'buddyboss' ),
 			'callback' => 'bp_media_admin_setting_callback_document_section',
 		),
-		'bp_media_settings_videos' => array(
+		'bp_media_settings_videos'    => array(
 			'page'     => 'video',
 			'title'    => __( 'Videos', 'buddyboss' ),
 			'callback' => 'bp_video_admin_setting_callback_video_section',
@@ -1654,6 +1654,11 @@ function bp_video_get_settings_fields_for_section( $section_id = '' ) {
 	$fields = bp_video_get_settings_fields();
 	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
 
+	/**
+	 * Filter for settings field sections.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
 	return (array) apply_filters( 'bp_video_get_settings_fields_for_section', $retval, $section_id );
 }
 
@@ -1682,6 +1687,11 @@ function bp_video_get_settings_fields() {
 		),
 	);
 
+	/**
+	 * Filter for settings fields.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
 	return (array) apply_filters( 'bp_video_get_settings_fields', $fields );
 }
 
@@ -1695,6 +1705,11 @@ function bp_video_extensions_list() {
 	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', bp_video_allowed_video_type() ) );
 }
 
+/**
+ * Settings for the video support extensions lists.
+ *
+ * @since BuddyBoss 1.5.7
+ */
 function bp_media_settings_callback_extension_video_support() {
 
 	$extensions = bp_video_extensions_list();
@@ -1702,18 +1717,19 @@ function bp_media_settings_callback_extension_video_support() {
 	?>
 	<table class="extension-listing wp-list-table widefat fixed striped">
 		<thead>
-		<td class="ext-head ext-head-enable check-column"><input id="bp_select_extensions" type="checkbox" value="1"></td>
-		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-icon"><?php echo esc_html__( 'Icon', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?></th>
+		<td class="ext-head ext-head-enable check-column"><input id="bp_select_extensions" type="checkbox" value="1">
+		</td>
+		<th class="ext-head ext-head-extension"><?php esc_html_e( 'Extension', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-desc"><?php esc_html_e( 'Description', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-icon"><?php esc_html_e( 'Icon', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-mime"><?php esc_html_e( 'MIME Type', 'buddyboss' ); ?></th>
 		</thead>
 		<tbody>
 		<?php
 		$counter = 1;
 		foreach ( $extensions as $k => $extension ) {
 
-			$k = ( !empty( $k )  ? $k : $counter );
+			$k = ( ! empty( $k ) ? $k : $counter );
 
 			$name       = 'bp_video_extensions_support[' . $k . ']';
 			$edit       = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'readonly="readonly"' : '';
@@ -1724,11 +1740,9 @@ function bp_media_settings_callback_extension_video_support() {
 			if ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) {
 				$document_icon = $extension['icon'];
 			} else {
-				$document_file_extension = substr(strrchr( $extension['extension'],'.'),1);
-				$document_icon = bp_video_svg_icon( $document_file_extension );
+				$document_file_extension = substr( strrchr( $extension['extension'], '.' ), 1 );
+				$document_icon           = bp_video_svg_icon( $document_file_extension );
 			}
-
-
 			?>
 			<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
 				<td>
@@ -1743,7 +1757,8 @@ function bp_media_settings_callback_extension_video_support() {
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
 					<?php
-					if ( $is_default ) { ?>
+					if ( $is_default ) {
+						?>
 						<i class="bb-icon <?php echo $document_icon; ?>"></i>
 						<?php
 					}
@@ -1761,8 +1776,11 @@ function bp_media_settings_callback_extension_video_support() {
 						</select>
 						<?php
 					} else {
-						?><input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/><?php
-					}?>
+						?>
+						<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/>
+						<?php
+					}
+					?>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-mime" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
@@ -1772,11 +1790,12 @@ function bp_media_settings_callback_extension_video_support() {
 						<a href="#" id="<?php echo esc_attr( $name . '[mime_type]' ); ?>" class="btn-check-mime-type button"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
 						<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
 						<?php
-					} ?>
+					}
+					?>
 				</td>
 			</tr>
 			<?php
-			$counter++;
+			$counter ++;
 		}
 
 		$name = 'bp_document_extensions_support[1]';
@@ -1787,7 +1806,7 @@ function bp_media_settings_callback_extension_video_support() {
 			</td>
 			<td>
 				<input name="extension-extension" data-name="<?php echo esc_attr( $name . '[extension]' ); ?>" type="text" class="extension-extension" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
-				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0" class="extension-hidden" />
+				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0" class="extension-hidden"/>
 			</td>
 			<td>
 				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>

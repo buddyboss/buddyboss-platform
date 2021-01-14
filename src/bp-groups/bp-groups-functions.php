@@ -4333,7 +4333,7 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 /**
  * Check whether a user is allowed to manage video albums in a given group.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.

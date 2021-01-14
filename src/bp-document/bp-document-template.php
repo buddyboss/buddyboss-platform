@@ -2330,9 +2330,16 @@ function bp_get_document_preview_music_extensions() {
 	return apply_filters( 'bp_get_document_preview_music_extensions', array( 'mp3', 'wav', 'ogg' ) );
 }
 
+/**
+ * Return the document previeew functions extensions.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.7
+ */
 function bp_get_document_preview_video_extensions() {
 
-	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4') );
+	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4' ) );
 }
 
 /**

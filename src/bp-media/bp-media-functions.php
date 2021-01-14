@@ -3350,10 +3350,10 @@ function bp_media_get_report_link( $args = array() ) {
 /**
  * Return download link of the album.
  *
- * @param $album_id
+ * @param int $album_id album id.
  *
  * @return mixed|void
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_media_album_download_link( $album_id ) {
 
@@ -3363,6 +3363,11 @@ function bp_media_album_download_link( $album_id ) {
 
 	$link = site_url() . '/?attachment=' . $album_id . '&media_type=album&download_media_file=1&media_file=' . $album_id;
 
+	/**
+	 * Filter for album download link.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
 	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
 
 }
