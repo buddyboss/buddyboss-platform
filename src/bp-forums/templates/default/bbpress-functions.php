@@ -73,44 +73,14 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			/** Scripts */
 
 			add_action( 'bbp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS.
-			add_action(
-				'bbp_enqueue_scripts',
-				array(
-					$this,
-					'localize_topic_script',
-				)
-			); // Enqueue theme script localization.
-			add_action(
-				'bbp_enqueue_scripts',
-				array(
-					$this,
-					'media_localize_script',
-				)
-			); // Enqueue media script localization.
+			add_action( 'bbp_enqueue_scripts', array( $this, 'localize_topic_script' ) ); // Enqueue theme script localization.
+			add_action( 'bbp_enqueue_scripts', array( $this, 'media_localize_script' ) ); // Enqueue media script localization.
 			add_action( 'wp_footer', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS.
 			add_action( 'wp_footer', array( $this, 'localize_topic_script' ) ); // Enqueue theme script localization.
 			add_action( 'wp_footer', array( $this, 'media_localize_script' ) ); // Enqueue media script localization.
-			add_action(
-				'bbp_ajax_favorite',
-				array(
-					$this,
-					'ajax_favorite',
-				)
-			); // Handles the topic ajax favorite/unfavorite.
-			add_action(
-				'bbp_ajax_subscription',
-				array(
-					$this,
-					'ajax_subscription',
-				)
-			); // Handles the topic ajax subscribe/unsubscribe.
-			add_action(
-				'bbp_ajax_forum_subscription',
-				array(
-					$this,
-					'ajax_forum_subscription',
-				)
-			); // Handles the forum ajax subscribe/unsubscribe.
+			add_action( 'bbp_ajax_favorite', array( $this, 'ajax_favorite' ) ); // Handles the topic ajax favorite/unfavorite.
+			add_action( 'bbp_ajax_subscription', array( $this, 'ajax_subscription' ) ); // Handles the topic ajax subscribe/unsubscribe.
+			add_action( 'bbp_ajax_forum_subscription', array( $this, 'ajax_forum_subscription' ) ); // Handles the forum ajax subscribe/unsubscribe.
 			add_action( 'bbp_enqueue_scripts', array( $this, 'mentions_script' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'mentions_script' ) );
 
@@ -134,7 +104,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			?>
 
 			<div id="bbp-container">
-			<div id="bbp-content" role="main">
+				<div id="bbp-content" role="main">
 
 			<?php
 		}
@@ -148,7 +118,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function after_main_content() {
 			?>
 
-			</div><!-- #bbp-content -->
+				</div><!-- #bbp-content -->
 			</div><!-- #bbp-container -->
 
 			<?php
@@ -300,7 +270,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			if ( is_admin() ) {
 				if (
 					! get_current_screen() ||
-					! in_array( get_current_screen()->base, array( 'page', 'post' ) ) ||
+					! in_array( get_current_screen()->base, array( 'page', 'post' ), true ) ||
 					! post_type_supports( get_current_screen()->post_type, 'editor' ) ) {
 					return;
 				}
