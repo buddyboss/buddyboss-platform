@@ -250,7 +250,7 @@ class BP_Video_Template {
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
-	function has_video() {
+	public function has_video() {
 		if ( $this->video_count ) {
 			return true;
 		}
@@ -301,7 +301,7 @@ class BP_Video_Template {
 	public function user_videos() {
 		if ( ( $this->current_video + 1 ) < $this->video_count ) {
 			return true;
-		} elseif ( ( $this->current_video + 1 ) == $this->video_count ) {
+		} elseif ( (int) ( $this->current_video + 1 ) === (int) $this->video_count ) {
 
 			/**
 			 * Fires right before the rewinding of video posts.
@@ -340,12 +340,12 @@ class BP_Video_Template {
 		}
 
 		// Loop has just started.
-		if ( $this->current_video == 0 ) {
+		if ( 0 === (int) $this->current_video ) {
 
 			/**
 			 * Fires if the current video item is the first in the activity loop.
 			 *
-			 * @since BuddyBoss 1.1.0
+			 * @since BuddyBoss 1.5.7
 			 */
 			do_action( 'video_loop_start' );
 		}

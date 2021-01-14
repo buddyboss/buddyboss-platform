@@ -3,7 +3,7 @@
  * Video Settings
  *
  * @package BuddyBoss\Video
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly

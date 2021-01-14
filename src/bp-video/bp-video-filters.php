@@ -749,7 +749,7 @@ function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids,
  *
  * @return bool
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_message_validated_content( $validated_content, $content, $post ) {
 	// check if video is enabled in messages or not and empty video in object request or not.
@@ -762,7 +762,7 @@ function bp_video_message_validated_content( $validated_content, $content, $post
 /**
  * Delete video entries attached to the attachment
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.5.7
  *
  * @param int $attachment_id ID of the attachment being deleted.
  */
@@ -787,7 +787,7 @@ function bp_video_delete_attachment_video( $attachment_id ) {
 /**
  * Update video privacy when activity is updated.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.5.7
  *
  * @param BP_Activity_Activity $activity Activity object.
  */
@@ -811,7 +811,7 @@ function bp_video_activity_update_video_privacy( $activity ) {
 /**
  * Set up activity arguments for use with the 'video' scope.
  *
- * @since BuddyBoss 1.4.2
+ * @since BuddyBoss 1.5.7
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -841,7 +841,7 @@ add_filter( 'bp_activity_set_video_scope_args', 'bp_activity_filter_video_scope'
  *
  * @param $repair_list
  *
- * @since BuddyBoss 1.4.4
+ * @since BuddyBoss 1.5.7
  * @return array Repair list items.
  */
 function bp_video_add_admin_repair_items( $repair_list ) {
@@ -863,7 +863,7 @@ function bp_video_add_admin_repair_items( $repair_list ) {
 /**
  * Repair BuddyBoss video.
  *
- * @since BuddyBoss 1.4.4
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_admin_repair_video() {
 	global $wpdb;
@@ -925,7 +925,7 @@ function bp_video_admin_repair_video() {
 /**
  * Repair BuddyBoss video forums privacy.
  *
- * @since BuddyBoss 1.4.2
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_forum_privacy_repair() {
 	global $wpdb;
@@ -967,7 +967,7 @@ function bp_video_forum_privacy_repair() {
 /**
  * Set up video arguments for use with the 'public' scope.
  *
- * @since BuddyBoss 1.1.9
+ * @since BuddyBoss 1.5.7
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1430,7 +1430,7 @@ function bp_video_parse_file_path( $file_path ) {
 /**
  * Added text on the email when replied on the activity.
  *
- * @since BuddyBoss 1.4.7
+ * @since BuddyBoss 1.5.7
  *
  * @param BP_Activity_Activity $activity Activity Object.
  */
