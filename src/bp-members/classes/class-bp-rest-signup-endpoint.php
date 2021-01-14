@@ -211,22 +211,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						 * Added support for display name format support from platform.
 						 */
 						// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-						$current_value = bp_get_option( 'bp-display-name-format' );
-
-						// If First Name selected then do not add last name field.
-						if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-								continue;
-							}
-							// If Nick Name selected then do not add first & last name field.
-						} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-								continue;
-							}
-						} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-								continue;
-							}
+						if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+							continue;
 						}
 
 						if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
@@ -241,8 +227,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						$field    = $fields_endpoint->assemble_response_data( $field, $request );
 						$fields[] = array(
 							'id'          => 'field_' . $field['id'],
-							'label'       => $field['name'],
-							'description' => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'label'       => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'description' => $field['description']['rendered'],
 							'type'        => $field['type'],
 							'required'    => $field['is_required'],
 							'options'     => $field['options'],
@@ -615,7 +601,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			? bp_get_signup_username_value()
 			: (
 				isset( $_POST['signup_username'] )
-				? filter_input( INPUT_POST, 'signup_username' )
+				? sanitize_text_field( wp_unslash( $_POST['signup_username'] ) )
 				: ''
 			)
 		);
@@ -624,7 +610,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			? bp_get_signup_email_value()
 			: (
 				isset( $_POST['signup_email'] )
-				? filter_input( INPUT_POST, 'signup_email' )
+				? sanitize_text_field( wp_unslash( $_POST['signup_email'] ) )
 				: ''
 			)
 		);
@@ -839,7 +825,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		} else {
 			$wp_user_id = bp_core_signup_user(
 				$user_name,
-				filter_input( INPUT_POST, 'signup_password' ),
+				sanitize_text_field( wp_unslash( $_POST['signup_password'] ) ),
 				$user_email,
 				$usermeta
 			);

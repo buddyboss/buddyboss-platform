@@ -130,6 +130,27 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
 
 	}
+
+	if ( in_array( 'instructor-role/instructor.php', $bp_plugins, true ) ) {
+
+		/**
+		 * Function to exclude group type post to prevent group role overriding.
+		 *
+		 * @param array $exclude_posts excluded post types.
+		 *
+		 * @return array|mixed
+		 */
+		function bp_core_instructor_role_post_exclude( $exclude_posts ) {
+
+			if ( is_array( $exclude_posts ) ) {
+				$exclude_posts[] = 'bp-group-type';
+			}
+
+			return $exclude_posts;
+		}
+
+		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );

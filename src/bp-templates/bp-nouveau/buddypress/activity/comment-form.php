@@ -38,15 +38,20 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
 				<div id="ac-reply-toolbar-<?php bp_activity_id(); ?>" class="ac-reply-toolbar">
 
-					<?php if ( bp_is_active( 'media' ) ) : ?>
+					<?php
+                    $component = bp_get_activity_object_name();
+                    $item_id = bp_get_activity_item_id();
+                    if ( bp_is_active( 'media' ) ) : ?>
 
-                        <div class="post-elements-buttons-item post-media media-support">
-                            <a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
-								<i class="bb-icon bb-icon-camera-small"></i>
-                            </a>
-                        </div>
+	                    <?php if ( bp_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? ( 'groups' === $component ? $item_id : bp_get_current_group_id() ) : 0 ) ) ): ?>
+                            <div class="post-elements-buttons-item post-media media-support">
+                                <a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+                                    <i class="bb-icon bb-icon-camera-small"></i>
+                                </a>
+                            </div>
+						<?php endif; ?>
 
-						<?php if ( bp_is_active( 'media' ) ): ?>
+	                    <?php if ( bp_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? ( 'groups' === $component ? $item_id : bp_get_current_group_id() ) : 0 ) ) ): ?>
 							<div class="post-elements-buttons-item post-media document-support">
 								<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Attach a document', 'buddyboss'); ?>" data-ac-id="<?php bp_activity_id(); ?>">
 									<i class="bb-icon bb-icon-attach"></i>

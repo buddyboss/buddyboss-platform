@@ -53,6 +53,7 @@ add_action( 'generate_rewrite_rules', 'bp_generate_rewrite_rules', 10 );
  *                                                      v---Load order
  */
 add_action( 'bp_loaded', 'bp_setup_components', 2 );
+add_action( 'bp_loaded', 'bp_setup_membership', 3 ); // Membership.
 add_action( 'bp_loaded', 'bp_setup_integrations', 3 );
 add_action( 'bp_loaded', 'bp_include', 4 );
 add_action( 'bp_loaded', 'bp_setup_option_filters', 5 );
@@ -118,6 +119,9 @@ add_action( 'bp_after_setup_theme', 'bp_check_theme_template_pack_dependency', -
 add_action( 'bp_after_setup_theme', 'bp_load_theme_functions', 1 );
 add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar', 9999999 );
 
+// Restrict user when view media/document from url.
+add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
+
 // Load the admin.
 if ( is_admin() ) {
 	add_action( 'bp_loaded', 'bp_admin' );
@@ -126,7 +130,7 @@ if ( is_admin() ) {
 // Activation redirect.
 add_action( 'bp_activation', 'bp_add_activation_redirect' );
 
-// Add Platform plugin updater code
+// Add Platform plugin updater code.
 if ( is_admin() ) {
 	add_action( 'bp_init', 'bp_platform_plugin_updater' );
 }
@@ -145,3 +149,26 @@ add_action( 'bp_init', function() {
 		bp_update_option( 'bp-active-components', $component );
 	}
 }, 10, 2 );
+
+/**
+ * Restrict user when visit attachment url from media/document.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_restrict_single_attachment() {
+	if ( is_attachment() ) {
+		global $post;
+		if ( ! empty( $post ) ) {
+			$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
+			$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
+			if (
+				! empty( $media_meta ) ||
+				! empty( $document_meta )
+			) {
+				bp_do_404();
+				return;
+			}
+		}
+	}
+}

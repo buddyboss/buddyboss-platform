@@ -533,10 +533,10 @@ function bp_add_permastructs() {
  * @since BuddyBoss 1.0.0
  */
 function bp_init_background_updater() {
-	global $background_updater;
+	global $bp_background_updater;
 
 	include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
-	$background_updater = new BP_Background_Updater();
+	$bp_background_updater = new BP_Background_Updater();
 
 	/**
 	 * Fires inside the 'bp_init_background_updater' function, where BP updates data.
@@ -781,4 +781,19 @@ function bp_get_request() {
 	 * @param string $action The action being run.
 	 */
 	do_action( 'bp_get_request', $action );
+}
+
+/**
+ * Fire the 'bp_setup_membership' action, where plugins should initialize components.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_setup_membership() {
+
+	/**
+	 * Fires inside the 'bp_setup_membership' function, where plugins should initialize components.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	do_action( 'bp_setup_membership' );
 }

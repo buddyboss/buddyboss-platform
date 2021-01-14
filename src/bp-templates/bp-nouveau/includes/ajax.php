@@ -181,6 +181,13 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 			$results['scopes']['following'] = $GLOBALS['members_template']->total_member_count;
 			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
 		}
+
+		if ( ! empty( $counts['followers'] ) ) {
+			add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_followers_scope', 20, 2 );
+			bp_has_members( bp_ajax_querystring( 'members' ) );
+			$results['scopes']['followers'] = $GLOBALS['members_template']->total_member_count;
+			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_followers_scope', 20, 2 );
+		}
 	}
 
 	return $results;
@@ -268,6 +275,33 @@ function bp_nouveau_object_template_results_members_following_scope( $querystrin
 }
 
 /**
+ * Object template results members Followers scope.
+ *
+ * @since BuddyBoss 1.4.3
+ */
+function bp_nouveau_object_template_results_members_followers_scope( $querystring, $object ) {
+	if ( 'members' !== $object ) {
+		return $querystring;
+	}
+
+	$querystring = wp_parse_args( $querystring );
+
+	$args                             = array(
+		'user_id' => ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id(),
+	);
+	$followers_comma_separated_string = bp_get_follower_ids( $args );
+	$querystring['include']           = $followers_comma_separated_string;
+	$querystring['scope']             = 'followers';
+	$querystring['page']              = 1;
+	$querystring['per_page']          = '1';
+	if ( isset( $querystring['user_id'] ) && ! empty( $querystring['user_id'] ) ) {
+		unset( $querystring['user_id'] );
+	}
+
+	return http_build_query( $querystring );
+}
+
+/**
  * Object template results members groups personal scope.
  *
  * @since BuddyBoss 1.0.0
@@ -283,4 +317,39 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 	$querystring['per_page'] = '1';
 	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	return http_build_query( $querystring );
+}
+
+add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
+
+/**
+ * Save Cover image position for group and member.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_nouveau_ajax_save_cover_position() {
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	if ( ! isset( $_POST['position'] ) ) {
+		wp_send_json_error();
+	}
+
+	$position = floatval( $_POST['position'] );
+	$updated  = false;
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$updated = groups_update_groupmeta( bp_get_current_group_id(), 'bp_cover_position', $position );
+	} else if ( bp_is_user() ) {
+		$updated = bp_update_user_meta( bp_displayed_user_id(), 'bp_cover_position', $position );
+	}
+
+	if ( empty( $updated ) ) {
+		wp_send_json_error();
+	}
+
+	$result['content'] = $position;
+
+	wp_send_json_success( $result );
 }

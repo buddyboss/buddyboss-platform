@@ -307,6 +307,10 @@ window.bp = window.bp || {};
 							}
 						);
 
+						if( $( '.header-aside-inner .user-link .avatar' ).length ){
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+						}
+
 						// Inject the Delete nav
 						bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
 

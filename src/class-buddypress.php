@@ -95,6 +95,11 @@ class BuddyPress {
 	public $integrations = array();
 
 	/**
+	 * @var array Membership.
+	 */
+	public $membership = array();
+
+	/**
 	 * Whether autoload is in use.
 	 *
 	 * @since BuddyPress 2.5.0
@@ -330,7 +335,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 16000;
+		$this->db_version = 16401;
 
 		/** Loading */
 
@@ -581,6 +586,8 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.6.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -619,64 +626,81 @@ class BuddyPress {
 			'media',
 			'document',
 			'gdpr',
+			'suspend',
 			'invites',
+			'moderation',
 		);
 
 		// These classes don't have a name that matches their component.
 		$irregular_map = array(
-			'BP_Akismet'                      => 'activity',
-			'BP_Admin'                        => 'core',
-			'BP_Attachment_Avatar'            => 'core',
-			'BP_Attachment_Cover_Image'       => 'core',
-			'BP_Attachment'                   => 'core',
-			'BP_Button'                       => 'core',
-			'BP_Component'                    => 'core',
-			'BP_Integration'                  => 'core',
-			'BP_Customizer_Control_Range'     => 'core',
-			'BP_Date_Query'                   => 'core',
-			'BP_Email_Tokens'                 => 'core',
-			'BP_Email_Delivery'               => 'core',
-			'BP_Email_Recipient'              => 'core',
-			'BP_Email'                        => 'core',
-			'BP_Embed'                        => 'core',
-			'BP_Media_Extractor'              => 'core',
-			'BP_Members_Suggestions'          => 'core',
-			'BP_PHPMailer'                    => 'core',
-			'BP_Recursive_Query'              => 'core',
-			'BP_Suggestions'                  => 'core',
-			'BP_Theme_Compat'                 => 'core',
-			'BP_User_Query'                   => 'core',
-			'BP_Walker_Category_Checklist'    => 'core',
-			'BP_Walker_Nav_Menu_Checklist'    => 'core',
-			'BP_Walker_Nav_Menu'              => 'core',
-			'BP_Invitation_Manager'           => 'core',
-			'BP_Invitation'                   => 'core',
-			'BP_Core_Gdpr'                    => 'gdpr',
-			'BP_Activity_Export'              => 'gdpr',
-			'BP_Export'                       => 'gdpr',
-			'BP_Friendship_Export'            => 'gdpr',
-			'BP_Group_Export'                 => 'gdpr',
-			'BP_Group_Membership_Export'      => 'gdpr',
-			'BP_Message_Export'               => 'gdpr',
-			'BP_Notification_Export'          => 'gdpr',
-			'BP_Settings_Export'              => 'gdpr',
-			'BP_Xprofile_Export'              => 'gdpr',
-			'BP_Bbp_Gdpr_Forums'              => 'gdpr',
-			'BP_Bbp_Gdpr_Replies'             => 'gdpr',
-			'BP_Bbp_Gdpr_Topics'              => 'gdpr',
-			'BP_Core_Friends_Widget'          => 'friends',
-			'BP_Core_Network_Posts_Widget'    => 'core',
-			'BP_Core_Follow_Following_Widget' => 'core',
-			'BP_Core_Follow_Follower_Widget'  => 'core',
-			'BP_Group_Extension'              => 'groups',
-			'BP_Group_Member_Query'           => 'groups',
-			'BP_Core_Members_Template'        => 'members',
-			'BP_Core_Members_Widget'          => 'members',
-			'BP_Core_Recently_Active_Widget'  => 'members',
-			'BP_Core_Whos_Online_Widget'      => 'members',
-			'BP_Registration_Theme_Compat'    => 'members',
-			'BP_Signup'                       => 'members',
-			'BP_BuddyBoss_Platform_Updater'   => 'core',
+			'BP_Akismet'                                   => 'activity',
+			'BP_Admin'                                     => 'core',
+			'BP_Attachment_Avatar'                         => 'core',
+			'BP_Attachment_Cover_Image'                    => 'core',
+			'BP_Attachment'                                => 'core',
+			'BP_Button'                                    => 'core',
+			'BP_Component'                                 => 'core',
+			'BP_Integration'                               => 'core',
+			'BP_Customizer_Control_Range'                  => 'core',
+			'BP_Date_Query'                                => 'core',
+			'BP_Email_Tokens'                              => 'core',
+			'BP_Email_Delivery'                            => 'core',
+			'BP_Email_Recipient'                           => 'core',
+			'BP_Email'                                     => 'core',
+			'BP_Embed'                                     => 'core',
+			'BP_Media_Extractor'                           => 'core',
+			'BP_Members_Suggestions'                       => 'core',
+			'BP_PHPMailer'                                 => 'core',
+			'BP_Recursive_Query'                           => 'core',
+			'BP_Suggestions'                               => 'core',
+			'BP_Theme_Compat'                              => 'core',
+			'BP_User_Query'                                => 'core',
+			'BP_Walker_Category_Checklist'                 => 'core',
+			'BP_Walker_Nav_Menu_Checklist'                 => 'core',
+			'BP_Walker_Nav_Menu'                           => 'core',
+			'BP_Invitation_Manager'                        => 'core',
+			'BP_Invitation'                                => 'core',
+			'BP_Core_Gdpr'                                 => 'gdpr',
+			'BP_Activity_Export'                           => 'gdpr',
+			'BP_Export'                                    => 'gdpr',
+			'BP_Friendship_Export'                         => 'gdpr',
+			'BP_Group_Export'                              => 'gdpr',
+			'BP_Group_Membership_Export'                   => 'gdpr',
+			'BP_Message_Export'                            => 'gdpr',
+			'BP_Notification_Export'                       => 'gdpr',
+			'BP_Settings_Export'                           => 'gdpr',
+			'BP_Xprofile_Export'                           => 'gdpr',
+			'BP_Bbp_Gdpr_Forums'                           => 'gdpr',
+			'BP_Bbp_Gdpr_Replies'                          => 'gdpr',
+			'BP_Bbp_Gdpr_Topics'                           => 'gdpr',
+			'BP_Core_Friends_Widget'                       => 'friends',
+			'BP_Core_Network_Posts_Widget'                 => 'core',
+			'BP_Core_Follow_Following_Widget'              => 'core',
+			'BP_Core_Follow_Follower_Widget'               => 'core',
+			'BP_Group_Extension'                           => 'groups',
+			'BP_Group_Member_Query'                        => 'groups',
+			'BP_Core_Members_Template'                     => 'members',
+			'BP_Core_Members_Widget'                       => 'members',
+			'BP_Core_Recently_Active_Widget'               => 'members',
+			'BP_Core_Whos_Online_Widget'                   => 'members',
+			'BP_Registration_Theme_Compat'                 => 'members',
+			'BP_Signup'                                    => 'members',
+			'BP_BuddyBoss_Platform_Updater'                => 'core',
+			'BP_Core_Suspend'                              => 'suspend',
+			'BP_Suspend_Abstract'                          => 'suspend',
+			'BP_Suspend_Member'                            => 'suspend',
+			'BP_Suspend_Activity'                          => 'suspend',
+			'BP_Suspend_Activity_Comment'                  => 'suspend',
+			'BP_Suspend_Group'                             => 'suspend',
+			'BP_Suspend_Forum'                             => 'suspend',
+			'BP_Suspend_Forum_Topic'                       => 'suspend',
+			'BP_Suspend_Forum_Reply'                       => 'suspend',
+			'BP_Suspend_Document'                          => 'suspend',
+			'BP_Suspend_Folder'                            => 'suspend',
+			'BP_Suspend_Media'                             => 'suspend',
+			'BP_Suspend_Album'                             => 'suspend',
+			'BP_Suspend_Comment'                           => 'suspend',
+			'BP_Suspend_Message'                           => 'suspend',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
@@ -691,6 +715,10 @@ class BuddyPress {
 			'BP_REST_Signup_Endpoint'                      => 'members',
 			'BP_REST_Media_Endpoint'                       => 'media',
 			'BP_REST_Media_Albums_Endpoint'                => 'media',
+			'BP_REST_Media_Details_Endpoint'               => 'media',
+			'BP_REST_Document_Endpoint'                    => 'document',
+			'BP_REST_Document_Folder_Endpoint'             => 'document',
+			'BP_REST_Document_Details_Endpoint'            => 'document',
 			'BP_REST_Activity_Endpoint'                    => 'activity',
 			'BP_REST_Activity_Comment_Endpoint'            => 'activity',
 			'BP_REST_Activity_Details_Endpoint'            => 'activity',
@@ -726,6 +754,8 @@ class BuddyPress {
 			'BP_REST_Invites_Endpoint'                     => 'invites',
 			'BP_REST_Account_Settings_Endpoint'            => 'settings',
 			'BP_REST_Account_Settings_Options_Endpoint'    => 'settings',
+			'BP_REST_Moderation_Endpoint'                  => 'moderation',
+			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
 		);
 
 		$component = null;
@@ -746,9 +776,11 @@ class BuddyPress {
 		// Sanitize class name.
 		$class = strtolower( str_replace( '_', '-', $class ) );
 		if ( 'bp-rest-attachments' === $class ) {
-			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-attachments.php";
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bp-rest-attachments.php";
 		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
+		} elseif ( 'suspend' === $component ) {
+			$path = dirname( __FILE__ ) . "/bp-moderation/classes/suspend/class-{$class}.php";
 		} else {
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";
 		}
@@ -763,7 +795,7 @@ class BuddyPress {
 		 * Skip if PHPUnit is running, or BuddyPress is installing for the first time.
 		 */
 		if (
-			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr', 'profiletype' ), true ) &&
+			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr', 'suspend', 'profiletype' ), true ) &&
 			! bp_is_active( $component ) &&
 			! function_exists( 'tests_add_filter' )
 		) {

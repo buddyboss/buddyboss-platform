@@ -2294,6 +2294,17 @@ function bp_is_document_component() {
 }
 
 /**
+ * Check whether the current page is part of the Moderation component.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @return bool True if the current page is part of the Moderation component.
+ */
+function bp_is_moderation_component() {
+	return (bool) bp_is_current_component( 'moderation' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2346,6 +2357,17 @@ function bp_is_activity_directory() {
  */
 function bp_is_single_activity() {
 	return (bool) ( bp_is_activity_component() && is_numeric( bp_current_action() ) );
+}
+
+/**
+ * Is the current page a single activity item edit permalink?
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @return bool True if the current page is a single activity item edit permalink.
+ */
+function bp_is_activity_edit() {
+	return (bool) ( bp_is_activity_component() && is_numeric( bp_current_action() ) && 'edit' === bp_action_variable() );
 }
 
 /** User **********************************************************************/
@@ -2548,6 +2570,19 @@ function bp_is_user_change_cover_image() {
  */
 function bp_is_user_groups() {
 	return (bool) ( bp_is_user() && bp_is_groups_component() );
+}
+
+/**
+ * Is the current page part of a user's Groups invite page?
+ *
+ * Eg http://example.com/members/joe/groups/invites/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.5.3
+ *
+ * @return bool True if the current page is a user's Groups invite page.
+ */
+function bp_is_user_groups_invites() {
+	return (bool) ( bp_is_user_groups() && bp_is_current_action( 'invites' ) );
 }
 
 /**
@@ -2763,6 +2798,19 @@ function bp_is_user_document() {
 	return (bool) ( bp_is_user() && bp_is_document_component() );
 }
 
+/**
+ * Is this a user's moderation page?
+ *
+ * Eg http://example.com/members/joe/moderation/ (or a subpage thereof).
+ *
+ * @since BuddyPress 2.0.0
+ *
+ * @return bool True if the current page is a user's moderation page.
+ */
+function bp_is_user_moderation() {
+	return (bool) ( bp_is_user() && bp_is_moderation_component() );
+}
+
 
 /**
  * Is the current page the media directory?
@@ -2842,6 +2890,44 @@ function bp_is_single_document() {
 
 	return (bool) ( bp_is_media_component() && 'my-document' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
+
+/** Users Following/Followers ********************************************************************/
+
+/**
+ * Is this a user's followers page?
+ *
+ * Eg http://example.com/members/joe/followers/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @return bool True if the current page is a user's followers page.
+ */
+function bp_is_user_followers() {
+	if ( ! bp_is_active( 'activity' ) ) {
+		return false;
+	}
+
+	return (bool) ( bp_is_user() && bp_is_activity_follow_active() && 'followers' == bp_current_action() );
+}
+
+/**
+ * Is this a user's following page?
+ *
+ * Eg http://example.com/members/joe/following/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @return bool True if the current page is a user's following page.
+ */
+function bp_is_user_following() {
+	if ( ! bp_is_active( 'activity' ) ) {
+		return false;
+	}
+
+	return (bool) ( bp_is_user() && bp_is_activity_follow_active() && 'following' == bp_current_action() );
+
+}
+
 
 
 /** Groups ********************************************************************/
@@ -2963,7 +3049,7 @@ function bp_is_group_subgroups() {
  * @return bool True if the current page is part of a group forum topic.
  */
 function bp_is_group_forum_topic() {
-	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) && bp_is_action_variable( 'topic', 0 ) );
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( 'topic', 0 ) );
 }
 
 /**
@@ -2975,7 +3061,7 @@ function bp_is_group_forum_topic() {
  * @return bool True if the current page is part of a group forum topic edit page.
  */
 function bp_is_group_forum_topic_edit() {
-	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) && bp_is_action_variable( 'topic', 0 ) && bp_is_action_variable( 'edit', 2 ) );
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( 'topic', 0 ) && bp_is_action_variable( 'edit', 2 ) );
 }
 
 /**
@@ -3154,7 +3240,7 @@ function bp_is_group_albums() {
 function bp_is_group_document() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled' ) && ! bp_is_group_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -3175,7 +3261,7 @@ function bp_is_group_document() {
 function bp_is_group_folders() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled' ) && ! bp_is_group_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -3196,7 +3282,7 @@ function bp_is_group_folders() {
 function bp_is_user_folders() {
 	$retval = false;
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component') && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component' ) && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
 		$retval = true;
 	}
 
@@ -4113,4 +4199,78 @@ function bp_is_group_messages() {
 	}
 
 	return $retval;
+}
+
+/**
+ * Is the current page a user's album page?
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @return bool True if the current page is a album page.
+ */
+function bp_is_user_albums() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && bp_is_media_component() && bp_is_current_action( 'albums' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Checks if user can create a document or not.
+ *
+ * @return bool Is user can create document or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_document() {
+	return (bool) apply_filters( 'bp_user_can_create_document', true );
+}
+
+/**
+ * Checks if user can create a media or not.
+ *
+ * @return bool Is user can create media or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_media() {
+	return (bool) apply_filters( 'bp_user_can_create_media', true );
+}
+
+/**
+ * Checks if user can create a activity or not.
+ *
+ * @return bool Is user can create activity or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_activity() {
+	return (bool) apply_filters( 'bp_user_can_create_activity', true );
+}
+
+/**
+ * Checks if user can send messages or not.
+ *
+ * @param object $thread          The thread object.
+ * @param object $thread_template The thread template.
+ * @param string $error_type      Return error type.
+ *
+ * @return bool Is user can send messages or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
+	return apply_filters( 'bp_user_can_send_messages', $thread, $thread_template, $error_type );
+}
+
+/**
+ * Checks if user can send group membership requests or not.
+ *
+ * @param bool $default  Default send the group membership requests.
+ * @param int $group_id  Group id to send membership requests.
+ *
+ * @return bool Is user can send group membership requests or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_groups_user_can_send_membership_requests( $default = true, $group_id ) {
+	return (bool) apply_filters( 'bp_groups_user_can_send_membership_requests', $default, $group_id );
 }

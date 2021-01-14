@@ -140,11 +140,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function get_items( $request ) {
 
 		$args = array(
-			'post_parent'    => ( ! empty( $request['parent'] ) ? $request['parent'] : 'any' ),
-			'orderby'        => ( ! empty( $request['orderby'] ) ? $request['orderby'] : 'date' ),
-			'order'          => ( ! empty( $request['order'] ) ? $request['order'] : 'ASC' ),
-			'paged'          => ( ! empty( $request['page'] ) ? $request['page'] : '' ),
-			'posts_per_page' => ( ! empty( $request['per_page'] ) ? $request['per_page'] : '' ),
+			'post_parent'      => ( ! empty( $request['parent'] ) ? $request['parent'] : 'any' ),
+			'orderby'          => ( ! empty( $request['orderby'] ) ? $request['orderby'] : 'date' ),
+			'order'            => ( ! empty( $request['order'] ) ? $request['order'] : 'ASC' ),
+			'paged'            => ( ! empty( $request['page'] ) ? $request['page'] : '' ),
+			'posts_per_page'   => ( ! empty( $request['per_page'] ) ? $request['per_page'] : '' ),
+			'moderation_query' => false,
 		);
 
 		if ( ! empty( $request['search'] ) ) {
@@ -376,7 +377,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$reply = get_post( $request['id'] );
+		$reply = bbp_get_reply( $request['id'] );
 
 		if ( bbp_thread_replies() ) {
 
@@ -482,7 +483,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$reply = get_post( $request['id'] );
+		$reply = bbp_get_reply( $request['id'] );
 
 		if ( true === $retval && empty( $reply->ID ) ) {
 			$retval = new WP_Error(
@@ -504,7 +505,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && isset( $reply->post_type ) ) {
+		if ( true === $retval && is_user_logged_in() && isset( $reply->post_type ) ) {
 			$post_type = get_post_type_object( $reply->post_type );
 			if ( ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
 				$retval = new WP_Error(
@@ -826,8 +827,24 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// No reply content.
 		if (
 			empty( $reply_content )
-			&& empty( $request['bbp_media'] )
-			&& empty( $request['bbp_media_gif'] )
+			&& ! (
+				(
+					function_exists( 'bp_is_forums_media_support_enabled' )
+					&& false !== bp_is_forums_media_support_enabled()
+					&& ! empty( $request['bbp_media'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_gif_support_enabled' )
+					&& false !== bp_is_forums_gif_support_enabled()
+					&& ! empty( $request['bbp_media_gif']['url'] )
+					&& ! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_document_support_enabled' )
+					&& false !== bp_is_forums_document_support_enabled()
+					&& ! empty( $request['bbp_documents'] )
+				)
+			)
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_content',
@@ -1027,13 +1044,19 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		/**
+		 * Removed notification sent and called additionally.
+		 * Due to we have moved all filters on title and content.
+		 */
+		remove_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 11, 5 );
+
 		/** Update counts, etc... */
 		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
 
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
 
-		$reply         = get_post( $reply_id );
+		$reply         = bbp_get_reply( $reply_id );
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
@@ -1052,12 +1075,21 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_create_item', $reply, $topic_id, $forum_id, $request );
 
-		return $this->get_item(
+		$response = $this->get_item(
 			array(
 				'id'      => $reply_id,
 				'context' => 'view',
 			)
 		);
+
+		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
+			/**
+			 * Sends notification emails for new replies to subscribed topics.
+			 */
+			bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author );
+		}
+
+		return $response;
 	}
 
 	/**
@@ -1301,7 +1333,27 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
 		// No reply content.
-		if ( empty( $reply_content ) ) {
+		if (
+			empty( $reply_content )
+			&& ! (
+				(
+					function_exists( 'bp_is_forums_media_support_enabled' )
+					&& false !== bp_is_forums_media_support_enabled()
+					&& ! empty( $request['bbp_media'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_gif_support_enabled' )
+					&& false !== bp_is_forums_gif_support_enabled()
+					&& ! empty( $request['bbp_media_gif']['url'] )
+					&& ! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_document_support_enabled' )
+					&& false !== bp_is_forums_document_support_enabled()
+					&& ! empty( $request['bbp_documents'] )
+				)
+			)
+		) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_content',
 				__( 'Your reply cannot be empty.', 'buddyboss' ),
@@ -1381,8 +1433,24 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			remove_post_type_support( bbp_get_reply_post_type(), 'revisions' );
 		}
 
+		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
+			remove_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		}
+
+		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
+			remove_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
+		}
+
 		// Insert topic.
 		$reply_id = wp_update_post( $reply_data );
+
+		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
+			add_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		}
+
+		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
+			add_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
+		}
 
 		// Toggle revisions back on.
 		if ( true === $revisions_removed ) {
@@ -1455,7 +1523,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_edit_reply_post_extras', $reply_id );
 
-		$reply         = get_post( $reply_id );
+		$reply         = bbp_get_reply( $reply_id );
+		$reply->edit   = true;
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
@@ -1507,7 +1576,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( true === $retval ) {
-			$reply = get_post( $request['id'] );
+			$reply = bbp_get_reply( $request['id'] );
 			if ( bbp_get_user_id( 0, true, true ) !== $reply->post_author && ! current_user_can( 'edit_reply', $request['id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -1548,7 +1617,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$reply = get_post( $request['id'] );
+		$reply = bbp_get_reply( $request['id'] );
 
 		$previous = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $reply, $request )
@@ -1803,12 +1872,18 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$this->forum_endpoint->prepare_password_response( $reply->post_password );
 		}
 
-		$content = apply_filters( 'the_content', $reply->post_content );
+		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
 			'raw'      => $reply->post_content,
-			'rendered' => $content,
+			'rendered' => bbp_get_reply_content( $reply->ID ),
 		);
+
+		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
 		if ( ! empty( $reply->post_password ) ) {
@@ -1837,11 +1912,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response  The Response data.
 		 * @param WP_REST_Request  $request   Request used to generate the response.
-		 * @param array            $component The component and its values.
+		 * @param WP_Post          $component The component and its values.
 		 *
 		 * @since 0.1.0
 		 */
-		return apply_filters( 'bp_rest_forums_prepare_value', $response, $request, $reply );
+		return apply_filters( 'bp_rest_reply_prepare_value', $response, $request, $reply );
 	}
 
 	/**

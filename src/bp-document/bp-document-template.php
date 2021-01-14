@@ -148,8 +148,13 @@ function bp_has_document( $args = '' ) {
 	$group_id = false;
 
 	// The default scope should recognize custom slugs.
-	$scope = ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = ( isset( $args['scope'] ) && ! empty( $args['scope'] ) ? $args['scope'] : $scope );
 	$scope = bp_document_default_scope( $scope );
+
+	if ( isset( $args ) && isset( $args['scope'] ) ) {
+		unset( $args['scope'] );
+	}
 
 	/*
 	 * Parse Args.
@@ -753,6 +758,13 @@ function bp_document_user_can_delete( $document = false ) {
 		if ( isset( $document->user_id ) && ( $document->user_id === bp_loggedin_user_id() ) ) {
 			$can_delete = true;
 		}
+
+		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
+			$manage = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
+			if ( $manage ) {
+				$can_delete = true;
+			}
+		}
 	}
 
 	/**
@@ -805,22 +817,9 @@ function bp_document_user_can_edit( $document = false ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
-
-			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
-			$status   = bp_group_get_media_status( $document->group_id );
-			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $document->group_id );
-			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $document->group_id );
-
+			$manage = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
 			if ( $manage ) {
-				if ( $document->user_id === bp_loggedin_user_id() ) {
-					$can_edit = true;
-				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
-					$can_edit = true;
-				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-					$can_edit = true;
-				} elseif ( 'admins' == $status && $is_admin ) {
-					$can_edit = true;
-				}
+				$can_edit = true;
 			}
 
 		}
@@ -862,7 +861,7 @@ function bp_get_document_folder_id() {
 	$id = 0;
 
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
-		$id = $document_template->document->id;
+		$id = $document_template->document->folder_id;
 	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->id ) ) {
 		$id = $document_folder_template->folder->id;
 	}
@@ -1712,7 +1711,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
 			$can_delete = true;
 
-			// Users are allowed to delete their own folder.
+		// Users are allowed to delete their own folder.
 		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
 			$can_delete = true;
 		}

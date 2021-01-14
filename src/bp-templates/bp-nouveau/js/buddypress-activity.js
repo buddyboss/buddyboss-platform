@@ -70,15 +70,16 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
-					url					: BP_Nouveau.ajaxurl,
-					timeout				: 3 * 60 * 60 * 1000,
-					dictDefaultMessage 	: BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles		: 'image/*',
-					autoProcessQueue	: true,
-					addRemoveLinks		: true,
-					uploadMultiple		: false,
-					maxFiles			: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-					maxFilesize			: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					url                 : BP_Nouveau.ajaxurl,
+					timeout             : 3 * 60 * 60 * 1000,
+					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       : 'image/*',
+					autoProcessQueue    : true,
+					addRemoveLinks      : true,
+					uploadMultiple      : false,
+					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 				};
 
 				// if defined, add custom dropzone options.
@@ -224,7 +225,7 @@ window.bp = window.bp || {};
 				 * Deal with the 'All Members' dynamic span from here as HeartBeat is working even when
 				 * the user is not logged in
 				 */
-				 $( bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]' ).find( 'a span' ).html( newest_activities_count );
+				$( bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]' ).find( 'a span' ).html( newest_activities_count );
 
 				// Set all activities to be highlighted for the current scope.
 			} else {
@@ -278,6 +279,10 @@ window.bp = window.bp || {};
 			 * Finally trigger a pending event containing the activity heartbeat data
 			 */
 			$( '#buddypress [data-bp-list="activity"]' ).trigger( 'bp_heartbeat_pending', this.heartbeat_data );
+
+			if ( typeof bp.Nouveau !== 'undefined' ){
+				bp.Nouveau.reportPopUp();
+			}
 		},
 
 		/**
@@ -344,7 +349,7 @@ window.bp = window.bp || {};
 				// Remove highlighted for the current scope.
 				setTimeout(
 					function () {
-							$( event.delegateTarget ).find( '[data-bp-activity-id]' ).removeClass( 'newest_' + scope + '_activity' );
+						$( event.delegateTarget ).find( '[data-bp-activity-id]' ).removeClass( 'newest_' + scope + '_activity' );
 					},
 					3000
 				);
@@ -371,7 +376,7 @@ window.bp = window.bp || {};
 				// Now set it.
 				$( event.delegateTarget ).children( '.just-posted' ).each(
 					function() {
-							self.just_posted.push( $( this ).data( 'bp-activity-id' ) );
+						self.just_posted.push( $( this ).data( 'bp-activity-id' ) );
 					}
 				);
 
@@ -422,34 +427,34 @@ window.bp = window.bp || {};
 
 			comments.each(
 				function( c, comment ) {
-						comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
-						comment_items   = $( comment_parents ).find( 'li' ).not( '.document-action-class' );
+					comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
+					comment_items   = $( comment_parents ).find( 'li' ).not( $( '.document-action-class, .media-action-class' ) );
 
 					if ( ! comment_items.length ) {
 						return;
 					}
 
-						// Get the activity id.
-						activity_item = $( comment ).closest( '.activity-item' );
+					// Get the activity id.
+					activity_item = $( comment ).closest( '.activity-item' );
 
-						// Get the comment count.
-						comment_count = $( '#acomment-comment-' + activity_item.data( 'bp-activity-id' ) + ' span.comment-count' ).html() || ' ';
+					// Get the comment count.
+					comment_count = $( '#acomment-comment-' + activity_item.data( 'bp-activity-id' ) + ' span.comment-count' ).html() || ' ';
 
-						// Keep latest 5 comments.
-						comment_items.each(
-							function( i, item ) {
-								if ( i < comment_items.length - 4 ) {
-									$( item ).addClass( 'bp-hidden' ).hide();
+					// Keep latest 5 comments.
+					comment_items.each(
+						function( i, item ) {
+							if ( i < comment_items.length - 4 ) {
+								$( item ).addClass( 'bp-hidden' ).hide();
 
-									// Prepend a link to display all.
-									if ( ! i ) {
-										$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
-									}
+								// Prepend a link to display all.
+								if ( ! i ) {
+									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 								}
 							}
-						);
+						}
+					);
 
-						// If all parents are hidden, reveal at least one. It seems very risky to manipulate the DOM to keep exactly 5 comments!
+					// If all parents are hidden, reveal at least one. It seems very risky to manipulate the DOM to keep exactly 5 comments!
 					if ( $( comment_parents ).children( '.bp-hidden' ).length === $( comment_parents ).children( 'li' ).length - 1 && $( comment_parents ).find( 'li.show-all' ).length ) {
 						$( comment_parents ).children( 'li:not(.show-all)' ).removeClass( 'bp-hidden' ).toggle();
 					}
@@ -471,12 +476,12 @@ window.bp = window.bp || {};
 
 			setTimeout(
 				function() {
-						$( event.target ).closest( 'ul' ).find( 'li' ).removeClass( 'bp-hidden' ).fadeIn(
-							300,
-							function() {
-								$( event.target ).parent( 'li' ).remove();
-							}
-						);
+					$( event.target ).closest( 'ul' ).find( 'li' ).removeClass( 'bp-hidden' ).fadeIn(
+						300,
+						function() {
+							$( event.target ).parent( 'li' ).remove();
+						}
+					);
 				},
 				600
 			);
@@ -539,7 +544,7 @@ window.bp = window.bp || {};
 
 			setTimeout(
 				function () {
-						$( '#buddypress #activity-stream .activity-item' ).removeClass( 'newest_' + data.scope + '_activity' );
+					$( '#buddypress #activity-stream .activity-item' ).removeClass( 'newest_' + data.scope + '_activity' );
 				},
 				3000
 			);
@@ -551,10 +556,29 @@ window.bp = window.bp || {};
 				window.FB.XFBML.parse();
 			}
 
+			// Fix comments atwho query elements.
+			this.fixAtWhoActivity();
+
+			// Edit Activity Loader.
+			this.openEditActivityPopup();
+
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout( function() {
 				jQuery( window ).scroll();
 			},200);
+		},
+
+		openEditActivityPopup: function() {
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
+				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
+				if ( activity_item.length ) {
+					var activity_data = activity_item.data( 'bp-activity' );
+
+					if ( ! _.isUndefined( activity_data ) ) {
+						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+					}
+				}
+			}
 		},
 
 		activityPrivacyChange: function( event ) {
@@ -572,7 +596,7 @@ window.bp = window.bp || {};
 
 			parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.data( 'value' ) }, 'activity' ).done(
 				function( response ) {
-						activity_item.find( '.privacy' ).removeClass( 'loading' );
+					activity_item.find( '.privacy' ).removeClass( 'loading' );
 
 					if ( true === response.success ) {
 						activity_item.find( '.activity-privacy li' ).removeClass( 'selected' );
@@ -644,7 +668,7 @@ window.bp = window.bp || {};
 
 				parent.ajax( { action: 'activity_mark_' + type, 'id': activity_id }, 'activity' ).done(
 					function( response ) {
-							target.removeClass( 'loading' );
+						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
 							return;
@@ -667,8 +691,8 @@ window.bp = window.bp || {};
 
 									if ( likes_text.length ) {
 										response.data.like_count ?
-										likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
-										likes_text.empty() && activity_state.removeClass( 'has-likes' );
+											likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
+											likes_text.empty() && activity_state.removeClass( 'has-likes' );
 
 										// Update like tooltip.
 										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
@@ -714,8 +738,8 @@ window.bp = window.bp || {};
 								}
 							}
 
-								target.removeClass( 'unfav' );
-								target.addClass( 'fav' );
+							target.removeClass( 'unfav' );
+							target.addClass( 'fav' );
 						}
 					}
 				);
@@ -765,7 +789,7 @@ window.bp = window.bp || {};
 
 				parent.ajax( ajaxData, 'activity' ).done(
 					function( response ) {
-							target.removeClass( 'loading' );
+						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
 							li_parent.prepend( response.data.feedback );
@@ -865,12 +889,12 @@ window.bp = window.bp || {};
 				).done(
 					function( response ) {
 
-							// check for JSON output.
+						// check for JSON output.
 						if ( typeof response !== 'object' && target.closest( 'div' ).find( '.bb-activity-media-wrap' ).length > 0 ) {
 							response = JSON.parse( response );
 						}
 
-							$( readMore ).removeClass( 'loading' );
+						$( readMore ).removeClass( 'loading' );
 
 						if ( content.parent().find( '.bp-feedback' ).length ) {
 							content.parent().find( '.bp-feedback' ).remove();
@@ -1037,6 +1061,21 @@ window.bp = window.bp || {};
 
 				comment_content = $( form ).find( '.ac-input' ).first();
 
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+
+				// transform other emoji into emojionearea emoji.
+				comment_content.find( 'img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
+
+				// Transform emoji image into emoji unicode.
 				comment_content.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
@@ -1176,13 +1215,40 @@ window.bp = window.bp || {};
 							$( '#ac-reply-post-gif-' + activity_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 						}
 
-							self.destroyCommentMediaUploader( activity_id );
-							self.destroyCommentDocumentUploader( activity_id );
+						self.destroyCommentMediaUploader( activity_id );
+						self.destroyCommentDocumentUploader( activity_id );
 
-							target.prop( 'disabled', false );
-							comment_content.prop( 'disabled', false );
+						target.prop( 'disabled', false );
+						comment_content.prop( 'disabled', false );
 					}
 				);
+			}
+
+			// Edit the activity
+			if ( target.hasClass( 'edit' ) && target.hasClass( 'edit-activity' ) ) {
+				// Stop event propagation
+				event.preventDefault();
+
+				var activity_data = activity_item.data('bp-activity');
+
+				if ( typeof activity_data !== 'undefined' ) {
+					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+
+					// Check if it's a Group activity
+					if( target.closest('li').hasClass( 'groups' ) ) {
+						$('#bp-nouveau-activity-form').addClass( 'group-activity' );
+					} else {
+						$('#bp-nouveau-activity-form').removeClass( 'group-activity' );
+					}
+
+
+					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
+					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
+						$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
+						$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
+					}
+
+				}
 			}
 		},
 
@@ -1404,7 +1470,9 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								if(!jQuery('.comment-media-error-popup').length) {
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								}
 								this.removeFile(file);
 							}
 						}
@@ -1477,18 +1545,19 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url						: BP_Nouveau.ajaxurl,
-						timeout					: 3 * 60 * 60 * 1000,
-						dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-						acceptedFiles			: BP_Nouveau.media.document_type,
-						createImageThumbnails 	: false,
-						dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
-						autoProcessQueue		: true,
-						addRemoveLinks			: true,
-						uploadMultiple			: false,
-						maxFiles				: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-						maxFilesize				: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-						dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
+						url                  : BP_Nouveau.ajaxurl,
+						timeout              : 3 * 60 * 60 * 1000,
+						dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
+						acceptedFiles        : BP_Nouveau.media.document_type,
+						createImageThumbnails: false,
+						dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
+						autoProcessQueue     : true,
+						addRemoveLinks       : true,
+						uploadMultiple       : false,
+						maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+						maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+						dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+						dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 					};
 
 					// init dropzone.
@@ -1559,7 +1628,9 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								if(!jQuery('.comment-document-error-popup').length) {
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								}
 								this.removeFile(file);
 							}
 						}
@@ -1711,7 +1782,17 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-		}
+		},
+
+		fixAtWhoActivity: function() {
+			$('.acomment-content, .activity-content').each(function(){
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = $(this).find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+			});
+		},
 	};
 
 	// Launch BP Nouveau Activity.

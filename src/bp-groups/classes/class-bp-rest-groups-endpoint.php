@@ -1645,7 +1645,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		if ( 'private' === bp_get_group_status( $item ) ) {
 			if ( $item->is_invited ) {
 				return true;
-			} else if ( $item->is_pending ) {
+			} elseif ( $item->is_pending ) {
 				return false;
 			} else {
 				// Check for the group type > profile type joining.
