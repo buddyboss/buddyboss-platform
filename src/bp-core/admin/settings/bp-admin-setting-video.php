@@ -1,10 +1,10 @@
 <?php
 /**
- * Add admin Media settings page in Dashboard->BuddyBoss->Settings
+ * Add admin Video settings page in Dashboard->BuddyBoss->Settings
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly.
@@ -13,10 +13,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Search Settings class.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 
+	/**
+	 * Initialize.
+	 */
 	public function initialize() {
 
 		$this->tab_label = __( 'Video', 'buddyboss' );
@@ -24,20 +27,33 @@ class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 		$this->tab_order = 50;
 	}
 
+	/**
+	 * Whether active or not.
+	 *
+	 * @return bool is active or not.
+	 */
 	public function is_active() {
 		return bp_is_active( 'media' );
 	}
 
+	/**
+	 * Whether visible or not.
+	 *
+	 * @return bool is active or not.
+	 */
 	public function is_tab_visible() {
 		return false;
 	}
 
+	/**
+	 * Register fields.
+	 */
 	public function register_fields() {
 		$sections = bp_video_get_settings_sections();
 
 		foreach ( (array) $sections as $section_id => $section ) {
 
-			// Only add section and fields if section has fields
+			// Only add section and fields if section has fields.
 			$fields = bp_video_get_settings_fields_for_section( $section_id );
 
 			if ( empty( $fields ) ) {
@@ -47,10 +63,10 @@ class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
 			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
 
-			// Add the section
+			// Add the section.
 			$this->add_section( $section_id, $section_title, $section_callback );
 
-			// Loop through fields for this section
+			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
 
 				$field['args'] = isset( $field['args'] ) ? $field['args'] : array();
@@ -63,9 +79,9 @@ class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 		}
 
 		/**
-		 * Fires to register Media tab settings fields and section.
+		 * Fires to register Video tab settings fields and section.
 		 *
-		 * @since BuddyBoss 1.2.6
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param Object $this BP_Admin_Setting_Media.
 		 */
