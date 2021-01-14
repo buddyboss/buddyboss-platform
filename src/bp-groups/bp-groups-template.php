@@ -7625,7 +7625,7 @@ function bp_group_show_messages_status_setting( $setting, $group = false ) {
 }
 
 /**
- * Get the media status of a group.
+ * Get the video status of a group.
  *
  * This function can be used either in or out of the loop.
  *

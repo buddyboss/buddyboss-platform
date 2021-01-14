@@ -2331,7 +2331,7 @@ function bp_get_document_preview_music_extensions() {
 }
 
 /**
- * Return the document previeew functions extensions.
+ * Return the document preview functions extensions.
  *
  * @return mixed|void
  *
@@ -2339,6 +2339,11 @@ function bp_get_document_preview_music_extensions() {
  */
 function bp_get_document_preview_video_extensions() {
 
+	/**
+	 * Return the document preview functions extensions.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
 	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4' ) );
 }
 
