@@ -265,7 +265,7 @@ function bp_video_upload_handler( $file_id = 'file' ) {
  */
 function bp_video_compress_image( $source, $destination, $quality = 90 ) {
 
-	$info = @getimagesize( $source );
+	$info = @getimagesize( $source ); // phpcs:ignore
 
 	if ( 'image/jpeg' === $info['mime'] ) {
 		$image = @imagecreatefromjpeg( $source ); // phpcs:ignore
@@ -1300,6 +1300,10 @@ function bp_get_total_video_count() {
  * Video results all scope.
  *
  * @since BuddyBoss 1.5.7
+ *
+ * @param string $querystring query string.
+ *
+ * @return string
  */
 function bp_video_object_results_video_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
@@ -1319,6 +1323,10 @@ function bp_video_object_results_video_all_scope( $querystring ) {
  * Object template results video personal scope.
  *
  * @since BuddyBoss 1.5.7
+ *
+ * @param string $querystring query string.
+ *
+ * @return string
  */
 function bp_video_object_template_results_video_personal_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
@@ -1639,7 +1647,7 @@ function albums_get_video_album( $album_id ) {
 /**
  * Check album access for current user or guest
  *
- * @param $album_id
+ * @param int $album_id album id.
  *
  * @return bool
  * @since BuddyBoss 1.5.7
@@ -1666,7 +1674,7 @@ function albums_check_video_album_access( $album_id ) {
 			return true;
 		}
 
-		if ( bp_is_my_profile() && $album->user_id == bp_loggedin_user_id() && 'onlyme' === $album->privacy ) {
+		if ( bp_is_my_profile() && bp_loggedin_user_id() === (int) $album->user_id && 'onlyme' === $album->privacy ) {
 			return true;
 		}
 	}
@@ -1728,7 +1736,7 @@ function bp_video_sideload_attachment( $file ) {
 	$file_array['name'] = basename( $matches[0] );
 
 	// Download file to temp location.
-	$file = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
+	$file = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file ); // phpcs:ignore
 
 	if ( ! function_exists( 'download_url' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -1767,7 +1775,8 @@ function bp_video_handle_sideload( $file_array, $post_data = array() ) {
 	$overrides = array( 'test_form' => false );
 
 	$time = current_time( 'mysql' );
-	if ( $post = get_post() ) {
+	$post = get_post();
+	if ( $post ) {
 		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
 			$time = $post->post_date;
 		}
@@ -1785,7 +1794,7 @@ function bp_video_handle_sideload( $file_array, $post_data = array() ) {
 	$content = '';
 
 	// Use image exif/iptc data for title and caption defaults if possible.
-	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+	if ( $image_meta = @wp_read_image_metadata( $file ) ) { // phpcs:ignore
 		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
 			$title = $image_meta['title'];
 		}
@@ -1835,7 +1844,7 @@ function bp_video_directory_page_content() {
 
 	if ( ! empty( $page_ids['video'] ) ) {
 		$video_page_content = get_post_field( 'post_content', $page_ids['video'] );
-		echo apply_filters( 'the_content', $video_page_content );
+		echo apply_filters( 'the_content', $video_page_content ); // phpcs:ignore
 	}
 }
 
@@ -1885,7 +1894,7 @@ function bp_video_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 
 		$privacy[] = 'loggedin';
 
-		if ( bp_is_my_profile() || $user_id === bp_loggedin_user_id() ) {
+		if ( bp_is_my_profile() || bp_loggedin_user_id() === (int) $user_id ) {
 			$privacy[] = 'onlyme';
 
 			if ( bp_is_active( 'friends' ) ) {
@@ -1893,7 +1902,7 @@ function bp_video_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 			}
 		}
 
-		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
+		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) { // phpcs:ignore
 
 			// get the login user id.
 			$current_user_id = bp_loggedin_user_id();
@@ -1926,7 +1935,7 @@ function bp_video_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
  * Update activity video privacy based on activity.
  *
  * @param int    $activity_id Activity ID.
- * @param string $privacy     Privacy
+ * @param string $privacy     Privacy.
  *
  * @since BuddyBoss 1.5.7
  */
@@ -2241,6 +2250,13 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 	return apply_filters( 'bp_video_user_can_manage_video', $data, $video_id, $user_id );
 }
 
+/**
+ * Get the thread id based on video.
+ *
+ * @param string|int $video_id video id.
+ *
+ * @return mixed|void
+ */
 function bp_video_get_thread_id( $video_id ) {
 
 	$thread_id = 0;
@@ -2335,6 +2351,13 @@ function bp_video_ie_nocache_headers_fix( $headers ) {
 	return $headers;
 }
 
+/**
+ * Get the frorum id based on video.
+ *
+ * @param int|string $video_id video id.
+ *
+ * @return mixed|void
+ */
 function bp_video_get_forum_id( $video_id ) {
 
 	$forum_id           = 0;
@@ -2360,7 +2383,7 @@ function bp_video_get_forum_id( $video_id ) {
 
 			if ( ! empty( $video_ids ) ) {
 				$video_ids = explode( ',', $video_ids );
-				if ( in_array( $video_id, $video_ids ) ) {
+				if ( in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 					$forum_id = $post_id;
 					break;
 				}
@@ -2392,7 +2415,7 @@ function bp_video_get_forum_id( $video_id ) {
 
 				if ( ! empty( $video_ids ) ) {
 					$video_ids = explode( ',', $video_ids );
-					if ( in_array( $video_id, $video_ids ) ) {
+					if ( in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 						$forum_id = bbp_get_topic_forum_id( $post_id );
 						break;
 					}
@@ -2426,7 +2449,7 @@ function bp_video_get_forum_id( $video_id ) {
 				if ( ! empty( $video_ids ) ) {
 					$video_ids = explode( ',', $video_ids );
 					foreach ( $video_ids as $video_id ) {
-						if ( in_array( $video_id, $video_ids ) ) {
+						if ( in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 							$forum_id = bbp_get_reply_forum_id( $post_id );
 							break;
 						}
@@ -2585,7 +2608,7 @@ function bp_video_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 /**
  * Return the extension of the attachment.
  *
- * @param $attachment_id
+ * @param int $attachment_id attachment id.
  *
  * @return mixed|string
  * @since BuddyBoss 1.5.7
@@ -2601,8 +2624,9 @@ function bp_video_mime_type( $attachment_id ) {
 /**
  * Return the icon based on the extension.
  *
- * @param $extension extension.
- * @param $attachment_id attachment id.
+ * @param string $extension extension.
+ * @param int    $attachment_id attachment id.
+ * @param string $type font.
  *
  * @return mixed|void
  * @since BuddyBoss 1.5.7
@@ -2727,6 +2751,14 @@ function bp_video_svg_icon_list() {
 	return apply_filters( 'bp_video_svg_icon_list', $icons );
 }
 
+/**
+ * Search from the array.
+ *
+ * @param array $array  array to be search.
+ * @param array $search array to search.
+ *
+ * @return array
+ */
 function bp_video_multi_array_search( $array, $search ) {
 
 	// Create the result array.
@@ -2792,12 +2824,12 @@ function bp_video_user_video_album_tree_view_li_html( $user_id = 0, $group_id = 
 	}
 
 	if ( $group_id > 0 ) {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
+		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id ); // phpcs:ignore
 	} else {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id ); // phpcs:ignore
 	}
 
-	$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // db call ok; no-cache ok;
+	$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // phpcs:ignore
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -3037,7 +3069,7 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 							}
 
 							// Remove the video id from the parent activity meta.
-							$key = array_search( $video_id, $parent_activity_video_ids );
+							$key = array_search( $video_id, $parent_activity_video_ids ); // phpcs:ignore
 							if ( false !== $key ) {
 								unset( $parent_activity_video_ids[ $key ] );
 							}
