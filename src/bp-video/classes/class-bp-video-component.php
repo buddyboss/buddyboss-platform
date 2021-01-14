@@ -22,7 +22,7 @@ class BP_Video_Component extends BP_Component {
 	 * @since BuddyBoss 1.5.7
 	 * @var BP_Video_Album
 	 */
-	// public $current_album;
+	/* public $current_album; */
 
 	/**
 	 * Default video extension.
@@ -31,7 +31,7 @@ class BP_Video_Component extends BP_Component {
 	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
-	var $default_component;
+	public $default_component;
 
 	/**
 	 * Default video extension.
@@ -320,7 +320,11 @@ class BP_Video_Component extends BP_Component {
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
-						'alt'     => sprintf( __( 'Profile video of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf(
+							/* translators: User Display Name. */
+							__( 'Profile video of %s', 'buddyboss' ),
+							bp_get_displayed_user_fullname()
+						),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();
