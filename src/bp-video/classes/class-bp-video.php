@@ -28,7 +28,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $id;
+	public $id;
 
 	/**
 	 * Blog ID of the video item.
@@ -36,7 +36,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $blog_id;
+	public $blog_id;
 
 	/**
 	 * Attachment ID of the video item.
@@ -44,7 +44,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $attachment_id;
+	public $attachment_id;
 
 	/**
 	 * User ID of the video item.
@@ -52,7 +52,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $user_id;
+	public $user_id;
 
 	/**
 	 * Title of the video item.
@@ -60,7 +60,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
-	var $title;
+	public $title;
 
 	/**
 	 * Album ID of the video item.
@@ -68,7 +68,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $album_id;
+	public $album_id;
 
 	/**
 	 * Activity ID of the video item.
@@ -76,7 +76,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $activity_id;
+	public $activity_id;
 
 	/**
 	 * Group ID of the video item.
@@ -84,7 +84,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $group_id;
+	public $group_id;
 
 	/**
 	 * Privacy of the video item.
@@ -92,7 +92,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
-	var $privacy;
+	public $privacy;
 
 	/**
 	 * Menu order of the video item.
@@ -100,7 +100,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $menu_order;
+	public $menu_order;
 
 	/**
 	 * Upload date of the video item.
@@ -108,7 +108,7 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
-	var $date_created;
+	public $date_created;
 
 	/**
 	 * Error holder.
@@ -896,19 +896,22 @@ class BP_Video {
 	 *
 	 * @since BuddyBoss 1.5.7
 	 *
-	 * @param array $args {
-	 * @int    $id                Optional. The ID of a specific item to delete.
-	 * @int    $blog_id           Optional. The blog ID to filter by.
-	 * @int    $attachment_id           Optional. The attachment ID to filter by.
-	 * @int    $user_id           Optional. The user ID to filter by.
-	 * @string    $title           Optional. The title to filter by.
-	 * @int    $album_id           Optional. The album ID to filter by.
-	 * @int    $activity_id           Optional. The activity ID to filter by.
-	 * @int    $group_id           Optional. The group ID to filter by.
-	 * @string    $privacy           Optional. The privacy to filter by.
-	 * @string $date_created      Optional. The date to filter by.
-	 * }
-	 * @param bool  $from Context of deletion from. ex. attachment, activity etc.
+	 * @param array $args          {
+	 *                             An array of arguments.
+	 *
+	 * @type int    $id            Optional. The ID of a specific item to delete.
+	 * @type int    $blog_id       Optional. The blog ID to filter by.
+	 * @type int    $attachment_id Optional. The attachment ID to filter by.
+	 * @type int    $user_id       Optional. The user ID to filter by.
+	 * @type string $title         Optional. The title to filter by.
+	 * @type int    $album_id      Optional. The album ID to filter by.
+	 * @type int    $activity_id   Optional. The activity ID to filter by.
+	 * @type int    $group_id      Optional. The group ID to filter by.
+	 * @type string $privacy       Optional. The privacy to filter by.
+	 * @type string $date_created  Optional. The date to filter by.
+	 *                    }
+	 *
+	 * @param bool  $from          Context of deletion from. ex. attachment, activity etc.
 	 *
 	 * @return array|bool An array of deleted video IDs on success, false on failure.
 	 */
