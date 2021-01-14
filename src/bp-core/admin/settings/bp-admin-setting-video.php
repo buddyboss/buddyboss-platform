@@ -21,7 +21,6 @@ class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 	 * Initialize.
 	 */
 	public function initialize() {
-
 		$this->tab_label = __( 'Video', 'buddyboss' );
 		$this->tab_name  = 'bp-video';
 		$this->tab_order = 50;
