@@ -117,10 +117,7 @@ function bp_is_group_video_albums_support_enabled( $default = 0 ) {
  */
 function bp_video_settings_callback_messages_video_support() {
 	?>
-	<input name="bp_video_messages_video_support"
-		   id="bp_video_messages_video_support"
-		   type="checkbox"
-		   value="1"
+	<input name="bp_video_messages_video_support" id="bp_video_messages_video_support" type="checkbox" value="1"
 		<?php checked( bp_is_messages_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_messages_video_support">
@@ -138,7 +135,7 @@ function bp_video_settings_callback_messages_video_support() {
 /**
  * Checks if messages video support is enabled.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is messages video support enabled or not
  * @since BuddyBoss 1.5.7
@@ -154,14 +151,11 @@ function bp_is_messages_video_support_enabled( $default = 0 ) {
  */
 function bp_video_settings_callback_forums_video_support() {
 	?>
-	<input name="bp_video_forums_video_support"
-		   id="bp_video_forums_video_support"
-		   type="checkbox"
-		   value="1"
+	<input name="bp_video_forums_video_support" id="bp_video_forums_video_support" type="checkbox" value="1"
 		<?php checked( bp_is_forums_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_forums_video_support">
-		<?php _e( 'Allow members to upload videos in <strong>forum discussions</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to upload videos in <strong>forum discussions</strong>', 'buddyboss' ); // phpcs:ignore ?>
 	</label>
 	<?php
 }
@@ -169,7 +163,7 @@ function bp_video_settings_callback_forums_video_support() {
 /**
  * Checks if forums video support is enabled.
  *
- * @param $default integer
+ * @param int $default default value.
  *
  * @return bool Is forums video support enabled or not
  * @since BuddyBoss 1.5.7
@@ -189,7 +183,7 @@ function bp_video_uploading_tutorial() {
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
+		echo bp_get_admin_url( // phpcs:ignore
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -199,12 +193,15 @@ function bp_video_uploading_tutorial() {
 			)
 		);
 		?>
-		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
 }
 
+/**
+ * Print the FFMPEG notice.
+ */
 function bp_video_admin_setting_callback_video_section() {
 
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
@@ -213,7 +210,7 @@ function bp_video_admin_setting_callback_video_section() {
 			<?php
 			echo sprintf(
 			/* translators: 1: FFMpeg status */
-				_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+				_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
 				'<code><a href="https://ffmpeg.org/" target="_blank">FFMPEG</a></code>'
 			);
 			?>
@@ -232,7 +229,7 @@ function bp_video_admin_setting_callback_video_section() {
 				<?php
 				echo sprintf(
 				/* translators: 1: FFMpeg status */
-					_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+					_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
 					'<code><a href="https://ffmpeg.org/" target="_blank">FFMPEG</a></code>'
 				);
 				?>
@@ -251,23 +248,14 @@ function bp_video_settings_callback_video_allowed_size() {
 	$max_size    = bp_core_upload_max_size();
 	$max_size_mb = bp_video_format_size_units( $max_size, false, 'MB' );
 	?>
-	<input type="number"
-		   name="bp_video_allowed_size"
-		   id="bp_video_allowed_size"
-		   class="regular-text"
-		   min="1"
-		   step="1"
-		   max="<?php echo esc_attr( $max_size_mb ); ?>"
-		   required
-		   value="<?php echo esc_attr( bp_video_allowed_upload_video_size() ); ?>"
-		   style="width: 70px;"
+	<input type="number" name="bp_video_allowed_size" id="bp_video_allowed_size" class="regular-text" min="1" step="1" max="<?php echo esc_attr( $max_size_mb ); ?>" required value="<?php echo esc_attr( bp_video_allowed_upload_video_size() ); ?>" style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
 			'%1$s <strong>%2$s %3$s</strong>',
-			__( 'Set a maximum file size for video uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
-			$max_size_mb,
+			__( 'Set a maximum file size for video uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ), //phpcs:ignore
+			$max_size_mb, //phpcs:ignore
 			'MB.'
 		);
 		?>
@@ -288,13 +276,16 @@ function bp_video_allowed_upload_video_size() {
 	return (int) apply_filters( 'bp_video_allowed_upload_video_size', (int) get_option( 'bp_video_allowed_size', $default ) );
 }
 
+/**
+ * Print extension link.
+ */
 function bp_video_settings_callback_extension_link() {
 
 	printf(
 		'<label>%s</label>',
 		sprintf(
-			__( '<a href="%s">Manage</a> which file extensions are allowed to be uploaded.', 'buddyboss' ),
-			bp_get_admin_url(
+			__( '<a href="%s">Manage</a> which file extensions are allowed to be uploaded.', 'buddyboss' ), //phpcs:ignore
+			bp_get_admin_url( //phpcs:ignore
 				add_query_arg(
 					array(
 						'page' => 'bp-settings',
@@ -314,13 +305,7 @@ function bp_video_settings_callback_extension_link() {
  */
 function bp_video_settings_callback_video_allowed_per_batch() {
 	?>
-<input type="number"
-	   name="bp_video_allowed_per_batch"
-	   id="bp_video_allowed_per_batch"
-	   value="<?php echo esc_attr( bp_video_allowed_upload_video_per_batch() ); ?>"
-	   class="small-text"
-/>
-
+	<input type="number" name="bp_video_allowed_per_batch" id="bp_video_allowed_per_batch" value="<?php echo esc_attr( bp_video_allowed_upload_video_per_batch() ); ?>" class="small-text" />
 	<?php
 }
 
