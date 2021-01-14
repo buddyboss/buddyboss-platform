@@ -3,7 +3,7 @@
  * BuddyBoss Video Search Class
  *
  * @package BuddyBoss\Search
- * @since BuddyBoss 1.5.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly.
@@ -27,7 +27,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
 		 *
-		 * @since BuddyBoss 1.5.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @return object Bp_Search_Video
 		 */
@@ -120,7 +120,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the video Search query.
 			 *
-			 * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -151,7 +151,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the video Search query.
 			 *
-			 * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.

@@ -792,7 +792,7 @@ function bp_search_settings_callback_albums() {
 /**
  * Allow Post Type search setting field
  *
- * @since BuddyBoss 1.8.0
+ * @since BuddyBoss 1.5.7
  *
  * @uses checked() To display the checked attribute
  */
@@ -897,9 +897,9 @@ function bp_is_search_albums_enable( $default = 0 ) {
 /**
  * Checks if video search is enabled.
  *
- * @since BuddyBoss 1.8.0
+ * @since BuddyBoss 1.5.7
  *
- * @param $default integer
+ * @param int $default whether video search enabled or not.
  *
  * @return bool Is video media search enabled or not
  */
