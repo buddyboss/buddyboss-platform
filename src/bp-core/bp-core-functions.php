@@ -786,7 +786,7 @@ function bp_core_get_directory_page_default_titles() {
 		'video'           => __( 'Videos', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
-	// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
+		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 		'new_forums_page' => __( 'Forums', 'buddyboss' ),
 		'terms'           => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
@@ -5312,7 +5312,7 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 /**
  * Function which remove the temporary created directory.
  *
- * @param string $directory directory to remove.
+ * @param string $directory Directory to remove.
  *
  * @since BuddyBoss 1.5.7
  */

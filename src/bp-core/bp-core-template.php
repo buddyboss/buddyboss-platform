@@ -2910,7 +2910,7 @@ function bp_is_single_video_album() {
 		return true;
 	}
 
-	return (bool) ( bp_is_video_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+	return (bool) ( bp_is_video_component() && 'albums' === bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 /**

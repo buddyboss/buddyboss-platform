@@ -2246,8 +2246,8 @@ function bp_activity_edit_update_document( $document_ids ) {
 /**
  * We removing the Edit Button on Document/Media/Video Activity popup until we fully support on popup.
  *
- * @param $buttons
- * @param $activity_id
+ * @param array $buttons     Buttons Argument.
+ * @param int   $activity_id Activity ID.
  *
  * @return mixed
  * @since BuddyBoss 1.5.0
@@ -2256,9 +2256,10 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 
 	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity', 'video_get_activity' );
 
-	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, 1 ) ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, true ) ) {
 		$activity = new BP_Activity_Activity( $activity_id );
-		if ( in_array( $activity->privacy, array( 'document', 'media', 'video' ), 1 ) ) {
+		if ( in_array( $activity->privacy, array( 'document', 'media', 'video' ), true ) ) {
 			unset( $buttons['activity_edit'] );
 		}
 	}
@@ -2351,8 +2352,8 @@ add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_r
 /**
  * Function which set the content on activity blog post comment.
  *
- * @param $content
- * @param $activity
+ * @param string               $content  Activity Content
+ * @param BP_Activity_Activity $activity Activity Object.
  *
  * @return string
  * @since BuddyBoss 1.5.5
@@ -2421,8 +2422,13 @@ function bp_activity_video_add( $video ) {
 				$args['item_id'] = $video->group_id;
 				$args['type']    = 'activity_update';
 				$current_group   = groups_get_group( $video->group_id );
-				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $video->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
-				$activity_id     = groups_record_activity( $args );
+				$args['action']  = sprintf(
+					/* translators: 1. User Link. 2. Group link. */
+					__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
+					bp_core_get_userlink( $video->user_id ),
+					'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+				);
+				$activity_id = groups_record_activity( $args );
 			} else {
 				$activity_id = bp_activity_post_update( $args );
 			}
@@ -2571,6 +2577,7 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 function bp_activity_edit_update_video( $video_ids ) {
 	global $bp_activity_edit, $bp_activity_post_update_id;
 
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
 		$old_video_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_video_ids', true );
 		$old_video_ids = explode( ',', $old_video_ids );
@@ -2582,7 +2589,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 				$old_video_id = $old_video_ids[0];
 
 				// check if old video id is in new video uploaded.
-				if ( in_array( $old_video_id, $video_ids ) ) {
+				if ( in_array( $old_video_id, $video_ids, true ) ) {
 
 					// Create new video activity for old video because it has only parent activity to show right now.
 					$old_video = new BP_Video( $old_video_id );
@@ -2595,8 +2602,13 @@ function bp_activity_edit_update_video( $video_ids ) {
 						$args['item_id'] = $old_video->group_id;
 						$args['type']    = 'activity_update';
 						$current_group   = groups_get_group( $old_video->group_id );
-						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_video->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
-						$activity_id     = groups_record_activity( $args );
+						$args['action']  = sprintf(
+							/* translators: 1. User Link. 2. Group link. */
+							__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
+							bp_core_get_userlink( $old_video->user_id ),
+							'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+						);
+						$activity_id = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
 					}
@@ -2628,7 +2640,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 				$new_video_id = $video_ids[0];
 
 				// check if new video is in old video uploaded, if yes then delete that video's video activity first.
-				if ( in_array( $new_video_id, $old_video_ids ) ) {
+				if ( in_array( $new_video_id, $old_video_ids, true ) ) {
 					$new_video         = new BP_Video( $new_video_id );
 					$video_activity_id = $new_video->activity_id;
 
@@ -2650,7 +2662,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 				$new_video_id = $video_ids[0];
 
 				// check if new video is not in old video uploaded and.
-				if ( ! in_array( $new_video_id, $old_video_ids ) ) {
+				if ( ! in_array( $new_video_id, $old_video_ids, true ) ) {
 					$old_video_id = $old_video_ids[0];
 					$old_video    = new BP_Video( $old_video_id );
 
