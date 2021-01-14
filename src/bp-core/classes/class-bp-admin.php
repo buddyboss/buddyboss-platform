@@ -707,7 +707,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
-		    require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
 		}
 
 		/**
@@ -838,23 +838,31 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0 Now outputs Hello BuddyBoss template.
 		 */
 		public function about_buddyboss_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss' ) {
+			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 
 			include $this->admin_dir . 'templates/about-buddyboss.php';
 		}
 
+		/**
+		 * Output the document mime type checker screen.
+		 */
 		public function document_extension_mime_type_check_screen() {
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 
 			include $this->admin_dir . 'templates/check-document-mime-type.php';
 		}
 
-		public function video_extension_mime_type_check_screen(){
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' !== $_GET['tab'] ) {
+		/**
+		 * Output the video mime type checker screen.
+		 *
+		 * @since BuddyBoss 1.5.7
+		 */
+		public function video_extension_mime_type_check_screen() {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' !== $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 
