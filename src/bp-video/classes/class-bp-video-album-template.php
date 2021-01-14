@@ -296,7 +296,7 @@ class BP_Video_Album_Template {
 			/**
 			 * Fires right before the rewinding of album posts.
 			 *
-			 * @since BuddyBoss 1.6.0
+			 * @since BuddyBoss 1.5.7
 			 */
 			do_action( 'album_loop_end' );
 

@@ -121,7 +121,7 @@ add_filter( 'bp_media_set_friends_scope_args', 'bp_friends_filter_media_scope', 
  *
  * For details on the syntax, see {@link BP_Video_Query}.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.

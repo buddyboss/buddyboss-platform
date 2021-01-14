@@ -241,7 +241,7 @@ add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_persona
 /**
  * Set up video arguments for use with the 'personal' scope.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.

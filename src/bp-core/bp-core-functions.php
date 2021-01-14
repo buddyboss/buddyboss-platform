@@ -5314,7 +5314,7 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
  *
  * @param string $directory directory to remove.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_core_remove_temp_directory( $directory = '' ) {
 	if ( is_dir( $directory ) ) {

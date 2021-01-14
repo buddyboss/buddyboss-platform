@@ -7629,7 +7629,7 @@ function bp_group_show_messages_status_setting( $setting, $group = false ) {
  *
  * This function can be used either in or out of the loop.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  *
  * @param int|bool $group_id Optional. The ID of the group whose status you want to
  *                           check. Default: the displayed group, or the current group
@@ -7667,7 +7667,7 @@ function bp_group_get_video_status( $group_id = false ) {
 	 *
 	 * Video status in this case means who can manage the videos.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param string $video_status Membership level needed to manage video.
 	 * @param int    $group_id      ID of the group whose status is being checked.
@@ -7680,7 +7680,7 @@ function bp_group_get_video_status( $group_id = false ) {
  *
  * This function can be used either in or out of the loop.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  *
  * @param int|bool $group_id Optional. The ID of the group whose status you want to
  *                           check. Default: the displayed group, or the current group

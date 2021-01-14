@@ -190,7 +190,7 @@ class BP_Video_Album {
 		/**
 		 * Fires after an album has been saved to the database.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param BP_Video $this Current instance of album being saved. Passed by reference.
 		 */
@@ -266,7 +266,7 @@ class BP_Video_Album {
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
-			 * @since BuddyBoss 1.6.0
+			 * @since BuddyBoss 1.5.7
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 */
@@ -379,7 +379,7 @@ class BP_Video_Album {
 		/**
 		 * Filters the paged video MySQL statement.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param string $album_ids_sql    MySQL statement used to query for Video IDs.
 		 * @param array  $r                Array of arguments passed into method.
@@ -598,7 +598,7 @@ class BP_Video_Album {
 	 * associated objects, so that inline lookups - done primarily when
 	 * building action strings - do not result in excess database queries.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $albums Array of video albums.
 	 * @return array $albums Array of video albums.
@@ -608,7 +608,7 @@ class BP_Video_Album {
 		/**
 		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with album.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array $videos Array of video albums.
 		 */

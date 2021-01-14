@@ -1596,7 +1596,7 @@ function bp_media_allowed_upload_document_per_batch() {
  * Get the Video settings sections.
  *
  * @return array
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_get_settings_sections() {
 
@@ -1628,7 +1628,7 @@ function bp_video_get_settings_sections() {
 /**
  * Component video helper text.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_settings_callback_extension_section() {
 	?>
@@ -1642,7 +1642,7 @@ function bp_video_settings_callback_extension_section() {
  * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -1663,7 +1663,7 @@ function bp_video_get_settings_fields_for_section( $section_id = '' ) {
  * Get all of the settings fields.
  *
  * @return array
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_get_settings_fields() {
 
@@ -1689,7 +1689,7 @@ function bp_video_get_settings_fields() {
  * Checks if extension support is enabled.
  *
  * @return array Is video extension support enabled or not
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_extensions_list() {
 	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', bp_video_allowed_video_type() ) );
