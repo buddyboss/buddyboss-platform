@@ -125,7 +125,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'video_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
+		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
 	);
@@ -147,7 +147,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'upload'               => __( 'Upload', 'buddyboss' ),
 		'upload_thumb'         => __( 'Add Thumbnail', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
-		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
+		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ), // phpcs:ignore
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Videos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'video_delete_confirm' => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
@@ -251,7 +251,7 @@ function bp_video_download_file( $attachment_id, $type = 'video' ) {
  * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_video_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) {
+	if ( isset( $buttons['activity_edit'] ) && ( bp_is_video_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) { // phpcs:ignore
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'video' !== $activity->privacy ) {

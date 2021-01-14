@@ -55,7 +55,7 @@ class BP_Nouveau_Video {
 			add_action(
 				'admin_init',
 				function() {
-					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'video_' ) ) {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'video_' ) ) { // phpcs:ignore
 						require $this->dir . 'ajax.php';
 					}
 				}
