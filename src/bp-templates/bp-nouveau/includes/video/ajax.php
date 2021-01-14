@@ -924,7 +924,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 /**
  * Update video privacy
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_update_privacy() {
 	$response = array(
@@ -984,7 +984,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 /**
  * Update video activity description.
  *
- * @since BuddyBoss 1.3.5
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_description_save() {
 	$response = array(
@@ -1078,6 +1078,8 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * @param string $querystring query string of query.
  *
  * @return string
+ *
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_object_template_results_albums_existing_video_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
@@ -1094,7 +1096,7 @@ function bp_nouveau_object_template_results_albums_existing_video_query( $querys
 /**
  * Get description for the video.
  *
- * @since BuddyBoss 1.4.4
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_get_video_description() {
 
@@ -1265,7 +1267,7 @@ function bp_nouveau_ajax_video_get_album_view() {
 /**
  * Ajax video move.
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_move() {
 
@@ -1336,6 +1338,11 @@ function bp_nouveau_ajax_video_move() {
 
 }
 
+/**
+ * Get Video edit thumbnail data.
+ *
+ * @since BuddyBoss 1.5.7
+ */
 function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 
 	$response = array(
@@ -1420,9 +1427,10 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 
 }
 
-
 /**
  * Save the video thumbnail.
+ *
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_ajax_video_thumbnail_save() {
 	$response = array(
@@ -1460,7 +1468,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 
 	$thumbnail_url = wp_get_attachment_image_url( $pre_selected_id, 'full' );
 
-	if( empty( $thumbnail_url ) ) {
+	if ( empty( $thumbnail_url ) ) {
 		$thumbnail_url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
 	}
 

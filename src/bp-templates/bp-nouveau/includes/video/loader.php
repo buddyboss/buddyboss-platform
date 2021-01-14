@@ -19,7 +19,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Constructor
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function __construct() {
 		$this->setup_globals();
@@ -31,7 +31,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Globals
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	protected function setup_globals() {
 		$this->dir = trailingslashit( dirname( __FILE__ ) );
@@ -40,7 +40,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Include needed files
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	protected function includes() {
 		require $this->dir . 'functions.php';
@@ -76,7 +76,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Register add_filter() hooks
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	protected function setup_filters() {
 

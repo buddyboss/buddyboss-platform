@@ -62,7 +62,7 @@ function bp_nouveau_video_enqueue_scripts() {
 /**
  * Localize the strings needed for the messages UI
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.5.7
  *
  * @param  array $params Associative array containing the JS Strings needed by scripts.
  * @return array         The same array with specific strings for the messages UI if needed.
@@ -215,6 +215,7 @@ function bp_nouveau_get_video_directory_nav_items() {
  *
  * @param int    $attachment_id id of the attachment.
  * @param string $type type of download.
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_download_file( $attachment_id, $type = 'video' ) {
 
@@ -247,7 +248,7 @@ function bp_video_download_file( $attachment_id, $type = 'video' ) {
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.7
  */
 function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
 	if ( isset( $buttons['activity_edit'] ) && ( bp_is_video_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) {
@@ -272,6 +273,7 @@ function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
  * Function get video support extension.
  *
  * @return array|mixed|string|void
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_allowed_video_type() {
 
@@ -414,6 +416,11 @@ function bp_video_allowed_video_type() {
 		),
 	);
 
+	/**
+	 * Filter get video support extension.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
 	$extension_lists = apply_filters( 'bp_video_allowed_video_type', $extension_lists );
 
 	return $extension_lists;

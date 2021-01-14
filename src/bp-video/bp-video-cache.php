@@ -71,7 +71,7 @@ add_action( 'bp_video_add', 'bp_video_clear_video_user_object_cache', 10 );
 /**
  * Clear a user's cached video count when delete.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.5.7
  *
  * @param array $videos DB results of video items.
  */
@@ -92,7 +92,7 @@ add_action( 'bp_video_before_delete', 'bp_video_clear_video_user_object_cache_on
 /**
  * Clear a user's cached video count.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.5.7
  *
  * @param int $user_id ID of the user deleted.
  */
@@ -121,7 +121,7 @@ add_action( 'bp_video_add', 'bp_video_clear_video_group_object_cache', 10 );
 /**
  * Clear a group's cached video count when delete.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.5.7
  *
  * @param array $videos DB results of video items.
  */
@@ -183,7 +183,7 @@ add_action( 'bp_video_album_add', 'bp_video_album_reset_cache_incrementor' );
 /**
  * Clear a group's cached album count.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.5.7
  *
  * @param object $album Album object item.
  */
@@ -199,7 +199,7 @@ add_action( 'bp_video_album_add', 'bp_video_clear_album_group_object_cache', 10 
 /**
  * Clear a group's cached album count when delete.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.5.7
  *
  * @param array $albums DB results of album items.
  */
