@@ -15,6 +15,7 @@ function video_screen() {
 
 	if ( bp_action_variables() ) {
 		bp_do_404();
+
 		return;
 	}
 

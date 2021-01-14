@@ -432,7 +432,7 @@ class BuddyPress {
 		/**
 		 * Filters the post type slug for the email component.
 		 *
-		 * since 2.5.0
+		 * @since 2.5.0
 		 *
 		 * @param string $value Email post type slug.
 		 */
@@ -441,7 +441,7 @@ class BuddyPress {
 		/**
 		 * Filters the post type slug for the profile type component.
 		 *
-		 * since BuddyBoss 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param string $value Profile Type post type slug.
 		 */
@@ -450,7 +450,7 @@ class BuddyPress {
 		/**
 		 * Filters the post type slug for the group type component.
 		 *
-		 * since BuddyBoss 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param string $value Group Type post type slug.
 		 */
@@ -468,7 +468,7 @@ class BuddyPress {
 		/**
 		 * Filters the post type slug for the invites component.
 		 *
-		 * since BuddyBoss 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param string $value Group Type post type slug.
 		 */

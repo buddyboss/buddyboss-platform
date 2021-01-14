@@ -3,7 +3,7 @@
  * Video: Single album screen handler
  *
  * @package BuddyBoss\Video\Screens
- * @since BuddyBoss 1.5.7
+ * @since   BuddyBoss 1.5.7
  */
 
 /**
@@ -52,4 +52,5 @@ function video_screen_single_album() {
 	 */
 	bp_core_load_template( apply_filters( 'video_template_single_album', 'members/single/home' ) );
 }
+
 add_action( 'bp_screens', 'video_screen_single_album' );

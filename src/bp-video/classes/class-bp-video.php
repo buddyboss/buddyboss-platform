@@ -135,7 +135,7 @@ class BP_Video {
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
 	 */
-	function __construct( $id = false ) {
+	public function __construct( $id = false ) {
 		// Instantiate errors object.
 		$this->errors = new WP_Error();
 
@@ -221,9 +221,7 @@ class BP_Video {
 			return $this->errors;
 		}
 
-		if ( empty( $this->attachment_id )
-		// || empty( $this->activity_id ) //todo: when forums video is saving, it should have activity id assigned if settings enabled need to check this
-		) {
+		if ( empty( $this->attachment_id ) ) {
 			if ( 'bool' === $this->error_type ) {
 				return false;
 			} else {
@@ -440,9 +438,7 @@ class BP_Video {
 
 		// Join the where conditions together.
 		if ( ! empty( $scope_query['sql'] ) ) {
-			$where_sql = 'WHERE ' .
-						 ( ! empty( $where_conditions ) ? '( ' . join( ' AND ', $where_conditions ) . ' ) AND ' : '' ) .
-						 ' ( ' . $scope_query['sql'] . ' )';
+			$where_sql = 'WHERE ' . ( ! empty( $where_conditions ) ? '( ' . join( ' AND ', $where_conditions ) . ' ) AND ' : '' ) . ' ( ' . $scope_query['sql'] . ' )';
 		} else {
 			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
 		}
@@ -494,6 +490,7 @@ class BP_Video {
 		$cached = bp_core_get_incremented_cache( $video_ids_sql, $cache_group );
 
 		if ( false === $cached ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$video_ids = $wpdb->get_col( $video_ids_sql );
 			bp_core_set_incremented_cache( $video_ids_sql, $cache_group, $video_ids );
 		} else {
@@ -515,9 +512,6 @@ class BP_Video {
 		}
 
 		if ( 'ids' !== $r['fields'] ) {
-			// Get the fullnames of users so we don't have to query in the loop.
-			// $videos = self::append_user_fullnames( $videos );
-
 			// Pre-fetch data associated with video users and other objects.
 			$videos = self::prefetch_object_data( $videos );
 		}
@@ -539,6 +533,7 @@ class BP_Video {
 			$total_videos_sql = apply_filters( 'bp_video_total_videos_sql', "SELECT count(DISTINCT m.id) FROM {$bp->video->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached           = bp_core_get_incremented_cache( $total_videos_sql, $cache_group );
 			if ( false === $cached ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$total_videos = $wpdb->get_var( $total_videos_sql );
 				bp_core_set_incremented_cache( $total_videos_sql, $cache_group, $total_videos );
 			} else {
@@ -1002,6 +997,7 @@ class BP_Video {
 		$where_sql = 'WHERE ' . join( ' AND ', $where_args );
 
 		// Fetch all video being deleted so we can perform more actions.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$videos = $wpdb->get_results( "SELECT * FROM {$bp->video->table_name} {$where_sql}" );
 
 		/**
@@ -1015,6 +1011,7 @@ class BP_Video {
 		do_action_ref_array( 'bp_video_before_delete', array( $videos, $r ) );
 
 		// Attempt to delete video from the database.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query( "DELETE FROM {$bp->video->table_name} {$where_sql}" );
 
 		// Bail if nothing was deleted.
@@ -1125,7 +1122,7 @@ class BP_Video {
 	 *
 	 * @since BuddyBoss 1.5.7
 	 *
-	 * @param int $user_id
+	 * @param int $user_id User ID.
 	 *
 	 * @return array|bool|int
 	 */
@@ -1145,7 +1142,7 @@ class BP_Video {
 	 *
 	 * @since BuddyBoss 1.5.7
 	 *
-	 * @param int $group_id
+	 * @param int $group_id Group id.
 	 *
 	 * @return array|bool|int
 	 */
@@ -1195,7 +1192,7 @@ class BP_Video {
 	/**
 	 * Count total groups video for the given user.
 	 *
-	 * @param int $user_id
+	 * @param int $user_id User ID.
 	 *
 	 * @return array|bool|int
 	 * @since BuddyBoss 1.5.7
@@ -1215,7 +1212,7 @@ class BP_Video {
 	 * Get all video ids for the album
 	 *
 	 * @since BuddyBoss 1.5.7
-	 * @param bool $album_id
+	 * @param bool $album_id Media Album id.
 	 *
 	 * @return array|bool
 	 */
@@ -1244,7 +1241,7 @@ class BP_Video {
 	 * Get video id for the activity.
 	 *
 	 * @since BuddyBoss 1.5.7
-	 * @param bool $activity_id
+	 * @param bool $activity_id Activity id.
 	 *
 	 * @return array|bool
 	 */
