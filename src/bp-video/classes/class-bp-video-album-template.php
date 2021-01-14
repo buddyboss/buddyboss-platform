@@ -150,7 +150,7 @@ class BP_Video_Album_Template {
 			'search_terms' => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
-		extract( $r );
+		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
@@ -240,7 +240,7 @@ class BP_Video_Album_Template {
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
-	function has_albums() {
+	public function has_albums() {
 		if ( $this->album_count ) {
 			return true;
 		}
@@ -291,7 +291,7 @@ class BP_Video_Album_Template {
 	public function user_albums() {
 		if ( ( $this->current_album + 1 ) < $this->album_count ) {
 			return true;
-		} elseif ( ( $this->current_album + 1 ) == $this->album_count ) {
+		} elseif ( (int) ( $this->current_album + 1 ) === (int) $this->album_count ) {
 
 			/**
 			 * Fires right before the rewinding of album posts.
@@ -330,7 +330,7 @@ class BP_Video_Album_Template {
 		}
 
 		// Loop has just started.
-		if ( $this->current_album == 0 ) {
+		if ( 0 === (int) $this->current_album ) {
 
 			/**
 			 * Fires if the current album item is the first in the activity loop.
