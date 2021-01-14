@@ -6,7 +6,7 @@
  * @since BuddyBoss 1.5.7
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -28,7 +28,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $id;
+	public $id;
 
 	/**
 	 * User ID of the album.
@@ -36,7 +36,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $user_id;
+	public $user_id;
 
 	/**
 	 * Group ID of the album.
@@ -44,7 +44,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 * @var int
 	 */
-	var $group_id;
+	public $group_id;
 
 	/**
 	 * Title of the album.
@@ -52,7 +52,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
-	var $title;
+	public $title;
 
 	/**
 	 * Privacy of the album.
@@ -60,7 +60,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
-	var $privacy;
+	public $privacy;
 
 	/**
 	 * Upload date of the album.
@@ -68,7 +68,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 * @var string
 	 */
-	var $date_created;
+	public $date_created;
 
 	/**
 	 * Error holder.
@@ -95,7 +95,7 @@ class BP_Video_Album {
 	 *
 	 * @param int|bool $id Optional. The ID of a specific video album.
 	 */
-	function __construct( $id = false ) {
+	public function __construct( $id = false ) {
 		// Instantiate errors object.
 		$this->errors = new WP_Error();
 
@@ -117,7 +117,8 @@ class BP_Video_Album {
 		$row = wp_cache_get( $this->id, 'bp_video_album' );
 
 		if ( false === $row ) {
-			$bp  = buddypress();
+			$bp = buddypress();
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name_albums} WHERE id = %d", $this->id ) );
 
 			wp_cache_set( $this->id, $row, 'bp_video_album' );
@@ -125,6 +126,7 @@ class BP_Video_Album {
 
 		if ( empty( $row ) ) {
 			$this->id = 0;
+
 			return;
 		}
 
@@ -178,6 +180,7 @@ class BP_Video_Album {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created ); //phpcs:ignore
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( false === $wpdb->query( $q ) ) {
 			return false;
 		}
@@ -206,19 +209,20 @@ class BP_Video_Album {
 	 *
 	 * @since BuddyBoss 1.5.7
 	 *
-	 * @param array $args {
-	 *     An array of arguments. All items are optional.
-	 *     @type int          $page              Which page of results to fetch. Using page=1 without per_page will result
+	 * @param array $args         {
+	 *                            An array of arguments. All items are optional.
+	 *
+	 * @type int         $page         Which page of results to fetch. Using page=1 without per_page will result
 	 *                                           in no pagination. Default: 1.
-	 *     @type int|bool     $per_page          Number of results per page. Default: 20.
-	 *     @type int|bool     $max               Maximum number of results to return. Default: false (unlimited).
-	 *     @type string       $fields            Video fields to return. Pass 'ids' to get only the video IDs.
+	 * @type int|bool    $per_page     Number of results per page. Default: 20.
+	 * @type int|bool    $max          Maximum number of results to return. Default: false (unlimited).
+	 * @type string      $fields       Video fields to return. Pass 'ids' to get only the video IDs.
 	 *                                           'all' returns full video objects.
-	 *     @type string       $sort              ASC or DESC. Default: 'DESC'.
-	 *     @type string       $order_by          Column to order results by.
-	 *     @type array        $exclude           Array of video IDs to exclude. Default: false.
-	 *     @type string       $search_terms      Limit results by a search term. Default: false.
-	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total albums
+	 * @type string      $sort         ASC or DESC. Default: 'DESC'.
+	 * @type string      $order_by     Column to order results by.
+	 * @type array       $exclude      Array of video IDs to exclude. Default: false.
+	 * @type string      $search_terms Limit results by a search term. Default: false.
+	 * @type string|bool $count_total  If true, an additional DB query is run to count the total albums
 	 *                                           for the query. Default: false.
 	 * }
 	 * @return array The array returned has two keys:
@@ -281,7 +285,7 @@ class BP_Video_Album {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
 
@@ -381,8 +385,8 @@ class BP_Video_Album {
 		 *
 		 * @since BuddyBoss 1.5.7
 		 *
-		 * @param string $album_ids_sql    MySQL statement used to query for Video IDs.
-		 * @param array  $r                Array of arguments passed into method.
+		 * @param string $album_ids_sql MySQL statement used to query for Video IDs.
+		 * @param array  $r             Array of arguments passed into method.
 		 */
 		$album_ids_sql = apply_filters( 'bp_video_album_paged_activities_sql', $album_ids_sql, $r );
 
@@ -390,6 +394,7 @@ class BP_Video_Album {
 
 		$cached = bp_core_get_incremented_cache( $album_ids_sql, $cache_group );
 		if ( false === $cached ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$album_ids = $wpdb->get_col( $album_ids_sql );
 			bp_core_set_incremented_cache( $album_ids_sql, $cache_group, $album_ids );
 		} else {
@@ -411,9 +416,6 @@ class BP_Video_Album {
 		}
 
 		if ( 'ids' !== $r['fields'] ) {
-			// Get the fullnames of users so we don't have to query in the loop.
-			// $albums = self::append_user_fullnames( $albums );
-
 			// Pre-fetch data associated with video users and other objects.
 			$albums = self::prefetch_object_data( $albums );
 		}
@@ -435,6 +437,7 @@ class BP_Video_Album {
 			$total_albums_sql = apply_filters( 'bp_video_album_total_videos_sql', "SELECT count(DISTINCT m.id) FROM {$bp->video->table_name_albums} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached           = bp_core_get_incremented_cache( $total_albums_sql, $cache_group );
 			if ( false === $cached ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$total_albums = $wpdb->get_var( $total_albums_sql );
 				bp_core_set_incremented_cache( $total_albums_sql, $cache_group, $total_albums );
 			} else {
@@ -481,6 +484,7 @@ class BP_Video_Album {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from album table, preserving order.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->video->table_name_albums} WHERE id IN ({$uncached_ids_sql})" );
 
 			// Put that data into the placeholders created earlier,
@@ -539,8 +543,8 @@ class BP_Video_Album {
 	 *
 	 * @since BuddyBoss 1.5.7
 	 *
-	 * @param string $id       ID to check.
-	 * @param string $type     type to check.
+	 * @param string $id ID to check.
+	 *
 	 * @return int|bool Album ID if found; false if not.
 	 */
 	public static function album_exists( $id ) {
@@ -568,6 +572,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $albums Albums array.
+	 *
 	 * @return array
 	 */
 	protected static function append_user_fullnames( $albums ) {
@@ -593,7 +598,7 @@ class BP_Video_Album {
 	/**
 	 * Pre-fetch data for objects associated with albums.
 	 *
-	 * albums are associated with users, and often with other
+	 * Albums are associated with users, and often with other
 	 * BuddyPress data objects. Here, we pre-fetch data about these
 	 * associated objects, so that inline lookups - done primarily when
 	 * building action strings - do not result in excess database queries.
@@ -601,6 +606,7 @@ class BP_Video_Album {
 	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param array $albums Array of video albums.
+	 *
 	 * @return array $albums Array of video albums.
 	 */
 	protected static function prefetch_object_data( $albums ) {
@@ -620,7 +626,7 @@ class BP_Video_Album {
 	 *
 	 * @since BuddyBoss 1.5.7
 	 *
-	 * @param int $group_id
+	 * @param int $group_id Group ID.
 	 *
 	 * @return array|bool|int
 	 */
@@ -640,13 +646,14 @@ class BP_Video_Album {
 	 *
 	 * @since BuddyBoss 1.5.7
 	 *
-	 * @param array $args {
-	 * @int    $id                Optional. The ID of a specific item to delete.
-	 * @int    $user_id           Optional. The user ID to filter by.
-	 * @int    $group_id           Optional. The group ID to filter by.
-	 * @string    $title          Optional. The title to filter by.
-	 * @string $date_created      Optional. The date to filter by.
-	 * }
+	 * @param array $args         {
+	 *                            Array of Arguments.
+	 * @type int    $id           Optional. The ID of a specific item to delete.
+	 * @type int    $user_id      Optional. The user ID to filter by.
+	 * @type int    $group_id     Optional. The group ID to filter by.
+	 * @type string $title        Optional. The title to filter by.
+	 * @type string $date_created Optional. The date to filter by.
+	 *                    }
 	 *
 	 * @return array|bool An array of deleted video IDs on success, false on failure.
 	 */
@@ -696,6 +703,7 @@ class BP_Video_Album {
 		$where_sql = 'WHERE ' . join( ' AND ', $where_args );
 
 		// Fetch all video albums being deleted so we can perform more actions.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$albums = $wpdb->get_results( "SELECT * FROM {$bp->video->table_name_albums} {$where_sql}" );
 
 		/**
@@ -704,11 +712,12 @@ class BP_Video_Album {
 		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param array $albums Array of video albums.
-		 * @param array $r          Array of parsed arguments.
+		 * @param array $r      Array of parsed arguments.
 		 */
 		do_action_ref_array( 'bp_video_album_before_delete', array( $albums, $r ) );
 
 		// Attempt to delete video albums from the database.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query( "DELETE FROM {$bp->video->table_name_albums} {$where_sql}" );
 
 		// Bail if nothing was deleted.
@@ -721,8 +730,8 @@ class BP_Video_Album {
 		 *
 		 * @since BuddyBoss 1.5.7
 		 *
-		 * @param array $albums     Array of video albums.
-		 * @param array $r          Array of parsed arguments.
+		 * @param array $albums Array of video albums.
+		 * @param array $r      Array of parsed arguments.
 		 */
 		do_action_ref_array( 'bp_video_album_after_delete', array( $albums, $r ) );
 
