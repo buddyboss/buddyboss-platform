@@ -154,7 +154,7 @@ class BP_Video_Template {
 			'privacy'      => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
-		extract( $r );
+		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );

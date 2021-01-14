@@ -163,7 +163,8 @@ class BP_Video_Query extends BP_Recursive_Query {
 				'REGEXP',
 				'NOT REGEXP',
 				'RLIKE',
-			)
+			),
+			true
 		) ) {
 			$clause['compare'] = '=';
 		}
@@ -177,16 +178,16 @@ class BP_Video_Query extends BP_Recursive_Query {
 
 		// Value.
 		if ( isset( $clause['value'] ) ) {
-			if ( in_array( $compare, array( 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN' ) ) ) {
+			if ( in_array( $compare, array( 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN' ), true ) ) {
 				if ( ! is_array( $value ) ) {
 					$value = preg_split( '/[,\s]+/', $value );
 				}
 			}
 
 			// Tinyint.
-			if ( ! empty( $column ) && true === in_array( $column, array( 'hide_sitewide', 'is_spam' ) ) ) {
+			if ( ! empty( $column ) && true === in_array( $column, array( 'hide_sitewide', 'is_spam' ), true ) ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$sql_chunks['where'][] = $wpdb->prepare( "{$alias}{$column} = %d", $value );
-
 			} else {
 				switch ( $compare ) {
 					// IN uses different syntax.
@@ -260,7 +261,7 @@ class BP_Video_Query extends BP_Recursive_Query {
 	 * @return string A validated column name value.
 	 */
 	public function validate_column( $column = '' ) {
-		if ( in_array( $column, $this->db_columns ) ) {
+		if ( in_array( $column, $this->db_columns, true ) ) {
 			return $column;
 		} else {
 			return '';
