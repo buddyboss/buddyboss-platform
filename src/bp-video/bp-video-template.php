@@ -131,8 +131,8 @@ function bp_has_video( $args = '' ) {
 
 	$search_terms_default = false;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'video' );
-	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) { // phpcs:ignore
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] ); // phpcs:ignore
 	}
 
 	// Album filtering.
@@ -151,7 +151,7 @@ function bp_has_video( $args = '' ) {
 	}
 
 	// The default scope should recognize custom slugs.
-	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' ); // phpcs:ignore
 	$scope = ( isset( $args['scope'] ) && ! empty( $args['scope'] ) ? $args['scope'] : $scope );
 
 	$scope = bp_video_default_scope( trim( $scope ) );
@@ -208,8 +208,8 @@ function bp_has_video( $args = '' ) {
 	);
 
 	// Search terms.
-	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
-		$r['search_terms'] = $_REQUEST['s'];
+	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) { // phpcs:ignore
+		$r['search_terms'] = $_REQUEST['s']; // phpcs:ignore
 	}
 
 	// Do not exceed the maximum per page.
@@ -323,7 +323,7 @@ function bp_get_video_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $video_template->pag_num - 1 ) > $video_template->total_video_count ) ? $video_template->total_video_count : $start_num + ( $video_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $video_template->total_video_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_template->total_video_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_template->total_video_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore
 
 	return $message;
 }
@@ -1089,8 +1089,8 @@ function bp_has_video_albums( $args = '' ) {
 
 	$search_terms_default = false;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'album' );
-	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) { // phpcs:ignore
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] ); // phpcs:ignore
 	}
 
 	$privacy = array( 'public' );
@@ -1160,8 +1160,8 @@ function bp_has_video_albums( $args = '' ) {
 	 */
 
 	// Search terms.
-	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
-		$r['search_terms'] = $_REQUEST['s'];
+	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) { // phpcs:ignore
+		$r['search_terms'] = $_REQUEST['s']; // phpcs:ignore
 	}
 
 	// Do not exceed the maximum per page.
@@ -1275,7 +1275,7 @@ function bp_get_video_album_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $video_album_template->pag_num - 1 ) > $video_album_template->total_album_count ) ? $video_album_template->total_album_count : $start_num + ( $video_album_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $video_album_template->total_album_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_album_template->total_video_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_album_template->total_video_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore
 
 	return $message;
 }
@@ -1797,7 +1797,7 @@ function bp_get_video_visibility() {
  * @since BuddyBoss 1.5.3
  */
 function bp_video_author() {
-	echo bp_get_video_author();
+	echo bp_get_video_author(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
