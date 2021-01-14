@@ -57,7 +57,9 @@ add_image_size( 'bp-video-thumbnail', 400, 400 );
 add_image_size( 'bp-activity-video-thumbnail', 1600, 1600 );
 
 /**
- * Add video theatre template for activity pages
+ * Add video theatre template for activity pages.
+ *
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_add_theatre_template() {
 	bp_get_template_part( 'video/theatre' );
@@ -66,7 +68,7 @@ function bp_video_add_theatre_template() {
 /**
  * Get activity entry video to render on front end
  *
- * @BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_activity_entry() {
 	global $video_template;
@@ -150,10 +152,10 @@ function bp_video_activity_entry() {
 /**
  * Append the video content to activity read more content
  *
- * @BuddyBoss 1.1.3
+ * @since BuddyBoss 1.5.7
  *
- * @param $content
- * @param $activity
+ * @param string $content content.
+ * @param object $activity Activity object.
  *
  * @return string
  */
@@ -232,7 +234,11 @@ function bp_video_activity_append_video( $content, $activity ) {
 }
 
 /**
- * Get activity comment entry video to render on front end
+ * Get activity comment entry video to render on front end.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @param int $comment_id Comment id.
  */
 function bp_video_activity_comment_entry( $comment_id ) {
 	global $video_template;
@@ -307,9 +313,9 @@ function bp_video_activity_comment_entry( $comment_id ) {
 /**
  * Update video for activity
  *
- * @param $content
- * @param $user_id
- * @param $activity_id
+ * @param string $content content.
+ * @param int    $user_id User id.
+ * @param int    $activity_id Activity id.
  *
  * @since BuddyBoss 1.5.7
  *
@@ -398,10 +404,10 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 /**
  * Update video for group activity
  *
- * @param $content
- * @param $user_id
- * @param $group_id
- * @param $activity_id
+ * @param string $content content.
+ * @param int    $user_id User id.
+ * @param int    $group_id Group id.
+ * @param int    $activity_id Activity id.
  *
  * @since BuddyBoss 1.5.7
  *
@@ -414,13 +420,11 @@ function bp_video_groups_activity_update_video_meta( $content, $user_id, $group_
 /**
  * Update video for activity comment
  *
- * @param $comment_id
- * @param $r
- * @param $activity
+ * @param int    $comment_id comment id.
+ * @param string $r parameter.
+ * @param object $activity activity object.
  *
  * @since BuddyBoss 1.5.7
- *
- * @return bool
  */
 function bp_video_activity_comments_update_video_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
@@ -432,7 +436,7 @@ function bp_video_activity_comments_update_video_meta( $comment_id, $r, $activit
  * Delete video when related activity is deleted.
  *
  * @since BuddyBoss 1.5.7
- * @param $activities
+ * @param array $activities activity array.
  */
 function bp_video_delete_activity_video( $activities ) {
 	if ( ! empty( $activities ) ) {
@@ -461,7 +465,7 @@ function bp_video_delete_activity_video( $activities ) {
  * Update video privacy according to album's privacy
  *
  * @since BuddyBoss 1.5.7
- * @param $album
+ * @param object $album album object.
  */
 function bp_video_update_video_privacy( $album ) {
 
@@ -505,7 +509,7 @@ function bp_video_update_video_privacy( $album ) {
  * Save video when new topic or reply is saved
  *
  * @since BuddyBoss 1.5.7
- * @param $post_id
+ * @param int $post_id post id.
  */
 function bp_video_forums_new_post_video_save( $post_id ) {
 
@@ -622,8 +626,8 @@ function bp_video_forums_new_post_video_save( $post_id ) {
  * Embed topic or reply attachments in a post
  *
  * @since BuddyBoss 1.5.7
- * @param $content
- * @param $id
+ * @param string $content content.
+ * @param int    $id  id of forum.
  *
  * @return string
  */
@@ -672,7 +676,7 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  * Attach video to the message object
  *
  * @since BuddyBoss 1.5.7
- * @param $message
+ * @param object $message message object.
  */
 function bp_video_attach_video_to_message( &$message ) {
 
@@ -694,8 +698,8 @@ function bp_video_attach_video_to_message( &$message ) {
  * Delete video attached to messages
  *
  * @since BuddyBoss 1.5.7
- * @param $thread_id
- * @param $message_ids
+ * @param int   $thread_id thread id.
+ * @param array $message_ids messages array.
  */
 function bp_video_messages_delete_attached_video( $thread_id, $message_ids ) {
 
@@ -719,8 +723,8 @@ function bp_video_messages_delete_attached_video( $thread_id, $message_ids ) {
  * Delete video attached to messages
  *
  * @since BuddyBoss 1.5.7
- * @param $thread_id
- * @param $message_ids
+ * @param int   $thread_id thread id.
+ * @param array $message_ids messages array.
  */
 function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids, $user_id, $update_message_ids ) {
 
@@ -839,7 +843,7 @@ add_filter( 'bp_activity_set_video_scope_args', 'bp_activity_filter_video_scope'
 /**
  * Add video repair list item.
  *
- * @param $repair_list
+ * @param array $repair_list repair list.
  *
  * @since BuddyBoss 1.5.7
  * @return array Repair list items.
@@ -1461,7 +1465,7 @@ function bp_video_activity_after_email_content( $activity ) {
  *
  * @return array $activity Returns the activity with video if video saved otherwise no video.
  *
- * @since BuddyBoss 1.5.0
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_get_edit_activity_data( $activity ) {
 
@@ -1523,6 +1527,8 @@ add_filter( 'mod_rewrite_rules', 'bp_video_protect_download_rewite_rules' );
 
 /**
  * Function to create a protected directory for the videos.
+ *
+ * @since BuddyBoss 1.5.7
  */
 function bp_video_check_download_album_protection() {
 
