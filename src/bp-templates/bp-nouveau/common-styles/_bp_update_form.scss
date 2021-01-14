@@ -183,6 +183,32 @@
 			display: none;
 		}
 
+
+		#activity-post-video-uploader.dropzone .dz-preview.dz-complete {
+
+			.dz-remove:after {
+				left: 0;
+			}
+
+			.dz-filename {
+				color: #4d5c6d;
+			}
+
+			&.dz-file-preview {
+				background-color: #f0f3f7;
+			}
+
+			.dz-details {
+				min-height: 120px;
+
+				.dz-size {
+					display: block !important;
+				}
+
+			}
+
+		}
+
 		@media screen and (max-width: 646px) {
 
 			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {

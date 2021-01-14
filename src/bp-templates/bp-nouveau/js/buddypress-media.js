@@ -76,6 +76,7 @@ window.bp = window.bp || {};
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 			};
 
+			var ForumVideoTemplate = document.getElementsByClassName('forum-post-video-template').length ? document.getElementsByClassName('forum-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
 			this.videoOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
@@ -90,6 +91,7 @@ window.bp = window.bp || {};
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
+				previewTemplate: ForumVideoTemplate
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
@@ -2662,6 +2664,29 @@ window.bp = window.bp || {};
 						}
 					);
 
+					self.video_dropzone_obj.on(
+						'addedfile',
+						function ( file ) {
+	
+							if(file.dataURL) {
+								// Get Thumbnail image from response
+							} else {
+	
+								if( bp.Nouveau.getVideoThumb ) {
+									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+								}
+	
+							}
+						}
+							
+					);
+
+					self.video_dropzone_obj.on(
+						'uploadprogress',
+						function( element ) {
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+						  }
+					);
 
 					self.video_dropzone_obj.on(
 						'success',
@@ -3038,6 +3063,30 @@ window.bp = window.bp || {};
 								done();
 							}
 						}
+					);
+
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'addedfile',
+						function ( file ) {
+	
+							if(file.dataURL) {
+								// Get Thumbnail image from response
+							} else {
+	
+								if( bp.Nouveau.getVideoThumb ) {
+									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+								}
+	
+							}
+						}
+							
+					);
+
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'uploadprogress',
+						function( element ) {
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+						  }
 					);
 
 					self.dropzone_obj[ dropzone_obj_key ].on(

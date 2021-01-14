@@ -1735,6 +1735,8 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
+			var acCommentVideoTemplate = document.getElementsByClassName('ac-reply-post-video-template').length ? document.getElementsByClassName('ac-reply-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
@@ -1753,6 +1755,7 @@ window.bp = window.bp || {};
 						maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 						dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
 						dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
+						previewTemplate		 : acCommentVideoTemplate,
 					};
 
 					// init dropzone.
@@ -1789,6 +1792,30 @@ window.bp = window.bp || {};
 								done();
 							}
 						}
+					);
+
+					self.dropzone_video_obj.on(
+						'addedfile',
+						function ( file ) {
+	
+							if(file.dataURL) {
+								// Get Thumbnail image from response
+							} else {
+	
+								if( bp.Nouveau.getVideoThumb ) {
+									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+								}
+	
+							}
+						}
+							
+					);
+	
+					self.dropzone_video_obj.on(
+						'uploadprogress',
+						function( element ) {
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+						  }
 					);
 
 					self.dropzone_video_obj.on(

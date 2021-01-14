@@ -888,3 +888,239 @@
 	}
 
 }
+
+//Video Uploader
+#activity-post-video-uploader,
+#bp-video-dropzone-content,
+#forums-post-video-uploader,
+#messages-post-video-uploader,
+#bp-group-messages-post-video-uploader,
+#boss-video-create-album-popup,
+.ac-reply-content .ac-reply-attachments .dropzone.video,
+#video-uploader.dropzone {
+
+	.dz-default.dz-message {
+		flex-basis: calc(100% - 12px);
+		max-width: inherit;
+		min-height: 20vh;
+
+		.dz-button {
+			font-size: 16px !important;
+			background-size: 48px !important;
+			padding: 50px 0 0 0 !important;
+		}
+
+	}
+
+	.dz-progress-count {
+		position: absolute;
+		z-index: 1;
+		bottom: 15%;
+		left: 50%;
+		width: 50%;
+		transform: translateX(-50%);
+		background-color: #333;
+		color: #fff;
+		border-radius: 30px;
+		padding: 0 30px 0 10px;
+		font-size: 14px;
+		line-height: 2;
+		min-width: 160px;
+	}
+
+	.dz-preview {
+		background: #f0f3f7;
+	}
+
+	.dz-preview .dz-progress {
+		position: absolute;
+		top: inherit;
+		bottom: 50%;
+		opacity: 1;
+		height: 6px;
+		border-radius: 3px;
+		background-color: rgba(255, 2255, 255, 0.5);
+		transform: translateY(50%);
+	}
+
+	.dz-remove {
+		position: absolute;
+		bottom: 18%;
+		top: inherit;
+		left: 50%;
+		margin-left: 65px;
+		transform: translateX(-50%);
+		background-color: transparent;
+		line-height: 1;
+		height: auto;
+		width: auto;
+
+		&:after {
+			font-size: 25px;
+			line-height: 1;
+			position: static;
+		}
+	}
+
+	.dz-complete {
+
+		.dz-remove {
+			background-color: #fd4343;
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			height: 14px;
+			width: 14px;
+			margin: 0;
+			left: inherit;
+			transform: none;
+
+			&:after {
+				position: relative;
+				top: -1px;
+				left: -1px;
+				font-size: 14px;
+				line-height: 1;
+			}
+
+		}
+
+		.dz-filename {
+			color: #fff;
+		}
+
+		.dz-progress-count {
+			display: none;
+		}
+
+		&.dz-preview.dz-file-preview {
+			background-color: #111;
+			border-radius: 4px;
+		}
+
+	}
+
+	#dropzone-video-preview {
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		object-fit: fill;
+	}
+
+	.dz-preview.dz-file-preview .dz-details {
+		min-height: 140px;
+
+		.dz-size {
+			display: none !important;
+		}
+
+		.dz-filename > span {
+			max-width: 70%;
+			margin: auto;
+		}
+
+	}
+
+	.dz-success-mark {
+		top: 60%;
+	}
+
+	.dz-preview.dz-file-preview {
+		width: calc(33.33333% - 11px);
+
+		.dz-details {
+			width: 100%;
+			background-color: transparent;
+			z-index: 1;
+		}
+
+	}
+
+	.dz-video-thumbnail {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		border-radius: 4px;
+		overflow: hidden;
+
+		img {
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+		}
+
+	}
+
+	@media screen and (max-width: 768px ) {
+
+		.dz-preview.dz-file-preview {
+			width: calc(50% - 11.5px);
+			margin: 0 5px 10px;
+
+			&:last-child {
+				margin-right: 0;
+			}
+
+		}
+
+	}
+
+	@media screen and (max-width: 480px ) {
+
+		.dz-preview.dz-file-preview {
+			width: calc(100% - 10px);
+			margin: 0 5px 10px;
+		}
+
+	}
+
+}
+
+// Profile Video, Message Video and Group Message Video Uploader
+#bp-group-messages-post-video-uploader,
+.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone,
+#video-uploader.dropzone {
+	-webkit-box-pack: start;
+	-ms-flex-pack: start;
+	justify-content: flex-start;
+
+	.dz-preview.dz-file-preview {
+		width: calc(50% - 11.5px);
+		margin: 0 5px 10px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+	}
+
+	.dz-complete .dz-remove:after {
+		left: 0;
+	}
+
+	@media screen and (max-width: 768px ) {
+
+		.dz-preview.dz-file-preview {
+			width: calc(50% - 11.5px);
+			margin: 0 5px 10px;
+
+			&:last-child {
+				margin-right: 0;
+			}
+
+		}
+
+		.dz-preview.dz-file-preview {
+			width: calc(100% - 10px);
+			margin: 0 5px 10px;
+		}
+
+	}
+
+}

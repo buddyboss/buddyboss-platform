@@ -2079,6 +2079,58 @@ window.bp = window.bp || {};
 		coverPhotoCropperAlert: function ( e ) {
 			e.preventDefault();
 			$( '#cover-photo-alert' ).remove();
+		},
+
+		getVideoThumb: function( file, target ) { //target = '.node'
+
+			//Load Video Thumbnail
+			var fileReader = new FileReader();
+			fileReader.onload = function() {
+				var blob = new Blob([fileReader.result], {type: file.type});
+				var url = URL.createObjectURL(blob);
+				var video = document.createElement('video');
+				var timeupdate = function() {
+					if (snapImage()) {
+					video.removeEventListener('timeupdate', timeupdate);
+					video.pause();
+					}
+				};
+				video.addEventListener('loadeddata', function() {
+					if (snapImage()) {
+					video.removeEventListener('timeupdate', timeupdate);
+					}
+				});
+				var snapImage = function() {
+					var canvas = document.createElement('canvas');
+					canvas.width = video.videoWidth;
+					canvas.height = video.videoHeight;
+					canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+					var image = canvas.toDataURL();
+					var success = image.length > 100000;
+					if (success) {
+					var img = document.createElement('img');
+					img.src = image;
+
+					if( file.previewElement ) {
+						$( file.previewElement ).find( target ).append(img);
+						$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
+					} else {
+						$( target ).append(img);
+					}
+
+					URL.revokeObjectURL(url);
+					}
+					return success;
+				};
+				video.addEventListener('timeupdate', timeupdate);
+				video.preload = 'metadata';
+				video.src = url;
+				video.muted = true;
+				video.playsInline = true;
+				video.play();
+			};
+			fileReader.readAsArrayBuffer(file);
+
 		}
 
 	};

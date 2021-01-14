@@ -1144,6 +1144,9 @@ span.dashicons.dashicons-admin-file:before {
 
 						&.move-disabled[data-balloon]:after {
 							content: attr(data-balloon);
+							white-space: normal;
+							max-width: 200px;
+							width: 100%;
 						}
 
 						a:before {
@@ -1385,6 +1388,9 @@ span.dashicons.dashicons-admin-file:before {
 
 						&.move-disabled[data-balloon]:after {
 							content: attr(data-balloon);
+							white-space: normal;
+							max-width: 200px;
+							width: 100%;
 						}
 
 						a:before {
@@ -1727,6 +1733,9 @@ span.dashicons.dashicons-admin-file:before {
 
 							&.move-disabled[data-balloon]:after {
 								content: attr(data-balloon);
+								white-space: normal;
+								max-width: 200px;
+								width: 100%;
 							}
 
 							a:before {

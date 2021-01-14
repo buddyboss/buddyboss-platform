@@ -61,6 +61,8 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 			}
 
+			var uploaderVideoTemplate = document.getElementsByClassName('uploader-post-video-template').length ? document.getElementsByClassName('uploader-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
 			this.videoOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
@@ -74,6 +76,7 @@ window.bp = window.bp || {};
 				maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
+				previewTemplate: uploaderVideoTemplate,
 			};
 
 			this.videoThumbnailOptions = {
@@ -608,7 +611,7 @@ window.bp = window.bp || {};
 
 				self.video_dropzone_obj.on(
 					'addedfile',
-					function () {
+					function ( file ) {
 						setTimeout(
 							function () {
 								if ( self.video_dropzone_obj.getAcceptedFiles().length ) {
@@ -617,6 +620,17 @@ window.bp = window.bp || {};
 							},
 							1000
 						);
+
+						if(file.dataURL) {
+							// Get Thumbnail image from response
+						} else {
+
+							if( bp.Nouveau.getVideoThumb ) {
+								bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+							}
+
+						}
+
 					}
 				);
 
@@ -648,6 +662,13 @@ window.bp = window.bp || {};
 					function () {
 						$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
 					}
+				);
+
+				self.video_dropzone_obj.on(
+					'uploadprogress',
+					function( element ) {
+						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+					  }
 				);
 
 				self.video_dropzone_obj.on(
@@ -2387,7 +2408,7 @@ window.bp = window.bp || {};
 						cus_button.addClass( 'vjs-icon-square' );
 						var fullscreen_btn = $( this ).find('.vjs-icon-square').addClass( 'enlarge_button' );
 						fullscreen_btn.attr( 'data-balloon-pos', 'up' );
-						fullscreen_btn.attr( 'data-balloon', 'Enlarge' ); //TODO : This text should be translatable
+						fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_enlarge_text );
 						cus_button.on( 'click', function() {
 							//Set current time of video and id
 							if( player[ele_id].currentTime() > 0 ) {
@@ -2402,7 +2423,7 @@ window.bp = window.bp || {};
 					if( $( self ).closest( '.video-theatre').length ) {
 						var Enter_fullscreen_btn = $( this ).parent().find('.vjs-fullscreen-control');
 						Enter_fullscreen_btn.attr( 'data-balloon-pos', 'up' );
-						Enter_fullscreen_btn.attr( 'data-balloon', 'Enter fullscreen' ); //TODO : This text should be translatable
+						Enter_fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_fullscreen_text );
 					}
 
 					$( this ).addClass( 'loaded' );
