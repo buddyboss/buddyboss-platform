@@ -70,7 +70,7 @@ $is_comment_vid = bp_video_is_activity_comment_video( $video_template->video );
 						if ( $report_btn ) {
 							?>
 							<li class="report_file">
-								<?php echo $report_btn; ?>
+								<?php echo $report_btn; // phpcs:ignore ?>
 							</li>
 							<?php
 						}

@@ -38,8 +38,8 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 						<?php
 							printf(
 								/* translators: videos */
-								_n( '%s video', '%s videos', $video_album_template->album->video['total'], 'buddyboss' ),
-								number_format_i18n( $video_album_template->album->video['total'] )
+								_n( '%s video', '%s videos', $video_album_template->album->video['total'], 'buddyboss' ), // phpcs:ignore
+								number_format_i18n( $video_album_template->album->video['total'] ) // phpcs:ignore
 							);
 						?>
 								</span>

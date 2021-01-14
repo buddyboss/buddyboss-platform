@@ -1,5 +1,4 @@
 <?php
-
 /**
  * BuddyBoss - Video Activity Album Move
  *
