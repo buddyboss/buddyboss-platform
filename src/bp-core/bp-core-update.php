@@ -325,7 +325,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 16501 ) {
-			bp_update_to_1_6_0();
+			bp_update_to_1_5_6();
 		}
 	}
 
@@ -668,11 +668,11 @@ function bp_update_to_1_5_1() {
 }
 
 /**
- * Fix forums media showing in users profile media tab.
+ * Update media table for the video components.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.7
  */
-function bp_update_to_1_6_0() {
+function bp_update_to_1_5_7() {
 	bp_core_install_media();
 }
 
