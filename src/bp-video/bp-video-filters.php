@@ -1,7 +1,8 @@
 <?php
-
 /**
  * Exit if accessed directly.
+ *
+ * @package BuddyBoss\Video
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -81,7 +82,7 @@ function bp_video_activity_entry() {
 
 	// Add Video to single activity page..
 	$video_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_activity', true );
-	if ( bp_is_single_activity() && ! empty( $video_activity ) && '1' == $video_activity && empty( $video_ids ) ) {
+	if ( bp_is_single_activity() && ! empty( $video_activity ) && '1' === $video_activity && empty( $video_ids ) ) {
 		$video_ids = BP_Video::get_activity_video_id( bp_get_activity_id() );
 	} else {
 		$video_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_ids', true );
@@ -211,9 +212,9 @@ function bp_video_activity_append_video( $content, $activity ) {
 			<?php ob_start(); ?>
 			<div class="bb-activity-video-wrap
 			<?php
-			echo 'bb-video-length-' . $video_template->video_count;
-				echo $video_template->video_count > 5 ? ' bb-video-length-more' : '';
-				echo true === $is_forum_activity ? ' forums-video-wrap' : '';
+			echo esc_attr( 'bb-video-length-' . $video_template->video_count );
+				echo $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '';
+				echo true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '';
 			?>
 				">
 				<?php
@@ -389,7 +390,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 
 				foreach ( $old_video_ids as $video_id ) {
 
-					if ( ! in_array( $video_id, $video_ids ) ) {
+					if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 						bp_video_delete( array( 'id' => $video_id ) );
 					}
 				}
@@ -410,8 +411,6 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
  * @param int    $activity_id Activity id.
  *
  * @since BuddyBoss 1.5.7
- *
- * @return bool
  */
 function bp_video_groups_activity_update_video_meta( $content, $user_id, $group_id, $activity_id ) {
 	bp_video_update_activity_video_meta( $content, $user_id, $activity_id );
@@ -513,13 +512,13 @@ function bp_video_update_video_privacy( $album ) {
  */
 function bp_video_forums_new_post_video_save( $post_id ) {
 
-	if ( bp_is_forums_video_support_enabled() && ! empty( $_POST['bbp_video'] ) ) {
+	if ( bp_is_forums_video_support_enabled() && ! empty( $_POST['bbp_video'] ) ) { // phpcs:ignore
 
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
 
 		// save video.
-		$videos = json_decode( stripslashes( $_POST['bbp_video'] ), true );
+		$videos = json_decode( stripslashes( $_POST['bbp_video'] ), true ); // phpcs:ignore
 
 		// fetch currently uploaded video ids.
 		$existing_video                = array();
@@ -548,8 +547,8 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 			$menu_order        = ! empty( $video['menu_order'] ) ? $video['menu_order'] : 0;
 
 			if ( ! empty( $existing_video_attachment_ids ) ) {
-				$index = array_search( $attachment_id, $existing_video_attachment_ids );
-				if ( ! empty( $attachment_id ) && $index !== false && ! empty( $existing_video[ $attached_video_id ] ) ) {
+				$index = array_search( $attachment_id, $existing_video_attachment_ids ); // phpcs:ignore
+				if ( ! empty( $attachment_id ) && false !== $index && ! empty( $existing_video[ $attached_video_id ] ) ) {
 
 					$existing_video[ $attached_video_id ]->menu_order = $menu_order;
 					$existing_video[ $attached_video_id ]->save();
@@ -653,8 +652,8 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 		?>
 			<div class="bb-activity-media-wrap forums-video-wrap
 		<?php
-			echo 'bb-media-length-' . $video_template->video_count;
-			echo $video_template->video_count > 5 ? ' bb-media-length-more' : '';
+			echo esc_attr( 'bb-media-length-' . $video_template->video_count );
+			echo $video_template->video_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
 		?>
 		">
 				<?php
@@ -680,11 +679,12 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  */
 function bp_video_attach_video_to_message( &$message ) {
 
-	if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['video'] ) ) {
+	$videos = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $videos ) ) {
 		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
 		remove_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
 
-		$video_ids = bp_video_add_handler( $_POST['video'], 'message' );
+		$video_ids = bp_video_add_handler( $videos, 'message' );
 
 		add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
 		add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
@@ -725,6 +725,8 @@ function bp_video_messages_delete_attached_video( $thread_id, $message_ids ) {
  * @since BuddyBoss 1.5.7
  * @param int   $thread_id thread id.
  * @param array $message_ids messages array.
+ * @param int   $user_id user id.
+ * @param array $update_message_ids messages array.
  */
 function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids, $user_id, $update_message_ids ) {
 
@@ -775,7 +777,7 @@ function bp_video_delete_attachment_video( $attachment_id ) {
 
 	$bp = buddypress();
 
-	$video = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE attachment_id = %d", $attachment_id ) );
+	$video = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE attachment_id = %d", $attachment_id ) ); // phpcs:ignore
 
 	if ( ! $video ) {
 		return false;
@@ -871,7 +873,7 @@ function bp_video_add_admin_repair_items( $repair_list ) {
  */
 function bp_video_admin_repair_video() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
 	$bp     = buddypress();
 
 	$video_query = "SELECT id, activity_id FROM {$bp->video->table_name} WHERE activity_id != 0 AND type = 'video' LIMIT 50 OFFSET $offset ";
