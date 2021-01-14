@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Album Entry
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 ?>
 

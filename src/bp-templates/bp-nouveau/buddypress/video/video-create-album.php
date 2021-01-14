@@ -3,7 +3,7 @@
 /**
  * BuddyBoss - Video Create Album
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.5.7
  * @package BuddyBoss\Core
  */
 

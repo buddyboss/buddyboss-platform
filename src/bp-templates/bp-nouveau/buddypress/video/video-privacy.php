@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Video Privacy Change
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.5.7
  * @package BuddyBoss\Core
  */
 

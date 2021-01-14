@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.7
  */
 
 if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>

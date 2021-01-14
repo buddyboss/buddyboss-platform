@@ -47,7 +47,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 		/**
 		 * A dummy constructor to prevent this class from being loaded more than once.
 		 *
-		 * @since BuddyBoss 1.4.0
+		 * @since BuddyBoss 1.5.7
 		 */
 		private function __construct() {
 			/* Do nothing here */
@@ -174,7 +174,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 		}
 
 		/**
-		 * Generare Html for video search
+		 * Generate Html for video search
 		 *
 		 * @param string $template_type Template type.
 		 */
