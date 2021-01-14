@@ -1585,24 +1585,24 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 					$parent_user    = $parent->user_id;
 					$parent_privacy = $parent->privacy;
 
-					if ( $parent_privacy === 'public' ) {
+					if ( 'public' === $parent_privacy ) {
 						continue;
 					}
 
 					$remove_from_stream = false;
 
-					if ( $parent_privacy === 'loggedin' && ! bp_loggedin_user_id() ) {
+					if ( 'loggedin' === $parent_privacy && ! bp_loggedin_user_id() ) {
 						$remove_from_stream = true;
 					}
 
-					if ( false === $remove_from_stream && $parent_privacy === 'onlyme' && bp_loggedin_user_id() !== $parent_user ) {
+					if ( false === $remove_from_stream && 'onlyme' === $parent_privacy && bp_loggedin_user_id() !== $parent_user ) {
 						$remove_from_stream = true;
 					}
 
-					if ( false === $remove_from_stream && $parent_privacy === 'friends' ) {
+					if ( false === $remove_from_stream && 'friends' === $parent_privacy ) {
 						if ( bp_is_active( 'friends' ) ) {
 							$is_friend = friends_check_friendship( bp_loggedin_user_id(), $parent_user );
-							if ( ! $is_friend && $parent_user !== bp_loggedin_user_id() ) {
+							if ( ! $is_friend && bp_loggedin_user_id() !== $parent_user ) {
 								$remove_from_stream = true;
 							}
 						} else {
@@ -1625,7 +1625,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 	}
 
 	$activities->activities = array_values( $activities->activities );
-	if ( $activities->activity_count === 0 ) {
+	if ( 0 === $activities->activity_count ) {
 		return false;
 	}
 
