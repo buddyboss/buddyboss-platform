@@ -34,7 +34,6 @@ function bp_nouveau_document_enqueue_scripts() {
  *
  * @return array         The same array with specific strings for the messages UI if needed.
  * @since BuddyBoss 1.4.0
- *
  */
 function bp_nouveau_document_localize_scripts( $params = array() ) {
 
@@ -136,7 +135,6 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
  *
  * @return array An associative array of nav items.
  * @since BuddyBoss 1.4.0
- *
  */
 function bp_nouveau_get_document_directory_nav_items() {
 	$nav_items = array();
@@ -181,7 +179,6 @@ function bp_nouveau_get_document_directory_nav_items() {
 	 * @param array $nav_items The list of the media directory nav items.
 	 *
 	 * @since BuddyBoss 1.4.0
-	 *
 	 */
 	return apply_filters( 'bp_nouveau_get_document_directory_nav_items', $nav_items );
 }
@@ -841,10 +838,10 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$allowed_for_download             = array();
 		$allowed_file_type_with_mime_type = array();
 		foreach ( $all_extensions as $extension ) {
-			if ( isset( $extension[ 'is_active' ] ) && true === (bool) $extension[ 'is_active' ] ) {
-				$extension_name                                      = ltrim( $extension[ 'extension' ], '.' );
+			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+				$extension_name                                      = ltrim( $extension['extension'], '.' );
 				$allowed_for_download[]                              = $extension_name;
-				$allowed_file_type_with_mime_type[ $extension_name ] = $extension[ 'mime_type' ];
+				$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
 			}
 		}
 
@@ -858,8 +855,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		}
 
 		$file_new_name = $file_name;
-		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] ) ? $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] : '';
-		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension[ 'extension' ] );
+		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
+		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
 
 		bp_document_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	} else {
@@ -869,7 +866,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		// Get Upload directory.
 		$upload     = wp_upload_dir();
-		$upload_dir = $upload[ 'basedir' ];
+		$upload_dir = $upload['basedir'];
 
 		// Create temp folder.
 		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time();
@@ -984,7 +981,7 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
  * This function will give the breadcrumbs ul li html.
  *
  * @param      $array
- * @param bool $parent_folder
+ * @param bool  $parent_folder
  *
  * @return string
  * @since BuddyBoss 1.4.0
@@ -1039,7 +1036,7 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 		$more_text = false;
 		if ( strlen( $file_data ) >= 9999 ) {
 			$file_data .= '...';
-			$more_text = true;
+			$more_text  = true;
 		}
 		fclose( $file_open );
 
@@ -1191,7 +1188,7 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.5.7
  */
 
 function bp_document_get_preview_video_url( $document_id, $extension, $attachment_id ) {
@@ -1207,6 +1204,11 @@ function bp_document_get_preview_video_url( $document_id, $extension, $attachmen
 		}
 	}
 
+	/**
+	 * Return the preview URL of the video.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
 	return apply_filters( 'bp_document_get_preview_video_url', $attachment_url, $document_id, $extension );
 }
 
