@@ -11,7 +11,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'muplugins_loaded', 'bp_performance_loaded' );
+add_action( 'muplugins_loaded', 'bp_performance_loaded', 999 );
 if ( ! function_exists( 'bp_performance_loaded' ) ) {
 	/**
 	 * Load Performance instance.

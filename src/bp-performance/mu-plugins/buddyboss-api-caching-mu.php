@@ -14,20 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Load the class from Bundle BuddyBoss APP.
- */
-$include = WP_PLUGIN_DIR . '/buddyboss-app/include/Performance/buddyboss-app-mu-loader.php';
-// Cache [ performance ].
-if ( file_exists( $include ) ) {
-	/**
-	 * Included File.
-	 *
-	 * @var string $include file path.
-	 */
-	require_once $include;
-}
-
-/**
  * Load the class from Bundle BuddyBoss Platform.
  */
 // File from api plugin.
@@ -55,4 +41,18 @@ if ( file_exists( $buddyboss_platform_api ) ) {
 	 * Included File.
 	 */
 	require_once $buddyboss_performance_dev;
+}
+
+/**
+ * Load the class from Bundle BuddyBoss APP.
+ */
+$include = WP_PLUGIN_DIR . '/buddyboss-app/include/Performance/buddyboss-app-mu-loader.php';
+// Cache [ performance ].
+if ( file_exists( $include ) ) {
+	/**
+	 * Included File.
+	 *
+	 * @var string $include file path.
+	 */
+	require_once $include;
 }
