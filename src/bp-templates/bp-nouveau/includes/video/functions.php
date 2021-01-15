@@ -139,21 +139,21 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 	}
 
 	$params['video']['i18n_strings'] = array(
-		'select'               	=> __( 'Select', 'buddyboss' ),
-		'unselect'             	=> __( 'Unselect', 'buddyboss' ),
-		'selectall'            	=> __( 'Select All', 'buddyboss' ),
-		'unselectall'          	=> __( 'Unselect All', 'buddyboss' ),
-		'no_videos_found'      	=> __( 'Sorry, no videos were found', 'buddyboss' ),
-		'upload'               	=> __( 'Upload', 'buddyboss' ),
-		'upload_thumb'         	=> __( 'Add Thumbnail', 'buddyboss' ),
-		'uploading'            	=> __( 'Uploading', 'buddyboss' ),
-		'upload_status'        	=> __( '%1$d out of %2$d uploaded', 'buddyboss' ), // phpcs:ignore
-		'album_delete_confirm' 	=> __( 'Are you sure you want to delete this album? Videos in this album will also be deleted.', 'buddyboss' ),
-		'album_delete_error'   	=> __( 'There was a problem deleting the album.', 'buddyboss' ),
-		'video_delete_confirm' 	=> __( 'Are you sure you want to delete this video?', 'buddyboss' ),
-		'video_enlarge_text'   	=> __( 'Enlarge', 'buddyboss' ),
+		'select'                => __( 'Select', 'buddyboss' ),
+		'unselect'              => __( 'Unselect', 'buddyboss' ),
+		'selectall'             => __( 'Select All', 'buddyboss' ),
+		'unselectall'           => __( 'Unselect All', 'buddyboss' ),
+		'no_videos_found'       => __( 'Sorry, no videos were found', 'buddyboss' ),
+		'upload'                => __( 'Upload', 'buddyboss' ),
+		'upload_thumb'          => __( 'Add Thumbnail', 'buddyboss' ),
+		'uploading'             => __( 'Uploading', 'buddyboss' ),
+		'upload_status'         => __( '%1$d out of %2$d uploaded', 'buddyboss' ), // phpcs:ignore
+		'album_delete_confirm'  => __( 'Are you sure you want to delete this album? Videos in this album will also be deleted.', 'buddyboss' ),
+		'album_delete_error'    => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'video_delete_confirm'  => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
+		'video_enlarge_text'    => __( 'Enlarge', 'buddyboss' ),
 		'video_fullscreen_text' => __( 'Enter fullscreen', 'buddyboss' ),
-		'video_uploaded_text' 	=> __( 'Uploaded', 'buddyboss' ),
+		'video_uploaded_text'   => __( 'Uploaded', 'buddyboss' ),
 	);
 
 	return $params;
@@ -217,7 +217,8 @@ function bp_nouveau_get_video_directory_nav_items() {
  * Download the file.
  *
  * @param int    $attachment_id id of the attachment.
- * @param string $type type of download.
+ * @param string $type          type of download.
+ *
  * @since BuddyBoss 1.5.7
  */
 function bp_video_download_file( $attachment_id, $type = 'video' ) {
@@ -234,7 +235,7 @@ function bp_video_download_file( $attachment_id, $type = 'video' ) {
 		}
 
 		// clean the file url.
-		$file_url = stripslashes( trim( $the_file ) );
+		$the_file = stripslashes( trim( $the_file ) );
 
 		// get filename.
 		$file_name = basename( $the_file );
