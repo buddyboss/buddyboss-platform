@@ -60,7 +60,9 @@ class BP_Performance_Component extends BP_Component {
 
 		if ( class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 			$performance = \BuddyBoss\Performance\Performance::instance();
-			$performance->validate();
+			if ( method_exists( 'validate', $performance ) ) {
+				$performance->validate();
+			}
 		}
 
 		parent::includes( $includes );
