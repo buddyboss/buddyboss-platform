@@ -289,6 +289,24 @@
 				transform: rotateY(180deg);
 			}
 
+			@media screen and (max-width: 540px ) {
+				bottom: 10px;
+
+				.vjs-picture-in-picture-control {
+					display: none;
+				}
+
+				button {
+					width: 3em;
+				}
+
+				.enlarge_button .vjs-icon-placeholder:before {
+					font-size: 14px;
+					line-height: 2.2;
+				}
+
+			}
+
 		}
 
 		.video-theatre &:fullscreen .vjs-control-bar .vjs-fullscreen-control {

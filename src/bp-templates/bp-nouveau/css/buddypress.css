@@ -3739,6 +3739,47 @@ span.dashicons.dashicons-admin-file:before {
   margin-top: -8px;
 }
 
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a,
+#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.report_file a,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.report_file a {
+  background-color: transparent;
+  text-align: left;
+  font-weight: 400;
+  box-shadow: none;
+  border-radius: 0;
+  min-height: auto;
+}
+
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a:before,
+#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.report_file a:before,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.report_file a:before {
+  content: "\e8ea";
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a:hover,
+#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.report_file a:hover,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.report_file a:hover {
+  background-color: #f5f5f5;
+}
+
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a.reported-content,
+#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.report_file a.reported-content,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.report_file a.reported-content {
+  opacity: 0.8 !important;
+  pointer-events: none;
+}
+
+#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a.report-content, #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a.reported-content,
+#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.report_file a.report-content,
+#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.report_file a.reported-content,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.report_file a.report-content,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.report_file a.reported-content {
+  border: 0;
+  -webkit-font-smoothing: auto;
+}
+
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.delete_file a:before,
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.delete_file a:before,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.delete_file a:before {
@@ -18933,6 +18974,30 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back {
   transform: rotateY(180deg);
+}
+
+@media screen and (max-width: 540px) {
+  .bb-activity-video-elem .video-js .vjs-control-bar,
+  .bb-video-thumb .video-js .vjs-control-bar,
+  .bb-media-section .video-js .vjs-control-bar {
+    bottom: 10px;
+  }
+  .bb-activity-video-elem .video-js .vjs-control-bar .vjs-picture-in-picture-control,
+  .bb-video-thumb .video-js .vjs-control-bar .vjs-picture-in-picture-control,
+  .bb-media-section .video-js .vjs-control-bar .vjs-picture-in-picture-control {
+    display: none;
+  }
+  .bb-activity-video-elem .video-js .vjs-control-bar button,
+  .bb-video-thumb .video-js .vjs-control-bar button,
+  .bb-media-section .video-js .vjs-control-bar button {
+    width: 3em;
+  }
+  .bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
+  .bb-video-thumb .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
+  .bb-media-section .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before {
+    font-size: 14px;
+    line-height: 2.2;
+  }
 }
 
 .video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:before, .video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
