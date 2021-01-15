@@ -7,22 +7,6 @@
 
 namespace BuddyBoss\Performance;
 
-use BuddyBoss\Performance\Route_Helper;
-use BuddyBoss\Performance\Integration\BB_Groups;
-use BuddyBoss\Performance\Integration\BB_Members;
-use BuddyBoss\Performance\Integration\BB_Activity;
-use BuddyBoss\Performance\Integration\BB_Friends;
-use BuddyBoss\Performance\Integration\BB_Notifications;
-use BuddyBoss\Performance\Integration\BB_Messages;
-use BuddyBoss\Performance\Integration\BB_Forums;
-use BuddyBoss\Performance\Integration\BB_Topics;
-use BuddyBoss\Performance\Integration\BB_Replies;
-use BuddyBoss\Performance\Integration\LdCourses;
-use BuddyBoss\Performance\Integration\LdLessons;
-use BuddyBoss\Performance\Integration\LdTopics;
-use BuddyBoss\Performance\Integration\AbAppPages;
-use BuddyBoss\Performance\Integration\LdQuizzes;
-
 /**
  * User Provider class.
  */

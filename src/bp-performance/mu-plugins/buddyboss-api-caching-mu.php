@@ -16,13 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Load the class from Bundle BuddyBoss Platform.
  */
-// File for the build version.
+// File from api plugin.
 $buddyboss_platform_api = WP_PLUGIN_DIR . '/buddyboss-platform-api/buddyboss-api-mu-loader.php';
 
-// File for the build version.
+// File from the build version.
 $buddyboss_performance = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/bp-performance-mu-loader.php';
 
-// File for the development version.
+// File from the development version.
 $buddyboss_performance_dev = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/bp-performance-mu-loader.php';
 
 // Cache [ performance ].
