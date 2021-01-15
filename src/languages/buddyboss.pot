@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-14 13:12:10+00:00\n"
+"POT-Creation-Date: 2021-01-15 06:55:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3030,7 +3030,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
 #: bp-media/bp-media-settings.php:631 bp-media/bp-media-settings.php:658
 #: bp-media/bp-media-settings.php:815 bp-media/bp-media-settings.php:1022
-#: bp-search/bp-search-settings.php:472 bp-video/bp-video-settings.php:196
+#: bp-search/bp-search-settings.php:472 bp-video/bp-video-settings.php:187
 msgid "View Tutorial"
 msgstr ""
 
@@ -3731,7 +3731,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1659 bp-forums/admin/tools.php:1661
 #: bp-forums/admin/tools.php:1733 bp-forums/admin/tools.php:1735
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1770
-#: bp-video/bp-video-filters.php:967
+#: bp-video/bp-video-filters.php:972
 msgid "Complete!"
 msgstr ""
 
@@ -8911,7 +8911,7 @@ msgid "Download"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:1053 bp-media/bp-media-filters.php:1865
-#: bp-video/bp-video-filters.php:1059
+#: bp-video/bp-video-filters.php:1065
 msgid "File not found"
 msgstr ""
 
@@ -8938,7 +8938,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-document/bp-document-filters.php:1631 bp-media/bp-media-filters.php:2282
-#: bp-video/bp-video-filters.php:1454
+#: bp-video/bp-video-filters.php:1470
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -9622,7 +9622,7 @@ msgid "About Forums"
 msgstr ""
 
 #: bp-forums/admin/admin.php:506
-#: bp-forums/templates/default/bbpress-functions.php:247
+#: bp-forums/templates/default/bbpress-functions.php:217
 msgid "Loading"
 msgstr ""
 
@@ -12119,9 +12119,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1380
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1415
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1448
-#: bp-forums/templates/default/bbpress-functions.php:759
-#: bp-forums/templates/default/bbpress-functions.php:827
-#: bp-forums/templates/default/bbpress-functions.php:895
+#: bp-forums/templates/default/bbpress-functions.php:729
+#: bp-forums/templates/default/bbpress-functions.php:797
+#: bp-forums/templates/default/bbpress-functions.php:865
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -12694,8 +12694,8 @@ msgid "Favorites are no longer active."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1333
-#: bp-forums/templates/default/bbpress-functions.php:745
-#: bp-forums/templates/default/bbpress-functions.php:881
+#: bp-forums/templates/default/bbpress-functions.php:715
+#: bp-forums/templates/default/bbpress-functions.php:851
 msgid "Subscriptions are no longer active."
 msgstr ""
 
@@ -14083,64 +14083,64 @@ msgstr ""
 msgid "Email (will not be published) (required):"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:68
+#: bp-forums/templates/default/bbpress/form-attachments.php:82
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:139
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:155
 msgid "Show formatting"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:68
+#: bp-forums/templates/default/bbpress/form-attachments.php:82
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:139
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:155
 msgid "Hide formatting"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:77
+#: bp-forums/templates/default/bbpress/form-attachments.php:91
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:60
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:17
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:147
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:163
 msgid "Attach a photo"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:89
+#: bp-forums/templates/default/bbpress/form-attachments.php:103
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:65
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:39
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:157
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:173
 msgid "Attach a video"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:101
+#: bp-forums/templates/default/bbpress/form-attachments.php:115
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:70
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:32
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:28
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:164
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:180
 msgid "Attach a document"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:111
+#: bp-forums/templates/default/bbpress/form-attachments.php:125
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:76
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:41
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:48
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:172
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:188
 msgid "Post a GIF"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:117
+#: bp-forums/templates/default/bbpress/form-attachments.php:131
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:179
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:195
 msgid "Search GIFs"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:131
+#: bp-forums/templates/default/bbpress/form-attachments.php:145
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:83
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:47
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:57
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:193
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:209
 msgid "Insert an emoji"
 msgstr ""
 
@@ -14658,61 +14658,61 @@ msgstr ""
 msgid "This user has not created any discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:251
+#: bp-forums/templates/default/bbpress-functions.php:221
 msgid "Add Tags:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:284
+#: bp-forums/templates/default/bbpress-functions.php:254
 msgid "Explain what the forum is about"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:285
+#: bp-forums/templates/default/bbpress-functions.php:255
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:286
+#: bp-forums/templates/default/bbpress-functions.php:256
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:703
-#: bp-forums/templates/default/bbpress-functions.php:716
+#: bp-forums/templates/default/bbpress-functions.php:673
+#: bp-forums/templates/default/bbpress-functions.php:686
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:750
+#: bp-forums/templates/default/bbpress-functions.php:720
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:767
+#: bp-forums/templates/default/bbpress-functions.php:737
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:772
-#: bp-forums/templates/default/bbpress-functions.php:840
-#: bp-forums/templates/default/bbpress-functions.php:908
+#: bp-forums/templates/default/bbpress-functions.php:742
+#: bp-forums/templates/default/bbpress-functions.php:810
+#: bp-forums/templates/default/bbpress-functions.php:878
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:780
-#: bp-forums/templates/default/bbpress-functions.php:848
-#: bp-forums/templates/default/bbpress-functions.php:916
+#: bp-forums/templates/default/bbpress-functions.php:750
+#: bp-forums/templates/default/bbpress-functions.php:818
+#: bp-forums/templates/default/bbpress-functions.php:886
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:813
+#: bp-forums/templates/default/bbpress-functions.php:783
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:818
+#: bp-forums/templates/default/bbpress-functions.php:788
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:835
-#: bp-forums/templates/default/bbpress-functions.php:903
+#: bp-forums/templates/default/bbpress-functions.php:805
+#: bp-forums/templates/default/bbpress-functions.php:873
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:886
+#: bp-forums/templates/default/bbpress-functions.php:856
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -19098,7 +19098,7 @@ msgstr ""
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1322 bp-video/bp-video-settings.php:287
+#: bp-media/bp-media-settings.php:1322 bp-video/bp-video-settings.php:277
 msgid "<a href=\"%s\">Manage</a> which file extensions are allowed to be uploaded."
 msgstr ""
 
@@ -19117,7 +19117,7 @@ msgid ""
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1455 bp-media/bp-media-settings.php:1500
-#: bp-video/bp-video-settings.php:252
+#: bp-video/bp-video-settings.php:242
 msgid "MB"
 msgstr ""
 
@@ -23671,15 +23671,15 @@ msgstr ""
 msgid "All Group Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:197
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:213
 msgid "Group Thread"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:198
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:214
 msgid "Private Reply (BCC)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:217
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:233
 msgid "Send Message"
 msgstr ""
 
@@ -23741,7 +23741,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:48
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:41
-#: bp-video/bp-video-filters.php:1449
+#: bp-video/bp-video-filters.php:1465
 #. translators: Photos count.
 #. translators: videos
 msgid "%s video"
@@ -26124,93 +26124,93 @@ msgstr ""
 msgid "All Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:287
+#: bp-templates/bp-nouveau/includes/video/functions.php:288
 msgid "Flash"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:295
+#: bp-templates/bp-nouveau/includes/video/functions.php:296
 msgid "MPEG-4"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:303
+#: bp-templates/bp-nouveau/includes/video/functions.php:304
 msgid "iPhone Index"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:311
+#: bp-templates/bp-nouveau/includes/video/functions.php:312
 msgid "iPhone Segment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:319
+#: bp-templates/bp-nouveau/includes/video/functions.php:320
 msgid "3GP Mobile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:327
+#: bp-templates/bp-nouveau/includes/video/functions.php:328
 msgid "QuickTime"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:335
+#: bp-templates/bp-nouveau/includes/video/functions.php:336
 msgid "A/V Interleave"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:343
+#: bp-templates/bp-nouveau/includes/video/functions.php:344
 msgid "Windows Media"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:351
+#: bp-templates/bp-nouveau/includes/video/functions.php:352
 msgid "Open Web Media Project"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:359
+#: bp-templates/bp-nouveau/includes/video/functions.php:360
 msgid "M4v"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:367
+#: bp-templates/bp-nouveau/includes/video/functions.php:368
 msgid "Quicktime"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:375
+#: bp-templates/bp-nouveau/includes/video/functions.php:376
 msgid "MPEG"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:383
+#: bp-templates/bp-nouveau/includes/video/functions.php:384
 msgid "Microsoft Advanced Systems Format (ASF)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:391
-#: bp-templates/bp-nouveau/includes/video/functions.php:399
-#: bp-templates/bp-nouveau/includes/video/functions.php:407
+#: bp-templates/bp-nouveau/includes/video/functions.php:392
+#: bp-templates/bp-nouveau/includes/video/functions.php:400
+#: bp-templates/bp-nouveau/includes/video/functions.php:408
 msgid "VOB"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:415
+#: bp-templates/bp-nouveau/includes/video/functions.php:416
 msgid "Matroska"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:857
+#: bp-video/bp-video-filters.php:862
 msgid "Repair video on the site."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:862
+#: bp-video/bp-video-filters.php:867
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:916
+#: bp-video/bp-video-filters.php:921
 msgid "%s video updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:926
+#: bp-video/bp-video-filters.php:931
 msgid "Video update complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:955
+#: bp-video/bp-video-filters.php:960
 msgid "%s Forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:963
+#: bp-video/bp-video-filters.php:968
 msgid "Forums video privacy updated %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1076
+#: bp-video/bp-video-filters.php:1083
 msgid "Go to video"
 msgstr ""
 
@@ -26226,41 +26226,41 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-settings.php:31
+#: bp-video/bp-video-settings.php:26
 msgid ""
 "Allow members to upload videos in <strong>profiles</strong> and "
 "<strong>profile activity</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:33
+#: bp-video/bp-video-settings.php:28
 msgid "Allow members to upload videos in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:80
+#: bp-video/bp-video-settings.php:72
 msgid ""
 "Allow members to upload videos in <strong>groups</strong> and <strong>group "
 "activity</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:82
+#: bp-video/bp-video-settings.php:74
 msgid "Allow members to upload videos in <strong>groups</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:126
+#: bp-video/bp-video-settings.php:118
 msgid ""
 "Allow members to upload videos in <strong>private messages</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:128
+#: bp-video/bp-video-settings.php:120
 msgid "Allow members to upload videos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:158
+#: bp-video/bp-video-settings.php:150
 msgid "Allow members to upload videos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:257
+#: bp-video/bp-video-settings.php:247
 msgid ""
 "Set a maximum file size for video uploads, in megabytes. Your server's "
 "maximum upload size is "
@@ -27671,7 +27671,7 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-video/bp-video-settings.php:213 bp-video/bp-video-settings.php:232
+#: bp-video/bp-video-settings.php:203 bp-video/bp-video-settings.php:222
 #. translators: 1: FFMpeg status
 msgctxt "extension notification"
 msgid ""

@@ -2393,6 +2393,11 @@ window.bp = window.bp || {};
 						);
 					}
 					);
+					//Forward and backward
+					player[ $( this ).attr('id') ].seekButtons({
+						forward: 10,
+						back: 10
+					});
 					//Check if Video has played before and has the same id
 					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == bp.Nouveau.Video.Player.playerID ) {
 						player[ $(self).parent().attr('id') ].currentTime( bp.Nouveau.Video.Player.playerTime );

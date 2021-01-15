@@ -18840,6 +18840,20 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   justify-content: center;
 }
 
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before,
+.bb-media-section .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before {
+  content: "\e9ce";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back,
+.bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back {
+  transform: rotateY(180deg);
+}
+
 .video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:before, .video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
 .bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:before, .video-theatre
 .bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
@@ -20354,9 +20368,9 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .dropzone.dz-started .dz-default.dz-message .dz-button {
-  background-size: 30px !important;
+  background-size: 35px !important;
   font-size: 12px !important;
-  padding-top: 35px !important;
+  padding: 40px 5px 0 !important;
 }
 
 .dropzone.dz-max-files-reached .dz-default.dz-message {

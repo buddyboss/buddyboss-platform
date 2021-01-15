@@ -255,6 +255,15 @@
 
 			}
 
+			.vjs-seek-button span.vjs-icon-placeholder:before {
+				content: "\e9ce";
+				font-family: "bb-icons";/* stylelint-disable-line */
+			}
+
+			.vjs-seek-button.skip-back {
+				transform: rotateY(180deg);
+			}
+
 		}
 
 		.video-theatre &:fullscreen .vjs-control-bar .vjs-fullscreen-control {
