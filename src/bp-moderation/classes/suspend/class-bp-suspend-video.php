@@ -52,10 +52,6 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		add_filter( 'bp_video_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// modify in group videos count.
-		add_filter( 'bp_video_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_video_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
-
 		add_filter( 'bp_video_search_join_sql_video', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_video_search_where_conditions_video', array( $this, 'update_where_sql' ), 10, 2 );
 	}
@@ -133,12 +129,12 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			if ( ! empty( $item_id ) ) {
 				$post_video = $function( $item_id, 'bp_video_ids', true );
 
-				if ( empty( $post_video ) ){
+				if ( empty( $post_video ) ) {
 					$post_video = BP_Video::get_activity_video_id( $item_id );
 				}
 
-				if ( ! empty( $post_video )  ){
-					$video_ids  = wp_parse_id_list( $post_video );
+				if ( ! empty( $post_video ) ) {
+					$video_ids = wp_parse_id_list( $post_video );
 				}
 			}
 		}

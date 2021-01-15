@@ -19,7 +19,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 		$total_media = $media_album_template->album->media['total'];
 		?>
 		<div id="bp-media-single-album">
-			<div class="album-single-view" <?php echo $total_media == 0 ? 'no-photos' : ''; ?>>
+			<div class="album-single-view" <?php echo 0 === $total_media ? 'no-photos' : ''; ?>>
 
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
@@ -58,10 +58,11 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 								<?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
 									<?php
 									$selected = '';
-									if ( $k == bp_get_album_privacy() ) {
-										$selected = 'selected="selectred"';}
+									if ( bp_get_album_privacy() === $k ) {
+										$selected = 'selected="selected"';
+									}
 									?>
-									<option <?php echo $selected; ?> value="<?php echo $k; ?>"><?php echo $option; ?></option>
+									<option <?php echo esc_html( $selected ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
 								<?php } ?>
 							</select>
 

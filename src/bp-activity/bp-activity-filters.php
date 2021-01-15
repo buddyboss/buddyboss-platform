@@ -2352,7 +2352,7 @@ add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_r
 /**
  * Function which set the content on activity blog post comment.
  *
- * @param string               $content  Activity Content
+ * @param string               $content  Activity Content.
  * @param BP_Activity_Activity $activity Activity Object.
  *
  * @return string

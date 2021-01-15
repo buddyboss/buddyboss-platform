@@ -273,14 +273,14 @@ function bp_nouveau_ajax_delete_activity() {
 	}
 
 
-	$activity_html 		= '';
+	$activity_html      = '';
 	$parent_activity_id = 0;
-	if( isset( $activity->secondary_item_id ) && ! empty( $activity->secondary_item_id ) ) {
+	if ( isset( $activity->secondary_item_id ) && ! empty( $activity->secondary_item_id ) ) {
 		$parent_activity_id = $activity->secondary_item_id;
 		ob_start();
 		if ( bp_has_activities(
 			array(
-				'include'     => $parent_activity_id,
+				'include' => $parent_activity_id,
 			)
 		) ) {
 			while ( bp_activities() ) {
@@ -290,7 +290,7 @@ function bp_nouveau_ajax_delete_activity() {
 		}
 		$activity_html = ob_get_contents();
 		ob_end_clean();
-		$response['activity'] = $activity_html;
+		$response['activity']           = $activity_html;
 		$response['parent_activity_id'] = $parent_activity_id;
 	}
 	wp_send_json_success( $response );

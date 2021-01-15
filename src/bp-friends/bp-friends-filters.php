@@ -144,7 +144,7 @@ function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
 		$friends = array( 0 );
 	}
 
-	if ( $user_id !== bp_loggedin_user_id() ) {
+	if ( bp_loggedin_user_id() !== (int) $user_id ) {
 		array_push( $friends, bp_loggedin_user_id() );
 	}
 

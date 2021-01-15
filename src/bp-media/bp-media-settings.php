@@ -1750,7 +1750,7 @@ function bp_media_settings_callback_extension_video_support() {
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Extension', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-extension" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo ( isset( $extension['extension'] ) ) ? esc_attr( $extension['extension'] ) : ''; ?>" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
-					<input <?php echo esc_attr( $edit ); ?> class="<?php echo esc_attr( $class ); ?> extension-hidden" name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo $is_default; ?>"/>
+					<input <?php echo esc_attr( $edit ); ?> class="<?php echo esc_attr( $class ); ?> extension-hidden" name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo esc_attr( $is_default ); ?>"/>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-desc" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
@@ -1759,7 +1759,7 @@ function bp_media_settings_callback_extension_video_support() {
 					<?php
 					if ( $is_default ) {
 						?>
-						<i class="bb-icon <?php echo $document_icon; ?>"></i>
+						<i class="bb-icon <?php echo esc_attr( $document_icon ); ?>"></i>
 						<?php
 					}
 					if ( ! $is_default ) {
@@ -1777,7 +1777,7 @@ function bp_media_settings_callback_extension_video_support() {
 						<?php
 					} else {
 						?>
-						<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/>
+						<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo esc_attr( ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? $extension['icon'] : $document_icon ); ?>"/>
 						<?php
 					}
 					?>

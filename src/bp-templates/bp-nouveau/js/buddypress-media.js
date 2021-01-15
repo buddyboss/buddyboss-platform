@@ -662,7 +662,7 @@ window.bp = window.bp || {};
 			$( '.modal-container .bb-model-footer' ).show();
 			$( '.bb-field-wrap-search' ).show();
 			$( '.bp-document-open-create-popup-folder' ).show();
-			$( '.bp-video-open-create-popup-album' ).show();
+			$( '.modal-container:visible .bp-video-open-create-popup-album' ).show();
 			$( '.location-album-list-wrap-main' ).show();
 			$( '.bb-field-steps-2 #bp-media-prev' ).show();
 			$( '.bb-field-steps-2 #bp-video-next' ).show();
@@ -1385,7 +1385,7 @@ window.bp = window.bp || {};
 				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
 				currentPopup.find( '.bb-field-steps-1 #bp-media-photo-next, .bb-field-steps-1 #bp-media-document-next ' ).hide();
 				currentPopup.find( '.bb-field-steps-1' ).removeClass( 'controls-added' );
-				currentPopup.find( '#bp-media-document-prev, #bp-media-prev, #bp-media-document-submit, #bp-media-submit, .bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, .create-popup-folder-wrap, .create-popup-album-wrap' ).hide();
+				currentPopup.find( '#bp-media-document-prev, #bp-media-prev, #bp-media-document-submit, #bp-media-submit, .bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, .create-popup-folder-wrap, .create-popup-album-wrap, .bp-video-open-create-popup-album' ).hide();
 			}
 
 			this.clearFolderLocationUI( event );

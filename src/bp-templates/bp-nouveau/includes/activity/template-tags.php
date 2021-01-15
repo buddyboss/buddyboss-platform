@@ -235,13 +235,13 @@ function bp_nouveau_activity_timestamp() {
 	echo esc_attr( bp_nouveau_get_activity_timestamp() );
 }
 
-	/**
-	 * Get the Activity timestamp.
-	 *
-	 * @since BuddyPress 3.0.0
-	 *
-	 * @return integer The Activity timestamp.
-	 */
+/**
+ * Get the Activity timestamp.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return integer The Activity timestamp.
+ */
 function bp_nouveau_get_activity_timestamp() {
 	/**
 	 * Filter here to edit the activity timestamp.
@@ -787,11 +787,11 @@ function bp_nouveau_activity_comment_action() {
 	echo bp_nouveau_get_activity_comment_action();
 }
 
-	/**
-	 * Get the Activity comment action string
-	 *
-	 * @since BuddyPress 3.0.0
-	 */
+/**
+ * Get the Activity comment action string
+ *
+ * @since BuddyPress 3.0.0
+ */
 function bp_nouveau_get_activity_comment_action() {
 
 	/**
@@ -803,8 +803,8 @@ function bp_nouveau_get_activity_comment_action() {
 	 */
 	return apply_filters(
 		'bp_nouveau_get_activity_comment_action',
-		/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since */
 		sprintf(
+			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since */
 			__( '<a class="author-name" href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),

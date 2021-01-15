@@ -171,7 +171,6 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
  */
 function bp_video_uploading_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
@@ -187,7 +186,6 @@ function bp_video_uploading_tutorial() {
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -308,7 +306,6 @@ function bp_video_settings_callback_video_allowed_per_batch() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_allowed_upload_video_per_batch() {
-
 	$default = apply_filters( 'bp_video_upload_chunk_limit', 10 );
 	return (int) apply_filters( 'bp_video_allowed_upload_video_per_batch', (int) get_option( 'bp_video_allowed_per_batch', $default ) );
 }

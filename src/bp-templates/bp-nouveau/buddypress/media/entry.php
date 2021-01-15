@@ -64,7 +64,7 @@ if ( 'video' === $media_template->media->type ) {
 							}
 							if ( $is_comment_vid ) {
 								?>
-								<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+								<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 								</li>
 								<?php
@@ -85,7 +85,7 @@ if ( 'video' === $media_template->media->type ) {
 							if ( $report_btn ) {
 								?>
 								<li class="report_file">
-									<?php echo $report_btn; ?>
+									<?php echo wp_kses_post( $report_btn ); ?>
 								</li>
 								<?php
 							}
@@ -109,7 +109,7 @@ if ( 'video' === $media_template->media->type ) {
 				?>
 				<div class="bb-media-check-wrap bb-action-check-wrap">
 					<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
-					<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
+					<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
 				</div>
 			<?php endif; ?>
 		</div>

@@ -380,8 +380,9 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed media statuses.
 		 */
-		$allowed_video_status = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
-		$video_status         = in_array( $_POST['group-video-status'], (array) $allowed_video_status ) ? $_POST['group-video-status'] : 'members';
+		$allowed_video_status    = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
+		$post_group_video_status = filter_input( INPUT_POST, 'group-video-status', FILTER_SANITIZE_STRING );
+		$video_status            = in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -390,8 +391,9 @@ function bp_groups_admin_load() {
 		 *
 		 * @param array $value Array of allowed album statuses.
 		 */
-		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
-		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+		$allowed_album_status    = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
+		$post_group_album_status = filter_input( INPUT_POST, 'group-album-status', FILTER_SANITIZE_STRING );
+		$album_status            = isset( $post_group_album_status ) && in_array( $post_group_album_status, (array) $allowed_album_status, true ) ? $post_group_album_status : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -1205,42 +1207,42 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-status">
 		<fieldset>
-			<legend><?php _e( 'Group Privacy', 'buddyboss' ); ?></legend>
+			<legend><?php esc_html_e( 'Group Privacy', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-status-public"><input type="radio" name="group-status" id="bp-group-status-public" value="public" <?php checked( $item->status, 'public' ); ?> /><?php _e( 'Public', 'buddyboss' ); ?></label>
-			<label for="bp-group-status-private"><input type="radio" name="group-status" id="bp-group-status-private" value="private" <?php checked( $item->status, 'private' ); ?> /><?php _e( 'Private', 'buddyboss' ); ?></label>
-			<label for="bp-group-status-hidden"><input type="radio" name="group-status" id="bp-group-status-hidden" value="hidden" <?php checked( $item->status, 'hidden' ); ?> /><?php _e( 'Hidden', 'buddyboss' ); ?></label>
+			<label for="bp-group-status-public"><input type="radio" name="group-status" id="bp-group-status-public" value="public" <?php checked( $item->status, 'public' ); ?> /><?php esc_html_e( 'Public', 'buddyboss' ); ?></label>
+			<label for="bp-group-status-private"><input type="radio" name="group-status" id="bp-group-status-private" value="private" <?php checked( $item->status, 'private' ); ?> /><?php esc_html_e( 'Private', 'buddyboss' ); ?></label>
+			<label for="bp-group-status-hidden"><input type="radio" name="group-status" id="bp-group-status-hidden" value="hidden" <?php checked( $item->status, 'hidden' ); ?> /><?php esc_html_e( 'Hidden', 'buddyboss' ); ?></label>
 		</fieldset>
 	</div>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-invite-status">
 		<fieldset>
-			<legend><?php _e( 'Who can invite others to join this group?', 'buddyboss' ); ?></legend>
+			<legend><?php esc_html_e( 'Who can invite others to join this group?', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-invite-status-members"><input type="radio" name="group-invite-status" id="bp-group-invite-status-members" value="members" <?php checked( $invite_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
-			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
-			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+			<label for="bp-group-invite-status-members"><input type="radio" name="group-invite-status" id="bp-group-invite-status-members" value="members" <?php checked( $invite_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
+			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers', 'buddyboss' ); ?></label>
 		</fieldset>
 	</div>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
 		<fieldset>
-			<legend><?php _e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
+			<legend><?php esc_html_e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ); ?> /><?php _e( 'All group members', 'buddyboss' ); ?></label>
-			<label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			<label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ); ?> /><?php _e( 'Organizers only', 'buddyboss' ); ?></label>
+			<label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ); ?> /><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+			<label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+			<label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 		</fieldset>
 	</div>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
 			<fieldset>
-				<legend><?php _e( 'Who can manage photos in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can manage photos in this group?', 'buddyboss' ); ?></legend>
 
-				<label for="bp-group-media-status-members"><input type="radio" name="group-media-status" id="bp-group-media-status-members" value="members" <?php checked( $media_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
-				<label for="bp-group-media-status-mods"><input type="radio" name="group-media-status" id="bp-group-media-status-mods" value="mods" <?php checked( $media_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
-				<label for="bp-group-media-status-admins"><input type="radio" name="group-media-status" id="bp-group-media-status-admins" value="admins" <?php checked( $media_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+				<label for="bp-group-media-status-members"><input type="radio" name="group-media-status" id="bp-group-media-status-members" value="members" <?php checked( $media_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-media-status-mods"><input type="radio" name="group-media-status" id="bp-group-media-status-mods" value="mods" <?php checked( $media_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-media-status-admins"><input type="radio" name="group-media-status" id="bp-group-media-status-admins" value="admins" <?php checked( $media_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers', 'buddyboss' ); ?></label>
 			</fieldset>
 		</div>
 	<?php endif; ?>
@@ -1248,11 +1250,11 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
 			<fieldset>
-				<legend><?php _e( 'Who can manage albums in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can manage albums in this group?', 'buddyboss' ); ?></legend>
 
-				<label for="bp-group-album-status-members"><input type="radio" name="group-album-status" id="bp-group-album-status-members" value="members" <?php checked( $album_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
-				<label for="bp-group-album-status-mods"><input type="radio" name="group-album-status" id="bp-group-album-status-mods" value="mods" <?php checked( $album_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
-				<label for="bp-group-album-status-admins"><input type="radio" name="group-album-status" id="bp-group-album-status-admins" value="admins" <?php checked( $album_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+				<label for="bp-group-album-status-members"><input type="radio" name="group-album-status" id="bp-group-album-status-members" value="members" <?php checked( $album_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-album-status-mods"><input type="radio" name="group-album-status" id="bp-group-album-status-mods" value="mods" <?php checked( $album_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-album-status-admins"><input type="radio" name="group-album-status" id="bp-group-album-status-admins" value="admins" <?php checked( $album_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers', 'buddyboss' ); ?></label>
 			</fieldset>
 		</div>
 	<?php endif; ?>
@@ -1260,35 +1262,35 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-document-status">
 			<fieldset>
-				<legend><?php _e( 'Who can manage documents in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can manage documents in this group?', 'buddyboss' ); ?></legend>
 
-				<label for="bp-group-document-status-members"><input type="radio" name="group-document-status" id="bp-group-document-status-members" value="members" <?php checked( $document_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
-				<label for="bp-group-document-status-mods"><input type="radio" name="group-document-status" id="bp-group-document-status-mods" value="mods" <?php checked( $document_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
-				<label for="bp-group-document-status-admins"><input type="radio" name="group-document-status" id="bp-group-document-status-admins" value="admins" <?php checked( $document_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+				<label for="bp-group-document-status-members"><input type="radio" name="group-document-status" id="bp-group-document-status-members" value="members" <?php checked( $document_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-document-status-mods"><input type="radio" name="group-document-status" id="bp-group-document-status-mods" value="mods" <?php checked( $document_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-document-status-admins"><input type="radio" name="group-document-status" id="bp-group-document-status-admins" value="admins" <?php checked( $document_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers', 'buddyboss' ); ?></label>
 			</fieldset>
 		</div>
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) : ?>
-        <div class="bp-groups-settings-section" id="bp-groups-settings-section-video-status">
-            <fieldset>
-                <legend><?php _e( 'Who can manage videos in this group?', 'buddyboss' ); ?></legend>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-video-status">
+			<fieldset>
+				<legend><?php esc_html_e( 'Who can manage videos in this group?', 'buddyboss' ); ?></legend>
 
-                <label for="bp-group-video-status-members"><input type="radio" name="group-video-status" id="bp-group-video-status-members" value="members" <?php checked( $video_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
-                <label for="bp-group-video-status-mods"><input type="radio" name="group-video-status" id="bp-group-video-status-mods" value="mods" <?php checked( $video_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
-                <label for="bp-group-video-status-admins"><input type="radio" name="group-video-status" id="bp-group-video-status-admins" value="admins" <?php checked( $video_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
-            </fieldset>
-        </div>
+				<label for="bp-group-video-status-members"><input type="radio" name="group-video-status" id="bp-group-video-status-members" value="members" <?php checked( $video_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-video-status-mods"><input type="radio" name="group-video-status" id="bp-group-video-status-mods" value="mods" <?php checked( $video_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-video-status-admins"><input type="radio" name="group-video-status" id="bp-group-video-status-admins" value="admins" <?php checked( $video_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers', 'buddyboss' ); ?></label>
+			</fieldset>
+		</div>
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-message-status">
 			<fieldset>
-				<legend><?php _e( 'Who can manage group messages in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can manage group messages in this group?', 'buddyboss' ); ?></legend>
 
-				<label for="bp-group-message-status-members"><input type="radio" name="group-message-status" id="bp-group-message-status-members" value="members" <?php checked( $message_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
-				<label for="bp-group-message-status-mods"><input type="radio" name="group-message-status" id="bp-group-message-status-mods" value="mods" <?php checked( $message_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
-				<label for="bp-group-message-status-admins"><input type="radio" name="group-message-status" id="bp-group-message-status-admins" value="admins" <?php checked( $message_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+				<label for="bp-group-message-status-members"><input type="radio" name="group-message-status" id="bp-group-message-status-members" value="members" <?php checked( $message_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-message-status-mods"><input type="radio" name="group-message-status" id="bp-group-message-status-mods" value="mods" <?php checked( $message_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-message-status-admins"><input type="radio" name="group-message-status" id="bp-group-message-status-admins" value="admins" <?php checked( $message_status, 'admins' ); ?> /><?php esc_html_e( 'Organizers', 'buddyboss' ); ?></label>
 			</fieldset>
 		</div>
 	<?php endif; ?>

@@ -171,7 +171,7 @@ function bp_nouveau_ajax_albums_loader() {
 	ob_start();
 	if ( bp_has_video_albums( array( 'page' => $page ) ) ) {
 		while ( bp_video_album() ) {
-			bp_video_the_album();
+			bp_the_video_album();
 			bp_get_template_part( 'video/album-entry' );
 		}
 
@@ -1469,7 +1469,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$thumbnail_url = wp_get_attachment_image_url( $pre_selected_id, 'full' );
 
 	if ( empty( $thumbnail_url ) ) {
-		$thumbnail_url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
+		$thumbnail_url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
 	}
 
 	wp_send_json_success(

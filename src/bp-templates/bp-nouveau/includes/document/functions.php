@@ -1178,19 +1178,17 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );
 }
 
-
 /**
  * Return the video url of the file.
  *
- * @param $document_id
- * @param $extension
- * @param $attachment_id
+ * @param int    $document_id   Document id.
+ * @param string $extension     Extension name.
+ * @param int    $attachment_id Attachment id.
  *
  * @return mixed|void
  *
  * @since BuddyBoss 1.5.7
  */
-
 function bp_document_get_preview_video_url( $document_id, $extension, $attachment_id ) {
 	$attachment_url = '';
 
@@ -1206,6 +1204,10 @@ function bp_document_get_preview_video_url( $document_id, $extension, $attachmen
 
 	/**
 	 * Return the preview URL of the video.
+	 *
+	 * @param string $attachment_url Attachment URL.
+	 * @param int    $document_id    Document id.
+	 * @param string $extension      Extension name.
 	 *
 	 * @since BuddyBoss 1.5.7
 	 */

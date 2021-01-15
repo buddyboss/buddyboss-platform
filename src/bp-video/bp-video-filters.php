@@ -129,14 +129,14 @@ function bp_video_activity_entry() {
 		$args['privacy'][] = 'forums';
 	}
 
-	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) { ?>
-		<div class="bb-activity-video-wrap
-		<?php
-		echo esc_attr( 'bb-video-length-' . $video_template->video_count );
-			echo $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '';
-			echo true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '';
+	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
+		$classes = array(
+			esc_attr( 'bb-video-length-' . $video_template->video_count ),
+			$video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '',
+			true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '',
+		);
 		?>
-			">
+		<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 			<?php
 			bp_get_template_part( 'video/add-video-thumbnail' );
 			bp_get_template_part( 'video/video-move' );
@@ -155,7 +155,7 @@ function bp_video_activity_entry() {
  *
  * @since BuddyBoss 1.5.7
  *
- * @param string $content content.
+ * @param string $content  content.
  * @param object $activity Activity object.
  *
  * @return string
@@ -208,15 +208,14 @@ function bp_video_activity_append_video( $content, $activity ) {
 		}
 
 		if ( bp_has_video( $args ) ) {
+			$classes = array(
+				esc_attr( 'bb-video-length-' . $video_template->video_count ),
+				( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
+				( true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '' ),
+			);
 			?>
 			<?php ob_start(); ?>
-			<div class="bb-activity-video-wrap
-			<?php
-			echo esc_attr( 'bb-video-length-' . $video_template->video_count );
-				echo $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '';
-				echo true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '';
-			?>
-				">
+			<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 				<?php
 				bp_get_template_part( 'video/add-video-thumbnail' );
 				bp_get_template_part( 'video/video-move' );
@@ -291,31 +290,30 @@ function bp_video_activity_comment_entry( $comment_id ) {
 	}
 
 	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
+		$classes = array(
+			esc_attr( 'bb-video-length-' . $video_template->video_count ),
+			( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
+		);
 		?>
-		<div class="bb-activity-video-wrap
-		<?php
-		echo esc_attr( 'bb-video-length-' . $video_template->video_count );
-		echo $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '';
-		?>
-		">
-				<?php
-				bp_get_template_part( 'video/add-video-thumbnail' );
-				bp_get_template_part( 'video/video-move' );
-				while ( bp_video() ) {
-					bp_the_video();
-					bp_get_template_part( 'video/activity-entry' );
-				}
-				?>
-			</div>
+		<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 			<?php
+			bp_get_template_part( 'video/add-video-thumbnail' );
+			bp_get_template_part( 'video/video-move' );
+			while ( bp_video() ) {
+				bp_the_video();
+				bp_get_template_part( 'video/activity-entry' );
+			}
+			?>
+		</div>
+		<?php
 	}
 }
 
 /**
  * Update video for activity
  *
- * @param string $content content.
- * @param int    $user_id User id.
+ * @param string $content     content.
+ * @param int    $user_id     User id.
  * @param int    $activity_id Activity id.
  *
  * @since BuddyBoss 1.5.7
@@ -405,9 +403,9 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 /**
  * Update video for group activity
  *
- * @param string $content content.
- * @param int    $user_id User id.
- * @param int    $group_id Group id.
+ * @param string $content     content.
+ * @param int    $user_id     User id.
+ * @param int    $group_id    Group id.
  * @param int    $activity_id Activity id.
  *
  * @since BuddyBoss 1.5.7
@@ -420,8 +418,8 @@ function bp_video_groups_activity_update_video_meta( $content, $user_id, $group_
  * Update video for activity comment
  *
  * @param int    $comment_id comment id.
- * @param string $r parameter.
- * @param object $activity activity object.
+ * @param string $r          parameter.
+ * @param object $activity   activity object.
  *
  * @since BuddyBoss 1.5.7
  */
@@ -435,6 +433,7 @@ function bp_video_activity_comments_update_video_meta( $comment_id, $r, $activit
  * Delete video when related activity is deleted.
  *
  * @since BuddyBoss 1.5.7
+ *
  * @param array $activities activity array.
  */
 function bp_video_delete_activity_video( $activities ) {
@@ -464,6 +463,7 @@ function bp_video_delete_activity_video( $activities ) {
  * Update video privacy according to album's privacy
  *
  * @since BuddyBoss 1.5.7
+ *
  * @param object $album album object.
  */
 function bp_video_update_video_privacy( $album ) {
@@ -508,6 +508,7 @@ function bp_video_update_video_privacy( $album ) {
  * Save video when new topic or reply is saved
  *
  * @since BuddyBoss 1.5.7
+ *
  * @param int $post_id post id.
  */
 function bp_video_forums_new_post_video_save( $post_id ) {
@@ -625,8 +626,9 @@ function bp_video_forums_new_post_video_save( $post_id ) {
  * Embed topic or reply attachments in a post
  *
  * @since BuddyBoss 1.5.7
+ *
  * @param string $content content.
- * @param int    $id  id of forum.
+ * @param int    $id      id of forum.
  *
  * @return string
  */
@@ -648,24 +650,23 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 			'sort'     => 'ASC',
 		)
 	) ) {
-			ob_start();
+		ob_start();
+		$classes = array(
+			esc_attr( 'bb-media-length-' . $video_template->video_count ),
+			( $video_template->video_count > 5 ? esc_attr( ' bb-media-length-more' ) : '' ),
+		);
 		?>
-			<div class="bb-activity-media-wrap forums-video-wrap
-		<?php
-			echo esc_attr( 'bb-media-length-' . $video_template->video_count );
-			echo $video_template->video_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
-		?>
-		">
-				<?php
-				bp_get_template_part( 'video/add-video-thumbnail' );
-				while ( bp_video() ) {
-					bp_the_video();
-					bp_get_template_part( 'video/activity-entry' );
-				}
-				?>
-			</div>
+		<div class="bb-activity-media-wrap forums-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 			<?php
-			$content .= ob_get_clean();
+			bp_get_template_part( 'video/add-video-thumbnail' );
+			while ( bp_video() ) {
+				bp_the_video();
+				bp_get_template_part( 'video/activity-entry' );
+			}
+			?>
+		</div>
+		<?php
+		$content .= ob_get_clean();
 	}
 
 	return $content;
@@ -675,21 +676,30 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  * Attach video to the message object
  *
  * @since BuddyBoss 1.5.7
+ *
  * @param object $message message object.
  */
 function bp_video_attach_video_to_message( &$message ) {
 
-	$videos = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $videos ) ) {
+	if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['video'] ) ) { // phpcs:ignore
 		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
 		remove_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+
+		$videos = $_POST['video']; // phpcs:ignore
+		if ( ! empty( $videos ) ) {
+			foreach ( $videos as $k => $video ) {
+				if ( array_key_exists( 'group_id', $video ) ) {
+					unset( $videos[ $k ]['group_id'] );
+				}
+			}
+		}
 
 		$video_ids = bp_video_add_handler( $videos, 'message' );
 
 		add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
 		add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
 
-		// save video meta for message..
+		// save video meta for message.
 		bp_messages_update_meta( $message->id, 'bp_video_ids', implode( ',', $video_ids ) );
 	}
 }
@@ -698,7 +708,8 @@ function bp_video_attach_video_to_message( &$message ) {
  * Delete video attached to messages
  *
  * @since BuddyBoss 1.5.7
- * @param int   $thread_id thread id.
+ *
+ * @param int   $thread_id   thread id.
  * @param array $message_ids messages array.
  */
 function bp_video_messages_delete_attached_video( $thread_id, $message_ids ) {
@@ -723,9 +734,10 @@ function bp_video_messages_delete_attached_video( $thread_id, $message_ids ) {
  * Delete video attached to messages
  *
  * @since BuddyBoss 1.5.7
- * @param int   $thread_id thread id.
- * @param array $message_ids messages array.
- * @param int   $user_id user id.
+ *
+ * @param int   $thread_id          thread id.
+ * @param array $message_ids        messages array.
+ * @param int   $user_id            user id.
  * @param array $update_message_ids messages array.
  */
 function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids, $user_id, $update_message_ids ) {
@@ -821,7 +833,7 @@ function bp_video_activity_update_video_privacy( $activity ) {
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
- * @return array $retval
+ * @return array $retval Meta Query.
  */
 function bp_activity_filter_video_scope( $retval = array(), $filter = array() ) {
 
@@ -969,7 +981,6 @@ function bp_video_forum_privacy_repair() {
 	}
 }
 
-
 /**
  * Set up video arguments for use with the 'public' scope.
  *
@@ -977,6 +988,7 @@ function bp_video_forum_privacy_repair() {
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
+ *
  * @return array
  */
 function bp_video_filter_public_scope( $retval = array(), $filter = array() ) {
@@ -1042,6 +1054,7 @@ add_filter( 'bp_video_set_public_scope_args', 'bp_video_filter_public_scope', 10
  *
  * @param string $file_path File path.
  * @param string $filename  File name.
+ *
  * @since BuddyBoss 1.5.7
  */
 function bp_video_download_file_force( $file_path, $filename ) {
@@ -1069,6 +1082,7 @@ function bp_video_download_file_force( $file_path, $filename ) {
  * @param string  $message Error message.
  * @param string  $title   Error title.
  * @param integer $status  Error status.
+ *
  * @since BuddyBoss 1.5.7
  */
 function bp_video_download_error( $message, $title = '', $status = 404 ) {
@@ -1083,6 +1097,7 @@ function bp_video_download_error( $message, $title = '', $status = 404 ) {
  *
  * @param string $file_path File path.
  * @param string $filename  File name.
+ *
  * @since BuddyBoss 1.5.7
  */
 function bp_video_download_file_redirect( $file_path, $filename = '' ) {
@@ -1095,9 +1110,10 @@ function bp_video_download_file_redirect( $file_path, $filename = '' ) {
  *
  * Reads file in chunks so big downloads are possible without changing PHP.INI - http://codeigniter.com/wiki/Download_helper_for_large_files/.
  *
- * @param  string $file   File.
- * @param  int    $start  Byte offset/position of the beginning from which to read from the file.
- * @param  int    $length Length of the chunk to be read from the file in bytes, 0 means full file.
+ * @param string $file   File.
+ * @param int    $start  Byte offset/position of the beginning from which to read from the file.
+ * @param int    $length Length of the chunk to be read from the file in bytes, 0 means full file.
+ *
  * @return bool Success or fail
  * @since BuddyBoss 1.5.7
  */
@@ -1156,6 +1172,7 @@ function bp_video_readfile_chunked( $file, $start = 0, $length = 0 ) {
  * @param string $file_path      File path.
  * @param string $filename       File name.
  * @param array  $download_range Array containing info about range download request (see {@see get_download_range} for structure).
+ *
  * @since BuddyBoss 1.5.7
  */
 function bp_video_download_headers( $file_path, $filename, $download_range = array() ) {
@@ -1198,6 +1215,7 @@ function bp_video_download_headers( $file_path, $filename, $download_range = arr
  * Wrapper for set_time_limit to see if it is enabled.
  *
  * @since BuddyBoss 1.5.7
+ *
  * @param int $limit Time limit.
  */
 function bp_video_set_time_limit( $limit = 0 ) {
@@ -1241,7 +1259,8 @@ function bp_video_clean_buffers() {
 /**
  * Set constants to prevent caching by some plugins.
  *
- * @param  mixed $return Value to return. Previously hooked into a filter.
+ * @param mixed $return Value to return. Previously hooked into a filter.
+ *
  * @return mixed
  * @since BuddyBoss 1.5.7
  */
@@ -1256,6 +1275,7 @@ function bp_video_set_nocache_constants( $return = true ) {
  * Define a constant if it is not already defined.
  *
  * @since BuddyBoss 1.5.7
+ *
  * @param string $name  Constant name.
  * @param mixed  $value Value.
  */
@@ -1278,7 +1298,8 @@ function bp_video_nocache_headers() {
 /**
  * Get content type of a download.
  *
- * @param  string $file_path File path.
+ * @param string $file_path File path.
+ *
  * @return string
  * @since BuddyBoss 1.5.7
  */
@@ -1301,15 +1322,16 @@ function bp_video_get_download_content_type( $file_path ) {
  * Parse the HTTP_RANGE request from iOS devices.
  * Does not support multi-range requests.
  *
- * @param int $file_size Size of file in bytes.
+ * @param int $file_size        Size of file in bytes.
+ *
  * @return array {
  *     Information about range download request: beginning and length of
  *     file chunk, whether the range is valid/supported and whether the request is a range request.
  *
- *     @type int  $start            Byte offset of the beginning of the range. Default 0.
- *     @type int  $length           Length of the requested file chunk in bytes. Optional.
- *     @type bool $is_range_valid   Whether the requested range is a valid and supported range.
- *     @type bool $is_range_request Whether the request is a range request.
+ * @type int  $start            Byte offset of the beginning of the range. Default 0.
+ * @type int  $length           Length of the requested file chunk in bytes. Optional.
+ * @type bool $is_range_valid   Whether the requested range is a valid and supported range.
+ * @type bool $is_range_request Whether the request is a range request.
  * }
  * @since BuddyBoss 1.5.7
  */
@@ -1378,7 +1400,8 @@ function bp_video_get_download_range( $file_size ) {
 /**
  * Parse file path and see if its remote or local.
  *
- * @param  string $file_path File path.
+ * @param string $file_path File path.
+ *
  * @return array
  * @since BuddyBoss 1.5.7
  */
@@ -1459,7 +1482,6 @@ function bp_video_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity video data for the edit activity
  *
@@ -1484,9 +1506,16 @@ function bp_video_get_edit_activity_data( $activity ) {
 			foreach ( $video_ids as $video_id ) {
 				$video = new BP_Video( $video_id );
 
+				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+				$thumb        = '';
+				if ( $get_existing ) {
+					$thumb = wp_get_attachment_image_url( $get_existing, 'bp-video-thumbnail' );
+				}
+
 				$activity['video'][] = array(
 					'id'          => $video_id,
 					'vid_id'      => $video->attachment_id,
+					'thumb'       => $thumb,
 					'name'        => $video->title,
 					'group_id'    => $video->group_id,
 					'album_id'    => $video->album_id,
@@ -1508,10 +1537,11 @@ function bp_video_get_edit_activity_data( $activity ) {
  * Protect downloads from ms-files.php in multisite.
  *
  * @param string $rewrite rewrite rules.
+ *
  * @return string
  * @since BuddyBoss 1.5.7
  */
-function bp_video_protect_download_rewite_rules( $rewrite ) {
+function bp_video_protect_download_rewrite_rules( $rewrite ) {
 	if ( ! is_multisite() ) {
 		return $rewrite;
 	}
@@ -1525,7 +1555,7 @@ function bp_video_protect_download_rewite_rules( $rewrite ) {
 
 	return $rule . $rewrite;
 }
-add_filter( 'mod_rewrite_rules', 'bp_video_protect_download_rewite_rules' );
+add_filter( 'mod_rewrite_rules', 'bp_video_protect_download_rewrite_rules' );
 
 /**
  * Function to create a protected directory for the videos.
