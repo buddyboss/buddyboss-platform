@@ -4,6 +4,7 @@
  *
  * @since BuddyBoss 1.5.7
  */
+
 ?>
 
 <div class="bb-video-container bb-media-container member-video">
@@ -15,9 +16,8 @@
 
 	switch ( bp_current_action() ) :
 
-		// Home/Video
+		// Home/Video.
 		case 'my-video':
-
 			bp_get_template_part( 'video/add-video' );
 
 			bp_nouveau_member_hook( 'before', 'video_content' );
@@ -35,15 +35,16 @@
 
 			break;
 
-		// Home/Video/Albums
+		// Home/Video/Albums.
 		case 'albums':
-			if ( ! bp_is_single_video_album() )
+			if ( ! bp_is_single_video_album() ) {
 				bp_get_template_part( 'video/albums' );
-			else
+			} else {
 				bp_get_template_part( 'video/single-album' );
+			}
 			break;
 
-		// Any other
+		// Any other.
 		default:
 			bp_get_template_part( 'members/single/plugins' );
 			break;
