@@ -244,6 +244,7 @@ class BP_Video_Album {
 				'sort'         => 'DESC',          // ASC or DESC.
 				'order_by'     => 'date_created',  // Column to order by.
 				'exclude'      => false,           // Array of ids to exclude.
+				'in'           => false,           // Array of ids to include.
 				'search_terms' => false,           // Terms to search by.
 				'user_id'      => false,           // user id.
 				'group_id'     => false,           // group id.
@@ -631,11 +632,19 @@ class BP_Video_Album {
 	 * @return array|bool|int
 	 */
 	public static function total_group_album_count( $group_id = 0 ) {
-		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name_albums} WHERE group_id = {$group_id}" );
+		if ( empty( $group_id ) ) {
+			return 0;
+		}
 
-		return $total_count;
+		$total_count = self::get(
+			array(
+				'group_id'    => $group_id,
+				'count_total' => true,
+			)
+		);
+
+		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
 	}
 
 	/**

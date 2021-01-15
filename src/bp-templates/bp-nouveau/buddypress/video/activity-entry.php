@@ -31,7 +31,7 @@ $is_comment_vid = bp_video_is_activity_comment_video( bp_get_video_id() );
 
 <div class="bb-activity-video-elem
 <?php
-echo esc_attr( bp_video_id() ) . ' ';
+echo esc_attr( bp_get_video_id() ) . ' ';
 echo $video_template->current_video > 2 ? esc_attr( 'hide ' ) : '';
 echo 1 === $video_template->video_count || $video_template->video_count > 1 && 0 === $video_template->current_video ? esc_attr( 'act-grid-1-1 ' ) : '';
 echo $video_template->video_count > 1 && $video_template->current_video > 0 ? esc_attr( 'act-grid-1-2 ' ) : '';

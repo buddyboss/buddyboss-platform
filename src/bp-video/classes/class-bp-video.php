@@ -308,6 +308,8 @@ class BP_Video {
 				'in'           => false,           // Array of ids to limit query by (IN).
 				'search_terms' => false,           // Terms to search by.
 				'album_id'     => false,           // Album ID.
+				'user_id'      => false,           // User ID.
+				'group_id'     => false,           // Group ID.
 				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'count_total'  => false,           // Whether or not to use count_total.
 			)
@@ -469,7 +471,7 @@ class BP_Video {
 		// Query first for video IDs.
 		$video_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
 
-		if ( ! empty( $per_page ) && ! empty( $page ) ) {
+		if ( ! empty( $per_page ) && ! empty( $page ) && - 1 !== $r['per_page'] ) {
 			// We query for $per_page + 1 items in order to
 			// populate the has_more_items flag.
 			$video_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
@@ -1130,14 +1132,23 @@ class BP_Video {
 	 * @return array|bool|int
 	 */
 	public static function total_video_count( $user_id = 0 ) {
-		global $bp, $wpdb;
+
+		if ( empty( $user_id ) ) {
+			return 0;
+		}
 
 		$privacy = bp_video_query_privacy( $user_id );
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" ); //phpcs:ignore
+		$total_count = self::get(
+			array(
+				'user_id'     => $user_id,
+				'privacy'     => $privacy,
+				'count_total' => true,
+			)
+		);
 
-		return $total_count;
+		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
+
 	}
 
 	/**
@@ -1151,45 +1162,19 @@ class BP_Video {
 	 */
 	public static function total_group_video_count( $group_id = 0 ) {
 
-		global $bp, $wpdb;
+		if ( empty( $group_id ) ) {
+			return 0;
+		}
 
-		$select_sql = 'SELECT COUNT(*)';
+		$total_count = self::get(
+			array(
+				'group_id'    => $group_id,
+				'privacy'     => array( 'grouponly' ),
+				'count_total' => true,
+			)
+		);
 
-		$from_sql = " FROM {$bp->video->table_name} m";
-
-		// Where conditions.
-		$where_conditions = array();
-
-		$where_conditions['group_sql']         = $wpdb->prepare( 'm.group_id = %s', $group_id );
-		$where_conditions['group_video_count'] = $wpdb->prepare( 'm.type = %s', 'video' );
-		$where_conditions['group_privacy']     = $wpdb->prepare( 'm.privacy = %s', 'grouponly' );
-
-		/**
-		 * Filters the MySQL WHERE conditions for the Video items get method.
-		 *
-		 * @since BuddyBoss 1.5.6
-		 *
-		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
-		 * @param array $args             array of arguments.
-		 */
-		$where_conditions = apply_filters( 'bp_video_get_where_count_conditions', $where_conditions, array( 'group_id' => $group_id ) );
-
-		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
-
-		/**
-		 * Filter the MySQL JOIN clause for the main video query.
-		 *
-		 * @since BuddyBoss 1.5.6
-		 *
-		 * @param string $join_sql JOIN clause.
-		 * @param array  $args     array of arguments.
-		 */
-		$from_sql = apply_filters( 'bp_video_get_join_count_sql', $from_sql, array( 'group_id' => $group_id ) );
-
-		$video_ids_sql = "{$select_sql} {$from_sql} {$where_sql}";
-		$total_count   = (int) $wpdb->get_var( $video_ids_sql ); // phpcs:ignore
-
-		return $total_count;
+		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
 	}
 
 	/**
@@ -1201,43 +1186,48 @@ class BP_Video {
 	 * @since BuddyBoss 1.5.7
 	 */
 	public static function total_user_group_video_count( $user_id = 0 ) {
-		global $bp, $wpdb;
+
+		if ( empty( $user_id ) ) {
+			return 0;
+		}
 
 		$privacy = bp_video_query_privacy( $user_id, 0, 'groups' );
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->video->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" ); // phpcs:ignore
+		$total_count = self::get(
+			array(
+				'user_id'     => $user_id,
+				'privacy'     => $privacy,
+				'count_total' => true,
+			)
+		);
 
-		return $total_count;
+		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
 	}
 
 	/**
 	 * Get all video ids for the album
 	 *
 	 * @since BuddyBoss 1.5.7
-	 * @param bool $album_id Media Album id.
+	 * @param int $album_id Media Album id.
 	 *
-	 * @return array|bool
+	 * @return array
 	 */
-	public static function get_album_video_ids( $album_id = false ) {
-		global $bp, $wpdb;
+	public static function get_album_video_ids( $album_id = 0 ) {
 
 		if ( ! $album_id ) {
-			return false;
+			return array();
 		}
 
-		$album_video_sql = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->video->table_name} m WHERE m.album_id = %d", $album_id ); // phpcs:ignore
+		$video_ids = self::get(
+			array(
+				'album_id' => $album_id,
+				'fields'   => 'ids',
+				'per_page' => -1,
+			)
+		);
 
-		$cached = bp_core_get_incremented_cache( $album_video_sql, 'bp_video' );
+		return (array) ( is_array( $video_ids['videos'] ) ? $video_ids['videos'] : array() );
 
-		if ( false === $cached ) {
-			$video_ids = $wpdb->get_col( $album_video_sql ); // phpcs:ignore
-			bp_core_set_incremented_cache( $album_video_sql, 'bp_video', $video_ids );
-		} else {
-			$video_ids = $cached;
-		}
-
-		return (array) $video_ids;
 	}
 
 	/**

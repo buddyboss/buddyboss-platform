@@ -120,7 +120,7 @@ function messages_new_message( $args = '' ) {
 		$new_reply = true;
 
 		if ( isset( $thread->messages[0]->id ) ) {
-			$group = bp_messages_get_meta( $thread->messages[0]->id, 'group_id', true ); // group id
+			$group = bp_messages_get_meta( $thread->messages[0]->id, 'group_id', true ); // group id.
 			if ( ! empty( $group ) ) {
 				$is_group_thread = true;
 			}
@@ -221,11 +221,11 @@ function messages_new_message( $args = '' ) {
 
 				$first_message = BP_Messages_Thread::get_first_message( (int) $thread->thread_id );
 				$message_id    = $first_message->id;
-				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
-				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
-				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
-				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
-				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual.
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private.
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply.
+				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group.
 
 				if ( ! empty( $group ) && 'all' === $message_users && 'open' === $message_type && 'new' === $thread_type && 'group' === $message_from ) {
 					$previous_thread = null;
@@ -262,7 +262,7 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	// check if force friendship is enabled and check recipients
+	// check if force friendship is enabled and check recipients.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) {
 
 		$error_messages = array(
@@ -291,7 +291,7 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	// preapre to upadte the deleted user's last message if message sending successfull
+	// preapre to upadte the deleted user's last message if message sending successfull.
 	$last_message_data = BP_Messages_Thread::prepare_last_message_status( $message->thread_id );
 
 	// Bail if message failed to send.
@@ -308,7 +308,7 @@ function messages_new_message( $args = '' ) {
 		return false;
 	}
 
-	// only update after the send()
+	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
 
 	/**

@@ -263,12 +263,12 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 	if ( bp_loggedin_user_id() ) {
 		$privacy[] = 'loggedin';
 
-		if ( (int) $user_id === (int) bp_loggedin_user_id() ) {
+		if ( bp_loggedin_user_id() === (int) $user_id ) {
 			$privacy[] = 'onlyme';
 		}
 
 		if ( bp_is_active( 'friends' ) && bp_is_profile_video_support_enabled() ) {
-			if ( (int) $user_id === (int) bp_loggedin_user_id() ) {
+			if ( bp_loggedin_user_id() === (int) $user_id ) {
 				$privacy[] = 'friends';
 			} else {
 				$friends = friends_get_friend_user_ids( $user_id );
@@ -288,7 +288,7 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 		array(
 			'column'  => 'privacy',
 			'value'   => $privacy,
-			'compare' => 'IN'
+			'compare' => 'IN',
 		),
 	);
 

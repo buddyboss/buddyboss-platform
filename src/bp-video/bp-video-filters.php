@@ -681,17 +681,25 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  */
 function bp_video_attach_video_to_message( &$message ) {
 
-	$videos = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $videos ) ) {
+	if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['video'] ) ) { // phpcs:ignore
 		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
 		remove_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+
+		$videos = $_POST['video']; // phpcs:ignore
+		if ( ! empty( $videos ) ) {
+			foreach ( $videos as $k => $video ) {
+				if ( array_key_exists( 'group_id', $video ) ) {
+					unset( $videos[ $k ]['group_id'] );
+				}
+			}
+		}
 
 		$video_ids = bp_video_add_handler( $videos, 'message' );
 
 		add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
 		add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
 
-		// save video meta for message..
+		// save video meta for message.
 		bp_messages_update_meta( $message->id, 'bp_video_ids', implode( ',', $video_ids ) );
 	}
 }
@@ -825,8 +833,7 @@ function bp_video_activity_update_video_privacy( $activity ) {
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
- *
- * @return array $retval
+ * @return array $retval Meta Query.
  */
 function bp_activity_filter_video_scope( $retval = array(), $filter = array() ) {
 
@@ -1499,9 +1506,16 @@ function bp_video_get_edit_activity_data( $activity ) {
 			foreach ( $video_ids as $video_id ) {
 				$video = new BP_Video( $video_id );
 
+				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+				$thumb        = '';
+				if ( $get_existing ) {
+					$thumb = wp_get_attachment_image_url( $get_existing, 'bp-video-thumbnail' );
+				}
+
 				$activity['video'][] = array(
 					'id'          => $video_id,
 					'vid_id'      => $video->attachment_id,
+					'thumb'       => $thumb,
 					'name'        => $video->title,
 					'group_id'    => $video->group_id,
 					'album_id'    => $video->album_id,
@@ -1527,7 +1541,7 @@ function bp_video_get_edit_activity_data( $activity ) {
  * @return string
  * @since BuddyBoss 1.5.7
  */
-function bp_video_protect_download_rewite_rules( $rewrite ) {
+function bp_video_protect_download_rewrite_rules( $rewrite ) {
 	if ( ! is_multisite() ) {
 		return $rewrite;
 	}
@@ -1541,7 +1555,7 @@ function bp_video_protect_download_rewite_rules( $rewrite ) {
 
 	return $rule . $rewrite;
 }
-add_filter( 'mod_rewrite_rules', 'bp_video_protect_download_rewite_rules' );
+add_filter( 'mod_rewrite_rules', 'bp_video_protect_download_rewrite_rules' );
 
 /**
  * Function to create a protected directory for the videos.

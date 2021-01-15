@@ -3366,6 +3366,9 @@ function bp_media_album_download_link( $album_id ) {
 	/**
 	 * Filter for album download link.
 	 *
+	 * @param string $link     Downloadable album link.
+	 * @param int    $album_id Album id.
+	 *
 	 * @since BuddyBoss 1.5.7
 	 */
 	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
