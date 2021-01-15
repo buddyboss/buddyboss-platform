@@ -18870,6 +18870,32 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-size: 16px;
 }
 
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-play-control:after,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-play-control:after,
+.bb-media-section .video-js .vjs-control-bar .vjs-play-control:after {
+  margin-right: 15px;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-play-control.vjs-playing:after,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-play-control.vjs-playing:after,
+.bb-media-section .video-js .vjs-control-bar .vjs-play-control.vjs-playing:after {
+  content: attr(data-balloon-pause);
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar > [data-balloon]:after, .bb-activity-video-elem .video-js .vjs-control-bar > [data-balloon]:before,
+.bb-video-thumb .video-js .vjs-control-bar > [data-balloon]:after,
+.bb-video-thumb .video-js .vjs-control-bar > [data-balloon]:before,
+.bb-media-section .video-js .vjs-control-bar > [data-balloon]:after,
+.bb-media-section .video-js .vjs-control-bar > [data-balloon]:before {
+  transition: none;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-play-progress .vjs-time-tooltip,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-play-progress .vjs-time-tooltip,
+.bb-media-section .video-js .vjs-control-bar .vjs-play-progress .vjs-time-tooltip {
+  display: none;
+}
+
 .video-theatre .bb-activity-video-elem .video-js .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
 .bb-video-thumb .video-js .vjs-control-bar .vjs-fullscreen-control:after, .video-theatre
 .bb-media-section .video-js .vjs-control-bar .vjs-fullscreen-control:after {

@@ -231,6 +231,31 @@
 
 			}
 
+			.vjs-play-control {
+
+				&:after {
+					margin-left: 15px;
+				}
+
+				&.vjs-playing:after {
+					content: attr(data-balloon-pause);
+				}
+
+			}
+
+			> [data-balloon] {
+
+				&:after,
+				&:before {
+					transition: none;
+				}
+
+			}
+
+			.vjs-play-progress .vjs-time-tooltip {
+				display: none;
+			}
+
 			.video-theatre & .vjs-fullscreen-control {
 
 				&:after {

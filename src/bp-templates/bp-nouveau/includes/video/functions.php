@@ -153,7 +153,11 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_delete_confirm'  => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
 		'video_enlarge_text'    => __( 'Enlarge', 'buddyboss' ),
 		'video_fullscreen_text' => __( 'Enter fullscreen', 'buddyboss' ),
-		'video_uploaded_text'   => __( 'Uploaded', 'buddyboss' ),
+		'video_play_text'		=> __( 'Play', 'buddyboss' ),
+		'video_pause_text'	    => __( 'Pause', 'buddyboss' ),
+		'video_volume_text'   => __( 'Volume', 'buddyboss' ),
+		'video_miniplayer_text'   => __( 'Miniplayer', 'buddyboss' ),
+		'video_speed_text'   => __( 'Speed', 'buddyboss' ),
 	);
 
 	return $params;

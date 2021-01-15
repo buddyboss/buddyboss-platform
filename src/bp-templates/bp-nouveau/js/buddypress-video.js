@@ -2393,11 +2393,7 @@ window.bp = window.bp || {};
 						);
 					}
 					);
-					//Forward and backward
-					player[ $( this ).attr('id') ].seekButtons({
-						forward: 10,
-						back: 10
-					});
+					
 					//Check if Video has played before and has the same id
 					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == bp.Nouveau.Video.Player.playerID ) {
 						player[ $(self).parent().attr('id') ].currentTime( bp.Nouveau.Video.Player.playerTime );
@@ -2430,6 +2426,18 @@ window.bp = window.bp || {};
 						Enter_fullscreen_btn.attr( 'data-balloon-pos', 'up' );
 						Enter_fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_fullscreen_text );
 					}
+
+					//Add Tooltips to control buttons
+					var vjsallControlsButton = $( this ).parent().find('.vjs-control-bar > button, .vjs-control-bar > div');
+					vjsallControlsButton.attr( 'data-balloon-pos', 'up' );
+
+					var vjsBlock = $( this ).parent();
+					vjsBlock.find('.vjs-control-bar > .vjs-play-control').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_play_text );
+					vjsBlock.find('.vjs-control-bar > .vjs-play-control').attr( 'data-balloon-pause', BP_Nouveau.video.i18n_strings.video_pause_text );
+					vjsBlock.find('.vjs-control-bar > .vjs-volume-panel').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_volume_text );
+					vjsBlock.find('.vjs-control-bar > .vjs-picture-in-picture-control').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_miniplayer_text );
+					vjsBlock.find('.vjs-control-bar > .vjs-playback-rate').attr( 'data-balloon-pos', 'left' );
+					vjsBlock.find('.vjs-control-bar > .vjs-playback-rate').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_speed_text );
 
 					$( this ).addClass( 'loaded' );
 				}
