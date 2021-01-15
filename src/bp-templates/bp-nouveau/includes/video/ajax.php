@@ -171,7 +171,7 @@ function bp_nouveau_ajax_albums_loader() {
 	ob_start();
 	if ( bp_has_video_albums( array( 'page' => $page ) ) ) {
 		while ( bp_video_album() ) {
-			bp_video_the_album();
+			bp_the_video_album();
 			bp_get_template_part( 'video/album-entry' );
 		}
 

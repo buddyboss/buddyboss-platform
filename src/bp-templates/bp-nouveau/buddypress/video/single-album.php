@@ -16,7 +16,7 @@ $can_add       = true === (bool) $album_privacy['can_add'];
 if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
 	while ( bp_video_album() ) :
-		bp_video_the_album();
+		bp_the_video_album();
 
 		$total_video = $video_album_template->album->video['total'];
 		?>
