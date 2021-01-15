@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_nouveau_before_video_directory_content() {
 	/**
-	 * Fires at the begining of the templates BP injected content.
+	 * Fires at the beginning of the templates BP injected content.
 	 *
 	 * @since BuddyBoss 1.5.7
 	 */
@@ -99,13 +99,13 @@ function bp_nouveau_video_timestamp() {
 	echo esc_attr( bp_nouveau_get_video_timestamp() );
 }
 
-	/**
-	 * Get the Video timestamp.
-	 *
-	 * @since BuddyBoss 1.5.7
-	 *
-	 * @return integer The Video timestamp.
-	 */
+/**
+ * Get the Video timestamp.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return integer The Video timestamp.
+ */
 function bp_nouveau_get_video_timestamp() {
 	/**
 	 * Filter here to edit the video timestamp.
