@@ -2601,6 +2601,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .active#messages-gif-button .bb-icon,
 .ac-reply-media-button.active .bb-icon,
 .ac-reply-document-button.active .bb-icon,
+.ac-reply-video-button.active .bb-icon,
 .ac-reply-gif-button.active .bb-icon {
   color: #122b46;
 }
