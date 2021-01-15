@@ -392,7 +392,7 @@ module.exports = function (grunt) {
 				stdout: false
 			},
 			rest_performance: {
-				command: 'git clone -b Features/73_Performance https://github.com/buddyboss/buddyboss-platform-api.git',
+				command: 'git clone -b dev https://github.com/buddyboss/buddyboss-platform-api.git',
 				cwd: SOURCE_DIR,
 				stdout: false
 			},
