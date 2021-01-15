@@ -1469,7 +1469,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$thumbnail_url = wp_get_attachment_image_url( $pre_selected_id, 'full' );
 
 	if ( empty( $thumbnail_url ) ) {
-		$thumbnail_url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
+		$thumbnail_url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
 	}
 
 	wp_send_json_success(

@@ -2601,6 +2601,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .active#messages-gif-button .bb-icon,
 .ac-reply-media-button.active .bb-icon,
 .ac-reply-document-button.active .bb-icon,
+.ac-reply-video-button.active .bb-icon,
 .ac-reply-gif-button.active .bb-icon {
   color: #122b46;
 }
@@ -3879,7 +3880,7 @@ span.dashicons.dashicons-admin-file:before {
   flex-basis: 30px;
   width: 30px;
   text-align: center;
-  padding: 15px 0;
+  padding: 15px 0 !important;
   display: inline-block;
   vertical-align: middle;
   position: relative;
@@ -14427,7 +14428,7 @@ ul.bb-albums-list .load-more {
 .bb-album-list-item .bs-cover-wrap:after {
   content: " ";
   position: absolute;
-  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 60%, rgba(0, 0, 0, 0) 100%);
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.01) 60%, rgba(0, 0, 0, 0) 100%);
   border-radius: 3px;
   width: 100%;
   height: 100%;
@@ -14452,7 +14453,7 @@ ul.bb-albums-list .load-more {
   bottom: 0;
   z-index: 11;
   right: 0;
-  padding: 25px;
+  padding: 20px;
   font-size: 13px;
   color: #fff;
   letter-spacing: -0.24px;
@@ -14461,7 +14462,49 @@ ul.bb-albums-list .load-more {
 }
 
 #buddypress .bb-album-content-wrap h4 {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  letter-spacing: 0.2px;
+}
+
+.bb-album-content-wrap .bb-album_date {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.bb-album-content-wrap .bb-album_stats {
+  font-size: 14px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.bb-album-content-wrap .bb-album_stats i.bb-icon {
+  font-size: 20px;
+  margin-left: 7px;
+}
+
+.bb-album-content-wrap .bb-album_stats i.bb-icon.bb-icon-video-alt {
+  font-size: 18px;
+}
+
+.bb-album-content-wrap .bb-album_stats .bb-album_stats_photos,
+.bb-album-content-wrap .bb-album_stats .bb-album_stats_videos {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.bb-album-content-wrap .bb-album_stats .bb-album_stats_spacer {
+  color: #b2b1b0;
+  font-size: 20px;
+  margin: 0 8px;
 }
 
 #buddypress #bp-media-single-album .bb-single-album-header {
@@ -14636,6 +14679,18 @@ ul.bb-albums-list .load-more {
   }
   .buddypress-wrap .bp-list.bb-photo-list li {
     flex: 0 0 50%;
+  }
+  .bb-album-content-wrap .bb-album_stats {
+    font-size: 12px;
+  }
+  .bb-album-content-wrap .bb-album_stats i.bb-icon {
+    font-size: 20px;
+  }
+  .bb-album-content-wrap .bb-album_stats i.bb-icon.bb-icon-video-alt {
+    font-size: 17px;
+  }
+  .bb-album-content-wrap .bb-album_stats .bb-album_stats_spacer {
+    margin: 0 5px;
   }
 }
 
@@ -19541,7 +19596,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 #video-uploader.dropzone .dz-complete .dz-remove:after {
   position: relative;
   top: -1px;
-  right: -1px;
+  right: 0;
   font-size: 14px;
   line-height: 1;
 }

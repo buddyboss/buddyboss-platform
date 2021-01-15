@@ -636,10 +636,10 @@ class BP_Video {
 					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
 				}
 			} else {
-				$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-				$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-				$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-				$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
+				$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+				$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+				$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+				$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
 			}
 
 			$video->attachment_data = $attachment_data;
