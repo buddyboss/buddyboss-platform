@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.7
  */
 function bp_video_slug() {
-	echo bp_get_video_slug(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_slug() );
 }
 
 /**
@@ -42,7 +42,7 @@ function bp_get_video_slug() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_root_slug() {
-	echo bp_get_video_root_slug(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_root_slug() );
 }
 
 /**
@@ -77,8 +77,8 @@ function bp_get_video_root_slug() {
  *                                     ways, and because bp_has_video() determines some default arguments in
  *                                     a dynamic fashion, we list all accepted arguments here as well.
  *
- *    Arguments can be passed as an associative array, or as a URL querystring
- *    (eg, 'user_id=4&fields=all').
+ *   Arguments can be passed as an associative array, or as a URL querystring
+ *   (eg, 'user_id=4&fields=all').
  *
  * @type int            $page           Which page of results to fetch. Using page=1 without per_page will result
  *                                               in no pagination. Default: 1.
@@ -577,7 +577,7 @@ function bp_get_video_attachment_id() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_link() {
-	echo bp_get_video_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_url( bp_get_video_link() );
 }
 
 /**
@@ -609,7 +609,7 @@ function bp_get_video_link() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_type() {
-	echo bp_get_video_type(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_type() );
 }
 
 /**
@@ -639,7 +639,7 @@ function bp_get_video_type() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_title() {
-	echo bp_get_video_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_title() );
 }
 
 /**
@@ -827,7 +827,7 @@ function bp_get_video_activity_id() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_date_created() {
-	echo bp_get_video_date_created(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_date_created() );
 }
 
 /**
@@ -857,7 +857,7 @@ function bp_get_video_date_created() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_attachment_image_thumbnail() {
-	echo bp_get_video_attachment_image_thumbnail(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_url( bp_get_video_attachment_image_thumbnail() );
 }
 
 /**
@@ -887,7 +887,7 @@ function bp_get_video_attachment_image_thumbnail() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_attachment_image_activity_thumbnail() {
-	echo bp_get_video_attachment_image_activity_thumbnail(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_url( bp_get_video_attachment_image_activity_thumbnail() );
 }
 
 /**
@@ -917,7 +917,7 @@ function bp_get_video_attachment_image_activity_thumbnail() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_attachment_image() {
-	echo bp_get_video_attachment_image(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_url( bp_get_video_attachment_image() );
 }
 
 /**
@@ -974,7 +974,7 @@ function bp_get_video_directory_permalink() {
  * @since BuddyBoss 1.2.3
  */
 function bp_video_privacy() {
-	echo bp_get_video_privacy(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_privacy() );
 }
 
 /**
@@ -1044,8 +1044,8 @@ function bp_get_video_parent_activity_id() {
  *                                           ways, and because bp_has_video() determines some default arguments in
  *                                           a dynamic fashion, we list all accepted arguments here as well.
  *
- *    Arguments can be passed as an associative array, or as a URL querystring
- *    (eg, 'author_id=4&privacy=public').
+ *   Arguments can be passed as an associative array, or as a URL querystring
+ *   (eg, 'author_id=4&privacy=public').
  *
  * @type int            $page                 Which page of results to fetch. Using page=1 without per_page will result
  *                                               in no pagination. Default: 1.
@@ -1409,7 +1409,7 @@ function bp_get_video_album_per_page() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_album_title() {
-	echo bp_get_video_album_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_album_title() );
 }
 
 /**
@@ -1460,7 +1460,7 @@ function bp_get_video_album_privacy() {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_album_link() {
-	echo bp_get_video_album_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_url( bp_get_video_album_link() );
 }
 
 /**
@@ -1766,7 +1766,7 @@ function bp_get_video_auto_generated_thumbnail_ids() {
  * @since BuddyBoss 1.2.3
  */
 function bp_video_visibility() {
-	echo bp_get_video_visibility(); //phpcs:ignore
+	echo esc_html( bp_get_video_visibility() );
 }
 
 /**
@@ -1797,7 +1797,7 @@ function bp_get_video_visibility() {
  * @since BuddyBoss 1.5.3
  */
 function bp_video_author() {
-	echo bp_get_video_author(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_html( bp_get_video_author() );
 }
 
 /**
@@ -1832,7 +1832,7 @@ function bp_get_video_author() {
  * @since BuddyBoss 1.5.7
  */
 function bp_videos_link() {
-	echo bp_get_videos_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo esc_url( bp_get_videos_link() );
 }
 
 /**
