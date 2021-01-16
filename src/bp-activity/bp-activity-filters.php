@@ -142,7 +142,9 @@ add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
-
+// Add filter for add oembed to activity and comment on activity.
+add_filter( 'bp_get_activity_content', 'bbp_activity_content_autoembed_paragraph', 99999, 1 );
+add_filter( 'bp_get_activity_content_body', 'bbp_activity_content_autoembed_paragraph', 99999, 1 );
 /** Functions *****************************************************************/
 
 /**
@@ -2270,7 +2272,7 @@ function bp_blogs_activity_content_set_temp_content() {
 	global $activities_template;
 
 	$activity = $activities_template->activity;
-	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) &&  'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$content = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $content, 'WP_Post' ) ) {
@@ -2294,43 +2296,41 @@ add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read
  */
 function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
-	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
-		if( is_a( $blog_post, 'WP_Post' ) ) {
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
 			$content = bp_create_excerpt( html_entity_decode( $blog_post->post_content ) );
-			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
-					$iframe  = $matches[0];
-					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+					$iframe   = $matches[0];
+					$content  = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
 					$content .= $iframe;
 				} else {
 					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
-					if( isset( $src[0] ) ) {
+					if ( isset( $src[0] ) ) {
 						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
 					}
 				}
-
 			} else {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				$content = strip_tags( $content, '<a><iframe>' );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
 				} else {
 					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
-					if( isset( $src[0] ) ) {
+					if ( isset( $src[0] ) ) {
 						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
 					}
 				}
 			}
 		}
-
 	}
 
 	return $content;
@@ -2350,17 +2350,17 @@ add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_r
  */
 function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
 
-	if( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+	if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
 		// Get activity object.
 		$comment_activity = new BP_Activity_Activity( $activity->item_id );
-		if( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+		if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
 			$comment_post_type = $comment_activity->secondary_item_id;
 			$get_post_type     = get_post_type( $comment_post_type );
 			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
-			if( $comment_id ) {
+			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-				if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
@@ -2370,4 +2370,45 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 	}
 
 	return $content;
+}
+/**
+ * Add oembed to activity and comment on activity.
+ *
+ * @param $content
+ *
+ * @return string
+ */
+function bbp_activity_content_autoembed_paragraph( $content ) {
+
+	if ( strpos( $content, '<iframe' ) !== false ) {
+		return $content;
+	}
+
+	global $wp_embed;
+	$embed_urls = $embeds_array = array();
+	$flag       = true;
+
+	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	}
+
+	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+		$embed_urls = array_filter( $embed_urls[0] );
+		$embed_urls = array_unique( $embed_urls );
+
+		foreach ( $embed_urls as $url ) {
+			if ( $flag == false ) {
+				continue;
+			}
+
+			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+			if ( $embed ) {
+				$flag           = false;
+				$embeds_array[] = wpautop( $embed );
+			}
+		}
+	}
+
+	// Put the line breaks back.
+	return $content . implode( '', $embeds_array );
 }
