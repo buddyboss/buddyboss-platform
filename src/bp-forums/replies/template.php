@@ -2817,29 +2817,29 @@ function bbp_get_form_reply_edit_reason() {
 	return apply_filters( 'bbp_get_form_reply_edit_reason', esc_attr( $reply_edit_reason ) );
 }
 /**
-*  Output total count of a topic discussion reply
-*
-* @since bbPress (r2485)
-*
-* @param int     $topic_id Optional. Topic id
-* @param boolean $integer  Optional. Whether or not to format the result
-*
-* @uses  bbp_get_topic_discussion_reply_count() To get the topic reply count
-*/
+ *  Output total count of a topic discussion reply
+ *
+ * @since bbPress (r2485)
+ *
+ * @param int     $topic_id Optional. Topic id
+ * @param boolean $integer  Optional. Whether or not to format the result
+ *
+ * @uses  bbp_get_topic_discussion_reply_count() To get the topic reply count
+ */
 function bbp_topic_discussion_reply_count( $integer = false ) {
 	echo bbp_get_topic_discussion_reply_count( $integer );
 }
 /**
-* Return total topic reply count.
-*
-* @since                 bbPress (r2954)
-*
-* @param boolean $integer  Optional. Whether or not to format the result
-*
-* @return int Reply count
-* @uses                  apply_filters() Calls 'bbp_get_topic_discussion_reply_count' with the
-*                        topic discussion count
-*/
+ * Return total topic reply count.
+ *
+ * @since                 bbPress (r2954)
+ *
+ * @param boolean $integer  Optional. Whether or not to format the result
+ *
+ * @return int Reply count
+ * @uses                  apply_filters() Calls 'bbp_get_topic_discussion_reply_count' with the
+ *                        topic discussion count
+ */
 function bbp_get_topic_discussion_reply_count( $integer = false ) {
 	// Get reply query
 	$bbp = bbpress();
