@@ -2585,16 +2585,6 @@ function bbp_get_topic_pagination_count() {
 
 	// Define local variable(s)
 	$retstr = '';
-//	echo '<pre>';
-//	print_r( $bbp->reply_query->total_count );
-//	echo '</pre>';
-//	$reply_posts = $bbp->reply_query->posts;
-//	$total_int = 0;
-//	foreach($reply_posts as $value) {
-//		if( $value->reply_to == 0 ) {
-//			$total_int ++;
-//		}
-//	}
 	$total_int = $bbp->reply_query->total_count; //thread_reply
 	// Set pagination values
 	$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
