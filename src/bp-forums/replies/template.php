@@ -261,26 +261,16 @@ function bbp_has_replies( $args = '' ) {
 		}
 
 		// Figure out total pages
+		$bbp->reply_query->total_count = '';
 		if( true === $r['hierarchical'] ) {
 			$walker      = new BBP_Walker_Reply();
-			$total_pages = ceil( (int) $walker->get_number_of_root_elements( $bbp->reply_query->posts ) / (int) $replies_per_page );
+			$total_count = (int) $walker->get_number_of_root_elements( $bbp->reply_query->posts ); //thread_reply
+			$total_pages = ceil( $total_count / (int) $replies_per_page );
 		} else {
-
-			$total_pages = ceil( (int) $bbp->reply_query->found_posts / (int) $replies_per_page );
-			if( true === $r['hierarchical'] ) {
-				$reply_posts        = bbpress()->reply_query->posts;
-				$num_parent_replies = 0;
-				foreach( $reply_posts as $value ) {
-					if( $value->reply_to == 0 ) {
-						$num_parent_replies ++;
-					}
-				}
-
-				$total_pages = ceil( (int) $num_parent_replies / (int) $replies_per_page );
-			}
-
+			$total_count = (int) $bbp->reply_query->found_posts; //thread_reply
+			$total_pages = ceil( (int) $total_count / (int) $replies_per_page );
 		}
-
+		$bbp->reply_query->total_count = $total_count; //thread_reply
 		// Add pagination to query object
 		$bbp->reply_query->pagination_links = paginate_links(
 			apply_filters(
@@ -2595,15 +2585,17 @@ function bbp_get_topic_pagination_count() {
 
 	// Define local variable(s)
 	$retstr = '';
-
-	$reply_posts = $bbp->reply_query->posts;
-	$total_int = 0;
-	foreach($reply_posts as $value) {
-		if( $value->reply_to == 0 ) {
-			$total_int ++;
-		}
-	}
-
+//	echo '<pre>';
+//	print_r( $bbp->reply_query->total_count );
+//	echo '</pre>';
+//	$reply_posts = $bbp->reply_query->posts;
+//	$total_int = 0;
+//	foreach($reply_posts as $value) {
+//		if( $value->reply_to == 0 ) {
+//			$total_int ++;
+//		}
+//	}
+	$total_int = $bbp->reply_query->total_count; //thread_reply
 	// Set pagination values
 	$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
 	$from_num  = bbp_number_format( $start_num );
@@ -2823,4 +2815,35 @@ function bbp_get_form_reply_edit_reason() {
 	}
 
 	return apply_filters( 'bbp_get_form_reply_edit_reason', esc_attr( $reply_edit_reason ) );
+}
+/**
+*  Output total count of a topic discussion reply
+*
+* @since bbPress (r2485)
+*
+* @param int     $topic_id Optional. Topic id
+* @param boolean $integer  Optional. Whether or not to format the result
+*
+* @uses  bbp_get_topic_discussion_reply_count() To get the topic reply count
+*/
+function bbp_topic_discussion_reply_count( $integer = false ) {
+	echo bbp_get_topic_discussion_reply_count( $integer );
+}
+/**
+* Return total topic reply count.
+*
+* @since                 bbPress (r2954)
+*
+* @param boolean $integer  Optional. Whether or not to format the result
+*
+* @return int Reply count
+* @uses                  apply_filters() Calls 'bbp_get_topic_discussion_reply_count' with the
+*                        topic discussion count
+*/
+function bbp_get_topic_discussion_reply_count( $integer = false ) {
+	// Get reply query
+	$bbp = bbpress();
+	$replies  = $bbp->reply_query->total_count;
+	$filter   = ( true === $integer ) ? 'bbp_topic_post_reply_count_int' : 'bbp_topic_post_reply_count';
+	return apply_filters( $filter, $replies );
 }
