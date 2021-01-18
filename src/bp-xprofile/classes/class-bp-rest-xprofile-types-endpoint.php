@@ -401,7 +401,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				&& true === bp_enable_group_auto_join()
 			) {
 				$schema['properties']['bp-group-type-auto-join'] = array(
-					'description' => __( 'Group types will automatically approve all membership requests from users of this profile type.', 'buddyboss' ),
+					'description' => __( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types other than Hidden Groups.', 'buddyboss' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,

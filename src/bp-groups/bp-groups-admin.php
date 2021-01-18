@@ -2201,7 +2201,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?>
+						<?php _e( 'On Registration and Account activation, Selected Profile Type members will auto-join Groups of this Type other than Hidden Groups. Members of the selected profile types can also join new Private groups of this Type without approval.', 'buddyboss' ); ?>
                         <?php
                         if ( class_exists( 'BB_Platform_Pro' ) ) {
 	                        echo sprintf( __( '( This settings will be override if you added a restriction <a href="%s">here</a>. )', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
