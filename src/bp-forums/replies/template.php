@@ -509,13 +509,7 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
 	$topic_id = bbp_get_reply_topic_id( $reply_id );
 
 	// Hierarchical reply page
-	if ( bbp_thread_replies() ) {
-		$reply_page = 1;
-
-		// Standard reply page
-	} else {
-		$reply_page = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
-	}
+	$reply_page = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
 
 	$reply_hash = '#post-' . $reply_id;
 	$topic_link = bbp_get_topic_permalink( $topic_id, $redirect_to );
