@@ -382,7 +382,7 @@ function bp_groups_admin_load() {
 		 */
 		$allowed_video_status    = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
 		$post_group_video_status = filter_input( INPUT_POST, 'group-video-status', FILTER_SANITIZE_STRING );
-		$video_status            = in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
+		$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -393,7 +393,7 @@ function bp_groups_admin_load() {
 		 */
 		$allowed_album_status    = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
 		$post_group_album_status = filter_input( INPUT_POST, 'group-album-status', FILTER_SANITIZE_STRING );
-		$album_status            = isset( $post_group_album_status ) && in_array( $post_group_album_status, (array) $allowed_album_status, true ) ? $post_group_album_status : 'members';
+		$album_status            = ! empty( $post_group_album_status ) && in_array( $post_group_album_status, (array) $allowed_album_status, true ) ? $post_group_album_status : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
