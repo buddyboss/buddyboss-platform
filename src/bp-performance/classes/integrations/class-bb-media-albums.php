@@ -103,7 +103,7 @@ class BB_Media_Albums extends Integration_Abstract {
 			);
 
 			$this->cache_endpoint(
-				'buddyboss/v1/media/albums<id>',
+				'buddyboss/v1/media/albums/<id>',
 				Cache::instance()->month_in_seconds * 60,
 				array_keys( $purge_single_events ),
 				$event_groups,
