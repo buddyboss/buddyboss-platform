@@ -1969,7 +1969,7 @@ function bp_member_type_permissions_metabox( $post ) {
 						<?php _e( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types below other than Hidden Groups.', 'buddyboss' ); ?>
                         <?php
                         if ( class_exists( 'BB_Platform_Pro' ) ) {
-	                        echo sprintf( __( '</br><span>(Settings will be overrided if you add a restriction <a href="%s">HERE</a>)</span>', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
+	                        echo sprintf( __( '</br><strong>(Settings will be overrided if you add a restriction <a href="%s">HERE</a>)</strong>', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
                         }
                         ?>
                     </td>

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-08 05:39:01+00:00\n"
+"POT-Creation-Date: 2021-01-18 11:32:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2717,8 +2717,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1885
-#: bp-core/admin/bp-core-admin-functions.php:2108
-msgid "(None)"
+msgid "(None - hide group type option)"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1962
@@ -2726,16 +2725,17 @@ msgid "Group Type Membership Approval"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1969
+#: bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php:404
 msgid ""
-"Selected group types will automatically approve all membership requests "
-"from users of this profile type:"
+"On Registration and Account activation, Profile Type members will auto-join "
+"Groups from Selected Group Types below other than Hidden Groups."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1972
 #: bp-groups/bp-groups-admin.php:2207
 msgid ""
-"( This settings will be override if you added a restriction <a "
-"href=\"%s\">here</a>. )"
+"</br><strong>(Settings will be overrided if you add a restriction <a "
+"href=\"%s\">HERE</a>)</strong>"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2016
@@ -2768,6 +2768,10 @@ msgstr ""
 msgid ""
 "Users of this profile type will be auto-assigned to the following WordPress "
 "roles (includes existing users):"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:2108
+msgid "(None)"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2252
@@ -5172,15 +5176,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2655
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\n"
+"content will be unhidden</li>\r\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
-"\t\t\t</ul>\n"
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -7891,13 +7895,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -15909,8 +15913,8 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:2204
 #: bp-groups/classes/class-bp-rest-groups-types-endpoint.php:372
 msgid ""
-"Members of the selected profile types can always join groups of this type, "
-"even if the group is private."
+"Members of the selected Profile Types below can join Private groups of the "
+"Group Type without approval."
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2252
@@ -24053,7 +24057,7 @@ msgid "No activities were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:594
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:610
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:617
 #. translators: 1: string or media and medias. 2: group text.
 msgid "You don't have access to upload %1$s%2$s."
 msgstr ""
@@ -24065,33 +24069,33 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:596
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:612
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:619
 msgid " inside group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:611
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:618
 msgid "document"
 msgid_plural "documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:672
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:679
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:695
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:702
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:695
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:702
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:726
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:733
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:775
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:782
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
@@ -26420,12 +26424,6 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php:389
 msgid "Which group types this profile type is allowed to create."
-msgstr ""
-
-#: bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php:404
-msgid ""
-"Group types will automatically approve all membership requests from users "
-"of this profile type."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php:417
