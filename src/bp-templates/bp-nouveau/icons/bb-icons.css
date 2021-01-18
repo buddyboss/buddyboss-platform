@@ -1,12 +1,12 @@
  /* stylelint-disable */
 @font-face {
   font-family: 'bb-icons';
-  src: url('../icons/bb-icons.eot?80309866');
-  src: url('../icons/bb-icons.eot?80309866#iefix') format('embedded-opentype'),
-       url('../icons/bb-icons.woff2?80309866') format('woff2'),
-       url('../icons/bb-icons.woff?80309866') format('woff'),
-       url('../icons/bb-icons.ttf?80309866') format('truetype'),
-       url('../icons/bb-icons.svg?80309866#bb-icons') format('svg');
+  src: url('../icons/bb-icons.eot?80309867');
+  src: url('../icons/bb-icons.eot?80309867#iefix') format('embedded-opentype'),
+       url('../icons/bb-icons.woff2?80309867') format('woff2'),
+       url('../icons/bb-icons.woff?80309867') format('woff'),
+       url('../icons/bb-icons.ttf?80309867') format('truetype'),
+       url('../icons/bb-icons.svg?80309867#bb-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
