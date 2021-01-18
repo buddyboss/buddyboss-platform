@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-26 07:12:10+00:00\n"
+"POT-Creation-Date: 2020-12-29 11:34:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2626,11 +2626,11 @@ msgid "Suspend"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1617
-msgid "User suspended."
+msgid "Member suspended."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1619
-msgid "User unsuspended."
+msgid "Member unsuspended."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1692
@@ -2909,6 +2909,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3201
 #: bp-moderation/bp-moderation-admin.php:572
+#: bp-moderation/bp-moderation-settings.php:102
 #: bp-moderation/classes/class-bp-moderation-component.php:180
 msgid "Reporting Categories"
 msgstr ""
@@ -2987,6 +2988,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1230
 #: bp-core/admin/bp-core-admin-settings.php:1295
 #: bp-core/admin/bp-core-admin-settings.php:1332
+#: bp-core/admin/bp-core-admin-settings.php:1356
 #: bp-core/admin/settings/bp-admin-setting-friends.php:95
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:411
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
@@ -3395,7 +3397,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:799
 #: bp-media/bp-media-settings.php:29 bp-media/bp-media-settings.php:1313
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1199
-#: bp-moderation/classes/class-bp-moderation-document.php:101
+#: bp-moderation/classes/class-bp-moderation-document.php:102
 #: bp-search/bp-search-settings.php:800
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:30
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
@@ -4953,7 +4955,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:330
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1168
-#: bp-moderation/classes/class-bp-moderation-media.php:102
+#: bp-moderation/classes/class-bp-moderation-media.php:103
 #: bp-search/bp-search-settings.php:756
 #: bp-templates/bp-nouveau/buddypress/groups/single/photos.php:24
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:11
@@ -9090,7 +9092,7 @@ msgid "Document already exists for attachment id: %d"
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:801
-msgid "Sorry, you are not allowed to move this document with folder."
+msgid "Sorry, you are not allowed to move this document along with the folder."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:863
@@ -9245,7 +9247,7 @@ msgid "Visibility of the document."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1540
-msgid "Count of the child documents and folders of the folder."
+msgid "Count of documents and folders inside folder."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1546
@@ -12999,9 +13001,9 @@ msgstr ""
 
 #: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:240
 #: bp-moderation/classes/class-bp-moderation-list-table.php:280
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:69
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:111
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:162
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:59
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:101
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:152
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:27
 #. translators: user role
 msgid "Blocked"
@@ -14368,7 +14370,6 @@ msgid "You must be logged in to create new discussions."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:39
-#: bp-moderation/classes/class-bp-moderation-comment.php:110
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1118
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1488
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1895
@@ -14380,7 +14381,7 @@ msgid "This content has been hidden as the member is suspended."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:41
-#: bp-moderation/classes/class-bp-moderation-comment.php:108
+#: bp-moderation/classes/class-bp-moderation-comment.php:117
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1120
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1490
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1897
@@ -14392,6 +14393,7 @@ msgid "This content has been hidden as you have blocked this member."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:43
+#: bp-moderation/classes/class-bp-moderation-comment.php:119
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1122
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1492
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:46
@@ -19198,7 +19200,7 @@ msgid "Media already exists for attachment id: %d"
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-endpoint.php:705
-msgid "Sorry, you are not allowed to move this media with album."
+msgid "Sorry, you are not allowed to move this media along with the album."
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-endpoint.php:743
@@ -20842,8 +20844,8 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1056
 #: bp-notifications/bp-notifications-template.php:1036
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:56
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:98
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:46
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:88
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:112
 msgid "Mark unread"
 msgstr ""
@@ -21473,13 +21475,14 @@ msgstr ""
 #: bp-moderation/bp-moderation-filters.php:137
 #: bp-moderation/bp-moderation-filters.php:376
 #: bp-moderation/bp-moderation-filters.php:442
-msgid "Sorry, you are not able to report this item."
+msgid "Sorry, you are not allowed to report this content."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:153
 #: bp-moderation/bp-moderation-filters.php:217
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:372
-msgid "Already reported this item."
+#: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:276
+msgid "Content already reported."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:185
@@ -21487,8 +21490,9 @@ msgstr ""
 #: bp-moderation/bp-moderation-filters.php:341
 #: bp-moderation/bp-moderation-filters.php:407
 #: bp-moderation/bp-moderation-filters.php:460
-#: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:583
-msgid "Sorry, Something happened wrong"
+#: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:390
+#: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:291
+msgid "Something went wrong. Please try again."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:222
@@ -21510,7 +21514,7 @@ msgid "Reported content was not found."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:322
-msgid "Sorry, you can not unblock a suspended member."
+msgid "Sorry, you cannot unblock suspended member."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:336
@@ -21535,7 +21539,7 @@ msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:495
 #: bp-moderation/bp-moderation-functions.php:239
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:166
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:156
 msgid "Block"
 msgstr ""
 
@@ -21576,11 +21580,6 @@ msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:84
 msgid "Auto Hide"
-msgstr ""
-
-#: bp-moderation/bp-moderation-settings.php:102
-#: bp-moderation/classes/class-bp-moderation-component.php:165
-msgid "Reporting Category"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:185
@@ -21627,11 +21626,11 @@ msgstr ""
 msgid "Moderation not enabled."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-comment.php:83
+#: bp-moderation/classes/class-bp-moderation-comment.php:92
 msgid "Blog Comments"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-comment.php:132
+#: bp-moderation/classes/class-bp-moderation-comment.php:141
 #: bp-moderation/classes/class-bp-moderation-list-table.php:231
 #: bp-moderation/classes/class-bp-moderation-members.php:226
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1092
@@ -21646,6 +21645,10 @@ msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:139
 msgid "My Moderation"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:165
+msgid "Reporting Category"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:169
@@ -21818,11 +21821,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:81
-msgid "Sorry, no reported content report was found."
+msgid "Sorry, no reported content found."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:83
-msgid "Sorry, no blocked members report were found."
+msgid "Sorry, no blocked members found."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:180
@@ -21855,8 +21858,9 @@ msgid "A unique numeric ID for the moderation."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:236
+#: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:318
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:200
-msgid "Sorry, you need to be logged in to view the block members."
+msgid "Please login to view blocked members."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:277
@@ -21865,15 +21869,6 @@ msgstr ""
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:556
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:566
 msgid "Invalid moderation ID."
-msgstr ""
-
-#: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:318
-msgid "Sorry, you need to be logged in to view the block member."
-msgstr ""
-
-#: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:390
-#: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:291
-msgid "Sorry, something goes wrong please try again."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:464
@@ -21886,6 +21881,10 @@ msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:487
 msgid "Sorry, you are not allowed to block admin members."
+msgstr ""
+
+#: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:583
+msgid "Sorry something went wrong. Please try again."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:627
@@ -22004,10 +22003,6 @@ msgstr ""
 msgid "Sorry, Invalid item to report."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:276
-msgid "Sorry, Already reported this item."
-msgstr ""
-
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:331
 msgid "Sorry, you are not allowed to report a moderation."
 msgstr ""
@@ -22058,7 +22053,7 @@ msgid "A unique numeric ID for the moderation report."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:677
-msgid "Reported user ID."
+msgid "Reported member ID."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:683
@@ -22098,7 +22093,7 @@ msgstr ""
 
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:145
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:135
 #: bp-templates/bp-nouveau/includes/template-tags.php:2585
 #: bp-templates/bp-nouveau/includes/template-tags.php:2602
 #: bp-templates/bp-nouveau/includes/template-tags.php:2620
@@ -22917,41 +22912,41 @@ msgstr ""
 msgid "Looks like you haven't initiated a conversation with any other member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:36
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:27
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:60
 msgid ","
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:44
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:34
 msgid "Started"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:59
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:101
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:49
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:91
 msgid "Hide conversation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:65
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:107
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:55
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:97
 msgid "Block a member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:73
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:115
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:63
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:105
 msgid "Block member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:78
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:120
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:68
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:110
 msgid "Delete your messages"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:81
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:126
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:71
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:116
 msgid "Delete conversation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:144
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:134
 msgid "Block a Member?"
 msgstr ""
 

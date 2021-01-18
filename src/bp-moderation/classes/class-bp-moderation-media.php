@@ -66,12 +66,13 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $item_id Item id.
+	 * @param int $media_id Media id.
 	 *
 	 * @return string|void
 	 */
-	public static function get_permalink( $item_id ) {
-		return '';
+	public static function get_permalink( $media_id ) {
+		$media = new BP_Media( $media_id );
+		return wp_get_attachment_url( $media->attachment_id );
 	}
 
 	/**

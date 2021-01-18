@@ -1313,11 +1313,11 @@ function bp_admin_setting_callback_group_messages() {
 
 
 /**
- * Link to Moderation tutorial
+ * Link to Moderation Block tutorial
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_admin_moderation_setting_tutorial() {
+function bp_admin_moderation_block_setting_tutorial() {
 	?>
 
     <p>
@@ -1325,7 +1325,31 @@ function bp_admin_moderation_setting_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => 86158, /* Update documentation article id here */
+					'article' => 121711,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+
+
+/**
+ * Link to Moderation Report tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_moderation_report_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 121712,
 				),
 				'admin.php'
 			)

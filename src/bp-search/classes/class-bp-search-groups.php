@@ -116,7 +116,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 						$query_placeholder[]               = '%' . $wpdb->esc_like( $sterm ) . '%';
 					}
 				}
-				$sql .= ' ) ';
+				$where_conditions['search_query'] .= ' ) ';
 
 			}
 

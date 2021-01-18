@@ -1515,7 +1515,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 				if ( ! empty( $is_suspend ) && 'suspend' === $is_suspend ) {
 					BP_Suspend_Member::suspend_user( $user_id );
-				} elseif ( bp_moderation_is_user_suspended( $user_id ) ) {
+				} elseif ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( $user_id ) ) {
 					BP_Suspend_Member::unsuspend_user( $user_id );
 				}
 			}
