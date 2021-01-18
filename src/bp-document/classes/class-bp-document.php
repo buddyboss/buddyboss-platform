@@ -723,7 +723,7 @@ class BP_Document {
 				} elseif ( 'forums' === $document->privacy ) {
 					$visibility = esc_html__( 'Forums', 'buddyboss' );
 				} else {
-					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? $document_privacy[ $document->privacy ] : '';
+					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? ucfirst( $document_privacy[ $document->privacy ] ) : '';
 				}
 			}
 

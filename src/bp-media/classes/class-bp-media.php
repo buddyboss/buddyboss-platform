@@ -634,7 +634,16 @@ class BP_Media {
 					$visibility = ucfirst( $status );
 				}
 			} else {
-				$visibility = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
+				$media_privacy = bp_media_get_visibility_levels();
+				if ( 'friends' === $media->privacy && bp_loggedin_user_id() !== (int) $media->user_id ) {
+					$visibility = esc_html__( 'Connections', 'buddyboss' );
+				} elseif ( 'message' === $media->privacy ) {
+					$visibility = esc_html__( 'Message', 'buddyboss' );
+				} elseif ( 'forums' === $media->privacy ) {
+					$visibility = esc_html__( 'Forums', 'buddyboss' );
+				} else {
+					$visibility = ( isset( $media_privacy[ $media->privacy ] ) ) ? ucfirst( $media_privacy[ $media->privacy ] ) : '';
+				}
 			}
 			$media->group_name = $group_name;
 			$media->visibility = $visibility;
