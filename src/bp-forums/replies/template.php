@@ -138,7 +138,7 @@ function bbp_has_replies( $args = '' ) {
 	$default_post_parent    = ( bbp_is_single_topic() ) ? bbp_get_topic_id() : 'any';
 	$default_post_type      = ( bbp_is_single_topic() && bbp_show_lead_topic() ) ? bbp_get_reply_post_type() : array(
 		bbp_get_topic_post_type(),
-		bbp_get_reply_post_type(),
+		bbp_get_reply_post_type()
 	);
 	$default_thread_replies = (bool) ( bbp_is_single_topic() && bbp_thread_replies() );
 
@@ -262,7 +262,7 @@ function bbp_has_replies( $args = '' ) {
 
 		// Figure out total pages
 		$bbp->reply_query->total_count = '';
-		if ( true === $r['hierarchical'] ) {
+		if( true === $r['hierarchical'] ) {
 			$walker      = new BBP_Walker_Reply();
 			$total_count = (int) $walker->get_number_of_root_elements( $bbp->reply_query->posts ); // thread_reply
 			$total_pages = ceil( $total_count / (int) $replies_per_page );
@@ -509,7 +509,13 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
 	$topic_id = bbp_get_reply_topic_id( $reply_id );
 
 	// Hierarchical reply page
-	$reply_page = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
+	if ( bbp_thread_replies() ) {
+		$reply_page = 1;
+
+		// Standard reply page
+	} else {
+		$reply_page = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
+	}
 
 	$reply_hash = '#post-' . $reply_id;
 	$topic_link = bbp_get_topic_permalink( $topic_id, $redirect_to );
@@ -691,7 +697,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
 	}
 
 	if ( ! empty( $length ) && ( $excerpt_length > $length ) ) {
-		$excerpt  = substr( $excerpt, 0, $length - 1 );
+		$excerpt = substr( $excerpt, 0, $length - 1 );
 		$excerpt .= '&hellip;';
 	}
 
@@ -1072,6 +1078,7 @@ function bbp_reply_author( $reply_id = 0 ) {
  * @uses                           apply_filters() Calls 'bbp_get_reply_author' with the reply
  *                                 author and reply id
  * @deprecated                     bbPress (r5119)
+ *
  */
 function bbp_get_reply_author( $reply_id = 0 ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
@@ -1353,6 +1360,7 @@ function bbp_get_reply_author_link( $args = '' ) {
 		if ( true === $r['show_role'] ) {
 			$author_link .= bbp_get_reply_author_role( array( 'reply_id' => $reply_id ) );
 		}
+
 	}
 
 	// Filter & return
@@ -1994,12 +2002,12 @@ function bbp_get_reply_admin_links( $args = array() ) {
 		$r['links'] = apply_filters(
 			'bbp_reply_admin_links',
 			array(
-				'edit'  => bbp_get_reply_edit_link( $r ),
-				'move'  => bbp_get_reply_move_link( $r ),
-				'split' => bbp_get_topic_split_link( $r ),
-				'trash' => bbp_get_reply_trash_link( $r ),
-				'spam'  => bbp_get_reply_spam_link( $r ),
-				'reply' => bbp_get_reply_to_link( $r ),
+				'edit'   => bbp_get_reply_edit_link( $r ),
+				'move'   => bbp_get_reply_move_link( $r ),
+				'split'  => bbp_get_topic_split_link( $r ),
+				'trash'  => bbp_get_reply_trash_link( $r ),
+				'spam'   => bbp_get_reply_spam_link( $r ),
+				'reply'  => bbp_get_reply_to_link( $r ),
 			),
 			$r['id']
 		);
@@ -2229,45 +2237,45 @@ function bbp_get_reply_trash_link( $args = '' ) {
 
 	if ( bbp_is_reply_trash( $reply->ID ) ) {
 		$actions['untrash'] = '<a title="' . esc_attr__( 'Restore this item from the Trash', 'buddyboss' ) . '" href="' . esc_url(
-			wp_nonce_url(
-				add_query_arg(
-					array(
-						'action'     => 'bbp_toggle_reply_trash',
-						'sub_action' => 'untrash',
-						'reply_id'   => $reply->ID,
-					)
-				),
-				'untrash-' . $reply->post_type . '_' . $reply->ID
-			)
-		) . '" class="bbp-reply-restore-link">' . $r['restore_text'] . '</a>';
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action'     => 'bbp_toggle_reply_trash',
+							'sub_action' => 'untrash',
+							'reply_id'   => $reply->ID,
+						)
+					),
+					'untrash-' . $reply->post_type . '_' . $reply->ID
+				)
+			) . '" class="bbp-reply-restore-link">' . $r['restore_text'] . '</a>';
 	} elseif ( EMPTY_TRASH_DAYS ) {
 		$actions['trash'] = '<a title="' . esc_attr__( 'Move this item to the Trash', 'buddyboss' ) . '" href="' . esc_url(
-			wp_nonce_url(
-				add_query_arg(
-					array(
-						'action'     => 'bbp_toggle_reply_trash',
-						'sub_action' => 'trash',
-						'reply_id'   => $reply->ID,
-					)
-				),
-				'trash-' . $reply->post_type . '_' . $reply->ID
-			)
-		) . '" class="bbp-reply-trash-link">' . $r['trash_text'] . '</a>';
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action'     => 'bbp_toggle_reply_trash',
+							'sub_action' => 'trash',
+							'reply_id'   => $reply->ID,
+						)
+					),
+					'trash-' . $reply->post_type . '_' . $reply->ID
+				)
+			) . '" class="bbp-reply-trash-link">' . $r['trash_text'] . '</a>';
 	}
 
 	if ( bbp_is_reply_trash( $reply->ID ) || ! EMPTY_TRASH_DAYS ) {
 		$actions['delete'] = '<a title="' . esc_attr__( 'Delete this item permanently', 'buddyboss' ) . '" href="' . esc_url(
-			wp_nonce_url(
-				add_query_arg(
-					array(
-						'action'     => 'bbp_toggle_reply_trash',
-						'sub_action' => 'delete',
-						'reply_id'   => $reply->ID,
-					)
-				),
-				'delete-' . $reply->post_type . '_' . $reply->ID
-			)
-		) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete that permanently?', 'buddyboss' ) ) . '\' );" class="bbp-reply-delete-link">' . $r['delete_text'] . '</a>';
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action'     => 'bbp_toggle_reply_trash',
+							'sub_action' => 'delete',
+							'reply_id'   => $reply->ID,
+						)
+					),
+					'delete-' . $reply->post_type . '_' . $reply->ID
+				)
+			) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete that permanently?', 'buddyboss' ) ) . '\' );" class="bbp-reply-delete-link">' . $r['delete_text'] . '</a>';
 	}
 
 	// Process the admin links
@@ -2507,7 +2515,7 @@ function bbp_get_topic_split_link( $args = '' ) {
  *
  * @since bbPress (r2678)
  *
- * @param int                                                         $reply_id Optional. Reply ID
+ * @param int $reply_id Optional. Reply ID
  * @param array Extra classes you can pass when calling this function
  *
  * @uses  bbp_get_reply_class() To get the reply class
@@ -2521,7 +2529,7 @@ function bbp_reply_class( $reply_id = 0, $classes = array() ) {
  *
  * @since bbPress (r2678)
  *
- * @param int                                                         $reply_id Optional. Reply ID
+ * @param int $reply_id Optional. Reply ID
  * @param array Extra classes you can pass when calling this function
  *
  * @return string Row class of the reply
@@ -2576,7 +2584,7 @@ function bbp_get_topic_pagination_count() {
 	$bbp = bbpress();
 
 	// Define local variable(s)
-	$retstr    = '';
+	$retstr = '';
 	$total_int = $bbp->reply_query->total_count; // thread_reply
 	// Set pagination values
 	$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
