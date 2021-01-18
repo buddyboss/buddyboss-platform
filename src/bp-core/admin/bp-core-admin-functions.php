@@ -1882,7 +1882,7 @@ function bp_member_type_permissions_metabox( $post ) {
 								)
 							);
 							?>
-                        /> <?php _e( '(None)', 'buddyboss' ); ?>
+                        /> <?php _e( '(None - hide group type option)', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
