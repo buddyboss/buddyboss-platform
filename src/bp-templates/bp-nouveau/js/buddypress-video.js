@@ -2397,6 +2397,12 @@ window.bp = window.bp || {};
 					}
 					);
 
+					if ( player[ $( this ).attr('id') ] !== undefined) {
+						player[ $( this ).attr('id') ].seekButtons({
+							forward: 5,
+							back: 5
+						});
+					}
 					//Check if Video has played before and has the same id
 					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == bp.Nouveau.Video.Player.playerID ) {
 						player[ $(self).parent().attr('id') ].currentTime( bp.Nouveau.Video.Player.playerTime );
