@@ -57,7 +57,7 @@ function groups_screen_group_admin_settings() {
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_video_status    = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
 		$post_group_video_status = filter_input( INPUT_POST, 'group-video-status', FILTER_SANITIZE_STRING );
-		$video_status            = isset( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
+		$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
