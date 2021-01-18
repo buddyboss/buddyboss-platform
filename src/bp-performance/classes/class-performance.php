@@ -66,6 +66,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				$class_name          = __CLASS__;
 				self::$instance      = new $class_name();
 				self::$file_location = __DIR__;
+				add_action( 'muplugins_loaded', array( self::$instance, 'start' ), 9999 );
 			}
 
 			return self::$instance;
@@ -294,10 +295,6 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 * Setup the mu plugin file and shows sitewide notice..
 		 */
 		public function bp_mu_setup_and_load_plugin_file() {
-			// If installing MU plugin fails, display warning and download link in WP admin.
-			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' ) ) {
-				add_action( 'admin_notices', array( $this, 'add_sitewide_notice' ) );
-			}
 
 			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' ) ) {
 				$bp_mu_plugin_file_path = '';
@@ -343,6 +340,11 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 						die();
 					}
 				}
+			}
+
+			// If installing MU plugin fails, display warning and download link in WP admin.
+			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' ) ) {
+				add_action( 'admin_notices', array( $this, 'add_sitewide_notice' ) );
 			}
 		}
 
