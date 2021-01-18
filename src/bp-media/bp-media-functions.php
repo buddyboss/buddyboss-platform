@@ -2301,7 +2301,7 @@ function bp_media_default_scope( $scope ) {
 
 	$new_scope = array();
 
-	$allowed_scopes = array( 'public' );
+	$allowed_scopes = array( 'public', 'all' );
 	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
 		$allowed_scopes[] = 'friends';
 	}

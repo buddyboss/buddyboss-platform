@@ -573,6 +573,68 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 
 			if ( ! is_wp_error( $video_id ) ) {
 
+				// Set the Preview image came via JS.
+				if ( ! empty( $video['js_preview'] ) ) {
+
+					// Get Upload directory.
+					$upload     = wp_upload_dir();
+					$upload_dir = $upload['basedir'];
+					$upload_dir = $upload_dir . '/' . $video['id'] . '-video-thumbnail-' . time();
+
+					// If folder not exists then create.
+					if ( ! is_dir( $upload_dir ) ) {
+
+						// Create temp folder.
+						wp_mkdir_p( $upload_dir );
+						chmod( $upload_dir, 0777 );
+
+					}
+
+					add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+					add_action( 'intermediate_image_sizes_advanced', 'bp_video_disable_thumbnail_images' );
+
+					$str         = wp_rand();
+					$unique_file = md5( $str );
+					$image_name  = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $unique_file );
+					$thumbnail   = $upload_dir . '/' . $image_name . '.jpg';
+					$file_name   = $image_name . '.jpg';
+
+					$thumbnail = bp_video_base64_to_jpeg( $video['js_preview'], $thumbnail );
+
+					if ( file_exists( $thumbnail ) ) {
+						$upload_file = wp_upload_bits( $file_name, null, file_get_contents( $thumbnail ) ); // phpcs:ignore
+						if ( ! $upload_file['error'] ) {
+							$wp_filetype = wp_check_filetype( $file_name, null );
+							$attachment  = array(
+								'post_mime_type' => $wp_filetype['type'],
+								'post_title'     => sanitize_file_name( $image_name ),
+								'post_content'   => '',
+								'post_status'    => 'inherit',
+							);
+
+							$preview_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+							if ( ! is_wp_error( $preview_attachment_id ) ) {
+								if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+									require_once ABSPATH . 'wp-admin/includes/image.php';
+									require_once ABSPATH . 'wp-admin/includes/file.php';
+									require_once ABSPATH . 'wp-admin/includes/media.php';
+								}
+								$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $upload_file['file'] );
+								wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+								$thumbnail_list[] = $preview_attachment_id;
+								update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
+								update_post_meta( $preview_attachment_id, 'video_id', $video_id );
+
+								update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', $preview_attachment_id );
+							}
+						}
+					}
+
+					remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+					remove_action( 'intermediate_image_sizes_advanced', 'bp_video_disable_thumbnail_images' );
+					bp_core_remove_temp_directory( $upload_dir );
+				}
+
 				if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 
 					$thumbnails   = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
@@ -1509,7 +1571,10 @@ function bp_video_get_edit_activity_data( $activity ) {
 				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 				$thumb        = '';
 				if ( $get_existing ) {
-					$thumb = wp_get_attachment_image_url( $get_existing, 'bp-video-thumbnail' );
+					$file  = get_attached_file( $get_existing );
+					$type  = pathinfo( $file, PATHINFO_EXTENSION );
+					$data  = file_get_contents( $file ); // phpcs:ignore
+					$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
 				}
 
 				$activity['video'][] = array(

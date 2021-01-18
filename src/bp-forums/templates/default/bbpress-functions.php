@@ -371,13 +371,23 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						$index                      = 0;
 						while ( bp_video() ) {
 							bp_the_video();
+
+							$get_existing = get_post_meta( bp_get_video_attachment_id(), 'bp_video_preview_thumbnail_id', true );
+							$thumb        = '';
+							if ( $get_existing ) {
+								$file  = get_attached_file( $get_existing );
+								$type  = pathinfo( $file, PATHINFO_EXTENSION );
+								$data  = file_get_contents( $file ); // phpcs:ignore
+								$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+							}
+
 							$size                         = filesize( get_attached_file( bp_get_video_attachment_id() ) );
 							$params['topic_edit_video'][] = array(
 								'id'            => bp_get_video_id(),
 								'attachment_id' => bp_get_video_attachment_id(),
 								'name'          => basename( get_attached_file( bp_get_video_attachment_id() ) ),
 								'type'          => 'video',
-								'thumb'         => '',
+								'thumb'         => $thumb,
 								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
 								'size'          => $size,
 								'menu_order'    => $index,
@@ -472,13 +482,23 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						$index                      = 0;
 						while ( bp_video() ) {
 							bp_the_video();
+
+							$get_existing = get_post_meta( bp_get_video_attachment_id(), 'bp_video_preview_thumbnail_id', true );
+							$thumb        = '';
+							if ( $get_existing ) {
+								$file  = get_attached_file( $get_existing );
+								$type  = pathinfo( $file, PATHINFO_EXTENSION );
+								$data  = file_get_contents( $file ); // phpcs:ignore
+								$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+							}
+
 							$size                         = filesize( get_attached_file( bp_get_video_attachment_id() ) );
 							$params['reply_edit_video'][] = array(
 								'id'            => bp_get_video_id(),
 								'attachment_id' => bp_get_video_attachment_id(),
 								'name'          => basename( get_attached_file( bp_get_video_attachment_id() ) ),
 								'type'          => 'video',
-								'thumb'         => '',
+								'thumb'         => $thumb,
 								'size'          => $size,
 								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
 								'menu_order'    => $index,
@@ -573,13 +593,23 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						$index                      = 0;
 						while ( bp_video() ) {
 							bp_the_video();
+
+							$get_existing = get_post_meta( bp_get_video_attachment_id(), 'bp_video_preview_thumbnail_id', true );
+							$thumb        = '';
+							if ( $get_existing ) {
+								$file  = get_attached_file( $get_existing );
+								$type  = pathinfo( $file, PATHINFO_EXTENSION );
+								$data  = file_get_contents( $file ); // phpcs:ignore
+								$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+							}
+
 							$size                         = filesize( get_attached_file( bp_get_video_attachment_id() ) );
 							$params['forum_edit_video'][] = array(
 								'id'            => bp_get_video_id(),
 								'attachment_id' => bp_get_video_attachment_id(),
 								'name'          => basename( get_attached_file( bp_get_video_attachment_id() ) ),
 								'type'          => 'video',
-								'thumb'         => '',
+								'thumb'         => $thumb,
 								'size'          => $size,
 								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
 								'menu_order'    => $index,

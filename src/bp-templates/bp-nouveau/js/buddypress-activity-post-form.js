@@ -308,28 +308,29 @@ window.bp = window.bp || {};
 							video_file = false;
 
 							video_file = {
-								name				: activity_data.video[vidi].name,
-								size				: activity_data.video[vidi].size,
-								accepted			: true,
-								kind				: 'file',
+								name: activity_data.video[ vidi ].name,
+								size: activity_data.video[ vidi ].size,
+								accepted: true,
+								kind: 'file',
 								upload: {
-									filename			: activity_data.video[vidi].name,
-									uuid			: activity_data.video[vidi].vid_id
+									filename: activity_data.video[ vidi ].name,
+									uuid: activity_data.video[ vidi ].vid_id
 								},
-								dataURL				: activity_data.video[vidi].url,
-								id					: activity_data.video[vidi].vid_id,
+								dataURL: activity_data.video[ vidi ].url,
+								id: activity_data.video[ vidi ].vid_id,
 								video_edit_data: {
-									'id'			: activity_data.video[vidi].vid_id,
-									'name'			: activity_data.video[vidi].name,
-									'type'			: 'video',
-									'url'			: activity_data.video[vidi].url,
-									'size'			: activity_data.video[vidi].size,
-									'uuid'			: activity_data.video[vidi].vid_id,
-									'video_id'	: activity_data.video[vidi].id,
-									'menu_order'	: activity_data.video[vidi].menu_order,
-									'album_id'	: activity_data.video[vidi].album_id,
-									'group_id'	: activity_data.video[vidi].group_id,
-									'saved'			: true
+									'id': activity_data.video[ vidi ].vid_id,
+									'name': activity_data.video[ vidi ].name,
+									'type': 'video',
+									'thumb': activity_data.video[ vidi ].thumb,
+									'url': activity_data.video[ vidi ].url,
+									'size': activity_data.video[ vidi ].size,
+									'uuid': activity_data.video[ vidi ].vid_id,
+									'video_id': activity_data.video[ vidi ].id,
+									'menu_order': activity_data.video[ vidi ].menu_order,
+									'album_id': activity_data.video[ vidi ].album_id,
+									'group_id': activity_data.video[ vidi ].group_id,
+									'saved': true
 								}
 							};
 
@@ -1085,7 +1086,7 @@ window.bp = window.bp || {};
 					maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 					dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 					dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
-					previewTemplate : document.getElementsByClassName('activity-post-video-template')[0].innerHTML
+					previewTemplate : document.getElementsByClassName( 'activity-post-video-template' )[0].innerHTML
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', this.dropzone_options );
@@ -1098,17 +1099,17 @@ window.bp = window.bp || {};
 							self.model.set( 'video', self.video );
 						}
 
-						if(file.dataURL) {
-							// Get Thumbnail image from response
+						if ( file.dataURL && file.video_edit_data.thumb.length ) {
+							// Get Thumbnail image from response.
+							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend('<img src=" ' + file.video_edit_data.thumb + ' " />');
 						} else {
 
-							if( bp.Nouveau.getVideoThumb ) {
+							if ( bp.Nouveau.getVideoThumb ) {
 								bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 							}
 
 						}
 					}
-						
 				);
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
@@ -1136,8 +1137,8 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'uploadprogress',
 					function( element ) {
-						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-				  	}
+						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+					}
 				);
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
@@ -1156,7 +1157,7 @@ window.bp = window.bp || {};
 							response.data.uuid       = file.upload.uuid;
 							response.data.group_id   = ! _.isUndefined( BP_Nouveau.video ) && ! _.isUndefined( BP_Nouveau.video.group_id ) ? BP_Nouveau.video.group_id : false;
 							response.data.saved      = false;
-							response.data.jsPreview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.video.push( response.data );
 							self.model.set( 'video', self.video );
@@ -1239,10 +1240,10 @@ window.bp = window.bp || {};
 				$( '#whats-new-attachments' ).removeClass( 'empty' );
 			},
 
-			createThumbnailFromUrl: function ( mock_file ) {
+			createVideoThumbnailFromUrl: function ( mock_file ) {
 				var self = this;
 
-				self.videoDropzoneObj.createThumbnailFromUrl(
+				self.videoDropzoneObj.createVideoThumbnailFromUrl(
 					mock_file,
 					self.videoDropzoneObj.options.thumbnailWidth,
 					self.videoDropzoneObj.options.thumbnailHeight,

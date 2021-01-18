@@ -622,7 +622,7 @@ window.bp = window.bp || {};
 						);
 
 						if(file.dataURL) {
-							// Get Thumbnail image from response
+							// Get Thumbnail image from response.
 						} else {
 
 							if( bp.Nouveau.getVideoThumb ) {
@@ -680,6 +680,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = self.dropzone_video.length;
 							response.data.album_id   = self.video_album_id;
 							response.data.group_id   = self.video_group_id;
+							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							response.data.saved      = false;
 							self.dropzone_video.push( response.data );
 						} else {
@@ -835,6 +836,7 @@ window.bp = window.bp || {};
 							response.data.album_id   = self.video_album_id;
 							response.data.group_id   = self.video_group_id;
 							response.data.saved      = false;
+							response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							self.dropzone_video_thumb.push( response.data );
 						} else {
 							if ( !jQuery( '.media-error-popup' ).length ) {
@@ -890,12 +892,12 @@ window.bp = window.bp || {};
 						success: function ( response ) {
 							if ( response.success ) {
 
+								var ulSelector = $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
 								if ( response.data.default_images ) {
-									var ulSelector = $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
 									ulSelector.html( '' );
 									ulSelector.html( response.data.default_images );
-									ulSelector.removeClass( 'loading' );
 								}
+								ulSelector.removeClass( 'loading' );
 
 								if ( response.data.dropzone_edit ) {
 									var mock_file = false;
@@ -1040,6 +1042,7 @@ window.bp = window.bp || {};
 							response.data.album_id   = self.video_album_id;
 							response.data.group_id   = self.video_group_id;
 							response.data.saved      = false;
+							response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							self.dropzone_video.push( response.data );
 						} else {
 							if ( !jQuery( '.media-error-popup' ).length ) {
@@ -2393,7 +2396,7 @@ window.bp = window.bp || {};
 						);
 					}
 					);
-					
+
 					//Check if Video has played before and has the same id
 					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == bp.Nouveau.Video.Player.playerID ) {
 						player[ $(self).parent().attr('id') ].currentTime( bp.Nouveau.Video.Player.playerTime );

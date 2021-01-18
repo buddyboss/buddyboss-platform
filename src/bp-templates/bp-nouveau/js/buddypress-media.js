@@ -2667,18 +2667,18 @@ window.bp = window.bp || {};
 					self.video_dropzone_obj.on(
 						'addedfile',
 						function ( file ) {
-	
+
 							if(file.dataURL) {
-								// Get Thumbnail image from response
+								// Get Thumbnail image from response.
 							} else {
-	
+
 								if( bp.Nouveau.getVideoThumb ) {
 									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 								}
-	
+
 							}
 						}
-							
+
 					);
 
 					self.video_dropzone_obj.on(
@@ -2697,6 +2697,7 @@ window.bp = window.bp || {};
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
 								response.data.group_id = self.group_id;
+								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								response.data.saved = false;
 								self.dropzone_media.push( response.data );
 								self.addVideoIdsToGroupMessagesForm();
@@ -3068,18 +3069,19 @@ window.bp = window.bp || {};
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'addedfile',
 						function ( file ) {
-	
-							if(file.dataURL) {
-								// Get Thumbnail image from response
+
+							if( file.dataURL && file.dataThumb && file.dataThumb.length ) {
+								// Get Thumbnail image from response.
+								$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend('<img src=" ' + file.dataThumb + ' " />');
 							} else {
-	
+
 								if( bp.Nouveau.getVideoThumb ) {
 									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 								}
-	
+
 							}
 						}
-							
+
 					);
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
@@ -3098,6 +3100,7 @@ window.bp = window.bp || {};
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
 								response.data.group_id = self.group_id;
+								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								response.data.saved = false;
 								self.dropzone_media[ dropzone_obj_key ].push( response.data );
 								self.addVideoIdsToForumsForm( dropzone_container );
@@ -3185,8 +3188,9 @@ window.bp = window.bp || {};
 										'size': edit_videos[ v ].size,
 										'url': edit_videos[ v ].url,
 										'uuid': edit_videos[ v ].id,
+										'thumb': edit_videos[ v ].thumb,
 										'menu_order': v,
-										'saved': true
+										'saved': true,
 									}
 								);
 
@@ -3202,6 +3206,7 @@ window.bp = window.bp || {};
 										uuid: edit_videos[ v ].id
 									},
 									dataURL: edit_videos[ v ].url,
+									dataThumb: edit_videos[ v ].thumb,
 									id: edit_videos[ v ].id
 								};
 

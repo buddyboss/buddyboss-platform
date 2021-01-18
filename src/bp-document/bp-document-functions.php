@@ -427,6 +427,7 @@ function bp_document_get_specific( $args = '' ) {
 			'folder_id'    => false,      // Sort ASC or DESC.
 			'folder'       => false,
 			'meta_query'   => false,
+			'privacy'      => false,      // privacy to filter.
 		),
 		'document_get_specific'
 	);
@@ -440,6 +441,7 @@ function bp_document_get_specific( $args = '' ) {
 		'order_by'   => $r['order_by'],
 		'folder_id'  => $r['folder_id'],
 		'folder'     => $r['folder'],
+		'privacy'    => $r['privacy'],      // privacy to filter.
 		'meta_query' => $r['meta_query'],
 	);
 

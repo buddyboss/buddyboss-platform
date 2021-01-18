@@ -1227,7 +1227,7 @@ window.bp = window.bp || {};
 					function ( file ) {
 
 						if(file.dataURL) {
-							// Get Thumbnail image from response
+							// Get Thumbnail image from response.
 						} else {
 
 							if( bp.Nouveau.getVideoThumb ) {
@@ -1236,7 +1236,7 @@ window.bp = window.bp || {};
 
 						}
 					}
-						
+
 				);
 
 				bp.Nouveau.Messages.dropzone.on(
@@ -1255,6 +1255,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							response.data.saved 	 = false;
 							response.data.privacy 	 = 'message';
+							response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							self.video.push( response.data );
 							self.model.set( 'video', self.video );
 						} else {

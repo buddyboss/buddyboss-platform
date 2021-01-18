@@ -1797,20 +1797,20 @@ window.bp = window.bp || {};
 					self.dropzone_video_obj.on(
 						'addedfile',
 						function ( file ) {
-	
+
 							if(file.dataURL) {
-								// Get Thumbnail image from response
+								// Get Thumbnail image from response.
 							} else {
-	
+
 								if( bp.Nouveau.getVideoThumb ) {
 									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 								}
-	
+
 							}
 						}
-							
+
 					);
-	
+
 					self.dropzone_video_obj.on(
 						'uploadprogress',
 						function( element ) {
@@ -1828,6 +1828,7 @@ window.bp = window.bp || {};
 								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
 								response.data.group_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 								response.data.saved      = false;
+								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
