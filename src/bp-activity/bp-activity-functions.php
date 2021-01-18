@@ -5452,3 +5452,75 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		)
 	);
 }
+
+/**
+ * Return the link to report activity
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args Arguments
+ *
+ * @return string Link for a report a activity
+ */
+function bp_activity_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$args = wp_parse_args( $args,
+		array(
+			'id'                => 'activity_report',
+			'component'         => 'moderation',
+			'position'          => 10,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_get_activity_id(),
+				'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Filter Activity report link
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	return apply_filters( 'bp_activity_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}
+
+/**
+ * Return the link to report activity activity
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args Arguments
+ *
+ * @return string Link for a report a activity comment
+ */
+function bp_activity_comment_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$args = wp_parse_args( $args,
+		array(
+			'id'                => 'activity_comment_report',
+			'component'         => 'moderation',
+			'position'          => 50,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_get_activity_comment_id(),
+				'data-bp-content-type' => BP_Moderation_Activity_Comment::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Filter Activity comment report link
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}

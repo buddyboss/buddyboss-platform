@@ -927,3 +927,4 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 		)
 	);
 }
+

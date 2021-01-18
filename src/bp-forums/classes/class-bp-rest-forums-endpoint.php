@@ -278,7 +278,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $forum, $request )
@@ -321,7 +321,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		if ( true === $retval && empty( $forum->ID ) ) {
 			$retval = new WP_Error(
@@ -385,7 +385,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the forum.
 	 */
 	public function update_item( $request ) {
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		$user_id = bbp_get_user_id( 0, true, true );
 
@@ -457,7 +457,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		if ( empty( $forum->ID ) ) {
 			$retval = new WP_Error(
@@ -1098,7 +1098,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$last_id = get_post_meta( $forum_id, '_bbp_last_active_id', true );
 		if ( ! empty( $last_id ) ) {
-			$post = get_post( $last_id );
+			$post = bbp_get_forum( $last_id );
 
 			return ( ! empty( $post ) && ! empty( $post->post_author ) ) ? $post->post_author : 0;
 		}
