@@ -1147,7 +1147,7 @@ class BP_Video {
 			)
 		);
 
-		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
+		return ( isset( $total_count['total'] ) ? $total_count['total'] : 0 );
 
 	}
 
@@ -1174,7 +1174,7 @@ class BP_Video {
 			)
 		);
 
-		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
+		return ( isset( $total_count['total'] ) ? $total_count['total'] : 0 );
 	}
 
 	/**
@@ -1201,7 +1201,7 @@ class BP_Video {
 			)
 		);
 
-		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
+		return ( isset( $total_count['total'] ) ? $total_count['total'] : 0 );
 	}
 
 	/**
@@ -1226,7 +1226,7 @@ class BP_Video {
 			)
 		);
 
-		return (array) ( is_array( $video_ids['videos'] ) ? $video_ids['videos'] : array() );
+		return (array) ( isset( $video_ids['videos'] ) ? $video_ids['videos'] : array() );
 
 	}
 

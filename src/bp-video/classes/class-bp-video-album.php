@@ -644,7 +644,7 @@ class BP_Video_Album {
 			)
 		);
 
-		return ( is_array( $total_count['total'] ) ? $total_count['total'] : 0 );
+		return ( isset( $total_count['total'] ) ? $total_count['total'] : 0 );
 	}
 
 	/**
