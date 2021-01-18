@@ -369,7 +369,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			);
 
 			$schema['properties']['member_type_join'] = array(
-				'description' => __( 'On Registration and Account activation, Selected Profile Type members will auto-join Groups of this Type other than Hidden Groups. Members of the selected profile types can also join new Private groups of this Type without approval.', 'buddyboss' ),
+				'description' => __( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
