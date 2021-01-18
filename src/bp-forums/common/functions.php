@@ -1517,27 +1517,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
-		/**
-		 * //thread_reply - Need to update total reply count at front side based on Reply Threading option.
-		 */
-		$default_thread_replies = (bool) ( bbp_is_single_topic() && bbp_thread_replies() );
-		if ( true === $default_thread_replies ) {
-			// Call when Reply Threading option is enable.
-			$reply_exclude_qry = $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts}
-			WHERE post_parent = %d
-			AND post_status IN ( {$post_status} )
-			AND post_type = '%s'
-			AND {$wpdb->posts}.ID NOT IN( SELECT {$wpdb->posts}.ID FROM {$wpdb->posts}
-			INNER JOIN {$wpdb->postmeta} ON ( {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id )
-			WHERE {$wpdb->postmeta}.meta_key = '%s');", $parent_id, $post_type, '_bbp_reply_to' );
-			$child_count = $wpdb->get_var( $reply_exclude_qry );
-		} else {
-			// Call when Reply Threading option is disable.
-			$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} 
-			WHERE post_parent = %d 
-			AND post_status IN ( {$post_status} ) 
-			AND post_type = '%s';", $parent_id, $post_type ) );
-		}
+		$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_count, 'bbpress_posts' );
 	}
 
