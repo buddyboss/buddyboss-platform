@@ -49,7 +49,6 @@ function bp_nouveau_video_enqueue_scripts() {
 
 			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_style( 'bp-media-videojs-css' );
-			wp_enqueue_style( 'bp-media-videojs-seek-buttons-css' );
 			wp_enqueue_script( 'bp-media-videojs' );
 			wp_enqueue_script( 'bp-media-videojs-seek-buttons' );
 			wp_enqueue_script( 'bp-media-videojs-flv' );

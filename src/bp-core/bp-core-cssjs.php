@@ -371,10 +371,6 @@ function bp_core_register_common_styles() {
 				'file'         => "{$url}vendor/video-js{$min}.css",
 				'dependencies' => array(),
 			),
-			'bp-media-videojs-seek-buttons-css' => array(
-				'file'         => "{$url}vendor/videojs-seek-buttons.css",
-				'dependencies' => array(),
-			),
 		)
 	);
 

@@ -2383,7 +2383,7 @@ window.bp = window.bp || {};
 				function () {
 
 					var self    = this;
-					var options = {};
+					var options = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
 
 					player[ $( this ).attr('id') ] = videojs(
 						self,
