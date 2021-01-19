@@ -1966,12 +1966,7 @@ function bp_member_type_permissions_metabox( $post ) {
                 <tbody>
                 <tr>
                     <td colspan="2">
-						<?php _e( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types below other than Hidden Groups.', 'buddyboss' ); ?>
-                        <?php
-                        if ( class_exists( 'BB_Platform_Pro' ) ) {
-	                        echo sprintf( __( '</br><strong>(Settings will be overrided if you add a restriction <a href="%s">HERE</a>)</strong>', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
-                        }
-                        ?>
+						<?php _e( 'Select which group types members with this profile type should be automatically added to after they have registered and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
@@ -1994,6 +1989,14 @@ function bp_member_type_permissions_metabox( $post ) {
                     </tr>
 
 				<?php } ?>
+				
+				<?php
+				if ( class_exists( 'BB_Platform_Pro' ) ) {
+					echo '<tr><td>';
+					echo sprintf( __( 'Note: This setting might be affected by <a href="%s">Group Access</a> restrictions.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
+					echo '</td></tr>';
+				}
+				?>
 
                 </tbody>
             </table>

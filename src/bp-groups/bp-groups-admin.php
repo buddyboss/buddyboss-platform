@@ -2201,12 +2201,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss' ); ?>
-                        <?php
-                        if ( class_exists( 'BB_Platform_Pro' ) ) {
-	                        echo sprintf( __( '</br><strong>(Settings will be overrided if you add a restriction <a href="%s">HERE</a>)</strong>', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
-                        }
-                        ?>
+						<?php _e( 'Select which profile types can join private groups with this group type without approval.', 'buddyboss' ); ?>
 					</td>
 				</tr>
 
@@ -2228,6 +2223,14 @@ function bp_group_type_permissions_meta_box( $post ) {
 				</tr>
 
 			<?php } ?>
+
+			<?php
+			if ( class_exists( 'BB_Platform_Pro' ) ) {
+				echo '<tr><td>';
+				echo sprintf( __( 'Note: This setting might be affected by <a href="%s">Group Access</a> restrictions.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
+				echo '</td></tr>';
+			}
+			?>
 
 			</tbody>
 		</table>
