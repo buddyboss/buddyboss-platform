@@ -920,7 +920,15 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			$count  = 1;
-			$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
+			$admins = array_map(
+				'intval',
+				get_users(
+					array(
+						'role'   => 'administrator',
+						'fields' => 'ID',
+					)
+				)
+			);
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
@@ -1666,12 +1674,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	/*if ( bp_is_active( 'moderation' ) ) {
-		$thread->thread['recipients'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-		$thread->thread['recipients'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
-	}*/
-
-	// Check moderation if user blocked or not for single user thread
+	// Check moderation if user blocked or not for single user thread.
 	if ( bp_is_active( 'moderation' ) && ! empty( $recipients ) && 1 === count( $recipients ) ) {
 		$recipient_id = current( array_keys( $recipients ) );
 
@@ -1698,8 +1701,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_message_thread_type = '';
 	$group_message_fresh       = '';
 	$message_from              = '';
+	$first_message             = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
 
-	if ( ! $group_id ) {
+	$is_group_message_thread = false;
+	$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+	$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+	$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+	$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+	if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		$is_group_message_thread = true;
+	}
+
+	if ( ! $is_group_message_thread ) {
 		$thread = bp_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
 	}
 
@@ -1773,7 +1788,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	if ( ! $group_id ) {
-		$first_message           = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
 		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 
@@ -1822,13 +1836,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$is_group_thread = 0;
 	if ( (int) $group_id > 0 ) {
-
-		$first_message           = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual
-		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
-		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 
 		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 			$is_group_thread = 1;
@@ -1870,7 +1882,15 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
 		$count  = 1;
-		$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
+		$admins = array_map(
+			'intval',
+			get_users(
+				array(
+					'role'   => 'administrator',
+					'fields' => 'ID',
+				)
+			)
+		);
 		foreach ( $thread_template->thread->recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients'][ $count ] = array(
