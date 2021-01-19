@@ -19002,13 +19002,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   .bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button,
   .bb-video-thumb .video-js .vjs-control-bar .enlarge_button,
   .bb-media-section .video-js .vjs-control-bar .enlarge_button {
-    width: 2em;
-  }
-  .bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
-  .bb-video-thumb .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
-  .bb-media-section .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before {
-    font-size: 14px;
-    line-height: 2.2;
+    width: 3em;
   }
 }
 
