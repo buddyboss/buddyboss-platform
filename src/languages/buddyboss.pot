@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-19 07:32:30+00:00\n"
+"POT-Creation-Date: 2021-01-19 14:00:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1310,7 +1310,7 @@ msgstr ""
 #: bp-media/bp-media-filters.php:1313 bp-media/bp-media-settings.php:234
 #: bp-media/bp-media-settings.php:241 bp-media/bp-media-settings.php:248
 #: bp-media/bp-media-settings.php:255 bp-media/bp-media-settings.php:262
-#: bp-media/classes/class-bp-media.php:643
+#: bp-media/classes/class-bp-media.php:679
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1122
 #: bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:202
@@ -2401,7 +2401,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
 #: bp-media/bp-media-settings.php:1195 bp-media/bp-media-settings.php:1228
-#: bp-media/bp-media-settings.php:1723 bp-media/bp-media-settings.php:1755
+#: bp-media/bp-media-settings.php:1723 bp-media/bp-media-settings.php:1748
 msgid "Description"
 msgstr ""
 
@@ -3519,7 +3519,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:175
 #: bp-friends/classes/class-bp-friends-component.php:259
 #: bp-friends/classes/class-bp-friends-component.php:305
-#: bp-media/classes/class-bp-media.php:639
+#: bp-media/classes/class-bp-media.php:675
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:920
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1026
@@ -4463,7 +4463,7 @@ msgstr ""
 #: bp-core/admin/templates/check-document-mime-type.php:44
 #: bp-core/admin/templates/check-video-mime-type.php:44
 #: bp-media/bp-media-settings.php:1197 bp-media/bp-media-settings.php:1258
-#: bp-media/bp-media-settings.php:1725 bp-media/bp-media-settings.php:1785
+#: bp-media/bp-media-settings.php:1724 bp-media/bp-media-settings.php:1751
 msgid "MIME Type"
 msgstr ""
 
@@ -9043,9 +9043,9 @@ msgstr ""
 #: bp-document/classes/class-bp-document.php:710
 #: bp-document/classes/class-bp-document.php:1372
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
-#: bp-media/classes/class-bp-media-album.php:529
+#: bp-media/classes/class-bp-media-album.php:520
 #: bp-media/classes/class-bp-media-privacy.php:59
-#: bp-media/classes/class-bp-media.php:632
+#: bp-media/classes/class-bp-media.php:668
 #: bp-video/classes/class-bp-video.php:653
 msgid "Group Members"
 msgstr ""
@@ -9065,7 +9065,7 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document.php:722
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
-#: bp-media/classes/class-bp-media.php:641
+#: bp-media/classes/class-bp-media.php:677
 #: bp-messages/bp-messages-template.php:1455
 #: bp-templates/bp-nouveau/includes/customizer.php:336
 #: bp-video/classes/class-bp-video.php:662
@@ -18881,7 +18881,7 @@ msgid "Go to media"
 msgstr ""
 
 #: bp-media/bp-media-filters.php:2277
-#: bp-templates/bp-nouveau/buddypress/media/single-album.php:33
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:34
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:36
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:36
 #. translators: Photos count.
@@ -19070,36 +19070,35 @@ msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1194 bp-media/bp-media-settings.php:1224
-#: bp-media/bp-media-settings.php:1722 bp-media/bp-media-settings.php:1751
+#: bp-media/bp-media-settings.php:1722 bp-media/bp-media-settings.php:1744
 msgid "Extension"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1196 bp-media/bp-media-settings.php:1231
-#: bp-media/bp-media-settings.php:1724 bp-media/bp-media-settings.php:1758
 msgid "Icon"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1225 bp-media/bp-media-settings.php:1281
-#: bp-media/bp-media-settings.php:1752 bp-media/bp-media-settings.php:1808
+#: bp-media/bp-media-settings.php:1745 bp-media/bp-media-settings.php:1774
 msgid ".extension"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1229 bp-media/bp-media-settings.php:1285
-#: bp-media/bp-media-settings.php:1756 bp-media/bp-media-settings.php:1812
+#: bp-media/bp-media-settings.php:1749 bp-media/bp-media-settings.php:1778
 msgid "description"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1259 bp-media/bp-media-settings.php:1300
-#: bp-media/bp-media-settings.php:1786 bp-media/bp-media-settings.php:1827
+#: bp-media/bp-media-settings.php:1752 bp-media/bp-media-settings.php:1781
 msgid "MIME type"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1263 bp-media/bp-media-settings.php:1301
-#: bp-media/bp-media-settings.php:1790 bp-media/bp-media-settings.php:1828
+#: bp-media/bp-media-settings.php:1756 bp-media/bp-media-settings.php:1782
 msgid "MIME Checker"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1309 bp-media/bp-media-settings.php:1836
+#: bp-media/bp-media-settings.php:1309 bp-media/bp-media-settings.php:1790
 msgid "Add Extension"
 msgstr ""
 
@@ -23737,7 +23736,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
 #: bp-templates/bp-nouveau/buddypress/media/index.php:36
-#: bp-templates/bp-nouveau/buddypress/media/single-album.php:50
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:53
 msgid "Add Photos"
 msgstr ""
 
@@ -23748,7 +23747,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:15
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:19
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:42
-#: bp-templates/bp-nouveau/buddypress/video/index.php:41
+#: bp-templates/bp-nouveau/buddypress/video/index.php:51
 msgid "Create Album"
 msgstr ""
 
@@ -23819,14 +23818,27 @@ msgstr ""
 msgid "cancel"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/single-album.php:43
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:35
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:48
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:48
+#: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
+#: bp-templates/bp-nouveau/buddypress/video/single-album.php:41
+#: bp-video/bp-video-filters.php:1534
+#. translators: Photos count.
+#. translators: videos
+msgid "%s video"
+msgid_plural "%s videos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:46
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:55
 msgid "Delete Album"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/single-album.php:53
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:58
 #: bp-templates/bp-nouveau/buddypress/video/add-video.php:15
-#: bp-templates/bp-nouveau/buddypress/video/index.php:40
+#: bp-templates/bp-nouveau/buddypress/video/index.php:43
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:62
 msgid "Add Videos"
 msgstr ""
@@ -24119,18 +24131,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/activity.php:19
 msgid "ago"
 msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:48
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:48
-#: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
-#: bp-templates/bp-nouveau/buddypress/video/single-album.php:41
-#: bp-video/bp-video-filters.php:1534
-#. translators: Photos count.
-#. translators: videos
-msgid "%s video"
-msgid_plural "%s videos"
-msgstr[0] ""
-msgstr[1] ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:20
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:24

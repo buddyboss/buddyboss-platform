@@ -680,6 +680,7 @@ table.extension-listing tbody tr.custom-extension td input.extension-mime[type="
 }
 
 table.extension-listing tfoot td #btn-add-extensions,
+table.extension-listing tfoot td #btn-add-video-extensions,
 table.extension-listing tfoot td #btn-check-mime-type {
   cursor: pointer;
   float: right;
