@@ -589,6 +589,7 @@ class BP_Media {
 				}
 
 				$retval['total_video'] = $total_videos;
+				$retval['total']       = $retval['total'] - $total_videos;
 			}
 		}
 
