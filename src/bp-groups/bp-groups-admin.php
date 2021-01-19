@@ -2201,10 +2201,10 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?>
+						<?php _e( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss' ); ?>
                         <?php
                         if ( class_exists( 'BB_Platform_Pro' ) ) {
-	                        echo sprintf( __( '( This settings will be override if you added a restriction <a href="%s">here</a>. )', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
+	                        echo sprintf( __( '</br><strong>(Settings will be overrided if you add a restriction <a href="%s">HERE</a>)</strong>', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
                         }
                         ?>
 					</td>
