@@ -2402,6 +2402,12 @@ window.bp = window.bp || {};
 							forward: 5,
 							back: 5
 						});
+						setTimeout( function() {
+							var vjsBlock = $( self ).parent();
+							vjsBlock.find('.vjs-control-bar > .vjs-seek-button.skip-back, .vjs-control-bar > .vjs-seek-button.skip-forward').attr( 'data-balloon-pos', 'up');
+							vjsBlock.find('.vjs-control-bar > .vjs-seek-button.skip-back').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_skip_back_text );
+							vjsBlock.find('.vjs-control-bar > .vjs-seek-button.skip-forward').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_skip_forward_text );
+						},0);
 					}
 					//Check if Video has played before and has the same id
 					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == bp.Nouveau.Video.Player.playerID ) {
@@ -2437,10 +2443,10 @@ window.bp = window.bp || {};
 					}
 
 					//Add Tooltips to control buttons
-					var vjsallControlsButton = $( this ).parent().find('.vjs-control-bar > button, .vjs-control-bar > div');
+					var vjsallControlsButton = $( self ).parent().find('.vjs-control-bar > button, .vjs-control-bar > div');
 					vjsallControlsButton.attr( 'data-balloon-pos', 'up' );
 
-					var vjsBlock = $( this ).parent();
+					var vjsBlock = $( self ).parent();
 					vjsBlock.find('.vjs-control-bar > .vjs-play-control').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_play_text );
 					vjsBlock.find('.vjs-control-bar > .vjs-play-control').attr( 'data-balloon-pause', BP_Nouveau.video.i18n_strings.video_pause_text );
 					vjsBlock.find('.vjs-control-bar > .vjs-volume-panel').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_volume_text );

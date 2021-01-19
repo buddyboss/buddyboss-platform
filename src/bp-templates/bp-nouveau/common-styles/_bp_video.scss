@@ -248,6 +248,7 @@
 				&:after,
 				&:before {
 					transition: none;
+					display: block;
 				}
 
 			}
@@ -281,11 +282,11 @@
 			}
 
 			.vjs-seek-button span.vjs-icon-placeholder:before {
-				content: "\e9ce";
+				content: "\e9ce" !important;
 				font-family: "bb-icons";/* stylelint-disable-line */
 			}
 
-			.vjs-seek-button.skip-back {
+			.vjs-seek-button.skip-back .vjs-icon-placeholder:before {
 				transform: rotateY(180deg);
 			}
 
@@ -300,9 +301,14 @@
 					width: 3em;
 				}
 
-				.enlarge_button .vjs-icon-placeholder:before {
-					font-size: 14px;
-					line-height: 2.2;
+				.enlarge_button {
+					width: 2em;
+
+					.vjs-icon-placeholder:before {
+						font-size: 14px;
+						line-height: 2.2;
+					}
+
 				}
 
 			}
