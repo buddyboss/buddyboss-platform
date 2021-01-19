@@ -45,8 +45,8 @@ $albums_link = bp_get_album_link();
 							<?php
 							printf(
 							// translators: Photos count.
-								esc_html( _n( '%s video', '%s videos', $media_album_template->album->video['total'], 'buddyboss' ) ),
-								esc_attr( number_format_i18n( $media_album_template->album->video['total'] ) )
+								esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
+								esc_attr( number_format_i18n( $media_album_template->album->media['total_video'] ) )
 							);
 							?>
 						</span> <!-- Get the count of photos in that album -->
