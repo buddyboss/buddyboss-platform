@@ -473,6 +473,10 @@ class BP_Media {
 			'has_more_items' => null,
 		);
 
+		if ( $r['video'] ) {
+			$retval['total_video'] = null;
+		}
+
 		// Query first for media IDs.
 		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
 
@@ -555,6 +559,37 @@ class BP_Media {
 			}
 
 			$retval['total'] = $total_medias;
+
+			if ( $r['video'] ) {
+
+				$where_sql .= " AND m.type = 'video'";
+
+				/**
+				 * Filters the total video MySQL statement.
+				 *
+				 * @since BuddyBoss 1.5.8
+				 *
+				 * @param string $value     MySQL statement used to query for total medias.
+				 * @param string $where_sql MySQL WHERE statement portion.
+				 * @param string $sort      Sort direction for query.
+				 */
+				$total_videos_sql = apply_filters( 'bp_media_total_videos_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
+				$cached           = bp_core_get_incremented_cache( $total_videos_sql, $cache_group );
+				if ( false === $cached ) {
+					$total_videos = $wpdb->get_var( $total_videos_sql );
+					bp_core_set_incremented_cache( $total_videos_sql, $cache_group, $total_videos );
+				} else {
+					$total_videos = $cached;
+				}
+
+				if ( ! empty( $r['max'] ) ) {
+					if ( (int) $total_videos > (int) $r['max'] ) {
+						$total_videos = $r['max'];
+					}
+				}
+
+				$retval['total_video'] = $total_videos;
+			}
 		}
 
 		return $retval;
@@ -579,7 +614,7 @@ class BP_Media {
 		// Get BuddyPress.
 		$bp = buddypress();
 
-		// Media Privacy array
+		// Media Privacy array.
 		$media_privacy = bp_media_get_visibility_levels();
 
 		$medias       = array();
@@ -615,7 +650,7 @@ class BP_Media {
 				$media->menu_order    = (int) $media->menu_order;
 			}
 
-			// fetch attachment data
+			// fetch attachment data.
 			$attachment_data                 = new stdClass();
 			$attachment_data->full           = wp_get_attachment_image_url( $media->attachment_id, 'full' );
 			$attachment_data->thumb          = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );

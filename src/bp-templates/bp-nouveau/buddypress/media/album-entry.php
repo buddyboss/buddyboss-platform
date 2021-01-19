@@ -22,7 +22,7 @@
                 <div class="bb-album_stats">
                     <span class="bb-album_stats_photos"> <i class="bb-icon bb-icon-video-album"></i> <?php echo number_format_i18n( $media_album_template->album->media['total'] ); ?></span>
                     <span class="bb-album_stats_spacer">&middot;</span>
-                    <span class="bb-album_stats_videos"><i class="bb-icon bb-icon-video-alt"></i> <?php echo number_format_i18n( $media_album_template->album->video['total'] ); ?></span>
+                    <span class="bb-album_stats_videos"><i class="bb-icon bb-icon-video-alt"></i> <?php echo number_format_i18n( $media_album_template->album->media['total_video'] ); ?></span>
                 </div>
 			</div>
         </a>
