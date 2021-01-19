@@ -395,7 +395,16 @@
 			);
 
 			if ( $( 'body .section-bp_video_settings_extensions' ).length ) {
+
 				$( document ).find( '.nav-settings-subsubsub .subsubsub li.bp-media a' ).addClass( 'current' );
+
+				$( '.video-extensions-listing #bp_select_extensions' ).click(
+					function () {
+						var table = $( 'body .section-bp_video_settings_extensions table tbody tr td table tbody tr' );
+						$( 'td input:checkbox', table ).prop( 'checked', this.checked );
+					}
+				);
+
 			}
 
 			/**

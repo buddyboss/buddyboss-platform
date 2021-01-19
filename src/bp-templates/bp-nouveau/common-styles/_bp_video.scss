@@ -183,10 +183,6 @@
 				border-radius: 2px;
 			}
 
-			.vjs-volume-panel {
-				width: auto;
-			}
-
 			.vjs-volume-panel-horizontal.vjs-hover {
 				width: auto;
 			}
@@ -293,6 +289,10 @@
 			@media screen and (max-width: 540px ) {
 				bottom: 10px;
 
+				.vjs-seek-button,
+				.vjs-time-control,
+				.vjs-duration,
+				.vjs-playback-rate,
 				.vjs-picture-in-picture-control {
 					display: none;
 				}

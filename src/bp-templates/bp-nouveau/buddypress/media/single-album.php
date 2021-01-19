@@ -30,7 +30,10 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'cancel', 'buddyboss' ); ?></a>
 					<?php endif; ?>
 					<p>
-						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span><span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span>
+						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
+						<span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep">&middot;</span>
+						<span><?php printf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total_video'] ) ); ?></span>
+
 					</p>
 				</div>
 
