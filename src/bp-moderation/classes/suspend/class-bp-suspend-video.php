@@ -49,6 +49,19 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			return;
 		}
 
+		$this->alias = $this->alias . 'v'; // v = Video.
+
+		// modify in videos count for album.
+		add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// modify in group videos count for album.
+		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
+
 		add_filter( 'bp_video_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
