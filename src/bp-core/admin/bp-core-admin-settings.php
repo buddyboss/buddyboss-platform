@@ -1309,3 +1309,52 @@ function bp_admin_setting_callback_group_messages() {
 	<label for="bp-disable-group-messages"><?php _e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }
+
+
+
+/**
+ * Link to Moderation Block tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_moderation_block_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 121711,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+
+
+/**
+ * Link to Moderation Report tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_moderation_report_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 121712,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}

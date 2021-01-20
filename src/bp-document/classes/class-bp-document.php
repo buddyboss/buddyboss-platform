@@ -821,15 +821,15 @@ class BP_Document {
 		$select_sql_document = 'SELECT DISTINCT d.*';
 		$select_sql_folder   = 'SELECT DISTINCT f.*';
 
-		$from_sql_document = " FROM {$bp->document->table_name} d, {$bp->document->table_name_meta} dm WHERE ( d.id = dm.document_id ) ";
-		$from_sql_folder   = " FROM {$bp->document->table_name_folder} f WHERE id != '0' ";
+		$from_sql_document = " FROM {$bp->document->table_name} d INNER JOIN {$bp->document->table_name_meta} dm ON ( d.id = dm.document_id ) ";
+		$from_sql_folder   = " FROM {$bp->document->table_name_folder} f";
 
 		$join_sql_document = '';
 		$join_sql_folder   = '';
 
 		// Where conditions.
-		$where_conditions_document = array();
-		$where_conditions_folder   = array();
+		$where_conditions_document = array( '1=1' );
+		$where_conditions_folder   = array( "f.id != '0'" );
 
 		if ( ! empty( $r['scope'] ) ) {
 			$scope_query_document = self::get_scope_document_query_sql( $r['scope'], $r );
@@ -967,24 +967,24 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
-		$where_conditions_folder   = apply_filters( 'bp_document_get_where_conditions_folder', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
+		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
+		$where_conditions_folder   = apply_filters( 'bp_document_folder_get_where_conditions', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
 
 		// Join the where conditions together for document.
 		if ( ! empty( $scope_query_document['sql'] ) ) {
-			$where_sql_document = 'AND ' .
+			$where_sql_document = 'WHERE ' .
 			                      ( ! empty( $where_conditions_document ) ? '( ' . join( ' AND ', $where_conditions_document ) . ' ) AND ' : '' ) .
 			                      ' ( ' . $scope_query_document['sql'] . ' )';
 		} else {
-			$where_sql_document = ( ! empty( $where_conditions_document ) ? 'AND ' . join( ' AND ', $where_conditions_document ) : '' );
+			$where_sql_document = 'WHERE ' . ( ! empty( $where_conditions_document ) ? join( ' AND ', $where_conditions_document ) : '' );
 		}
 
 		// Join the where conditions together for folder.
 		if ( ! empty( $scope_query_folder['sql'] ) ) {
-			$where_sql_folder = 'AND ' . ( ! empty( $where_conditions_folder ) ? '( ' . join( ' AND ', $where_conditions_folder ) . ' ) AND ' : '' ) .
+			$where_sql_folder = 'WHERE ' . ( ! empty( $where_conditions_folder ) ? '( ' . join( ' AND ', $where_conditions_folder ) . ' ) AND ' : '' ) .
 			                    ' ( ' . $scope_query_folder['sql'] . ' )';
 		} else {
-			$where_sql_folder = ( ! empty( $where_conditions_folder ) ? 'AND ' . join( ' AND ', $where_conditions_folder ) : '' );
+			$where_sql_folder = 'WHERE ' . ( ! empty( $where_conditions_folder ) ? join( ' AND ', $where_conditions_folder ) : '' );
 		}
 
 		/**
@@ -998,8 +998,8 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$join_sql_folder   = apply_filters( 'bp_document_get_join_sql_folder', $join_sql_folder, $r, $select_sql_folder, $from_sql_folder, $where_sql_folder );
-		$join_sql_document = apply_filters( 'bp_document_get_join_sql_document', $join_sql_document, $r, $select_sql_document, $from_sql_document, $where_sql_document );
+		$join_sql_folder   = apply_filters( 'bp_document_folder_get_join_sql', $join_sql_folder, $r, $select_sql_folder, $from_sql_folder, $where_sql_folder );
+		$join_sql_document = apply_filters( 'bp_document_get_join_sql', $join_sql_document, $r, $select_sql_document, $from_sql_document, $where_sql_document );
 
 		$retval = array(
 			'documents'      => null,
@@ -1866,7 +1866,23 @@ class BP_Document {
 			return false;
 		}
 
-		$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+		$activity_document_id = false;
+
+		// Check activity component enabled or not.
+		if ( bp_is_active( 'activity' ) ) {
+			$activity_document_id = bp_activity_get_meta( $activity_id, 'bp_document_id', true );
+		}
+
+		if ( empty( $activity_document_id ) ) {
+			$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+
+			if ( bp_is_active( 'activity' ) ) {
+				$document_activity = bp_activity_get_meta( $activity_id, 'bp_document_activity', true );
+				if ( ! empty( $document_activity ) && ! empty( $activity_document_id ) ) {
+					bp_activity_update_meta( $activity_id, 'bp_document_id', $activity_document_id );
+				}
+			}
+		}
 
 		return $activity_document_id;
 	}
