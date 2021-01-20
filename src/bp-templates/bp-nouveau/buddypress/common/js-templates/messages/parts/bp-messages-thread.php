@@ -20,7 +20,7 @@
 	<a href="javascript:void(0);" data-bp-thread-id="{{data.id}}" data-bp-action="hide_thread" class="close-conversation"> <i class="dashicons dashicons-no-alt"></i> </a>
 	<# } #>
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
-		<div class="thread-avatar">
+		<div class="thread-avatar {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }}">
             <# if ( data.avatars && data.avatars.length > 1  ) {
                 if( data.avatars.length == 2 ) { #>
                     <div class="thread-multiple-avatar">
@@ -47,36 +47,43 @@
 			<# } #>
 		</div>
 
-		<div class="thread-content" data-thread-id="{{data.id}}">
+		<div class="thread-content {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-content' : '' }}" data-thread-id="{{data.id}}">
 			<div class="thread-to">
 
 				<# if ( data.group_name && data.group_name.length && data.is_group_thread ) { #>
-					<span class="user-name">{{data.group_name}}</span>
-				<# } else { #>
-
-					<# for ( i in first_three ) { #>
-						<span class="user-name">
-							{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
-						</span>
-					<# } #>
-
-					<# if ( data.toOthers ) { #>
-						<span class="num-name">{{data.toOthers}}</span>
-					<# } #>
+				    <span class="user-name">{{data.group_name}}</span>
+                <# } else { #>
+                <# for ( i in first_three ) { #>
+                    <span class="user-name">
+                        {{other_recipients[i].user_name}}
+                        <# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #>
+                        <?php _e( ',', 'buddyboss' ); ?>
+                        <# } #>
+                    </span>
+                <# } #>
+                <# if ( data.toOthers ) { #>
+				<span class="num-name">{{data.toOthers}}</span>
+                <# } #>
 
 				<# } #>
 			</div>
 
+            <# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 			<div class="thread-subject">
 				<span class="last-message-sender">
 				  <# if ( data.sender_is_you ) { #>
-					<?php _e('You', 'buddyboss'); ?>:
-				  <# } else if ( other_recipients && other_recipients.length ) { #>
+					<?php _e( 'You', 'buddyboss' ); ?>:
+				  <# } else { #>
 					{{ data.sender_name }}:
 				  <# } #>
 				</span>
-				{{{data.excerpt}}}
+                {{{data.excerpt}}}
 			</div>
+			<# } #>
+				
+				
+
+
 		</div>
 
 		<div class="thread-date">
