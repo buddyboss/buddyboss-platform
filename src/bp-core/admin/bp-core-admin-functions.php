@@ -2598,7 +2598,7 @@ function bp_core_admin_create_background_page() {
 		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
 		if ( 'new_forums_page' === $_POST['page'] ) {
 			$slug = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			flush_rewrite_rules( true );
 		}
 	}
@@ -3050,7 +3050,7 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 	if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
 		$slug = get_page_uri( $post_id );
 		if ( '' !== $slug ) {
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			bp_update_option( 'rewrite_rules', '' );
 		}
 	}
