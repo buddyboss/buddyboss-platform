@@ -2126,11 +2126,12 @@ function bp_avatar_template_check() {
 }
 
 /**
- * inject uploaded profile photo as avatar into get_avatar()
+ * Inject uploaded profile photo as avatar into get_avatar()
  *
- * @param $data
- * @param $id_or_email
- * @param $args
+ * @param string|null $data      HTML for the user's avatar. Default null.
+ * @param mixed       $id_or_email The avatar to retrieve. Accepts a user_id, Gravatar MD5 hash,
+ *                                 user email, WP_User object, WP_Post object, or WP_Comment object.
+ * @param array       $args        Arguments passed to get_avatar_url(), after processing.
  *
  * @return mixed|void
  */
@@ -2140,14 +2141,16 @@ function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
 		return $data;
 	}
 
+	$user = false;
+
 	// Ugh, hate duplicating code; process the user identifier.
 	if ( is_numeric( $id_or_email ) ) {
 		$user = get_user_by( 'id', absint( $id_or_email ) );
 	} elseif ( $id_or_email instanceof WP_User ) {
-		// User Object
+		// User Object.
 		$user = $id_or_email;
 	} elseif ( $id_or_email instanceof WP_Post ) {
-		// Post Object
+		// Post Object.
 		$user = get_user_by( 'id', (int) $id_or_email->post_author );
 	} elseif ( $id_or_email instanceof WP_Comment ) {
 		if ( ! empty( $id_or_email->user_id ) ) {
@@ -2174,7 +2177,7 @@ function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
 	if ( $bp_avatar = bp_core_fetch_avatar( $args ) ) {
 		$url = $bp_avatar;
 
-		// Avatar classes
+		// Avatar classes.
 		$class = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 		if ( ( isset( $args['found_avatar'] ) && ! $args['found_avatar'] ) || $args['force_default'] ) {
 			$class[] = 'avatar-default';
