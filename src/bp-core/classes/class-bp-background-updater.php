@@ -67,7 +67,7 @@ if ( ! class_exists( 'BP_Background_Updater' ) ) {
 		/**
 		 * Schedule fallback event.
 		 */
-		protected function schedule_event() {
+		public function schedule_event() {
 			if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
 				wp_schedule_event( time() + 10, $this->cron_interval_identifier, $this->cron_hook_identifier );
 			}
@@ -97,17 +97,28 @@ if ( ! class_exists( 'BP_Background_Updater' ) ) {
 		protected function task( $callback ) {
 			$result = false;
 
+			$args = array();
+			if ( ! is_callable( $callback ) ) {
+				$args     = ( ! empty( $callback['args'] ) ) ? $callback['args'] : array();
+				$callback = ( ! empty( $callback['callback'] ) ) ? $callback['callback'] : '';
+			}
+
 			if ( is_callable( $callback ) ) {
-				error_log( sprintf( 'Running %s callback', $callback ) );
-				$result = (bool) call_user_func( $callback, $this );
+				error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
+
+				if ( empty( $args ) ) {
+					$result = (bool) call_user_func( $callback, $this );
+				} else {
+					$result = (bool) call_user_func_array( $callback, $args );
+				}
 
 				if ( $result ) {
-					error_log( sprintf( '%s callback needs to run again', $callback ) );
+					error_log( sprintf( '%s callback needs to run again', json_encode( $callback ) ) );
 				} else {
-					error_log( sprintf( 'Finished running %s callback', $callback ) );
+					error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
 				}
 			} else {
-				error_log( sprintf( 'Could not find %s callback', $callback ) );
+				error_log( sprintf( 'Could not find %s callback', json_encode( $callback ) ) );
 			}
 
 			return $result ? $callback : false;
