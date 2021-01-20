@@ -196,6 +196,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$item_id = 0;
 		if ( ! empty( $args['group_id'] ) ) {
+			$request['component']         = 'groups';
 			$args['filter']['object']     = 'groups';
 			$args['filter']['primary_id'] = $args['group_id'];
 
@@ -1098,7 +1099,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
 
 		if ( 'activity_comment' === $activity->type ) {
-			$rendered = apply_filters( 'bp_get_activity_content', $activity->content );
+			$rendered = apply_filters( 'bp_get_activity_content', $activity->content, $activity );
 		} else {
 			$activities_template = null;
 
@@ -1461,10 +1462,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
-		return bp_activity_user_can_read(
-			$this->get_activity_object( $request ),
-			bp_loggedin_user_id()
-		);
+		$activity = $this->get_activity_object( $request );
+
+		return ( ! empty( $activity ) ? bp_activity_user_can_read( $activity, bp_loggedin_user_id() ) : false );
 	}
 
 	/**
@@ -1996,33 +1996,43 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0 ) {
 		$new_scope = array();
 
-		if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
-
-			$new_scope[] = 'public';
-
-			if ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
-				$new_scope[] = 'groups';
+		if (
+			bp_loggedin_user_id()
+			&& (
+				'all' === $scope
+				|| empty( $scope )
+				|| 'just-me' === $scope
+			)
+		) {
+			if ( bp_is_active( 'groups' ) && ! empty( $group_id ) ) {
+				$new_scope[] = 'activity';
 			} else {
 				$new_scope[] = 'just-me';
 
-				if ( empty( $user_id ) ) {
+				if (
+					empty( $user_id ) ||
+					(
+						bp_loggedin_user_id() === $user_id &&
+						( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )
+					)
+				) {
 					$new_scope[] = 'public';
-				}
 
-				if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
-					$new_scope[] = 'mentions';
-				}
+					if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
+						$new_scope[] = 'mentions';
+					}
 
-				if ( bp_is_active( 'friends' ) ) {
-					$new_scope[] = 'friends';
-				}
+					if ( bp_is_active( 'friends' ) ) {
+						$new_scope[] = 'friends';
+					}
 
-				if ( bp_is_active( 'groups' ) ) {
-					$new_scope[] = 'groups';
-				}
+					if ( bp_is_active( 'groups' ) ) {
+						$new_scope[] = 'groups';
+					}
 
-				if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
-					$new_scope[] = 'following';
+					if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+						$new_scope[] = 'following';
+					}
 				}
 
 				if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
@@ -2038,6 +2048,21 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $new_scope ) ) {
 			$new_scope = (array) $scope;
+		}
+
+		if (
+			bp_loggedin_user_id() &&
+			empty( $user_id ) &&
+			function_exists( 'bp_is_relevant_feed_enabled' ) &&
+			bp_is_relevant_feed_enabled()
+		) {
+			$key = array_search( 'public', $new_scope, true );
+			if ( is_array( $new_scope ) && false !== $key ) {
+				unset( $new_scope[ $key ] );
+				if ( bp_is_active( 'forums' ) ) {
+					$new_scope[] = 'forums';
+				}
+			}
 		}
 
 		/**
