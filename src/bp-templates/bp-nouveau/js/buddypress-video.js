@@ -2449,7 +2449,7 @@ window.bp = window.bp || {};
 					var vjsBlock = $( self ).parent();
 					vjsBlock.find('.vjs-control-bar > .vjs-play-control').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_play_text );
 					vjsBlock.find('.vjs-control-bar > .vjs-play-control').attr( 'data-balloon-pause', BP_Nouveau.video.i18n_strings.video_pause_text );
-					vjsBlock.find('.vjs-control-bar > .vjs-volume-panel').attr( 'data-balloon-pos', 'left' );
+					vjsBlock.find('.vjs-control-bar > .vjs-volume-panel').attr( 'data-balloon-pos', 'right' );
 					vjsBlock.find('.vjs-control-bar > .vjs-volume-panel').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_volume_text );
 					vjsBlock.find('.vjs-control-bar > .vjs-picture-in-picture-control').attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_miniplayer_text );
 					vjsBlock.find('.vjs-control-bar > .vjs-playback-rate').attr( 'data-balloon-pos', 'left' );
