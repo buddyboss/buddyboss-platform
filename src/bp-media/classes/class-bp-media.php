@@ -612,14 +612,14 @@ class BP_Media {
 
 			// fetch attachment data
 			$attachment_data                 = new stdClass();
-			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'full' );
-			$attachment_data->thumb          = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-media-thumbnail' );
-			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
-			$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
+			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-preview' );
+			$attachment_data->thumb          = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
+			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-preview' );
+			$attachment_data->meta           = self::attachment_meta( $media->attachment_id );
 			$media->attachment_data          = $attachment_data;
 
 			$group_name = '';
-			if ( bp_is_active( 'groups') && $media->group_id > 0 ) {
+			if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
 				$group      = groups_get_group( $media->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
@@ -629,8 +629,9 @@ class BP_Media {
 					$visibility = ucfirst( $status );
 				}
 			} else {
-				$visibility       = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
+				$visibility = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
 			}
+
 			$media->group_name = $group_name;
 			$media->visibility = $visibility;
 
@@ -659,6 +660,31 @@ class BP_Media {
 		}
 
 		return $medias;
+	}
+
+	/**
+	 * Get attachment meta.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 *
+	 * @return array
+	 * @since BuddyBoss 1.5.7
+	 */
+	protected static function attachment_meta( $attachment_id ) {
+		$metadata = wp_get_attachment_metadata( $attachment_id );
+
+		$meta = array(
+			'width'  => $metadata['width'],
+			'height' => $metadata['height'],
+		);
+
+		if ( isset( $metadata['sizes']['bp-media-thumbnail'] ) ) {
+			$meta['sizes'] = array(
+				'bp-media-thumbnail' => $metadata['sizes']['bp-media-thumbnail'],
+			);
+		}
+
+		return $meta;
 	}
 
 	/**

@@ -74,9 +74,25 @@ function bp_media_allowed_mimes( $mime_types ) {
 }
 
 /**
+ * This will remove the default image sizes registered.
+ *
+ * @param array $sizes Image sizes registered.
+ *
+ * @return array Empty array.
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_remove_default_image_sizes( $sizes ) {
+	if ( isset( $sizes['bp-media-thumbnail'] ) ) {
+		return array( 'bp-media-thumbnail' => $sizes['bp-media-thumbnail'] );
+	}
+
+	return array();
+}
+
+/**
  * Media upload handler
  *
- * @param string $file_id
+ * @param string $file_id File ID.
  *
  * @return array|int|null|WP_Error|WP_Post
  * @since BuddyBoss 1.0.0
@@ -88,19 +104,19 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	 */
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 
 	if ( ! function_exists( 'media_handle_upload' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	add_image_size( 'bp-media-thumbnail', 400, 400 );
-	add_image_size( 'bp-activity-media-thumbnail', 1600, 1600 );
-
+	add_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
 	add_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9, 1 );
+	add_filter( 'big_image_size_threshold', '__return_false' );
+	add_image_size( 'bp-media-thumbnail', 400, 400 );
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -122,14 +138,16 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	);
 
 	remove_image_size( 'bp-media-thumbnail' );
-	remove_image_size( 'bp-activity-media-thumbnail' );
+
+	remove_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9 );
+	remove_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
 		return $aid;
 	}
 
-	// Image rotation fix
+	// Image rotation fix.
 	do_action( 'bp_media_attachment_uploaded', $aid );
 
 	$attachment = get_post( $aid );
@@ -146,11 +164,39 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 }
 
 /**
+ * Generate media preview images.
+ *
+ * @param int $attachment_id Attachment ID.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_generate_preview_images( $attachment_id ) {
+	$file = get_attached_file( $attachment_id );
+
+	if ( wp_attachment_is_image( $attachment_id ) && ! empty( $file ) && file_exists( $file ) ) {
+		$path_parts = pathinfo( $file );
+
+		// phpcs:disable
+		/*
+		$count = strlen( 'scaled' );
+		if ( 'scaled' === ( substr( $path_parts['filename'], - $count ) ) ) {
+			$path_parts['filename'] = substr( $path_parts['filename'], 0, - ( $count + 1 ) );
+			update_attached_file( $attachment_id, $path_parts['dirname'] . '/' . $path_parts['filename'] . '.' . $path_parts['extension'] );
+		}
+		*/
+		// phpcs:enable
+
+		$destination = $path_parts['dirname'] . '/' . $path_parts['filename'] . '-bb-preview.' . $path_parts['extension'];
+		bp_media_compress_image( $file, $destination, 50 );
+	}
+}
+
+/**
  * Compress the image
  *
- * @param     $source
- * @param     $destination
- * @param int         $quality
+ * @param string $source
+ * @param string $destination
+ * @param int    $quality
  *
  * @return mixed
  * @since BuddyBoss 1.0.0
@@ -3346,10 +3392,10 @@ function bp_media_get_report_link( $args = array() ) {
 /**
  * Set bb_medias folder for the media upload directory.
  *
- * @param $pathdata
+ * @param string $pathdata Path.
  *
  * @return mixed
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.5.7
  */
 function bp_media_upload_dir( $pathdata ) {
 	if ( isset( $_POST['action'] ) && 'media_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
@@ -3366,16 +3412,17 @@ function bp_media_upload_dir( $pathdata ) {
 			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
 		}
 	}
+
 	return $pathdata;
 }
 
 /**
  * Set bb_documents folder for the document upload directory.
  *
- * @param $pathdata
+ * @param string $pathdata Path.
  *
  * @return mixed
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.5.7
  */
 function bp_media_upload_dir_script( $pathdata ) {
 
@@ -3390,5 +3437,184 @@ function bp_media_upload_dir_script( $pathdata ) {
 		$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
 		$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
 	}
+
 	return $pathdata;
+}
+
+/**
+ * Media symlink directory path.
+ *
+ * @return string Path to media symlink directory.
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_symlink_path() {
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
+
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 );
+	}
+
+	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
+	if ( ! is_dir( $media_symlinks_path ) ) {
+		wp_mkdir_p( $media_symlinks_path );
+		chmod( $media_symlinks_path, 0755 );
+	}
+
+	return $media_symlinks_path;
+}
+
+/**
+ * Create symlink for a media.
+ *
+ * @param object $media BP_Media Object.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_create_symlinks( $media ) {
+	// Check if media is id of media, create document object.
+	if ( ! $media instanceof BP_Media && is_int( $media ) ) {
+		$media = new BP_Media( $media );
+	}
+
+	// Return if no media found.
+	if ( empty( $media ) ) {
+		return;
+	}
+
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
+
+	// Get media previews symlink directory path.
+	$symlinks_path = bp_media_symlink_path();
+	$attachment_id = $media->attachment_id;
+
+	$privacy         = $media->privacy;
+	$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bp-media-thumbnail' );
+	$file            = image_get_intermediate_size( $attachment_id, 'bp-media-thumbnail' );
+	$output_file_src = $upload_dir . '/' . $file['path'];
+
+	if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+		symlink( $output_file_src, $attachment_path );
+	}
+
+	$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bb-preview' );
+	$path            = get_attached_file( $attachment_id );
+	$path_parts      = pathinfo( $path );
+	$file            = $path_parts['dirname'] . '/' . $path_parts['filename'] . '-bb-preview.' . $path_parts['extension'];
+
+	if ( ! file_exists( $file ) ) {
+		bp_media_generate_preview_images( $attachment_id );
+	}
+
+	if ( file_exists( $file ) && is_file( $file ) && ! is_dir( $file ) && ! file_exists( $attachment_path ) ) {
+		symlink( $file, $attachment_path );
+	}
+
+	/**
+	 * Actions to execute to create symlinks.
+	 *
+	 * @param int    $media_id      Media ID.
+	 * @param int    $attachment_id Attachment ID.
+	 * @param object $media         BP_Media Object.
+	 * @param string $symlinks_path Path to symlinks directory.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
+	do_action( 'bp_media_create_symlinks', $media->id, $attachment_id, $media, $symlinks_path );
+}
+
+/**
+ * Delete symlink for a media.
+ *
+ * @param object $media BP_Media Object.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_delete_symlinks( $media ) {
+	// Check if media is id of media, create media object.
+	if ( $media instanceof BP_Media ) {
+		$media_id = $media->id;
+	} elseif ( is_int( $media ) ) {
+		$media_id = $media;
+	}
+
+	$old_media = new BP_Media( $media_id );
+
+	// Return if no media found.
+	if ( empty( $old_media ) ) {
+		return;
+	}
+
+	// Get media previews symlink directory path.
+	$symlinks_path = bp_media_symlink_path();
+	$attachment_id = $old_media->attachment_id;
+
+	$privacy         = $old_media->privacy;
+	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bp-media-thumbnail' );
+
+	if ( file_exists( $attachment_path ) ) {
+		unlink( $attachment_path );
+	}
+
+	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-preview' );
+
+	if ( file_exists( $attachment_path ) ) {
+		unlink( $attachment_path );
+	}
+
+	/**
+	 * Actions to execute when delete symlinks.
+	 *
+	 * @param int    $media_id      Media ID.
+	 * @param int    $attachment_id Attachment ID.
+	 * @param object $media         BP_Media Object.
+	 * @param string $symlinks_path Path to symlinks directory.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
+	do_action( 'bp_media_delete_symlinks', $media->id, $attachment_id, $media, $symlinks_path );
+}
+
+/**
+ * Return the preview url of the file.
+ *
+ * @param int    $media_id      Media ID.
+ * @param int    $attachment_id Attachment ID.
+ * @param string $size          Size of preview.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bp-media-thumbnail' ) {
+	$attachment_url = '';
+
+	$output_file_src = get_attached_file( $attachment_id );
+	if ( wp_attachment_is_image( $attachment_id ) && file_exists( $output_file_src ) ) {
+		$media = new BP_Media( $media_id );
+
+		$upload_directory = wp_get_upload_dir();
+		$symlinks_path    = bp_media_symlink_path();
+
+		$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
+		if ( ! file_exists( $preview_attachment_path ) ) {
+			bp_media_create_symlinks( $media );
+		}
+		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+	}
+
+	/**
+	 * Filters media preview image url.
+	 *
+	 * @param string $attachment_url Attachment symlink preview url.
+	 * @param int    $media_id       Media ID.
+	 * @param int    $attachment_id  Attachment ID.
+	 * @param string $size           Preview size.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
+	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size );
 }

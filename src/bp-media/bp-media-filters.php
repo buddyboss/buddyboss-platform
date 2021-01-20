@@ -67,6 +67,22 @@ add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_co
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
 
+// Delete symlinks for media when before saved.
+add_action( 'bp_media_before_save', 'bp_media_delete_symlinks' );
+
+// Create symlinks for media when saved.
+add_action( 'bp_media_after_save', 'bp_media_create_symlinks' );
+
+// Generate preview images for photos.
+add_action( 'bp_media_attachment_uploaded', 'bp_media_generate_preview_images', 99 );
+
+// Clear media symlinks on delete.
+add_action( 'bp_media_before_delete', 'bp_media_clear_media_symlinks_on_delete', 10 );
+
+// Filter attachments in the query to filter media and documents.
+add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+
 /**
  * Add Media items for search
  */
@@ -1438,6 +1454,21 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 }
 
 /**
+ * Clear a user's symlinks media when attachment media delete.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @param array $medias DB results of media items.
+ */
+function bp_media_clear_media_symlinks_on_delete( $medias ) {
+	if ( ! empty( $medias[0] ) ) {
+		foreach ( (array) $medias[0] as $deleted_media ) {
+			bp_media_delete_symlinks( $deleted_media->id );
+		}
+	}
+}
+
+/**
  * Update media privacy when activity is updated.
  *
  * @since BuddyBoss 1.2.3
@@ -2313,8 +2344,8 @@ function bp_media_get_edit_activity_data( $activity ) {
 				$activity['media'][] = array(
 					'id'            => $media_id,
 					'attachment_id' => $media->attachment_id,
-					'thumb'         => wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' ),
-					'url'           => wp_get_attachment_image_url( $media->attachment_id, 'full' ),
+					'thumb'         => bp_media_get_preview_image_url( $media->id, $media->attachment_id ),
+					'url'           => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' ),
 					'name'          => $media->title,
 					'group_id'      => $media->group_id,
 					'album_id'      => $media->album_id,
@@ -2427,3 +2458,41 @@ Options -ExecCGI
 	}
 }
 add_action( 'bp_init', 'bp_media_check_download_album_protection', 9999 );
+
+/**
+ * Filter attachments query posts join sql.
+ * Filters all photos/documents.
+ *
+ * @param string $join     Join statement query.
+ * @param object $wp_query WP_Query object.
+ *
+ * @return mixed|string
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
+	global $wpdb;
+	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
+		$join .= " LEFT JOIN {$wpdb->postmeta} AS bb_mt1 ON ({$wpdb->posts}.ID = bb_mt1.post_id AND bb_mt1.meta_key = 'bp_media_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt2 ON ({$wpdb->posts}.ID = bb_mt2.post_id AND bb_mt2.meta_key = 'bp_document_upload' )";
+	}
+
+	return $join;
+}
+
+/**
+ * Filter attachments query posts where sql.
+ * Filters all photos/documents.
+ *
+ * @param string $where    Where statement query.
+ * @param object $wp_query WP_Query object.
+ *
+ * @return mixed|string
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_filter_attachments_query_posts_where( $where, $wp_query ) {
+	global $wpdb;
+	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
+		$where .= " AND ( ( bb_mt1.post_id IS NULL AND bb_mt2.post_id IS NULL ) OR ( {$wpdb->posts}.post_parent != 0 ) )";
+	}
+
+	return $where;
+}

@@ -894,7 +894,7 @@ function bp_get_media_attachment_image_activity_thumbnail() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_attachment_image() {
-	echo bp_get_media_attachment_image();
+	echo esc_url( bp_get_media_attachment_image() );
 }
 
 /**
