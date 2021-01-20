@@ -795,6 +795,16 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 			$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 
 			if ( ! empty( $duration ) ) {
+
+				/**
+				 * Hook for before background thumbnail create.
+				 *
+				 * @since BuddyBoss 1.5.8
+				 *
+				 * @param int $video_id video id.
+				 */
+				do_action( 'bp_video_before_background_create_thumbnail', $video_id );
+
 				// Update video attachment meta.
 				update_post_meta( $video['id'], 'duration', $duration );
 
@@ -880,6 +890,15 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 						update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', current( $thumbnail_list ) );
 					}
 				}
+
+				/**
+				 * Hook for After background thumbnail create.
+				 *
+				 * @since BuddyBoss 1.5.8
+				 *
+				 * @param int $video_id video id.
+				 */
+				do_action( 'bp_video_after_background_create_thumbnail', $video_id );
 			}
 		} catch ( Exception $ex ) {
 			$bp_background_updater->cancel_process();
