@@ -4311,7 +4311,7 @@ window.bp = window.bp || {};
 										}
 									} else {
 										// Prepend the activity.
-										!hasNotAlbum ? bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend') : '';
+										hasNotAlbum ? bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend') : '';
 									}
 								} else {
 									location.reload(true);
@@ -5644,6 +5644,10 @@ window.bp = window.bp || {};
 				}
 				activity.remove();
 			}
+
+			// Report content popup
+			bp.Nouveau.reportPopUp();
+			bp.Nouveau.reportActions();
 		},
 
 		closeTheatre: function (event) {
@@ -6046,6 +6050,12 @@ window.bp = window.bp || {};
 								$('.bb-media-info-section:visible').show();
 
 								jQuery(window).scroll();
+								setTimeout(
+									function () { // Waiting to load dummy image
+										bp.Nouveau.reportPopUp();
+									},
+									1000
+								);
 							}
 						}
 					}
@@ -6093,6 +6103,12 @@ window.bp = window.bp || {};
 								$('.bb-media-info-section:visible').show();
 
 								jQuery(window).scroll();
+								setTimeout(
+									function () { // Waiting to load dummy image
+										bp.Nouveau.reportPopUp();
+									},
+									1000
+								);
 							}
 						}
 					}

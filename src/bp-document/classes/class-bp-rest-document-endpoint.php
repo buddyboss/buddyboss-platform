@@ -127,6 +127,25 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if (
+			isset( $file['file']['size'] ) &&
+			function_exists( 'bp_media_allowed_upload_document_size' ) &&
+			$file['file']['size'] > bp_media_allowed_upload_document_size() * 1048576
+		) {
+			return new WP_Error(
+				'bp_rest_max_upload_size',
+				sprintf(
+					/* translators: 1: File size, 2: Allowed size. */
+					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss' ),
+					round( $file['file']['size'] / 1048576, 1 ),
+					bp_media_allowed_upload_document_size()
+				),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
 		add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 
 		/**
@@ -771,13 +790,27 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$args['privacy']  = 'grouponly';
 		}
 
-		if ( isset( $request['folder_id'] ) && ! empty( $request['folder_id'] ) ) {
-			$args['folder_id'] = $request['folder_id'];
-			$parent_folder     = new BP_Document_Folder( $args['folder_id'] );
-			$args['privacy']   = $parent_folder->privacy;
-			$args['group_id']  = $parent_folder->group_id;
-		} elseif ( isset( $request['folder_id'] ) && 0 === (int) $request['folder_id'] ) {
-			$args['folder_id'] = $request['folder_id'];
+		if ( isset( $request['folder_id'] ) && ( (int) $args['folder_id'] !== (int) $request['folder_id'] ) ) {
+			$parent_folder     = new BP_Document_Folder( $request['folder_id'] );
+			$args['privacy'] = ( ! empty( $parent_folder ) ? $parent_folder->privacy : $document->privacy );
+			$args['group_id'] = ( ! empty( $parent_folder ) ? $parent_folder->group_id : $document->group_id );
+			$moved_document_id = bp_document_move_document_to_folder( $args['id'], $request['folder_id'], $args['group_id'] );
+			if ( empty( (int) $moved_document_id ) || is_wp_error( $moved_document_id ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_move_with_folder',
+					__( 'Sorry, you are not allowed to move this document along with the folder.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} else {
+				$moved_document = new BP_Document( (int) $moved_document_id );
+				if ( ! empty( $moved_document ) ) {
+					$args['group_id'] = $moved_document->group_id;
+					$args['album_id'] = $moved_document->album_id;
+					$args['privacy']  = $moved_document->privacy;
+				}
+			}
 		}
 
 		if ( isset( $request['content'] ) ) {
@@ -913,6 +946,18 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
 					__( 'You don\'t have a permission to edit a document inside this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
+		}
+
+		if ( true === $retval && isset( $request['folder_id'] ) && ! empty( $request['folder_id'] ) ) {
+			if ( ! bp_folder_user_can_edit( (int) $request['folder_id'] ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1229,6 +1274,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
+			$group_base     = sprintf( '/%s/%s/', $this->namespace, buddypress()->groups->id );
+			$group_url      = $group_base . $document->group_id;
+			$links['group'] = array(
+				'href'       => rest_url( $group_url ),
+				'embeddable' => true,
+			);
+		}
+
 		/**
 		 * Filter links prepared for the REST response.
 		 *
@@ -1483,7 +1537,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				),
 				'count'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Count of the child documents and folders of the folder.', 'buddyboss' ),
+					'description' => __( 'Count of documents and folders inside folder.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1745,17 +1799,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				$retval['delete'] = 1;
 
 				if ( 0 === (int) $document->group_id && 0 === (int) $document->parent ) {
-					if ( ! empty( $document->attachment_id ) ) {
-						$child_activity = get_post_meta( $document->attachment_id, 'bp_document_activity_id', true );
-						if ( $child_activity ) {
-							$parent_activity_id = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
-							if ( bp_is_active( 'activity' ) ) {
-								$retval['edit_post_privacy'] = $parent_activity_id;
-							} else {
-								$retval['edit_post_privacy'] = $document->activity_id;
-							}
+					if ( ! empty( $document->attachment_id ) && bp_is_active( 'activity' ) ) {
+						$parent_activity_id = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
+						if ( ! empty( $parent_activity_id ) ) {
+							$retval['edit_post_privacy'] = $parent_activity_id;
 						} else {
-							$retval['edit_privacy'] = 1;
+							$retval['edit_post_privacy'] = $document->activity_id;
 						}
 					} else {
 						$retval['edit_privacy'] = 1;

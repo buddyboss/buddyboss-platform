@@ -251,6 +251,11 @@ function bp_nouveau_ajax_messages_send_message() {
 					}
 				}
 
+				if ( bp_is_active( 'moderation' ) ) {
+					$response['is_user_suspended'] = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id );
+					$response['is_user_blocked']   = bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id );
+				}
+
 				if ( bp_is_active( 'messages', 'star' ) ) {
 					$star_link = bp_get_the_message_star_action_link(
 						array(
@@ -428,6 +433,11 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'date'          => bp_get_the_thread_message_date_sent() * 1000,
 		'display_date'  => bp_get_the_thread_message_time_since(),
 	);
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$reply['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
+		$reply['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
+	}
 
 	if ( bp_is_active( 'messages', 'star' ) ) {
 
@@ -909,9 +919,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		);
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
+			$count  = 1;
+			$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
-					$threads->threads[ $i ]['recipients'][] = array(
+					$threads->threads[ $i ]['recipients'][ $count ] = array(
 						'avatar'     => esc_url(
 							bp_core_fetch_avatar(
 								array(
@@ -929,6 +941,14 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
 					);
+
+					if ( bp_is_active( 'moderation' ) ) {
+						$threads->threads[ $i ]['recipients'][ $count ]['is_user_suspended'] = bp_moderation_is_user_suspended( $recipient->user_id );
+						$threads->threads[ $i ]['recipients'][ $count ]['is_user_blocked']   = bp_moderation_is_user_blocked( $recipient->user_id );
+						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( $recipient->user_id, $admins, true ) ) ? true : false;
+					}
+
+					$count ++;
 				}
 			}
 		}
@@ -988,6 +1008,17 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 			if ( ! empty( $gif_data ) ) {
 				$threads->threads[ $i ]['excerpt'] = __( 'sent a gif', 'buddyboss' );
+			}
+		}
+
+		if ( bp_is_active( 'moderation' ) ) {
+			$threads->threads[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id );
+			$threads->threads[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id );
+
+			if ( bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id ) ) {
+				$threads->threads[ $i ]['excerpt'] = esc_html__( 'Hidden content from suspended member.', 'buddyboss' );
+			} elseif ( bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id ) ) {
+				$threads->threads[ $i ]['excerpt'] = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 			}
 		}
 
@@ -1215,6 +1246,13 @@ function bp_nouveau_ajax_delete_thread() {
 		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
+
+		/**
+		 * Fires after message thread deleted.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 */
+		do_action( 'bp_messages_message_delete_thread', $thread_id );
 	}
 
 	wp_send_json_success(
@@ -1600,16 +1638,15 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$thread = new stdClass();
 
+	$recipients = (array) $thread_template->thread->recipients;
+	// Strip the sender from the recipient list, and unset them if they are
+	// not alone. If they are alone, let them talk to themselves.
+	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
+		unset( $recipients[ bp_loggedin_user_id() ] );
+	}
+
 	// Check recipients if connected or not.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-
-		$recipients = (array) $thread_template->thread->recipients;
-
-		// Strip the sender from the recipient list, and unset them if they are
-		// not alone. If they are alone, let them talk to themselves.
-		if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
-			unset( $recipients[ bp_loggedin_user_id() ] );
-		}
 
 		foreach ( $recipients as $recipient ) {
 			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
@@ -1626,6 +1663,28 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 				break;
 			}
+		}
+	}
+
+	/*if ( bp_is_active( 'moderation' ) ) {
+		$thread->thread['recipients'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+		$thread->thread['recipients'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+	}*/
+
+	// Check moderation if user blocked or not for single user thread
+	if ( bp_is_active( 'moderation' ) && ! empty( $recipients ) && 1 === count( $recipients ) ) {
+		$recipient_id = current( array_keys( $recipients ) );
+
+		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
+			$thread->feedback_error = array(
+				'feedback' => __( "You can't message suspended member.", 'buddyboss' ),
+				'type'     => 'error',
+			);
+		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
+			$thread->feedback_error = array(
+				'feedback' => __( "You can't message a blocked member.", 'buddyboss' ),
+				'type'     => 'error',
+			);
 		}
 	}
 
@@ -1806,9 +1865,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
+		$count  = 1;
+		$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 		foreach ( $thread_template->thread->recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
-				$thread->thread['recipients'][] = array(
+				$thread->thread['recipients'][ $count ] = array(
 					'avatar'     => esc_url(
 						bp_core_fetch_avatar(
 							array(
@@ -1825,7 +1886,15 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
 					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 					'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
+					'id'         => $recipient->user_id,
 				);
+
+				if ( bp_is_active( 'moderation' ) ) {
+					$thread->thread['recipients'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+					$thread->thread['recipients'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+				}
+
+				$count ++;
 			}
 		}
 	}
@@ -2013,6 +2082,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
 				'display_date'  => bp_get_the_thread_message_time_since(),
 			);
+		}
+
+		if ( bp_is_active( 'moderation' ) ) {
+			$thread->messages[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
+			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
+
+			if ( bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() ) ) {
+				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) . '</p>';
+			} elseif ( bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() ) ) {
+				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) . '</p>';
+			}
 		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {

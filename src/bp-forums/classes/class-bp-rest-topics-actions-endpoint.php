@@ -705,7 +705,8 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 								'guid'        => '',
 							)
 						);
-						$destination_topic    = bbp_get_topic( $destination_topic_id );
+
+						$destination_topic = bbp_get_topic( $destination_topic_id );
 
 						// Make sure the new topic knows its a topic.
 						bbp_update_topic_topic_id( $from_reply->ID );

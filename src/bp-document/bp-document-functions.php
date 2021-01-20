@@ -6,8 +6,8 @@
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss\Document\Functions
  * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Document\Functions
  */
 
 // Exit if accessed directly.
@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                            for all objects, ignoring the specified object_id. Otherwise,
  *                            only delete matching metadata entries for the specified
  *                            document item. Default: false.
+ *
  * @return bool True on success, false on failure.
  */
 function bp_document_delete_meta( $document_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
@@ -181,7 +182,7 @@ function bp_document_folder_delete_meta( $folder_id, $meta_key = '', $meta_value
  *
  * @since BuddyBoss 1.4.0
  *
- * @param int    $folder_id ID of the document folder item whose metadata is being requested.
+ * @param int    $folder_id   ID of the document folder item whose metadata is being requested.
  * @param string $meta_key    Optional. If present, only the metadata matching
  *                            that meta key will be returned. Otherwise, all metadata for the
  *                            document folder item will be fetched.
@@ -200,10 +201,10 @@ function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = 
 	 *
 	 * @since BuddyBoss 1.4.0
 	 *
-	 * @param mixed  $retval      The meta values for the document folder item.
+	 * @param mixed  $retval    The meta values for the document folder item.
 	 * @param int    $folder_id ID of the document folder item.
-	 * @param string $meta_key    Meta key for the value being requested.
-	 * @param bool   $single      Whether to return one matched meta key row or all.
+	 * @param string $meta_key  Meta key for the value being requested.
+	 * @param bool   $single    Whether to return one matched meta key row or all.
 	 */
 	return apply_filters( 'bp_document_folder_get_meta', $retval, $folder_id, $meta_key, $single );
 }
@@ -213,7 +214,7 @@ function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = 
  *
  * @since BuddyBoss 1.4.0
  *
- * @param int    $folder_id ID of the document folder item whose metadata is being updated.
+ * @param int    $folder_id   ID of the document folder item whose metadata is being updated.
  * @param string $meta_key    Key of the metadata being updated.
  * @param mixed  $meta_value  Value to be set.
  * @param mixed  $prev_value  Optional. If specified, only update existing metadata entries
@@ -235,7 +236,7 @@ function bp_document_folder_update_meta( $folder_id, $meta_key, $meta_value, $pr
  *
  * @since BuddyBoss 1.4.0
  *
- * @param int    $folder_id ID of the document folder item.
+ * @param int    $folder_id   ID of the document folder item.
  * @param string $meta_key    Metadata key.
  * @param mixed  $meta_value  Metadata value.
  * @param bool   $unique      Optional. Whether to enforce a single metadata value for the
@@ -358,6 +359,7 @@ function bp_document_get( $args = '' ) {
 
 			'meta_query_document' => false,         // Filter by activity meta. See WP_Meta_Query for format.
 			'meta_query_folder'   => false,          // Filter by activity meta. See WP_Meta_Query for format.
+			'moderation_query'    => true,         // Filter for exclude moderation query.
 		),
 		'document_get'
 	);
@@ -382,6 +384,7 @@ function bp_document_get( $args = '' ) {
 			'user_directory'      => $r['user_directory'],
 			'meta_query_document' => $r['meta_query_document'],
 			'meta_query_folder'   => $r['meta_query_folder'],
+			'moderation_query'    => $r['moderation_query'],
 		)
 	);
 
@@ -2142,37 +2145,37 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 
 	global $wpdb, $bp;
 
-	if( 0 === $document_id ) {
+	if ( 0 === $document_id ) {
 		return false;
 	}
 
-	if( (int) $document_id > 0 ) {
+	if ( (int) $document_id > 0 ) {
 		$has_access = bp_document_user_can_edit( $document_id );
-		if( ! $has_access ) {
+		if ( ! $has_access ) {
 			return false;
 		}
 	}
 
-	if( (int) $folder_id > 0 ) {
+	if ( (int) $folder_id > 0 ) {
 		$has_access = bp_folder_user_can_edit( $folder_id );
-		if( ! $has_access ) {
+		if ( ! $has_access ) {
 			return false;
 		}
 	}
 
-	if( ! $group_id ) {
+	if ( ! $group_id ) {
 		$get_document = new BP_Document( $document_id );
-		if( $get_document->group_id > 0 ) {
+		if ( $get_document->group_id > 0 ) {
 			$group_id = $get_document->group_id;
 		}
 	}
 
-	if( $group_id > 0 ) {
+	if ( $group_id > 0 ) {
 		$destination_privacy = 'public';
-	} elseif( $folder_id > 0 ) {
+	} elseif ( $folder_id > 0 ) {
 		$destination_folder = BP_Document_Folder::get_folder_data( array( $folder_id ) );
 		$destination_folder = ( ! empty( $destination_folder ) ) ? current( $destination_folder ) : array();
-		if( empty( $destination_folder ) ) {
+		if ( empty( $destination_folder ) ) {
 			return false;
 		}
 		$destination_privacy = $destination_folder->privacy;
@@ -2186,7 +2189,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		$destination_privacy = $document_object->privacy;
 	}
 
-	if( empty( $destination_privacy ) ) {
+	if ( empty( $destination_privacy ) ) {
 		$destination_privacy = 'loggedin';
 	}
 
@@ -2195,10 +2198,11 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 	$document->group_id      = $group_id;
 	$document->date_modified = bp_core_current_time();
 	$document->privacy       = ( $group_id > 0 ) ? 'grouponly' : $destination_privacy;
+	$document->menu_order    = 0;
 	$document->save();
 
 	// Update document activity privacy.
-	if( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+	if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 
 		$document_attachment = $document->attachment_id;
 		$parent_activity_id  = get_post_meta( $document_attachment, 'bp_document_parent_activity_id', true );
@@ -2206,13 +2210,13 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		// If found need to make this activity to main activity.
 		$child_activity_id = get_post_meta( $document_attachment, 'bp_document_activity_id', true );
 
-		if( bp_is_active( 'activity' ) ) {
+		if ( bp_is_active( 'activity' ) ) {
 
 			// Single document upload.
-			if( empty( $child_activity_id ) ) {
+			if ( empty( $child_activity_id ) ) {
 				$activity = new BP_Activity_Activity( (int) $parent_activity_id );
 				// Update activity data.
-				if( bp_activity_user_can_delete( $activity ) ) {
+				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
 					$activity->hide_sitewide     = 0;
 					$activity->secondary_item_id = 0;
@@ -2221,12 +2225,12 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				}
 
 				bp_activity_delete_meta( (int) $parent_activity_id, 'bp_document_folder_activity' );
-				if( $folder_id > 0 ) {
+				if ( $folder_id > 0 ) {
 					// Update to moved album id.
 					bp_activity_update_meta( (int) $parent_activity_id, 'bp_document_folder_activity', (int) $folder_id );
 				}
 
-			// We have to change child activity privacy when we move the document while at a time multiple document uploaded.
+				// We have to change child activity privacy when we move the document while at a time multiple document uploaded.
 			} else {
 
 				$parent_activity_document_ids = bp_activity_get_meta( $parent_activity_id, 'bp_document_ids', true );
@@ -2234,11 +2238,11 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Get the parent activity.
 				$parent_activity = new BP_Activity_Activity( (int) $parent_activity_id );
 
-				if( bp_activity_user_can_delete( $parent_activity ) && ! empty( $parent_activity_document_ids ) ) {
+				if ( bp_activity_user_can_delete( $parent_activity ) && ! empty( $parent_activity_document_ids ) ) {
 					$parent_activity_document_ids = explode( ',', $parent_activity_document_ids );
 
 					// Do the changes if only one media is attached to a activity.
-					if( 1 === sizeof( $parent_activity_document_ids ) ) {
+					if ( 1 === count( $parent_activity_document_ids ) ) {
 
 						// Get the document object.
 						$document = new BP_Document( $document_id );
@@ -2262,7 +2266,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						update_post_meta( $document->attachment_id, 'bp_document_saved', 1 );
 
 						bp_activity_delete_meta( $parent_activity_id, 'bp_document_folder_activity' );
-						if( $document_album > 0 ) {
+						if ( $document_album > 0 ) {
 							bp_activity_update_meta( $parent_activity_id, 'bp_document_folder_activity', $document_album );
 						}
 
@@ -2276,13 +2280,13 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						$parent_activity->privacy = $destination_privacy;
 						$parent_activity->save();
 
-					} elseif( count( $parent_activity_document_ids ) > 2 ) {
+					} elseif ( count( $parent_activity_document_ids ) > 1 ) {
 
 						// Get the child activity.
 						$activity = new BP_Activity_Activity( (int) $child_activity_id );
 
 						// Update activity data.
-						if( bp_activity_user_can_delete( $activity ) ) {
+						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
 							$activity->hide_sitewide     = 0;
@@ -2302,17 +2306,18 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 							bp_activity_delete_meta( $child_activity_id, 'bp_document_activity' );
 
 							bp_activity_delete_meta( (int) $child_activity_id, 'bp_document_folder_activity' );
-							if( $folder_id > 0 ) {
+							if ( $folder_id > 0 ) {
 								bp_activity_update_meta( (int) $child_activity_id, 'bp_document_folder_activity', (int) $folder_id );
 							}
 
 							// Remove the document id from the parent activity meta.
-							if( ( $key = array_search( $document_id, $parent_activity_document_ids ) ) !== false ) {
+							$key = array_search( $document_id, $parent_activity_document_ids );
+							if ( false !== $key ) {
 								unset( $parent_activity_document_ids[ $key ] );
 							}
 
 							// Update the activity meta.
-							if( ! empty( $parent_activity_document_ids ) ) {
+							if ( ! empty( $parent_activity_document_ids ) ) {
 								$activity_document_ids = implode( ',', $parent_activity_document_ids );
 								bp_activity_update_meta( $parent_activity_id, 'bp_document_ids', $activity_document_ids );
 							} else {
@@ -2580,14 +2585,17 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		}
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $new_filename, bp_core_current_time(), $document_id, $attachment_document_id );
-	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
-
-	bp_document_update_meta( $document_id, 'file_name', $new_filename );
-
-	if ( false === $query ) {
+	$document = new BP_Document( $document_id );
+	if ( empty( $document->id ) ) {
 		return false;
 	}
+
+	$document->title         = $new_filename;
+	$document->date_modified = bp_core_current_time();
+	$document->attachment_id = $attachment_document_id;
+	$document->save();
+
+	bp_document_update_meta( $document_id, 'file_name', $new_filename );
 
 	$response = apply_filters(
 		'bp_document_rename_file',
@@ -2634,13 +2642,16 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 
 	$title = wp_strip_all_tags( $title );
 
-	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
-
-	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
-
-	if ( false === $q ) {
+	$folder = new BP_Document_Folder( $folder_id );
+	if ( empty( $folder->id ) ) {
 		return false;
 	}
+
+	$folder->title         = $title;
+	$folder->date_modified = bp_core_current_time();
+	$folder->save();
+
+	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
 
 	return $folder_id;
 }
@@ -3679,4 +3690,33 @@ function bp_document_is_activity_comment_document( $document ) {
 
 	return $is_comment_document;
 
+}
+
+/**
+ * Function to get document report link
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args button arguments.
+ *
+ * @return mixed|void
+ */
+function bp_document_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$report_btn = bp_moderation_get_report_button( array(
+		'id'                => 'document_report',
+		'component'         => 'moderation',
+		'must_be_logged_in' => true,
+		'button_attr'       => array(
+			'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
+			'data-bp-content-type' => BP_Moderation_Document::$moderation_type,
+		),
+	),
+		true );
+
+	return apply_filters( 'bp_document_get_report_link', $report_btn, $args );
 }
