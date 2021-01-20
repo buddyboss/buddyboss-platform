@@ -735,6 +735,16 @@ function bp_core_fetch_avatar( $args = '' ) {
 		$gravatar = apply_filters( 'bp_core_default_avatar_' . $params['object'], bp_core_avatar_default( 'local', $params ), $params );
 	}
 
+	/**
+	 * Filters a gravatar avatar URL.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param string $avatar_url URL for a gravatar.
+	 * @param array  $params     Array of parameters for the request.
+	 */
+	$gravatar = apply_filters( 'bp_core_fetch_gravatar_url_check', $gravatar, $params );
+
 	if ( true === $params['html'] ) {
 
 		/** This filter is documented in bp-core/bp-core-avatars.php */

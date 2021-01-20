@@ -556,12 +556,13 @@ function messages_get_message_thread_id( $message_id = 0 ) {
 
 	$messages = BP_Messages_Message::get(
 		array(
-			'fields'  => 'thread_ids',
-			'include' => array( $message_id ),
+			'fields'   => 'thread_ids',
+			'include'  => array( $message_id ),
+			'per_page' => 1,
 		)
 	);
 
-	return (int) ( ! empty( $messages['messages'][0] && is_numeric( $messages['messages'][0] ) ) ) ? $messages['messages'][0] : 0;
+	return (int) ( ! empty( $messages['messages'] ) ? current( $messages['messages'] ) : 0 );
 }
 
 /**

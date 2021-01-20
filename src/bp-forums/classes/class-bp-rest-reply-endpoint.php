@@ -140,11 +140,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function get_items( $request ) {
 
 		$args = array(
-			'post_parent'    => ( ! empty( $request['parent'] ) ? $request['parent'] : 'any' ),
-			'orderby'        => ( ! empty( $request['orderby'] ) ? $request['orderby'] : 'date' ),
-			'order'          => ( ! empty( $request['order'] ) ? $request['order'] : 'ASC' ),
-			'paged'          => ( ! empty( $request['page'] ) ? $request['page'] : '' ),
-			'posts_per_page' => ( ! empty( $request['per_page'] ) ? $request['per_page'] : '' ),
+			'post_parent'      => ( ! empty( $request['parent'] ) ? $request['parent'] : 'any' ),
+			'orderby'          => ( ! empty( $request['orderby'] ) ? $request['orderby'] : 'date' ),
+			'order'            => ( ! empty( $request['order'] ) ? $request['order'] : 'ASC' ),
+			'paged'            => ( ! empty( $request['page'] ) ? $request['page'] : '' ),
+			'posts_per_page'   => ( ! empty( $request['per_page'] ) ? $request['per_page'] : '' ),
+			'moderation_query' => false,
 		);
 
 		if ( ! empty( $request['search'] ) ) {
@@ -376,7 +377,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$reply = get_post( $request['id'] );
+		$reply = bbp_get_reply( $request['id'] );
 
 		if ( bbp_thread_replies() ) {
 
@@ -482,7 +483,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$reply = get_post( $request['id'] );
+		$reply = bbp_get_reply( $request['id'] );
 
 		if ( true === $retval && empty( $reply->ID ) ) {
 			$retval = new WP_Error(
@@ -504,7 +505,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && isset( $reply->post_type ) ) {
+		if ( true === $retval && is_user_logged_in() && isset( $reply->post_type ) ) {
 			$post_type = get_post_type_object( $reply->post_type );
 			if ( ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
 				$retval = new WP_Error(
@@ -1055,7 +1056,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
 
-		$reply         = get_post( $reply_id );
+		$reply         = bbp_get_reply( $reply_id );
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
@@ -1522,7 +1523,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_edit_reply_post_extras', $reply_id );
 
-		$reply         = get_post( $reply_id );
+		$reply         = bbp_get_reply( $reply_id );
 		$reply->edit   = true;
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
@@ -1575,7 +1576,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( true === $retval ) {
-			$reply = get_post( $request['id'] );
+			$reply = bbp_get_reply( $request['id'] );
 			if ( bbp_get_user_id( 0, true, true ) !== $reply->post_author && ! current_user_can( 'edit_reply', $request['id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -1616,7 +1617,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$reply = get_post( $request['id'] );
+		$reply = bbp_get_reply( $request['id'] );
 
 		$previous = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $reply, $request )
@@ -1911,11 +1912,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response  The Response data.
 		 * @param WP_REST_Request  $request   Request used to generate the response.
-		 * @param array            $component The component and its values.
+		 * @param WP_Post          $component The component and its values.
 		 *
 		 * @since 0.1.0
 		 */
-		return apply_filters( 'bp_rest_forums_prepare_value', $response, $request, $reply );
+		return apply_filters( 'bp_rest_reply_prepare_value', $response, $request, $reply );
 	}
 
 	/**

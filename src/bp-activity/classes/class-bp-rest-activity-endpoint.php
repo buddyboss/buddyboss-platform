@@ -196,6 +196,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$item_id = 0;
 		if ( ! empty( $args['group_id'] ) ) {
+			$request['component']         = 'groups';
 			$args['filter']['object']     = 'groups';
 			$args['filter']['primary_id'] = $args['group_id'];
 
@@ -451,6 +452,25 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$request['content'] = '&#8203;';
 		}
 
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $post_map ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
+		}
+
 		$prepared_activity = $this->prepare_item_for_database( $request );
 
 		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
@@ -639,6 +659,25 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $activity_object->content ) ) {
 			$activity_object->content = '&#8203;';
+		}
+
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $post_map ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
 		}
 
 		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object->id );
@@ -1060,7 +1099,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
 
 		if ( 'activity_comment' === $activity->type ) {
-			$rendered = apply_filters( 'bp_get_activity_content', $activity->content );
+			$rendered = apply_filters( 'bp_get_activity_content', $activity->content, $activity );
 		} else {
 			$activities_template = null;
 
@@ -1080,6 +1119,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				remove_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
 			}
 
+			// Removed lazyload from link preview.
+			add_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
+
 			$rendered = apply_filters_ref_array(
 				'bp_get_activity_content_body',
 				array(
@@ -1087,6 +1129,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&$activity,
 				)
 			);
+
+			remove_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
 
 			// removed combined gif data with content.
 			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
@@ -1168,8 +1212,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 			}
 		} else {
-			$activities            = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
-			$data['comment_count'] = ! empty( $activities ) ? count( $activities ) : 0;
+			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
+			$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
 		}
 
 		if ( ! empty( $schema['properties']['user_avatar'] ) ) {
@@ -1418,10 +1462,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
-		return bp_activity_user_can_read(
-			$this->get_activity_object( $request ),
-			bp_loggedin_user_id()
-		);
+		$activity = $this->get_activity_object( $request );
+
+		return ( ! empty( $activity ) ? bp_activity_user_can_read( $activity, bp_loggedin_user_id() ) : false );
 	}
 
 	/**
@@ -1953,33 +1996,43 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0 ) {
 		$new_scope = array();
 
-		if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
-
-			$new_scope[] = 'public';
-
-			if ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
-				$new_scope[] = 'groups';
+		if (
+			bp_loggedin_user_id()
+			&& (
+				'all' === $scope
+				|| empty( $scope )
+				|| 'just-me' === $scope
+			)
+		) {
+			if ( bp_is_active( 'groups' ) && ! empty( $group_id ) ) {
+				$new_scope[] = 'activity';
 			} else {
 				$new_scope[] = 'just-me';
 
-				if ( empty( $user_id ) ) {
+				if (
+					empty( $user_id ) ||
+					(
+						bp_loggedin_user_id() === $user_id &&
+						( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )
+					)
+				) {
 					$new_scope[] = 'public';
-				}
 
-				if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
-					$new_scope[] = 'mentions';
-				}
+					if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
+						$new_scope[] = 'mentions';
+					}
 
-				if ( bp_is_active( 'friends' ) ) {
-					$new_scope[] = 'friends';
-				}
+					if ( bp_is_active( 'friends' ) ) {
+						$new_scope[] = 'friends';
+					}
 
-				if ( bp_is_active( 'groups' ) ) {
-					$new_scope[] = 'groups';
-				}
+					if ( bp_is_active( 'groups' ) ) {
+						$new_scope[] = 'groups';
+					}
 
-				if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
-					$new_scope[] = 'following';
+					if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+						$new_scope[] = 'following';
+					}
 				}
 
 				if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
@@ -1995,6 +2048,21 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $new_scope ) ) {
 			$new_scope = (array) $scope;
+		}
+
+		if (
+			bp_loggedin_user_id() &&
+			empty( $user_id ) &&
+			function_exists( 'bp_is_relevant_feed_enabled' ) &&
+			bp_is_relevant_feed_enabled()
+		) {
+			$key = array_search( 'public', $new_scope, true );
+			if ( is_array( $new_scope ) && false !== $key ) {
+				unset( $new_scope[ $key ] );
+				if ( bp_is_active( 'forums' ) ) {
+					$new_scope[] = 'forums';
+				}
+			}
 		}
 
 		/**
@@ -2035,5 +2103,27 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		return (array) $edit_activity_data;
+	}
+
+	/**
+	 * Removed lazyload from link preview embed.
+	 *
+	 * @param string               $content  Activity Content.
+	 * @param BP_Activity_Activity $activity Activity object.
+	 *
+	 * @return null|string|string[]
+	 */
+	public function bp_rest_activity_remove_lazyload( $content, $activity ) {
+		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
+
+		if ( empty( $link_embed ) ) {
+			return $content;
+		}
+
+		$content = preg_replace( '/iframe(.*?)data-lazy-type="iframe"/is', 'iframe$1', $content );
+		$content = preg_replace( '/iframe(.*?)class="lazy/is', 'iframe$1class="', $content );
+		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
+
+		return $content;
 	}
 }

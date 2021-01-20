@@ -157,6 +157,10 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			$args['album_ids'] = $request['include'];
 		}
 
+		if ( ! empty( $request['all'] ) ) {
+			$args['per_page'] = 0;
+		}
+
 		$privacy   = array();
 		$privacy[] = $args['privacy'];
 		if ( is_user_logged_in() ) {
@@ -897,6 +901,20 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $album, $request ) {
+		$medias = array(
+			'medias'         => array(),
+			'total'          => ( isset( $album->media['total'] ) ? $album->media['total'] : 0 ),
+			'has_more_items' => ( isset( $album->media['has_more_items'] ) ? $album->media['has_more_items'] : false ),
+		);
+
+		if ( ! empty( $album->media['medias'] ) ) {
+			foreach ( $album->media['medias'] as $media ) {
+				$medias['medias'][] = $this->prepare_response_for_collection(
+					$this->media_endpoint->prepare_item_for_response( $media, $request )
+				);
+			}
+		}
+
 		$data = array(
 			'id'            => $album->id,
 			'user_id'       => $album->user_id,
@@ -904,8 +922,9 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'date_created'  => $album->date_created,
 			'title'         => $album->title,
 			'privacy'       => $album->privacy,
-			'media'         => $album->media,
-			'user_email'    => $album->user_email,
+			'media'         => $medias,
+			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
+			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
 			'user_nicename' => $album->user_nicename,
 			'user_login'    => $album->user_login,
 			'display_name'  => $album->display_name,
@@ -914,11 +933,11 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$response = rest_ensure_response( $data );
 
 		/**
-		 * Filter an activity value returned from the API.
+		 * Filter a media album value returned from the API.
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BP_Media         $media    The Media object.
+		 * @param BP_Media_Album   $album    The Album object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -990,9 +1009,15 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'user_email'    => array(
+				'group_name'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The user\'s email id to create a media.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the Album.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
+				'visibility'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Visibility of the Album.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
