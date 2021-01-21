@@ -610,11 +610,11 @@ class BP_Media {
 				$media->menu_order    = (int) $media->menu_order;
 			}
 
-			// fetch attachment data
+			// fetch attachment data.
 			$attachment_data                 = new stdClass();
-			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-preview' );
+			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
 			$attachment_data->thumb          = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
-			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-preview' );
+			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
 			$attachment_data->meta           = self::attachment_meta( $media->attachment_id );
 			$media->attachment_data          = $attachment_data;
 
@@ -676,12 +676,15 @@ class BP_Media {
 		$meta = array(
 			'width'  => $metadata['width'],
 			'height' => $metadata['height'],
+			'sizes'  => array(),
 		);
 
 		if ( isset( $metadata['sizes']['bp-media-thumbnail'] ) ) {
-			$meta['sizes'] = array(
-				'bp-media-thumbnail' => $metadata['sizes']['bp-media-thumbnail'],
-			);
+			$meta['sizes']['bp-media-thumbnail'] = $metadata['sizes']['bp-media-thumbnail'];
+		}
+
+		if ( isset( $metadata['sizes']['bp-activity-media-thumbnail'] ) ) {
+			$meta['sizes']['bp-activity-media-thumbnail'] = $metadata['sizes']['bp-activity-media-thumbnail'];
 		}
 
 		return $meta;

@@ -62,7 +62,7 @@ function bp_media_upload() {
  */
 function bp_media_allowed_mimes( $mime_types ) {
 
-	// Creating a new array will reset the allowed filetypes
+	// Creating a new array will reset the allowed filetypes.
 	$mime_types = array(
 		'jpg|jpeg|jpe' => 'image/jpeg',
 		'gif'          => 'image/gif',
@@ -82,8 +82,11 @@ function bp_media_allowed_mimes( $mime_types ) {
  * @since BuddyBoss 1.5.7
  */
 function bp_media_remove_default_image_sizes( $sizes ) {
-	if ( isset( $sizes['bp-media-thumbnail'] ) ) {
-		return array( 'bp-media-thumbnail' => $sizes['bp-media-thumbnail'] );
+	if ( isset( $sizes['bp-media-thumbnail'] ) && isset( $sizes['bp-activity-media-thumbnail'] ) ) {
+		return array(
+			'bp-media-thumbnail'          => $sizes['bp-media-thumbnail'],
+			'bp-activity-media-thumbnail' => $sizes['bp-activity-media-thumbnail'],
+		);
 	}
 
 	return array();
@@ -102,7 +105,6 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	/**
 	 * Include required files
 	 */
-
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -116,7 +118,9 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	add_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
 	add_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9, 1 );
 	add_filter( 'big_image_size_threshold', '__return_false' );
+
 	add_image_size( 'bp-media-thumbnail', 400, 400 );
+	add_image_size( 'bp-activity-media-thumbnail', 1600, 1600 );
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -138,6 +142,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	);
 
 	remove_image_size( 'bp-media-thumbnail' );
+	remove_image_size( 'bp-activity-media-thumbnail' );
 
 	remove_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9 );
 	remove_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
@@ -3494,23 +3499,24 @@ function bp_media_create_symlinks( $media ) {
 	$privacy         = $media->privacy;
 	$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bp-media-thumbnail' );
 	$file            = image_get_intermediate_size( $attachment_id, 'bp-media-thumbnail' );
-	$output_file_src = $upload_dir . '/' . $file['path'];
 
-	if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-		symlink( $output_file_src, $attachment_path );
+	if ( ! empty( $file['path'] ) ) {
+		$output_file_src = $upload_dir . '/' . $file['path'];
+
+		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+			symlink( $output_file_src, $attachment_path );
+		}
 	}
 
-	$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bb-preview' );
-	$path            = get_attached_file( $attachment_id );
-	$path_parts      = pathinfo( $path );
-	$file            = $path_parts['dirname'] . '/' . $path_parts['filename'] . '-bb-preview.' . $path_parts['extension'];
+	$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bp-activity-media-thumbnail' );
+	$file            = image_get_intermediate_size( $attachment_id, 'bp-activity-media-thumbnail' );
 
-	if ( ! file_exists( $file ) ) {
-		bp_media_generate_preview_images( $attachment_id );
-	}
+	if ( ! empty( $file['path'] ) ) {
+		$output_file_src = $upload_dir . '/' . $file['path'];
 
-	if ( file_exists( $file ) && is_file( $file ) && ! is_dir( $file ) && ! file_exists( $attachment_path ) ) {
-		symlink( $file, $attachment_path );
+		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+			symlink( $output_file_src, $attachment_path );
+		}
 	}
 
 	/**
@@ -3617,4 +3623,35 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bp-
 	 * @since BuddyBoss 1.5.7
 	 */
 	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size );
+}
+
+/**
+ * Media download file.
+ *
+ * @param int    $attachment_id Attachment ID.
+ * @param string $type          Type of media.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_download_file( $attachment_id, $type = 'media' ) {
+
+	// Add action to prevent issues in IE.
+	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
+
+	if ( 'media' === $type ) {
+
+		$the_file = wp_get_attachment_url( $attachment_id );
+
+		if ( ! $the_file ) {
+			return;
+		}
+
+		// clean the file url.
+		$file_url = stripslashes( trim( $the_file ) );
+
+		// get filename.
+		$file_name = basename( $the_file );
+
+		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
+	}
 }
