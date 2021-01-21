@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-01-21 10:31:16+00:00\n"
+"POT-Creation-Date: 2021-01-21 12:25:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1582,7 +1582,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 #: bp-templates/bp-nouveau/includes/groups/functions.php:590
 #: bp-templates/bp-nouveau/includes/media/functions.php:221
-#: bp-templates/bp-nouveau/includes/video/functions.php:207
+#: bp-templates/bp-nouveau/includes/video/functions.php:208
 msgid "My Groups"
 msgstr ""
 
@@ -5267,15 +5267,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\n"
+"content will be unhidden</li>\r\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
-"\t\t\t</ul>\n"
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -5340,7 +5340,7 @@ msgid "My Photos"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2913
-#: bp-templates/bp-nouveau/includes/video/functions.php:195
+#: bp-templates/bp-nouveau/includes/video/functions.php:196
 #: bp-video/classes/class-bp-video-component.php:296
 #: bp-video/classes/class-bp-video-component.php:316
 msgid "My Videos"
@@ -7998,13 +7998,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -26133,88 +26133,92 @@ msgid "Pause"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:159
-msgid "Volume"
+msgid "Uploaded"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:160
-msgid "Miniplayer"
+msgid "Volume"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:161
-msgid "Speed"
+msgid "Miniplayer"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:162
-msgid "Step Back (5)"
+msgid "Speed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:163
+msgid "Step Back (5)"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/video/functions.php:164
 msgid "Step Forward (5)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:184
+#: bp-templates/bp-nouveau/includes/video/functions.php:185
 msgid "All Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:295
+#: bp-templates/bp-nouveau/includes/video/functions.php:296
 msgid "Flash"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:303
+#: bp-templates/bp-nouveau/includes/video/functions.php:304
 msgid "MPEG-4"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:311
+#: bp-templates/bp-nouveau/includes/video/functions.php:312
 msgid "iPhone Index"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:319
+#: bp-templates/bp-nouveau/includes/video/functions.php:320
 msgid "iPhone Segment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:327
+#: bp-templates/bp-nouveau/includes/video/functions.php:328
 msgid "3GP Mobile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:335
+#: bp-templates/bp-nouveau/includes/video/functions.php:336
 msgid "QuickTime"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:343
+#: bp-templates/bp-nouveau/includes/video/functions.php:344
 msgid "A/V Interleave"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:351
+#: bp-templates/bp-nouveau/includes/video/functions.php:352
 msgid "Windows Media"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:359
+#: bp-templates/bp-nouveau/includes/video/functions.php:360
 msgid "Open Web Media Project"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:367
+#: bp-templates/bp-nouveau/includes/video/functions.php:368
 msgid "M4v"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:375
+#: bp-templates/bp-nouveau/includes/video/functions.php:376
 msgid "Quicktime"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:383
+#: bp-templates/bp-nouveau/includes/video/functions.php:384
 msgid "MPEG"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:391
+#: bp-templates/bp-nouveau/includes/video/functions.php:392
 msgid "Microsoft Advanced Systems Format (ASF)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:399
-#: bp-templates/bp-nouveau/includes/video/functions.php:407
-#: bp-templates/bp-nouveau/includes/video/functions.php:415
+#: bp-templates/bp-nouveau/includes/video/functions.php:400
+#: bp-templates/bp-nouveau/includes/video/functions.php:408
+#: bp-templates/bp-nouveau/includes/video/functions.php:416
 msgid "VOB"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:423
+#: bp-templates/bp-nouveau/includes/video/functions.php:424
 msgid "Matroska"
 msgstr ""
 

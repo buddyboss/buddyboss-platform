@@ -1241,9 +1241,14 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function( element ) {
+					function( element, file ) {
 						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-					  }
+
+						if( element.upload.progress === 100 ) {
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+						}
+
+					}
 				);
 
 				bp.Nouveau.Messages.dropzone.on(

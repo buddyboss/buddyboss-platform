@@ -950,7 +950,8 @@
 #bp-group-messages-post-video-uploader,
 #boss-video-create-album-popup,
 .ac-reply-content .ac-reply-attachments .dropzone.video,
-#video-uploader.dropzone {
+#video-uploader.dropzone,
+body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments {
 
 	.dz-default.dz-message {
 		flex-basis: calc(100% - 12px);
@@ -1015,7 +1016,7 @@
 		}
 	}
 
-	.dz-complete {
+	.dz-preview.dz-complete.dz-file-preview {
 
 		.dz-remove {
 			background-color: #fd4343;
@@ -1087,7 +1088,8 @@
 
 		.dz-details {
 			width: 100%;
-			background-color: transparent;
+			color: #fff;
+			background-color: rgba(0, 0, 0, 0.3);
 			z-index: 1;
 		}
 
