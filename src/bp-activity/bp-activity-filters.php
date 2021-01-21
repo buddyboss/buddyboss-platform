@@ -1797,11 +1797,24 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $album_id );
 			}
 
+			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
-				$main_activity = new BP_Activity_Activity( $activity_id );
 				if ( ! empty( $main_activity ) ) {
 					$main_activity->privacy = $privacy;
 					$main_activity->save();
+				}
+			}
+
+			if ( bp_is_active( 'media' ) && ! empty( $main_activity->id ) && count( $media_ids ) > 1 ) {
+				foreach ( $media_ids as $id ) {
+					$media = new BP_Media( $id );
+					if ( ! empty( $media->activity_id ) ) {
+						$media_activity = new BP_Activity_Activity( $media->activity_id );
+						if ( ! empty( $media_activity->id ) ) {
+							$media_activity->secondary_item_id = $main_activity->id;
+							$media_activity->save();
+						}
+					}
 				}
 			}
 		}
@@ -2120,11 +2133,24 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 				bp_activity_update_meta( $activity_id, 'bp_document_folder_activity', $folder_id );
 			}
 
+			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
-				$main_activity = new BP_Activity_Activity( $activity_id );
 				if ( ! empty( $main_activity ) ) {
 					$main_activity->privacy = $privacy;
 					$main_activity->save();
+				}
+			}
+
+			if ( bp_is_active( 'document' ) && ! empty( $main_activity->id ) && count( $document_ids ) > 1 ) {
+				foreach ( $document_ids as $id ) {
+					$document = new BP_Document( $id );
+					if ( ! empty( $document->activity_id ) ) {
+						$document_activity = new BP_Activity_Activity( $document->activity_id );
+						if ( ! empty( $document_activity->id ) ) {
+							$document_activity->secondary_item_id = $main_activity->id;
+							$document_activity->save();
+						}
+					}
 				}
 			}
 		}
@@ -2553,11 +2579,24 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 				bp_activity_update_meta( $activity_id, 'bp_video_album_activity', $album_id );
 			}
 
+			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
-				$main_activity = new BP_Activity_Activity( $activity_id );
 				if ( ! empty( $main_activity ) ) {
 					$main_activity->privacy = $privacy;
 					$main_activity->save();
+				}
+			}
+
+			if ( bp_is_active( 'video' ) && ! empty( $main_activity->id ) && count( $video_ids ) > 1 ) {
+				foreach ( $video_ids as $id ) {
+					$video = new BP_Video( $id );
+					if ( ! empty( $video->activity_id ) ) {
+						$video_activity = new BP_Activity_Activity( $video->activity_id );
+						if ( ! empty( $video_activity->id ) ) {
+							$video_activity->secondary_item_id = $main_activity->id;
+							$video_activity->save();
+						}
+					}
 				}
 			}
 		}
