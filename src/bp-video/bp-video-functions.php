@@ -752,7 +752,7 @@ function bp_video_add_generate_thumb_background_process( $attachment_id, $video 
 		 *
 		 * @since BuddyBoss 1.5.8
 		 *
-		 * @param int $video_id video id.
+		 * @param int $attachment_id video attachment id.
 		 * @param array $video video detail.
 		 */
 		do_action( 'bp_video_before_background_process_create', $attachment_id, $video );
@@ -779,7 +779,7 @@ function bp_video_add_generate_thumb_background_process( $attachment_id, $video 
 		 *
 		 * @since BuddyBoss 1.5.8
 		 *
-		 * @param int $video_id video id.
+		 * @param int $attachment_id video attachment id.
 		 * @param array $video video detail.
 		 */
 		do_action( 'bp_video_after_background_process_create', $attachment_id, $video );
