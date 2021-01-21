@@ -46,7 +46,7 @@ window.bp = window.bp || {};
 				insertTpl:         BP_Mentions_Options.insert_tpl,
 				limit:             10,
 				startWithSpace:    false,
-				suffix:            '',
+				// suffix:            '', //Issue with space in android firefox
 
 				callbacks: {
 					/**
@@ -159,8 +159,8 @@ window.bp = window.bp || {};
 					 * @return {string}
 					 * @since BuddyPress 2.1.0
 					 */
-					inserting_wrapper: function( $inputor, content, suffix ) {
-						return '' + content + suffix;
+					inserting_wrapper: function( $inputor, content ) { //suffix
+						return '' + content + ''; //suffix
 					}
 				}
 			},
@@ -280,18 +280,20 @@ window.bp = window.bp || {};
 			jQuery(this).on('keydown', function (e) {
 
 				// Check backspace key down event
-				if(e.keyCode == 8){
+				if (!isAndroid()) {
+					if(e.keyCode == 8){
 
-					jQuery(this).find('.atwho-inserted').each(function (  ){
-						jQuery(this).removeAttr('contenteditable');
-					});
+						jQuery(this).find('.atwho-inserted').each(function (  ){
+							jQuery(this).removeAttr('contenteditable');
+						});
 
-				}else{
+					}else{
 
-					jQuery(this).find('.atwho-inserted').each(function (  ){
-						jQuery(this).attr('contenteditable',false);
-					});
+						jQuery(this).find('.atwho-inserted').each(function (  ){
+							jQuery(this).attr('contenteditable',false);
+						});
 
+					}
 				}
 			});
 			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
@@ -349,24 +351,6 @@ window.bp = window.bp || {};
 				jQuery(this).find('.atwho-inserted').each(function (){
 					jQuery(this).removeAttr('contenteditable');
 				});
-
-			}
-
-			// When we do backspace.
-			if(e.keyCode == 8 || ( isAndroid() && ( new_length < old_length ) ) ){
-
-				// Make the box empty, if no text is there.
-				if(null == jQuery(this).text() || '' == jQuery(this).text()){
-					jQuery(this).empty();
-				}
-
-				if(isAndroid()){
-
-					// Remove the attribute for android device when backspace.
-					jQuery(this).find('.atwho-inserted').each(function (){
-						jQuery(this).removeAttr('contenteditable');
-					});
-				}
 
 			}
 		});
