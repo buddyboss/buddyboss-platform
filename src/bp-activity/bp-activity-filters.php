@@ -242,6 +242,11 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
+	// return if link embed was used and activity type is comment.
+	if ( true === $link_embed && ! empty( $link_url ) && 'activity_comment' === $activity->type ) {
+		return;
+	}
+
 	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
 	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
 	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
