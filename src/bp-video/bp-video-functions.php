@@ -1941,7 +1941,7 @@ function bp_video_default_scope( $scope ) {
 	}
 
 	if ( empty( $new_scope ) ) {
-		$new_scope = (array) $scope;
+		$new_scope = (array) ( ! is_array( $scope ) ? explode( ',', trim( $scope ) ) : $scope );
 	}
 
 	// Remove duplicate scope if added.

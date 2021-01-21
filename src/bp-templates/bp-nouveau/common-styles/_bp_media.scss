@@ -4468,7 +4468,23 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			font-size: 14px;
 			height: 34px;
 		}
+
 	}
+
+}
+
+.directory.media,
+.directory.document,
+.directory.video {
+
+	.bp-subnavs li.selected a:hover span {
+		color: #fff;
+	}
+
+	.entry-header .entry-title {
+		text-align: left;
+	}
+
 }
 
 .directory.media .media-options,

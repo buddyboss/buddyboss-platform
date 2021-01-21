@@ -1102,6 +1102,7 @@ window.bp = window.bp || {};
 						if ( file.dataURL && file.video_edit_data.thumb.length ) {
 							// Get Thumbnail image from response.
 							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend('<img src=" ' + file.video_edit_data.thumb + ' " />');
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 						} else {
 
 							if ( bp.Nouveau.getVideoThumb ) {
@@ -1136,8 +1137,13 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'uploadprogress',
-					function( element ) {
+					function( element, file ) {
 						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
+						if( element.upload.progress === 100 ) {
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+						}
+
 					}
 				);
 

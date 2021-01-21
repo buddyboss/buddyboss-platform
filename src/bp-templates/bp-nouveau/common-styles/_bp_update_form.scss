@@ -209,6 +209,15 @@
 
 		}
 
+		#activity-post-video-uploader.dropzone .dz-preview.dz-complete.dz-has-thumbnail {
+
+			.dz-filename,
+			.dz-size {
+				color: #fff;
+			}
+
+		}
+
 		@media screen and (max-width: 646px) {
 
 			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {

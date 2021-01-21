@@ -352,6 +352,11 @@ window.bp = window.bp || {};
 											addClass( 'media-list item-list bp-list bb-photo-list grid' )
 										);
 										$( '.bb-videos-actions' ).show();
+
+										if ( $( '.bb-photos-actions' ).length ) {
+											$( '.bb-photos-actions' ).show();
+										}
+
 									}
 
 									// Prepend the activity.
@@ -672,9 +677,14 @@ window.bp = window.bp || {};
 
 				self.video_dropzone_obj.on(
 					'uploadprogress',
-					function( element ) {
+					function( element, file ) {
 						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-					  }
+
+						if( element.upload.progress === 100 ) {
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+						}
+
+					}
 				);
 
 				self.video_dropzone_obj.on(
