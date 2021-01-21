@@ -374,6 +374,7 @@ function bp_nouveau_ajax_video_save() {
 
 	$video_personal_count = 0;
 	$video_group_count    = 0;
+	$video_all_count      = 0;
 	if ( bp_is_user_video() || ( ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && bp_is_single_album() ) ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
@@ -385,11 +386,31 @@ function bp_nouveau_ajax_video_save() {
 		$video_group_count = bp_video_get_total_group_video_count();
 	}
 
+	if ( bp_is_video_directory() ) {
+
+		add_filter( 'bp_ajax_querystring', 'bp_video_object_results_video_all_scope', 20 );
+		bp_has_video( bp_ajax_querystring( 'video' ) );
+		$video_all_count = $GLOBALS['video_template']->total_video_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_results_video_all_scope', 20 );
+
+		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+		bp_has_video( bp_ajax_querystring( 'video' ) );
+		$video_personal_count = $GLOBALS['video_template']->total_video_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+
+		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
+		bp_has_video( bp_ajax_querystring( 'groups' ) );
+		$video_group_count = $GLOBALS['video_template']->total_video_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
+
+	}
+
 	wp_send_json_success(
 		array(
 			'video'                => $video,
 			'video_personal_count' => $video_personal_count,
 			'video_group_count'    => $video_group_count,
+			'video_all_count'      => $video_all_count,
 		)
 	);
 }

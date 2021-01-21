@@ -381,6 +381,12 @@ window.bp = window.bp || {};
 									$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
 								}
 
+								if ( 'yes' === BP_Nouveau.video.is_video_directory ) {
+									$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-all a span.count' ).text( response.data.video_all_count );
+									$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-personal a span.count' ).text( response.data.video_personal_count );
+									$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-groups a span.count' ).text( response.data.video_group_count );
+								}
+
 								for ( var i = 0; i < self.dropzone_video.length; i++ ) {
 									self.dropzone_video[ i ].saved = true;
 								}
