@@ -352,6 +352,11 @@ window.bp = window.bp || {};
 											addClass( 'media-list item-list bp-list bb-photo-list grid' )
 										);
 										$( '.bb-videos-actions' ).show();
+
+										if ( $( '.bb-photos-actions' ).length ) {
+											$( '.bb-photos-actions' ).show();
+										}
+
 									}
 
 									// Prepend the activity.
