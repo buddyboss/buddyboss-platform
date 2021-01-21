@@ -737,9 +737,9 @@ function bp_video_preview_image_by_js( $video ) {
 }
 
 /**
- * Put the video in background to create thumbnails.
+ * Put the video in background process to create thumbnails.
  *
- * @param int  	$video_id video ID.
+ * @param int  	$attachment_id video attachment id.
  * @param array	$videos videos array.
  *
  * @since BuddyBoss 1.5.7
@@ -775,7 +775,7 @@ function bp_video_add_generate_thumb_background_process( $attachment_id, $video 
 		}
 
 		/**
-		 * Hook for After background thumbnail create.
+		 * Hook for After background process create.
 		 *
 		 * @since BuddyBoss 1.5.8
 		 *
