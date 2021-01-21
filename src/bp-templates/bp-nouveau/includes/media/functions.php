@@ -236,30 +236,6 @@ function bp_nouveau_get_media_directory_nav_items() {
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
 }
 
-function bp_media_download_file( $attachment_id, $type = 'media' ) {
-
-	// Add action to prevent issues in IE.
-	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
-
-	if ( 'media' === $type ) {
-
-		$the_file = wp_get_attachment_url( $attachment_id );
-
-		if ( ! $the_file ) {
-			return;
-		}
-
-		// clean the file url.
-		$file_url = stripslashes( trim( $the_file ) );
-
-		// get filename.
-		$file_name = basename( $the_file );
-
-		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
-	}
-
-}
-
 /**
  * Edit button alter when media activity other than activity page.
  *
@@ -286,51 +262,4 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 	}
 
 	return $buttons;
-}
-
-/**
- * Return absolute path of the media file.
- *
- * @param $attachment_id
- * @param $size
- * @since BuddyBoss 1.5.6
- */
-function bp_media_scaled_image_path( $attachment_id, $size ) {
-
-	$is_image         = wp_attachment_is_image( $attachment_id );
-	$img_url          = get_attached_file( $attachment_id );
-	$meta             = wp_get_attachment_metadata( $attachment_id );
-	$img_url_basename = wp_basename( $img_url );
-
-	if ( ! $is_image ) {
-		if ( ! empty( $meta['sizes']['full'] ) ) {
-			$img_url = str_replace( $img_url_basename, $meta['sizes'][$size]['file'], $img_url );
-		}
-	}
-
-	return $img_url;
-}
-
-/**
- * Return the preview url of the file.
- *
- * @param $media_id
- * @param $extension
- * @param $preview_attachment_id
- *
- * @return mixed|void
- *
- * @since BuddyBoss 1.5.6
- */
-function bp_media_get_preview_image_url( $media_id, $preview_attachment_id, $size ) {
-	$attachment_url = '';
-
-	$media_id        = 'forbidden_' . $media_id;
-	$attachment_id   = 'forbidden_' . $preview_attachment_id;
-	$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-	if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-		$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . base64_encode( $size );
-	}
-
-	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id );
 }
