@@ -744,7 +744,7 @@ function bp_video_preview_image_by_js( $video ) {
  *
  * @since BuddyBoss 1.5.7
  */
-function bp_video_add_generate_thumb_background_process( $video_id, $video ) {
+function bp_video_add_generate_thumb_background_process( $attachment_id, $video ) {
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 
 		/**
@@ -755,10 +755,10 @@ function bp_video_add_generate_thumb_background_process( $video_id, $video ) {
 		 * @param int $video_id video id.
 		 * @param array $video video detail.
 		 */
-		do_action( 'bp_video_before_background_process_create', $video_id, $video );
+		do_action( 'bp_video_before_background_process_create', $attachment_id, $video );
 
-		$thumbnails   = get_post_meta( $video_id, 'video_preview_thumbnails', true );
-		$thumbnail_id = get_post_meta( $video_id, 'bp_video_preview_thumbnail_id', true );
+		$thumbnails   = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+		$thumbnail_id = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
 
 		if ( ! $thumbnails && ! $thumbnail_id ) {
 			global $bp_background_updater;
@@ -766,7 +766,7 @@ function bp_video_add_generate_thumb_background_process( $video_id, $video ) {
 			$bp_background_updater->push_to_queue(
 				array(
 					'callback' => 'bp_video_background_create_thumbnail',
-					'args'     => array( $video_id, $video ),
+					'args'     => array( $attachment_id, $video ),
 				)
 			);
 
@@ -782,7 +782,7 @@ function bp_video_add_generate_thumb_background_process( $video_id, $video ) {
 		 * @param int $video_id video id.
 		 * @param array $video video detail.
 		 */
-		do_action( 'bp_video_after_background_process_create', $video_id, $video );
+		do_action( 'bp_video_after_background_process_create', $attachment_id, $video );
 
 	}
 }
