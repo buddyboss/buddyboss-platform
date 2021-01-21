@@ -213,6 +213,11 @@ class BP_Media_Template {
 			}
 		}
 
+		// Video count compatibility if album have only single video.
+		if ( isset( $this->medias['total_video'] ) && ! is_null( $this->medias['total_video'] ) && $video ) {
+			$this->total_media_count = $this->total_media_count + (int) $this->medias['total_video'];
+		}
+
 		$this->has_more_items = $this->medias['has_more_items'];
 
 		$this->medias = $this->medias['medias'];

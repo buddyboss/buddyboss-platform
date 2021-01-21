@@ -1156,7 +1156,7 @@ function bp_has_albums( $args = '' ) {
 			// get the login user id.
 			$current_user_id = get_current_user_id();
 
-			// check if the login user is friends of the display user
+			// check if the login user is friends of the display user.
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
 
 			/**
@@ -1199,7 +1199,7 @@ function bp_has_albums( $args = '' ) {
 			'fields'       => 'all',
 			'count_total'  => false,
 
-			// Filtering
+			// Filtering.
 			'user_id'      => $user_id,     // user_id to filter on.
 			'group_id'     => $group_id,    // group_id to filter on.
 			'privacy'      => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.

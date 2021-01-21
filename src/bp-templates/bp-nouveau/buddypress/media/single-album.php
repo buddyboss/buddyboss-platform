@@ -80,8 +80,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php
 					if ( $can_manage ) {
 						bp_get_template_part( 'media/uploader' );
+						bp_get_template_part( 'video/uploader' );
 					}
-					bp_get_template_part( 'video/uploader' );
 				endif;
 
 				if ( $can_manage ) {

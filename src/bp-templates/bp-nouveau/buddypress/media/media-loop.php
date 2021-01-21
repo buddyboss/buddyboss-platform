@@ -7,11 +7,14 @@
 
 bp_nouveau_before_loop();
 
+if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+    bp_get_template_part( 'media/media-move' );
+    bp_get_template_part( 'video/video-move' );
+    bp_get_template_part( 'video/add-video-thumbnail' );
+endif;
+
 if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-		<?php bp_get_template_part( 'media/media-move' ); ?>
-		<?php bp_get_template_part( 'video/video-move' ); ?>
-		<?php bp_get_template_part( 'video/add-video-thumbnail' ); ?>
 		<ul class="media-list item-list bp-list bb-photo-list grid">
 		<?php
 	endif;

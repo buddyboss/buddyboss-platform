@@ -374,7 +374,7 @@ function bp_nouveau_ajax_video_save() {
 
 	$video_personal_count = 0;
 	$video_group_count    = 0;
-	if ( bp_is_user_video() ) {
+	if ( bp_is_user_video() || ( ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && bp_is_single_album() ) ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
 		$video_personal_count = $GLOBALS['video_template']->total_video_count;

@@ -1009,9 +1009,6 @@ class BP_Media {
 			$where_args[] = $wpdb->prepare( 'date_created = %s', $r['date_created'] );
 		}
 
-		// Delete the photo.
-		$where_args[] = $wpdb->prepare( 'type = %s', 'photo' );
-
 		// Bail if no where arguments.
 		if ( empty( $where_args ) ) {
 			return false;
