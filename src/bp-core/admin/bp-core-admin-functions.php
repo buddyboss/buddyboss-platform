@@ -1966,7 +1966,7 @@ function bp_member_type_permissions_metabox( $post ) {
                 <tbody>
                 <tr>
                     <td colspan="2">
-						<?php _e( 'Select which group types members with this profile type should be automatically added to after they have registered and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
+						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registerd and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
