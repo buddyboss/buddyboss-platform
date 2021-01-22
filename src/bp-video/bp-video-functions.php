@@ -723,7 +723,7 @@ function bp_video_preview_image_by_js( $video ) {
 				wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 				$thumbnail_list[] = $preview_attachment_id;
 				update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
-				update_post_meta( $preview_attachment_id, 'video_id', $video_id );
+				update_post_meta( $preview_attachment_id, 'video_id', $video['id'] );
 
 				update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', $preview_attachment_id );
 			}
