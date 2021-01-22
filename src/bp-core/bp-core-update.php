@@ -896,7 +896,7 @@ function bp_add_activation_redirect() {
 				$slug    = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
-				bp_update_option( '_bbp_root_slug', $slug );
+				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 
 			}
 
