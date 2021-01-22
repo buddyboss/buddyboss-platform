@@ -1479,6 +1479,17 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$pre_selected_id     = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
 
+	$auto_generated_thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+	$old_thumbnail_id          = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
+	if ( ! empty( $auto_generated_thumbnails ) ) {
+		$auto_generated_thumbnails = explode( ',', $auto_generated_thumbnails );
+	} else {
+		$auto_generated_thumbnails = array();
+	}
+	if ( $pre_selected_id !== $old_thumbnail_id && ! in_array( $old_thumbnail_id, $auto_generated_thumbnails, true ) ) {
+		wp_delete_post( $old_thumbnail_id, true );
+	}
+
 	if ( $video_attachment_id && $thumbnail ) {
 		$pre_selected_id = current( $thumbnail );
 		$pre_selected_id = $pre_selected_id['id'];
