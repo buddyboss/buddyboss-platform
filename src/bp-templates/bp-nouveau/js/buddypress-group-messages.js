@@ -60,6 +60,20 @@ window.bp = window.bp || {};
 
 			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
 
+			var isGroupThreadPageSelector = $( '.groups.group-messages.public-message' );
+			if ( isGroupThreadPageSelector.length ) {
+
+				$( '.groups.group-messages.public-message .subnav #public-message-groups-li' ).addClass( 'current selected' );
+
+			}
+
+			var isGroupPrivateThreadPageSelector = $( '.groups.group-messages.private-message' );
+			if ( isGroupPrivateThreadPageSelector.length ) {
+
+				$( '.groups.group-messages.private-message .subnav #private-message-groups-li' ).addClass( 'current selected' );
+
+			}
+
 			$( document ).on(
 				'click',
 				'#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field',
