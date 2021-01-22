@@ -5,6 +5,55 @@
 	display: flex;
 	flex-flow: row wrap;
 
+	.bp-navs.group-subnav {
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 100%;
+		flex: 0 0 100%;
+		min-height: 1px;
+		border: 0;
+		padding: 0 20px;
+		border-radius: 4px 4px 0 0;
+		background: #fff;
+		border-bottom: 1px solid #E7E9EC;
+
+		li {
+			float: left;
+			margin-right: 30px;
+			padding-right: 0;
+
+			a {
+				background: transparent;
+				margin-bottom: 0;
+				border: 0;
+				font-size: 14px;
+				color: #939597;
+				letter-spacing: -0.24px;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: justify;
+				-ms-flex-pack: justify;
+				justify-content: space-between;
+				line-height: 1;
+				margin-bottom: 1px;
+				padding: 16px 0;
+			}
+
+			&.selected {
+				background: transparent;
+				border-bottom: 1px solid #007CFF;
+				margin-bottom: -1px;
+
+				a {
+					font-weight: 500;
+				}
+
+			}
+
+		}
+
+	}
+
 	@media screen and ( max-width: 540px ) {
 
 		.bb-groups-messages-right #whats-new-toolbar {

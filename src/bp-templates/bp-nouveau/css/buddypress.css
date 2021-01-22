@@ -18206,9 +18206,54 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   background: #fff;
   border: 1px solid #e7e9ec;
   border-radius: 4px;
-  margin-bottom: 20px;
   display: flex;
   flex-flow: row wrap;
+}
+
+#group-messages-container .bp-navs.group-subnav {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  min-height: 1px;
+  border: 0;
+  padding: 0 20px;
+  border-radius: 4px 4px 0 0;
+  background: #fff;
+  border-bottom: 1px solid #E7E9EC;
+}
+
+#group-messages-container .bp-navs.group-subnav li {
+  float: left;
+  margin-right: 30px;
+  padding-right: 0;
+}
+
+#group-messages-container .bp-navs.group-subnav li a {
+  background: transparent;
+  margin-bottom: 0;
+  border: 0;
+  font-size: 14px;
+  color: #939597;
+  letter-spacing: -0.24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 1;
+  margin-bottom: 1px;
+  padding: 16px 0;
+}
+
+#group-messages-container .bp-navs.group-subnav li.selected {
+  background: transparent;
+  border-bottom: 1px solid #007CFF;
+  margin-bottom: -1px;
+}
+
+#group-messages-container .bp-navs.group-subnav li.selected a {
+  font-weight: 500;
 }
 
 @media screen and (max-width: 540px) {
