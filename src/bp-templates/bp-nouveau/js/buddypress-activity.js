@@ -279,6 +279,10 @@ window.bp = window.bp || {};
 			 * Finally trigger a pending event containing the activity heartbeat data
 			 */
 			$( '#buddypress [data-bp-list="activity"]' ).trigger( 'bp_heartbeat_pending', this.heartbeat_data );
+
+			if ( typeof bp.Nouveau !== 'undefined' ){
+				bp.Nouveau.reportPopUp();
+			}
 		},
 
 		/**

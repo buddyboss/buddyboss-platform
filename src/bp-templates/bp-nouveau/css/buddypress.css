@@ -2331,6 +2331,21 @@ input.search-query-input {
   content: "\eaea";
 }
 
+.activity-list .activity-item .bp-generic-meta.action .reported-content:before,
+.activity-list .activity-item .bp-generic-meta.action .report-content:before {
+  content: "\e972";
+  position: relative;
+  font-size: 19px;
+  width: 22px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.activity-list .activity-item .bp-generic-meta.action .reported-content {
+  opacity: 0.8 !important;
+  pointer-events: none;
+}
+
 .activity-list .activity-item .bp-generic-meta.action .spam-activity:before {
   content: "\e8c9";
 }
@@ -2351,6 +2366,21 @@ input.search-query-input {
 
 .activity-list .activity-item .bp-generic-meta.action .unfav .like-count {
   color: #0061ac;
+}
+
+#buddypress .activity-list .comment-item .bp-generic-meta.action a.report-content.button:hover span, #buddypress
+.activity-list .comment-item .bp-generic-meta.action a.report-content.button span, #buddypress
+.activity-list .comment-item .bp-generic-meta.action a.reported-content.button:hover span, #buddypress
+.activity-list .comment-item .bp-generic-meta.action a.reported-content.button span {
+  font-weight: 500;
+  font-size: 12px;
+  color: #939597;
+  vertical-align: middle;
+}
+
+.activity-list .comment-item .bp-generic-meta.action a.report-content.button:before,
+.activity-list .comment-item .bp-generic-meta.action a.reported-content.button:before {
+  display: none;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -3061,6 +3091,41 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a {
+  background-color: transparent;
+  text-align: left;
+  font-weight: 400;
+  box-shadow: none;
+  border-radius: 0;
+  min-height: auto;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a:before {
+  content: "\e8ea";
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a:hover,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a:hover {
+  background-color: #f5f5f5;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.reported-content,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a.reported-content {
+  opacity: 0.8 !important;
+  pointer-events: none;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.report-content, #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.reported-content,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a.report-content,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.report_file a.reported-content {
+  border: 0;
+  -webkit-font-smoothing: auto;
+}
+
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.privacy_file a:before,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.privacy_file a:before {
   content: "\e90d";
@@ -3712,6 +3777,10 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+.mfp-wrap.mfp-wrap {
+  z-index: 999999;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.3 - Activity Comments
@@ -3823,6 +3892,26 @@ span.dashicons.dashicons-admin-file:before {
 
 .buddypress-wrap .activity-comments .show-all button:hover span, .buddypress-wrap .activity-comments .show-all button:focus span {
   color: #5087e5;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-content {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta .activity-time-since {
+  display: none;
 }
 
 .buddypress-wrap .mini .activity-comments {
@@ -6301,6 +6390,19 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.delete_thread a:before {
   content: "\e937";
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content a:before,
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread a:before,
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
+  content: "\e8c9";
+  vertical-align: middle;
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content,
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread {
+  pointer-events: none;
+  opacity: 0.9;
 }
 
 .bp-messages-content .single-thread-title {
@@ -11185,6 +11287,26 @@ h2.bbp-form-title.entry-title {
   font-size: 14px;
 }
 
+.bs-reply-suspended-block {
+  pointer-events: none;
+}
+
+.bs-reply-suspended-block .bbp-author-role {
+  display: none;
+}
+
+.bs-reply-header.bs-reply-suspended-header {
+  opacity: 0.7;
+}
+
+.bs-reply-header.bs-reply-suspended-header .bp-suspended-avatar {
+  min-width: 48px;
+}
+
+.bbp-reply-content.bs-forum-suspended-content {
+  opacity: 0.7;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 11.0 - Global Search classes
@@ -14964,6 +15086,41 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   font-size: 15px;
 }
 
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a {
+  background-color: transparent;
+  text-align: left;
+  box-shadow: none;
+  border-radius: 0;
+  min-height: auto;
+  font-weight: 400;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before {
+  content: "\e8ea";
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:hover,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:hover {
+  background-color: #f5f5f5;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content {
+  opacity: 0.8 !important;
+  pointer-events: none;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.report-content, .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.report-content,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content {
+  border: 0;
+  -webkit-font-smoothing: auto;
+}
+
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before {
   content: "\e890";
@@ -16629,6 +16786,225 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   margin: 20px;
 }
 
+.moderation-popup .modal-container {
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.moderation-popup .modal-container .bb-model-header {
+  margin-bottom: 25px;
+}
+
+.moderation-popup .modal-container .bb-model-header h4 {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.moderation-popup .modal-container .bb-model-footer {
+  text-align: right;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button {
+  width: auto;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button.report-submit.loading {
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button.report-submit.loading:after {
+  font: normal normal 400 14px/1 bb-icons;
+  speak: none;
+  display: inline-block;
+  margin: 0 0 0 6px;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\E838";
+  animation: spin 2s infinite linear;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button.bb-cancel-report-content {
+  color: #a5a7ab;
+  background-color: transparent;
+  box-shadow: none;
+  margin: 0 20px 0 0;
+  padding: 0;
+  min-width: inherit;
+}
+
+.moderation-popup .modal-container #bb-block-member,
+.moderation-popup .modal-container #bb-report-content {
+  margin-bottom: 0;
+}
+
+.moderation-popup .modal-container .form-item {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.moderation-popup .modal-container .form-item > span {
+  font-size: 14px;
+  padding-left: 30px;
+  display: inline-block;
+  line-height: 1.4;
+}
+
+.moderation-popup .modal-container .form-item label {
+  margin-bottom: 0;
+}
+
+.moderation-popup .modal-container .form-item label > input[type="radio"] {
+  margin-right: 10px;
+  vertical-align: middle;
+  height: 15px;
+  width: 15px;
+}
+
+.moderation-popup .modal-container .form-item label > span {
+  font-size: 16px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.moderation-popup .modal-container .form-item label > textarea {
+  margin-left: 30px;
+  width: calc(100% - 28px);
+}
+
+.moderation-popup .modal-container .bp-report-form-err {
+  display: flex;
+  color: #ef3e46;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  padding: 10px 0;
+  background: #fff;
+  -webkit-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  margin: 10px 0 20px;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.moderation-popup .modal-container .bp-report-form-err:empty {
+  display: none;
+}
+
+.moderation-popup .modal-container .bp-report-form-err:before {
+  content: "\f534";
+  background-color: #d33;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  font-family: dashicons;
+  left: 0;
+  margin: -10px 10px -10px 0;
+  position: relative;
+  padding: 0 0.5em;
+  border-radius: 3px 0 0 3px;
+}
+
+.moderation_notice.is_hidden {
+  display: none;
+}
+
+.moderation-popup .bb-report-type-wrp {
+  font-size: 15px;
+  text-align: left;
+}
+
+.moderation-popup .bb-report-type-wrp p {
+  margin-bottom: 10px;
+}
+
+.moderation-popup .bb-report-type-wrp p:last-child {
+  margin-bottom: 10px;
+}
+
+.moderation-popup .bb-report-type-wrp ul {
+  margin-bottom: 10px;
+}
+
+.moderation-popup .bb-report-type-wrp .bb-model-footer {
+  margin-top: 15px;
+}
+
+[dir="rtl"] .moderation-popup .bb-report-type-wrp .bb-model-footer {
+  text-align: left;
+}
+
+.mass-user-block-list.moderation-popup .bb-model-header {
+  position: relative;
+}
+
+.mass-user-block-list.moderation-popup .bb-model-header .mfp-close {
+  top: 7px;
+  right: 25px;
+  box-shadow: none;
+}
+
+.mass-user-block-list.moderation-popup .bb-model-header .mfp-close:before {
+  content: "\e828";
+  color: #939597;
+  letter-spacing: -0.24px;
+  line-height: 24px;
+  font-family: 'bb-icons';
+  /* stylelint-disable-line */
+  font-size: 22px;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp:last-child {
+  margin-bottom: 0;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-avatar {
+  max-height: 40px;
+  max-width: 40px;
+  overflow: hidden;
+  border-radius: 100%;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
+  min-width: calc(100% - 190px);
+  margin: 0 25px;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
+  min-width: 95px;
+  text-align: right;
+}
+
+.mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
+  min-width: 95px;
+}
+
+@media (max-width: 480px) {
+  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp {
+    flex-wrap: wrap;
+  }
+  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
+    min-width: calc(100% - 100px);
+    margin: 0 0 0 25px;
+  }
+  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
+    width: 100%;
+    margin: 10px 0;
+  }
+  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
+    width: 100%;
+  }
+}
+
 /* BASICS */
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
@@ -17912,7 +18288,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .group-messages-members-listing #members-list {
-  max-height: 60vh;
+  max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 -20px;

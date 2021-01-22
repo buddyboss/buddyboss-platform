@@ -1462,10 +1462,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
-		return bp_activity_user_can_read(
-			$this->get_activity_object( $request ),
-			bp_loggedin_user_id()
-		);
+		$activity = $this->get_activity_object( $request );
+
+		return ( ! empty( $activity ) ? bp_activity_user_can_read( $activity, bp_loggedin_user_id() ) : false );
 	}
 
 	/**

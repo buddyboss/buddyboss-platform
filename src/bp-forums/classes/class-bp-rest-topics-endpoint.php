@@ -501,7 +501,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$topic = get_post( $request['id'] );
+		$topic = bbp_get_topic( $request['id'] );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $topic, $request )
@@ -544,7 +544,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$topic = get_post( $request['id'] );
+		$topic = bbp_get_topic( $request['id'] );
 
 		if ( true === $retval && empty( $topic->ID ) ) {
 			$retval = new WP_Error(
@@ -1075,7 +1075,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_new_topic_post_extras', $topic_id );
 
-		$topic         = get_post( $topic_id );
+		$topic         = bbp_get_topic( $topic_id );
 		$fields_update = $this->update_additional_fields_for_object( $topic, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
@@ -1610,7 +1610,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_edit_topic_post_extras', $topic_id );
 
-		$topic         = get_post( $topic_id );
+		$topic         = bbp_get_topic( $topic_id );
 		$topic->edit   = true;
 		$fields_update = $this->update_additional_fields_for_object( $topic, $request );
 
@@ -1664,7 +1664,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( true === $retval ) {
-			$topic = get_post( $request['id'] );
+			$topic = bbp_get_topic( $request['id'] );
 			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'delete_topic', $request['id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -1705,7 +1705,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$topic = get_post( $request['id'] );
+		$topic = bbp_get_topic( $request['id'] );
 
 		$previous = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $topic, $request )
