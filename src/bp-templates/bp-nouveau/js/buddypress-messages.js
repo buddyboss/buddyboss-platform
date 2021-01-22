@@ -1981,7 +1981,7 @@ window.bp = window.bp || {};
 			scrolled: function( event ) {
 				var target = $( event.currentTarget );
 
-				if ( ( target[0].scrollHeight - ( target.scrollTop() ) ) == target.innerHeight() &&
+				if ( ( target[0].scrollHeight - target.scrollTop() ) >= ( target.innerHeight() - 5 ) &&
 					this.collection.length &&
 					this.collection.options.page < this.collection.options.total_page &&
 					! target.find( '.bp-user-messages-loading' ).length
