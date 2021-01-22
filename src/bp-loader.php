@@ -112,9 +112,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
 		global $bp_is_multisite;
 
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		if ( $bp_is_multisite ) {
-			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
 
@@ -127,7 +127,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.0.0
 	 * @return mixed
 	 */
-	function bp_core_set_bbpress_buddypress_active( $value = array(), $option ) {
+	function bp_core_set_bbpress_buddypress_active( $value = array() ) {
 
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite, $buddyboss_platform_plugin_file;
 
@@ -284,13 +284,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	if ( ! is_network_admin() ) {
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 	}
 	// Filter for setting the spoofing of BuddyPress.
 	add_filter( 'pre_update_option_active_plugins', 'bp_pre_update_option_active_plugins' );
 
 	if ( $bp_is_multisite ) {
-		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 	}
