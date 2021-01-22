@@ -18206,7 +18206,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   background: #fff;
   border: 1px solid #e7e9ec;
   border-radius: 4px;
-  margin-bottom: 20px;
   display: flex;
   flex-flow: row wrap;
 }
