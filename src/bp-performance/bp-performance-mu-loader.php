@@ -11,16 +11,16 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'muplugins_loaded', 'bp_performance_loaded' );
 if ( ! function_exists( 'bp_performance_loaded' ) ) {
 	/**
 	 * Load Performance instance.
 	 */
 	function bp_performance_loaded() {
-		require_once dirname( __FILE__ ) . '/classes/class-performance.php';
-		if ( class_exists( 'BuddyBoss\Performance\Performance' ) ) {
-			$performance = \BuddyBoss\Performance\Performance::instance();
-			$performance->start();
+		if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
+			require_once dirname( __FILE__ ) . '/classes/class-performance.php';
+			\BuddyBoss\Performance\Performance::instance();
 		}
 	}
+
+	add_action( 'muplugins_loaded', 'bp_performance_loaded', 20 );
 }
