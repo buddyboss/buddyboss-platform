@@ -474,8 +474,13 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  * @since BuddyBoss 1.5.6
  */
 function bb_moderation_content_report_popup() {
-	include BP_PLUGIN_DIR . 'src/bp-moderation/screens/content-report-form.php';
-	include BP_PLUGIN_DIR . 'src/bp-moderation/screens/block-member-form.php';
+
+	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/content-report-form.php" ) ) {
+		include buddypress()->core->path . "bp-moderation/screens/content-report-form.php";
+	}
+	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
+		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
+	}
 }
 
 add_action( 'wp_footer', 'bb_moderation_content_report_popup' );

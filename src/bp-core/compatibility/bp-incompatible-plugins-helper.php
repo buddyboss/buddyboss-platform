@@ -313,7 +313,7 @@ add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db
  *
  * @return array Return the names or objects of the taxonomies which are registered for the requested object or object type
  */
-function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies = array(), $post_type ) {
+function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type ) {
 
 	delete_blog_option( bp_get_root_blog_id(), "bp_search_{$post_type}_tax_author" );
 	return array_diff( $taxonomies, array( 'author' ) );
