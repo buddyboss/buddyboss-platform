@@ -15,59 +15,7 @@ $group_members = groups_get_group_members( $args );
 
 ?>
 
-
-	<?php if ( $group_members['count'] != 0 ) { ?>
-		<div class="bb-groups-messages-left">
-			<div class="bb-groups-messages-left-inner">
-				<div class="bb-panel-head">
-					<div class="bb-panel-subhead">
-						<h4 class="total-members-text"><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
-						<div class="bp-group-message-wrap">
-							<input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox" checked>
-							<label for="bp-group-message-switch-checkbox" class="bp-group-message-label"><span class="select-members-text"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></span></label>
-						</div>
-					</div>
-					<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
-						<div>
-							<i class="bb-icon-loader animate-spin"></i>
-						</div>
-					</div>
-				</div>
-
-				<div class="group-messages-search subnav-search clearfix" role="search">
-					<div class="bp-search">
-						<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form" data-bp-search="group-messages">
-							<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
-							<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
-							<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit">
-								<span class="bb-icon-search" aria-hidden="true"></span>
-								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
-							</button>
-						</form>
-					</div>
-				</div>
-
-				<div class="group-messages-members-listing">
-					<div class="last" style="display: none;"></div>
-
-					<div class="bp-messages-feedback bp-messages-feedback-hide">
-						<div class="bp-feedback">
-							<span class="bp-icon" aria-hidden="true"></span>
-							<p></p>
-						</div>
-					</div>
-
-					<ul id="members-list" class="item-list bp-list all-members"></ul>
-				</div>
-
-				<div class="bb-panel-footer">
-					<a class="bb-close-select-members button" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
-				</div>
-			</div>
-		</div>
-	<?php } ?>
-
-	<div class="bb-groups-messages-right">
+<div class="bb-groups-messages-right">
 		<form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
 			<div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
@@ -170,10 +118,6 @@ $group_members = groups_get_group_members( $args );
 								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 							<?php endif; ?>
 							<div id="group-messages-new-submit" class="submit">
-								<select name="group-messages-type" class="group-messages-type">
-									<option value="open"><?php esc_html_e( 'Group Thread', 'buddyboss' ); ?></option>
-									<option value="private"><?php esc_html_e( 'Private Reply (BCC)', 'buddyboss' ); ?></option>
-								</select>
 								<?php
 
 								$disabled = '';

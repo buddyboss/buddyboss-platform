@@ -18219,7 +18219,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 0 20px;
   border-radius: 4px 4px 0 0;
   background: #fff;
-  border-bottom: 1px solid #E7E9EC;
+  border-bottom: 1px solid #e7e9ec;
 }
 
 #group-messages-container .bp-navs.group-subnav li {
@@ -18230,7 +18230,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 #group-messages-container .bp-navs.group-subnav li a {
   background: transparent;
-  margin-bottom: 0;
   border: 0;
   font-size: 14px;
   color: #939597;
@@ -18248,7 +18247,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 #group-messages-container .bp-navs.group-subnav li.selected {
   background: transparent;
-  border-bottom: 1px solid #007CFF;
+  border-bottom: 1px solid #007cff;
   margin-bottom: -1px;
 }
 
