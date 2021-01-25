@@ -201,65 +201,69 @@ window.bp = window.bp || {};
 				}
 			);
 
-			var membersDiv = document.getElementById( 'members-list' );
-			$( '.bb-icon-loader' ).hide();
-			membersDiv.addEventListener(
-				'scroll',
-				function () {
-					if ( membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight ) {
+			if ( isGroupPrivateThreadPageSelector.length ) {
 
-						if ( page >= total_pages ) {
-							return false;
-						}
+				var membersDiv = document.getElementById( 'members-list' );
+				$( '.bb-icon-loader' ).hide();
+				membersDiv.addEventListener(
+					'scroll',
+					function () {
+						if ( membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight ) {
 
-						page = page + 1;
-
-						$( '.bb-icon-loader' ).show();
-
-						var type = '';
-						if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
-							type = 'all';
-						} else {
-							type = 'individual';
-						}
-						var data = {
-							'action': 'groups_get_group_members_listing',
-							'nonce': BP_Nouveau.group_messages.nonces.retrieve_group_members,
-							'group': BP_Nouveau.group_messages.group_id,
-							'type': type,
-							'page': page
-						};
-						$.ajax(
-							{
-								type: 'POST',
-								url: BP_Nouveau.ajaxurl,
-								data: data,
-								success: function ( response ) {
-									if ( response.success && 'no_member' !== response.data.results ) {
-										$( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).remove();
-										memberListUl.append( response.data.results );
-										memberListUlLast.html( '' );
-										memberListUlLast.html( response.data.pagination );
-										$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
-										if ( 'all' === type ) {
-											$( '.group-messages-members-listing #members-list li .action' ).hide();
-										} else {
-											$( '.group-messages-members-listing #members-list li .action' ).show();
-										}
-										if ( typeof response.data.total_page !== 'undefined' ) {
-											total_pages = response.data.total_page;
-										}
-									} else {
-										$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
-										feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
-									}
-									$( '.bb-icon-loader' ).hide();
-								}
+							if ( page >= total_pages ) {
+								return false;
 							}
-						);
+
+							page = page + 1;
+
+							$( '.bb-icon-loader' ).show();
+
+							var type = '';
+							if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
+								type = 'all';
+							} else {
+								type = 'individual';
+							}
+							var data = {
+								'action': 'groups_get_group_members_listing',
+								'nonce': BP_Nouveau.group_messages.nonces.retrieve_group_members,
+								'group': BP_Nouveau.group_messages.group_id,
+								'type': type,
+								'page': page
+							};
+							$.ajax(
+								{
+									type: 'POST',
+									url: BP_Nouveau.ajaxurl,
+									data: data,
+									success: function ( response ) {
+										if ( response.success && 'no_member' !== response.data.results ) {
+											$( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).remove();
+											memberListUl.append( response.data.results );
+											memberListUlLast.html( '' );
+											memberListUlLast.html( response.data.pagination );
+											$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
+											if ( 'all' === type ) {
+												$( '.group-messages-members-listing #members-list li .action' ).hide();
+											} else {
+												$( '.group-messages-members-listing #members-list li .action' ).show();
+											}
+											if ( typeof response.data.total_page !== 'undefined' ) {
+												total_pages = response.data.total_page;
+											}
+										} else {
+											$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
+											feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
+										}
+										$( '.bb-icon-loader' ).hide();
+									}
+								}
+							);
+						}
 					}
-				}
-			);
+				);
+
+			}
 
 			$( document ).on(
 				'click',
