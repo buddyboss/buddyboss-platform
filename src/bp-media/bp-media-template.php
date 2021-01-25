@@ -144,7 +144,7 @@ function bp_has_media( $args = '' ) {
 		$album_id = ( isset( $args['album_id'] ) ? $args['album_id'] : false );
 	}
 
-	if ( $album_id ) {
+	if ( $album_id && ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) ) {
 		$args['video'] = true;
 	}
 
