@@ -713,8 +713,7 @@ function bp_groups_admin_edit() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						),
-						bp_get_admin_url( 'admin.php' )
+						), bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -736,8 +735,7 @@ function bp_groups_admin_edit() {
 								'page'   => 'bp-groups',
 								'create' => 'create-from-admin',
 								'action' => 'edit',
-							),
-							bp_get_admin_url( 'admin.php' )
+							), bp_get_admin_url( 'admin.php' )
 						)
 					);
 					?>
