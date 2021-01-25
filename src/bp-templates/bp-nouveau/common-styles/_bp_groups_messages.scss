@@ -82,6 +82,20 @@
 					bottom: 91px;
 				}
 			}
+
+			div.medium-editor-toolbar {
+
+				.group-messages.public-message & {
+					bottom: 65px;
+
+					&.active {
+						bottom: 47px;
+					}
+
+				}
+
+			}
+
 		}
 
 		.bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
@@ -351,6 +365,10 @@ div#bp-group-message-content {
 	height: 100%;
 	display: flex;
 	flex-flow: column;
+
+	#whats-new-attachments {
+		margin-bottom: 10px;
+	}
 }
 
 #group-messages-container .bb-groups-messages-left .bp-messages-feedback-hide {

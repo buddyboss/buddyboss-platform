@@ -18279,6 +18279,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
     bottom: 91px;
   }
+  .group-messages.public-message #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar {
+    bottom: 65px;
+  }
+  .group-messages.public-message #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
+    bottom: 47px;
+  }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
     bottom: 90px;
   }
@@ -18545,6 +18551,10 @@ div#bp-group-message-content {
   height: 100%;
   display: flex;
   flex-flow: column;
+}
+
+div#bp-group-message-content #whats-new-attachments {
+  margin-bottom: 10px;
 }
 
 #group-messages-container .bb-groups-messages-left .bp-messages-feedback-hide {
