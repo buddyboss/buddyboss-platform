@@ -262,7 +262,7 @@ class BB_Documents extends Integration_Abstract {
 			}
 		}
 
-		$document_folder_ids = $this->get_document_folde_ids_by_group_id( $group_id );
+		$document_folder_ids = $this->get_document_folder_ids_by_group_id( $group_id );
 		if ( ! empty( $document_folder_ids ) ) {
 			foreach ( $document_folder_ids as $folder_id ) {
 				Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
@@ -284,7 +284,7 @@ class BB_Documents extends Integration_Abstract {
 				}
 			}
 
-			$document_folder_ids = $this->get_document_folde_ids_by_group_id( $group->id );
+			$document_folder_ids = $this->get_document_folder_ids_by_group_id( $group->id );
 			if ( ! empty( $document_folder_ids ) ) {
 				foreach ( $document_folder_ids as $folder_id ) {
 					Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
@@ -306,7 +306,7 @@ class BB_Documents extends Integration_Abstract {
 			}
 		}
 
-		$document_folder_ids = $this->get_document_folde_ids_by_group_id( $group_id );
+		$document_folder_ids = $this->get_document_folder_ids_by_group_id( $group_id );
 		if ( ! empty( $document_folder_ids ) ) {
 			foreach ( $document_folder_ids as $folder_id ) {
 				Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
