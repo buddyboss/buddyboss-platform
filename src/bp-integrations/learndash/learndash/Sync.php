@@ -88,8 +88,13 @@ class Sync {
 		$generator = $this->generator( null, $groupId );
 
 		if ( $generator->hasBpGroup() && $generator->getBpGroupId() == $newGroup ) {
+			/**
+			 * Update bp group when ld group update
+			 *
+			 * @since BuddyBoss 1.5.8
+			 */
+			$generator->updateBuddypressGroup( $groupId, $newGroup );
 			$generator->fullSyncToBuddypress();
-
 			return false;
 		}
 

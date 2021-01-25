@@ -713,7 +713,8 @@ function bp_groups_admin_edit() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						), bp_get_admin_url( 'admin.php' )
+						),
+						bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -735,7 +736,8 @@ function bp_groups_admin_edit() {
 								'page'   => 'bp-groups',
 								'create' => 'create-from-admin',
 								'action' => 'edit',
-							), bp_get_admin_url( 'admin.php' )
+							),
+							bp_get_admin_url( 'admin.php' )
 						)
 					);
 					?>
@@ -967,7 +969,8 @@ function bp_process_create_group_admin() {
 				'page'   => 'bp-groups',
 				'gid'    => $new_group_id,
 				'action' => 'edit',
-			), bp_get_admin_url( 'admin.php' )
+			),
+			bp_get_admin_url( 'admin.php' )
 		)
 	);
 	exit();
@@ -1110,7 +1113,8 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						), bp_get_admin_url( 'admin.php' )
+						),
+						bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -1137,7 +1141,8 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						), bp_get_admin_url( 'admin.php' )
+						),
+						bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -1569,10 +1574,10 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 			<?php
 
 			foreach ( $types as $type ) :
-				if ( isset( $type->labels['singular_name'] ) && !empty( $type->labels['singular_name'] ) ) :
-				?>
+				if ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) :
+					?>
 					<option value="<?php echo esc_attr( $type->name ); ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
-				<?php
+					<?php
 				endif;
 			endforeach;
 
@@ -2308,7 +2313,7 @@ function bp_group_type_show_data( $column, $post_id ) {
 
 		case 'total_groups':
 			$group_key      = bp_group_get_group_type_key( $post_id );
-			$group_type_url = bp_get_admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
+			$group_type_url = bp_get_admin_url() . 'admin.php?page=bp-groups&bp-group-type=' . $group_key;
 			printf(
 				__( '<a href="%1$s">%2$s</a>', 'buddyboss' ),
 				esc_url( $group_type_url ),
