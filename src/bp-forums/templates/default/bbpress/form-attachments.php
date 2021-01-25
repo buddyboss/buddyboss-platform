@@ -53,7 +53,7 @@ if ( ! bp_is_active( 'media' ) ) {
 		</div>
 	<?php endif; ?>
 
-	<?php if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() ) : ?>
+	<?php if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() && bp_user_can_create_forum_media() ) : ?>
 		<div class="post-elements-buttons-item post-media media-support">
 			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
 				<i class="bb-icon bb-icon-camera-small"></i>
@@ -64,7 +64,7 @@ if ( ! bp_is_active( 'media' ) ) {
 
 	<?php
 	$extensions = bp_is_active( 'media' ) ?  bp_document_get_allowed_extension() : false;
-	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bp_is_forums_document_support_enabled() ) :
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bp_is_forums_document_support_enabled() && bp_user_can_create_forum_document() ) :
 		?>
 
 		<div class="post-elements-buttons-item post-media document-support">
