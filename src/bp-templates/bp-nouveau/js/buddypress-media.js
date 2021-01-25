@@ -2004,7 +2004,7 @@ window.bp = window.bp || {};
 
 		resetGroupMessagesMediaComponent: function () {
 			var self = this;
-			if (self.dropzone_obj.length && typeof self.dropzone_obj !== 'undefined') {
+			if ( $( 'div.group-message-media-support' ).length && self.dropzone_obj && typeof self.dropzone_obj !== 'undefined') {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];

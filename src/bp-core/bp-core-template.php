@@ -3732,6 +3732,18 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 		}
 	}
 
+	if ( bp_is_group_messages() ) {
+		$bp_classes[] = 'group-messages';
+
+		if ( 'public-message' === bp_get_group_current_messages_tab() ) {
+			$bp_classes[] = 'public-message';
+		}
+
+		if ( 'private-message' === bp_get_group_current_messages_tab() ) {
+			$bp_classes[] = 'private-message';
+		}
+	}
+
 	if ( bp_is_group_members() ) {
 		$bp_classes[] = 'group-members';
 	}

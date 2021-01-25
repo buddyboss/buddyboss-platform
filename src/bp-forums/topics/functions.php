@@ -203,6 +203,20 @@ function bbp_new_topic_handler( $action = '' ) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
 
+	if ( ! empty( $_POST['bbp_media'] ) ) {
+		$can_send_media = bp_is_forums_media_support_enabled();
+		if ( ! $can_send_media ) {
+			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_document'] ) ) {
+		$can_send_document = bp_is_forums_document_support_enabled();
+		if ( ! $can_send_document ) {
+			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+		}
+	}
+
 	/** Topic Forum */
 
 	// Error check the POST'ed topic id.
