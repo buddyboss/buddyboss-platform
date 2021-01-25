@@ -96,11 +96,11 @@ $group_members = groups_get_group_members( $args );
 						<div id="group_message_content" name="group_message_content" tabindex="3"></div>
 						<input type="hidden" id="group_message_content_hidden" name="group_message_content_hidden" value="">
 						<div id="whats-new-attachments">
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && bp_user_can_create_media() ) : ?>
+							<?php if ( bp_is_active( 'media' ) ) : ?>
 								<div class="dropzone closed" id="bp-group-messages-post-media-uploader"></div>
 								<input name="bp_group_messages_media" id="bp_group_messages_media" type="hidden" value=""/>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && bp_user_can_create_document() ) : ?>
+							<?php if ( bp_is_active( 'media' ) ) : ?>
 								<div class="dropzone closed" id="bp-group-messages-post-document-uploader"></div>
 								<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 							<?php endif; ?>
@@ -130,14 +130,14 @@ $group_members = groups_get_group_members( $args );
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && bp_user_can_create_media() ) : ?>
-								<div class="post-elements-buttons-item post-media media-support">
+								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-camera-small"></span>
 									</a>
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && bp_user_can_create_document() ) : ?>
-								<div class="post-elements-buttons-item post-media document-support">
+								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-attach"></span>
 									</a>

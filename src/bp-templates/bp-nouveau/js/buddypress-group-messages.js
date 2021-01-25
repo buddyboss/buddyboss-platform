@@ -5,7 +5,7 @@ window.bp = window.bp || {};
 
 ( function( exports, $ ) {
 
-	// Bail if not set
+	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
