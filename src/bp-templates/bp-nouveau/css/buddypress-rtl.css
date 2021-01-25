@@ -18220,6 +18220,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-radius: 4px 4px 0 0;
   background: #fff;
   border-bottom: 1px solid #e7e9ec;
+  margin-bottom: 0;
 }
 
 #group-messages-container .bp-navs.group-subnav li {
@@ -19004,6 +19005,18 @@ span.icons:before {
   transition: color 0.1s ease-in;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.group-messages.public-message .bb-groups-messages-right {
+  flex: auto;
+}
+
+.group-messages.public-message .bb-groups-messages-right div#bp-group-message-content {
+  min-height: 50vh;
+}
+
+.group-messages.public-message .bb-groups-messages-right .add-more-members {
+  display: none;
 }
 
 @media screen and (min-width: 1081px) {

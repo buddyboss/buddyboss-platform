@@ -15,6 +15,7 @@
 		border-radius: 4px 4px 0 0;
 		background: #fff;
 		border-bottom: 1px solid #e7e9ec;
+		margin-bottom: 0;
 
 		li {
 			float: left;
@@ -830,6 +831,23 @@ span.icons:before {
 		transition: color 0.1s ease-in;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+	}
+
+}
+
+.group-messages.public-message {
+
+	.bb-groups-messages-right {
+		flex: auto;
+
+		div#bp-group-message-content {
+			min-height: 50vh;
+		}
+
+		.add-more-members {
+			display: none;
+		}
+
 	}
 
 }
