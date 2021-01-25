@@ -22,7 +22,7 @@ add_action(
 			),
 			array(
 				'video_albums_loader' => array(
-					'function' => 'bp_nouveau_ajax_albums_loader',
+					'function' => 'bp_nouveau_ajax_video_albums_loader',
 					'nopriv'   => true,
 				),
 			),
@@ -142,7 +142,7 @@ add_action(
  *
  * @since BuddyBoss 1.5.7
  */
-function bp_nouveau_ajax_albums_loader() {
+function bp_nouveau_ajax_video_albums_loader() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
