@@ -128,7 +128,7 @@ $group_members = groups_get_group_members( $args );
 												</g>
 											</svg>
 										</div>
-										<div class="dz-progress-count"></span></div>
+										<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></span></div>
 										<div class="dz-video-thumbnail"></span></div>
 									</div>
 								</div>
