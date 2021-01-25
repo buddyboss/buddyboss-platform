@@ -111,6 +111,10 @@
 	min-width: 0;
 	position: relative;
 
+	&.full_width {
+		flex: auto;
+	}
+
 	.medium-editor-element:not(.emojionearea),
 	.medium-editor-placeholder:not(.emojionearea) {
 		max-height: 50vh;

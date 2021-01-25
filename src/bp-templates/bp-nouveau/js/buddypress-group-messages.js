@@ -373,6 +373,7 @@ window.bp = window.bp || {};
 				function( e ) {
 					e.preventDefault();
 					$( '#item-body #group-messages-container .bb-groups-messages-right-top .group-messages-compose' ).hide();
+					$( '#item-body #group-messages-container .bb-groups-messages-right' ).removeClass('full_width');
 					$( '#item-body #group-messages-container .bb-groups-messages-left' ).show();
 					$( '#item-body #group-messages-container .bb-groups-messages-right .remove-after-few-seconds' ).remove();
 					$( '#item-body .bb-groups-messages-right-top .bp-messages-feedback' ).show();
@@ -511,6 +512,7 @@ window.bp = window.bp || {};
 								if ( response.success ) {
 
 									$( '#item-body #group-messages-container .bb-groups-messages-right .select2-container' ).hide();
+									$( '#item-body #group-messages-container .bb-groups-messages-right' ).addClass('full_width');
 									$( '#item-body #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-bottom' ).hide();
 									$( '#item-body #group-messages-container .remove-after-few-seconds' ).remove();
 									$( '#item-body #group-messages-container .bb-groups-messages-left' ).hide();

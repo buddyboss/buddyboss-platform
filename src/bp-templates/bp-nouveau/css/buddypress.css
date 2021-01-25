@@ -18296,6 +18296,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   position: relative;
 }
 
+.bb-groups-messages-right.full_width {
+  flex: auto;
+}
+
 .bb-groups-messages-right .medium-editor-element:not(.emojionearea),
 .bb-groups-messages-right .medium-editor-placeholder:not(.emojionearea) {
   max-height: 50vh;
