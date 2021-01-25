@@ -1003,7 +1003,7 @@ function bp_video_filter_public_scope( $retval = array(), $filter = array() ) {
 		),
 	);
 
-	if ( ! bp_is_profile_video_support_enabled() && ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bp_is_profile_video_support_enabled() ) {
 		$args[] = array(
 			'column'  => 'user_id',
 			'compare' => '=',
@@ -1011,7 +1011,7 @@ function bp_video_filter_public_scope( $retval = array(), $filter = array() ) {
 		);
 	}
 
-	if ( ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bp_is_profile_video_support_enabled() ) {
 		$args[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',

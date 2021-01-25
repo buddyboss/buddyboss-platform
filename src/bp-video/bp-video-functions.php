@@ -1243,7 +1243,6 @@ function bp_video_object_results_video_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
 	$querystring['scope'] = 'all';
-
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
 	$querystring['user_id']     = 0;
@@ -1917,7 +1916,7 @@ function bp_video_default_scope( $scope ) {
 		$allowed_scopes[] = 'groups';
 	}
 
-	if ( ( is_user_logged_in() || bp_is_user() ) && bp_is_profile_media_support_enabled() ) {
+	if ( ( is_user_logged_in() || bp_is_user() ) && bp_is_profile_video_support_enabled() ) {
 		$allowed_scopes[] = 'personal';
 	}
 
