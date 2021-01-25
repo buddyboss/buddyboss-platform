@@ -294,14 +294,14 @@ function bbp_new_reply_handler( $action = '' ) {
 	}
 
 	if ( ! empty( $_POST['bbp_media'] ) ) {
-		$can_send_media = bp_is_forums_media_support_enabled();
+		$can_send_media = bp_user_can_create_forum_media();
 		if ( ! $can_send_media ) {
 			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_document'] ) ) {
-		$can_send_document = bp_is_forums_document_support_enabled();
+		$can_send_document = bp_user_can_create_forum_document();
 		if ( ! $can_send_document ) {
 			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
 		}

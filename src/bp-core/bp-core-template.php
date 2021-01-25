@@ -4203,6 +4203,16 @@ function bp_user_can_create_document() {
 }
 
 /**
+ * Checks if user can create a forum document or not.
+ *
+ * @return bool Is user can create forum document or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_forum_document() {
+	return (bool) apply_filters( 'bp_user_can_create_forum_document', true );
+}
+
+/**
  * Checks if user can create a media or not.
  *
  * @return bool Is user can create media or not.
@@ -4210,6 +4220,16 @@ function bp_user_can_create_document() {
  */
 function bp_user_can_create_media() {
 	return (bool) apply_filters( 'bp_user_can_create_media', true );
+}
+
+/**
+ * Checks if user can create a forum media or not.
+ *
+ * @return bool Is user can create forum media or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_forum_media() {
+	return (bool) apply_filters( 'bp_user_can_create_forum_media', true );
 }
 
 /**
