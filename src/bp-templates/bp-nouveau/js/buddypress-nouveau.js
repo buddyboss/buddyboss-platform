@@ -2182,6 +2182,7 @@ window.bp = window.bp || {};
 				video.src         = url;
 				video.muted       = true;
 				video.playsInline = true;
+				video.currentTime = 6; //Seek 6 seconds before capturing thumbnail
 				video.play();
 			};
 			fileReader.readAsArrayBuffer( file );
