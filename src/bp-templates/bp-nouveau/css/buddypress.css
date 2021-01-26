@@ -15393,6 +15393,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   max-width: 40px;
 }
 
+div.dropzone .dz-preview {
+  min-width: 120px;
+}
+
 div.dropzone .dz-preview .dz-success-mark,
 div.dropzone .dz-preview .dz-progress,
 div.dropzone .dz-preview .dz-error-mark {
@@ -19950,12 +19954,6 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 .bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview:last-child,
 #video-uploader.dropzone .dz-preview.dz-file-preview:last-child {
   margin-right: 0;
-}
-
-#bp-group-messages-post-video-uploader .dz-complete .dz-remove:after,
-.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-complete .dz-remove:after,
-#video-uploader.dropzone .dz-complete .dz-remove:after {
-  left: 0;
 }
 
 @media screen and (max-width: 768px) {

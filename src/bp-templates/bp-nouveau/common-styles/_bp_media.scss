@@ -2285,6 +2285,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 }
 
 div.dropzone .dz-preview {
+	min-width: 120px;
 
 	.dz-success-mark,
 	.dz-progress,
