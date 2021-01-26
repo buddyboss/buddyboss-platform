@@ -124,14 +124,14 @@ $group_members = groups_get_group_members( $args );
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && bp_user_can_create_media() ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0 ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-camera-small"></span>
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && bp_user_can_create_document() ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0 ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-attach"></span>

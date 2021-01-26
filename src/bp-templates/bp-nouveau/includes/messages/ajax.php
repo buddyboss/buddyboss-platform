@@ -363,7 +363,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = apply_filters( 'bp_user_can_create_message_media', bp_is_messages_media_support_enabled(), bp_nouveau_get_thread_messages( $thread_id, $_POST ), bp_loggedin_user_id() );
+		$can_send_media = apply_filters( 'bp_user_can_create_message_media', bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id ), bp_nouveau_get_thread_messages( $thread_id, $_POST ), bp_loggedin_user_id() );
 		if ( ! $can_send_media ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
 			wp_send_json_error( $response );
@@ -371,8 +371,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_media = apply_filters( 'bp_user_can_create_message_document', bp_is_messages_document_support_enabled(), bp_nouveau_get_thread_messages( $thread_id, $_POST ), bp_loggedin_user_id() );
-		if ( ! $can_send_media ) {
+		$can_send_document = apply_filters( 'bp_user_can_create_message_document', bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id ), bp_nouveau_get_thread_messages( $thread_id, $_POST ), bp_loggedin_user_id() );
+		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
@@ -1006,7 +1006,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 			if ( ! empty( $media_ids ) ) {
 				$media_ids = explode( ',', $media_ids );
-				if ( sizeof( $media_ids ) < 2 ) {
+				if ( count( $media_ids ) < 2 ) {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent a photo', 'buddyboss' );
 				} else {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
@@ -1019,7 +1019,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 			if ( ! empty( $document_ids ) ) {
 				$document_ids = explode( ',', $document_ids );
-				if ( sizeof( $document_ids ) < 2 ) {
+				if ( count( $document_ids ) < 2 ) {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent a document', 'buddyboss' );
 				} else {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent some documents', 'buddyboss' );
@@ -1675,7 +1675,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		foreach ( $recipients as $recipient ) {
 			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-				if ( sizeof( $recipients ) > 1 ) {
+				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
 						'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
 						'type'     => 'error',
@@ -2348,14 +2348,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$bp->current_action = $reset_action;
 
 	// pagination.
-	$thread->per_page                = $thread_template->thread->messages_perpage;
-	$thread->messages_count          = $thread_template->thread->total_messages;
-	$thread->next_messages_timestamp = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
-
+	$thread->per_page                 = $thread_template->thread->messages_perpage;
+	$thread->messages_count           = $thread_template->thread->total_messages;
+	$thread->next_messages_timestamp  = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 	$thread->group_id                 = $group_id;
 	$thread->is_group_thread          = $is_group_thread;
-	$thread->user_can_upload_media    = apply_filters( 'bp_user_can_create_message_media', bp_is_messages_media_support_enabled(), $thread, bp_loggedin_user_id() );
-	$thread->user_can_upload_document = apply_filters( 'bp_user_can_create_message_document', bp_is_messages_document_support_enabled(), $thread, bp_loggedin_user_id() );
+	$thread->user_can_upload_media    = apply_filters( 'bp_user_can_create_message_media', bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id ), $thread, bp_loggedin_user_id() );
+	$thread->user_can_upload_document = apply_filters( 'bp_user_can_create_message_document', bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id ), $thread, bp_loggedin_user_id() );
 
 	return $thread;
 }

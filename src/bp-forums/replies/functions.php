@@ -263,7 +263,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $topic_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
-		//remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
+		// remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
 	}
 
 	/** Reply Title */
@@ -285,23 +285,24 @@ function bbp_new_reply_handler( $action = '' ) {
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 	// No reply content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
-		 && empty( $_POST['bbp_media'] )
-		 && empty( $_POST['bbp_media_gif'] )
-		 && empty( $_POST['bbp_document'] )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) ) && empty( $_POST['bbp_media'] ) && empty( $_POST['bbp_media_gif'] ) && empty( $_POST['bbp_document'] )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
 
+	if ( empty( $forum_id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $topic_id );
+	}
+
 	if ( ! empty( $_POST['bbp_media'] ) ) {
-		$can_send_media = bp_user_can_create_forum_media();
+		$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0 );
 		if ( ! $can_send_media ) {
 			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_document'] ) ) {
-		$can_send_document = bp_user_can_create_forum_document();
+		$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0 );
 		if ( ! $can_send_document ) {
 			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
 		}
@@ -594,7 +595,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_edit_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_encode_bad', 10 );
-		//remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
+		// remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
 	}
 
 	/** Reply Topic */
@@ -1989,18 +1990,19 @@ function bbp_reply_content_autoembed() {
  */
 function bbp_reply_content_autoembed_paragraph( $content ) {
 
-	if ( strpos( $content, '<iframe' ) !== false )
+	if ( strpos( $content, '<iframe' ) !== false ) {
 		return $content;
+	}
 
 	global $wp_embed;
 	$embed_urls = $embeds_array = array();
-	$flag = true;
+	$flag       = true;
 
 	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content , $embed_urls );
+		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 	}
 
-	if ( !empty( $embed_urls ) && !empty( $embed_urls[0] ) ) {
+	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
 		$embed_urls = array_filter( $embed_urls[0] );
 		$embed_urls = array_unique( $embed_urls );
 
@@ -2010,8 +2012,8 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 			}
 
 			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if( $embed ) {
-				$flag = false;
+			if ( $embed ) {
+				$flag           = false;
 				$embeds_array[] = wpautop( $embed );
 			}
 		}
@@ -2453,7 +2455,6 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 					$display_role = __( 'Moderator', 'buddyboss' );
 				}
 			}
-
 		}
 	}
 

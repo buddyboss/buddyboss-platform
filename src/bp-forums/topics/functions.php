@@ -195,27 +195,11 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
-		 && empty( $_POST['bbp_media'] )
-		 && empty( $_POST['bbp_document'] )
-		 && empty( $_POST['bbp_media_gif'] )
-	) {
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) ) && empty( $_POST['bbp_media'] ) && empty( $_POST['bbp_document'] ) && empty( $_POST['bbp_media_gif'] ) ) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
 
-	if ( ! empty( $_POST['bbp_media'] ) ) {
-		$can_send_media = bp_user_can_create_forum_media();
-		if ( ! $can_send_media ) {
-			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
-		}
-	}
 
-	if ( ! empty( $_POST['bbp_document'] ) ) {
-		$can_send_document = bp_user_can_create_forum_document();
-		if ( ! $can_send_document ) {
-			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
-		}
-	}
 
 	/** Topic Forum */
 
@@ -282,6 +266,20 @@ function bbp_new_topic_handler( $action = '' ) {
 					bbp_add_error( 'bbp_new_topic_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss' ) );
 				}
 			}
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_media'] ) ) {
+		$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_media ) {
+			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_document'] ) ) {
+		$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_document ) {
+			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
 		}
 	}
 
