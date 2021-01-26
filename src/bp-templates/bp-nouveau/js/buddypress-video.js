@@ -379,7 +379,7 @@ window.bp = window.bp || {};
 								}
 
 								if ( response.data.video_personal_count ) {
-									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#videos-personal-li a span.count' ).text( response.data.video_personal_count );
+									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
 								}
 
 								if ( response.data.video_group_count ) {
