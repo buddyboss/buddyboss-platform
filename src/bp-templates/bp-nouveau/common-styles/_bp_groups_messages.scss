@@ -56,6 +56,27 @@
 
 	@media screen and ( max-width: 540px ) {
 
+		.bp-navs.group-subnav {
+			padding: 0 8px;
+
+			li {
+				margin-right: 10px;
+			}
+
+		}
+
+		.bb-groups-messages-right .bb-title-wrap {
+			flex-flow: column;
+			align-items: flex-start;
+
+			.add-more-members {
+				display: flex;
+				align-items: center;
+				margin-top: 15px;
+			}
+
+		}
+
 		.bb-groups-messages-right #whats-new-toolbar {
 			display: block;
 

@@ -18257,6 +18257,21 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 @media screen and (max-width: 540px) {
+  #group-messages-container .bp-navs.group-subnav {
+    padding: 0 8px;
+  }
+  #group-messages-container .bp-navs.group-subnav li {
+    margin-left: 10px;
+  }
+  #group-messages-container .bb-groups-messages-right .bb-title-wrap {
+    flex-flow: column;
+    align-items: flex-start;
+  }
+  #group-messages-container .bb-groups-messages-right .bb-title-wrap .add-more-members {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar {
     display: block;
   }
