@@ -1018,6 +1018,23 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 	.dz-preview.dz-complete.dz-file-preview {
 
+		.dz-filename {
+			color: #fff;
+		}
+
+		.dz-progress-count {
+			display: none;
+		}
+
+		&.dz-preview.dz-file-preview {
+			background-color: #111;
+			border-radius: 4px;
+		}
+
+	}
+
+	.dz-preview.dz-file-preview {
+
 		.dz-remove {
 			background-color: #fd4343;
 			position: absolute;
@@ -1030,26 +1047,13 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			transform: none;
 
 			&:after {
-				position: relative;
+				position: absolute;
 				top: -1px;
-				left: -1px;
+				left: 2px;
 				font-size: 14px;
 				line-height: 1;
 			}
 
-		}
-
-		.dz-filename {
-			color: #fff;
-		}
-
-		.dz-progress-count {
-			display: none;
-		}
-
-		&.dz-preview.dz-file-preview {
-			background-color: #111;
-			border-radius: 4px;
 		}
 
 	}
