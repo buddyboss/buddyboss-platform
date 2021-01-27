@@ -467,7 +467,7 @@ function bp_media_settings_callback_group_media_support() {
 		printf(
 			'%1$s <strong>%2$s</strong>',
 			__( 'Allow members to upload photos in', 'buddyboss' ),
-			$display_string,
+			$display_string
 		);
 
 		?>
@@ -1060,7 +1060,7 @@ function bp_media_settings_callback_group_document_support() {
 		printf(
 			'%1$s <strong>%2$s</strong>',
 			__( 'Allow members to upload documents in', 'buddyboss' ),
-			$display_string,
+			$display_string
 		);
 		?>
 	</label>
