@@ -4366,3 +4366,101 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 	return false;
 
 }
+
+/**
+ * Whether user has access to upload GIF or not.
+ *
+ * @param int $group_id  group id to be check if passed.
+ * @param int $user_id   user id to be check if passed.
+ * @param int $forum_id  forum id to be check if passed.
+ * @param int $thread_id thread id.
+ *
+ * @return mixed|void
+ */
+function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		return bp_is_groups_gif_support_enabled();
+	} elseif ( ! empty( $forum_id ) && function_exists( 'bbp_get_forum_group_ids' ) ) {
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
+			return bp_is_groups_gif_support_enabled();
+		} else {
+			return ( function_exists( 'bp_is_forums_gif_support_enabled' ) && bp_is_forums_gif_support_enabled() );
+		}
+	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
+		$is_group_message_thread = false;
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+		if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			$is_group_message_thread = true;
+		}
+
+		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+			return bp_is_groups_gif_support_enabled();
+		} else {
+			return ( function_exists( 'bp_is_messages_gif_support_enabled' ) && bp_is_messages_gif_support_enabled() );
+		}
+	}
+
+	return false;
+
+}
+
+/**
+ * Whether user has access to upload Emoji or not.
+ *
+ * @param int $group_id  group id to be check if passed.
+ * @param int $user_id   user id to be check if passed.
+ * @param int $forum_id  forum id to be check if passed.
+ * @param int $thread_id thread id.
+ *
+ * @return mixed|void
+ */
+function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		return bp_is_groups_emoji_support_enabled();
+	} elseif ( ! empty( $forum_id ) && function_exists( 'bbp_get_forum_group_ids' ) ) {
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
+			return bp_is_groups_emoji_support_enabled();
+		} else {
+			return ( function_exists( 'bp_is_forums_emoji_support_enabled' ) && bp_is_forums_emoji_support_enabled() );
+		}
+	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
+		$is_group_message_thread = false;
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+		if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			$is_group_message_thread = true;
+		}
+
+		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+			return bp_is_groups_emoji_support_enabled();
+		} else {
+			return ( function_exists( 'bp_is_messages_emoji_support_enabled' ) && bp_is_messages_emoji_support_enabled() );
+		}
+	}
+
+	return false;
+
+}
