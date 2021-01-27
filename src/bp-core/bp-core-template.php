@@ -4277,6 +4277,8 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
 		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_document( $user_id, $group_id );
 		} else {
@@ -4322,6 +4324,8 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
 		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_media( $user_id, $group_id );
 		} else {
@@ -4367,6 +4371,8 @@ function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
 		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return bp_is_groups_gif_support_enabled();
 		} else {
@@ -4412,6 +4418,8 @@ function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
 		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return bp_is_groups_emoji_support_enabled();
 		} else {
