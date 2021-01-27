@@ -931,6 +931,8 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			);
 
 			$name = bp_core_get_user_displayname( $member->ID );
+
+			$can_send_group_message = apply_filters( 'bp_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			?>
 			<li class="group-message-member-li <?php echo $member->ID; ?>">
 				<div class="item-avatar">
@@ -946,15 +948,25 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 					</div>
 				</div>
 				<div class="action">
-					<button type="button"
-							class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
-							data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
-							data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-							data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
-						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
+					<?php
+					if ( $can_send_group_message ) {
+						?>
+						<button type="button"
+								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
+								data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
+								data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 							<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
 						</span>
-					</button>
+						</button>
+						<?php
+					} else {
+						?>
+						<i class="bb-icon-lock-fill" aria-hidden="true"></i>
+						<?php
+					}
+					?>
 				</div>
 			</li>
 			<?php

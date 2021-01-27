@@ -429,19 +429,47 @@ function bp_is_profile_albums_support_enabled( $default = 1 ) {
  */
 function bp_media_settings_callback_group_media_support() {
 	?>
-	<input name="bp_media_group_media_support"
-		   id="bp_media_group_media_support"
-		   type="checkbox"
-		   value="1"
-		<?php checked( bp_is_group_media_support_enabled() ); ?>
-	/>
+	<input name="bp_media_group_media_support" id="bp_media_group_media_support" type="checkbox" value="1" <?php checked( bp_is_group_media_support_enabled() ); ?> />
 	<label for="bp_media_group_media_support">
 		<?php
-		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload photos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
-		} else {
-			_e( 'Allow members to upload photos in <strong>groups</strong>', 'buddyboss' );
+
+		$string_array = array();
+
+		if ( bp_is_active( 'groups' ) ) {
+			$string_array[] = __( 'groups', 'buddyboss' );
 		}
+
+		if ( bp_is_active( 'activity' ) ) {
+			$string_array[] = __( 'group activity', 'buddyboss' );
+		}
+
+		if ( true === bp_disable_group_messages() ) {
+			$string_array[] = __( 'group messages', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$string_array[] = __( 'group forums', 'buddyboss' );
+		}
+
+		$last_string    = array_pop( $string_array );
+		$display_string = '';
+		if ( count( $string_array ) ) {
+			$second_to_last_string_name = array_pop( $string_array );
+			$display_string            .= implode( ', ', $string_array );
+			if ( ! empty( $second_to_last_string_name ) ) {
+				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+			} else {
+				$display_string .= ' and ';
+			}
+		}
+		$display_string .= $last_string;
+
+		printf(
+			'%1$s <strong>%2$s</strong>',
+			__( 'Allow members to upload photos in', 'buddyboss' ),
+			$display_string,
+		);
+
 		?>
 	</label>
 	<br/>
@@ -489,20 +517,11 @@ function bp_is_group_albums_support_enabled( $default = 1 ) {
  */
 function bp_media_settings_callback_messages_media_support() {
 	?>
-	<input name="bp_media_messages_media_support"
-		   id="bp_media_messages_media_support"
-		   type="checkbox"
-		   value="1"
-		<?php checked( bp_is_messages_media_support_enabled() ); ?>
-	/>
+	<input name="bp_media_messages_media_support" id="bp_media_messages_media_support" type="checkbox" value="1" <?php checked( bp_is_messages_media_support_enabled() ); ?> />
 	<label for="bp_media_messages_media_support">
-		<?php
-		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to upload photos in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' );
-		} else {
-			_e( 'Allow members to upload photos in <strong>private messages</strong>', 'buddyboss' );
-		}
-		?>
+	<?php
+		_e( 'Allow members to upload photos in <strong>private messages</strong>', 'buddyboss' );
+	?>
 	</label>
 	<?php
 }
@@ -975,20 +994,11 @@ function bp_animated_gifs_tutorial() {
  */
 function bp_media_settings_callback_messages_document_support() {
 	?>
-	<input name="bp_media_messages_document_support"
-		   id="bp_media_messages_document_support"
-		   type="checkbox"
-		   value="1"
-		<?php checked( bp_is_messages_document_support_enabled() ); ?>
-	/>
+	<input name="bp_media_messages_document_support" id="bp_media_messages_document_support" type="checkbox" value="1" <?php checked( bp_is_messages_document_support_enabled() ); ?> />
 	<label for="bp_media_messages_document_support">
-		<?php
-		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to upload documents in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' );
-		} else {
-			_e( 'Allow members to upload documents in <strong>private messages</strong>', 'buddyboss' );
-		}
-		?>
+	<?php
+		_e( 'Allow members to upload documents in <strong>private messages</strong>', 'buddyboss' );
+	?>
 	</label>
 	<?php
 }
@@ -1012,19 +1022,46 @@ function bp_is_messages_document_support_enabled( $default = 0 ) {
  */
 function bp_media_settings_callback_group_document_support() {
 	?>
-	<input name="bp_media_group_document_support"
-		   id="bp_media_group_document_support"
-		   type="checkbox"
-		   value="1"
-		<?php checked( bp_is_group_document_support_enabled() ); ?>
-	/>
+	<input name="bp_media_group_document_support" id="bp_media_group_document_support" type="checkbox" value="1" <?php checked( bp_is_group_document_support_enabled() ); ?> />
 	<label for="bp_media_group_document_support">
 		<?php
-		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload documents in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
-		} else {
-			_e( 'Allow members to upload documents in <strong>groups</strong>', 'buddyboss' );
+
+		$string_array = array();
+
+		if ( bp_is_active( 'groups' ) ) {
+			$string_array[] = __( 'groups', 'buddyboss' );
 		}
+
+		if ( bp_is_active( 'activity' ) ) {
+			$string_array[] = __( 'group activity', 'buddyboss' );
+		}
+
+		if ( true === bp_disable_group_messages() ) {
+			$string_array[] = __( 'group messages', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$string_array[] = __( 'group forums', 'buddyboss' );
+		}
+
+		$last_string    = array_pop( $string_array );
+		$display_string = '';
+		if ( count( $string_array ) ) {
+			$second_to_last_string_name = array_pop( $string_array );
+			$display_string            .= implode( ', ', $string_array );
+			if ( ! empty( $second_to_last_string_name ) ) {
+				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+			} else {
+				$display_string .= ' and ';
+			}
+		}
+		$display_string .= $last_string;
+
+		printf(
+			'%1$s <strong>%2$s</strong>',
+			__( 'Allow members to upload documents in', 'buddyboss' ),
+			$display_string,
+		);
 		?>
 	</label>
 	<?php

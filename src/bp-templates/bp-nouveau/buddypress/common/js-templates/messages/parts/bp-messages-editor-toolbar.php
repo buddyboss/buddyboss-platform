@@ -12,19 +12,17 @@
 			</a>
 		</div>
 
-		<?php if ( bp_is_messages_media_support_enabled() ) : ?>
-			<div class="post-elements-buttons-item post-media">
-				<a href="#" id="messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
-					<i class="bb-icon bb-icon-camera-small"></i>
-				</a>
-			</div>
-		<?php endif; ?>
+		<div class="post-elements-buttons-item post-media post-media-photo-support">
+			<a href="#" id="messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
+				<i class="bb-icon bb-icon-camera-small"></i>
+			</a>
+		</div>
 
 		<?php
 		$extensions = bp_document_get_allowed_extension();
-		if ( bp_is_messages_document_support_enabled() && ! empty( $extensions ) ) :
+		if ( ! empty( $extensions ) ) :
 			?>
-			<div class="post-elements-buttons-item post-media">
+			<div class="post-elements-buttons-item post-media post-media-document-support">
 				<a href="#" id="messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
 					<i class="bb-icon bb-icon-attach"></i>
 				</a>

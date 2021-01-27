@@ -7515,6 +7515,38 @@ function bp_get_group_current_invite_tab() {
 }
 
 /**
+ * Echo the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_group_current_messages_tab() {
+	echo bp_get_group_current_messages_tab();
+}
+/**
+ * Returns the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bp_get_group_current_messages_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group invite tab slug.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param string $tab Current group invite tab slug.
+	 */
+	return apply_filters( 'bp_get_group_current_messages_tab', $tab );
+}
+
+/**
  * Return string with the article prefix "a/an".
  *
  * @since BuddyBoss 1.2.8
