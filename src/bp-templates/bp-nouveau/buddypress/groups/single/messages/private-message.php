@@ -67,8 +67,8 @@ $group_members = groups_get_group_members( $args );
 		<form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
 			<div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
-					<h2 class="bb-title"><?php esc_html_e( 'New Group Message', 'buddyboss' ); ?></h2>
-					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Group Message', 'buddyboss' ); ?></a>
+					<h2 class="bb-title"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></h2>
+					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></a>
 					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-plus-circle"></span><?php esc_html_e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-select-members-wrap">
