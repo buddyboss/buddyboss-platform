@@ -674,7 +674,41 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
 
 	// Do not embed attachment in wp-admin area.
-	if ( is_admin() || ! bp_is_forums_media_support_enabled() ) {
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_media_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_group_media_support_enabled()
+		)
+	) {
 		return $content;
 	}
 
@@ -722,8 +756,42 @@ function bp_media_forums_embed_attachments( $content, $id ) {
  */
 function bp_media_forums_embed_gif( $content, $id ) {
 
-	// check if forums gif support enabled.
-	if ( ! bp_is_forums_gif_support_enabled() ) {
+	// Do not embed attachment in wp-admin area.
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_gif_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_groups_gif_support_enabled()
+		)
+	) {
 		return $content;
 	}
 
