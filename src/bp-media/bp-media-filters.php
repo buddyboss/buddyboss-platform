@@ -575,7 +575,7 @@ function bp_media_update_media_privacy( $album ) {
  */
 function bp_media_forums_new_post_media_save( $post_id ) {
 
-	if ( bp_is_forums_media_support_enabled() && ! empty( $_POST['bbp_media'] ) ) {
+	if ( ! empty( $_POST['bbp_media'] ) ) {
 
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
@@ -765,11 +765,6 @@ function bp_media_forums_embed_gif( $content, $id ) {
  * @param $post_id
  */
 function bp_media_forums_save_gif_data( $post_id ) {
-
-	// check if forums gif support enabled.
-	if ( ! bp_is_forums_gif_support_enabled() ) {
-		return;
-	}
 
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
 
