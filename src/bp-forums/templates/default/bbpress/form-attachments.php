@@ -32,7 +32,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ) :
+	if ( bp_is_active( 'media' ) && bp_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
 		?>
 		<div class="forums-attached-gif-container closed" data-key="<?php echo esc_attr( bp_unique_id( 'forums_attached_gif_container_' ) ); ?>">
 			<div class="gif-image-container">
@@ -88,7 +88,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ) :
+	if ( bp_is_active( 'media' ) && bp_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
 		?>
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
@@ -112,7 +112,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bp_is_forums_emoji_support_enabled() ) :
+	if ( bp_is_active( 'media' ) && bp_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
 		?>
 		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 	<?php endif; ?>

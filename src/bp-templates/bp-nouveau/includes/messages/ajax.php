@@ -363,7 +363,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = apply_filters( 'bp_user_can_create_message_media', bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id ), bp_nouveau_get_thread_messages( $thread_id, $_POST ), bp_loggedin_user_id() );
+		$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_media ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
 			wp_send_json_error( $response );
@@ -371,9 +371,17 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_document = apply_filters( 'bp_user_can_create_message_document', bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id ), bp_nouveau_get_thread_messages( $thread_id, $_POST ), bp_loggedin_user_id() );
+		$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
+	if ( ! empty( $_POST['gif_data'] ) ) {
+		$can_send_document = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		if ( ! $can_send_document ) {
+			$response['feedback'] = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 	}
@@ -2353,8 +2361,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->next_messages_timestamp  = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 	$thread->group_id                 = $group_id;
 	$thread->is_group_thread          = $is_group_thread;
-	$thread->user_can_upload_media    = apply_filters( 'bp_user_can_create_message_media', bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id ), $thread, bp_loggedin_user_id() );
-	$thread->user_can_upload_document = apply_filters( 'bp_user_can_create_message_document', bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id ), $thread, bp_loggedin_user_id() );
+	$thread->user_can_upload_media    = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_gif      = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_emoji    = bp_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 
 	return $thread;
 }

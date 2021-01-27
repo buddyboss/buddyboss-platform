@@ -124,21 +124,21 @@ $group_members = groups_get_group_members( $args );
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0 ) ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-camera-small"></span>
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0 ) ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-attach"></span>
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
 										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Post a GIF', 'buddyboss' ); ?>">
@@ -161,7 +161,7 @@ $group_members = groups_get_group_members( $args );
 									</div>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_emoji_support_enabled() ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 							<?php endif; ?>
 							<div id="group-messages-new-submit" class="submit">
