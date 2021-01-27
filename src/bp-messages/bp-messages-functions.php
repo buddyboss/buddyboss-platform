@@ -82,7 +82,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = apply_filters( 'bp_user_can_create_message_media', bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'] ), bp_nouveau_get_thread_messages( $r['thread_id'], $_POST ), bp_loggedin_user_id() );
+		$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
@@ -91,10 +91,19 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_document = apply_filters( 'bp_user_can_create_message_document', bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'] ), bp_nouveau_get_thread_messages( $r['thread_id'], $_POST ), bp_loggedin_user_id() );
+		$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_document ) {
 			$error_code = 'messages_empty_content';
-			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
+	if ( ! empty( $_POST['gif_data'] ) ) {
+		$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_gif ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
 			return new WP_Error( $error_code, $feedback );
 		}
 	}

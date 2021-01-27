@@ -963,7 +963,7 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
  */
 function bp_media_messages_save_gif_data( &$message ) {
 
-	if ( ! bp_is_messages_gif_support_enabled() || empty( $_POST['gif_data'] ) ) {
+	if ( empty( $_POST['gif_data'] ) ) {
 		return;
 	}
 

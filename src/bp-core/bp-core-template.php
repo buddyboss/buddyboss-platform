@@ -4241,16 +4241,6 @@ function bp_user_can_create_document() {
 }
 
 /**
- * Checks if user can create a forum document or not.
- *
- * @return bool Is user can create forum document or not.
- * @since BuddyBoss 1.5.4
- */
-function bp_user_can_create_forum_document() {
-	return (bool) apply_filters( 'bp_user_can_create_forum_document', true );
-}
-
-/**
  * Checks if user can create a media or not.
  *
  * @return bool Is user can create media or not.
@@ -4258,16 +4248,6 @@ function bp_user_can_create_forum_document() {
  */
 function bp_user_can_create_media() {
 	return (bool) apply_filters( 'bp_user_can_create_media', true );
-}
-
-/**
- * Checks if user can create a forum media or not.
- *
- * @return bool Is user can create forum media or not.
- * @since BuddyBoss 1.5.4
- */
-function bp_user_can_create_forum_media() {
-	return (bool) apply_filters( 'bp_user_can_create_forum_media', true );
 }
 
 /**
@@ -4310,16 +4290,17 @@ function bp_groups_user_can_send_membership_requests( $default = true, $group_id
 /**
  * Whether user has access to upload documents or not.
  *
- * @param int $group_id  group id to be check if passed.
- * @param int $user_id   user id to be check if passed.
- * @param int $forum_id  forum id to be check if passed.
- * @param int $thread_id thread id.
+ * @param int    $group_id  group id to be check if passed.
+ * @param int    $user_id   user id to be check if passed.
+ * @param int    $forum_id  forum id to be check if passed.
+ * @param int    $thread_id thread id.
+ * @param string $type      from where permission to follow.
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0 ) {
+function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
-	if ( empty( $user_id ) ) {
+	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
 	}
 
@@ -4330,7 +4311,7 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
 		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_document( $user_id, current( $group_ids ) );
 		} else {
-			return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bp_user_can_create_forum_document();
+			return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bp_user_can_create_document();
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
 		$is_group_message_thread = false;
@@ -4350,6 +4331,12 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
 		} else {
 			return ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) && bp_user_can_create_document();
 		}
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
+		return ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) && bp_user_can_create_document();
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
+		return ( function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() && bp_user_can_create_document() );
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
+		return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bp_user_can_create_document();
 	}
 
 	return false;
@@ -4359,16 +4346,17 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
 /**
  * Whether user has access to upload media or not.
  *
- * @param int $group_id  group id to be check if passed.
- * @param int $user_id   user id to be check if passed.
- * @param int $forum_id  forum id to be check if passed.
- * @param int $thread_id thread id.
+ * @param int    $group_id  group id to be check if passed.
+ * @param int    $user_id   user id to be check if passed.
+ * @param int    $forum_id  forum id to be check if passed.
+ * @param int    $thread_id thread id.
+ * @param string $type      from where permission to follow.
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0 ) {
+function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
-	if ( empty( $user_id ) ) {
+	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
 	}
 
@@ -4379,7 +4367,7 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_media( $user_id, current( $group_ids ) );
 		} else {
-			return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bp_user_can_create_forum_media();
+			return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bp_user_can_create_media();
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
 		$is_group_message_thread = false;
@@ -4399,6 +4387,12 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 		} else {
 			return ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ) && bp_user_can_create_media();
 		}
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
+		return ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ) && bp_user_can_create_media();
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
+		return ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() && bp_user_can_create_media() );
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
+		return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bp_user_can_create_media();
 	}
 
 	return false;
@@ -4408,16 +4402,17 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 /**
  * Whether user has access to upload GIF or not.
  *
- * @param int $group_id  group id to be check if passed.
- * @param int $user_id   user id to be check if passed.
- * @param int $forum_id  forum id to be check if passed.
- * @param int $thread_id thread id.
+ * @param int    $group_id  group id to be check if passed.
+ * @param int    $user_id   user id to be check if passed.
+ * @param int    $forum_id  forum id to be check if passed.
+ * @param int    $thread_id thread id.
+ * @param string $type      from where permission to follow.
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0 ) {
+function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
-	if ( empty( $user_id ) ) {
+	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
 	}
 
@@ -4448,6 +4443,12 @@ function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
 		} else {
 			return ( function_exists( 'bp_is_messages_gif_support_enabled' ) && bp_is_messages_gif_support_enabled() );
 		}
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
+		return ( function_exists( 'bp_is_messages_gif_support_enabled' ) && bp_is_messages_gif_support_enabled() );
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
+		return ( function_exists( 'bp_is_profiles_gif_support_enabled' ) && bp_is_profiles_gif_support_enabled() );
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
+		return ( function_exists( 'bp_is_forums_gif_support_enabled' ) && bp_is_forums_gif_support_enabled() );
 	}
 
 	return false;
@@ -4457,16 +4458,17 @@ function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
 /**
  * Whether user has access to upload Emoji or not.
  *
- * @param int $group_id  group id to be check if passed.
- * @param int $user_id   user id to be check if passed.
- * @param int $forum_id  forum id to be check if passed.
- * @param int $thread_id thread id.
+ * @param int    $group_id  group id to be check if passed.
+ * @param int    $user_id   user id to be check if passed.
+ * @param int    $forum_id  forum id to be check if passed.
+ * @param int    $thread_id thread id.
+ * @param string $type      from where permission to follow.
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0 ) {
+function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
-	if ( empty( $user_id ) ) {
+	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
 	}
 
@@ -4497,6 +4499,12 @@ function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 		} else {
 			return ( function_exists( 'bp_is_messages_emoji_support_enabled' ) && bp_is_messages_emoji_support_enabled() );
 		}
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
+		return ( function_exists( 'bp_is_messages_emoji_support_enabled' ) && bp_is_messages_emoji_support_enabled() );
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
+		return ( function_exists( 'bp_is_profiles_emoji_support_enabled' ) && bp_is_profiles_emoji_support_enabled() );
+    } elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
+		return ( function_exists( 'bp_is_forums_emoji_support_enabled' ) && bp_is_forums_emoji_support_enabled() );
 	}
 
 	return false;
