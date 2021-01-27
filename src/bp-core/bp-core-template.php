@@ -4314,18 +4314,9 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
 			return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bp_user_can_create_document();
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = false;
+		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-		if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-			$is_group_message_thread = true;
-		}
-
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_document( $user_id, $group_id );
 		} else {
@@ -4370,18 +4361,9 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 			return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bp_user_can_create_media();
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = false;
+		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-		if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-			$is_group_message_thread = true;
-		}
-
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_media( $user_id, $group_id );
 		} else {
@@ -4426,18 +4408,9 @@ function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
 			return ( function_exists( 'bp_is_forums_gif_support_enabled' ) && bp_is_forums_gif_support_enabled() );
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = false;
+		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-		if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-			$is_group_message_thread = true;
-		}
-
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return bp_is_groups_gif_support_enabled();
 		} else {
@@ -4482,18 +4455,9 @@ function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 			return ( function_exists( 'bp_is_forums_emoji_support_enabled' ) && bp_is_forums_emoji_support_enabled() );
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = false;
+		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-		if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-			$is_group_message_thread = true;
-		}
-
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return bp_is_groups_emoji_support_enabled();
 		} else {
@@ -4503,7 +4467,7 @@ function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 		return ( function_exists( 'bp_is_messages_emoji_support_enabled' ) && bp_is_messages_emoji_support_enabled() );
 	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
 		return ( function_exists( 'bp_is_profiles_emoji_support_enabled' ) && bp_is_profiles_emoji_support_enabled() );
-    } elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
 		return ( function_exists( 'bp_is_forums_emoji_support_enabled' ) && bp_is_forums_emoji_support_enabled() );
 	}
 

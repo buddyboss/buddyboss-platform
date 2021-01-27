@@ -1113,3 +1113,30 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	 */
 	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
 }
+
+/**
+ * Check whether given thread is group thread or not.
+ *
+ * @param int $thread_id Thread id.
+ *
+ * @return bool
+ */
+function bp_messages_is_group_thread( $thread_id ) {
+
+	if ( ! $thread_id || ! bp_is_active( 'messages' ) ) {
+		return false;
+	}
+
+	$is_group_message_thread = false;
+	$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+	$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+	$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+	if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		$is_group_message_thread = true;
+	}
+
+	return $is_group_message_thread;
+}
