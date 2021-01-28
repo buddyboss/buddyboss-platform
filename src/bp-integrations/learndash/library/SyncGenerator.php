@@ -415,7 +415,7 @@ class SyncGenerator {
 			}
 		}
 
-		if ( ! empty( $post_price ) && ! learndash_is_user_in_group( bp_loggedin_user_id(), $this->ldGroupId )  ) {
+		if ( ! empty( $post_price ) && ! learndash_is_user_in_group( bp_loggedin_user_id(), $this->ldGroupId ) ) {
 			$group_object->group_id = null;
 		}
 
@@ -759,23 +759,25 @@ class SyncGenerator {
 	 *
 	 * @param string $ld_group_id Group id for learndash
 	 *
-	 * @param int $groupId Group id for buddyboss
+	 * @param int    $groupId Group id for buddyboss
 	 *
 	 * @since BuddyBoss 1.5.8
 	 */
 	public function updateLearndashGroup( $ld_group_id, $groupId ) {
 		$bpGroup = groups_get_group( $groupId );
 
-		wp_update_post(
-			array(
-				'ID'           => $ld_group_id,
-				'post_title'   => $bpGroup->name,
-				'post_author'  => $bpGroup->creator_id,
-				'post_content' => $bpGroup->description,
-				'post_status'  => 'publish',
-				'post_type'    => learndash_get_post_type_slug( 'group' ),
-			)
-		);
+		if ( ! empty( $ld_group_id ) ) {
+			wp_update_post(
+				array(
+					'ID'           => $ld_group_id,
+					'post_title'   => $bpGroup->name,
+					'post_author'  => $bpGroup->creator_id,
+					'post_content' => $bpGroup->description,
+					'post_status'  => 'publish',
+					'post_type'    => learndash_get_post_type_slug( 'group' ),
+				)
+			);
+		}
 	}
 
 	/**
@@ -783,7 +785,7 @@ class SyncGenerator {
 	 *
 	 * @param string $ld_group_id Group id for learndash
 	 *
-	 * @param int $groupId Group id for buddyboss
+	 * @param int    $groupId Group id for buddyboss
 	 *
 	 * @since BuddyBoss 1.5.8
 	 */
@@ -791,16 +793,18 @@ class SyncGenerator {
 		$ldGroup  = get_post( $ld_group_id );
 		$settings = bp_ld_sync( 'settings' );
 
-		groups_create_group(
-			array(
-				'group_id'    => $groupId,
-				'creator_id'  => $ldGroup->post_author,
-				'name'        => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
-				'status'      => $settings->get( 'learndash.default_bp_privacy' ),
-				'description' => $ldGroup->post_content,
-				'slug'        => $ldGroup->post_name,
-			)
-		);
+		if ( ! empty( $groupId ) ) {
+			groups_create_group(
+				array(
+					'group_id'    => $groupId,
+					'creator_id'  => $ldGroup->post_author,
+					'name'        => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+					'status'      => $settings->get( 'learndash.default_bp_privacy' ),
+					'description' => $ldGroup->post_content,
+					'slug'        => $ldGroup->post_name,
+				)
+			);
+		}
 
 		groups_update_groupmeta( $ld_group_id, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
 
