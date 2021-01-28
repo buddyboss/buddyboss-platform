@@ -632,7 +632,7 @@ function bp_media_settings_callback_profiles_emoji_support() {
 	?>
 	<input name="bp_media_profiles_emoji_support" id="bp_media_profiles_emoji_support" type="checkbox" value="1" <?php checked( bp_is_profiles_emoji_support_enabled() ); ?> />
 	<label for="bp_media_profiles_emoji_support">
-		<?php _e( 'Allow members to use emoji in <strong>profile activity</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use emoji in <strong>profile activity posts</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -651,15 +651,15 @@ function bp_media_settings_callback_groups_emoji_support() {
 	}
 
 	if ( bp_is_active( 'activity' ) ) {
-		$string_array[] = __( 'group activity', 'buddyboss' );
+		$string_array[] = __( 'activity posts', 'buddyboss' );
 	}
 
 	if ( true === bp_disable_group_messages() ) {
-		$string_array[] = __( 'group messages', 'buddyboss' );
+		$string_array[] = __( 'messages', 'buddyboss' );
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
-		$string_array[] = __( 'group forums', 'buddyboss' );
+		$string_array[] = __( 'forums', 'buddyboss' );
 	}
 
 	$last_string    = array_pop( $string_array );
@@ -712,7 +712,7 @@ function bp_media_settings_callback_forums_emoji_support() {
 	?>
 	<input name="bp_media_forums_emoji_support" id="bp_media_forums_emoji_support" type="checkbox" value="1" <?php checked( bp_is_forums_emoji_support_enabled() ); ?> />
 	<label for="bp_media_forums_emoji_support">
-		<?php _e( 'Allow members to use emoji in <strong>forum discussions</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use emoji in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -845,7 +845,7 @@ function bp_media_settings_callback_profiles_gif_support() {
 	?>
 	<input name="bp_media_profiles_gif_support" id="bp_media_profiles_gif_support" type="checkbox" value="1" <?php checked( bp_is_profiles_gif_support_enabled() ); ?> />
 	<label for="bp_media_profiles_gif_support">
-		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity posts</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -864,15 +864,15 @@ function bp_media_settings_callback_groups_gif_support() {
 	}
 
 	if ( bp_is_active( 'activity' ) ) {
-		$string_array[] = __( 'group activity', 'buddyboss' );
+		$string_array[] = __( 'activity posts', 'buddyboss' );
 	}
 
 	if ( true === bp_disable_group_messages() ) {
-		$string_array[] = __( 'group messages', 'buddyboss' );
+		$string_array[] = __( 'messages', 'buddyboss' );
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
-		$string_array[] = __( 'group forums', 'buddyboss' );
+		$string_array[] = __( 'forums', 'buddyboss' );
 	}
 
 	$last_string    = array_pop( $string_array );
@@ -926,7 +926,7 @@ function bp_media_settings_callback_forums_gif_support() {
 	?>
 	<input name="bp_media_forums_gif_support" id="bp_media_forums_gif_support" type="checkbox" value="1" <?php checked( bp_is_forums_gif_support_enabled() ); ?> />
 	<label for="bp_media_forums_gif_support">
-		<?php _e( 'Allow members to use animated GIFs in <strong>forum discussions</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
