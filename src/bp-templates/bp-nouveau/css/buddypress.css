@@ -19040,12 +19040,108 @@ span.icons:before {
   flex: auto;
 }
 
+.group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-top {
+  padding-bottom: 0;
+}
+
+.group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap {
+  padding: 0;
+  border: 0;
+}
+
+.group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap .bb-title,
+.group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap .group-messages-compose {
+  display: none;
+}
+
+.group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-top .bp-select-members-wrap .select2-container {
+  display: none !important;
+}
+
+.group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-bottom {
+  border: 0;
+}
+
 .group-messages.public-message .bb-groups-messages-right div#bp-group-message-content {
   min-height: 50vh;
 }
 
-.group-messages.public-message .bb-groups-messages-right .add-more-members {
+.group-messages.public-message .bb-groups-messages-right.full_width .bb-groups-messages-right-top {
+  padding-bottom: 20px;
+}
+
+.group-messages.public-message .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap {
+  padding: 20px 20px 0;
+}
+
+.group-messages.public-message .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap .bb-title,
+.group-messages.public-message .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap .group-messages-compose {
+  display: block;
+}
+
+@media screen and (max-width: 540px) {
+  .group-messages.public-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap {
+    flex-flow: row;
+  }
+}
+
+.group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.is_disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+
+.group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.is_disabled .action > i {
+  color: rgba(18, 43, 70, 0.4);
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top {
+  padding-bottom: 0;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap {
+  padding: 0;
+  border: 0;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap .bb-title,
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap .group-messages-compose,
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap .add-more-members {
   display: none;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-bottom {
+  border-top: 0;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-bottom #bp-group-message-content {
+  padding-top: 10px;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top {
+  padding-bottom: 20px;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap {
+  flex-flow: row;
+  padding: 20px 20px 0;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap .bb-title {
+  display: block;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap .add-more-members {
+  display: none;
+}
+
+@media screen and (max-width: 540px) {
+  .group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap {
+    padding: 0 20px;
+  }
+  .group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap .add-more-members {
+    display: block;
+  }
 }
 
 @media screen and (min-width: 1081px) {

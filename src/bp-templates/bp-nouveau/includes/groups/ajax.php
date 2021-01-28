@@ -934,7 +934,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$can_send_group_message = apply_filters( 'bp_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; ?>">
+			<li class="group-message-member-li <?php echo $member->ID; echo !$can_send_group_message ? ' is_disabled ' : ''; ?>">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
