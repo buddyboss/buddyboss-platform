@@ -1717,7 +1717,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	$last_message_id           = $thread_template->thread->messages[0]->id;
-	$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 	$group_name                = '';
 	$group_avatar              = '';
 	$group_link                = '';
@@ -1725,19 +1724,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_message_type        = '';
 	$group_message_thread_type = '';
 	$group_message_fresh       = '';
-	$message_from              = '';
 	$first_message             = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
-
-	$is_group_message_thread = false;
-	$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-	$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-	$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-	$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-	$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-	if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-		$is_group_message_thread = true;
-	}
+	$group_id                  = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+	$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+	$is_group_message_thread   = bp_messages_is_group_thread( bp_get_the_thread_id() );
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bp_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
@@ -2157,7 +2147,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . bp_get_the_thread_message_id() );
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+		$is_group_thread = bp_messages_is_group_thread( $thread_id );
+
+		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_media_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_media_support_enabled() ) ) ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) && bp_has_media(
@@ -2188,7 +2180,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+
+		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_document_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_document_support_enabled() ) ) ) {
 			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) && bp_has_document(
@@ -2320,7 +2313,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_groups_gif_support_enabled() ) ) ) {
 			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {

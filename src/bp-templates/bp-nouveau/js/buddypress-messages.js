@@ -619,6 +619,26 @@ window.bp = window.bp || {};
 
 				}
 
+				// Membership GiF Support.
+				if ( ! _.isUndefined( resp.user_can_upload_gif ) && $( '#whats-new-messages-toolbar .post-media-gif-support' ).length ) {
+					if ( resp.user_can_upload_gif ) {
+						$( '#whats-new-messages-toolbar .post-media-gif-support' ).show();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-gif-support' ).hide();
+					}
+
+				}
+
+				// Membership Emoji Support.
+				if ( ! _.isUndefined( resp.user_can_upload_emoji ) && $( '#whats-new-messages-toolbar .post-media-emoji-support' ).length ) {
+					if ( resp.user_can_upload_emoji ) {
+						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).show();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).hide();
+					}
+
+				}
+
 				setTimeout(
 					function () { // Waiting to load dummy image.
 						bp.Nouveau.reportPopUp();
