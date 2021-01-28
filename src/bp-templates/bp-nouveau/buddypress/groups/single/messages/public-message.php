@@ -2,8 +2,7 @@
 /**
  * BP Nouveau Group's Public Message template.
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @since BuddyBoss 1.5.7
  */
 
 $args = array(

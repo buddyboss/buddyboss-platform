@@ -2,7 +2,7 @@
 /**
  * BuddyPress Single Groups Messages Navigation
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.5.7
  */
 ?>
 

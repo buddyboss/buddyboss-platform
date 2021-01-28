@@ -2319,6 +2319,8 @@ add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_posit
  * @param int    $field_id  to check against the filed id.
  * @param string $field_val to check against the filed value.
  *
+ * @since BuddyBoss 1.5.7
+ *
  * @return bool|array
  */
 function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {

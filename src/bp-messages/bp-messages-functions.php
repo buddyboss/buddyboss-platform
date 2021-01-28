@@ -1115,6 +1115,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
  *
  * @param int $thread_id Thread id.
  *
+ * @since BuddyBoss 1.5.7
+ *
  * @return bool
  */
 function bp_messages_is_group_thread( $thread_id ) {
