@@ -1122,6 +1122,26 @@ function bp_nouveau_ajax_groups_send_message() {
 		// We get members array from $_POST['users_list'] because user already selected them.
 	} else {
 		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+
+		// Check Membership Access.
+		$not_access_list = array();
+		foreach ( $members as $member ) {
+			$can_send_group_message = apply_filters( 'bp_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+			if ( ! $can_send_group_message ) {
+				$not_access_list[] = bp_core_get_user_displayname( $member );
+			}
+		}
+
+		if ( ! empty( $not_access_list ) ) {
+
+			$response['feedback'] = sprintf(
+				'%1$s <strong>%2$s</strong>',
+				( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
+				implode( ', ', $not_access_list )
+			);
+
+			wp_send_json_error( $response );
+		}
 	}
 
 	if ( empty( $members ) ) {
