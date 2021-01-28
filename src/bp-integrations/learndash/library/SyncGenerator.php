@@ -804,9 +804,9 @@ class SyncGenerator {
 					'slug'        => $ldGroup->post_name,
 				)
 			);
-		}
 
-		groups_update_groupmeta( $ld_group_id, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
+			groups_update_groupmeta( $groupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
+		}
 
 		$this->setSyncGropuIds();
 	}
