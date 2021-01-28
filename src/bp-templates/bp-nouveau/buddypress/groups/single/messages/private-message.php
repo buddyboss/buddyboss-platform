@@ -166,8 +166,8 @@ $group_members = groups_get_group_members( $args );
 							<?php endif; ?>
 							<div id="group-messages-new-submit" class="submit">
 								<select name="group-messages-type" class="group-messages-type">
-									<option value="open"><?php esc_html_e( 'Group Thread', 'buddyboss' ); ?></option>
-									<option value="private"><?php esc_html_e( 'Private Reply (BCC)', 'buddyboss' ); ?></option>
+									<option value="open"><?php esc_html_e( 'Create New Thread', 'buddyboss' ); ?></option>
+									<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>
 								</select>
 								<?php
 

@@ -963,7 +963,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						<?php
 					} else {
 						?>
-						<i class="bb-icon-lock-fill" aria-hidden="true"></i>
+						<i class="bb-icon-slash" aria-hidden="true"></i>
 						<?php
 					}
 					?>
