@@ -95,8 +95,8 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$group_messages_select.select2().prop( 'disabled', true );
-			$( '.bp-select-members-wrap .select2-selection__choice__remove' ).hide();
+			// $group_messages_select.select2().prop( 'disabled', true );
+			// $( '.bp-select-members-wrap .select2-selection__choice__remove' ).hide();
 
 			var data = {
 				'action': 'groups_get_group_members_listing',
