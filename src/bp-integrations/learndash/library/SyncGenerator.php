@@ -761,7 +761,7 @@ class SyncGenerator {
 	 *
 	 * @param int    $groupId Group id for buddyboss
 	 *
-	 * @since BuddyBoss 1.5.8
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function updateLearndashGroup( $ld_group_id, $groupId ) {
 		$bpGroup = groups_get_group( $groupId );
@@ -787,7 +787,7 @@ class SyncGenerator {
 	 *
 	 * @param int    $groupId Group id for buddyboss
 	 *
-	 * @since BuddyBoss 1.5.8
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function updateBuddypressGroup( $ld_group_id, $groupId ) {
 		$ldGroup  = get_post( $ld_group_id );

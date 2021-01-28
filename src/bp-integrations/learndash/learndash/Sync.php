@@ -91,7 +91,7 @@ class Sync {
 			/**
 			 * Update bp group when ld group update
 			 *
-			 * @since BuddyBoss 1.5.8
+			 * @since BuddyBoss 1.5.7
 			 */
 			$generator->updateBuddypressGroup( $groupId, $newGroup );
 			$generator->fullSyncToBuddypress();
