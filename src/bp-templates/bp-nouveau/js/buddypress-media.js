@@ -5654,6 +5654,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var self = this;
 
+			$('.bb-media-model-wrapper.media .bb-media-section').find('img').attr('src', '');
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_media = false;
 
