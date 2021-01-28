@@ -19099,6 +19099,10 @@ span.icons:before {
   padding-bottom: 0;
 }
 
+.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bp-select-members-wrap .select2.select2-container {
+  display: none;
+}
+
 .group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap {
   padding: 0;
   border: 0;

@@ -201,6 +201,20 @@ window.bp = window.bp || {};
 				}
 			);
 
+			$( document ).on(
+				'change',
+				$group_messages_select,
+				function() {
+					if( $group_messages_select[0].value ) {
+						$group_messages_select.siblings( '.select2.select2-container' ).show();
+					} else {
+						$group_messages_select.siblings( '.select2.select2-container' ).hide();
+					}
+				}
+			);
+
+
+
 			if ( isGroupPrivateThreadPageSelector.length ) {
 
 				var membersDiv = document.getElementById( 'members-list' );
