@@ -857,7 +857,7 @@ class BP_Groups_Component extends BP_Component {
 
 				$sub_nav[] = array_merge(
 					array(
-						'name'     => __( 'Group Thread', 'buddyboss' ),
+						'name'     => __( 'Send Group Message', 'buddyboss' ),
 						'slug'     => 'public-message',
 						'position' => 0,
 					),
@@ -866,7 +866,7 @@ class BP_Groups_Component extends BP_Component {
 
 				$sub_nav[] = array_merge(
 					array(
-						'name'     => __( 'Send Private Messages', 'buddyboss' ),
+						'name'     => __( 'Send Private Message', 'buddyboss' ),
 						'slug'     => 'private-message',
 						'position' => 1,
 					),
