@@ -7517,7 +7517,7 @@ function bp_get_group_current_invite_tab() {
 /**
  * Echo the current group invite tab slug.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.5.7
  */
 function bp_group_current_messages_tab() {
 	echo bp_get_group_current_messages_tab();
@@ -7525,7 +7525,7 @@ function bp_group_current_messages_tab() {
 /**
  * Returns the current group invite tab slug.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.5.7
  *
  * @return string $tab The current tab's slug.
  */
@@ -7539,7 +7539,7 @@ function bp_get_group_current_messages_tab() {
 	/**
 	 * Filters the current group invite tab slug.
 	 *
-	 * @since BuddyBoss 1.2.3
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @param string $tab Current group invite tab slug.
 	 */

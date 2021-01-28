@@ -4234,7 +4234,7 @@ function bp_is_user_albums() {
  * Checks if user can create a document or not.
  *
  * @return bool Is user can create document or not.
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 1.5.7
  */
 function bp_user_can_create_document() {
 	return (bool) apply_filters( 'bp_user_can_create_document', true );
@@ -4244,7 +4244,7 @@ function bp_user_can_create_document() {
  * Checks if user can create a media or not.
  *
  * @return bool Is user can create media or not.
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 1.5.7
  */
 function bp_user_can_create_media() {
 	return (bool) apply_filters( 'bp_user_can_create_media', true );
@@ -4254,7 +4254,7 @@ function bp_user_can_create_media() {
  * Checks if user can create a activity or not.
  *
  * @return bool Is user can create activity or not.
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 1.5.7
  */
 function bp_user_can_create_activity() {
 	return (bool) apply_filters( 'bp_user_can_create_activity', true );
@@ -4268,7 +4268,7 @@ function bp_user_can_create_activity() {
  * @param string $error_type      Return error type.
  *
  * @return bool Is user can send messages or not.
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 1.5.7
  */
 function bp_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
 	return apply_filters( 'bp_user_can_send_messages', $thread, $thread_template, $error_type );
@@ -4281,7 +4281,7 @@ function bp_user_can_send_messages( $thread, $thread_template, $error_type = 'wp
  * @param int  $group_id  Group id to send membership requests.
  *
  * @return bool Is user can send group membership requests or not.
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 1.5.7
  */
 function bp_groups_user_can_send_membership_requests( $default = true, $group_id ) {
 	return (bool) apply_filters( 'bp_groups_user_can_send_membership_requests', $default, $group_id );
@@ -4295,6 +4295,8 @@ function bp_groups_user_can_send_membership_requests( $default = true, $group_id
  * @param int    $forum_id  forum id to be check if passed.
  * @param int    $thread_id thread id.
  * @param string $type      from where permission to follow.
+ *
+ * @since BuddyBoss 1.5.7
  *
  * @return mixed|void
  */
@@ -4343,6 +4345,8 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
  * @param int    $thread_id thread id.
  * @param string $type      from where permission to follow.
  *
+ * @since BuddyBoss 1.5.7
+ *
  * @return mixed|void
  */
 function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
@@ -4390,6 +4394,8 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
  * @param int    $thread_id thread id.
  * @param string $type      from where permission to follow.
  *
+ * @since BuddyBoss 1.5.7
+ *
  * @return mixed|void
  */
 function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
@@ -4436,6 +4442,8 @@ function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
  * @param int    $forum_id  forum id to be check if passed.
  * @param int    $thread_id thread id.
  * @param string $type      from where permission to follow.
+ *
+ * @since BuddyBoss 1.5.7
  *
  * @return mixed|void
  */

@@ -3316,6 +3316,8 @@ function bp_media_get_report_link( $args = array() ) {
  * @param int $user_id  given user id.
  * @param int $group_id given group id.
  *
+ * @since BuddyBoss 1.5.6
+ *
  * @return bool
  */
 function bp_media_user_can_upload( $user_id = 0, $group_id = 0 ) {

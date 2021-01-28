@@ -883,12 +883,143 @@ span.icons:before {
 	.bb-groups-messages-right {
 		flex: auto;
 
+		.bb-groups-messages-right-top {
+			padding-bottom: 0;
+
+			.bb-title-wrap {
+				padding: 0;
+				border: 0;
+
+				.bb-title,
+				.group-messages-compose {
+					display: none;
+				}
+
+			}
+
+			.bp-select-members-wrap .select2-container {
+				display: none !important;
+			}
+
+		}
+
+		.bb-groups-messages-right-bottom {
+			border: 0;
+		}
+
 		div#bp-group-message-content {
 			min-height: 50vh;
 		}
 
-		.add-more-members {
-			display: none;
+		&.full_width {
+
+			.bb-groups-messages-right-top {
+				padding-bottom: 20px;
+
+				.bb-title-wrap {
+					padding: 20px 20px 0;
+
+					.bb-title,
+					.group-messages-compose {
+						display: block;
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	@media screen and (max-width: 540px) {
+
+		#group-messages-container .bb-groups-messages-right {
+
+			&.full_width .bb-groups-messages-right-top .bb-title-wrap {
+				flex-flow: row;
+			}
+
+		}
+
+	}
+
+}
+
+.group-messages.private-message #group-messages-container {
+
+	.group-messages-members-listing .all-members .group-message-member-li.is_disabled {
+		opacity: 0.5;
+		pointer-events: none;
+		cursor: default;
+
+		.action > i {
+			color: rgba(18, 43, 70, 0.4);
+		}
+	}
+
+	.bb-groups-messages-right {
+
+		.bb-groups-messages-right-top {
+			padding-bottom: 0;
+
+			.bb-title-wrap {
+				padding: 0;
+				border: 0;
+
+				.bb-title,
+				.group-messages-compose,
+				.add-more-members {
+					display: none;
+				}
+
+			}
+		}
+
+		.bb-groups-messages-right-bottom {
+			border-top: 0;
+
+			#bp-group-message-content {
+				padding-top: 10px;
+			}
+
+		}
+
+		&.full_width .bb-groups-messages-right-top {
+			padding-bottom: 20px;
+
+			.bb-title-wrap {
+				flex-flow: row;
+				padding: 20px 20px 0;
+
+				.bb-title {
+					display: block;
+				}
+
+				.add-more-members {
+					display: none;
+				}
+
+			}
+
+		}
+
+	}
+
+	@media screen and (max-width: 540px) {
+
+		.bb-groups-messages-right .bb-groups-messages-right-top {
+
+			.bb-title-wrap {
+				padding: 0 20px;
+
+				.add-more-members {
+					display: block;
+				}
+
+			}
+
+
 		}
 
 	}

@@ -2,8 +2,7 @@
 /**
  * BP Nouveau Group's Public Message template.
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @since BuddyBoss 1.5.7
  */
 
 $args = array(
@@ -27,7 +26,6 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php esc_html_e( 'New Group Message', 'buddyboss' ); ?></h2>
 					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Group Message', 'buddyboss' ); ?></a>
-					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-plus-circle"></span><?php esc_html_e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-select-members-wrap">
 					<div class="bp-messages-feedback bp-messages-feedback-hide">
