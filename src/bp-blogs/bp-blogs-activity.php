@@ -914,7 +914,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 */
 	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
- $resave_activity->content = '';
+	$resave_activity->content = '';
 	$resave_activity->save();
 
 	// Add the edit activity comment hook back.
