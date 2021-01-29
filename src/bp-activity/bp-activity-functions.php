@@ -5021,7 +5021,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 	}
 
 }
-// add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+//add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
 
 
 /**
@@ -5125,7 +5125,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 	}
 
 }
-// add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+//add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
 
 /**
  * AJAX endpoint for link preview URL parser.
