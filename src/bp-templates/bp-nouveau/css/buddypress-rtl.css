@@ -4623,8 +4623,9 @@ body.no-js .single-item-header .js-self-profile-button {
   display: none;
 }
 
-#create-group-form #header-cover-image {
+.group-create #create-group-form #header-cover-image {
   margin-bottom: 15px;
+  display: none;
 }
 
 @media screen and (min-width: 783px) {
