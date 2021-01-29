@@ -792,11 +792,17 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if ( ! _.isUndefined( BP_Nouveau.media ) &&
-						! _.isUndefined( BP_Nouveau.media.emoji ) &&
+					if ( !_.isUndefined( BP_Nouveau.media ) &&
+						!_.isUndefined( BP_Nouveau.media.emoji ) &&
 						(
-							! _.isUndefined( BP_Nouveau.media.emoji.messages ) &&
-							BP_Nouveau.media.emoji.messages
+							(
+								!_.isUndefined( BP_Nouveau.media.emoji.messages ) &&
+								BP_Nouveau.media.emoji.messages
+							) ||
+							(
+								!_.isUndefined( BP_Nouveau.media.emoji.groups ) &&
+								BP_Nouveau.media.emoji.groups
+							)
 						)
 					) {
 						$( '#message_content' ).emojioneArea(
