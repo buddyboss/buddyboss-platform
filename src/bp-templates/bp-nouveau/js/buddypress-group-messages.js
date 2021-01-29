@@ -95,8 +95,8 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$group_messages_select.select2().prop( 'disabled', true );
-			$( '.bp-select-members-wrap .select2-selection__choice__remove' ).hide();
+			// $group_messages_select.select2().prop( 'disabled', true );
+			// $( '.bp-select-members-wrap .select2-selection__choice__remove' ).hide();
 
 			var data = {
 				'action': 'groups_get_group_members_listing',
@@ -200,6 +200,20 @@ window.bp = window.bp || {};
 
 				}
 			);
+
+			$( document ).on(
+				'change',
+				$group_messages_select,
+				function() {
+					if( $group_messages_select[0].value ) {
+						$group_messages_select.siblings( '.select2.select2-container' ).show();
+					} else {
+						$group_messages_select.siblings( '.select2.select2-container' ).hide();
+					}
+				}
+			);
+
+
 
 			if ( isGroupPrivateThreadPageSelector.length ) {
 
