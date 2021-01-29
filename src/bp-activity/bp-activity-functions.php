@@ -4452,8 +4452,6 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	/**
 	 * When enabled sync comment option from activity section then comment was going empty when
 	 * reply from blog or custom post types.
-	 *
-	 * @since 1.5.7
 	 */
 	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 	/**
@@ -4548,8 +4546,6 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	/**
 	 * When enabled sync comment option from activity section then comment was going empty when
 	 * reply from blog or custom post types.
-	 *
-	 * @since 1.5.7
 	 */
 	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 }
@@ -5025,7 +5021,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 	}
 
 }
-//add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+// add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
 
 
 /**
@@ -5129,7 +5125,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 	}
 
 }
-//add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+// add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
 
 /**
  * AJAX endpoint for link preview URL parser.
@@ -5481,7 +5477,8 @@ function bp_activity_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args( $args,
+	$args = wp_parse_args(
+		$args,
 		array(
 			'id'                => 'activity_report',
 			'component'         => 'moderation',
@@ -5517,7 +5514,8 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args( $args,
+	$args = wp_parse_args(
+		$args,
 		array(
 			'id'                => 'activity_comment_report',
 			'component'         => 'moderation',
