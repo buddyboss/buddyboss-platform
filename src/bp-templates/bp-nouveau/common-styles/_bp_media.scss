@@ -1247,6 +1247,19 @@ ul.bb-albums-list {
 			}
 		}
 	}
+
+	.bb-media-container.member-media {
+
+		.bb-media-actions-wrap {
+			margin-bottom: 20px;
+		}
+
+		.bp-navs ~ .bb-media-actions-wrap {
+			margin-bottom: 0;
+		}
+
+	}
+
 }
 
 @media (min-width: 768px) {
