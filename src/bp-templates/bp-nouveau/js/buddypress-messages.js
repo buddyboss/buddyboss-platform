@@ -2800,19 +2800,21 @@ window.bp = window.bp || {};
 					content = tinyMCE.activeEditor.getContent();
 					jQuery( tinyMCE.activeEditor.formElement ).addClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
-					$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
-						function( index, Obj) {
-							$( Obj ).addClass( 'emojioneemoji' );
-							var emojis = $( Obj ).attr( 'alt' );
-							$( Obj ).attr( 'data-emoji-char', emojis );
-							$( Obj ).removeClass( 'emoji' );
-						}
-					);
-					$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emojioneemoji' ).replaceWith(
-						function () {
-							return this.dataset.emojiChar;
-						}
-					);
+					if ( bp.Nouveau.Messages.mediumEditor.getContent() ) {
+						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
+							function ( index, Obj ) {
+								$( Obj ).addClass( 'emojioneemoji' );
+								var emojis = $( Obj ).attr( 'alt' );
+								$( Obj ).attr( 'data-emoji-char', emojis );
+								$( Obj ).removeClass( 'emoji' );
+							}
+						);
+						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emojioneemoji' ).replaceWith(
+							function () {
+								return this.dataset.emojiChar;
+							}
+						);
+					}
 					content = bp.Nouveau.Messages.mediumEditor.getContent();
 					jQuery( '#message_content' ).addClass( 'loading' );
 				}
