@@ -3408,7 +3408,7 @@ function bp_document_get_root_parent_id( $child_id ) {
 FROM (
     SELECT @id AS _id, (SELECT @id := parent FROM {$table} WHERE id = _id)
     FROM (SELECT @id := %d) tmp1
-    JOIN {$table} ON @id <> 0
+    JOIN {$table} ON id <> 0
     ) tmp2
 JOIN {$table} f ON tmp2._id = f.id
 WHERE f.parent = 0",
