@@ -268,6 +268,12 @@ window.bp = window.bp || {};
 					// Add the delete view
 					bp.CoverImage.deleteView();
 
+					$( '.group-create #header-cover-image' ).css(
+						{
+							'background-image': 'url( ' + model.get( 'url' ) + ' )'
+						}
+					);
+
 					/**
 					 * Set the Attachment object
 					 *
