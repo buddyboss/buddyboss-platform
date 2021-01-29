@@ -779,7 +779,21 @@ window.bp = window.bp || {};
 					}
 				);
 
-				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && $( '#group_message_content' ).length && BP_Nouveau.media.emoji.messages === true ) {
+				if (
+					! _.isUndefined( BP_Nouveau.media ) &&
+					! _.isUndefined( BP_Nouveau.media.emoji ) &&
+					$( '#group_message_content' ).length &&
+					(
+						(
+							!_.isUndefined( BP_Nouveau.media.emoji.messages ) &&
+							BP_Nouveau.media.emoji.messages
+						) ||
+						(
+							!_.isUndefined( BP_Nouveau.media.emoji.groups ) &&
+							BP_Nouveau.media.emoji.groups
+						)
+					)
+				) {
 					$( '#group_message_content' ).emojioneArea(
 						{
 							standalone: true,
