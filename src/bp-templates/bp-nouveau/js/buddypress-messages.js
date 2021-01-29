@@ -2800,19 +2800,21 @@ window.bp = window.bp || {};
 					content = tinyMCE.activeEditor.getContent();
 					jQuery( tinyMCE.activeEditor.formElement ).addClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
-					$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
-						function( index, Obj) {
-							$( Obj ).addClass( 'emojioneemoji' );
-							var emojis = $( Obj ).attr( 'alt' );
-							$( Obj ).attr( 'data-emoji-char', emojis );
-							$( Obj ).removeClass( 'emoji' );
-						}
-					);
-					$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emojioneemoji' ).replaceWith(
-						function () {
-							return this.dataset.emojiChar;
-						}
-					);
+					if ( bp.Nouveau.Messages.mediumEditor.getContent() ) {
+						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
+							function ( index, Obj ) {
+								$( Obj ).addClass( 'emojioneemoji' );
+								var emojis = $( Obj ).attr( 'alt' );
+								$( Obj ).attr( 'data-emoji-char', emojis );
+								$( Obj ).removeClass( 'emoji' );
+							}
+						);
+						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emojioneemoji' ).replaceWith(
+							function () {
+								return this.dataset.emojiChar;
+							}
+						);
+					}
 					content = bp.Nouveau.Messages.mediumEditor.getContent();
 					jQuery( '#message_content' ).addClass( 'loading' );
 				}
@@ -2928,6 +2930,35 @@ window.bp = window.bp || {};
 
 			composeMessage: function() {
 				bp.Nouveau.Messages.composeView();
+
+				if ( !_.isUndefined( BP_Nouveau.media ) ) {
+
+					if ( BP_Nouveau.media.messages_document === false ) {
+						$( '#whats-new-messages-toolbar .post-media-document-support' ).hide();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-document-support' ).show();
+					}
+
+					if ( BP_Nouveau.media.messages_media === false ) {
+						$( '#whats-new-messages-toolbar .post-media-photo-support' ).hide();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-photo-support' ).show();
+					}
+
+					// Membership GiF Support.
+					if ( BP_Nouveau.media.gif.messages === false ) {
+						$( '#whats-new-messages-toolbar .post-media-gif-support' ).hide();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-gif-support' ).show();
+					}
+
+					// Membership Emoji Support.
+					if ( BP_Nouveau.media.emoji.messages === false ) {
+						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).hide();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).show();
+					}
+				}
 
 				$( 'body' ).removeClass( 'view' ).removeClass( 'inbox' ).addClass( 'compose' );
 			},
