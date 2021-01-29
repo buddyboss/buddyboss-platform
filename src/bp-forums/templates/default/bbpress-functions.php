@@ -226,13 +226,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			if ( bp_is_active( 'media' ) ) {
 
 				$gif = false;
-				if ( bp_is_forums_gif_support_enabled() ) {
+				if ( bp_is_forums_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) {
 					wp_enqueue_script( 'giphy' );
 					$gif = true;
 				}
 
 				$emoji = false;
-				if ( bp_is_forums_emoji_support_enabled() ) {
+				if ( bp_is_forums_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() ) {
 					wp_enqueue_script( 'emojionearea' );
 					wp_enqueue_style( 'emojionearea' );
 					$emoji = true;
