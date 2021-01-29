@@ -36,11 +36,8 @@ class Hooks {
 		// add some helpful missing hooks
 		add_action( 'groups_create_group', array( $this, 'groupCreated' ) );
 		add_action( 'groups_update_group', array( $this, 'groupUpdated' ) );
-		/**
-		 * groups_details_updated - When group details updated from manage at front side
-		 *
-		 * @since BuddyBoss 1.5.7
-		 */
+		
+		// groups_details_updated - When group details updated from manage at front side
 		add_action( 'groups_details_updated', array( $this, 'groupUpdated' ) );
 		add_action( 'groups_before_delete_group', array( $this, 'groupDeleting' ) );
 		add_action( 'groups_delete_group', array( $this, 'groupDeleted' ) );
