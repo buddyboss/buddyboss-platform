@@ -1914,8 +1914,6 @@ function bbp_get_reply_position( $reply_id = 0, $topic_id = 0 ) {
 	// Bump the position by one if the lead topic is in the replies loop
 	if ( ! bbp_show_lead_topic() ) {
 		$reply_position ++;
-	} else {
-		$reply_position;
 	}
 
 	return (int) apply_filters( 'bbp_get_reply_position', $reply_position, $reply_id, $topic_id );
@@ -2514,7 +2512,7 @@ function bbp_get_topic_split_link( $args = '' ) {
  *
  * @since bbPress (r2678)
  *
- * @param int                                                         $reply_id Optional. Reply ID
+ * @param int   $reply_id Optional. Reply ID
  * @param array Extra classes you can pass when calling this function
  *
  * @uses  bbp_get_reply_class() To get the reply class
@@ -2528,7 +2526,7 @@ function bbp_reply_class( $reply_id = 0, $classes = array() ) {
  *
  * @since bbPress (r2678)
  *
- * @param int                                                         $reply_id Optional. Reply ID
+ * @param int   $reply_id Optional. Reply ID
  * @param array Extra classes you can pass when calling this function
  *
  * @return string Row class of the reply
