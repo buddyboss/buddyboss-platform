@@ -1603,7 +1603,6 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 		// Join post statuses to specifically exclude together
 		$not_in      = array( 'draft', 'future' );
 		$post_status = "'" . implode( "', '", $not_in ) . "'";
-
 		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}
