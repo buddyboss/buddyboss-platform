@@ -4623,8 +4623,11 @@ body.no-js .single-item-header .js-self-profile-button {
   display: none;
 }
 
-.group-create #create-group-form #header-cover-image {
+#create-group-form #header-cover-image {
   margin-bottom: 15px;
+}
+
+.group-create #create-group-form #header-cover-image {
   display: none;
 }
 
