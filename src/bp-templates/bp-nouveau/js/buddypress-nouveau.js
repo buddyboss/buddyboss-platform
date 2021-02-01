@@ -2174,7 +2174,7 @@ window.bp = window.bp || {};
 		
 								if ( file.previewElement ) {
 									$( file.previewElement ).find( target ).append( img );
-									$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail dz-complete' );
+									$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 								} else {
 									$( target ).append( img );
 								}

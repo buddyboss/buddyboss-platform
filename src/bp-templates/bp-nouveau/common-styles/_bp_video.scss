@@ -286,6 +286,18 @@
 				transform: rotateY(180deg);
 			}
 
+			.vjs-seek-button,
+			.vjs-time-control,
+			.vjs-duration,
+			.vjs-playback-rate,
+			.vjs-picture-in-picture-control {
+
+				.bb-media-model-wrapper & {
+					display: none;
+				}
+
+			}
+
 			@media screen and (max-width: 540px ) {
 				bottom: 10px;
 
@@ -776,7 +788,6 @@
 
 					&:after {
 						top: -1px;
-						left: -1px;
 					}
 
 				}
@@ -997,7 +1008,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		transform: translateY(50%);
 	}
 
-	.dz-remove {
+	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
 		bottom: 18%;
 		top: inherit;
@@ -1029,6 +1040,26 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		&.dz-preview.dz-file-preview {
 			background-color: #111;
 			border-radius: 4px;
+		}
+
+		.dz-remove {
+			bottom: inherit;
+			transform: none;
+			margin: 0;
+			top: 5px;
+			left: inherit;
+			right: 5px;
+			background-color: #fd4343;
+			height: 14px;
+			width: 14px;
+
+			&:after {
+				position: absolute;
+				top: -1px;
+				left: 2px;
+				font-size: 14px;
+				line-height: 1;
+			}
 		}
 
 	}
@@ -1095,6 +1126,10 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			color: #fff;
 			background-color: rgba(0, 0, 0, 0.3);
 			z-index: 1;
+		}
+
+		.bb-media-model-wrapper & {
+			width: calc(100% - 11px);
 		}
 
 	}
