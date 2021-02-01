@@ -889,11 +889,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		if ( (int) $group_id > 0 ) {
 
 			$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group
+			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual
-			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
-			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group
+			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 
 			if ( 'group' === $message_from && bp_get_message_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 				$is_group_thread = 1;
@@ -905,26 +905,27 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		$threads->threads[ $i ] = array(
-			'id'                        => bp_get_message_thread_id(),
-			'message_id'                => (int) $last_message_id,
-			'subject'                   => wp_strip_all_tags( bp_get_message_thread_subject() ),
-			'group_avatar'              => $group_avatar,
-			'group_name'                => html_entity_decode( $group_name ),
-			'is_deleted'                => $is_deleted_group,
-			'is_group'                  => ! empty( $group_id ) ? true : false,
-			'is_group_thread'           => $is_group_thread,
-			'group_link'                => $group_link,
-			'group_message_users'       => $group_message_users,
-			'group_message_type'        => $group_message_type,
-			'group_message_thread_type' => $group_message_thread_type,
-			'group_message_fresh'       => $group_message_fresh,
-			'excerpt'                   => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
-			'content'                   => do_shortcode( bp_get_message_thread_content() ),
-			'unread'                    => bp_message_thread_has_unread(),
-			'sender_name'               => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
-			'sender_is_you'             => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
-			'sender_link'               => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
-			'sender_avatar'             => esc_url(
+			'id'                              => bp_get_message_thread_id(),
+			'message_id'                      => (int) $last_message_id,
+			'subject'                         => wp_strip_all_tags( bp_get_message_thread_subject() ),
+			'group_avatar'                    => $group_avatar,
+			'group_name'                      => html_entity_decode( $group_name ),
+			'is_deleted'                      => $is_deleted_group,
+			'is_group'                        => ! empty( $group_id ) ? true : false,
+			'is_group_thread'                 => $is_group_thread,
+			'group_link'                      => $group_link,
+			'group_message_users'             => $group_message_users,
+			'group_message_type'              => $group_message_type,
+			'can_user_send_message_in_thread' => ( $is_group_thread ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', bp_get_message_thread_id(), (array) $messages_template->thread->recipients ),
+			'group_message_thread_type'       => $group_message_thread_type,
+			'group_message_fresh'             => $group_message_fresh,
+			'excerpt'                         => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
+			'content'                         => do_shortcode( bp_get_message_thread_content() ),
+			'unread'                          => bp_message_thread_has_unread(),
+			'sender_name'                     => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+			'sender_is_you'                   => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
+			'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
+			'sender_avatar'                   => esc_url(
 				bp_core_fetch_avatar(
 					array(
 						'item_id' => $messages_template->thread->last_sender_id,
@@ -936,10 +937,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					)
 				)
 			),
-			'count'                     => bp_get_message_thread_total_count(),
-			'date'                      => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-			'display_date'              => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-			'started_date'              => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
+			'count'                           => bp_get_message_thread_total_count(),
+			'date'                            => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
+			'display_date'                    => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
@@ -998,7 +999,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$star_link_data                       = explode( '/', $star_link );
 			$threads->threads[ $i ]['is_starred'] = array_search( 'unstar', $star_link_data );
 
-			// Defaults to last
+			// Defaults to last.
 			$sm_id = $last_message_id;
 
 			if ( $threads->threads[ $i ]['is_starred'] ) {
@@ -2179,7 +2180,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 			}
 		}
-
 
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_document_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_document_support_enabled() ) ) ) {
 			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
