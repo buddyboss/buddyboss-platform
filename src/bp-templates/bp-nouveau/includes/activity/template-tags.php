@@ -570,10 +570,11 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 	if ( bp_is_active( 'moderation' ) ) {
 		$buttons['activity_report'] = bp_activity_get_report_link( array(
-						'parent_element' => $parent_element,
-						'parent_attr'    => $parent_attr,
-						'button_element' => $button_element,
-				) );
+			'position'          => 33,
+			'parent_element' => $parent_element,
+			'parent_attr'    => $parent_attr,
+			'button_element' => $button_element,
+		) );
 	}
 
 	$buttons['activity_delete'] = array(
