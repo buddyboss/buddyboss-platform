@@ -2190,6 +2190,12 @@ window.bp = window.bp || {};
 					this.el.className += ' group-thread';
 				}
 
+				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) ) {
+					this.el.className += ' can-user-send-message-in-thread';
+				} else {
+					this.el.className += ' can-not-user-send-message-in-thread';
+				}
+
 				// Add thread id into the li class.
 				this.el.className += ' ' + this.model.get( 'id' );
 
