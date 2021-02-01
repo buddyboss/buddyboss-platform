@@ -100,11 +100,7 @@ class Sync {
 			return;
 		}
 
-		/**
-		 * bp to ld sync
-		 *
-		 * @since BuddyBoss 1.5.7
-		 */
+		// bp to ld sync
 		$ld_group_id = groups_get_groupmeta( $groupId, '_sync_group_id' );
 		$this->generator( $ld_group_id )->updateLearndashGroup( $ld_group_id, $groupId );
 
