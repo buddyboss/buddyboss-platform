@@ -3159,6 +3159,7 @@ span.dashicons.dashicons-admin-file:before {
   z-index: 101;
   opacity: 1;
   visibility: visible;
+  pointer-events: none;
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -3455,6 +3456,7 @@ span.dashicons.dashicons-admin-file:before {
   z-index: 101;
   opacity: 1;
   visibility: visible;
+  pointer-events: none;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand {
@@ -13626,6 +13628,14 @@ ul.bb-albums-list .bb-more-photos strong {
 #buddypress #bp-media-single-album .bb-single-album-header p {
   flex-basis: 100%;
   width: 100%;
+}
+
+#buddypress .bb-media-container.member-media .bb-media-actions-wrap {
+  margin-bottom: 20px;
+}
+
+#buddypress .bb-media-container.member-media .bp-navs ~ .bb-media-actions-wrap {
+  margin-bottom: 0;
 }
 
 @media (min-width: 768px) {
