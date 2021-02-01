@@ -5,7 +5,7 @@
  * A performance component, Allow to cache BuddyBoss Platform REST API.
  *
  * @package BuddyBoss\Performance\MULoader
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly.

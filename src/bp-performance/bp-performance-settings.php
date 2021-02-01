@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the Performance settings sections.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  * @return array
  */
 function bp_performance_get_settings_sections() {
@@ -32,7 +32,7 @@ function bp_performance_get_settings_sections() {
 /**
  * Get all of the settings fields.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  * @return array
  */
 function bp_performance_get_settings_fields() {
@@ -46,7 +46,7 @@ function bp_performance_get_settings_fields() {
 /**
  * Get settings fields by section.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  *
  * @param string $section_id Section id.
  *
