@@ -6125,7 +6125,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 }
 
 #message-threads .can-not-send-msg {
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 #message-threads .can-not-send-msg .bp-message-link .thread-content.bp-suspended-content,
