@@ -2191,9 +2191,9 @@ window.bp = window.bp || {};
 				}
 
 				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) || true === this.model.get( 'can_user_send_message_in_thread' ) ) {
-					this.el.className += ' can-user-send-message-in-thread';
+					this.el.className += ' can-send-msg';
 				} else {
-					this.el.className += ' can-not-user-send-message-in-thread';
+					this.el.className += ' can-not-send-msg';
 				}
 
 				// Add thread id into the li class.
