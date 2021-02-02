@@ -78,6 +78,10 @@
 			opacity: 1;
 		}
 
+		&.unread .thread-to:after {
+			opacity: 0.85;
+		}
+
 		.thread-to:after {
 			content: "\e8c9";
 			font-size: 14px;

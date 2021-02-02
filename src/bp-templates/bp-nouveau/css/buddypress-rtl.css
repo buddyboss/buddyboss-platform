@@ -6133,6 +6133,10 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   opacity: 1;
 }
 
+#message-threads .can-not-send-msg.unread .thread-to:after {
+  opacity: 0.85;
+}
+
 #message-threads .can-not-send-msg .thread-to:after {
   content: "\e8c9";
   font-size: 14px;
