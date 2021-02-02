@@ -4283,8 +4283,8 @@ function bp_user_can_send_messages( $thread, $thread_template, $error_type = 'wp
  * @return bool Is user can send group membership requests or not.
  * @since BuddyBoss 1.5.7
  */
-function bp_groups_user_can_send_membership_requests( $default = true, $group_id ) {
-	return (bool) apply_filters( 'bp_groups_user_can_send_membership_requests', $default, $group_id );
+function bp_groups_user_can_send_membership_requests( $group_id ) {
+	return (bool) apply_filters( 'bp_groups_user_can_send_membership_requests', true, $group_id );
 }
 
 /**
