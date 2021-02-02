@@ -916,7 +916,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'group_link'                      => $group_link,
 			'group_message_users'             => $group_message_users,
 			'group_message_type'              => $group_message_type,
-			'can_user_send_message_in_thread' => ( $is_group_thread ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', bp_get_message_thread_id(), (array) $messages_template->thread->recipients ),
+			'can_user_send_message_in_thread' => ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', bp_get_message_thread_id(), (array) $messages_template->thread->recipients ),
 			'group_message_thread_type'       => $group_message_thread_type,
 			'group_message_fresh'             => $group_message_fresh,
 			'excerpt'                         => wp_strip_all_tags( bp_get_message_thread_excerpt() ),

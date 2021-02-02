@@ -2190,7 +2190,7 @@ window.bp = window.bp || {};
 					this.el.className += ' group-thread';
 				}
 
-				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) ) {
+				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) || true === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-user-send-message-in-thread';
 				} else {
 					this.el.className += ' can-not-user-send-message-in-thread';
