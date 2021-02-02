@@ -2230,7 +2230,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 				$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
 				if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
 					echo '<tr><td>';
-					echo sprintf( __( 'Note: This setting might be affected by <a href="%s">Group Access</a> restrictions.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array(
+					echo sprintf( __( 'If members are restricted from joining groups in the <a href="%s">Group Access</a> settings, they will be unable to join this group type even if they have the profile type specified above.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array(
 						'page' => 'bp-settings',
 						'tab'  => 'bp-groups#group_membership_block'
 					), 'admin.php' ) ) ) );
