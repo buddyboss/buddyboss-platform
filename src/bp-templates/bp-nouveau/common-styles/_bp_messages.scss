@@ -73,6 +73,11 @@
 	.can-not-send-msg {
 		opacity: 0.7;
 
+		.bp-message-link .thread-content.bp-suspended-content,
+		.bp-message-link .thread-avatar.bp-suspended-avatar {
+			opacity: 1;
+		}
+
 		.thread-to:after {
 			content: "\e8c9";
 			font-size: 14px;
