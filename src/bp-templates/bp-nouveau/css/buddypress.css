@@ -4645,6 +4645,10 @@ body.no-js .single-item-header .js-self-profile-button {
   margin-bottom: 15px;
 }
 
+.group-create #create-group-form #header-cover-image {
+  display: none;
+}
+
 @media screen and (min-width: 783px) {
   #item-header-avatar {
     padding-right: 1em;
