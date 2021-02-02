@@ -81,6 +81,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'backcompat'       => (bool) has_action( 'bp_activity_post_form_options' ),
 		'post_nonce'       => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
 		'excluded_hosts'   => array(),
+		'user_can_post'    => ( is_user_logged_in() && bp_user_can_create_activity() ),
 		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
 		'errors'           => array(
 			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' )

@@ -160,7 +160,7 @@ function bp_nouveau_activity_member_post_form() {
 	do_action( 'bp_before_member_activity_post_form' );
 
 	$is_main_tab = ! bp_current_action() || strpos( bp_current_action(), 'just-me' ) !== false;
-	if ( is_user_logged_in() && $is_main_tab ) {
+	if ( is_user_logged_in() && $is_main_tab && bp_user_can_create_activity() ) {
 		bp_get_template_part( 'activity/post-form' );
 	}
 
@@ -1189,7 +1189,7 @@ function bp_nouveau_activity_privacy() {
 
 		$privacy_items = bp_activity_get_visibility_levels();
 
-		if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
+		if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink && bp_user_can_create_activity() ) || ( $album_id && ! empty( $album_url ) ) ) ) {
 			?>
             <div class="bb-media-privacy-wrap">
             <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
@@ -1209,7 +1209,7 @@ function bp_nouveau_activity_privacy() {
 				<?php endif; ?>
             </ul>
             </div><?php
-		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
+		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink && bp_user_can_create_activity() ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
 			?>
             <div class="bb-media-privacy-wrap">
             <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
@@ -1231,7 +1231,7 @@ function bp_nouveau_activity_privacy() {
 				<?php endif; ?>
             </ul>
             </div><?php
-		} else {
+		} elseif ( bp_user_can_create_activity() ) {
 			?>
             <div class="bb-media-privacy-wrap">
             <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"

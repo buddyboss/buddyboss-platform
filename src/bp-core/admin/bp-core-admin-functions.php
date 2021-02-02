@@ -1882,7 +1882,7 @@ function bp_member_type_permissions_metabox( $post ) {
 								)
 							);
 							?>
-                        /> <?php _e( '(None)', 'buddyboss' ); ?>
+                        /> <?php _e( '(None - hide group type option)', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
@@ -1966,7 +1966,7 @@ function bp_member_type_permissions_metabox( $post ) {
                 <tbody>
                 <tr>
                     <td colspan="2">
-						<?php _e( 'Selected group types will automatically approve all membership requests from users of this profile type:', 'buddyboss' ); ?>
+						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registerd and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
@@ -1989,6 +1989,21 @@ function bp_member_type_permissions_metabox( $post ) {
                     </tr>
 
 				<?php } ?>
+
+				<?php
+				if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+                    $plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+                    $plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
+                    if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
+                        echo '<tr><td>';
+                        echo sprintf( __( 'Note: This setting might be affected by <a href="%s">Group Access</a> restrictions.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array(
+                            'page' => 'bp-settings',
+                            'tab'  => 'bp-groups#group_membership_block'
+                        ), 'admin.php' ) ) ) );
+                        echo '</td></tr>';
+                    }
+                }
+				?>
 
                 </tbody>
             </table>
