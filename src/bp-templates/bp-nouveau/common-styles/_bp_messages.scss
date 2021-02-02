@@ -62,6 +62,10 @@
 	padding: 0;
 	width: 100%;
 
+	li a.close-conversation {
+		right: 35px;
+	}
+
 	&:empty {
 		display: none;
 	}
@@ -69,45 +73,21 @@
 	.can-not-send-msg {
 		opacity: 0.7;
 
-		.thread-to {
-			position: relative;
-
-			&:after {
-				content: "\e8c9";
-				font-size: 14px;
-				line-height: 1;
-				font-family: "bb-icons";/* stylelint-disable-line */
-				display: inline-block;
-				vertical-align: middle;
-				position: absolute;
-				right: 0;
-			}
-
+		.thread-to:after {
+			content: "\e8c9";
+			font-size: 14px;
+			color: #122b46;
+			line-height: 1;
+			font-family: "bb-icons";/* stylelint-disable-line */
+			display: inline-block;
+			vertical-align: middle;
+			position: absolute;
+			right: 36px;
+			bottom: 10px;
 		}
 
-		@media screen and (max-width: 1080px) {
-
-			.thread-to:after {
-				display: none;
-			}
-
-			.thread-content {
-				position: relative;
-
-				&:after {
-					content: "\e8c9";
-					font-size: 14px;
-					line-height: 1;
-					font-family: "bb-icons";/* stylelint-disable-line */
-					display: inline-block;
-					vertical-align: middle;
-					position: absolute;
-					right: -15px;
-					top: 2px;
-				}
-
-			}
-
+		&:hover .thread-to:after {
+			display: none;
 		}
 
 	}
