@@ -2225,10 +2225,17 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<?php } ?>
 
 			<?php
-			if ( class_exists( 'BB_Platform_Pro' ) ) {
-				echo '<tr><td>';
-				echo sprintf( __( 'Note: This setting might be affected by <a href="%s">Group Access</a> restrictions.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array( 'page'    => 'bp-settings', 'tab' => 'bp-groups#group_membership_block' ), 'admin.php' ) ) ) );
-				echo '</td></tr>';
+			if ( class_exists( 'BB_Platform_Pro' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+				$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+				$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
+				if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
+					echo '<tr><td>';
+					echo sprintf( __( 'Note: This setting might be affected by <a href="%s">Group Access</a> restrictions.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-groups#group_membership_block'
+					), 'admin.php' ) ) ) );
+					echo '</td></tr>';
+				}
 			}
 			?>
 
