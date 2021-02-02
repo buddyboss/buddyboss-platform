@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-02-02 07:48:36+00:00\n"
+"POT-Creation-Date: 2021-02-02 12:32:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -940,7 +940,7 @@ msgstr[1] ""
 #: bp-groups/classes/class-bp-groups-invite-template.php:249
 #: bp-groups/classes/class-bp-groups-invite-template.php:262
 #: bp-groups/classes/class-bp-groups-invite-template.php:274
-#: bp-media/classes/class-bp-media-component.php:376
+#: bp-media/classes/class-bp-media-component.php:375
 #: bp-members/bp-members-template.php:824
 #: bp-members/bp-members-template.php:1547
 #: bp-members/bp-members-template.php:1605
@@ -4962,9 +4962,9 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:774
 #: bp-media/bp-media-filters.php:78 bp-media/bp-media-settings.php:25
 #: bp-media/classes/class-bp-media-component.php:70
-#: bp-media/classes/class-bp-media-component.php:260
-#: bp-media/classes/class-bp-media-component.php:267
-#: bp-media/classes/class-bp-media-component.php:330
+#: bp-media/classes/class-bp-media-component.php:259
+#: bp-media/classes/class-bp-media-component.php:266
+#: bp-media/classes/class-bp-media-component.php:329
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1168
 #: bp-moderation/classes/class-bp-moderation-media.php:103
@@ -5188,15 +5188,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2655
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\n"
+"content will be unhidden</li>\r\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
-"\t\t\t</ul>\n"
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -5253,8 +5253,8 @@ msgid "My Documents"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2910
-#: bp-media/classes/class-bp-media-component.php:338
-#: bp-media/classes/class-bp-media-component.php:369
+#: bp-media/classes/class-bp-media-component.php:337
+#: bp-media/classes/class-bp-media-component.php:368
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1174
 #: bp-templates/bp-nouveau/includes/media/functions.php:221
 msgid "My Photos"
@@ -7927,13 +7927,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9544,7 +9544,7 @@ msgid "About Forums"
 msgstr ""
 
 #: bp-forums/admin/admin.php:506
-#: bp-forums/templates/default/bbpress-functions.php:217
+#: bp-forums/templates/default/bbpress-functions.php:231
 msgid "Loading"
 msgstr ""
 
@@ -12030,9 +12030,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1380
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1415
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1448
-#: bp-forums/templates/default/bbpress-functions.php:645
-#: bp-forums/templates/default/bbpress-functions.php:713
-#: bp-forums/templates/default/bbpress-functions.php:781
+#: bp-forums/templates/default/bbpress-functions.php:659
+#: bp-forums/templates/default/bbpress-functions.php:727
+#: bp-forums/templates/default/bbpress-functions.php:795
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -12605,8 +12605,8 @@ msgid "Favorites are no longer active."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1333
-#: bp-forums/templates/default/bbpress-functions.php:631
-#: bp-forums/templates/default/bbpress-functions.php:767
+#: bp-forums/templates/default/bbpress-functions.php:645
+#: bp-forums/templates/default/bbpress-functions.php:781
 msgid "Subscriptions are no longer active."
 msgstr ""
 
@@ -14564,61 +14564,61 @@ msgstr ""
 msgid "This user has not created any discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:221
+#: bp-forums/templates/default/bbpress-functions.php:235
 msgid "Add Tags:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:254
+#: bp-forums/templates/default/bbpress-functions.php:268
 msgid "Explain what the forum is about"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:255
+#: bp-forums/templates/default/bbpress-functions.php:269
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:256
+#: bp-forums/templates/default/bbpress-functions.php:270
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:589
-#: bp-forums/templates/default/bbpress-functions.php:602
+#: bp-forums/templates/default/bbpress-functions.php:603
+#: bp-forums/templates/default/bbpress-functions.php:616
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:636
+#: bp-forums/templates/default/bbpress-functions.php:650
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:653
+#: bp-forums/templates/default/bbpress-functions.php:667
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:658
-#: bp-forums/templates/default/bbpress-functions.php:726
-#: bp-forums/templates/default/bbpress-functions.php:794
+#: bp-forums/templates/default/bbpress-functions.php:672
+#: bp-forums/templates/default/bbpress-functions.php:740
+#: bp-forums/templates/default/bbpress-functions.php:808
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:666
-#: bp-forums/templates/default/bbpress-functions.php:734
-#: bp-forums/templates/default/bbpress-functions.php:802
+#: bp-forums/templates/default/bbpress-functions.php:680
+#: bp-forums/templates/default/bbpress-functions.php:748
+#: bp-forums/templates/default/bbpress-functions.php:816
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:699
+#: bp-forums/templates/default/bbpress-functions.php:713
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:704
+#: bp-forums/templates/default/bbpress-functions.php:718
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:721
-#: bp-forums/templates/default/bbpress-functions.php:789
+#: bp-forums/templates/default/bbpress-functions.php:735
+#: bp-forums/templates/default/bbpress-functions.php:803
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:772
+#: bp-forums/templates/default/bbpress-functions.php:786
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -16402,7 +16402,7 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:787
 #: bp-media/bp-media-filters.php:76 bp-media/bp-media-filters.php:1362
-#: bp-media/classes/class-bp-media-component.php:295
+#: bp-media/classes/class-bp-media-component.php:294
 #: bp-search/bp-search-settings.php:778
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:22
@@ -19047,7 +19047,7 @@ msgstr ""
 msgid "Search Photos&hellip;"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:348
+#: bp-media/classes/class-bp-media-component.php:347
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1184
 msgid "My Albums"
 msgstr ""
