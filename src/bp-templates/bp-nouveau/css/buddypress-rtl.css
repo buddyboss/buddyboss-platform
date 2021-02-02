@@ -6116,6 +6116,10 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   width: 100%;
 }
 
+#message-threads li a.close-conversation {
+  left: 35px;
+}
+
 #message-threads:empty {
   display: none;
 }
@@ -6124,41 +6128,22 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   opacity: 0.7;
 }
 
-#message-threads .can-not-send-msg .thread-to {
-  position: relative;
-}
-
 #message-threads .can-not-send-msg .thread-to:after {
   content: "\e8c9";
   font-size: 14px;
+  color: #122B46;
   line-height: 1;
   font-family: "bb-icons";
   /* stylelint-disable-line */
   display: inline-block;
   vertical-align: middle;
   position: absolute;
-  left: 0;
+  left: 36px;
+  bottom: 10px;
 }
 
-@media screen and (max-width: 1080px) {
-  #message-threads .can-not-send-msg .thread-to:after {
-    display: none;
-  }
-  #message-threads .can-not-send-msg .thread-content {
-    position: relative;
-  }
-  #message-threads .can-not-send-msg .thread-content:after {
-    content: "\e8c9";
-    font-size: 14px;
-    line-height: 1;
-    font-family: "bb-icons";
-    /* stylelint-disable-line */
-    display: inline-block;
-    vertical-align: middle;
-    position: absolute;
-    left: -15px;
-    top: 2px;
-  }
+#message-threads .can-not-send-msg:hover .thread-to:after {
+  display: none;
 }
 
 #message-threads .bp-message-link {
