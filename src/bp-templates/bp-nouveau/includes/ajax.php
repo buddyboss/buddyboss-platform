@@ -147,7 +147,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );
 
 	// Locate the object template.
-	wp_send_json_success( $result );
+	wp_send_json_success( $result, 200 );
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_members_tabs', 10, 2 );
