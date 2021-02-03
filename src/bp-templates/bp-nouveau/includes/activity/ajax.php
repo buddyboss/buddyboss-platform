@@ -629,6 +629,15 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
+
+		if ( ! bp_user_can_create_activity() ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You don\'t have access to do a activity.', 'buddyboss' ),
+				)
+			);
+		}
+
 		$content = $_POST['content'];
 
 		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
