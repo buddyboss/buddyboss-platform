@@ -5302,3 +5302,22 @@ function bp_core_is_empty_directory( $dir ) {
 
 	return true;
 }
+
+/**
+ * Regenerate attachment thumbnails
+ *
+ * @param int $attachment_id Attachment ID.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
+	if ( function_exists( 'wp_get_original_image_path' ) ) {
+		$fullsizepath = wp_get_original_image_path( $attachment_id );
+	} else {
+		$fullsizepath = get_attached_file( $attachment_id );
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/admin.php';
+	$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
+	wp_update_attachment_metadata( $attachment_id, $new_metadata );
+}
