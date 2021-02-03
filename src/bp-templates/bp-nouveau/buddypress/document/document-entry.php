@@ -52,7 +52,7 @@ if ( $attachment_id ) {
 		$move_id   = bp_get_document_user_id();
 		$move_type = 'profile';
 	}
-	$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+	$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), bp_get_document_preview_attachment_id() );
 
 	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 		$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
@@ -105,8 +105,8 @@ id="div-listing-<?php bp_document_id(); ?>">
 		data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
 		data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
 		data-activity-id="<?php bp_document_activity_id(); ?>" data-author="<?php bp_document_user_id(); ?>"
-		data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
-		data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
+		data-preview="<?php bp_document_attachment_image(); ?>"
+		data-text-preview="<?php bp_document_attachment_image(); ?>"
 		data-mp3-preview="<?php echo $audio_url ? esc_url( $audio_url ) : ''; ?>"
 		data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>"
 		data-document-title="<?php echo esc_html( $filename ); ?>"

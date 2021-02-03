@@ -115,12 +115,11 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	add_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
-	add_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9, 1 );
-	add_filter( 'big_image_size_threshold', '__return_false' );
+	// Add upload filters.
+	bp_media_add_upload_filters();
 
-	add_image_size( 'bp-media-thumbnail', 400, 400 );
-	add_image_size( 'bp-activity-media-thumbnail', 1600, 1600 );
+	// Register image sizes.
+	bp_media_register_image_sizes();
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -141,11 +140,11 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		)
 	);
 
-	remove_image_size( 'bp-media-thumbnail' );
-	remove_image_size( 'bp-activity-media-thumbnail' );
+	// Deregister image sizes.
+	bp_media_deregister_image_sizes();
 
-	remove_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9 );
-	remove_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
+	// Remove upload filters.
+	bp_media_remove_upload_filters();
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
@@ -166,34 +165,6 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 
 	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss' ), array( 'status' => 500 ) );
 
-}
-
-/**
- * Generate media preview images.
- *
- * @param int $attachment_id Attachment ID.
- *
- * @since BuddyBoss 1.5.7
- */
-function bp_media_generate_preview_images( $attachment_id ) {
-	$file = get_attached_file( $attachment_id );
-
-	if ( wp_attachment_is_image( $attachment_id ) && ! empty( $file ) && file_exists( $file ) ) {
-		$path_parts = pathinfo( $file );
-
-		// phpcs:disable
-		/*
-		$count = strlen( 'scaled' );
-		if ( 'scaled' === ( substr( $path_parts['filename'], - $count ) ) ) {
-			$path_parts['filename'] = substr( $path_parts['filename'], 0, - ( $count + 1 ) );
-			update_attached_file( $attachment_id, $path_parts['dirname'] . '/' . $path_parts['filename'] . '.' . $path_parts['extension'] );
-		}
-		*/
-		// phpcs:enable
-
-		$destination = $path_parts['dirname'] . '/' . $path_parts['filename'] . '-bb-preview.' . $path_parts['extension'];
-		bp_media_compress_image( $file, $destination, 50 );
-	}
 }
 
 /**
@@ -3503,6 +3474,12 @@ function bp_media_create_symlinks( $media ) {
 	if ( ! empty( $file['path'] ) ) {
 		$output_file_src = $upload_dir . '/' . $file['path'];
 
+		// Regenerate attachment thumbnails.
+		if ( ! file_exists( $output_file_src ) ) {
+			bp_media_regenerate_attachment_thumbnails( $attachment_id );
+		}
+
+		// Check if file exists.
 		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
 			symlink( $output_file_src, $attachment_path );
 		}
@@ -3514,6 +3491,12 @@ function bp_media_create_symlinks( $media ) {
 	if ( ! empty( $file['path'] ) ) {
 		$output_file_src = $upload_dir . '/' . $file['path'];
 
+		// Regenerate attachment thumbnails.
+		if ( ! file_exists( $output_file_src ) ) {
+			bp_media_regenerate_attachment_thumbnails( $attachment_id );
+		}
+
+		// Check if file exists.
 		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
 			symlink( $output_file_src, $attachment_path );
 		}
@@ -3654,4 +3637,106 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 
 		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	}
+}
+
+/**
+ * Get media image sizes to register.
+ *
+ * @return array Image sizes.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_get_image_sizes() {
+	$image_sizes = array(
+		'bp-media-thumbnail'          => array(
+			'height' => 400,
+			'width'  => 400,
+		),
+		'bp-activity-media-thumbnail' => array(
+			'height' => 1600,
+			'width'  => 1600,
+		),
+	);
+
+	return (array) apply_filters( 'bp_media_add_image_sizes', $image_sizes );
+}
+
+/**
+ * Add media upload filters.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_add_upload_filters() {
+	add_filter( 'upload_dir', 'bp_media_upload_dir' );
+	add_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
+	add_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9, 1 );
+	add_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * Remove media upload filters.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_remove_upload_filters() {
+	remove_filter( 'upload_dir', 'bp_media_upload_dir' );
+	remove_filter( 'intermediate_image_sizes_advanced', 'bp_media_remove_default_image_sizes' );
+	remove_filter( 'upload_mimes', 'bp_media_allowed_mimes' );
+	remove_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * Register media image sizes.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_register_image_sizes() {
+	$image_sizes = bp_media_get_image_sizes();
+
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
+			}
+		}
+	}
+}
+
+/**
+ * Deregister media image sizes.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_deregister_image_sizes() {
+	$image_sizes = bp_media_get_image_sizes();
+
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			remove_image_size( sanitize_key( $name ) );
+		}
+	}
+}
+
+/**
+ * Regenerate media attachment thumbnails
+ *
+ * @param int $attachment_id Attachment ID.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
+	// Add upload filters.
+	bp_media_add_upload_filters();
+
+	// Register image sizes.
+	bp_media_register_image_sizes();
+
+	// Regenerate attachment thumbnails.
+	bp_core_regenerate_attachment_thumbnails( $attachment_id );
+
+	// Remove upload filters.
+	bp_media_remove_upload_filters();
+
+	// Deregister image sizes.
+	bp_media_deregister_image_sizes();
 }

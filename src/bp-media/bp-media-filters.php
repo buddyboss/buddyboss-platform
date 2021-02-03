@@ -73,9 +73,6 @@ add_action( 'bp_media_before_save', 'bp_media_delete_symlinks' );
 // Create symlinks for media when saved.
 add_action( 'bp_media_after_save', 'bp_media_create_symlinks' );
 
-// Generate preview images for photos.
-add_action( 'bp_media_attachment_uploaded', 'bp_media_generate_preview_images', 99 );
-
 // Clear media symlinks on delete.
 add_action( 'bp_media_before_delete', 'bp_media_clear_media_symlinks_on_delete', 10 );
 
