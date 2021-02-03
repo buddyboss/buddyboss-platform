@@ -2625,7 +2625,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 			// old video count 1 and new video uploaded count is greater than 1.
 			if ( 1 === count( $old_video_ids ) && 1 < count( $video_ids ) ) {
-				$old_video_id = $old_video_ids[0];
+				$old_video_id = (int) $old_video_ids[0];
 
 				// check if old video id is in new video uploaded.
 				if ( in_array( $old_video_id, $video_ids, true ) ) {
