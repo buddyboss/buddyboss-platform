@@ -304,7 +304,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -336,7 +336,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -714,6 +714,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			? friends_get_friendship_id( get_current_user_id(), $user->ID )
 			: ''
 		);
+
+		$data['create_friendship'] = ( bp_is_active( 'friends' ) && is_user_logged_in() && apply_filters( 'bp_rest_user_can_create_friendship', true, $user->ID ) );
 
 		$data['is_following'] = (bool) (
 		function_exists( 'bp_is_following' )
@@ -1140,6 +1142,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				'friendship_id'      => array(
 					'description' => __( 'A unique numeric ID for the friendship.', 'buddyboss' ),
 					'type'        => 'integer',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'create_friendship'  => array(
+					'description' => __( 'Logged in user can create friendship with current user.', 'buddyboss' ),
+					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
