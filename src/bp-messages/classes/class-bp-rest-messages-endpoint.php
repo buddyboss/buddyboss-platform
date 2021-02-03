@@ -1730,6 +1730,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 			// Edit message's properties.
 			$args['message']['type']        = 'string';
+			$args['message']['required']    = false;
 			$args['message']['description'] = __( 'Content of the Message to add to the Thread.', 'buddyboss' );
 
 			// Edit recipients properties.

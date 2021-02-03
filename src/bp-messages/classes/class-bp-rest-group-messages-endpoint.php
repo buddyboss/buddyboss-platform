@@ -1142,7 +1142,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		$params['message'] = array(
 			'description'       => __( 'Content of the Message to add to the Thread.', 'buddyboss' ),
 			'type'              => 'string',
-			'required'          => true,
+			'required'          => false,
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
