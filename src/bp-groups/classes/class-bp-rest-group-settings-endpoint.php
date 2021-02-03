@@ -223,7 +223,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// If group author does not match logged_in user, block update.
-		if ( true === $retval && ! $this->groups_endpoint->can_user_delete_or_update( $group ) ) {
+		if ( true === $retval && ! $this->groups_endpoint->can_see( $group ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss' ),

@@ -156,7 +156,7 @@ class BB_Notifications extends Integration_Abstract {
 	 * @param int $friendship_id ID of the friendship connection.
 	 */
 	public function event_friends_friendship_requested( $friendship_id ) {
-		$n_id = $this->_get_notification_id_by_friendship_id( $friendship_id );
+		$n_id = $this->get_notification_id_by_friendship_id( $friendship_id );
 		Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
 	}
 
@@ -166,7 +166,7 @@ class BB_Notifications extends Integration_Abstract {
 	 * @param int $friendship_id ID of the friendship connection.
 	 */
 	public function event_friends_friendship_accepted( $friendship_id ) {
-		$n_id = $this->_get_notification_id_by_friendship_id( $friendship_id );
+		$n_id = $this->get_notification_id_by_friendship_id( $friendship_id );
 		Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
 	}
 
@@ -176,7 +176,7 @@ class BB_Notifications extends Integration_Abstract {
 	 * @param int $friendship_id ID of the friendship connection.
 	 */
 	public function event_friends_friendship_deleted( $friendship_id ) {
-		$n_id = $this->_get_notification_id_by_friendship_id( $friendship_id );
+		$n_id = $this->get_notification_id_by_friendship_id( $friendship_id );
 		Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
 	}
 
@@ -186,7 +186,7 @@ class BB_Notifications extends Integration_Abstract {
 	 * @param int $friendship_id ID of the friendship connection.
 	 */
 	public function event_friends_friendship_rejected( $friendship_id ) {
-		$n_id = $this->_get_notification_id_by_friendship_id( $friendship_id );
+		$n_id = $this->get_notification_id_by_friendship_id( $friendship_id );
 		Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
 	}
 
@@ -197,7 +197,7 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_groups_member_after_save( $member ) {
 		$group_id = $member->group_id;
-		$n_id     = $this->_get_notification_id_by_group_id( $group_id );
+		$n_id     = $this->get_notification_id_by_group_id( $group_id );
 		Cache::instance()->purge_by_group( 'bp-notifications_' . $n_id );
 	}
 
