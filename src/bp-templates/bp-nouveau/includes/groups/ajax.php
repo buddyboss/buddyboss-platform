@@ -963,7 +963,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						<?php
 					} else {
 						?>
-						<i class="bb-icon-slash" aria-hidden="true"></i>
+						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'No Access', 'buddyboss' ); ?>">
+							<i class="bb-icon-slash" aria-hidden="true"></i>
+						</span>
 						<?php
 					}
 					?>
