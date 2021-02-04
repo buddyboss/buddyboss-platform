@@ -19458,10 +19458,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   color: #fff !important;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove:after {
-  top: -1px;
-}
-
 .video-thumbnail-content .bp-video-thumbnail-auto-generated {
   flex-basis: 66.666667%;
   width: 66.666667%;
