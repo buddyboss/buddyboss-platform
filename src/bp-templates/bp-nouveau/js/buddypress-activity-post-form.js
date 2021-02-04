@@ -112,6 +112,7 @@ window.bp = window.bp || {};
 			self.editActivityData = activity_data;
 
 			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass( 'loading' );
+			self.postForm.$el.removeClass( 'bp-hide' );
 
 			// add a pause to form to let it cool down a bit.
 			setTimeout(
@@ -2603,6 +2604,14 @@ window.bp = window.bp || {};
 					)
 				);
 
+				if ( 'user' === BP_Nouveau.activity.params.object ) {
+					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
+						this.$el.addClass( 'bp-hide' );
+					} else {
+						this.$el.removeClass( 'bp-hide' );
+					}
+				}
+
 				// Clone the model to set the resetted one.
 				this.resetModel = this.model.clone();
 
@@ -2709,6 +2718,14 @@ window.bp = window.bp || {};
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); // remove edit class if in edit mode
 				bp.Nouveau.Activity.postForm.editActivityData = false;
+
+				if ( 'user' === BP_Nouveau.activity.params.object ) {
+					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
+						this.$el.addClass( 'bp-hide' );
+					} else {
+						this.$el.removeClass( 'bp-hide' );
+					}
+				}
 
 				// Reset the model
 				this.model.clear();

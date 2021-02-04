@@ -196,19 +196,33 @@ function bp_nouveau_ajax_messages_send_message() {
 
 			while ( bp_message_threads() ) {
 				bp_message_thread();
-				$last_message_id = (int) $messages_template->thread->last_message_id;
+
+				$last_message_id         = (int) $messages_template->thread->last_message_id;
+				$is_group_thread         = 0;
+				$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+				if ( isset( $first_message ) && isset( $first_message->id ) ) {
+					$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+					$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+					$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+					$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+					if ( 'group' === $message_from && bp_get_message_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+						$is_group_thread = 1;
+					}
+                }
 
 				$response = array(
-					'id'            => bp_get_message_thread_id(),
-					'message_id'    => (int) $last_message_id,
-					'subject'       => wp_strip_all_tags( bp_get_message_thread_subject() ),
-					'excerpt'       => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
-					'content'       => do_shortcode( bp_get_message_thread_content() ),
-					'unread'        => bp_message_thread_has_unread(),
-					'sender_name'   => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
-					'sender_is_you' => $messages_template->thread->last_sender_id == bp_loggedin_user_id(),
-					'sender_link'   => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
-					'sender_avatar' => esc_url(
+					'id'                              => bp_get_message_thread_id(),
+					'can_user_send_message_in_thread' => ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', $messages_template->thread->thread_id, (array) $messages_template->thread->recipients ),
+					'message_id'                      => (int) $last_message_id,
+					'subject'                         => wp_strip_all_tags( bp_get_message_thread_subject() ),
+					'excerpt'                         => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
+					'content'                         => do_shortcode( bp_get_message_thread_content() ),
+					'unread'                          => bp_message_thread_has_unread(),
+					'sender_name'                     => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+					'sender_is_you'                   => $messages_template->thread->last_sender_id == bp_loggedin_user_id(),
+					'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
+					'sender_avatar'                   => esc_url(
 						bp_core_fetch_avatar(
 							array(
 								'item_id' => $messages_template->thread->last_sender_id,
@@ -220,10 +234,10 @@ function bp_nouveau_ajax_messages_send_message() {
 							)
 						)
 					),
-					'count'         => bp_get_message_thread_total_count(),
-					'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-					'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-					'started_date'  => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
+					'count'                           => bp_get_message_thread_total_count(),
+					'date'                            => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
+					'display_date'                    => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+					'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 				);
 
 				if ( is_array( $messages_template->thread->recipients ) ) {
@@ -916,7 +930,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'group_link'                      => $group_link,
 			'group_message_users'             => $group_message_users,
 			'group_message_type'              => $group_message_type,
-			'can_user_send_message_in_thread' => ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', bp_get_message_thread_id(), (array) $messages_template->thread->recipients ),
+			'can_user_send_message_in_thread' => ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', $messages_template->thread->thread_id, (array) $messages_template->thread->recipients ),
 			'group_message_thread_type'       => $group_message_thread_type,
 			'group_message_fresh'             => $group_message_fresh,
 			'excerpt'                         => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
@@ -1879,21 +1893,22 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
 
 	$thread->thread = array(
-		'id'                        => bp_get_the_thread_id(),
-		'subject'                   => wp_strip_all_tags( bp_get_the_thread_subject() ),
-		'started_date'              => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option( 'date_format' ) ),
-		'group_id'                  => $group_id,
-		'group_name'                => html_entity_decode( ucwords( $group_name ) ),
-		'is_group_thread'           => $is_group_thread,
-		'is_deleted'                => $is_deleted_group,
-		'group_avatar'              => $group_avatar,
-		'group_link'                => $group_link,
-		'group_message_users'       => $group_message_users,
-		'group_message_type'        => $group_message_type,
-		'group_message_thread_type' => $group_message_thread_type,
-		'group_message_fresh'       => $group_message_fresh,
-		'message_from'              => $message_from,
-		'is_participated'           => empty( $is_participated ) ? 0 : 1,
+		'id'                              => bp_get_the_thread_id(),
+		'subject'                         => wp_strip_all_tags( bp_get_the_thread_subject() ),
+		'started_date'                    => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option( 'date_format' ) ),
+		'group_id'                        => $group_id,
+		'group_name'                      => html_entity_decode( ucwords( $group_name ) ),
+		'is_group_thread'                 => $is_group_thread,
+		'can_user_send_message_in_thread' => ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', $thread_template->thread->thread_id, (array) $thread_template->thread->recipients ),
+		'is_deleted'                      => $is_deleted_group,
+		'group_avatar'                    => $group_avatar,
+		'group_link'                      => $group_link,
+		'group_message_users'             => $group_message_users,
+		'group_message_type'              => $group_message_type,
+		'group_message_thread_type'       => $group_message_thread_type,
+		'group_message_fresh'             => $group_message_fresh,
+		'message_from'                    => $message_from,
+		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
@@ -2349,15 +2364,16 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$bp->current_action = $reset_action;
 
 	// pagination.
-	$thread->per_page                 = $thread_template->thread->messages_perpage;
-	$thread->messages_count           = $thread_template->thread->total_messages;
-	$thread->next_messages_timestamp  = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
-	$thread->group_id                 = $group_id;
-	$thread->is_group_thread          = $is_group_thread;
-	$thread->user_can_upload_media    = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
-	$thread->user_can_upload_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
-	$thread->user_can_upload_gif      = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
-	$thread->user_can_upload_emoji    = bp_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->per_page                        = $thread_template->thread->messages_perpage;
+	$thread->messages_count                  = $thread_template->thread->total_messages;
+	$thread->next_messages_timestamp         = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
+	$thread->group_id                        = $group_id;
+	$thread->is_group_thread                 = $is_group_thread;
+	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$thread->user_can_upload_media           = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_document        = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_gif             = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_emoji           = bp_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 
 	return $thread;
 }
