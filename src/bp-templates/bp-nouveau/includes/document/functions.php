@@ -52,10 +52,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$user_id          = bp_loggedin_user_id();
 	$group_id         = 0;
 	$move_to_id_popup = $user_id;
-	if ( ( bp_is_group_media() || bp_is_group_albums() ) || ( bp_is_group_document() || bp_is_group_folders() ) ) {
+	if ( ( bp_is_group_media() || bp_is_group_albums() ) || ( bp_is_group_document() || bp_is_group_folders() ) || bp_is_group_single() ) {
 		$folder_id        = (int) bp_action_variable( 1 );
 		$type             = 'group';
-		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
+		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : 0;
 		$move_to_id_popup = $group_id;
 	} elseif ( ( bp_is_user_media() || bp_is_user_albums() ) || ( bp_is_user_document() || bp_is_user_folders() ) ) {
 		$folder_id        = (int) bp_action_variable( 0 );
@@ -66,11 +66,21 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		$type      = 'profile';
 	}
 
+	if ( bp_is_active( 'activity' ) && bp_is_single_activity() ) {
+		$activity_id = bp_current_action();
+		if ( ! empty( $activity_id ) ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			if ( ! empty( $activity->id ) && 'groups' === $activity->component ) {
+				$group_id = $activity->item_id;
+			}
+		}
+	}
+
 	$exclude         = array_merge( $mime_types, $extensions );
 	$document_params = array(
-		'profile_document'                => bp_is_profile_document_support_enabled(),
-		'group_document'                  => bp_is_group_document_support_enabled(),
-		'messages_document'               => bp_is_messages_document_support_enabled(),
+		'profile_document'                => bp_is_profile_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), 0 ),
+		'group_document'                  => bp_is_group_document_support_enabled() && ( bp_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
+		'messages_document'               => bp_is_messages_document_support_enabled() && bp_user_can_create_document(),
 		'document_type'                   => implode( ',', array_unique( $exclude ) ),
 		'empty_document_type'             => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
 		'current_folder'                  => $folder_id,

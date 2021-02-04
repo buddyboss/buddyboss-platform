@@ -810,13 +810,14 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$data = array_merge(
 			$member_data,
 			array(
-				'is_mod'        => (bool) $group_member->is_mod,
-				'is_admin'      => (bool) $group_member->is_admin,
-				'is_banned'     => (bool) $group_member->is_banned,
-				'is_confirmed'  => (bool) $group_member->is_confirmed,
-				'date_modified' => bp_rest_prepare_date_response( $group_member->date_modified ),
-				'role'          => '',
-				'plural_role'   => '',
+				'is_mod'             => (bool) $group_member->is_mod,
+				'is_admin'           => (bool) $group_member->is_admin,
+				'is_banned'          => (bool) $group_member->is_banned,
+				'is_confirmed'       => (bool) $group_member->is_confirmed,
+				'date_modified'      => bp_rest_prepare_date_response( $group_member->date_modified ),
+				'role'               => '',
+				'plural_role'        => '',
+				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bp_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) ),
 			)
 		);
 
@@ -1032,6 +1033,13 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$schema['properties']['plural_role'] = array(
 			'context'     => array( 'view', 'edit' ),
 			'description' => __( 'Current member\'s role label in the plural form in the group.', 'buddyboss' ),
+			'type'        => 'string',
+			'readonly'    => true,
+		);
+
+		$schema['properties']['send_group_message'] = array(
+			'context'     => array( 'view', 'edit' ),
+			'description' => __( 'Current member can send group message or not.', 'buddyboss' ),
 			'type'        => 'string',
 			'readonly'    => true,
 		);
@@ -1272,6 +1280,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$args['is_confirmed']      = false;
 			$bp->groups->invites_scope = 'invited';
 		}
+
+		$args = apply_filters( 'groups_get_group_potential_invites_requests_args', $args );
 
 		$potential_invites = bp_nouveau_get_group_potential_invites( $args );
 
