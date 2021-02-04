@@ -1752,7 +1752,7 @@ function bp_get_thread_recipients_count() {
 	 *
 	 * @param int $count Total recipients number.
 	 */
-	// message_imp
+	//message_imp
 	return (int) apply_filters( 'bp_get_thread_recipients_count', $thread_template->thread->total_recipients_count );
 }
 
