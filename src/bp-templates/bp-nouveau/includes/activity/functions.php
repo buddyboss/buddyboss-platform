@@ -211,6 +211,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		);
 	}
 
+	$activity_params['access_control_settings'] = array(
+		'can_create_activity'          => bp_user_can_create_activity(),
+		'can_create_activity_media'    => bp_user_can_create_media(),
+		'can_create_activity_document' => bp_user_can_create_document(),
+	);
+
 	$params['activity'] = array(
 		'params'  => $activity_params,
 		'strings' => $activity_strings,
