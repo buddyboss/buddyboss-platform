@@ -1612,6 +1612,8 @@ class BP_Messages_Thread {
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
 
+		$r['user_id'] = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+
 		$sql = array(
 			'select'     => 'SELECT DISTINCT r.id',
 			'from'       => "{$bp->messages->table_name_recipients} r",
