@@ -1,7 +1,7 @@
 <script type="text/html" id="tmpl-bp-messages-single-header">
-	<#    var other_recipients = _.reject(data.recipients, function(item) {    return item.is_you;    });
+	<#    var other_recipients = _.reject(data.recipients.memebers, function(item) {    return item.is_you;    });
 
-	var current_user = _.find(data.recipients, function(item) {    return item.is_you == true;    });
+	var current_user = _.find(data.recipients.memebers, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
 
@@ -159,6 +159,10 @@
 									</div>
 								</div>
 								<# }); #>
+							</div>
+
+							<div class="bb-report-type-pagination">
+
 							</div>
 						</div>
 					</div>
