@@ -3355,7 +3355,7 @@ function bp_media_get_report_link( $args = array() ) {
  *
  * @return bool
  */
-function bp_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
+function bb_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
 
 	if ( ( empty( $user_id ) && empty( $group_id ) ) || empty( $user_id ) ) {
 		return false;
@@ -3365,7 +3365,7 @@ function bp_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
 		return groups_can_user_manage_media( $user_id, $group_id );
 	}
 
-	if ( bp_is_profile_media_support_enabled() && bp_user_can_create_media() ) {
+	if ( bp_is_profile_media_support_enabled() && bb_user_can_create_media() ) {
 		return true;
 	}
 

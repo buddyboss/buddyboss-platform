@@ -599,7 +599,7 @@ window.bp = window.bp || {};
 					this.options.recipients     = resp.thread.recipients;
 				}
 
-				// Membership Document Support.
+				// Access Control Document Support.
 				if ( ! _.isUndefined( resp.user_can_upload_document ) && $( '#whats-new-messages-toolbar .post-media-document-support' ).length ) {
 					if ( resp.user_can_upload_document ) {
 						$( '#whats-new-messages-toolbar .post-media-document-support' ).show();
@@ -609,7 +609,7 @@ window.bp = window.bp || {};
 
 				}
 
-				// Membership Media Support.
+				// Access Control Media Support.
 				if ( ! _.isUndefined( resp.user_can_upload_media ) && $( '#whats-new-messages-toolbar .post-media-photo-support' ).length ) {
 					if ( resp.user_can_upload_media ) {
 						$( '#whats-new-messages-toolbar .post-media-photo-support' ).show();
@@ -619,7 +619,7 @@ window.bp = window.bp || {};
 
 				}
 
-				// Membership GiF Support.
+				// Access Control GiF Support.
 				if ( ! _.isUndefined( resp.user_can_upload_gif ) && $( '#whats-new-messages-toolbar .post-media-gif-support' ).length ) {
 					if ( resp.user_can_upload_gif ) {
 						$( '#whats-new-messages-toolbar .post-media-gif-support' ).show();
@@ -629,7 +629,7 @@ window.bp = window.bp || {};
 
 				}
 
-				// Membership Emoji Support.
+				// Access Control Emoji Support.
 				if ( ! _.isUndefined( resp.user_can_upload_emoji ) && $( '#whats-new-messages-toolbar .post-media-emoji-support' ).length ) {
 					if ( resp.user_can_upload_emoji ) {
 						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).show();

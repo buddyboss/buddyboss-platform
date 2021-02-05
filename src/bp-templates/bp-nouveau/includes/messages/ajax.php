@@ -377,7 +377,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_media ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
 			wp_send_json_error( $response );
@@ -385,7 +385,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
 			wp_send_json_error( $response );
@@ -393,7 +393,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( ! empty( $_POST['gif_data'] ) ) {
-		$can_send_document = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		$can_send_document = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
 			wp_send_json_error( $response );
@@ -1742,10 +1742,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$first_message             = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
 	$group_id                  = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 	$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-	$is_group_message_thread   = bp_messages_is_group_thread( bp_get_the_thread_id() );
+	$is_group_message_thread   = bb_messages_is_group_thread( bp_get_the_thread_id() );
 
 	if ( ! $is_group_message_thread ) {
-		$thread = bp_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
+		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
 	}
 
 	$is_deleted_group = 0;
@@ -2163,7 +2163,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . bp_get_the_thread_message_id() );
 		}
 
-		$is_group_thread = bp_messages_is_group_thread( $thread_id );
+		$is_group_thread = bb_messages_is_group_thread( $thread_id );
 
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_media_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_media_support_enabled() ) ) ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
@@ -2370,10 +2370,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->group_id                        = $group_id;
 	$thread->is_group_thread                 = $is_group_thread;
 	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
-	$thread->user_can_upload_media           = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
-	$thread->user_can_upload_document        = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
-	$thread->user_can_upload_gif             = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
-	$thread->user_can_upload_emoji           = bp_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_gif             = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_emoji           = bb_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 
 	return $thread;
 }

@@ -475,8 +475,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			function_exists( 'bp_media_user_can_upload' ) &&
-			! bp_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
+			function_exists( 'bb_media_user_can_upload' ) &&
+			! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
 		) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
@@ -547,8 +547,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if (
 			! is_user_logged_in() ||
 			(
-				function_exists( 'bp_media_user_can_upload' ) &&
-				! bp_media_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
+				function_exists( 'bb_media_user_can_upload' ) &&
+				! bb_media_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
 			)
 		) {
 			$retval = new WP_Error(
@@ -836,8 +836,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			(
 				! bp_media_user_can_edit( $media ) ||
 				(
-					function_exists( 'bp_media_user_can_upload' ) &&
-					! bp_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $media->group_id ) )
+					function_exists( 'bb_media_user_can_upload' ) &&
+					! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $media->group_id ) )
 				)
 			)
 		) {
@@ -2166,8 +2166,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if (
 			'bp_media_ids' !== $attribute ||
 			(
-				function_exists( 'bp_user_has_access_upload_media' ) &&
-				! bp_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
+				function_exists( 'bb_user_has_access_upload_media' ) &&
+				! bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
 			)
 		) {
 			$value->bp_media_ids = null;
@@ -2310,8 +2310,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			function_exists( 'bp_user_has_access_upload_gif' ) &&
-			! bp_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
+			function_exists( 'bb_user_has_access_upload_gif' ) &&
+			! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
 		) {
 			return;
 		}
@@ -2365,8 +2365,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			function_exists( 'bp_user_has_access_upload_gif' ) &&
-			! bp_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
+			function_exists( 'bb_user_has_access_upload_gif' ) &&
+			! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
 		) {
 			return $value;
 		}
@@ -2456,8 +2456,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$group_id = $item_id;
 		}
 
-		if ( function_exists( 'bp_user_has_access_upload_media' ) ) {
-			return bp_user_has_access_upload_media( $group_id, $user_id, 0, 0, 'profile' );
+		if ( function_exists( 'bb_user_has_access_upload_media' ) ) {
+			return bb_user_has_access_upload_media( $group_id, $user_id, 0, 0, 'profile' );
 		}
 
 		return false;
@@ -2694,8 +2694,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$forum_id = bbp_get_topic_forum_id( $post_id );
 		}
 
-		if ( function_exists( 'bp_user_has_access_upload_media' ) ) {
-			$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 			if ( ! $can_send_media ) {
 				$value->bbp_media = null;
 
@@ -2880,8 +2880,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$forum_id = bbp_get_topic_forum_id( $post_id );
 		}
 
-		if ( function_exists( 'bp_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 			if ( ! $can_send_gif ) {
 				return;
 			}
@@ -2968,8 +2968,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		if ( function_exists( 'bp_messages_is_group_thread' ) ) {
-			$is_group_thread = bp_messages_is_group_thread( $thread_id );
+		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
+			$is_group_thread = bb_messages_is_group_thread( $thread_id );
 		} else {
 			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
 			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
@@ -3055,8 +3055,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$thread_id = $value->thread_id;
 
-		if ( function_exists( 'bp_user_has_access_upload_media' ) ) {
-			$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		if ( function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_media ) {
 				$value->bp_media_ids = null;
 				return $value;
@@ -3130,8 +3130,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		if ( function_exists( 'bp_messages_is_group_thread' ) ) {
-			$is_group_thread = bp_messages_is_group_thread( $thread_id );
+		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
+			$is_group_thread = bb_messages_is_group_thread( $thread_id );
 		} else {
 			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
 			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
@@ -3196,8 +3196,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$thread_id = $value->thread_id;
 
-		if ( function_exists( 'bp_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		if ( function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_gif ) {
 				return;
 			}

@@ -465,8 +465,8 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'avatar_url'     => $item_avatar_url,
 		'object_type'    => 'group',
 		'is_public'      => ( 'public' === $item->status ),
-		'group_media'    => ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && bp_media_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
-		'group_document' => ( bp_is_active( 'document' ) && bp_is_group_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
+		'group_media'    => ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
+		'group_document' => ( bp_is_active( 'document' ) && bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 	);
 }
 
