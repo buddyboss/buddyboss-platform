@@ -817,7 +817,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				'date_modified'      => bp_rest_prepare_date_response( $group_member->date_modified ),
 				'role'               => '',
 				'plural_role'        => '',
-				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bp_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) ),
+				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bb_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) ),
 			)
 		);
 

@@ -7490,6 +7490,7 @@ function bp_groups_get_profile_stats( $args = '' ) {
 function bp_group_current_invite_tab() {
 	echo bp_get_group_current_invite_tab();
 }
+
 /**
  * Returns the current group invite tab slug.
  *
@@ -7645,4 +7646,37 @@ function bp_group_show_messages_status_setting( $setting, $group = false ) {
 	if ( $setting == $message_status ) {
 		echo ' checked="checked"';
 	}
+}
+
+/**
+ * Echo the current group message tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bb_group_current_messages_tab() {
+	echo bb_get_group_current_messages_tab();
+}
+
+/**
+ * Returns the current group message tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bb_get_group_current_messages_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group message tab slug.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $tab Current group message tab slug.
+	 */
+	return apply_filters( 'bb_get_group_current_messages_tab', $tab );
 }

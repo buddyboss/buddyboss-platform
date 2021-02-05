@@ -932,7 +932,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$name = bp_core_get_user_displayname( $member->ID );
 
-			$can_send_group_message = apply_filters( 'bp_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
+			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			?>
 			<li class="group-message-member-li <?php echo $member->ID; echo !$can_send_group_message ? ' is_disabled ' : ''; ?>">
 				<div class="item-avatar">
@@ -1128,7 +1128,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		// Check Membership Access.
 		$not_access_list = array();
 		foreach ( $members as $member ) {
-			$can_send_group_message = apply_filters( 'bp_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
 			if ( ! $can_send_group_message ) {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
