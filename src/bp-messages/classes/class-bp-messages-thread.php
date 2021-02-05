@@ -275,7 +275,7 @@ class BP_Messages_Thread {
 
 			$results = self::get(
 				array(
-					'per_page'        => 5, //- 1,
+					'per_page'        => bp_messages_recepients_per_page(), //- 1,
 					'include_threads' => array( $thread_id ),
 					'include_current_user' => (int) $user_id,
 				)
@@ -322,13 +322,14 @@ class BP_Messages_Thread {
 		}
 
 		$thread_id = (int) $thread_id;
-
+		$user_id =	bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
 			$results = self::get(
 				array(
 					'per_page'        => - 1,
 					'include_threads' => array( $thread_id ),
 					'fields'          => 'ids',
 					'count_total'     => true,
+					'exclude_current_user' => array( 1, $user_id ),
 				)
 			);
 
@@ -1612,6 +1613,7 @@ class BP_Messages_Thread {
 			'count_total'          => false,
 			'exclude_active_users' => false,
 			'include_current_user' => false,
+			'exclude_current_user' => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1664,6 +1666,10 @@ class BP_Messages_Thread {
 
 		if ( true === $r['exclude_active_users'] ) {
 			$where_conditions['exclude_active_users'] = 'user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')';
+		}
+
+		if ( ! empty( $r['exclude_current_user'] ) ) {
+			$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_current_user'] ) .' )';
 		}
 
 		/* Order/orderby ********************************************/
@@ -1781,7 +1787,6 @@ class BP_Messages_Thread {
 			 * @param array  $r         Array of parsed arguments for the get method.
 			 */
 			$total_recipients_sql = apply_filters( 'bp_recipients_recipient_get_total_sql', $total_recipients_sql, $sql, $r );
-
 			$total_recipients = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total']  = $total_recipients;
 		}

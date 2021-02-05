@@ -1926,7 +1926,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		);
 		foreach ( $thread_template->thread->recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
-				$thread->thread['recipients']['memebers'][ $count ] = array(
+				$thread->thread['recipients']['members'][ $count ] = array(
 					'avatar'     => esc_url(
 						bp_core_fetch_avatar(
 							array(
@@ -1947,8 +1947,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				);
 
 				if ( bp_is_active( 'moderation' ) ) {
-					$thread->thread['recipients']['memebers'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-					$thread->thread['recipients']['memebers'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					$thread->thread['recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 				}
 
 				$count ++;
@@ -1956,6 +1956,24 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 	$thread->thread['recipients']['count'] = $recipents_count;
+	$thread->thread['recipients']['per_page'] = bp_messages_recepients_per_page();
+	$thread->thread['recipients']['total_pages'] = ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() );
+
+	$thread->thread['recipients']['pagination_links'] = paginate_links(
+		apply_filters(
+			'bbp_recipients_block',
+			array(
+				'base'      => '#',
+				'format'    => '',
+				'total'     => ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() ),
+				'current'   => (int) 1,
+				'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
+				'next_text' => is_rtl() ? '&larr;' : '&rarr;',
+				'mid_size'  => 1,
+				'add_args'  => '',
+			)
+		)
+	);
 
 	$thread->messages = array();
 	$i                = 0;
