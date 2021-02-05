@@ -250,6 +250,30 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/** Edit ******************************************************************/
 
 		/**
+		 * Get all forum ids according group id
+		 *
+		 * @since BuddyBoss 1.5.7
+		 *
+		 * @return array
+		 */
+		public function get_group_associated_forum_ids() {
+
+			global $wpdb;
+
+			$table_name = buddypress()->groups->table_name_groupmeta;
+			$sql        = "SELECT group_id, meta_value FROM {$table_name} WHERE meta_key = %s";
+			$query      = $wpdb->prepare( $sql, 'forum_id' );
+			$forums     = $wpdb->get_results( $query );
+
+			// Unserialize forum ids.
+			foreach ( $forums as $meta_value ) {
+				$meta_value->meta_value = is_serialized( $meta_value->meta_value ) ? maybe_unserialize( $meta_value->meta_value ) : (array) $meta_value->meta_value;
+			}
+
+			return $forums;
+		}
+
+		/**
 		 * Show forums and new forum form when editing a group
 		 *
 		 * @since bbPress (r3563)
@@ -261,6 +285,20 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id  = 0;
 			$group_id  = empty( $group->id ) ? bp_get_new_group_id() : $group->id;
 			$forum_ids = bbp_get_group_forum_ids( $group_id );
+
+			$all_group_forums  = $this->get_group_associated_forum_ids();
+			$exclude_forum_ids = array();
+
+			// From exclude items ignore the current groups forum. 
+			foreach ( $all_group_forums as $group_forum ) {
+				foreach ( $group_forum->meta_value as $froum_id ) {
+					if ( in_array( $froum_id, $forum_ids ) ) {
+						continue;
+					}
+
+					$exclude_forum_ids[$froum_id] = $froum_id;
+				}
+			}
 
 			// Get the first forum ID
 			if ( ! empty( $forum_ids ) ) {
@@ -294,6 +332,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 								'select_id' => 'bbp_group_forum_id',
 								'show_none' => __( '(No Forum)', 'buddyboss' ),
 								'selected'  => $forum_id,
+								'exclude'   => $exclude_forum_ids
 							)
 						);
 					?>
