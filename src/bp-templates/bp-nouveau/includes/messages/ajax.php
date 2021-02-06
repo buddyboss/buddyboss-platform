@@ -1955,25 +1955,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 	}
-	$thread->thread['recipients']['count'] = $recipents_count;
-	$thread->thread['recipients']['per_page'] = bp_messages_recepients_per_page();
+	$thread->thread['recipients']['count']       = $recipents_count;
+	$thread->thread['recipients']['per_page']    = bp_messages_recepients_per_page();
 	$thread->thread['recipients']['total_pages'] = ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() );
-
-	$thread->thread['recipients']['pagination_links'] = paginate_links(
-		apply_filters(
-			'bbp_recipients_block',
-			array(
-				'base'      => 'javascript:void(0);',
-				'format'    => '',
-				'total'     => ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() ),
-				'current'   => (int) 1,
-				'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
-				'next_text' => is_rtl() ? '&larr;' : '&rarr;',
-				'mid_size'  => 1,
-				'add_args'  => '',
-			)
-		)
-	);
 
 	$thread->messages = array();
 	$i                = 0;

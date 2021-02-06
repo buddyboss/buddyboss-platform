@@ -110,7 +110,7 @@ function bp_moderation_content_report() {
 		wp_send_json_error( $response );
 	}
 
-	$reports_terms   = get_terms(
+	$reports_terms = get_terms(
 		'bpm_category',
 		array(
 			'hide_empty' => false,
@@ -439,7 +439,7 @@ function bp_moderation_user_actions_request() {
 
 	// Check the current has access to report the item ot not.
 	$user_can = bp_moderation_can_report( $item_id, $item_type, 'suspend' == $sub_action );
-	if (  ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
+	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -476,11 +476,11 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  */
 function bb_moderation_content_report_popup() {
 
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/content-report-form.php" ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/content-report-form.php";
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/content-report-form.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
 	}
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/block-member-form.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/block-member-form.php';
 	}
 }
 
@@ -523,32 +523,37 @@ function bb_moderation_suspend_after_delete( $recode ) {
 
 }
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
-/**
-	* Get Next receipents list for block member.	*
-	*/
-function bp_nouveau_next_recepient_list_for_blocks() {
-		$thread_id = filter_input(INPUT_POST, 'thread_id', FILTER_SANITIZE_NUMBER_INT);
-		$page_no   = filter_input(INPUT_POST, 'page_no', FILTER_SANITIZE_NUMBER_INT);
-		$user_id   =	bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
 
-	if ( empty( $thread_id ) ) {
+/**
+ * Get Next recepients list for block member.
+ */
+function bp_nouveau_next_recepient_list_for_blocks() {
+	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$user_id   = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+
+	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recepient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
-	 $moderation_type = BP_Moderation_Members::$moderation_type;
-		$results = BP_Messages_Thread::get(
-			array(
-				'per_page'             => bp_messages_recepients_per_page(), //- 1,
-				'page'                 => $page_no,
-				'include_threads'      => array( $thread_id ),
-				'include_current_user' => (int) $user_id,
-			)
-		);
+	if ( ! isset( $post_data['page_no'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recepient_list_for_blocks', esc_html__( 'Invalid page number.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+
+	$moderation_type = BP_Moderation_Members::$moderation_type;
+	$results         = BP_Messages_Thread::get(
+		array(
+			'per_page'             => bp_messages_recepients_per_page(),
+			'page'                 => (int) $post_data['page_no'],
+			'include_threads'      => array( $post_data['thread_id'] ),
+			'include_current_user' => (int) $user_id,
+		)
+	);
 
 	if ( is_array( $results['recipients'] ) ) {
-		$count  = 1;
-		$admins = array_map(
+		$count          = 1;
+		$admins         = array_map(
 			'intval',
 			get_users(
 				array(
@@ -593,10 +598,10 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 	wp_send_json_success(
 		array(
 			'recipients' => $recipients_arr,
-			'type'     => 'success',
+			'type'       => 'success',
 		)
 	);
-		wp_die();
+	wp_die();
 }
 
 add_action( 'wp_ajax_next_recepient_list_for_blocks', 'bp_nouveau_next_recepient_list_for_blocks' );

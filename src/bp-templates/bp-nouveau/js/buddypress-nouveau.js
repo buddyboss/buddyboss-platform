@@ -692,33 +692,38 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
-			$( document ).on( 'click', '.page-data a', this.messageBlockListPagination );
+			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 		},
 		/**
-			* Pagination for message block list
-			* @returns {boolean}
-			*/
+		 * Pagination for message block list
+		 * @returns {boolean}
+		 */
 		messageBlockListPagination: function ( e ) {
-				e.preventDefault();
-				var threadId = '';
-				if ( $(this).parent('.page-data').length ) {
-					threadId = $(this).parent().attr('data-thread-id');
-				}
-			console.log( ' next_recepient_list_for_blocks ' + BP_Nouveau.ajaxurl);
-				$.post(
-					BP_Nouveau.ajaxurl,
-					{
-						'action': 'next_recepient_list_for_blocks',
-						'page_no': $(this).html(),
-						'thread_id': threadId,
-					}
-				).done( function ( $response ) {
-					// console.log( ' sucess ' + JSON.stringify( $response) );
-					// return false;
-					if ( $response.success && $response.data && '' !== $response.data.content ) {
-						var moderation_type = $response.data.recipients.moderation_type;
-						$.each($response.data.recipients.members, function(index, item) {
-							console.log(JSON.stringify( item));
+			e.preventDefault();
+			var threadId = '';
+			if ( $(this).parent('.page-data').length ) {
+				threadId = parseInt( $(this).parent().attr('data-thread-id') );
+			}
+			var current_page = parseInt( $(this).attr('data-cp') );
+			var total_pages  = parseInt( $(this).attr('data-tp') );
+			var postData = {
+				'page_no'  : current_page,
+				'thread_id': threadId,
+			}
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: {
+					'action'   : 'next_recepient_list_for_blocks',
+					'post_data': postData,
+				},
+				beforeSend: function() {
+					$( '.load_more_rl' ).addClass('loading');
+				},
+				success: function( response ) {
+					if ( response.success && response.data && '' !== response.data.content ) {
+						var moderation_type = response.data.recipients.moderation_type;
+						$.each(response.data.recipients.members, function(index, item) {
 							if ( '' !== item ) {
 								var userItemWrap = document.createElement( 'div' );
 								userItemWrap.setAttribute( 'class', 'user-item-wrp' );
@@ -759,14 +764,22 @@ window.bp = window.bp || {};
 								$( '.user-item-wrp:last' ).after( userItemWrap );
 							}
 						});
-						// return false;
-					} else {
-						// console.log( ' else  ');
+						if ( total_pages === current_page ) {
+							$( '.load_more_rl' ).hide();
+						} else {
+							current_page++;
+							$(this).attr('data-cp', current_page);
+						}
 					}
-				} ).fail( function () {
-					console.log( ' fail  ');
-				} );
-				return false;
+				},
+				error: function( xhr ) {
+
+				},
+				complete: function() {
+					$( '.load_more_rl' ).removeClass( 'loading' );
+				},
+			});
+			return false;
 		},
 		/**
 		 * [switchGridList description]

@@ -162,7 +162,12 @@
 
 							<div class="bb-report-type-pagination">
 								<p class="page-data" data-thread-id="{{data.id}}">
-									{{{data.recipients.pagination_links}}}
+									<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
+									   class="load_more_rl button small"
+									   data-tp="{{data.recipients.total_pages}}"
+									   data-tc="{{data.recipients.count}}"
+									   data-pp="<?php echo esc_attr( bp_messages_recepients_per_page() ); ?>"
+									   data-cp="2"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 								</p>
 							</div>
 						</div>
