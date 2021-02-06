@@ -523,3 +523,81 @@ function bb_moderation_suspend_after_delete( $recode ) {
 
 }
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
+/**
+	* Get Next receipents list for block member.	*
+	*/
+function bp_nouveau_next_recepient_list_for_blocks() {
+		$thread_id = filter_input(INPUT_POST, 'thread_id', FILTER_SANITIZE_NUMBER_INT);
+		$page_no   = filter_input(INPUT_POST, 'page_no', FILTER_SANITIZE_NUMBER_INT);
+		$user_id   =	bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+
+	if ( empty( $thread_id ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recepient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+
+	 $moderation_type = BP_Moderation_Members::$moderation_type;
+		$results = BP_Messages_Thread::get(
+			array(
+				'per_page'             => bp_messages_recepients_per_page(), //- 1,
+				'page'                 => $page_no,
+				'include_threads'      => array( $thread_id ),
+				'include_current_user' => (int) $user_id,
+			)
+		);
+
+	if ( is_array( $results['recipients'] ) ) {
+		$count  = 1;
+		$admins = array_map(
+			'intval',
+			get_users(
+				array(
+					'role'   => 'administrator',
+					'fields' => 'ID',
+				)
+			)
+		);
+		$recipients_arr = array();
+		foreach ( $results['recipients'] as $recipient ) {
+			if ( empty( $recipient->is_deleted ) ) {
+				$recipients_arr['members'][ $count ] = array(
+					'avatar'     => esc_url(
+						bp_core_fetch_avatar(
+							array(
+								'item_id' => $recipient->user_id,
+								'object'  => 'user',
+								'type'    => 'thumb',
+								'width'   => BP_AVATAR_THUMB_WIDTH,
+								'height'  => BP_AVATAR_THUMB_HEIGHT,
+								'html'    => false,
+							)
+						)
+					),
+					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+					'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
+					'id'         => $recipient->user_id,
+				);
+
+				if ( bp_is_active( 'moderation' ) ) {
+					$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+					$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+				}
+
+				$count ++;
+			}
+		}
+	}
+	$recipients_arr['moderation_type'] = $moderation_type;
+	wp_send_json_success(
+		array(
+			'recipients' => $recipients_arr,
+			'type'     => 'success',
+		)
+	);
+		wp_die();
+}
+
+add_action( 'wp_ajax_next_recepient_list_for_blocks', 'bp_nouveau_next_recepient_list_for_blocks' );
+add_action( 'wp_ajax_nopriv_next_recepient_list_for_blocks', 'bp_nouveau_next_recepient_list_for_blocks' );

@@ -1,6 +1,5 @@
 <script type="text/html" id="tmpl-bp-messages-single-header">
 	<#    var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
-
 	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
@@ -135,11 +134,11 @@
 								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 							</header>
 							<div class="bb-report-type-wrp">
-								<# _.reject(other_recipients, function(item) {
+								<#	_.reject(other_recipients, function(item) {
 	                            if( false == item.can_be_blocked ) {
 	                                return false;
 	                            } #>
-								<div class="user-item-wrp">
+								<div class="user-item-wrp" id="user-{{item.id}}">
 									<div class="user-avatar">
 										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
 									</div>
@@ -162,7 +161,7 @@
 							</div>
 
 							<div class="bb-report-type-pagination">
-								<p class="pag-data">
+								<p class="page-data" data-thread-id="{{data.id}}">
 									{{{data.recipients.pagination_links}}}
 								</p>
 							</div>

@@ -1963,7 +1963,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		apply_filters(
 			'bbp_recipients_block',
 			array(
-				'base'      => '#',
+				'base'      => 'javascript:void(0);',
 				'format'    => '',
 				'total'     => ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() ),
 				'current'   => (int) 1,
