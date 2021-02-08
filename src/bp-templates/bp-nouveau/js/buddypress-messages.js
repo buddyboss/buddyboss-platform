@@ -169,6 +169,7 @@ window.bp = window.bp || {};
 				feedback = this.views.get( 'feedback' );
 				feedback.get( 'view' ).remove();
 				this.views.remove( { id: 'feedback', view: feedback } );
+				$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
 			}
 		},
 
@@ -192,6 +193,7 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'feedback', view: feedback } );
 
 			feedback.inject( '.bp-messages-feedback' );
+			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
 		},
 
 		clearViews: function() {
@@ -2690,10 +2692,13 @@ window.bp = window.bp || {};
 				if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
 					// hide reply form.
-					this.$( '#send-reply' ).hide();
+					this.$( '#send-reply' ).hide().parent().addClass('is_restricted');
 					if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
-						this.$( '#send-reply' ).show();
+						this.$( '#send-reply' ).show().parent().removeClass('is_restricted');
+						$( '#send-reply' ).find( '.message-box' ).show();
 					}
+				} else {
+					$( '#send-reply' ).find( '.message-box' ).show();
 				}
 
 				if ( this.firstFetch ) {
