@@ -1294,6 +1294,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 		'page'                  => 1,
 		'type_message'          => __( 'Type message', 'buddyboss' ),
 		'group_no_member'       => __( 'There are no other members in this group. Please add some members before sending a message.', 'buddyboss' ),
+		'group_no_member_pro'   => __( 'You don\'t have a access to send a private message to other group members.', 'buddyboss' ),
 		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
 		'remove_recipient'      => __( 'Remove Recipient', 'buddyboss' ),
 		'add_recipient'         => __( 'Add Recipient', 'buddyboss' ),
