@@ -4323,6 +4323,16 @@ function bp_group_join_button( $group = false ) {
 		}
 
 		/**
+		 * Filters if the current logged in user can join group.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param string $button HTML button for joining a group.
+		 * @param object $group BuddyPress group object
+		 */
+		$button = apply_filters( 'bp_user_can_join_groups', $button, $group );
+
+		/**
 		 * Filters the HTML button for joining a group.
 		 *
 		 * @since BuddyPress 1.2.6
@@ -7502,6 +7512,38 @@ function bp_get_group_current_invite_tab() {
 	 * @param string $tab Current group invite tab slug.
 	 */
 	return apply_filters( 'bp_get_group_current_invite_tab', $tab );
+}
+
+/**
+ * Echo the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_group_current_messages_tab() {
+	echo bp_get_group_current_messages_tab();
+}
+/**
+ * Returns the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bp_get_group_current_messages_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group invite tab slug.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $tab Current group invite tab slug.
+	 */
+	return apply_filters( 'bp_get_group_current_messages_tab', $tab );
 }
 
 /**

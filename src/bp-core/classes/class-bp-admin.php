@@ -706,6 +706,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
+			// @todo: used for bp-performance will enable in feature.
+            // require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		}
 
 		/**
