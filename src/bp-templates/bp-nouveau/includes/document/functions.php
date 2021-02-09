@@ -1173,32 +1173,27 @@ function bp_document_mirror_text( $attachment_id ) {
  * Return the audio url of the file.
  *
  * @param $document_id
- * @param $extension
  * @param $attachment_id
+ * @param $extension
  *
  * @return mixed|void
  *
  * @since BuddyBoss 1.4.0
  */
-function bp_document_get_preview_audio_url( $document_id, $attachment_id ) {
+function bp_document_get_preview_audio_url( $document_id, $attachment_id, $extension ) {
 	$attachment_url = '';
 
-	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src) ) {
+	if ( ! empty( $attachment_id ) && ! empty( $document_id ) && in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+		$document = new BP_Document( $document_id );
 
-			if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-				$document = new BP_Document( $document_id );
+		$upload_directory       = wp_get_upload_dir();
+		$document_symlinks_path = bp_document_symlink_path();
 
-				$upload_directory       = wp_get_upload_dir();
-				$document_symlinks_path = bp_document_symlink_path();
-
-				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
-				if ( ! file_exists( $preview_attachment_path ) ) {
-					bp_document_create_symlinks( $document );
-				}
-				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-			}
+		$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+		if ( ! file_exists( $preview_attachment_path ) ) {
+			bp_document_create_symlinks( $document );
 		}
+		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 	}
 
 	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );

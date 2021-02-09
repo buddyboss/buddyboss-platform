@@ -520,14 +520,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 				}
 
 				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+					$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 				}
 
 				$output = '';
 				ob_start();
 
 				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+					$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 					?>
 					<div class="document-audio-wrap">
 						<audio controls controlsList="nodownload">
@@ -2172,7 +2172,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 					}
 
 					if ( ! empty( $extension_lists ) ) {
@@ -2187,7 +2187,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					ob_start();
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 						?>
 						<div class="document-audio-wrap">
 							<audio controls controlsList="nodownload">
