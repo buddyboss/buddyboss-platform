@@ -3581,18 +3581,24 @@ function bp_media_delete_symlinks( $media ) {
 function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bp-media-thumbnail' ) {
 	$attachment_url = '';
 
-	$output_file_src = get_attached_file( $attachment_id );
-	if ( wp_attachment_is_image( $attachment_id ) && file_exists( $output_file_src ) ) {
-		$media = new BP_Media( $media_id );
+	$do_symlink = apply_filters( 'bp_media_do_symlink', true, $media_id, $attachment_id, $size );
 
-		$upload_directory = wp_get_upload_dir();
-		$symlinks_path    = bp_media_symlink_path();
+	if ( $do_symlink ) {
 
-		$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
-		if ( ! file_exists( $preview_attachment_path ) ) {
-			bp_media_create_symlinks( $media );
+		$output_file_src = get_attached_file( $attachment_id );
+		if ( wp_attachment_is_image( $attachment_id ) && file_exists( $output_file_src ) ) {
+			$media = new BP_Media( $media_id );
+
+			$upload_directory = wp_get_upload_dir();
+			$symlinks_path    = bp_media_symlink_path();
+
+			$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
+			if ( ! file_exists( $preview_attachment_path ) ) {
+				bp_media_create_symlinks( $media );
+			}
+			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		}
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+
 	}
 
 	/**
