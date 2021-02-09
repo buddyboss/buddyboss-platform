@@ -615,7 +615,7 @@ body.vjs-full-window {
 .vjs-menu li.vjs-selected:focus,
 .vjs-menu li.vjs-selected:hover,
 .js-focus-visible .vjs-menu li.vjs-selected:hover {
-  background-color: #fff;
+  background-color: #fff !important;
   color: #2B333F;
 }
 
