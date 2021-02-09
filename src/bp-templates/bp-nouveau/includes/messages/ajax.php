@@ -507,7 +507,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$extension_description = '';
 				$extension_lists       = bp_document_extensions_list();
 				$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-				$attachment_url        = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+				$attachment_url        = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
 				$mirror_text           = bp_document_mirror_text( $attachment_id );
 				$audio_url             = '';
 
@@ -537,7 +537,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					</div>
 					<?php
 				}
-				$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+				$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
 				if ( $attachment_url ) {
 					?>
 					<div class="document-preview-wrap">
@@ -2164,11 +2164,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$url                   = wp_get_attachment_url( $attachment_id );
 					$extension_lists       = bp_document_extensions_list();
 					$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-					$attachment_url        = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+					$attachment_url        = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
 					$mirror_text           = bp_document_mirror_text( $attachment_id );
 					$audio_url             = '';
 					if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-						$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
+						$attachment_url = wp_get_attachment_url( bp_get_document_attachment_id() );
 					}
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
@@ -2197,7 +2197,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						</div>
 						<?php
 					}
-					$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+					$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
 					if ( $attachment_url ) {
 						?>
 						<div class="document-preview-wrap">

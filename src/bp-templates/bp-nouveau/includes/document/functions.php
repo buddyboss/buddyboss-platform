@@ -1056,125 +1056,45 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 /**
  * Return the preview url of the file.
  *
- * @param $document_id
- * @param $extension
- * @param $preview_attachment_id
+ * @param int    $document_id   Document ID.
+ * @param int    $attachment_id Attachment ID.
+ * @param string $size          Size of preview.
  *
  * @return mixed|void
  *
  * @since BuddyBoss 1.4.0
  */
-function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
+function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'medium' ) {
 	$attachment_url = '';
+	$extension      = bp_document_extension( $attachment_id );
 
-	if( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		$get_preview           = $preview_attachment_id;
-		$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
-		if( ! $preview_attachment_id ) {
-			$preview_attachment_id = $get_preview;
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		$document = new BP_Document( $document_id );
+
+		$upload_directory       = wp_get_upload_dir();
+		$document_symlinks_path = bp_document_symlink_path();
+
+		$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
+		if ( ! file_exists( $preview_attachment_path ) ) {
+			bp_document_create_symlinks( $document );
 		}
-//		$document_id     = 'forbidden_' . $document_id;
-//		$attachment_id   = 'forbidden_' . $preview_attachment_id;
-//		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-//		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-//			$attachment_url = home_url( '/' ) . 'bb-platform-document-preview?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
-//		}
-//		$document_id     = 'forbidden_' . $document_id;
-//		$attachment_id   = 'forbidden_' . $preview_attachment_id;
-//		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-//		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-//			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
-//		// WP OFFLOAD MEDIA Support.
-//		} elseif( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-//			$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-//			$is_image                   = wp_get_attachment_url( $preview_attachment_id );
-//			if( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] && $is_image && @getimagesize($is_image) ) {
-//				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ) . '&id2=' . base64_encode( 'aws' );
-//			}
-//		}
-
-		if ( ! defined( 'BP_DOCUMENT_DIR_SYMLINK' ) ) {
-			define( 'BP_DOCUMENT_DIR_SYMLINK', 'APMMFXGh0p' );
-		}
-
-		if ( ! defined( 'BP_DOCUMENT_CHILD_DIR_SYMLINK' ) ) {
-			define( 'BP_DOCUMENT_CHILD_DIR_SYMLINK', 'uLFgQH2hF5' );
-		}
-
-		$upload_dir = wp_upload_dir();
-		$upload_dir = $upload_dir['basedir'];
-
-		$parent_directory_name = $upload_dir . '/bp-platform-' . md5( BP_DOCUMENT_DIR_SYMLINK . BP_DOCUMENT_CHILD_DIR_SYMLINK . 'preview' );
-		if ( ! is_dir( $parent_directory_name ) ) {
-			wp_mkdir_p( $parent_directory_name );
-			chmod( $parent_directory_name, 0777 );
-		}
-
-		$inner_directory_name  = $parent_directory_name . '/' . md5( BP_DOCUMENT_DIR_SYMLINK . 'bb_documents' );
-		if ( ! is_dir( $inner_directory_name ) ) {
-			wp_mkdir_p( $inner_directory_name );
-			chmod( $inner_directory_name, 0777 );
-		}
-
-//		$timestamp_folder_create = $inner_directory_name . '/WARNING_BB_DOCUMENTS_DO_NOT_DELETE';
-//		if ( ! is_dir( $timestamp_folder_create ) ) {
-//			wp_mkdir_p( $timestamp_folder_create );
-//			chmod( $timestamp_folder_create, 0777 );
-//		}
-
-		$current_timestamp_file = $inner_directory_name . '/timestamp_bb_documents';
-
-		if ( ! file_exists( $current_timestamp_file ) ) {
-			$file_handle = fopen( $current_timestamp_file, 'a+' );
-			fwrite( $file_handle, '' );
-			fclose( $file_handle );
-		}
-
-		$current_timestamp_file_timestamp = filemtime( $current_timestamp_file );
-
-		if ( ( $current_timestamp_file_timestamp + ( 60*5 ) ) < time() ) {
-			$current_timestamp_file_timestamp = time();
-			touch( $current_timestamp_file, $current_timestamp_file_timestamp );
-
-			$all_dirs = glob( $inner_directory_name . '/*', GLOB_ONLYDIR );
-			if ( ! empty( $all_dirs ) ) {
-				foreach ( $all_dirs as $dir ) {
-					$dir_handle = opendir( $dir );
-					if ( ! $dir_handle ) {
-						return false;
-					}
-					while ( $file = readdir( $dir_handle ) ) {
-						if ( $file != "." && $file != ".." ) {
-							if ( ! is_dir( $dir . "/" . $file ) ) {
-								unlink( $dir . "/" . $file );
-							}
-						}
-					}
-					closedir( $dir_handle );
-					rmdir( $dir );
-				}
-			}
-		}
-
-		$symlink_timestamp_folder = $inner_directory_name . '/' . $current_timestamp_file_timestamp;
-		if ( ! is_dir( $symlink_timestamp_folder ) ) {
-			wp_mkdir_p( $symlink_timestamp_folder );
-			chmod( $symlink_timestamp_folder, 0777 );
-		}
-
-		$attachment_url = $inner_directory_name . '/' . $current_timestamp_file_timestamp . '/' . md5( BP_DOCUMENT_DIR_SYMLINK . $document_id ) . '_full';
-
-		$upload_directory = wp_get_upload_dir();
-		if ( ! file_exists( $attachment_url ) ) {
-			$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-			@symlink( $output_file_src, $attachment_url );
-		}
-
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_url );
-
+		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 	}
 
-	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+	if ( in_array( $extension, array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() ), true ) ) {
+		$document = new BP_Document( $document_id );
+
+		$upload_directory       = wp_get_upload_dir();
+		$document_symlinks_path = bp_document_symlink_path();
+
+		$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+		if ( ! file_exists( $preview_attachment_path ) ) {
+			bp_document_create_symlinks( $document );
+		}
+		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+	}
+
+	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension );
 }
 
 /**
@@ -1255,16 +1175,24 @@ function bp_document_mirror_text( $attachment_id ) {
  *
  * @since BuddyBoss 1.4.0
  */
-function bp_document_get_preview_audio_url( $document_id, $extension, $attachment_id ) {
+function bp_document_get_preview_audio_url( $document_id, $attachment_id ) {
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$passed_attachment_id   = $attachment_id;
-		$document_id            = 'forbidden_' . $document_id;
-		$attachment_id          = 'forbidden_' . $attachment_id;
-		$output_file_src         = get_attached_file( $passed_attachment_id );
 		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src) ) {
-			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+
+			if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+				$document = new BP_Document( $document_id );
+
+				$upload_directory       = wp_get_upload_dir();
+				$document_symlinks_path = bp_document_symlink_path();
+
+				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+				if ( ! file_exists( $preview_attachment_path ) ) {
+					bp_document_create_symlinks( $document );
+				}
+				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+			}
 		}
 	}
 

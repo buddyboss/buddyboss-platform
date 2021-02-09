@@ -231,8 +231,8 @@ abstract class BP_Moderation_Abstract {
 			)
 			|| bp_is_moderation_content_reporting_enable( 0, $this->item_type )
 		) {
-			$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
-		    AND 
+			$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL )
+		    AND
 		    ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
 		}
 

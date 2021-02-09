@@ -68,6 +68,12 @@ add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
 
+// Delete symlinks for documents when before saved.
+add_action( 'bp_document_before_save', 'bp_document_delete_symlinks' );
+
+// Create symlinks for documents when saved.
+add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
+
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {

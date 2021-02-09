@@ -3720,3 +3720,277 @@ function bp_document_get_report_link( $args = array() ) {
 
 	return apply_filters( 'bp_document_get_report_link', $report_btn, $args );
 }
+
+function bp_document_symlink_path() {
+	add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
+
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 );
+	}
+
+	$document_symlinks_path = $platform_previews_path . '/' . md5( 'bb-documents' );
+	if ( ! is_dir( $document_symlinks_path ) ) {
+		wp_mkdir_p( $document_symlinks_path );
+		chmod( $document_symlinks_path, 0755 );
+	}
+	remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+
+	return $document_symlinks_path;
+}
+
+/**
+ * Delete document previews/symlinks.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_document_delete_document_previews() {
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
+
+	$parent_directory_name = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $parent_directory_name ) ) {
+		return;
+	}
+
+	$inner_directory_name = $parent_directory_name . '/' . md5( 'bb-documents' );
+	if ( ! is_dir( $inner_directory_name ) ) {
+		return;
+	}
+	$dir          = opendir( $inner_directory_name );
+	$five_minutes = strtotime( '-5 minutes' );
+	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
+		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {
+			@unlink( $inner_directory_name . '/' . $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		}
+	}
+	closedir( $dir );
+}
+
+// Schedule cron.
+//bp_core_schedule_cron( 'delete_document_previews', 'bp_document_delete_document_previews' );
+
+/**
+ * Create symlink for a document.
+ *
+ * @param object $document BP_Document Object.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_document_create_symlinks( $document ) {
+	// Check if document is id of document, create document object.
+	if ( ! $document instanceof BP_Document && is_int( $document ) ) {
+		$document = new BP_Document( $document );
+	}
+
+	// Return if no document found.
+	if ( empty( $document ) ) {
+		return;
+	}
+
+	// Get documents previews symlink directory path.
+	$document_symlinks_path = bp_document_symlink_path();
+	$attachment_id          = $document->attachment_id;
+	$extension              = bp_document_extension( $attachment_id );
+	$attached_file          = get_attached_file( $attachment_id );
+	$privacy                = $document->privacy;
+
+	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+		$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
+		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+			symlink( $attached_file, $attachment_path );
+		}
+	}
+
+	if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
+		$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
+		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+			symlink( $attached_file, $attachment_path );
+		}
+	}
+
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
+		$file            = image_get_intermediate_size( $attachment_id, 'medium' );
+
+		$attached_file_info = pathinfo( $attached_file );
+		$file_path          = '';
+		if ( ! empty( $attached_file_info['dirname'] ) ) {
+			$file_path = $attached_file_info['dirname'];
+			$file_path = $file_path . '/' . $file['file'];
+		}
+
+		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+			symlink( $file_path, $attachment_path );
+		}
+
+		$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'large' );
+		$file            = image_get_intermediate_size( $attachment_id, 'large' );
+
+		$file_path = '';
+		if ( ! empty( $attached_file_info['dirname'] ) ) {
+			$file_path = $attached_file_info['dirname'];
+			$file_path = $file_path . '/' . $file['file'];
+		}
+
+		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+			symlink( $file_path, $attachment_path );
+		}
+	}
+}
+
+/**
+ * Delete symlink for a document.
+ *
+ * @param object $document BP_Document Object.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_document_delete_symlinks( $document ) {
+	// Check if document is id of document, create document object.
+	if ( $document instanceof BP_Document ) {
+		$document_id = $document->id;
+	} elseif ( is_int( $document ) ) {
+		$document_id = $document;
+	}
+
+	$old_document = new BP_Document( $document_id );
+
+	// Return if no document found.
+	if ( empty( $old_document ) ) {
+		return;
+	}
+
+	// Get documents previews symlink directory path.
+	$document_symlinks_path = bp_document_symlink_path();
+	$attachment_id          = $old_document->attachment_id;
+
+	$privacy         = $old_document->privacy;
+	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'medium' );
+
+	if ( file_exists( $attachment_path ) ) {
+		unlink( $attachment_path );
+	}
+
+	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'large' );
+
+	if ( file_exists( $attachment_path ) ) {
+		unlink( $attachment_path );
+	}
+}
+
+/**
+ * Called on 'wp_image_editors' action.
+ * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
+ */
+function bp_document_include_wp_image_editors( $image_editors ) {
+	if ( ! in_array( 'BP_GOPP_Image_Editor_GS', $image_editors, true ) ) {
+		if ( ! class_exists( 'BP_GOPP_Image_Editor_GS' ) ) {
+			if ( ! class_exists( 'WP_Image_Editor' ) ) {
+				require ABSPATH . WPINC . '/class-wp-image-editor.php';
+			}
+			require trailingslashit( dirname( __FILE__ ) ) . '/classes/class-bp-gopp-image-editor-gs.php';
+		}
+		array_unshift( $image_editors, 'BP_GOPP_Image_Editor_GS' );
+	}
+	return $image_editors;
+}
+
+/**
+ * Remove all temp directory.
+ *
+ * @param $dir
+ *
+ * @since BuddyBoss 1.4.0
+ */
+function bp_document_remove_temp_directory( $dir ) {
+	if ( is_dir( $dir ) ) {
+		$objects = scandir( $dir );
+		foreach ( $objects as $object ) {
+			if ( $object != '.' && $object != '..' ) {
+				if ( filetype( $dir . '/' . $object ) == 'dir' ) {
+					bp_document_remove_temp_directory( $dir . '/' . $object );
+				} else {
+					unlink( $dir . '/' . $object );
+				}
+			}
+		}
+		reset( $objects );
+		rmdir( $dir );
+	}
+}
+
+function bp_document_generate_document_previews( $attachment_id ) {
+	$is_preview_generated = get_post_meta( $attachment_id, 'document_preview_generated', true );
+
+	if ( empty( $is_preview_generated ) ) {
+		$extension = bp_document_extension( $attachment_id );
+
+		if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
+			bp_document_generate_code_previews( $attachment_id );
+		}
+	}
+}
+
+function bp_document_generate_code_previews( $attachment_id ) {
+	$extension = bp_document_extension( $attachment_id );
+	if ( ! in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
+		return false;
+	}
+
+	$absolute_path = get_attached_file( $attachment_id );
+	if ( '' !== $absolute_path && '' !== basename( $absolute_path ) && strstr( $absolute_path, 'bb_documents/' ) ) {
+		$upload_dir = wp_upload_dir();
+		$upload_dir = $upload_dir['basedir'];
+
+		// Create temp folder.
+		$upload_dir     = $upload_dir . '/preview-image-folder-' . time();
+		$preview_folder = $upload_dir;
+		// If folder not exists then create.
+		if ( ! is_dir( $upload_dir ) ) {
+
+			// Create temp folder.
+			wp_mkdir_p( $upload_dir );
+			chmod( $upload_dir, 0777 );
+
+			// Create given main parent folder.
+			$preview_folder = $upload_dir;
+			wp_mkdir_p( $preview_folder );
+
+			$file_name     = basename( $absolute_path );
+			$extension_pos = strrpos( $file_name, '.' ); // find position of the last dot, so where the extension starts.
+			$thumb         = substr( $file_name, 0, $extension_pos ) . '_thumb' . substr( $file_name, $extension_pos );
+			copy( $absolute_path, $preview_folder . '/' . $thumb );
+
+		}
+
+		$files      = scandir( $preview_folder );
+		$first_file = $preview_folder . '/' . $files[2];
+		bp_document_chmod_r( $preview_folder );
+
+		$image_data  = file_get_contents( $first_file );
+		$words       = 1000;
+		$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
+		update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+		update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
+		bp_document_remove_temp_directory( $preview_folder );
+	}
+}
+
+function bp_document_get_extension_description( $extension ) {
+	$extension_lists       = bp_document_extensions_list();
+	$extension_description = '';
+
+	if ( ! empty( $extension_lists ) ) {
+		$extension_lists = array_column( $extension_lists, 'description', 'extension' );
+		$extension_name  = '.' . $extension;
+		if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
+			$extension_description = $extension_lists[ $extension_name ];
+		}
+	}
+
+	return $extension_description;
+}

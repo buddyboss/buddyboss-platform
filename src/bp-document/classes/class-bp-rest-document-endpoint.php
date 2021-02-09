@@ -1368,7 +1368,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'</div>';
 
 			}
-			$attachment_url = bp_document_get_preview_image_url( $document->id, $data['extension'], $document->attachment_id );
+			$attachment_url = bp_document_get_preview_url( $document->id, $document->attachment_id );
 			if ( $attachment_url ) {
 				echo '<div class="document-preview-wrap">' .
 					'<img src="' . esc_url_raw( $attachment_url ) . '" alt="" />' .
