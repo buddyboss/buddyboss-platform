@@ -283,7 +283,7 @@ function bp_nouveau_ajax_joinleave_group() {
 					'type'     => 'success',
 				);
 
-				if ( $group->status == 'hidden' ) {
+				if ( 'hidden' === $group->status ) {
 					$response['group_url'] = esc_url( bp_get_groups_directory_permalink() );
 				}
 
