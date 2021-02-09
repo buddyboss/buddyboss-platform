@@ -3770,9 +3770,6 @@ function bp_document_delete_document_previews() {
 	closedir( $dir );
 }
 
-// Schedule cron.
-//bp_core_schedule_cron( 'delete_document_previews', 'bp_document_delete_document_previews' );
-
 /**
  * Create symlink for a document.
  *
