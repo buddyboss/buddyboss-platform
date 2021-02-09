@@ -143,6 +143,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
 		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_media_per_batch() ) ),
+		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 	);
 
 	if ( bp_is_single_album() ) {
