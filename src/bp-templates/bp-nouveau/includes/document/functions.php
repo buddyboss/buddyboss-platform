@@ -1068,30 +1068,35 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'med
 	$attachment_url = '';
 	$extension      = bp_document_extension( $attachment_id );
 
-	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		$document = new BP_Document( $document_id );
+	$do_symlink = apply_filters( 'bp_document_do_symlink', true, $document_id, $attachment_id, $size );
 
-		$upload_directory       = wp_get_upload_dir();
-		$document_symlinks_path = bp_document_symlink_path();
+	if ( $do_symlink ) {
 
-		$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
-		if ( ! file_exists( $preview_attachment_path ) ) {
-			bp_document_create_symlinks( $document );
+		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+			$document = new BP_Document( $document_id );
+
+			$upload_directory       = wp_get_upload_dir();
+			$document_symlinks_path = bp_document_symlink_path();
+
+			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
+			if ( ! file_exists( $preview_attachment_path ) ) {
+				bp_document_create_symlinks( $document );
+			}
+			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		}
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-	}
 
-	if ( in_array( $extension, array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() ), true ) ) {
-		$document = new BP_Document( $document_id );
+		if ( in_array( $extension, array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() ), true ) ) {
+			$document = new BP_Document( $document_id );
 
-		$upload_directory       = wp_get_upload_dir();
-		$document_symlinks_path = bp_document_symlink_path();
+			$upload_directory       = wp_get_upload_dir();
+			$document_symlinks_path = bp_document_symlink_path();
 
-		$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
-		if ( ! file_exists( $preview_attachment_path ) ) {
-			bp_document_create_symlinks( $document );
+			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+			if ( ! file_exists( $preview_attachment_path ) ) {
+				bp_document_create_symlinks( $document );
+			}
+			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		}
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 	}
 
 	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension );
