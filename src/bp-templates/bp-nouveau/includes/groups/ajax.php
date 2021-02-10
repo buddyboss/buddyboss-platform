@@ -1022,6 +1022,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
 		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
 		$total_count = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total', $group_members['count'] );
+		$count       = groups_get_group_members( array( 'group_id' => bp_get_current_group_id() ) );
 
 		wp_send_json_success(
 			array(
@@ -1030,12 +1031,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				'page'        => $page,
 				'pagination'  => $paginate,
 				'total_count' => __( 'Members', 'buddyboss' ),
-				'show_all' => ( ( $total_count + 1 ) === groups_get_current_group()->total_member_count  ) ? false : true,
+				'show_all' => ( ( $total_count ) ===  $count['count'] ) ? false : true,
 			)
 		);
-
-
-
 
 	}
 }
