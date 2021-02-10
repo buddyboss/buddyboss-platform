@@ -1148,6 +1148,26 @@ function bp_nouveau_ajax_groups_send_message() {
 
 			wp_send_json_error( $response );
 		}
+
+		// Check if force friendship is enabled and check recipients.
+        $not_friends =array();
+		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+			foreach ( $members as $member ) {
+				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+					$not_friends[] = bp_core_get_user_displayname( $member );
+				}
+			}
+		}
+
+		if ( ! empty( $not_friends ) ) {
+			$response['feedback'] = sprintf(
+				'%1$s <strong>%2$s</strong>',
+				( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss' ),
+				implode( ', ', $not_friends )
+			);
+			wp_send_json_error( $response );
+		}
+
 	}
 
 	if ( empty( $members ) ) {
