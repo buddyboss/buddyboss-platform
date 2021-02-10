@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-02-09 14:33:34+00:00\n"
+"POT-Creation-Date: 2021-02-10 04:56:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20739,7 +20739,7 @@ msgid "Your message was not sent. Please enter a subject line."
 msgstr ""
 
 #: bp-messages/actions/compose.php:38 bp-messages/bp-messages-functions.php:74
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1101
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1105
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:148
 msgid "Your message was not sent. Please enter some content."
 msgstr ""
@@ -21156,7 +21156,7 @@ msgid "Your message was sent privately to %s members of this group."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:995
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1938
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1942
 msgid "Your message was sent privately to all members of this group."
 msgstr ""
 
@@ -21200,7 +21200,7 @@ msgid "Your message was sent to %s members of this group."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1271
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:2018
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:2022
 msgid "Your message was sent to all members of this group."
 msgstr ""
 
@@ -25434,7 +25434,7 @@ msgid "There are no more pending invitations for the group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:875
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1057
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1061
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1564
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
@@ -25449,32 +25449,32 @@ msgstr ""
 msgid "No Access"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1141
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1145
 msgid "You don't have access to send the message to this members:  "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1141
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1145
 msgid "You don't have access to send the message to this member:  "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1150
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1154
 msgid "No Members Selected."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1155
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1159
 msgid "No group Selected."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1936
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1940
 msgid "Your message was sent privately to %%count%% members of this group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1941
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:2020
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1945
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:2024
 msgid "View message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:2016
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:2020
 msgid "Your message was sent to %%count%% members of this group."
 msgstr ""
 

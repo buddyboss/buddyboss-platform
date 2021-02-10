@@ -123,6 +123,12 @@ window.bp = window.bp || {};
 							if ( typeof response.data.total_page !== 'undefined' ) {
 								total_pages = response.data.total_page;
 							}
+
+							if ( $( '#group-messages-container .bb-groups-messages-left .bp-group-message-wrap #bp-group-message-see-all-checkbox' ).length && ! response.data.show_all ) {
+								$( '#group-messages-container .bb-groups-messages-left .bp-group-message-wrap' ).hide();
+							} else if ( $( '#group-messages-container .bb-groups-messages-left .bp-group-message-wrap #bp-group-message-see-all-checkbox' ).length && response.data.show_all ) {
+								$( '#group-messages-container .bb-groups-messages-left .bp-group-message-wrap' ).show();
+							}
 						} else if ( response.success && 'no_member' === response.data.results ) {
 							$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback' ).removeClass( 'bp-messages-feedback-hide' );
 							$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback' ).addClass( 'feedback' );

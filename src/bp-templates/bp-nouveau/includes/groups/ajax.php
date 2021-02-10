@@ -1030,8 +1030,12 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				'page'        => $page,
 				'pagination'  => $paginate,
 				'total_count' => __( 'Members', 'buddyboss' ),
+				'show_all' => ( ( $total_count + 1 ) === groups_get_current_group()->total_member_count  ) ? false : true,
 			)
 		);
+
+
+
 
 	}
 }
