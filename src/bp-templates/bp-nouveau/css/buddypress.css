@@ -18785,8 +18785,7 @@ span.icons:before {
   display: flex;
 }
 
-#group-messages-container div#group-messages-new-submit #send_group_message_button.loading:after,
-.bb-report-type-pagination .page-data a.load_more_rl.loading:after {
+#group-messages-container div#group-messages-new-submit #send_group_message_button.loading:after {
   content: "\e838";
   font-family: "bb-icons";
   /* stylelint-disable-line */
@@ -19359,12 +19358,4 @@ span.icons:before {
     max-width: calc(100% - 90px);
     width: auto;
   }
-}
-.bb-report-type-pagination {
-  margin: 30px 0 10px;
-}
-.bb-report-type-pagination p.page-data {
-  display: block;
-  margin: 0 auto;
-  text-align: center;
 }

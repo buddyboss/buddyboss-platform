@@ -692,95 +692,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
-			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 		},
-		/**
-		 * Pagination for message block list
-		 * @returns {boolean}
-		 */
-		messageBlockListPagination: function ( e ) {
-			e.preventDefault();
-			var threadId = '';
-			if ( $(this).parent('.page-data').length ) {
-				threadId = parseInt( $(this).parent().attr('data-thread-id') );
-			}
-			var current_page = parseInt( $(this).attr('data-cp') );
-			var total_pages  = parseInt( $(this).attr('data-tp') );
-			var postData = {
-				'page_no'  : current_page,
-				'thread_id': threadId,
-			}
-			$.ajax({
-				type: 'POST',
-				url: BP_Nouveau.ajaxurl,
-				data: {
-					'action'   : 'next_recepient_list_for_blocks',
-					'post_data': postData,
-				},
-				beforeSend: function() {
-					$( '.load_more_rl' ).addClass('loading');
-				},
-				success: function( response ) {
-					if ( response.success && response.data && '' !== response.data.content ) {
-						var moderation_type = response.data.recipients.moderation_type;
-						$.each(response.data.recipients.members, function(index, item) {
-							if ( '' !== item ) {
-								var userItemWrap = document.createElement( 'div' );
-								userItemWrap.setAttribute( 'class', 'user-item-wrp' );
-								userItemWrap.setAttribute( 'id', 'user-' + item.id );
-								var userAvtar = document.createElement( 'div' );
-								userAvtar.setAttribute( 'class', 'user-avatar' );
-								var userAvtarImg = document.createElement( 'img' );
-								userAvtarImg.setAttribute( 'src', item.avatar );
-								userAvtarImg.setAttribute( 'alt', item.user_name );
-								userAvtar.appendChild( userAvtarImg );
-								var userName = document.createElement( 'div' );
-								userName.setAttribute( 'class', 'user-name' );
-								var userNameText = document.createTextNode( item.user_name );
-								userName.appendChild( userNameText );
-								var userAction = document.createElement( 'div' );
-								userAction.setAttribute( 'class', 'user-actions' );
-								if ( true === item.is_blocked ) {
-									var userActionATag = document.createElement( 'a' );
-									userActionATag.setAttribute( 'class', 'blocked-member button small disabled' );
-									userActionATag.setAttribute( 'id', 'reported-user' );
-									var userActionATagText = document.createTextNode( 'Blocked' );
-									userActionATag.appendChild( userActionATagText );
-									userAction.appendChild( userActionATag );
-								} else {
-									var userActionATag2 = document.createElement( 'a' );
-									userActionATag2.setAttribute( 'class', 'block-member button small' );
-									userActionATag2.setAttribute( 'id', 'report-content-' + moderation_type );
-									userActionATag2.setAttribute( 'data-bp-content-id', item.id );
-									userActionATag2.setAttribute( 'data-bp-content-type', moderation_type );
-									userActionATag2.setAttribute( 'data-bp-nonce', 'wp_create_noncebp-moderation-content' );
-									var userActionATagText2 = document.createTextNode( 'Block' );
-									userActionATag2.appendChild( userActionATagText2 );
-									userAction.appendChild( userActionATag2 );
-								}
-								userItemWrap.appendChild( userAvtar );
-								userItemWrap.appendChild( userName );
-								userItemWrap.appendChild( userAction );
-								$( '.user-item-wrp:last' ).after( userItemWrap );
-							}
-						});
-						if ( total_pages === current_page ) {
-							$( '.load_more_rl' ).hide();
-						} else {
-							current_page++;
-							$(this).attr('data-cp', current_page);
-						}
-					}
-				},
-				error: function( xhr ) {
 
-				},
-				complete: function() {
-					$( '.load_more_rl' ).removeClass( 'loading' );
-				},
-			});
-			return false;
-		},
 		/**
 		 * [switchGridList description]
 		 *
@@ -1958,11 +1871,6 @@ window.bp = window.bp || {};
 						_this.handleReportError( response.data.message.errors, e.currentTarget );
 					}
 				} );
-			} );
-			$( document ).on( 'click', '.pag-data a', function ( e ) {
-				e.preventDefault();
-				console.log($(this).html());
-				return false;
 			} );
 		},
 		resetReportPopup: function () {
