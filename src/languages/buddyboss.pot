@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-02-10 06:26:30+00:00\n"
+"POT-Creation-Date: 2021-02-10 13:07:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20739,7 +20739,7 @@ msgid "Your message was not sent. Please enter a subject line."
 msgstr ""
 
 #: bp-messages/actions/compose.php:38 bp-messages/bp-messages-functions.php:74
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1105
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1101
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:148
 msgid "Your message was not sent. Please enter some content."
 msgstr ""
@@ -21156,7 +21156,7 @@ msgid "Your message was sent privately to %s members of this group."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:995
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1962
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1958
 msgid "Your message was sent privately to all members of this group."
 msgstr ""
 
@@ -21200,7 +21200,7 @@ msgid "Your message was sent to %s members of this group."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1271
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:2042
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:2038
 msgid "Your message was sent to all members of this group."
 msgstr ""
 
@@ -25434,7 +25434,7 @@ msgid "There are no more pending invitations for the group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:875
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1061
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1057
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1564
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
@@ -25446,43 +25446,43 @@ msgid "Add Recipient"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:966
-msgid "No Access"
+msgid "Restricted"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1145
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1141
 msgid "You don't have access to send the message to this members:  "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1145
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1141
 msgid "You don't have access to send the message to this member:  "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1165
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1161
 msgid "You need to be connected with this members in order to send a message:  "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1165
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1161
 msgid "You need to be connected with this member in order to send a message:  "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1174
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1170
 msgid "No Members Selected."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1179
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1175
 msgid "No group Selected."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1960
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1956
 msgid "Your message was sent privately to %%count%% members of this group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:1965
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:2044
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:1961
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:2040
 msgid "View message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:2040
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:2036
 msgid "Your message was sent to %%count%% members of this group."
 msgstr ""
 
@@ -25579,7 +25579,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1297
-msgid "You don't have a access to send a private message to other group members."
+msgid "You are not allowed to send private messages to any member of this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1299
