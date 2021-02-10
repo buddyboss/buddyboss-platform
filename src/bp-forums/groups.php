@@ -487,7 +487,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$group          = groups_get_group( $forum_group_id );
 				$group_url      = bp_get_group_link( $group );
 				
-				bp_core_add_message( __( "This forum associated with this $group_url group", 'buddyboss' ), 'error' );
+				bp_core_add_message( sprintf( __( 'This forum associated with this %1$s group', 'buddyboss' ), $group_url ), 'error' );
 			}
 
 			bbp_update_forum_group_ids( $forum_id, (array) $group_id );
