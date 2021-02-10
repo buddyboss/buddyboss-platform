@@ -5481,8 +5481,7 @@ window.bp = window.bp || {};
 			self.setCurrentMedia(id);
 			self.showMedia();
 			self.navigationCommands();
-
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && self.current_media.privacy !== 'comment' ) {
 				self.getActivity();
 			} else {
 				self.getMediasDescription();
@@ -5915,7 +5914,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
-				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && activity_id != self.current_media.activity_id ) {
+				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && self.current_media.privacy !== 'comment' ) {
 					self.getActivity();
 				} else {
 					self.getMediasDescription();
