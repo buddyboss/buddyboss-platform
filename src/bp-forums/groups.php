@@ -357,6 +357,60 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/**
+		 * Get group ids from individual forum id
+		 *
+		 * @since BuddyBoss 1.5.7
+		 *
+		 * @param int $forum_id
+		 * @return array
+		 */
+		public function get_forum_associated_group_ids( $forum_id ) {
+			$all_group_forums = $this->get_group_associated_forum_ids();
+			$group_ids        = array();
+
+			// set all groups id within an array.
+			foreach ( $all_group_forums as $group_forum ) {
+				foreach ( $group_forum->meta_value as $group_froum_id ) {
+					if ( $group_froum_id === $forum_id ) {
+						$group_ids[] = $group_forum->group_id;
+					}
+				}
+			}
+
+			return $group_ids;
+		}
+
+		/**
+		 * Is the forum associated with others group
+		 *
+		 * @since BuddyBoss 1.5.7
+		 *
+		 * @param array $forum_ids
+		 * @param int   $group_id
+		 * @return Boolean
+		 */
+		public function has_forum_group( $forum_ids, $group_id ) {
+			$group_ids = array();
+			
+			// set all groups id within an array.
+			foreach ( (array) $forum_ids as $forum_id ) {
+				$forum_groups = $this->get_forum_associated_group_ids( $forum_id );
+				$group_ids    = array_merge( $group_ids, $forum_groups );
+			}
+
+			// Exclude current group.
+			if ( in_array( $group_id, $group_ids ) ) {
+				return false;
+			}
+
+			if ( empty( $group_ids ) ) {
+				return false;
+			}
+
+			return true;
+		}
+
+		/**
 		 * Save the Group Forum data on edit
 		 *
 		 * @since bbPress (r3465)
@@ -422,8 +476,20 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
 			}
 
-			// Update the group ID and forum ID relationships
-			bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
+			// Is the forum associated with others group
+			if ( ! $this->has_forum_group( (array) $forum_ids, $group_id ) ) {
+				// Update the group ID and forum ID relationships
+				bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
+			} else {
+
+				$forum_group_id = bbp_get_forum_group_ids( $forum_id );
+				$forum_group_id = (int) ( is_array( $forum_group_id ) ? $forum_group_id[0] : $forum_group_id );
+				$group          = groups_get_group( $forum_group_id );
+				$group_url      = bp_get_group_link( $group );
+				
+				bp_core_add_message( __( "This forum associated with this $group_url group", 'buddyboss' ), 'error' );
+			}
+
 			bbp_update_forum_group_ids( $forum_id, (array) $group_id );
 
 			// Update the group forum setting
