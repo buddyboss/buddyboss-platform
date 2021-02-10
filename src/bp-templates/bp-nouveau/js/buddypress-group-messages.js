@@ -157,10 +157,22 @@ window.bp = window.bp || {};
 
 			$( '.bb-groups-messages-left-inner .bb-panel-head input#bp-group-message-see-all-checkbox' ).on(
 				'change',
-				function () {
+				function ( e ) {
+
+					var $this = $( this );
+
+					if ( $this.hasClass('loading') ) {
+						e.preventDefault();
+						return false;
+					} else {
+						$this.addClass('loading').prop( 'disabled', true );
+
+					}
+
+					$this.closest( '.bp-group-message-wrap' ).addClass( 'is_loading' );
 
 					var type = 'all';
-					if ( $( this ).is( ':checked' ) ) {
+					if ( $this.is( ':checked' ) ) {
 						show_all = 'yes';
 						type = 'individual';
 					} else {
@@ -182,7 +194,7 @@ window.bp = window.bp || {};
 						{
 							type: 'POST',
 							url: BP_Nouveau.ajaxurl,
-							async: false,
+							async: true,
 							data: data,
 							success: function (response) {
 								if ( response.success && 'no_member' !== response.data.results ) {
@@ -220,6 +232,8 @@ window.bp = window.bp || {};
 									$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
 									feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 								}
+								$this.removeClass('loading').prop( 'disabled', false );
+								$this.closest( '.bp-group-message-wrap' ).removeClass( 'is_loading' );
 							}
 						}
 					);

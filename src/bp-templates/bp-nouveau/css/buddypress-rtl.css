@@ -18491,6 +18491,22 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   line-height: 1;
 }
 
+.bb-groups-messages-left .bp-group-message-wrap.is_loading {
+  position: relative;
+}
+
+.bb-groups-messages-left .bp-group-message-wrap.is_loading:before {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 14px;
+  line-height: 1;
+  animation: spin 2s infinite linear;
+  position: absolute;
+  right: -20px;
+  top: 3px;
+}
+
 .bp-group-message-label {
   font-size: 13px;
   margin: 0;
