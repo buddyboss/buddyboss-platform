@@ -1701,12 +1701,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
 						'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
-						'type'     => 'error',
+						'type'     => 'info',
 					);
 				} else {
 					$thread->feedback_error = array(
 						'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
-						'type'     => 'error',
+						'type'     => 'info',
 					);
 				}
 				break;
@@ -1721,12 +1721,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$thread->feedback_error = array(
 				'feedback' => __( "You can't message suspended member.", 'buddyboss' ),
-				'type'     => 'error',
+				'type'     => 'info',
 			);
 		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 			$thread->feedback_error = array(
 				'feedback' => __( "You can't message a blocked member.", 'buddyboss' ),
-				'type'     => 'error',
+				'type'     => 'info',
 			);
 		}
 	}
