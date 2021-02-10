@@ -1022,7 +1022,14 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
 		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
 		$total_count = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total', $group_members['count'] );
-		$count       = groups_get_group_members( array( 'group_id' => bp_get_current_group_id() ) );
+
+		if ( function_exists( 'bb_access_control_bp_group_member_query_group_member_ids' ) ) {
+			remove_filter( 'bp_group_member_query_group_member_ids', 'bb_access_control_bp_group_member_query_group_member_ids', PHP_INT_MAX, 2 );
+			$count       = groups_get_group_members( array( 'group_id' => bp_get_current_group_id() ) );
+			add_filter( 'bp_group_member_query_group_member_ids', 'bb_access_control_bp_group_member_query_group_member_ids', PHP_INT_MAX, 2 );
+		} else {
+			$count       = groups_get_group_members( array( 'group_id' => bp_get_current_group_id() ) );
+		}
 
 		wp_send_json_success(
 			array(
@@ -1031,7 +1038,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				'page'        => $page,
 				'pagination'  => $paginate,
 				'total_count' => __( 'Members', 'buddyboss' ),
-				'show_all' => ( ( $total_count ) ===  $count['count'] ) ? false : true,
+				'show_all' => ( (int) $total_count ===  (int) $count['count'] ) ? false : true,
 			)
 		);
 
