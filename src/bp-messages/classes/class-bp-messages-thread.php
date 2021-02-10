@@ -126,6 +126,7 @@ class BP_Messages_Thread {
 	 * @param array  $args      Array of arguments for thread querying.
 	 *
 	 * @see   BP_Messages_Thread::populate() for full description of parameters.
+	 *
 	 */
 	public function __construct( $thread_id = false, $order = 'ASC', $args = array() ) {
 		if ( $thread_id ) {
@@ -182,7 +183,6 @@ class BP_Messages_Thread {
 
 		// Get messages for thread.
 		$this->messages       = self::get_messages( $this->thread_id, $this->messages_before, $this->messages_perpage, $this->messages_order );
-
 		$this->last_message   = self::get_last_message( $this->thread_id );
 		$this->total_messages = self::get_messages_count( $this->thread_id );
 
@@ -204,9 +204,6 @@ class BP_Messages_Thread {
 
 		// Fetch the recipients.
 		$this->recipients = $this->get_recipients();
-
-		// Fetch the recipients count. //message_imp
-		$this->total_recipients_count = $this->get_recipients_count();
 
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
@@ -266,7 +263,7 @@ class BP_Messages_Thread {
 		}
 
 		$thread_id = (int) $thread_id;
-		$user_id =	bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+
 		$recipients = wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
 		if ( false === $recipients ) {
@@ -275,9 +272,8 @@ class BP_Messages_Thread {
 
 			$results = self::get(
 				array(
-					'per_page'        => bp_messages_recepients_per_page(), //- 1,
+					'per_page'        => - 1,
 					'include_threads' => array( $thread_id ),
-					'include_current_user' => (int) $user_id,
 				)
 			);
 
@@ -304,36 +300,6 @@ class BP_Messages_Thread {
 		 * @param int   $thread_id  ID of the current thread.
 		 */
 		return apply_filters( 'bp_messages_thread_get_recipients', $recipients, $thread_id );
-	}
-
-	/**
-	 * Returns recipients count for a message thread. //message_imp
-	 *
-	 * @since BuddyPress 1.0.0
-	 * @since BuddyPress 2.3.0 Added $thread_id as a parameter.
-	 *
-	 * @param int $thread_id The thread ID.
-	 *
-	 * @return array
-	 */
-	public function get_recipients_count( $thread_id = 0 ) {
-		if ( empty( $thread_id ) ) {
-			$thread_id = $this->thread_id;
-		}
-
-		$thread_id = (int) $thread_id;
-		$user_id =	bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
-			$results = self::get(
-				array(
-					'per_page'        => - 1,
-					'include_threads' => array( $thread_id ),
-					'fields'          => 'ids',
-					'count_total'     => true,
-					'exclude_current_user' => array( 1, $user_id ),
-				)
-			);
-
-		return apply_filters( 'bp_messages_thread_get_recipients_count', $results['total'], $thread_id );
 	}
 
 	/** Static Functions ******************************************************/
@@ -509,7 +475,6 @@ class BP_Messages_Thread {
 						'inclusive' => true,
 					),
 					'per_page'        => $perpage,
-
 				)
 			);
 
@@ -967,18 +932,18 @@ class BP_Messages_Thread {
 			$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
 
 			$participants_sql           = array();
-			$participants_sql['select'] = 'SELECT DISTINCT(r.user_id), u.display_name';
+			$participants_sql['select'] = "SELECT DISTINCT(r.user_id), u.display_name";
 			$participants_sql['from']   = "FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID";
-			$participants_sql['where']  = 'WHERE 1=1';
+			$participants_sql['where']  = "WHERE 1=1";
 			if ( ! empty( $user_threads_query ) ) {
 				$participants_sql['where'] .= " AND r.thread_id IN ($user_threads_query)";
 			}
-			$participants_sql['where_like'] = 'u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s';
+			$participants_sql['where_like'] = "u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s";
 
 			$participants_args = array(
 				$search_terms_like,
 				$search_terms_like,
-				$search_terms_like,
+				$search_terms_like
 			);
 
 			// Search in xprofile field.
@@ -990,16 +955,16 @@ class BP_Messages_Thread {
 
 				if ( isset( $split_name ) && isset( $split_name[0] ) && isset( $split_name[1] ) && ! empty( $split_name ) && ! empty( trim( $split_name[0] ) ) && ! empty( trim( $split_name[1] ) ) ) {
 					$participants_sql['where_like'] .= ' OR spd.value LIKE %s OR spd.value LIKE %s';
-					$participants_args[]             = $split_name[0];
-					$participants_args[]             = $split_name[1];
+					$participants_args[]            = $split_name[0];
+					$participants_args[]            = $split_name[1];
 				} else {
 					$participants_sql['where_like'] .= ' OR spd.value LIKE %s';
-					$participants_args[]             = $search_terms_like;
+					$participants_args[]            = $search_terms_like;
 				}
 			}
 
 			$participants_sql['where'] .= " AND ( {$participants_sql['where_like']} )";
-			$participants_sql           = "{$participants_sql['select']} {$participants_sql['from']} {$participants_sql['where']}";
+			$participants_sql          = "{$participants_sql['select']} {$participants_sql['from']} {$participants_sql['where']}";
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$current_user_participants = $wpdb->get_results( $wpdb->prepare( $participants_sql, $participants_args ) );
 
@@ -1080,11 +1045,11 @@ class BP_Messages_Thread {
 			}
 
 			if ( $current_user_participants_ids ) {
-				$user_ids = implode( ',', array_unique( $current_user_participants_ids ) );
+				$user_ids  = implode( ',', array_unique( $current_user_participants_ids ) );
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$where_sql = '( ' . $wpdb->prepare( "m.message LIKE %s OR r.user_id IN ({$user_ids})", $search_terms_like );
 				if ( ! empty( $group_thread_in ) ) {
-					$thread_in  = implode( ',', $group_thread_in );
+					$thread_in = implode( ',', $group_thread_in );
 					$where_sql .= " OR r.thread_id IN ({$thread_in})";
 				}
 				$where_sql .= ' )';
@@ -1598,7 +1563,7 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		$defaults = array(
-			'orderby'              => 'user_id',//id
+			'orderby'              => 'id',
 			'order'                => 'DESC',
 			'per_page'             => 20,
 			'page'                 => 1,
@@ -1612,8 +1577,6 @@ class BP_Messages_Thread {
 			'fields'               => 'all',
 			'count_total'          => false,
 			'exclude_active_users' => false,
-			'include_current_user' => false,
-			'exclude_current_user' => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1650,9 +1613,9 @@ class BP_Messages_Thread {
 
 		if ( null !== $r['is_new'] ) {
 			if ( 1 == $r['is_new'] ) {
-				$where_conditions['is_new'] = 'r.unread_count != 0';
+				$where_conditions['is_new'] = "r.unread_count != 0";
 			} else {
-				$where_conditions['is_new'] = 'r.unread_count = 0';
+				$where_conditions['is_new'] = "r.unread_count = 0";
 			}
 		}
 
@@ -1666,10 +1629,6 @@ class BP_Messages_Thread {
 
 		if ( true === $r['exclude_active_users'] ) {
 			$where_conditions['exclude_active_users'] = 'user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')';
-		}
-
-		if ( ! empty( $r['exclude_current_user'] ) ) {
-			$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_current_user'] ) .' )';
 		}
 
 		/* Order/orderby ********************************************/
@@ -1722,25 +1681,8 @@ class BP_Messages_Thread {
 		 */
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
 
-		if ( ! empty( $r['include_current_user'] ) ) {
-			$sv_products_request = array(
-				'select'     => 'SELECT DISTINCT ru.id',
-				'from'       => "{$bp->messages->table_name_recipients} as ru",
-				'where'      => " ru.user_id = " . $r['include_current_user'] . " AND ru.thread_id = " . $include_threads,
-			);
-			$sv_where = '';
-			if ( ! empty( $sv_products_request['where'] ) ) {
-				$sql['where'] = implode( ' AND ', $where_conditions );
-				$sv_where        = "WHERE {$sv_products_request['where']}";
-			}
+		$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
-			$paged_recipients_sql = "( {$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']}
-			{$sql['pagination']} )
-   UNION ( {$sv_products_request['select']} FROM {$sv_products_request['from']}
-   {$sv_where} )";
-		} else {
-			$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
-		}
 		/**
 		 * Filters the pagination SQL statement.
 		 *
@@ -1761,6 +1703,7 @@ class BP_Messages_Thread {
 		} elseif ( ! empty( $paged_recipient_ids ) ) {
 			$recipient_ids_sql      = implode( ',', array_map( 'intval', $paged_recipient_ids ) );
 			$recipient_data_objects = $wpdb->get_results( "SELECT r.* FROM {$bp->messages->table_name_recipients} r WHERE r.id IN ({$recipient_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
 			foreach ( (array) $recipient_data_objects as $mdata ) {
 				$recipient_data_objects[ $mdata->id ] = $mdata;
 			}
@@ -1768,6 +1711,7 @@ class BP_Messages_Thread {
 				$paged_recipients[] = $recipient_data_objects[ $paged_recipient_id ];
 			}
 		}
+
 		$retval = array(
 			'recipients' => $paged_recipients,
 			'total'      => 0,
@@ -1787,6 +1731,7 @@ class BP_Messages_Thread {
 			 * @param array  $r         Array of parsed arguments for the get method.
 			 */
 			$total_recipients_sql = apply_filters( 'bp_recipients_recipient_get_total_sql', $total_recipients_sql, $sql, $r );
+
 			$total_recipients = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total']  = $total_recipients;
 		}
@@ -1809,9 +1754,6 @@ class BP_Messages_Thread {
 		switch ( $orderby ) {
 			case 'thread_id':
 				$order_by_term = 'r.thread_id';
-				break;
-			case 'user_id':
-				$order_by_term = 'r.user_id';
 				break;
 			case 'id':
 			default:

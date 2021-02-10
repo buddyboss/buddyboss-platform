@@ -1,6 +1,7 @@
 <script type="text/html" id="tmpl-bp-messages-single-header">
-	<#    var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
-	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
+	<#    var other_recipients = _.reject(data.recipients, function(item) {    return item.is_you;    });
+
+	var current_user = _.find(data.recipients, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
 
@@ -134,11 +135,11 @@
 								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 							</header>
 							<div class="bb-report-type-wrp">
-								<#	_.reject(other_recipients, function(item) {
+								<# _.reject(other_recipients, function(item) {
 	                            if( false == item.can_be_blocked ) {
 	                                return false;
 	                            } #>
-								<div class="user-item-wrp" id="user-{{item.id}}">
+								<div class="user-item-wrp">
 									<div class="user-avatar">
 										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
 									</div>
@@ -159,18 +160,6 @@
 								</div>
 								<# }); #>
 							</div>
-							<# if ( 1 < data.recipients.total_pages ) { #>
-								<div class="bb-report-type-pagination">
-									<p class="page-data" data-thread-id="{{data.id}}">
-										<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
-										   class="load_more_rl button small"
-										   data-tp="{{data.recipients.total_pages}}"
-										   data-tc="{{data.recipients.count}}"
-										   data-pp="<?php echo esc_attr( bp_messages_recepients_per_page() ); ?>"
-										   data-cp="2"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-									</p>
-								</div>
-							<# } #>
 						</div>
 					</div>
 				</div>

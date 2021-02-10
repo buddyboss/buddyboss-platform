@@ -110,7 +110,7 @@ function bp_moderation_content_report() {
 		wp_send_json_error( $response );
 	}
 
-	$reports_terms = get_terms(
+	$reports_terms   = get_terms(
 		'bpm_category',
 		array(
 			'hide_empty' => false,
@@ -439,7 +439,7 @@ function bp_moderation_user_actions_request() {
 
 	// Check the current has access to report the item ot not.
 	$user_can = bp_moderation_can_report( $item_id, $item_type, 'suspend' == $sub_action );
-	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
+	if (  ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -476,11 +476,11 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  */
 function bb_moderation_content_report_popup() {
 
-	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/content-report-form.php' ) ) {
-		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
+	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/content-report-form.php" ) ) {
+		include buddypress()->core->path . "bp-moderation/screens/content-report-form.php";
 	}
-	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/block-member-form.php' ) ) {
-		include buddypress()->core->path . 'bp-moderation/screens/block-member-form.php';
+	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
+		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
 	}
 }
 
@@ -523,86 +523,3 @@ function bb_moderation_suspend_after_delete( $recode ) {
 
 }
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
-
-/**
- * Get Next recepients list for block member.
- */
-function bp_nouveau_next_recepient_list_for_blocks() {
-	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
-	$user_id   = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
-
-	if ( ! isset( $post_data['thread_id'] ) ) {
-		$response['message'] = new WP_Error( 'bp_error_get_recepient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
-		wp_send_json_error( $response );
-	}
-
-	if ( ! isset( $post_data['page_no'] ) ) {
-		$response['message'] = new WP_Error( 'bp_error_get_recepient_list_for_blocks', esc_html__( 'Invalid page number.', 'buddyboss' ) );
-		wp_send_json_error( $response );
-	}
-
-	$moderation_type = BP_Moderation_Members::$moderation_type;
-	$results         = BP_Messages_Thread::get(
-		array(
-			'per_page'             => bp_messages_recepients_per_page(),
-			'page'                 => (int) $post_data['page_no'],
-			'include_threads'      => array( $post_data['thread_id'] ),
-			'include_current_user' => (int) $user_id,
-		)
-	);
-
-	if ( is_array( $results['recipients'] ) ) {
-		$count          = 1;
-		$admins         = array_map(
-			'intval',
-			get_users(
-				array(
-					'role'   => 'administrator',
-					'fields' => 'ID',
-				)
-			)
-		);
-		$recipients_arr = array();
-		foreach ( $results['recipients'] as $recipient ) {
-			if ( empty( $recipient->is_deleted ) ) {
-				$recipients_arr['members'][ $count ] = array(
-					'avatar'     => esc_url(
-						bp_core_fetch_avatar(
-							array(
-								'item_id' => $recipient->user_id,
-								'object'  => 'user',
-								'type'    => 'thumb',
-								'width'   => BP_AVATAR_THUMB_WIDTH,
-								'height'  => BP_AVATAR_THUMB_HEIGHT,
-								'html'    => false,
-							)
-						)
-					),
-					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-					'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
-					'id'         => $recipient->user_id,
-				);
-
-				if ( bp_is_active( 'moderation' ) ) {
-					$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-					$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
-				}
-
-				$count ++;
-			}
-		}
-	}
-	$recipients_arr['moderation_type'] = $moderation_type;
-	wp_send_json_success(
-		array(
-			'recipients' => $recipients_arr,
-			'type'       => 'success',
-		)
-	);
-	wp_die();
-}
-
-add_action( 'wp_ajax_next_recepient_list_for_blocks', 'bp_nouveau_next_recepient_list_for_blocks' );
-add_action( 'wp_ajax_nopriv_next_recepient_list_for_blocks', 'bp_nouveau_next_recepient_list_for_blocks' );
