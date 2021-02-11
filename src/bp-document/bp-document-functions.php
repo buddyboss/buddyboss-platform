@@ -4141,7 +4141,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'med
 		}
 	}
 
-	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension );
+	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id );
 }
 
 /**

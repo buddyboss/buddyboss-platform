@@ -130,17 +130,6 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
 
 	}
-
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		$preview = Amazon_S3_And_CloudFront::get_url_preview();
-
-		error_log( '$preview' );
-		error_log( $preview );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
-
-		}
-	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -167,13 +156,41 @@ function bb_media_offload_do_symlink( $can, $media_id, $attachment_id, $size ) {
 	return $can;
 }
 
-add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url', PHP_INT_MAX, 3 );
-function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension ) {
+function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file, $attachment_id, $as3cf_item ) {
+
+	$default = true;
+
+	return $default;
+}
+
+add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url', PHP_INT_MAX, 5 );
+function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$document = new BP_Document( $document_id );
-			$attachment_url = wp_get_attachment_url( $document->attachment_id );
+
+			if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+				$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+				if ( ! $attachment_url ) {
+				    add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+					bp_document_generate_document_previews( $attachment_id );
+					remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+                }
+			}
+
+			if ( in_array( $extension, array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() ), true ) ) {
+				$document = new BP_Document( $document_id );
+
+				$upload_directory       = wp_get_upload_dir();
+				$document_symlinks_path = bp_document_symlink_path();
+
+				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+				if ( ! file_exists( $preview_attachment_path ) ) {
+					bp_document_create_symlinks( $document );
+				}
+				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+			}
 		}
 	}
     return $attachment_url;
