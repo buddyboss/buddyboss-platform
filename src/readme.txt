@@ -58,7 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.5.7 =
-* Member Access Controls - Added support to restrict list of social interaction based on 'Access Control' settings provided in BuddyBoss Platform Pro
+* Member Access Controls - Added support to restrict list of social interaction based on Access Control settings provided in BuddyBoss Platform Pro
 * Activity - Fixed blog post activity showing Gutenberg block code issue
 * Activity - Fixed issue with comments disappearing when blog post updated
 * Messages - Fixed message threads listing scroll issue in the private message screen
@@ -74,7 +74,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Compatibility - Fixed group roles label not working with 'Instructor Role for LearnDash' plugin
 * Compatibility - Fixed issue registration issue with 'Google Captcha Pro' plugin
 * Compatibility - Fixes for WordPress 5.6 and PHP 8.0
-* REST API - Provided support and new endpoints added for 'Access Control' feature
+* REST API - Provided support and new endpoints added for the 'Access Control' feature
 * REST API - Added caching support for all REST APIs
 
 = 1.5.6 =
