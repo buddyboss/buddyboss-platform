@@ -78,9 +78,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$exclude         = array_merge( $mime_types, $extensions );
 	$document_params = array(
-		'profile_document'                => bp_is_profile_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), 0 ),
-		'group_document'                  => bp_is_group_document_support_enabled() && ( bp_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
-		'messages_document'               => bp_is_messages_document_support_enabled() && bp_user_can_create_document(),
+		'profile_document'                => bp_is_profile_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), 0 ),
+		'group_document'                  => bp_is_group_document_support_enabled() && ( bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
+		'messages_document'               => bp_is_messages_document_support_enabled() && bb_user_can_create_document(),
+		'messages_document_active'        => bp_is_messages_document_support_enabled(),
 		'document_type'                   => implode( ',', array_unique( $exclude ) ),
 		'empty_document_type'             => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
 		'current_folder'                  => $folder_id,
@@ -105,6 +106,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'sidebar_view_text'               => __( 'View', 'buddyboss' ),
 		'create_folder'                   => __( 'Create Folder', 'buddyboss' ),
 		'document_dict_file_exceeded'     => sprintf( __( 'You are allowed to upload only %s documents at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_document_per_batch() ) ),
+		'can_manage_document'             => ( is_user_logged_in() && bb_user_can_create_document() ),
 	);
 
 	$document_options = array(

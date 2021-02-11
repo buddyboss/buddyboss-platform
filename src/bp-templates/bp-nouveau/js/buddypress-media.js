@@ -5376,7 +5376,8 @@ window.bp = window.bp || {};
 			this.previousLink = $('.bb-prev-media');
 			this.activity_ajax = false;
 			this.group_id = typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-			this.manage_activity = typeof BP_Nouveau.activity !== 'undefined' && typeof BP_Nouveau.activity.params.user_can_post !== 'undefined' ? BP_Nouveau.activity.params.user_can_post : false;
+			this.manage_media = typeof BP_Nouveau.media.can_manage_media !== 'undefined' ? BP_Nouveau.media.can_manage_media : false;
+			this.manage_document = typeof BP_Nouveau.media.can_manage_document !== 'undefined' ? BP_Nouveau.media.can_manage_document : false;
 		},
 
 		/**
@@ -5702,6 +5703,7 @@ window.bp = window.bp || {};
 							parent_activity_id: media_element.data('parent-activity-id'),
 							album_id          : media_element.data('album-id'),
 							group_id          : media_element.data('group-id'),
+							can_edit          : media_element.data('can-edit'),
 							is_forum          : false
 						};
 
@@ -5754,6 +5756,7 @@ window.bp = window.bp || {};
 							author            : document_element.data('author'),
 							download          : document_element.attr('href'),
 							mp3               : document_element.data('mp3-preview'),
+							can_edit          : document_element.data('can-edit'),
 							is_forum          : false
 						};
 
@@ -5820,13 +5823,14 @@ window.bp = window.bp || {};
 				// hide privacy setting of media if activity is present.
 				if (( typeof BP_Nouveau.activity !== 'undefined' &&
 					typeof self.current_media.activity_id !== 'undefined' &&
-					self.current_media.activity_id != 0 && self.manage_activity ) ||
+					self.current_media.activity_id != 0  ) ||
 					self.group_id ||
-					self.manage_activity ||
 					self.current_media.is_forum ||
 					self.current_media.group_id ||
 					self.current_media.album_id ||
-					self.current_media.is_message
+					self.current_media.is_message ||
+					! self.can_manage_media ||
+					! self.current_media.can_edit
 				) {
 					media_privacy_wrap.hide();
 				}
@@ -5890,12 +5894,13 @@ window.bp = window.bp || {};
 				// hide privacy setting of media if activity is present.
 				if (( typeof BP_Nouveau.activity !== 'undefined' &&
 					typeof self.current_document.activity_id !== 'undefined' &&
-					self.current_document.activity_id != 0 &&
-					self.manage_activity ) ||
+					self.current_document.activity_id != 0 ) ||
 					self.group_id ||
 					self.current_document.is_forum ||
 					self.current_document.group_id ||
 					self.current_document.album_id ||
+					! self.can_manage_document ||
+					! self.current_document.can_edit ||
 					self.current_document.is_message
 				) {
 					document_privacy_wrap.hide();

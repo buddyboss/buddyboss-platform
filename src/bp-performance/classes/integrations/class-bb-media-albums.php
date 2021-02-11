@@ -229,7 +229,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	 * @param int $media_id Media ID.
 	 */
 	public function event_bp_suspend_media_suspended( $media_id ) {
-		$album_ids = get_album_id_by_media_id( $media_id );
+		$album_ids = $this->get_album_id_by_media_id( $media_id );
 		if ( ! empty( $album_ids ) ) {
 			foreach ( $album_ids as $album_id ) {
 				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
@@ -243,7 +243,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	 * @param int $media_id Media ID.
 	 */
 	public function event_bp_suspend_media_unsuspended( $media_id ) {
-		$album_ids = get_album_id_by_media_id( $media_id );
+		$album_ids = $this->get_album_id_by_media_id( $media_id );
 		if ( ! empty( $album_ids ) ) {
 			foreach ( $album_ids as $album_id ) {
 				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );

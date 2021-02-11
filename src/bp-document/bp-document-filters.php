@@ -1725,8 +1725,8 @@ function bp_document_get_edit_activity_data( $activity ) {
 			}
 		}
 
-		$activity['profile_document'] = bp_is_profile_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), 0 );
-		$activity['group_document']   = bp_is_group_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
+		$activity['profile_document'] = bp_is_profile_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_document']   = bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 
 	}
 

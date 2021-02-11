@@ -82,7 +82,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
@@ -91,7 +91,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_document ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
@@ -100,7 +100,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['gif_data'] ) ) {
-		$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
@@ -158,7 +158,7 @@ function messages_new_message( $args = '' ) {
 
 		// Check user can send the reply.
 		if ( ! $is_group_thread ) {
-			$has_access = bp_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
+			$has_access = bb_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
 			if ( is_wp_error( $has_access ) ) {
 				return $has_access;
 			}
@@ -330,7 +330,7 @@ function messages_new_message( $args = '' ) {
 
 	// Check user can send the message.
 	if ( true !== $is_group_thread ) {
-		$has_access = bp_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
+		$has_access = bb_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
 		if ( is_wp_error( $has_access ) ) {
 			return $has_access;
 		}
@@ -1119,7 +1119,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
  *
  * @return bool
  */
-function bp_messages_is_group_thread( $thread_id ) {
+function bb_messages_is_group_thread( $thread_id ) {
 
 	if ( ! $thread_id || ! bp_is_active( 'messages' ) ) {
 		return false;
