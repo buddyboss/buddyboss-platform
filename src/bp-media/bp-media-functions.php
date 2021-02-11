@@ -28,7 +28,13 @@ function bp_media_upload() {
 		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
 	}
 
+	add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+	add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+
 	$attachment = bp_media_upload_handler();
+
+	remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+	remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
 
 	if ( is_wp_error( $attachment ) ) {
 		return $attachment;
@@ -3581,7 +3587,7 @@ function bp_media_delete_symlinks( $media ) {
 function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bp-media-thumbnail' ) {
 	$attachment_url = '';
 
-	$do_symlink = apply_filters( 'bp_media_do_symlink', true, $media_id, $attachment_id, $size );
+	$do_symlink = apply_filters( 'bb_media_do_symlink', true, $media_id, $attachment_id, $size );
 
 	if ( $do_symlink ) {
 
@@ -3745,4 +3751,20 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 
 	// Deregister image sizes.
 	bp_media_deregister_image_sizes();
+}
+
+/**
+ * Make all the media to private signed URL if someone using the offload media to store in AWS.
+ *
+ * @handles `as3cf_upload_acl`
+ * @handles `as3cf_upload_acl_sizes`
+ *
+ * @param string $acl defaults to 'public-read'.
+ *
+ * @return string $acl make the document to private with signed url.
+ *
+ */
+function bb_media_private_upload_acl( $acl ) {
+	$acl = 'private';
+	return $acl;
 }

@@ -160,30 +160,6 @@ class BP_Document {
 	}
 
 	/**
-	 * Called on 'wp_image_editors' action.
-	 * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
-	 */
-	static function bp_document_wp_image_editors( $image_editors ) {
-		if ( ! in_array( 'BP_GOPP_Image_Editor_GS', $image_editors, true ) ) {
-			self::bp_document_load_gopp_image_editor_gs();
-			array_unshift( $image_editors, 'BP_GOPP_Image_Editor_GS' );
-		}
-		return $image_editors;
-	}
-
-	/**
-	 * Helper to load BP_GOPP_Image_Editor_GS class.
-	 */
-	static function bp_document_load_gopp_image_editor_gs() {
-		if ( ! class_exists( 'BP_GOPP_Image_Editor_GS' ) ) {
-			if ( ! class_exists( 'WP_Image_Editor' ) ) {
-				require ABSPATH . WPINC . '/class-wp-image-editor.php';
-			}
-			require trailingslashit( dirname( __FILE__ ) ) . '/class-bp-gopp-image-editor-gs.php';
-		}
-	}
-
-	/**
 	 * Populate the object with data about the specific document item.
 	 *
 	 * @since BuddyBoss 1.4.0
@@ -1958,7 +1934,7 @@ class BP_Document {
 		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
-		$this->date_modified  = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
+		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
 
 		/**
 		 * Fires before the current document item gets saved.

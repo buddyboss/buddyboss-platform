@@ -2,9 +2,14 @@
 /**
  * BuddyBoss - Activity Document Code Preview
  *
+ * @var $download_url
+ *
  * @since BuddyBoss 1.5.7
  * @package BuddyBoss\Core
  */
+
+$attachment_id = bp_get_document_attachment_id();
+$download_url  = bp_document_download_link( $attachment_id, bp_get_document_id() );
 
 if ( in_array( bp_get_document_extension(), bp_get_document_preview_code_extensions(), true ) ) {
 	$file  = get_attached_file( bp_get_document_attachment_id() );

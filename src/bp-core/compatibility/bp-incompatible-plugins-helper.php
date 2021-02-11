@@ -130,9 +130,66 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
 
 	}
+
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$preview = Amazon_S3_And_CloudFront::get_url_preview();
+
+		error_log( '$preview' );
+		error_log( $preview );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
+
+		}
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
+
+add_filter( 'bb_document_do_symlink', 'bb_media_offload_do_symlink', PHP_INT_MAX, 4 );
+function bb_document_offload_do_symlink( $can, $document_id, $attachment_id, $size ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			$can = false;
+		}
+	}
+	return $can;
+}
+
+add_filter( 'bb_media_do_symlink', 'bb_media_offload_do_symlink', PHP_INT_MAX, 4 );
+function bb_media_offload_do_symlink( $can, $media_id, $attachment_id, $size ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			$can = false;
+		}
+	}
+	return $can;
+}
+
+add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url', PHP_INT_MAX, 3 );
+function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			$document = new BP_Document( $document_id );
+			$attachment_url = wp_get_attachment_url( $document->attachment_id );
+		}
+	}
+    return $attachment_url;
+}
+
+add_filter( 'bp_media_get_preview_image_url', 'bp_media_offload_get_preview_url', PHP_INT_MAX, 4 );
+function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			$media = new BP_Media( $media_id );
+			$attachment_url = wp_get_attachment_url( $media->attachment_id );
+		}
+	}
+    return $attachment_url;
+}
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
