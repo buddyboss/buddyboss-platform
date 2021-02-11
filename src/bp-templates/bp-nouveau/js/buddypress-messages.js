@@ -2194,7 +2194,7 @@ window.bp = window.bp || {};
 
 				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) || true === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-send-msg';
-				} else {
+				} else if( 0 === this.model.get( 'can_user_send_message_in_thread' ) || false === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-not-send-msg';
 				}
 
