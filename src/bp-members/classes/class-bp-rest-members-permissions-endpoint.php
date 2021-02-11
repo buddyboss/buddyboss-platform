@@ -66,44 +66,44 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 
 		$data = array();
 
-		$data['can_create_activity'] = bp_is_active( 'activity' ) && bp_user_can_create_activity();
+		$data['can_create_activity'] = bp_is_active( 'activity' ) && bb_user_can_create_activity();
 		$data['can_create_group']    = bp_is_active( 'groups' ) && ! bp_restrict_group_creation() && bp_user_can_create_groups();
 		$data['can_join_group']      = bp_is_active( 'groups' ) && $this->bp_rest_check_user_group_join( $user_id );
 
 		$data['can_create_media'] = (
-			function_exists( 'bp_user_has_access_upload_media' )
-			? bp_user_has_access_upload_media( 0, $user_id, 0, 0, 'profile' )
-			: bp_is_active( 'media' ) && bp_is_profile_media_support_enabled() && ( ! function_exists( 'bp_user_can_create_media' ) || bp_user_can_create_media() )
+			function_exists( 'bb_user_has_access_upload_media' )
+			? bb_user_has_access_upload_media( 0, $user_id, 0, 0, 'profile' )
+			: bp_is_active( 'media' ) && bp_is_profile_media_support_enabled() && ( ! function_exists( 'bb_user_can_create_media' ) || bb_user_can_create_media() )
 		);
 
 		$data['can_create_forum_media'] = (
-			function_exists( 'bp_user_has_access_upload_media' )
-			? bp_user_has_access_upload_media( 0, $user_id, 0, 0, 'forum' )
-			: bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() && ( ! function_exists( 'bp_user_can_create_media' ) || bp_user_can_create_media() )
+			function_exists( 'bb_user_has_access_upload_media' )
+			? bb_user_has_access_upload_media( 0, $user_id, 0, 0, 'forum' )
+			: bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() && ( ! function_exists( 'bb_user_can_create_media' ) || bb_user_can_create_media() )
 		);
 
 		$data['can_create_message_media'] = (
-			function_exists( 'bp_user_has_access_upload_media' )
-			? bp_user_has_access_upload_media( 0, $user_id, 0, 0, 'message' )
-			: bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ( ! function_exists( 'bp_user_can_create_media' ) || bp_user_can_create_media() )
+			function_exists( 'bb_user_has_access_upload_media' )
+			? bb_user_has_access_upload_media( 0, $user_id, 0, 0, 'message' )
+			: bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ( ! function_exists( 'bb_user_can_create_media' ) || bb_user_can_create_media() )
 		);
 
 		$data['can_create_document'] = (
-			function_exists( 'bp_user_has_access_upload_document' )
-			? bp_user_has_access_upload_document( 0, $user_id, 0, 0, 'profile' )
-			: bp_is_active( 'document' ) && bp_is_profile_document_support_enabled() && ( ! function_exists( 'bp_user_can_create_document' ) || bp_user_can_create_document() )
+			function_exists( 'bb_user_has_access_upload_document' )
+			? bb_user_has_access_upload_document( 0, $user_id, 0, 0, 'profile' )
+			: bp_is_active( 'document' ) && bp_is_profile_document_support_enabled() && ( ! function_exists( 'bb_user_can_create_document' ) || bb_user_can_create_document() )
 		);
 
 		$data['can_create_forum_document'] = (
-			function_exists( 'bp_user_has_access_upload_document' )
-			? bp_user_has_access_upload_document( 0, $user_id, 0, 0, 'forum' )
-			: bp_is_active( 'document' ) && bp_is_forums_document_support_enabled() && ( ! function_exists( 'bp_user_can_create_document' ) || bp_user_can_create_document() )
+			function_exists( 'bb_user_has_access_upload_document' )
+			? bb_user_has_access_upload_document( 0, $user_id, 0, 0, 'forum' )
+			: bp_is_active( 'document' ) && bp_is_forums_document_support_enabled() && ( ! function_exists( 'bb_user_can_create_document' ) || bb_user_can_create_document() )
 		);
 
 		$data['can_create_message_document'] = (
-			function_exists( 'bp_user_has_access_upload_document' )
-			? bp_user_has_access_upload_document( 0, $user_id, 0, 0, 'message' )
-			: bp_is_active( 'document' ) && bp_is_messages_document_support_enabled() && ( ! function_exists( 'bp_user_can_create_document' ) || bp_user_can_create_document() )
+			function_exists( 'bb_user_has_access_upload_document' )
+			? bb_user_has_access_upload_document( 0, $user_id, 0, 0, 'message' )
+			: bp_is_active( 'document' ) && bp_is_messages_document_support_enabled() && ( ! function_exists( 'bb_user_can_create_document' ) || bb_user_can_create_document() )
 		);
 
 		$data     = $this->add_additional_fields_to_object( $data, $request );

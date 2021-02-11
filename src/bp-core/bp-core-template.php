@@ -4198,8 +4198,8 @@ function bp_is_user_albums() {
  * @return bool Is user can create document or not.
  * @since BuddyBoss 1.5.7
  */
-function bp_user_can_create_document() {
-	return (bool) apply_filters( 'bp_user_can_create_document', true );
+function bb_user_can_create_document() {
+	return (bool) apply_filters( 'bb_user_can_create_document', true );
 }
 
 /**
@@ -4208,8 +4208,8 @@ function bp_user_can_create_document() {
  * @return bool Is user can create media or not.
  * @since BuddyBoss 1.5.7
  */
-function bp_user_can_create_media() {
-	return (bool) apply_filters( 'bp_user_can_create_media', true );
+function bb_user_can_create_media() {
+	return (bool) apply_filters( 'bb_user_can_create_media', true );
 }
 
 /**
@@ -4218,8 +4218,8 @@ function bp_user_can_create_media() {
  * @return bool Is user can create activity or not.
  * @since BuddyBoss 1.5.7
  */
-function bp_user_can_create_activity() {
-	return (bool) apply_filters( 'bp_user_can_create_activity', true );
+function bb_user_can_create_activity() {
+	return (bool) apply_filters( 'bb_user_can_create_activity', true );
 }
 
 /**
@@ -4232,8 +4232,8 @@ function bp_user_can_create_activity() {
  * @return bool Is user can send messages or not.
  * @since BuddyBoss 1.5.7
  */
-function bp_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
-	return apply_filters( 'bp_user_can_send_messages', $thread, $thread_template, $error_type );
+function bb_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
+	return apply_filters( 'bb_user_can_send_messages', $thread, $thread_template, $error_type );
 }
 
 /**
@@ -4245,8 +4245,8 @@ function bp_user_can_send_messages( $thread, $thread_template, $error_type = 'wp
  * @return bool Is user can send group membership requests or not.
  * @since BuddyBoss 1.5.7
  */
-function bp_groups_user_can_send_membership_requests( $group_id ) {
-	return (bool) apply_filters( 'bp_groups_user_can_send_membership_requests', true, $group_id );
+function bb_groups_user_can_send_membership_requests( $group_id ) {
+	return (bool) apply_filters( 'bb_groups_user_can_send_membership_requests', true, $group_id );
 }
 
 /**
@@ -4262,7 +4262,7 @@ function bp_groups_user_can_send_membership_requests( $group_id ) {
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+function bb_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
 	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
@@ -4275,23 +4275,23 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
 		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_document( $user_id, current( $group_ids ) );
 		} else {
-			return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bp_user_can_create_document();
+			return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bb_user_can_create_document();
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_document( $user_id, $group_id );
 		} else {
-			return ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) && bp_user_can_create_document();
+			return ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) && bb_user_can_create_document();
 		}
 	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
-		return ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) && bp_user_can_create_document();
+		return ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) && bb_user_can_create_document();
 	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
-		return ( function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() && bp_user_can_create_document() );
+		return ( function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() && bb_user_can_create_document() );
 	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
-		return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bp_user_can_create_document();
+		return ( function_exists( 'bp_is_forums_document_support_enabled' ) && bp_is_forums_document_support_enabled() ) && bb_user_can_create_document();
 	}
 
 	return false;
@@ -4311,7 +4311,7 @@ function bp_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+function bb_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
 	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
@@ -4324,23 +4324,23 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_media( $user_id, current( $group_ids ) );
 		} else {
-			return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bp_user_can_create_media();
+			return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bb_user_can_create_media();
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 			return groups_can_user_manage_media( $user_id, $group_id );
 		} else {
-			return ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ) && bp_user_can_create_media();
+			return ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ) && bb_user_can_create_media();
 		}
 	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
-		return ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ) && bp_user_can_create_media();
+		return ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ) && bb_user_can_create_media();
 	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
-		return ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() && bp_user_can_create_media() );
+		return ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() && bb_user_can_create_media() );
 	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
-		return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bp_user_can_create_media();
+		return ( function_exists( 'bp_is_forums_media_support_enabled' ) && bp_is_forums_media_support_enabled() ) && bb_user_can_create_media();
 	}
 
 	return false;
@@ -4360,7 +4360,7 @@ function bp_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+function bb_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
 	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
@@ -4376,7 +4376,7 @@ function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
 			return ( function_exists( 'bp_is_forums_gif_support_enabled' ) && bp_is_forums_gif_support_enabled() );
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
@@ -4409,7 +4409,7 @@ function bp_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
  *
  * @return mixed|void
  */
-function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+function bb_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
 
 	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
 		return false;
@@ -4425,7 +4425,7 @@ function bp_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 			return ( function_exists( 'bp_is_forums_emoji_support_enabled' ) && bp_is_forums_emoji_support_enabled() );
 		}
 	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
-		$is_group_message_thread = bp_messages_is_group_thread( (int) $thread_id );
+		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
 		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
 		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {

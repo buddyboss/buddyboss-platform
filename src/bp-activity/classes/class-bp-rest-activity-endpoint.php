@@ -472,8 +472,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( bp_is_active( 'groups' ) && isset( $prepared_activity->component ) && buddypress()->groups->id === $prepared_activity->component ) {
 				$group_id = isset( $prepared_activity->group_id ) ? $prepared_activity->group_id : $request->get_param( 'primary_item_id' );
 			}
-			if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bp_user_has_access_upload_media' ) ) {
-				$can_send_media = bp_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+				$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_media ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_media',
@@ -485,8 +485,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['bp_documents'] ) && function_exists( 'bp_user_has_access_upload_document' ) ) {
-				$can_send_document = bp_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+				$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_document ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_document',
@@ -498,8 +498,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['media_gif'] ) && function_exists( 'bp_user_has_access_upload_gif' ) ) {
-				$can_send_gif = bp_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+				$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_gif ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_gif',
@@ -2148,14 +2148,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( array_key_exists( 'group_media', $edit_activity_data ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
-				$edit_activity_data['group_media'] = bp_is_group_media_support_enabled() && bp_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) );
+				$edit_activity_data['group_media'] = bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) );
 			}
 		}
 
 		if ( array_key_exists( 'group_document', $edit_activity_data ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
-				$edit_activity_data['group_document'] = bp_is_group_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) );
+				$edit_activity_data['group_document'] = bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) );
 			}
 		}
 
