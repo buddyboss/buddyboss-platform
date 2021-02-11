@@ -1544,12 +1544,12 @@ window.bp = window.bp || {};
 			messagesDocument: null,
 			messagesAttachedGifPreview: null,
 			initialize: function() {
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media ) {
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media_active ) {
 					this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
 					this.views.add( this.messagesMedia );
 				}
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_document ) {
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_document_active ) {
 					this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
 					this.views.add( this.messagesDocument );
 				}
