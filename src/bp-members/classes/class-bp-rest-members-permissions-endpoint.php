@@ -66,7 +66,13 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 
 		$data = array();
 
-		$data['can_create_activity'] = bp_is_active( 'activity' ) && bb_user_can_create_activity();
+		$data['can_create_activity'] = bp_is_active( 'activity' ) && (
+			! function_exists( 'bb_user_can_create_activity' ) ||
+			(
+				function_exists( 'bb_user_can_create_activity' ) &&
+				bb_user_can_create_activity()
+			)
+		);
 		$data['can_create_group']    = bp_is_active( 'groups' ) && ! bp_restrict_group_creation() && bp_user_can_create_groups();
 		$data['can_join_group']      = bp_is_active( 'groups' ) && $this->bp_rest_check_user_group_join( $user_id );
 
