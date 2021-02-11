@@ -172,15 +172,19 @@ function bp_document_activity_append_document( $content, $activity ) {
 function bp_document_activity_comment_entry( $comment_id ) {
 
 	$document_ids = bp_activity_get_meta( $comment_id, 'bp_document_ids', true );
+	$args = 	array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ||
+	     bp_is_active( 'activity' ) && buddypress()->activity->id === $activity->component ) { // Set privacy for activity - comment - 2121
+		$args['privacy'] = array( 'comment' );
+	}
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
-
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php

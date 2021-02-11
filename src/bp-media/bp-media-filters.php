@@ -291,9 +291,9 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 		'user_id'  => false,
 	);
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ||
+	     bp_is_active( 'activity' ) && buddypress()->activity->id === $activity->component ) { // Set privacy for activity - comment - 2121
 		if ( bp_is_group_media_support_enabled() ) {
-			// Change here privacy grouponly to comment - 2121
 			$args['privacy'] = array( 'comment' ); //grouponly
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-media';
@@ -310,11 +310,6 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		if ( ! bp_is_profile_albums_support_enabled() ) {
 			$args['album_id'] = 'existing-media';
 		}
-	}
-
-	// Set privacy for activity - comment - 2121
-	if ( ! empty( $activity ) && bp_is_active( 'activity' ) ) {
-		$args['privacy'][] = 'comment';
 	}
 
 	$is_forum_activity = false;

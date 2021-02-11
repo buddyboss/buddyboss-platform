@@ -1980,25 +1980,30 @@ function bp_activity_document_add( $document ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
 						$document->group_id = $comment_activity->item_id;
-						$document->privacy  = 'grouponly';
+						$document->privacy  = 'comment';
 					}
 				}
 			}
 
-			$args = array(
-				'hide_sitewide' => true,
-				'privacy'       => 'document',
-			);
-
-			// Create activity if not created previously.
-			if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['item_id'] = $document->group_id;
-				$args['type']    = 'activity_update';
-				$current_group   = groups_get_group( $document->group_id );
-				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
-				$activity_id     = groups_record_activity( $args );
+			// Check when new activity comment is empty then set privacy comment - - 2121
+			if ( ! empty( $bp_new_activity_comment ) ) {
+				$activity_id = $bp_new_activity_comment;
+				$document->privacy = 'comment';
 			} else {
-				$activity_id = bp_activity_post_update( $args );
+				$args = array(
+					'hide_sitewide' => true,
+					'privacy' => 'document',
+				);
+				// Create activity if not created previously.
+				if( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
+					$args['item_id'] = $document->group_id;
+					$args['type']    = 'activity_update';
+					$current_group   = groups_get_group( $document->group_id );
+					$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+					$activity_id     = groups_record_activity( $args );
+				} else {
+					$activity_id = bp_activity_post_update( $args );
+				}
 			}
 
 			if ( $activity_id ) {
@@ -2014,18 +2019,23 @@ function bp_activity_document_add( $document ) {
 				// save attachment meta for activity.
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
-				if ( ! empty( $parent_activity_id ) ) {
-					$document_activity                    = new BP_Activity_Activity( $activity_id );
-					$document_activity->secondary_item_id = $parent_activity_id;
-					$document_activity->save();
+				if ( $parent_activity_id ) {
+					if ( empty( $bp_new_activity_comment ) ) {
+						$document_activity                    = new BP_Activity_Activity( $activity_id );
+						$document_activity->secondary_item_id = $parent_activity_id;
+						$document_activity->save();
 
-					// save parent activity id in attachment meta.
-					update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
+						// save parent activity id in attachment meta.
+						update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
+					}
 				}
 			}
 		} else {
 			if ( $parent_activity_id ) {
-
+				if ( empty( $bp_new_activity_comment ) ) {
+					$parent_activity_id = $bp_new_activity_comment;
+					$document->privacy  = 'comment';
+				}
 				// save document activity id
 				$document->activity_id = $parent_activity_id;
 				$document->save();
