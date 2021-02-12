@@ -3727,6 +3727,33 @@ function bp_document_get_report_link( $args = array() ) {
 	return apply_filters( 'bp_document_get_report_link', $report_btn, $args );
 }
 
+/**
+ * Whether user can show the document upload button.
+ *
+ * @param int $user_id  given user id.
+ * @param int $group_id given group id.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool
+ */
+function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
+
+	if ( ( empty( $user_id ) && empty( $group_id ) ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_group_document_support_enabled() ) {
+		return groups_can_user_manage_document( $user_id, $group_id );
+	}
+
+	if ( bp_is_profile_document_support_enabled() && bb_user_can_create_document() ) {
+		return true;
+	}
+
+	return false;
+}
+
 function bp_document_symlink_path() {
 	add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 	$upload_dir = wp_upload_dir();

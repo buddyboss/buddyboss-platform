@@ -2661,6 +2661,23 @@ function bp_core_get_components( $type = 'all' ) {
 			</ul>
 			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
 		),
+        // @todo: used for bp-performance will enable in feature.
+        /*
+		'performance'       => array(
+			'title'       => __( 'API Caching', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-performance',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss' ),
+			'default'     => false,
+		),
+        */
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -2681,6 +2698,22 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => false,
 		),
 	);
+
+	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+		$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ).'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+		$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
+		if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>') ) {
+			$optional_components['messages']['settings'] = bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-messages',
+					),
+					'admin.php'
+				)
+			);
+		}
+	}
 
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
