@@ -673,6 +673,10 @@ class BP_Media {
 	protected static function attachment_meta( $attachment_id ) {
 		$metadata = wp_get_attachment_metadata( $attachment_id );
 
+		if ( ! $metadata ) {
+			return $metadata;
+		}
+
 		$meta = array(
 			'width'  => $metadata['width'],
 			'height' => $metadata['height'],

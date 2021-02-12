@@ -1377,7 +1377,7 @@ function bp_document_upload() {
 		return $attachment;
 	}
 
-	$name = $attachment->post_name;
+	do_action( 'bb_document_upload', $attachment );
 
 	$result = array(
 		'id'   => (int) $attachment->ID,

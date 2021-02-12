@@ -3561,8 +3561,12 @@ function bp_media_delete_symlinks( $media ) {
 	// Check if media is id of media, create media object.
 	if ( $media instanceof BP_Media ) {
 		$media_id = $media->id;
-	} elseif ( is_int( $media ) ) {
+	} elseif ( is_int( (int) $media ) ) {
 		$media_id = $media;
+	}
+
+	if ( empty( $media_id ) ) {
+		return;
 	}
 
 	$old_media = new BP_Media( $media_id );
