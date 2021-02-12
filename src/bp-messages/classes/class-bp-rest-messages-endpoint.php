@@ -451,8 +451,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bp_user_has_access_upload_media' ) ) {
-			$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bp_message_media',
@@ -464,8 +464,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bp_user_has_access_upload_document' ) ) {
-			$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
@@ -477,8 +477,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['media_gif'] ) && function_exists( 'bp_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bp_message_gif',

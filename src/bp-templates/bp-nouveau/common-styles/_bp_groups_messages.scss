@@ -1037,12 +1037,17 @@ span.icons:before {
 .group-messages.private-message #group-messages-container {
 
 	.group-messages-members-listing .all-members .group-message-member-li.is_disabled {
-		opacity: 0.5;
-		pointer-events: none;
-		cursor: default;
 
-		.action > i {
-			color: rgba(18, 43, 70, 0.4);
+		.action > span i {
+			font-size: 26px;
+			opacity: 0.25;
+		}
+
+		> .item-avatar,
+		> .item {
+			pointer-events: none;
+			cursor: default;
+			opacity: 0.5;
 		}
 	}
 

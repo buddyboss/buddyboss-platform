@@ -169,6 +169,7 @@ window.bp = window.bp || {};
 				feedback = this.views.get( 'feedback' );
 				feedback.get( 'view' ).remove();
 				this.views.remove( { id: 'feedback', view: feedback } );
+				$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
 			}
 		},
 
@@ -192,6 +193,7 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'feedback', view: feedback } );
 
 			feedback.inject( '.bp-messages-feedback' );
+			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
 		},
 
 		clearViews: function() {
@@ -599,7 +601,7 @@ window.bp = window.bp || {};
 					this.options.recipients     = resp.thread.recipients;
 				}
 
-				// Membership Document Support.
+				// Access Control Document Support.
 				if ( ! _.isUndefined( resp.user_can_upload_document ) && $( '#whats-new-messages-toolbar .post-media-document-support' ).length ) {
 					if ( resp.user_can_upload_document ) {
 						$( '#whats-new-messages-toolbar .post-media-document-support' ).show();
@@ -609,7 +611,7 @@ window.bp = window.bp || {};
 
 				}
 
-				// Membership Media Support.
+				// Access Control Media Support.
 				if ( ! _.isUndefined( resp.user_can_upload_media ) && $( '#whats-new-messages-toolbar .post-media-photo-support' ).length ) {
 					if ( resp.user_can_upload_media ) {
 						$( '#whats-new-messages-toolbar .post-media-photo-support' ).show();
@@ -619,7 +621,7 @@ window.bp = window.bp || {};
 
 				}
 
-				// Membership GiF Support.
+				// Access Control GiF Support.
 				if ( ! _.isUndefined( resp.user_can_upload_gif ) && $( '#whats-new-messages-toolbar .post-media-gif-support' ).length ) {
 					if ( resp.user_can_upload_gif ) {
 						$( '#whats-new-messages-toolbar .post-media-gif-support' ).show();
@@ -629,7 +631,7 @@ window.bp = window.bp || {};
 
 				}
 
-				// Membership Emoji Support.
+				// Access Control Emoji Support.
 				if ( ! _.isUndefined( resp.user_can_upload_emoji ) && $( '#whats-new-messages-toolbar .post-media-emoji-support' ).length ) {
 					if ( resp.user_can_upload_emoji ) {
 						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).show();
@@ -1542,12 +1544,12 @@ window.bp = window.bp || {};
 			messagesDocument: null,
 			messagesAttachedGifPreview: null,
 			initialize: function() {
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media ) {
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media_active ) {
 					this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
 					this.views.add( this.messagesMedia );
 				}
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_document ) {
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_document_active ) {
 					this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
 					this.views.add( this.messagesDocument );
 				}
@@ -2192,7 +2194,7 @@ window.bp = window.bp || {};
 
 				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) || true === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-send-msg';
-				} else {
+				} else if( 0 === this.model.get( 'can_user_send_message_in_thread' ) || false === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-not-send-msg';
 				}
 
@@ -2690,10 +2692,13 @@ window.bp = window.bp || {};
 				if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
 					// hide reply form.
-					this.$( '#send-reply' ).hide();
+					this.$( '#send-reply' ).hide().parent().addClass('is_restricted');
 					if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
-						this.$( '#send-reply' ).show();
+						this.$( '#send-reply' ).show().parent().removeClass('is_restricted');
+						$( '#send-reply' ).find( '.message-box' ).show();
 					}
+				} else {
+					$( '#send-reply' ).find( '.message-box' ).show();
 				}
 
 				if ( this.firstFetch ) {
