@@ -933,8 +933,14 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			$name = bp_core_get_user_displayname( $member->ID );
 
 			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
+			$is_friends_connection  = true;
+            if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+                if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
+                    $is_friends_connection  = false;
+                }
+            }
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; echo !$can_send_group_message ? ' is_disabled ' : ''; ?>">
+			<li class="group-message-member-li <?php echo $member->ID; echo ( $can_send_group_message && $is_friends_connection ) ? '' : ' is_disabled '; ?>">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
@@ -949,7 +955,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				</div>
 				<div class="action">
 					<?php
-					if ( $can_send_group_message ) {
+					if ( $can_send_group_message && $is_friends_connection ) {
 						?>
 						<button type="button"
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"

@@ -843,3 +843,49 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
 	return $args;
 }
+
+/**
+ * Filters the member IDs for the current group member query.
+ *
+ * Use this filter to build a custom query (such as when you've
+ * defined a custom 'type').
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param array                 $group_member_ids          Array of associated member IDs.
+ * @param BP_Group_Member_Query $group_member_query_object Current BP_Group_Member_Query instance.
+ */
+function bb_group_member_query_group_message_member_ids( $group_member_ids, $group_member_query_object ) {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group_single() && bp_is_group_messages() && 'private-message' === bb_get_group_current_messages_tab() ) {
+
+		$can_send_arr  = array();
+		$cant_send_arr = array();
+
+		// Check if force friendship is enabled and check recipients.
+		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+			foreach ( $group_member_ids as $member_id ) {
+				if ( friends_check_friendship( bp_loggedin_user_id(), $member_id ) ) {
+					$can_send_arr[] = $member_id;
+				} else {
+					$cant_send_arr[] = $member_id;
+				}
+			}
+			$group_member_ids = array_merge( $can_send_arr, $cant_send_arr );
+		}
+	}
+
+	/**
+	 * Filters the member IDs for the current group member query.
+	 *
+	 * Use this filter to build a custom query (such as when you've
+	 * defined a custom 'type').
+	 *
+	 * @since BuddyBoss 1.5.8
+	 *
+	 * @param array                 $group_member_ids          Array of associated member IDs.
+	 * @param BP_Group_Member_Query $group_member_query_object Current BP_Group_Member_Query instance.
+	 */
+	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
+}
+add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
