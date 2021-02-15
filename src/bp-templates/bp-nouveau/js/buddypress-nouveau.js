@@ -2197,7 +2197,21 @@ window.bp = window.bp || {};
 				}, 500);
 
 			};
-			fileReader.readAsArrayBuffer( file );
+
+			if( file.dataURL ) { //If file is already uploaded then convert to blob from file URL
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', file.dataURL, true);
+				xhr.responseType = 'blob';
+				xhr.onload = function() {
+					if (this.status == 200) {
+						var myBlob = this.response;
+						fileReader.readAsArrayBuffer( myBlob );
+					}
+				};
+				xhr.send();
+			} else {
+				fileReader.readAsArrayBuffer( file );
+			}
 
 		}
 
