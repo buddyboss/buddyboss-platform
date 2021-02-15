@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * All Integration written should be extending this abstract.
  * Class Integration_Abstract
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 abstract class Integration_Abstract {
 
@@ -571,8 +571,8 @@ abstract class Integration_Abstract {
 	private function prepare_header( $results ) {
 		$headers          = array();
 		$disallow_headers = array(
-			'appboss-logged-in',
-			'ab-unread-notifications',
+			'bbapp-logged-in',
+			'bbapp-unread-notifications',
 			'bbp-unread-notifications',
 			'Expires',
 			'Cache-Control',
