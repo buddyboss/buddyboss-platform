@@ -7,7 +7,7 @@
 
 namespace BuddyBoss\Performance;
 
-use AppBoss\Admin\Settings;
+use BuddyBossApp\Admin\Settings;
 
 /**
  * Cache Helper class.
@@ -52,7 +52,7 @@ class Helper {
 	 */
 	public function get_app_settings( $setting_key = null, $group = 'default' ) {
 
-		// Currently we supporting only Appboss Settings.
+		// Currently we supporting only BuddyBoss App Settings.
 		$settings = \BuddyBoss\Performance\Settings::get_settings( $group );
 
 		if ( ! empty( $setting_key ) ) {
