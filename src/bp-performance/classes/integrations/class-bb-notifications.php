@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Notification Integration Class.
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 class BB_Notifications extends Integration_Abstract {
 
