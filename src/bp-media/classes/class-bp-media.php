@@ -655,10 +655,10 @@ class BP_Media {
 
 			// fetch attachment data.
 			$attachment_data                 = new stdClass();
-			$attachment_data->full           = wp_get_attachment_image_url( $media->attachment_id, 'full' );
-			$attachment_data->thumb          = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );
-			$attachment_data->activity_thumb = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
-			$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
+			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
+			$attachment_data->thumb          = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
+			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
+			$attachment_data->meta           = self::attachment_meta( $media->attachment_id );
 			$media->attachment_data          = $attachment_data;
 
 			$group_name = '';
@@ -683,6 +683,7 @@ class BP_Media {
 					$visibility = ( isset( $media_privacy[ $media->privacy ] ) ) ? ucfirst( $media_privacy[ $media->privacy ] ) : '';
 				}
 			}
+
 			$media->group_name = $group_name;
 			$media->visibility = $visibility;
 
@@ -711,6 +712,38 @@ class BP_Media {
 		}
 
 		return $medias;
+	}
+
+	/**
+	 * Get attachment meta.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 *
+	 * @return array
+	 * @since BuddyBoss 1.5.7
+	 */
+	protected static function attachment_meta( $attachment_id ) {
+		$metadata = wp_get_attachment_metadata( $attachment_id );
+
+		if ( ! $metadata ) {
+			return $metadata;
+		}
+
+		$meta = array(
+			'width'  => $metadata['width'],
+			'height' => $metadata['height'],
+			'sizes'  => array(),
+		);
+
+		if ( isset( $metadata['sizes']['bp-media-thumbnail'] ) ) {
+			$meta['sizes']['bp-media-thumbnail'] = $metadata['sizes']['bp-media-thumbnail'];
+		}
+
+		if ( isset( $metadata['sizes']['bp-activity-media-thumbnail'] ) ) {
+			$meta['sizes']['bp-activity-media-thumbnail'] = $metadata['sizes']['bp-activity-media-thumbnail'];
+		}
+
+		return $meta;
 	}
 
 	/**

@@ -34,7 +34,7 @@ $more_media     = $media_template->media_count > 5 ? true : false;
 
 <div class="bb-activity-media-elem media-activity
 <?php
-echo esc_attr( bp_media_id() ) . ' ';
+echo esc_attr( bp_get_media_id() ) . ' ';
 echo $media_template->current_media > 4 ? esc_attr( 'hide' ) : '';
 echo 1 === $media_template->media_count || $media_template->media_count > 1 && 0 === $media_template->current_media ? esc_attr( 'act-grid-1-1 ' ) : '';
 echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : '';
@@ -90,18 +90,19 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 		<?php } ?>
 	</div> <!--.media-action-wrap-->
 	<a href="#"
-		class="bb-open-media-theatre entry-img"
-		data-id="<?php bp_media_id(); ?>"
-		data-attachment-id="<?php bp_media_attachment_id(); ?>"
-		data-attachment-full="<?php bp_media_attachment_image(); ?>"
-		data-activity-id="<?php bp_media_activity_id(); ?>"
-		data-privacy="<?php bp_media_privacy(); ?>"
-		data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
-		data-album-id="<?php bp_media_album_id(); ?>"
-		data-group-id="<?php bp_media_group_id(); ?>"
+	   class="bb-open-media-theatre entry-img"
+	   data-id="<?php bp_media_id(); ?>"
+	   data-attachment-id="<?php bp_media_attachment_id(); ?>"
+	   data-attachment-full="<?php bp_media_attachment_image(); ?>"
+	   data-activity-id="<?php bp_media_activity_id(); ?>"
+	   data-privacy="<?php bp_media_privacy(); ?>"
+	   data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
+	   data-album-id="<?php bp_media_album_id(); ?>"
+	   data-group-id="<?php bp_media_group_id(); ?>"
         data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>"
 	>
-		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_activity_thumbnail(); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
+		<?php $size = 1 === $media_template->media_count ? 'bp-activity-media-thumbnail' : 'bp-media-thumbnail'; ?>
+		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_template->media_count ? esc_url( bp_get_media_attachment_image() ) : esc_url( bp_get_media_attachment_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 
 		<?php
 		if ( $media_template->media_count > 5 && 4 === $media_template->current_media ) {

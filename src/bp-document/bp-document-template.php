@@ -689,6 +689,28 @@ function bp_get_document_attachment_id() {
 }
 
 /**
+ * Return the document extension.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document extension.
+ */
+function bp_get_document_extension() {
+	global $document_template;
+
+	/**
+	 * Filters the document extension.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $id The document extension.
+	 */
+	return apply_filters( 'bp_get_document_extension', $document_template->document->extension );
+}
+
+/**
  * Output the document title.
  *
  * @since BuddyBoss 1.4.0
@@ -977,6 +999,13 @@ function bp_document_attachment_image_thumbnail() {
 function bp_get_document_attachment_image_thumbnail() {
 	global $document_template;
 
+	$thumbnail = '';
+	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['thumb'] ) ) {
+		$thumbnail = $document_template->document->attachment_data['thumb'];
+	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->thumb ) ) {
+		$thumbnail = $document_template->document->attachment_data->thumb;
+	}
+
 	/**
 	 * Filters the document thumbnail being displayed.
 	 *
@@ -984,11 +1013,7 @@ function bp_get_document_attachment_image_thumbnail() {
 	 *
 	 * @param string The document thumbnail.
 	 */
-	if ( isset( $document_template->document->attachment_data->thumb ) ) {
-		return apply_filters( 'bp_get_document_activity_id', $document_template->document->attachment_data->thumb );
-	} else {
-		return apply_filters( 'bp_get_document_activity_id', '' );
-	}
+	return apply_filters( 'bp_get_document_activity_id', $thumbnail );
 }
 
 /**
@@ -1012,6 +1037,13 @@ function bp_document_attachment_image_activity_thumbnail() {
 function bp_get_document_attachment_image_activity_thumbnail() {
 	global $document_template;
 
+	$activity_thumbnail = '';
+	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['activity_thumb'] ) ) {
+		$activity_thumbnail = $document_template->document->attachment_data['activity_thumb'];
+	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->activity_thumb ) ) {
+		$activity_thumbnail = $document_template->document->attachment_data->activity_thumb;
+	}
+
 	/**
 	 * Filters the document activity thumbnail being displayed.
 	 *
@@ -1019,7 +1051,7 @@ function bp_get_document_attachment_image_activity_thumbnail() {
 	 *
 	 * @param string The document activity thumbnail.
 	 */
-	return apply_filters( 'bp_get_document_attachment_image', $document_template->document->attachment_data->activity_thumb );
+	return apply_filters( 'bp_get_document_attachment_image', $activity_thumbnail );
 }
 
 /**
@@ -1043,6 +1075,13 @@ function bp_document_attachment_image() {
 function bp_get_document_attachment_image() {
 	global $document_template;
 
+	$full = '';
+	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['full'] ) ) {
+		$full = $document_template->document->attachment_data['full'];
+	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->full ) ) {
+		$full = $document_template->document->attachment_data->full;
+	}
+
 	/**
 	 * Filters the document image being displayed.
 	 *
@@ -1050,12 +1089,45 @@ function bp_get_document_attachment_image() {
 	 *
 	 * @param string The full image.
 	 */
-	if ( isset( $document_template->document->attachment_data->full ) ) {
-		return apply_filters( 'bp_get_document_attachment_image', $document_template->document->attachment_data->full );
-	} else {
-		return apply_filters( 'bp_get_document_attachment_image', '' );
+	return apply_filters( 'bp_get_document_attachment_image', $full );
+}
+
+/**
+ * Output the document preview url.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_document_attachment_url() {
+	echo bp_get_document_attachment_url();
+}
+
+/**
+ * Return the document preview url.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document attachment url.
+ */
+function bp_get_document_attachment_url() {
+	global $document_template;
+
+	$full = '';
+	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['full'] ) ) {
+		$full = $document_template->document->attachment_data['full'];
+	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->full ) ) {
+		$full = $document_template->document->attachment_data->full;
 	}
 
+	/**
+	 * Filters the document url being displayed.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string The full image.
+	 */
+	return apply_filters( 'bp_get_document_attachment_url', $full );
 }
 
 /**

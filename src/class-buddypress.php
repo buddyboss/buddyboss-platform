@@ -548,6 +548,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-catchuri.php';
 		require $this->plugin_dir . 'bp-core/bp-core-functions.php';
 		require $this->plugin_dir . 'bp-core/bp-core-moderation.php';
+		require $this->plugin_dir . 'bp-core/bp-core-cron.php';
 		require $this->plugin_dir . 'bp-core/bp-core-loader.php';
 		require $this->plugin_dir . 'bp-core/bp-core-customizer-email.php';
 		require $this->plugin_dir . 'bp-core/bp-core-emails.php';
