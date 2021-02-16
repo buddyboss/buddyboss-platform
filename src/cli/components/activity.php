@@ -130,7 +130,7 @@ class Activity extends BuddypressCommand {
 		}
 
 		if ( 'groups' === $r['component'] ) {
-			$group_id = $r['component'];
+			$group_id = $r['item-id'];
 
 			if ( ! is_numeric( $group_id ) ) {
 				$group_id = groups_get_id( $group_id );
