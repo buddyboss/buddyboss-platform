@@ -18,6 +18,10 @@ if ( $group_members['count'] != 0 ) { ?>
 				<div class="bb-panel-head">
 					<div class="bb-panel-subhead">
 						<h4 class="total-members-text"><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
+                        <div class="bp-group-message-wrap">
+                            <input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
+                            <label for="bp-group-message-switch-checkbox" class="bp-group-message-label"><span class="select-members-text"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></span></label>
+                        </div>
 					</div>
 					<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
 						<div>
