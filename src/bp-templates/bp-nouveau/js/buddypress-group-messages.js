@@ -162,6 +162,7 @@ window.bp = window.bp || {};
 					$( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).trigger( 'click' );
 				}
 			);
+
 			$( document ).on(
 				'click',
 				'#item-body #group-messages-container .bb-groups-messages-left #members-list li .action .group-add-remove-invite-button',
@@ -294,7 +295,6 @@ window.bp = window.bp || {};
 
 			}
 
-			}
 
 			$( document ).on(
 				'click',
@@ -726,6 +726,7 @@ window.bp = window.bp || {};
 					medium_editor.toggleClass( 'active' );
 				}
 			);
+
 			$( document ).on(
 				'click',
 				'#group-messages-container .medium-editor-toolbar-actions',
@@ -735,6 +736,7 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
 			$( document ).on(
 				'input',
 				'#group_message_content',
