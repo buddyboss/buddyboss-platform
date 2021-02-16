@@ -272,6 +272,27 @@ function bbp_new_topic_handler( $action = '' ) {
 		}
 	}
 
+	if ( ! empty( $_POST['bbp_media'] ) ) {
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_media ) {
+			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_document'] ) ) {
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_document ) {
+			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_gif ) {
+			bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss' ) );
+		}
+	}
+
 	/** Topic Flooding */
 
 	if ( ! bbp_check_for_flood( $anonymous_data, $topic_author ) ) {

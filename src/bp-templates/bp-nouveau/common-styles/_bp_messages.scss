@@ -62,8 +62,43 @@
 	padding: 0;
 	width: 100%;
 
+	li a.close-conversation {
+		right: 35px;
+	}
+
 	&:empty {
 		display: none;
+	}
+
+	.can-not-send-msg {
+		opacity: 0.5;
+
+		.bp-message-link .thread-content.bp-suspended-content,
+		.bp-message-link .thread-avatar.bp-suspended-avatar {
+			opacity: 1;
+		}
+
+		&.unread .thread-to:after {
+			opacity: 0.85;
+		}
+
+		.thread-to:after {
+			content: "\e8c9";
+			font-size: 14px;
+			color: #122b46;
+			line-height: 1;
+			font-family: "bb-icons";/* stylelint-disable-line */
+			display: inline-block;
+			vertical-align: middle;
+			position: absolute;
+			right: 36px;
+			bottom: 10px;
+		}
+
+		&:hover .thread-to:after {
+			display: none;
+		}
+
 	}
 
 	// The primary list elements

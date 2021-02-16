@@ -202,11 +202,10 @@ class BP_Media_Component extends BP_Component {
 			$bp->is_single_item  = true;
 			$this->current_album = albums_get_album( $album_id );
 
-		// Set current_album to 0 to prevent debug errors.
+			// Set current_album to 0 to prevent debug errors.
 		} else {
 			$this->current_album = 0;
 		}
-
 
 	}
 
@@ -255,9 +254,9 @@ class BP_Media_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
-				$class    = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name = __( 'Photos', 'buddyboss' );
+				$count     = bp_media_get_total_media_count( bp_displayed_user_id() );
+				$class     = ( 0 === $count ) ? 'no-count' : 'count';
+				$nav_name  = __( 'Photos', 'buddyboss' );
 				$nav_name .= sprintf(
 					' <span class="%s">%s</span>',
 					esc_attr( $class ),
@@ -409,10 +408,12 @@ class BP_Media_Component extends BP_Component {
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
-		parent::rest_api_init( array(
-			'BP_REST_Media_Endpoint',
-			'BP_REST_Media_Albums_Endpoint',
-			'BP_REST_Media_Details_Endpoint',
-		) );
+		parent::rest_api_init(
+			array(
+				'BP_REST_Media_Endpoint',
+				'BP_REST_Media_Albums_Endpoint',
+				'BP_REST_Media_Details_Endpoint',
+			)
+		);
 	}
 }

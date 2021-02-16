@@ -54,13 +54,15 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
 				<div id="ac-reply-toolbar-<?php bp_activity_id(); ?>" class="ac-reply-toolbar">
 
-					<?php if ( bp_is_active( 'media' ) ) : ?>
+					<?php
+                  if ( bp_is_active( 'media' ) ) : ?>
 
 						<div class="post-elements-buttons-item post-media media-support">
 							<a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
 								<i class="bb-icon bb-icon-camera-small"></i>
 							</a>
 						</div>
+
 						<div class="post-elements-buttons-item post-video video-support">
 							<a href="#" id="ac-reply-video-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
 								<i class="bb-icon bb-icon-video-alt"></i>
@@ -71,6 +73,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 								<i class="bb-icon bb-icon-attach"></i>
 							</a>
 						</div>
+
 						<div class="post-elements-buttons-item post-gif">
 							<div class="gif-media-search">
 								<a href="#" id="ac-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Post a GIF', 'buddyboss' ); ?>">

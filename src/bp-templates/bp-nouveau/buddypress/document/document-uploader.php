@@ -30,7 +30,7 @@
 								<div class="media-uploader-wrapper">
 									<div class="dropzone" id="media-uploader"></div>
 								</div>
-								<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#">
+								<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
 									<i class="bb-icon-folder"></i>
 									<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>
 								</a>

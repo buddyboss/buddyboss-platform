@@ -138,7 +138,21 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function enqueue_scripts() {
 
 			if ( ! is_bbpress() ) {
-				return false;
+
+				if ( ! bp_is_active( 'groups' ) ) {
+					return false;
+				}
+
+				// Only filter if group forums are active.
+			   if ( ! bbp_is_group_forums_active() ) {
+					return false;
+			   }
+
+			   // Only filter for single group forum topics.
+			   if ( ! bp_is_group_single() && ! bp_is_group_forum_topic() && ! bp_is_group_forum_topic_edit() && ! bbp_is_reply_edit() ) {
+					return false;
+			   }
+
 			}
 
 			// Setup scripts array.
@@ -226,13 +240,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			if ( bp_is_active( 'media' ) ) {
 
 				$gif = false;
-				if ( bp_is_forums_gif_support_enabled() ) {
+				if ( bp_is_forums_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) {
 					wp_enqueue_script( 'giphy' );
 					$gif = true;
 				}
 
 				$emoji = false;
-				if ( bp_is_forums_emoji_support_enabled() ) {
+				if ( bp_is_forums_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() ) {
 					wp_enqueue_script( 'emojionearea' );
 					wp_enqueue_style( 'emojionearea' );
 					$emoji = true;

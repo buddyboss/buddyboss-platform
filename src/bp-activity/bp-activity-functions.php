@@ -4449,7 +4449,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	if ( ! post_type_supports( $post->post_type, 'buddypress-activity' ) ) {
 		return;
 	}
-
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 	/**
 	 * Fires before post type transition catch in activity
 	 *
@@ -4539,6 +4543,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		 */
 		do_action( 'bp_activity_post_type_transition_status_' . $post->post_type, $post, $new_status, $old_status );
 	}
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 }
 add_action( 'transition_post_status', 'bp_activity_catch_transition_post_type_status', 10, 3 );
 
@@ -5468,7 +5477,8 @@ function bp_activity_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args( $args,
+	$args = wp_parse_args(
+		$args,
 		array(
 			'id'                => 'activity_report',
 			'component'         => 'moderation',
@@ -5504,7 +5514,8 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args( $args,
+	$args = wp_parse_args(
+		$args,
 		array(
 			'id'                => 'activity_comment_report',
 			'component'         => 'moderation',

@@ -1233,6 +1233,7 @@ span.dashicons.dashicons-admin-file:before {
 				z-index: 101;
 				opacity: 1;
 				visibility: visible;
+				pointer-events: none;
 			}
 		}
 	}
@@ -1814,6 +1815,7 @@ span.dashicons.dashicons-admin-file:before {
 					z-index: 101;
 					opacity: 1;
 					visibility: visible;
+					pointer-events: none;
 				}
 			}
 		}

@@ -48,14 +48,19 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 						<?php
 						if ( $can_add ) {
-							?>
+						    if ( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() ) { ?>
+                                <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
+                                    <?php _e( 'Add Photos', 'buddyboss' ); ?>
+                                </a> <?php
+						    } elseif( bp_is_group() ) { ?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
-							</a>
+                                    <?php _e( 'Add Photos', 'buddyboss' ); ?>
+                                </a> <?php
+						    } ?>
 							<?php
 							if ( ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) {
 								?>
-								<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+                                <a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 								<?php
 							}
 							?>
@@ -78,10 +83,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					</div>
 
 					<?php
-					if ( $can_manage ) {
-						bp_get_template_part( 'media/uploader' );
-						bp_get_template_part( 'video/uploader' );
-					}
+                    bp_get_template_part( 'media/uploader' );
+					bp_get_template_part( 'video/uploader' );
 				endif;
 
 				if ( $can_manage ) {

@@ -157,7 +157,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	/** Topic ID */
 
-	// Topic id was not passed
+	// Topic id was not passed.
 	if ( empty( $_POST['bbp_topic_id'] ) ) {
 		bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID is missing.', 'buddyboss' ) );
 
@@ -263,7 +263,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $topic_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
-		//remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
+		// remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
 	}
 
 	/** Reply Title */
@@ -281,7 +281,7 @@ function bbp_new_reply_handler( $action = '' ) {
 		$reply_content = $_POST['bbp_reply_content'];
 	}
 
-	// Filter and sanitize
+	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 	// No reply content.
@@ -292,6 +292,31 @@ function bbp_new_reply_handler( $action = '' ) {
 		 && empty( $_POST['bbp_document'] )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
+	}
+
+	if ( empty( $forum_id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $topic_id );
+	}
+
+	if ( ! empty( $_POST['bbp_media'] ) ) {
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_media ) {
+			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_document'] ) ) {
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_document ) {
+			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_gif ) {
+			bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss' ) );
+		}
 	}
 
 	/** Reply Flooding */
@@ -387,23 +412,23 @@ function bbp_new_reply_handler( $action = '' ) {
 		)
 	);
 
-	// Insert reply
+	// Insert reply.
 	$reply_id = wp_insert_post( $reply_data );
 
 	/** No Errors */
 
-	// Check for missing reply_id or error
+	// Check for missing reply_id or error.
 	if ( ! empty( $reply_id ) && ! is_wp_error( $reply_id ) ) {
 
 		/** Topic Tags */
 
-		// Just in time manipulation of reply terms before being edited
+		// Just in time manipulation of reply terms before being edited.
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
-		// Insert terms
+		// Insert terms.
 		$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
 
-		// Term error
+		// Term error.
 		if ( is_wp_error( $terms ) ) {
 			bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss' ) );
 		}
@@ -414,38 +439,38 @@ function bbp_new_reply_handler( $action = '' ) {
 		// for the topic, so it is properly restored.
 		if ( bbp_is_topic_trash( $topic_id ) || ( $reply_data['post_status'] === bbp_get_trash_status_id() ) ) {
 
-			// Trash the reply
+			// Trash the reply.
 			wp_trash_post( $reply_id );
 
-			// Only add to pre-trashed array if topic is trashed
+			// Only add to pre-trashed array if topic is trashed.
 			if ( bbp_is_topic_trash( $topic_id ) ) {
 
-				// Get pre_trashed_replies for topic
+				// Get pre_trashed_replies for topic.
 				$pre_trashed_replies = (array) get_post_meta( $topic_id, '_bbp_pre_trashed_replies', true );
 
-				// Add this reply to the end of the existing replies
+				// Add this reply to the end of the existing replies.
 				$pre_trashed_replies[] = $reply_id;
 
-				// Update the pre_trashed_reply post meta
+				// Update the pre_trashed_reply post meta.
 				update_post_meta( $topic_id, '_bbp_pre_trashed_replies', $pre_trashed_replies );
 			}
 
 			/** Spam Check */
 
-			// If reply or topic are spam, officially spam this reply
+			// If reply or topic are spam, officially spam this reply.
 		} elseif ( bbp_is_topic_spam( $topic_id ) || ( $reply_data['post_status'] === bbp_get_spam_status_id() ) ) {
 			add_post_meta( $reply_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
 
-			// Only add to pre-spammed array if topic is spam
+			// Only add to pre-spammed array if topic is spam.
 			if ( bbp_is_topic_spam( $topic_id ) ) {
 
 				// Get pre_spammed_replies for topic
 				$pre_spammed_replies = (array) get_post_meta( $topic_id, '_bbp_pre_spammed_replies', true );
 
-				// Add this reply to the end of the existing replies
+				// Add this reply to the end of the existing replies.
 				$pre_spammed_replies[] = $reply_id;
 
-				// Update the pre_spammed_replies post meta
+				// Update the pre_spammed_replies post meta.
 				update_post_meta( $topic_id, '_bbp_pre_spammed_replies', $pre_spammed_replies );
 			}
 		}
@@ -460,21 +485,21 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		/** Redirect */
 
-		// Redirect to
+		// Redirect to.
 		$redirect_to = bbp_get_redirect_to();
 
-		// Get the reply URL
+		// Get the reply URL.
 		$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
 
-		// Allow to be filtered
+		// Allow to be filtered.
 		$reply_url = apply_filters( 'bbp_new_reply_redirect_to', $reply_url, $redirect_to, $reply_id );
 
 		/** Successful Save */
 
-		// Redirect back to new reply
+		// Redirect back to new reply.
 		wp_safe_redirect( $reply_url );
 
-		// For good measure
+		// For good measure.
 		exit();
 
 		/** Errors */
@@ -581,7 +606,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_edit_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_encode_bad', 10 );
-		//remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
+		// remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
 	}
 
 	/** Reply Topic */
@@ -1981,18 +2006,19 @@ function bbp_reply_content_autoembed() {
  */
 function bbp_reply_content_autoembed_paragraph( $content ) {
 
-	if ( strpos( $content, '<iframe' ) !== false )
+	if ( strpos( $content, '<iframe' ) !== false ) {
 		return $content;
+	}
 
 	global $wp_embed;
 	$embed_urls = $embeds_array = array();
-	$flag = true;
+	$flag       = true;
 
 	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content , $embed_urls );
+		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 	}
 
-	if ( !empty( $embed_urls ) && !empty( $embed_urls[0] ) ) {
+	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
 		$embed_urls = array_filter( $embed_urls[0] );
 		$embed_urls = array_unique( $embed_urls );
 
@@ -2002,8 +2028,8 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 			}
 
 			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if( $embed ) {
-				$flag = false;
+			if ( $embed ) {
+				$flag           = false;
 				$embeds_array[] = wpautop( $embed );
 			}
 		}
@@ -2445,7 +2471,6 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 					$display_role = __( 'Moderator', 'buddyboss' );
 				}
 			}
-
 		}
 	}
 
