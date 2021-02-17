@@ -87,6 +87,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 			data-album-id="<?php bp_media_album_id(); ?>"
 			data-group-id="<?php bp_media_group_id(); ?>"
 			data-attachment-id="<?php bp_media_attachment_id(); ?>"
+            data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>"
 			href="#">
 		   <img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
