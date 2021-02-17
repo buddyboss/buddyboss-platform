@@ -5,7 +5,7 @@
  * @since BuddyBoss 1.0.0
  */
 
-if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) { ?>
+if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() && is_user_logged_in() ) ) ) { ?>
 
 	<div class="bb-media-actions-wrap">
 		<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>

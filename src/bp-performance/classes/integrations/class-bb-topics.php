@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Topic Integration Class.
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 class BB_Topics extends Integration_Abstract {
 

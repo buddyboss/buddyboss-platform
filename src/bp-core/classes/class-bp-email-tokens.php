@@ -159,6 +159,8 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
+		$group_visibility = $group->status;
+		
 		if ( 'public' === $group->status ) {
 			$group_visibility = __( 'Public', 'buddyboss' );
 		} elseif ( 'hidden' === $group->status ) {

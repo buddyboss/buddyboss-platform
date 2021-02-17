@@ -239,7 +239,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -311,7 +311,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -1071,6 +1071,18 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				'embeddable' => true,
 			),
 		);
+
+		if (
+			function_exists( 'bbp_is_forum_group_forum' )
+			&& bbp_is_forum_group_forum( $post->ID )
+			&& function_exists( 'groups_get_group' )
+		) {
+			$group          = $this->bp_rest_get_group( $post->ID );
+			$links['group'] = array(
+				'href'       => rest_url( sprintf( '/%s/%s/', $this->namespace, 'groups' ) . $group->id ),
+				'embeddable' => true,
+			);
+		}
 
 		/**
 		 * Filter links prepared for the REST response.
