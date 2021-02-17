@@ -231,7 +231,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -316,7 +316,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -395,9 +395,23 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( isset( $request['parent'] ) && ! empty( $request['parent'] ) ) {
-			$args['parent']  = $request['parent'];
-			$parent_folder   = new BP_Document_Folder( $args['parent'] );
-			$args['privacy'] = $parent_folder->privacy;
+			$args['parent']   = $request['parent'];
+			$parent_folder    = new BP_Document_Folder( $args['parent'] );
+			$args['privacy']  = $parent_folder->privacy;
+			$args['group_id'] = $parent_folder->group_id;
+		}
+
+		if (
+			function_exists( 'bb_document_user_can_upload' ) &&
+			! bb_document_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
+		) {
+			return new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
 		}
 
 		/**
@@ -455,7 +469,13 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! is_user_logged_in() ) {
+		if (
+			! is_user_logged_in() ||
+			(
+				function_exists( 'bb_document_user_can_upload' ) &&
+				! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
+			)
+		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
@@ -716,7 +736,16 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_folder_user_can_edit( $folder ) ) {
+		if (
+			true === $retval &&
+			(
+				! bp_folder_user_can_edit( $folder ) ||
+				(
+					function_exists( 'bb_media_user_can_upload' ) &&
+					! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $folder->group_id ) )
+				)
+			)
+		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update this folder.', 'buddyboss' ),

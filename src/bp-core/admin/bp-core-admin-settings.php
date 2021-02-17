@@ -440,7 +440,7 @@ function bp_admin_setting_callback_group_creation() {
 	?>
 
 	<input id="bp_restrict_group_creation" name="bp_restrict_group_creation" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( ! bp_restrict_group_creation( false ) ); ?> />
-	<label for="bp_restrict_group_creation"><?php _e( 'Enable social group creation by all users', 'buddyboss' ); ?></label>
+	<label for="bp_restrict_group_creation"><?php _e( 'Enable social group creation by all members', 'buddyboss' ); ?></label>
 	<p class="description" id="bp_group_creation_description"><?php _e( 'Administrators can always create groups, regardless of this setting.', 'buddyboss' ); ?></p>
 
 	<?php

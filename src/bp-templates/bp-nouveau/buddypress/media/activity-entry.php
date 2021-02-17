@@ -99,6 +99,7 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 		data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
 		data-album-id="<?php bp_media_album_id(); ?>"
 		data-group-id="<?php bp_media_group_id(); ?>"
+        data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>"
 	>
 		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_activity_thumbnail(); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 

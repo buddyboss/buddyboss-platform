@@ -460,11 +460,13 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 	) );
 
 	return array(
-		'id'          => $item->id,
-		'name'        => wp_specialchars_decode( $item->name ),
-		'avatar_url'  => $item_avatar_url,
-		'object_type' => 'group',
-		'is_public'   => ( 'public' === $item->status ),
+		'id'             => $item->id,
+		'name'           => wp_specialchars_decode( $item->name ),
+		'avatar_url'     => $item_avatar_url,
+		'object_type'    => 'group',
+		'is_public'      => ( 'public' === $item->status ),
+		'group_media'    => ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
+		'group_document' => ( bp_is_active( 'document' ) && bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 	);
 }
 
@@ -1292,6 +1294,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 		'page'                  => 1,
 		'type_message'          => __( 'Type message', 'buddyboss' ),
 		'group_no_member'       => __( 'There are no other members in this group. Please add some members before sending a message.', 'buddyboss' ),
+		'group_no_member_pro'   => __( 'You are not allowed to send private messages to any member of this group.', 'buddyboss' ),
 		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
 		'remove_recipient'      => __( 'Remove Recipient', 'buddyboss' ),
 		'add_recipient'         => __( 'Add Recipient', 'buddyboss' ),
