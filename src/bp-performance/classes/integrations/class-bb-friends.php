@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Friends Integration Class.
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 class BB_Friends extends Integration_Abstract {
 

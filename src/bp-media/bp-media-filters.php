@@ -575,7 +575,7 @@ function bp_media_update_media_privacy( $album ) {
  */
 function bp_media_forums_new_post_media_save( $post_id ) {
 
-	if ( bp_is_forums_media_support_enabled() && ! empty( $_POST['bbp_media'] ) ) {
+	if ( ! empty( $_POST['bbp_media'] ) ) {
 
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
@@ -674,7 +674,41 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
 
 	// Do not embed attachment in wp-admin area.
-	if ( is_admin() || ! bp_is_forums_media_support_enabled() ) {
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_media_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_group_media_support_enabled()
+		)
+	) {
 		return $content;
 	}
 
@@ -722,8 +756,42 @@ function bp_media_forums_embed_attachments( $content, $id ) {
  */
 function bp_media_forums_embed_gif( $content, $id ) {
 
-	// check if forums gif support enabled.
-	if ( ! bp_is_forums_gif_support_enabled() ) {
+	// Do not embed attachment in wp-admin area.
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_gif_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_groups_gif_support_enabled()
+		)
+	) {
 		return $content;
 	}
 
@@ -765,11 +833,6 @@ function bp_media_forums_embed_gif( $content, $id ) {
  * @param $post_id
  */
 function bp_media_forums_save_gif_data( $post_id ) {
-
-	// check if forums gif support enabled.
-	if ( ! bp_is_forums_gif_support_enabled() ) {
-		return;
-	}
 
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
 
@@ -963,7 +1026,7 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
  */
 function bp_media_messages_save_gif_data( &$message ) {
 
-	if ( ! bp_is_messages_gif_support_enabled() || empty( $_POST['gif_data'] ) ) {
+	if ( empty( $_POST['gif_data'] ) ) {
 		return;
 	}
 
@@ -2334,6 +2397,9 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 			$activity['gif'] = $gif_raw_data;
 		}
+
+		$activity['profile_media'] = bp_is_profile_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_media']   = bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 	}
 
 	return $activity;

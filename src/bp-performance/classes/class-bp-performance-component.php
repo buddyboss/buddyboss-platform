@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates Performance component.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Performance_Component extends BP_Component {
 

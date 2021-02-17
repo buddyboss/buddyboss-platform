@@ -85,6 +85,7 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 				data-group-id="<?php bp_document_group_id(); ?>"
 				data-document-title="<?php echo esc_html( $filename ); ?>"
 				data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
+                data-can-edit="<?php echo esc_attr( bp_document_user_can_edit( bp_get_document_id() ) ); ?>"
 				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>" ></i>
 		</a>
@@ -106,6 +107,7 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 				data-group-id="<?php bp_document_group_id(); ?>"
 				data-document-title="<?php echo esc_html( $filename ); ?>"
 				data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
+                data-can-edit="<?php echo esc_attr( bp_document_user_can_edit( bp_get_document_id() ) ); ?>"
 				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>

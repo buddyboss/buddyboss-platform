@@ -54,7 +54,7 @@ class Settings {
 	 */
 	public static function get_purge_nonce() {
 		if ( ! isset( self::$purge_nonce ) ) {
-			self::$purge_nonce = wp_create_nonce( 'ab_cache_purge' );
+			self::$purge_nonce = wp_create_nonce( 'bbapp_cache_purge' );
 		}
 
 		return self::$purge_nonce;
@@ -90,7 +90,7 @@ class Settings {
 					'cache_bb_activity_feeds'     => array(
 						'label'          => __( 'Activity Feeds', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Activity Feeds', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Activity Feeds may show expired data.', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Activity Feeds may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-activity&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
@@ -98,7 +98,7 @@ class Settings {
 					'cache_bb_members'            => array(
 						'label'          => __( 'Member Profiles', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Member Profiles', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Member Profiles may show expired data.', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Member Profiles may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-members&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
@@ -106,7 +106,7 @@ class Settings {
 					'cache_bb_member_connections' => array(
 						'label'          => __( 'Member Connections', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Member Connections', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Member Connections may show expired data.', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Member Connections may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => admin_url( $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce ),
 						'type'           => 'checkbox',
 						'value'          => false,
@@ -114,7 +114,7 @@ class Settings {
 					'cache_bb_social_groups'      => array(
 						'label'          => __( 'Social Groups', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Social Groups', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Social Groups may show expired data.', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Social Groups may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-groups&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
@@ -122,7 +122,7 @@ class Settings {
 					'cache_bb_private_messaging'  => array(
 						'label'          => __( 'Private Messaging', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Private Messaging', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Private Messaging may show expired data.', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Private Messaging may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-messages&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
@@ -130,7 +130,7 @@ class Settings {
 					'cache_bb_forum_discussions'  => array(
 						'label'          => __( 'Forum Discussions', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Forum Discussions', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Forum Discussions may show expired data.', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Forum Discussions may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bbp-forums,bbp-topics,bbp-replies&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
@@ -138,23 +138,23 @@ class Settings {
 					'cache_bb_notifications'      => array(
 						'label'          => __( 'Notifications', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Notifications', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Notifications may show expired data.', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Notifications may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-notifications&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
 					),
 					'cache_bb_media'              => array(
-						'label'          => __( 'Media Uploading', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Media photos/albums', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Media photos/albums may show expired data.', 'buddyboss' ),
+						'label'          => __( 'Photos', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Photos and Albums', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Photos and Albums may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-media&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
 					),
 					'cache_bb_document'           => array(
-						'label'          => __( 'Documents Uploading', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Document files/folders', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Document files/folder may show expired data.', 'buddyboss' ),
+						'label'          => __( 'Documents', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Document Files and Folders', 'buddyboss' ),
+						'desc'           => __( 'Plugins that interact with Documents may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-document&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => false,
@@ -226,9 +226,9 @@ class Settings {
 
 		/**
 		 * Filter to set cache action by giving component.
-		 * It'll help us to extent it in custom code or support Appboss related group purging
+		 * It'll help us to extent it in custom code or support BuddyBoss App related group purging
 		 * $actions : Cache groups actions
-		 * $group: component like platofrm, Learndash, Appboss etc
+		 * $group: component like platofrm, Learndash, BuddyBoss App etc
 		 */
 		return apply_filters( 'performance_group_purge_actions', $actions, $group );
 	}
@@ -248,7 +248,7 @@ class Settings {
 		}
 
 		$purge_nonce = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
-		if ( wp_verify_nonce( $purge_nonce, 'ab_cache_purge' ) ) {
+		if ( wp_verify_nonce( $purge_nonce, 'bbapp_cache_purge' ) ) {
 
 			$group      = filter_input( INPUT_GET, 'group', FILTER_SANITIZE_STRING );
 			$components = filter_input( INPUT_GET, 'component', FILTER_SANITIZE_STRING );

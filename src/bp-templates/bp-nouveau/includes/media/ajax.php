@@ -879,9 +879,30 @@ function bp_nouveau_ajax_media_update_privacy() {
 		wp_send_json_error( $response );
 	}
 
+    if ( ! bp_media_user_can_edit( $media_id ) ) {
+	    $response['feedback'] = sprintf(
+		    '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+		    esc_html__( 'You don\'t have a permission to update privacy.', 'buddyboss' )
+	    );
+
+	    wp_send_json_error( $response );
+    }
+
 	$media          = new BP_Media( $media_id );
 	$media->privacy = $privacy;
 	$media->save();
+
+	if ( bp_is_active( 'activity' ) && ! empty( $media->id ) ) {
+		$attachment_id = $media->attachment_id;
+		$activity_id   = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+		if ( ! empty( $activity_id ) ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			if ( ! empty( $activity->id ) ) {
+				$activity->privacy = $privacy;
+				$activity->save();
+			}
+		}
+	}
 
 	wp_send_json_success();
 }

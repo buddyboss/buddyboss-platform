@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Performance Settings class.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss 1.5.7
  */
 class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 
 	/**
 	 * Performance setting initialize.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function initialize() {
 
@@ -32,7 +32,7 @@ class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	/**
 	 * Function to save performance settings
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function settings_save() {
 		$sections = bp_performance_get_settings_sections();
@@ -53,7 +53,7 @@ class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	/**
 	 * Performance component is active or not.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 *
 	 * @return bool
 	 */
@@ -64,7 +64,7 @@ class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	/**
 	 * Register setting Fields.
 	 *
-	 * @since BuddyBoss 1.6.0
+	 * @since BuddyBoss 1.5.7
 	 */
 	public function register_fields() {
 		$sections = bp_performance_get_settings_sections();
@@ -99,7 +99,7 @@ class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register Performance tab settings fields and section.
 		 *
-		 * @since BuddyBoss 1.6.0
+		 * @since BuddyBoss 1.5.7
 		 *
 		 * @param Object $this BP_Admin_Setting_Performance.
 		 */
