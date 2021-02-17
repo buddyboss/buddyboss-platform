@@ -245,6 +245,39 @@
 		flex: 0 0 100%;
 		min-width: 0;
 	}
+
+	.bb-panel-subhead .bp-group-message-wrap {
+
+		&:before,
+		&:after {
+			display: none;
+		}
+
+		&.is_disbaled {
+
+			&:before {
+				display: block;
+			}
+
+			&:after {
+				display: block;
+				width: 200px;
+				white-space: normal;
+
+				@media screen and (max-width: 360px ) {
+					width: 160px;
+				}
+
+			}
+
+			.bp-group-message-label {
+				cursor: pointer;
+			}
+
+		}
+
+	}
+
 }
 
 .bp-vertical-navs .bb-groups-messages-left {
@@ -1055,6 +1088,7 @@ span.icons:before {
 		}
 
 		> .item-avatar,
+		> .action,
 		> .item {
 			pointer-events: none;
 			cursor: default;

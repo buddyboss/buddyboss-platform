@@ -18456,6 +18456,30 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
 }
 
+.bb-groups-messages-left .bb-panel-subhead .bp-group-message-wrap:before, .bb-groups-messages-left .bb-panel-subhead .bp-group-message-wrap:after {
+  display: none;
+}
+
+.bb-groups-messages-left .bb-panel-subhead .bp-group-message-wrap.is_disbaled:before {
+  display: block;
+}
+
+.bb-groups-messages-left .bb-panel-subhead .bp-group-message-wrap.is_disbaled:after {
+  display: block;
+  width: 200px;
+  white-space: normal;
+}
+
+@media screen and (max-width: 360px) {
+  .bb-groups-messages-left .bb-panel-subhead .bp-group-message-wrap.is_disbaled:after {
+    width: 160px;
+  }
+}
+
+.bb-groups-messages-left .bb-panel-subhead .bp-group-message-wrap.is_disbaled .bp-group-message-label {
+  cursor: pointer;
+}
+
 .bp-vertical-navs .bb-groups-messages-left {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 260px;
@@ -19218,6 +19242,7 @@ span.icons:before {
 }
 
 .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.is_disabled > .item-avatar,
+.group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.is_disabled > .action,
 .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.is_disabled > .item {
   pointer-events: none;
   cursor: default;

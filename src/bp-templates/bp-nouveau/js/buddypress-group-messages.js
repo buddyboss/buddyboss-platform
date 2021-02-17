@@ -201,6 +201,7 @@ window.bp = window.bp || {};
 							$group_messages_select.select2().prop( 'disabled', false );
 							$( '#group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
 							$( '.group-messages-members-listing #members-list li .action' ).show();
+							$( '.group-messages-members-listing #members-list li' ).removeClass( 'is_disabled' );
 							$( '.bp-select-members-wrap .select2-selection__choice__remove' ).show();
 						}
 					}
@@ -223,6 +224,9 @@ window.bp = window.bp || {};
 						if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
 							$( '#bp-group-message-switch-checkbox' ).trigger( 'click' );
 						}
+						$( '#bp-group-message-switch-checkbox' ).prop('disabled', true).parent().addClass( 'is_disbaled' );
+					} else {
+						$( '#bp-group-message-switch-checkbox' ).prop('disabled', false).parent().removeClass( 'is_disbaled' );
 					}
 				}
 			);
