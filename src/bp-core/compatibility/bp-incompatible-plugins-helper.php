@@ -527,3 +527,60 @@ function bp_core_set_uri_elementor_show_on_front( $bool ) {
 	return $bool;
 }
 add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_front', 10, 3 );
+
+/**
+ * Generate Yoast SEO title, when post id is empty.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param string $title
+ * @param object $presentation
+ * @return string.
+ */
+function bp_set_wpseo_title( $title, $presentation ) {
+	global $post;
+
+	if ( ! empty( $post->ID ) ) {
+		return $title;
+	}
+
+	$page_id = bp_core_get_directory_page_id();
+
+	if ( empty( $page_id ) ) {
+		return $title;
+	}
+
+	$title = get_post_meta( $page_id, '_yoast_wpseo_title', true );
+
+	return $title;
+}
+add_filter( 'wpseo_title', 'bp_set_wpseo_title', 10, 2 );
+
+/**
+ * Generate Yoast SEO meta description, when post id is empty.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param string $meta_description
+ * @param object $presentation
+ * @return string.
+ */
+function bp_set_wpseo_meta_description( $meta_description, $presentation ) {
+	global $post;
+
+	if ( ! empty( $post->ID ) ) {
+		return $meta_description;
+	}
+
+	$page_id = bp_core_get_directory_page_id();
+
+	if ( empty( $page_id ) ) {
+		return $meta_description;
+	}
+
+	$meta_description = get_post_meta( $page_id, '_yoast_wpseo_metadesc', true );
+
+	return $meta_description;
+}
+add_filter( 'wpseo_metadesc', 'bp_set_wpseo_meta_description', 10, 2 );
+
