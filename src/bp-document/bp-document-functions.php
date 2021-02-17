@@ -1365,13 +1365,11 @@ function bp_document_upload() {
 		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file document.', 'buddyboss' ), array( 'status' => 500 ) );
 	}
 
-	add_filter( 'as3cf_upload_acl', 'bb_document_private_upload_acl', 10, 1 );
-	add_filter( 'as3cf_upload_acl_sizes', 'bb_document_private_upload_acl', 10, 1 );
+	do_action( 'bb_before_document_upload_handler' );
 
 	$attachment = bp_document_upload_handler();
 
-	remove_filter( 'as3cf_upload_acl', 'bb_document_private_upload_acl', 10, 1 );
-	remove_filter( 'as3cf_upload_acl_sizes', 'bb_document_private_upload_acl', 10, 1 );
+	do_action( 'bb_after_document_upload_handler' );
 
 	if ( is_wp_error( $attachment ) ) {
 		return $attachment;
@@ -4266,22 +4264,6 @@ function bp_document_get_preview_audio_url( $document_id, $attachment_id, $exten
 	}
 
 	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );
-}
-
-/**
- * Make all the document to private signed URL if someone using the offload media to store in AWS.
- *
- * @handles `as3cf_upload_acl`
- * @handles `as3cf_upload_acl_sizes`
- *
- * @param string $acl defaults to 'public-read'.
- *
- * @return string $acl make the document to private with signed url.
- *
- */
-function bb_document_private_upload_acl( $acl ) {
-	$acl = 'private';
-	return $acl;
 }
 
 /**
