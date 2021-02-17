@@ -627,8 +627,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if (
 			! is_user_logged_in() ||
 			(
-				function_exists( 'bp_document_user_can_upload' ) &&
-				! bp_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
+				function_exists( 'bb_document_user_can_upload' ) &&
+				! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
 			)
 		) {
 			$retval = new WP_Error(
@@ -944,8 +944,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			(
 				! bp_document_user_can_edit( $document ) ||
 				(
-					function_exists( 'bp_document_user_can_upload' ) &&
-					! bp_document_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $document->group_id ) )
+					function_exists( 'bb_document_user_can_upload' ) &&
+					! bb_document_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $document->group_id ) )
 				)
 			)
 		) {
@@ -2331,8 +2331,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if (
 			'bp_documents' !== $attribute ||
 			(
-				function_exists( 'bp_document_user_can_upload' ) &&
-				! bp_document_user_can_upload( bp_loggedin_user_id(), (int) $group_id )
+				function_exists( 'bb_document_user_can_upload' ) &&
+				! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $group_id )
 			)
 		) {
 			$value->bp_documents = null;
@@ -2485,8 +2485,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$group_id = $item_id;
 		}
 
-		if ( function_exists( 'bp_user_has_access_upload_document' ) ) {
-			return bp_user_has_access_upload_document( $group_id, $user_id, 0, 0, 'profile' );
+		if ( function_exists( 'bb_user_has_access_upload_document' ) ) {
+			return bb_user_has_access_upload_document( $group_id, $user_id, 0, 0, 'profile' );
 		}
 
 		return false;
@@ -2514,8 +2514,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		if ( function_exists( 'bp_messages_is_group_thread' ) ) {
-			$is_group_thread = bp_messages_is_group_thread( $thread_id );
+		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
+			$is_group_thread = bb_messages_is_group_thread( $thread_id );
 		} else {
 			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
 			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
@@ -2600,8 +2600,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$thread_id = $value->thread_id;
 
-		if ( function_exists( 'bp_user_has_access_upload_document' ) ) {
-			$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		if ( function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_document ) {
 				$value->bp_documents = null;
 
@@ -2758,8 +2758,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$forum_id = bbp_get_topic_forum_id( $post_id );
 		}
 
-		if ( function_exists( 'bp_user_has_access_upload_document' ) ) {
-			$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 			if ( ! $can_send_document ) {
 				$value->bbp_documents = null;
 
