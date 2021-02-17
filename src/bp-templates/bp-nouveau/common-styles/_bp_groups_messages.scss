@@ -971,8 +971,23 @@ span.icons:before {
 	.bb-groups-messages-right {
 		flex: auto;
 
+		.bp-select-members-wrap {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			align-items: center;
+
+			.group-messages-helper-text {
+				min-width: 70px;
+				color: #c3c6c9;
+			}
+
+		}
+
 		.bb-groups-messages-right-top {
-			padding-bottom: 0;
+			border-bottom: 1px solid #e7e9ec;
 
 			.bb-title-wrap {
 				padding: 0;
@@ -1047,10 +1062,61 @@ span.icons:before {
 		}
 	}
 
+	.group-messages-members-listing .all-members .group-message-member-li {
+
+		.invite-button {
+			background: none;
+
+			.icons {
+				opacity: 1;
+				visibility: visible;
+				height: 26px;
+				width: 26px;
+				border: 2px solid #b8c1ca;
+				display: inline-block;
+				border-radius: 100%;
+			}
+
+		}
+
+		&.selected .invite-button .icons {
+			border: 0;
+
+			&:before {
+				content: "\e876";
+				font-size: 18px;
+				line-height: 26px;
+				height: 26px;
+				width: 26px;
+				display: inline-block;
+				border-radius: 100%;
+				background-color: $blue;
+				color: #fff;
+			}
+
+		}
+
+	}
+
 	.bb-groups-messages-right {
 
+		.bp-select-members-wrap {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			align-items: center;
+
+			.group-messages-helper-text {
+				min-width: 70px;
+				color: #c3c6c9;
+			}
+
+		}
+
 		.bb-groups-messages-right-top {
-			padding-bottom: 0;
+			border-bottom: 1px solid #e7e9ec;
 
 			.bb-title-wrap {
 				padding: 0;
