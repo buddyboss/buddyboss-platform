@@ -19171,10 +19171,6 @@ span.icons:before {
   display: none;
 }
 
-.group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-top .bp-select-members-wrap .select2-container {
-  display: none !important;
-}
-
 .group-messages.public-message .bb-groups-messages-right .bb-groups-messages-right-bottom {
   border: 0;
 }
@@ -19216,10 +19212,6 @@ span.icons:before {
 
 .group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top {
   padding-bottom: 0;
-}
-
-.group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bp-select-members-wrap .select2.select2-container {
-  display: none;
 }
 
 .group-messages.private-message #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-top .bb-title-wrap {

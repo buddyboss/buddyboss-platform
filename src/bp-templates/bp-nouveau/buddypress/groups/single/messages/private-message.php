@@ -17,9 +17,9 @@ if ( $group_members['count'] != 0 ) { ?>
 			<div class="bb-groups-messages-left-inner">
 				<div class="bb-panel-head">
 					<div class="bb-panel-subhead">
-						<h4 class="total-members-text"><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
+						<h4 class="total-members-text"><?php esc_html_e( 'Group Members', 'buddyboss' ); ?></h4>
                         <div class="bp-group-message-wrap">
-                            <input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
+                            <input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox" checked>
                             <label for="bp-group-message-switch-checkbox" class="bp-group-message-label"><span class="select-members-text"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></span></label>
                         </div>
 					</div>
@@ -81,6 +81,7 @@ if ( $group_members['count'] != 0 ) { ?>
 					</div>
 					<?php if ( $group_members['count'] != 0 ) { ?>
 						<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true">
+                            <option value="all" selected="selected"><?php esc_html_e( 'All Group Members', 'buddyboss' ); ?></option>
 						</select>
 					<?php } ?>
 				</div>
@@ -166,8 +167,8 @@ if ( $group_members['count'] != 0 ) { ?>
 							<?php endif; ?>
 							<div id="group-messages-new-submit" class="submit">
 								<select name="group-messages-type" class="group-messages-type">
+                                    <option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>
 									<option value="open"><?php esc_html_e( 'Create New Thread', 'buddyboss' ); ?></option>
-									<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>
 								</select>
 								<?php
 								$disabled = '';

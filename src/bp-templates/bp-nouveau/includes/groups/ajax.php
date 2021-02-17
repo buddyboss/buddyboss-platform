@@ -961,9 +961,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
 								data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
 								data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Add Member', 'buddyboss' ); ?>">
 							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
-							<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Add Member', 'buddyboss' ); ?>
 						</span>
 						</button>
 						<?php
