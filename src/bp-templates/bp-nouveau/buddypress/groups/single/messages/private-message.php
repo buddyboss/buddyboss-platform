@@ -12,6 +12,30 @@ $args = array(
 
 $group_members = groups_get_group_members( $args );
 
+$total_count = 0;
+$all_text    = esc_html__( 'All Group Members', 'buddyboss' );
+
+if ( ! empty( $group_members ) && isset( $group_members['members'] ) && ! empty( $group_members['members'] ) ) {
+	foreach ( $group_members['members'] as $member ) {
+
+		$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
+		$is_friends_connection  = true;
+		if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+			if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
+				$is_friends_connection = false;
+			}
+		}
+
+		if ( $can_send_group_message && $is_friends_connection ) {
+			$total_count++;
+		}
+	}
+}
+
+if ( $total_count > 0 ) {
+	$all_text = sprintf( __( '%s Members', 'buddyboss' ), $total_count );
+}
+
 if ( $group_members['count'] != 0 ) { ?>
     <div class="bb-groups-messages-left">
 			<div class="bb-groups-messages-left-inner">

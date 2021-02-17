@@ -48,6 +48,8 @@ window.bp = window.bp || {};
 			var total_pages            = 1;
 			var show_all               = '';
 			var checkbox               = '';
+			var allText                = '';
+			var changeTextFlag         = 0;
 
 			// Activate bp_mentions.
 			this.addSelect2( $group_messages_select );
@@ -123,6 +125,12 @@ window.bp = window.bp || {};
 								total_pages = response.data.total_page;
 							}
 							$( '.group-messages-members-listing #members-list li' ).addClass( 'is_disabled' );
+
+							var isGroupPrivateThreadPageSelector = $( '.groups.group-messages.private-message' );
+							if ( isGroupPrivateThreadPageSelector.length && 0 === changeTextFlag ) {
+								changeTextFlag = 1;
+								allText = response.data.total_members_can_text;
+							}
 						} else if ( response.success && 'no_member' === response.data.results ) {
 							$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback' ).removeClass( 'bp-messages-feedback-hide' );
 							$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback' ).addClass( 'feedback' );
@@ -170,7 +178,13 @@ window.bp = window.bp || {};
 									$( this ).remove();
 								}
 							);
-							$group_messages_select.append( $( '<option>' ).val( BP_Nouveau.group_messages.select_default_value ).text( BP_Nouveau.group_messages.select_default_text ) );
+
+							if ( '' !== allText ) {
+								$group_messages_select.append( $( '<option>' ).val( BP_Nouveau.group_messages.select_default_value ).text( allText ) );
+							} else {
+								$group_messages_select.append( $( '<option>' ).val( BP_Nouveau.group_messages.select_default_value ).text( BP_Nouveau.group_messages.select_default_text ) );
+							}
+
 							$group_messages_select.select2().prop( 'disabled', true );
 							$group_messages_select.select2( 'data', { id: BP_Nouveau.group_messages.select_default_value, text: BP_Nouveau.group_messages.select_default_text } );
 							$group_messages_select.val( 'all' ).trigger( 'change' );

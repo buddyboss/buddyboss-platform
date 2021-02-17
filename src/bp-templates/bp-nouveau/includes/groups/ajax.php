@@ -906,11 +906,13 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		);
 	}
 
-	$group_members = groups_get_group_members( $args );
-	$html          = '';
-	$paginate      = '';
-	$result        = array();
-	$total_page    = 0;
+	$group_members   = groups_get_group_members( $args );
+	$html            = '';
+	$paginate        = '';
+	$result          = array();
+	$total_page      = 0;
+	$total_can_count = 0;
+	$all_text        = esc_html__( 'All Group Members', 'buddyboss' );
 
 	if ( empty( $group_members['members'] ) ) {
 		wp_send_json_success( array( 'results' => 'no_member' ) );
@@ -956,6 +958,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				<div class="action">
 					<?php
 					if ( $can_send_group_message && $is_friends_connection ) {
+						$total_can_count++;
 						?>
 						<button type="button"
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
@@ -1029,13 +1032,18 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
 		$total_count = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total', $group_members['count'] );
 
+		if ( $total_can_count > 0 ) {
+			$all_text = sprintf( __( '%s Members', 'buddyboss' ), $total_can_count );
+		}
+
 		wp_send_json_success(
 			array(
-				'results'     => $html,
-				'total_page'  => $total_page,
-				'page'        => $page,
-				'pagination'  => $paginate,
-				'total_count' => __( 'Members', 'buddyboss' ),
+				'results'                => $html,
+				'total_page'             => $total_page,
+				'page'                   => $page,
+				'pagination'             => $paginate,
+				'total_count'            => __( 'Members', 'buddyboss' ),
+				'total_members_can_text' => $all_text,
 			)
 		);
 
