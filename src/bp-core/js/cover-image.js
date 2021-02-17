@@ -132,6 +132,13 @@ window.bp = window.bp || {};
 								'background-image': 'none'
 							 }
 						);
+
+						$( '.group-create #header-cover-image' ).css(
+							{
+								'display': 'none'
+							 }
+						);
+
 					} else {
 						$( '#header-cover-image' ).css(
 							{
@@ -267,6 +274,13 @@ window.bp = window.bp || {};
 
 					// Add the delete view
 					bp.CoverImage.deleteView();
+
+					$( '.group-create #header-cover-image' ).css(
+						{
+							'background-image': 'url( ' + model.get( 'url' ) + ' )',
+							'display': 'block'
+						}
+					);
 
 					/**
 					 * Set the Attachment object

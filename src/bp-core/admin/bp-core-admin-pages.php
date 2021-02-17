@@ -405,7 +405,7 @@ function bp_core_admin_maybe_save_pages_settings() {
 				bp_update_option( '_bbp_root_slug_custom_slug', '' );
 			} else {
 				$slug    = get_page_uri( (int) $_POST['bp_pages']['new_forums_page'] );
-				bp_update_option( '_bbp_root_slug', $slug );
+				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 				bp_update_option( '_bbp_root_slug_custom_slug', (int) $_POST['bp_pages']['new_forums_page'] );
 			}
 		}

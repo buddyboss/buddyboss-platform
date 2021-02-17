@@ -103,6 +103,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 			$group_members = groups_get_group_members( $args );
 			$members       = wp_list_pluck( $group_members['members'], 'ID' );
+			$message_type  = 'open';
 
 			// We get members array from $_POST['users_list'] because user already selected them.
 		} else {
@@ -127,6 +128,69 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		if (
+			empty( $message )
+			&& ! (
+				! empty( $request['bp_media_ids'] ) ||
+				(
+					! empty( $request['media_gif']['url'] ) &&
+					! empty( $request['media_gif']['mp4'] )
+				) ||
+				! empty( $request['bp_documents'] )
+			)
+		) {
+			return new WP_Error(
+				'bp_rest_messages_empty_message',
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_media ) {
+				return new WP_Error(
+					'bp_rest_bp_message_media',
+					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_document ) {
+				return new WP_Error(
+					'bp_rest_bp_message_document',
+					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_gif ) {
+				return new WP_Error(
+					'bp_rest_bp_message_document',
+					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( empty( $message ) ) {
+			$message = '&nbsp;';
 		}
 
 		$_POST            = array();
@@ -1078,7 +1142,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		$params['message'] = array(
 			'description'       => __( 'Content of the Message to add to the Thread.', 'buddyboss' ),
 			'type'              => 'string',
-			'required'          => true,
+			'required'          => false,
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 

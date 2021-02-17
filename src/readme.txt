@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.6
+Tested up to: 5.6.1
 Requires PHP: 5.6.20
-Stable tag: 1.5.6
+Stable tag: 1.5.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,30 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.7.1 =
+* Messages - Fixed critical issue with sending a message when Social Groups component is not active
+* REST API - Code refactoring
+
+= 1.5.7 =
+* Member Access Controls - Added support to restrict list of social interaction based on Access Control settings provided in BuddyBoss Platform Pro
+* Activity - Fixed blog post activity showing Gutenberg block code issue
+* Activity - Fixed issue with comments disappearing when blog post updated
+* Messages - Fixed message threads listing scroll issue in the private message screen
+* Media - Fixed 'select album' option shows even when it is disabled in the settings
+* Media - Fixed media dropdown and popup layout issues
+* Groups - Fixed send invite members listing scroll issue at the time of creating and managing group
+* Groups - Fixed cover image layout issue at the time of creating a group
+* Groups - Fixed group status not translatable issue in the email
+* Forums - Fixed issue with Forum and Discussion non-English slug
+* Profiles - Fixed issue with radio and checkbox fields in Profile Search
+* LearnDash - Fixed issue with group name not synced on update
+* Moderation - Fixed Reporting Category taxonomy showing in nav menu issue
+* Compatibility - Fixed group roles label not working with 'Instructor Role for LearnDash' plugin
+* Compatibility - Fixed issue registration issue with 'Google Captcha Pro' plugin
+* Compatibility - Fixes for WordPress 5.6 and PHP 8.0
+* REST API - Provided support and new endpoints added for the 'Access Control' feature
+* REST API - Added caching support for all REST APIs
 
 = 1.5.6 =
 * Moderation - New Moderation Component added

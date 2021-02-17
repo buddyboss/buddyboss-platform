@@ -423,6 +423,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				}
 			}
 		}
+		$request = apply_filters( 'groups_get_group_potential_invites_requests_args', $request );
 	}
 
 	$bp->groups->invites_scope = 'members';
@@ -930,8 +931,10 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			);
 
 			$name = bp_core_get_user_displayname( $member->ID );
+
+			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; ?>">
+			<li class="group-message-member-li <?php echo $member->ID; echo !$can_send_group_message ? ' is_disabled ' : ''; ?>">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
@@ -945,15 +948,27 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 					</div>
 				</div>
 				<div class="action">
-					<button type="button"
-							class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
-							data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
-							data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-							data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
-						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
+					<?php
+					if ( $can_send_group_message ) {
+						?>
+						<button type="button"
+								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
+								data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
+								data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 							<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
 						</span>
-					</button>
+						</button>
+						<?php
+					} else {
+						?>
+						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss' ); ?>">
+							<i class="bb-icon-slash" aria-hidden="true"></i>
+						</span>
+						<?php
+					}
+					?>
 				</div>
 			</li>
 			<?php
@@ -1109,6 +1124,46 @@ function bp_nouveau_ajax_groups_send_message() {
 		// We get members array from $_POST['users_list'] because user already selected them.
 	} else {
 		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+
+		// Check Membership Access.
+		$not_access_list = array();
+		foreach ( $members as $member ) {
+			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+			if ( ! $can_send_group_message ) {
+				$not_access_list[] = bp_core_get_user_displayname( $member );
+			}
+		}
+
+		if ( ! empty( $not_access_list ) ) {
+
+			$response['feedback'] = sprintf(
+				'%1$s <strong>%2$s</strong>',
+				( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
+				implode( ', ', $not_access_list )
+			);
+
+			wp_send_json_error( $response );
+		}
+
+		// Check if force friendship is enabled and check recipients.
+        $not_friends =array();
+		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+			foreach ( $members as $member ) {
+				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+					$not_friends[] = bp_core_get_user_displayname( $member );
+				}
+			}
+		}
+
+		if ( ! empty( $not_friends ) ) {
+			$response['feedback'] = sprintf(
+				'%1$s <strong>%2$s</strong>',
+				( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss' ),
+				implode( ', ', $not_friends )
+			);
+			wp_send_json_error( $response );
+		}
+
 	}
 
 	if ( empty( $members ) ) {

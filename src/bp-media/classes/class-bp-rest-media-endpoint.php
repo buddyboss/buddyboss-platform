@@ -259,7 +259,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -368,7 +368,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -474,6 +474,19 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$args['content'] = $request['content'];
 		}
 
+		if (
+			function_exists( 'bb_media_user_can_upload' ) &&
+			! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
+		) {
+			return new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -531,7 +544,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! is_user_logged_in() ) {
+		if (
+			! is_user_logged_in() ||
+			(
+				function_exists( 'bb_media_user_can_upload' ) &&
+				! bb_media_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
+			)
+		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
@@ -702,7 +721,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( empty( (int) $moved_media_id ) || is_wp_error( $moved_media_id ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_move_with_album',
-					__( 'Sorry, you are not allowed to move this media along with the album.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -812,7 +831,16 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_media_user_can_edit( $media ) ) {
+		if (
+			true === $retval &&
+			(
+				! bp_media_user_can_edit( $media ) ||
+				(
+					function_exists( 'bb_media_user_can_upload' ) &&
+					! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $media->group_id ) )
+				)
+			)
+		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update this media.', 'buddyboss' ),
@@ -1854,6 +1882,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * Register custom field for the activity api.
 	 */
 	public function bp_rest_media_support() {
+
+		// Activity Media.
 		bp_rest_register_field(
 			'activity',      // Id of the BuddyPress component the REST field is about.
 			'bp_media_ids', // Used into the REST response/request.
@@ -1868,6 +1898,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		// Activity Gif.
 		bp_rest_register_field(
 			'activity',      // Id of the BuddyPress component the REST field is about.
 			'media_gif', // Used into the REST response/request.
@@ -1875,13 +1906,14 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),
 				'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
 				'schema'          => array(
-					'description' => 'Topic Gifs.',
+					'description' => 'Activity Gifs.',
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 			)
 		);
 
+		// Activity Comment Media.
 		register_rest_field(
 			'activity_comments',      // Id of the BuddyPress component the REST field is about.
 			'bp_media_ids', // Used into the REST response/request.
@@ -1896,6 +1928,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		// Activity Comment Gif.
 		register_rest_field(
 			'activity_comments',      // Id of the BuddyPress component the REST field is about.
 			'media_gif', // Used into the REST response/request.
@@ -1910,106 +1943,128 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( function_exists( 'bp_is_forums_media_support_enabled' ) && true === bp_is_forums_media_support_enabled() ) {
-			// Topic Media Photo Support.
-			register_rest_field(
-				'topics',
-				'bbp_media',
-				array(
-					'get_callback'    => array( $this, 'bbp_media_get_rest_field_callback' ),
-					'update_callback' => array( $this, 'bbp_media_update_rest_field_callback' ),
-					'schema'          => array(
-						'description' => 'Topic Medias.',
-						'type'        => 'object',
-						'context'     => array( 'embed', 'view', 'edit' ),
-					),
-				)
-			);
+		// Added param to main activity to check the comment has access to upload media or not.
+		bp_rest_register_field(
+			'activity',
+			'comment_upload_media',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_media' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload media or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 
-			// Reply Media Photo Support.
-			register_rest_field(
-				'reply',
-				'bbp_media',
-				array(
-					'get_callback'    => array( $this, 'bbp_media_get_rest_field_callback' ),
-					'update_callback' => array( $this, 'bbp_media_update_rest_field_callback' ),
-					'schema'          => array(
-						'description' => 'Reply Medias.',
-						'type'        => 'object',
-						'context'     => array( 'embed', 'view', 'edit' ),
-					),
-				)
-			);
-		}
+		// Added param to comment activity to check the child comment has access to upload media or not.
+		register_rest_field(
+			'activity_comments',
+			'comment_upload_media',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_media' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload media or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 
-		if ( function_exists( 'bp_is_forums_gif_support_enabled' ) && true === bp_is_forums_gif_support_enabled() ) {
-			// Topic Media Gif Support.
-			register_rest_field(
-				'topics',
-				'bbp_media_gif',
-				array(
-					'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
-					'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
-					'schema'          => array(
-						'description' => 'Topic Gifs.',
-						'type'        => 'object',
-						'context'     => array( 'embed', 'view', 'edit' ),
-					),
-				)
-			);
+		// Topic Media Photo Support.
+		register_rest_field(
+			'topics',
+			'bbp_media',
+			array(
+				'get_callback'    => array( $this, 'bbp_media_get_rest_field_callback' ),
+				'update_callback' => array( $this, 'bbp_media_update_rest_field_callback' ),
+				'schema'          => array(
+					'description' => 'Topic Medias.',
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 
-			// Reply Media Gif Support.
-			register_rest_field(
-				'reply',
-				'bbp_media_gif',
-				array(
-					'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
-					'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
-					'schema'          => array(
-						'description' => 'Topic Gifs.',
-						'type'        => 'object',
-						'context'     => array( 'embed', 'view', 'edit' ),
-					),
-				)
-			);
-		}
+		// Reply Media Photo Support.
+		register_rest_field(
+			'reply',
+			'bbp_media',
+			array(
+				'get_callback'    => array( $this, 'bbp_media_get_rest_field_callback' ),
+				'update_callback' => array( $this, 'bbp_media_update_rest_field_callback' ),
+				'schema'          => array(
+					'description' => 'Reply Medias.',
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 
-		if ( function_exists( 'bp_is_messages_media_support_enabled' ) && true === bp_is_messages_media_support_enabled() ) {
-			// Messages Media Photo Support.
-			bp_rest_register_field(
-				'messages',      // Id of the BuddyPress component the REST field is about.
-				'bp_media_ids', // Used into the REST response/request.
-				array(
-					'get_callback'    => array( $this, 'bp_media_ids_get_rest_field_callback_messages' ),
-					// The function to use to get the value of the REST Field.
-					'update_callback' => array( $this, 'bp_media_ids_update_rest_field_callback_messages' ),
-					// The function to use to update the value of the REST Field.
-					'schema'          => array(                                // The example_field REST schema.
-						'description' => 'Messages Medias.',
-						'type'        => 'object',
-						'context'     => array( 'view', 'edit' ),
-					),
-				)
-			);
-		}
+		// Topic Media Gif Support.
+		register_rest_field(
+			'topics',
+			'bbp_media_gif',
+			array(
+				'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
+				'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
+				'schema'          => array(
+					'description' => 'Topic Gifs.',
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 
-		if ( function_exists( 'bp_is_messages_gif_support_enabled' ) && true === bp_is_messages_gif_support_enabled() ) {
-			// Messages Media Gif Support.
-			bp_rest_register_field(
-				'messages',      // Id of the BuddyPress component the REST field is about.
-				'media_gif', // Used into the REST response/request.
-				array(
-					'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback_messages' ),
-					'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback_messages' ),
-					// The function to use to update the value of the REST Field.
-					'schema'          => array(                                // The example_field REST schema.
-						'description' => 'Message Gifs.',
-						'type'        => 'object',
-						'context'     => array( 'view', 'edit' ),
-					),
-				)
-			);
-		}
+		// Reply Media Gif Support.
+		register_rest_field(
+			'reply',
+			'bbp_media_gif',
+			array(
+				'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
+				'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
+				'schema'          => array(
+					'description' => 'Topic Gifs.',
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		// Messages Media Photo Support.
+		bp_rest_register_field(
+			'messages',      // Id of the BuddyPress component the REST field is about.
+			'bp_media_ids', // Used into the REST response/request.
+			array(
+				'get_callback'    => array( $this, 'bp_media_ids_get_rest_field_callback_messages' ),
+				// The function to use to get the value of the REST Field.
+				'update_callback' => array( $this, 'bp_media_ids_update_rest_field_callback_messages' ),
+				// The function to use to update the value of the REST Field.
+				'schema'          => array(                                // The example_field REST schema.
+					'description' => 'Messages Medias.',
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+				),
+			)
+		);
+
+		// Messages Media Gif Support.
+		bp_rest_register_field(
+			'messages',      // Id of the BuddyPress component the REST field is about.
+			'media_gif', // Used into the REST response/request.
+			array(
+				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback_messages' ),
+				'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback_messages' ),
+				// The function to use to update the value of the REST Field.
+				'schema'          => array(                                // The example_field REST schema.
+					'description' => 'Message Gifs.',
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -2025,6 +2080,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $activity_id ) ) {
 			return;
+		}
+
+		$value = new BP_Activity_Activity( $activity_id );
+
+		$group_id = 0;
+		if ( 'groups' === $value->component ) {
+			$group_id = $value->item_id;
+		}
+
+		if ( 'activity_comment' === $value->type && ! empty( $value->secondary_item_id ) && ! empty( $value->item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( (int) $value->item_id );
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+			unset( $parent_activity );
+		}
+
+		if (
+			(
+				empty( $group_id ) &&
+				! bp_is_profile_media_support_enabled()
+			) ||
+			(
+				bp_is_active( 'groups' ) &&
+				! empty( $group_id ) &&
+				! bp_is_group_media_support_enabled()
+			)
+		) {
+			return false;
 		}
 
 		$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
@@ -2066,7 +2150,26 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		global $bp_activity_edit, $bp_activity_post_update_id, $bp_activity_post_update;
 
-		if ( 'bp_media_ids' !== $attribute ) {
+		$group_id = 0;
+		if ( 'groups' === $value->component ) {
+			$group_id = $value->item_id;
+		}
+
+		if ( 'activity_comment' === $value->type && ! empty( $value->secondary_item_id ) && ! empty( $value->item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( (int) $value->item_id );
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+			unset( $parent_activity );
+		}
+
+		if (
+			'bp_media_ids' !== $attribute ||
+			(
+				function_exists( 'bb_user_has_access_upload_media' ) &&
+				! bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
+			)
+		) {
 			$value->bp_media_ids = null;
 
 			return $value;
@@ -2191,6 +2294,28 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
+		$value = new BP_Activity_Activity( $activity_id );
+
+		$group_id = 0;
+		if ( 'groups' === $value->component ) {
+			$group_id = $value->item_id;
+		}
+
+		if ( 'activity_comment' === $value->type && ! empty( $value->secondary_item_id ) && ! empty( $value->item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( (int) $value->item_id );
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+			unset( $parent_activity );
+		}
+
+		if (
+			function_exists( 'bb_user_has_access_upload_gif' ) &&
+			! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
+		) {
+			return;
+		}
+
 		$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
 
 		if ( empty( $gif_data ) ) {
@@ -2223,6 +2348,26 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	protected function bp_gif_data_update_rest_field_callback( $object, $value, $attribute ) {
 
 		if ( 'media_gif' !== $attribute ) {
+			return $value;
+		}
+
+		$group_id = 0;
+		if ( 'groups' === $value->component ) {
+			$group_id = $value->item_id;
+		}
+
+		if ( 'activity_comment' === $value->type && ! empty( $value->secondary_item_id ) && ! empty( $value->item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( (int) $value->item_id );
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+			unset( $parent_activity );
+		}
+
+		if (
+			function_exists( 'bb_user_has_access_upload_gif' ) &&
+			! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
+		) {
 			return $value;
 		}
 
@@ -2273,6 +2418,49 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * The function to use to set `comment_upload_media`
+	 *
+	 * @param BP_Activity_Activity $activity  Activity Array.
+	 * @param string               $attribute The REST Field key used into the REST response.
+	 *
+	 * @return string            The value of the REST Field to include into the REST response.
+	 */
+	protected function bp_rest_user_can_comment_upload_media( $activity, $attribute ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		$component = $activity['component'];
+		$type      = 'activity_comment' === $activity['type'];
+		$item_id   = $activity['primary_item_id'];
+		if ( true === $type && ! empty( $item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $item_id );
+			if ( 'groups' === $parent_activity->component ) {
+				$item_id   = $parent_activity->item_id;
+				$component = 'groups';
+			}
+		}
+
+		$user_id = bp_loggedin_user_id();
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		$group_id = 0;
+		if ( bp_is_active( 'groups' ) && 'groups' === $component && ! empty( $item_id ) ) {
+			$group_id = $item_id;
+		}
+
+		if ( function_exists( 'bb_user_has_access_upload_media' ) ) {
+			return bb_user_has_access_upload_media( $group_id, $user_id, 0, 0, 'profile' );
+		}
+
+		return false;
 	}
 
 	/**
@@ -2327,39 +2515,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_forums_collection_params( $params ) {
 
-		if ( function_exists( 'bp_is_forums_media_support_enabled' ) && true === bp_is_forums_media_support_enabled() ) {
-			$params['bbp_media'] = array(
-				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
-				'type'              => 'array',
-				'items'             => array( 'type' => 'integer' ),
-				'sanitize_callback' => 'wp_parse_id_list',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-		}
+		$params['bbp_media'] = array(
+			'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+			'type'              => 'array',
+			'items'             => array( 'type' => 'integer' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
 
-		if ( function_exists( 'bp_is_forums_gif_support_enabled' ) && true === bp_is_forums_gif_support_enabled() ) {
-			$params['bbp_media_gif'] = array(
-				'description' => __( 'Save gif data into topic.', 'buddyboss' ),
-				'type'        => 'object',
-				'items'       => array( 'type' => 'string' ),
-				'properties'  => array(
-					'url' => array(
-						'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
-						'type'              => 'string',
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_key',
-						'validate_callback' => 'rest_validate_request_arg',
-					),
-					'mp4' => array(
-						'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss' ),
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_key',
-						'validate_callback' => 'rest_validate_request_arg',
-					),
+		$params['bbp_media_gif'] = array(
+			'description' => __( 'Save gif data into topic.', 'buddyboss' ),
+			'type'        => 'object',
+			'items'       => array( 'type' => 'string' ),
+			'properties'  => array(
+				'url' => array(
+					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
+					'type'              => 'string',
+					'required'          => true,
+					'sanitize_callback' => 'sanitize_key',
+					'validate_callback' => 'rest_validate_request_arg',
 				),
-			);
-		}
+				'mp4' => array(
+					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss' ),
+					'required'          => true,
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_key',
+					'validate_callback' => 'rest_validate_request_arg',
+				),
+			),
+		);
 
 		return $params;
 	}
@@ -2373,39 +2557,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_message_query_arguments( $params ) {
 
-		if ( function_exists( 'bp_is_messages_media_support_enabled' ) && true === bp_is_messages_media_support_enabled() ) {
-			$params['bp_media_ids'] = array(
-				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
-				'type'              => 'array',
-				'items'             => array( 'type' => 'integer' ),
-				'sanitize_callback' => 'wp_parse_id_list',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-		}
+		$params['bp_media_ids'] = array(
+			'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+			'type'              => 'array',
+			'items'             => array( 'type' => 'integer' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
 
-		if ( function_exists( 'bp_is_messages_gif_support_enabled' ) && true === bp_is_messages_gif_support_enabled() ) {
-			$params['media_gif'] = array(
-				'description' => __( 'Save gif data into topic.', 'buddyboss' ),
-				'type'        => 'object',
-				'items'       => array( 'type' => 'string' ),
-				'properties'  => array(
-					'url' => array(
-						'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
-						'type'              => 'string',
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_key',
-						'validate_callback' => 'rest_validate_request_arg',
-					),
-					'mp4' => array(
-						'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss' ),
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_key',
-						'validate_callback' => 'rest_validate_request_arg',
-					),
+		$params['media_gif'] = array(
+			'description' => __( 'Save gif data into topic.', 'buddyboss' ),
+			'type'        => 'object',
+			'items'       => array( 'type' => 'string' ),
+			'properties'  => array(
+				'url' => array(
+					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
+					'type'              => 'string',
+					'required'          => true,
+					'sanitize_callback' => 'sanitize_key',
+					'validate_callback' => 'rest_validate_request_arg',
 				),
-			);
-		}
+				'mp4' => array(
+					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss' ),
+					'required'          => true,
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_key',
+					'validate_callback' => 'rest_validate_request_arg',
+				),
+			),
+		);
 
 		return $params;
 	}
@@ -2423,6 +2603,36 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$p_id = $post['id'];
 
 		if ( empty( $p_id ) ) {
+			return;
+		}
+
+		// Get current forum ID.
+		if ( bbp_get_reply_post_type() === get_post_type( $p_id ) ) {
+			$forum_id = bbp_get_reply_forum_id( $p_id );
+		} else {
+			$forum_id = bbp_get_topic_forum_id( $p_id );
+		}
+
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+		if (
+			(
+				(
+					empty( $group_id ) ||
+					(
+						! empty( $group_id ) &&
+						! bp_is_active( 'groups' )
+					)
+				) &&
+				! bp_is_forums_media_support_enabled()
+			) ||
+			(
+				bp_is_active( 'groups' ) &&
+				! empty( $group_id ) &&
+				! bp_is_group_media_support_enabled()
+			)
+		) {
 			return;
 		}
 
@@ -2482,6 +2692,15 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$forum_id = bbp_get_reply_forum_id( $post_id );
 		} else {
 			$forum_id = bbp_get_topic_forum_id( $post_id );
+		}
+
+		if ( function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+			if ( ! $can_send_media ) {
+				$value->bbp_media = null;
+
+				return $value;
+			}
 		}
 
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
@@ -2594,6 +2813,36 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
+		// Get current forum ID.
+		if ( bbp_get_reply_post_type() === get_post_type( $p_id ) ) {
+			$forum_id = bbp_get_reply_forum_id( $p_id );
+		} else {
+			$forum_id = bbp_get_topic_forum_id( $p_id );
+		}
+
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+		if (
+			(
+				(
+					empty( $group_id ) ||
+					(
+						! empty( $group_id ) &&
+						! bp_is_active( 'groups' )
+					)
+				) &&
+				! bp_is_forums_gif_support_enabled()
+			) ||
+			(
+				bp_is_active( 'groups' ) &&
+				! empty( $group_id ) &&
+				! bp_is_groups_gif_support_enabled()
+			)
+		) {
+			return;
+		}
+
 		$gif_data = get_post_meta( $p_id, '_gif_data', true );
 
 		if ( empty( $gif_data ) ) {
@@ -2623,6 +2872,20 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$still   = ( ! empty( $object ) && array_key_exists( 'url', $object ) ) ? $object['url'] : '';
 		$mp4     = ( ! empty( $object ) && array_key_exists( 'mp4', $object ) ) ? $object['mp4'] : '';
 		$post_id = $value->ID;
+
+		// Get current forum ID.
+		if ( 'reply' === $value->post_type ) {
+			$forum_id = bbp_get_reply_forum_id( $post_id );
+		} else {
+			$forum_id = bbp_get_topic_forum_id( $post_id );
+		}
+
+		if ( function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+			if ( ! $can_send_gif ) {
+				return;
+			}
+		}
 
 		if ( ! empty( $still ) && ! empty( $mp4 ) ) {
 
@@ -2698,6 +2961,47 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
+		$thread_id       = ( isset( $data['thread_id'] ) ? $data['thread_id'] : 0 );
+		$is_group_thread = false;
+
+		if ( empty( $thread_id ) ) {
+			return;
+		}
+
+		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
+			$is_group_thread = bb_messages_is_group_thread( $thread_id );
+		} else {
+			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+			if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+				$is_group_thread = true;
+			}
+		}
+
+		if (
+			(
+				(
+					empty( $is_group_thread ) ||
+					(
+						! empty( $is_group_thread ) &&
+						! bp_is_active( 'groups' )
+					)
+				) &&
+				! bp_is_messages_media_support_enabled()
+			) ||
+			(
+				bp_is_active( 'groups' ) &&
+				! empty( $is_group_thread ) &&
+				! bp_is_group_media_support_enabled()
+			)
+		) {
+			return;
+		}
+
 		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 		$media_ids = trim( $media_ids );
 		$media_ids = explode( ',', $media_ids );
@@ -2749,6 +3053,39 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
+		$thread_id = $value->thread_id;
+
+		if ( function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+			if ( ! $can_send_media ) {
+				$value->bp_media_ids = null;
+				return $value;
+			}
+		}
+
+		$thread = new BP_Messages_Thread( $thread_id );
+
+		$is_group_message_thread = false;
+		$first_message           = BP_Messages_Thread::get_first_message( $thread->thread_id );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+		if ( 'group' === $message_from && $thread->thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			$is_group_message_thread = true;
+		}
+
+		$thread->group_id        = $group_id;
+		$thread->is_group_thread = $is_group_message_thread;
+
+		if ( empty( apply_filters( 'bp_user_can_create_message_media', bp_is_messages_media_support_enabled(), $thread, bp_loggedin_user_id() ) ) ) {
+			$value->bp_media_ids = null;
+
+			return $value;
+		}
+
 		$args = array(
 			'upload_ids' => $medias,
 			'privacy'    => 'message',
@@ -2786,6 +3123,47 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
+		$thread_id       = ( isset( $data['thread_id'] ) ? $data['thread_id'] : 0 );
+		$is_group_thread = false;
+
+		if ( empty( $thread_id ) ) {
+			return;
+		}
+
+		if ( function_exists( 'bb_messages_is_group_thread' ) ) {
+			$is_group_thread = bb_messages_is_group_thread( $thread_id );
+		} else {
+			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+			if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+				$is_group_thread = true;
+			}
+		}
+
+		if (
+			(
+				(
+					empty( $is_group_thread ) ||
+					(
+						! empty( $is_group_thread ) &&
+						! bp_is_active( 'groups' )
+					)
+				) &&
+				! bp_is_messages_gif_support_enabled()
+			) ||
+			(
+				bp_is_active( 'groups' ) &&
+				! empty( $is_group_thread ) &&
+				! bp_is_groups_gif_support_enabled()
+			)
+		) {
+			return;
+		}
+
 		$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 		if ( empty( $gif_data ) ) {
@@ -2815,6 +3193,15 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$still      = ( ! empty( $object ) && array_key_exists( 'url', $object ) ) ? $object['url'] : '';
 		$mp4        = ( ! empty( $object ) && array_key_exists( 'mp4', $object ) ) ? $object['mp4'] : '';
 		$message_id = $value->id;
+
+		$thread_id = $value->thread_id;
+
+		if ( function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+			if ( ! $can_send_gif ) {
+				return;
+			}
+		}
 
 		if ( ! empty( $still ) && ! empty( $mp4 ) ) {
 
