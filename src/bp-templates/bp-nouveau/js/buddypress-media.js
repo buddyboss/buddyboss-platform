@@ -2004,7 +2004,7 @@ window.bp = window.bp || {};
 
 		resetGroupMessagesMediaComponent: function () {
 			var self = this;
-			if (self.dropzone_obj.length && typeof self.dropzone_obj !== 'undefined') {
+			if ( $( 'div.group-message-media-support' ).length && self.dropzone_obj && typeof self.dropzone_obj !== 'undefined') {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];
@@ -5376,7 +5376,8 @@ window.bp = window.bp || {};
 			this.previousLink = $('.bb-prev-media');
 			this.activity_ajax = false;
 			this.group_id = typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-
+			this.manage_media = typeof BP_Nouveau.media.can_manage_media !== 'undefined' ? BP_Nouveau.media.can_manage_media : false;
+			this.manage_document = typeof BP_Nouveau.media.can_manage_document !== 'undefined' ? BP_Nouveau.media.can_manage_document : false;
 		},
 
 		/**
@@ -5395,7 +5396,9 @@ window.bp = window.bp || {};
 			$(document).on('click', '.bb-next-document', this.nextDocument.bind(this));
 			$(document).on('bp_activity_ajax_delete_request', this.activityDeleted.bind(this));
 			$(document).on('click', '#bb-media-model-container .media-privacy>li', this.mediaPrivacyChange.bind(this));
+			$(document).on('click', '#bb-media-model-container .document-privacy>li', this.documentPrivacyChange.bind(this));
 			$(document).on('click', '#bb-media-model-container .bb-media-section span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind(this));
+			$(document).on('click', '#bb-media-model-container .bb-document-section span.privacy', bp.Nouveau, this.toggleDocumentPrivacyDropdown.bind(this));
 			$(document).on('click', '.bp-add-media-activity-description', this.openMediaActivityDescription.bind(this));
 			$(document).on('click', '#bp-activity-description-new-reset', this.closeMediaActivityDescription.bind(this));
 			$(document).on('click', '#bp-activity-description-new-submit', this.submitMediaActivityDescription.bind(this));
@@ -5480,7 +5483,7 @@ window.bp = window.bp || {};
 			self.showMedia();
 			self.navigationCommands();
 
-			if (typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
 				self.getActivity();
 			} else {
 				self.getMediasDescription();
@@ -5544,7 +5547,7 @@ window.bp = window.bp || {};
 			self.showDocument();
 			self.navigationDocumentCommands();
 
-			if (typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum ) {
 				self.getDocumentsActivity();
 			} else {
 				self.getDocumentsDescription();
@@ -5654,6 +5657,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var self = this;
 
+			$('.bb-media-model-wrapper.media .bb-media-section').find('img').attr('src', '');
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_media = false;
 
@@ -5699,6 +5703,7 @@ window.bp = window.bp || {};
 							parent_activity_id: media_element.data('parent-activity-id'),
 							album_id          : media_element.data('album-id'),
 							group_id          : media_element.data('group-id'),
+							can_edit          : media_element.data('can-edit'),
 							is_forum          : false
 						};
 
@@ -5751,6 +5756,7 @@ window.bp = window.bp || {};
 							author            : document_element.data('author'),
 							download          : document_element.attr('href'),
 							mp3               : document_element.data('mp3-preview'),
+							can_edit          : document_element.data('can-edit'),
 							is_forum          : false
 						};
 
@@ -5817,12 +5823,14 @@ window.bp = window.bp || {};
 				// hide privacy setting of media if activity is present.
 				if (( typeof BP_Nouveau.activity !== 'undefined' &&
 					typeof self.current_media.activity_id !== 'undefined' &&
-					self.current_media.activity_id != 0 ) ||
+					self.current_media.activity_id != 0  ) ||
 					self.group_id ||
 					self.current_media.is_forum ||
 					self.current_media.group_id ||
 					self.current_media.album_id ||
-					self.current_media.is_message
+					self.current_media.is_message ||
+					! self.can_manage_media ||
+					! self.current_media.can_edit
 				) {
 					media_privacy_wrap.hide();
 				}
@@ -5872,13 +5880,13 @@ window.bp = window.bp || {};
 			}
 
 			// privacy.
-			var document_privacy_wrap = $('.bb-media-section .bb-media-privacy-wrap');
+			var document_privacy_wrap = $('.bb-document-section .bb-document-privacy-wrap');
 
 			if (document_privacy_wrap.length) {
 				document_privacy_wrap.show();
-				document_privacy_wrap.find('ul.media-privacy li').removeClass('selected');
+				document_privacy_wrap.find('ul.document-privacy li').removeClass('selected');
 				document_privacy_wrap.find('.bp-tooltip').attr('data-bp-tooltip', '');
-				var selected_document_privacy_elem = document_privacy_wrap.find('ul.media-privacy').find('li[data-value=' + self.current_document.privacy + ']');
+				var selected_document_privacy_elem = document_privacy_wrap.find('ul.document-privacy').find('li[data-value=' + self.current_document.privacy + ']');
 				selected_document_privacy_elem.addClass('selected');
 				document_privacy_wrap.find('.bp-tooltip').attr('data-bp-tooltip', selected_document_privacy_elem.text());
 				document_privacy_wrap.find('.privacy').removeClass('public').removeClass('loggedin').removeClass('onlyme').removeClass('friends').addClass(self.current_document.privacy);
@@ -5891,6 +5899,8 @@ window.bp = window.bp || {};
 					self.current_document.is_forum ||
 					self.current_document.group_id ||
 					self.current_document.album_id ||
+					! self.can_manage_document ||
+					! self.current_document.can_edit ||
 					self.current_document.is_message
 				) {
 					document_privacy_wrap.hide();
@@ -5910,7 +5920,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
-				if (activity_id != self.current_media.activity_id) {
+				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && activity_id != self.current_media.activity_id ) {
 					self.getActivity();
 				} else {
 					self.getMediasDescription();
@@ -5929,7 +5939,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
-				if (activity_id != self.current_media.activity_id) {
+				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && activity_id != self.current_media.activity_id ) {
 					self.getActivity();
 				} else {
 					self.getMediasDescription();
@@ -5949,7 +5959,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_document.activity_id;
 				self.current_document = self.documents[ self.current_document_index ];
 				self.showDocument();
-				if (activity_id != self.current_document.activity_id) {
+				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && activity_id != self.current_document.activity_id ) {
 					self.getDocumentsActivity();
 				} else {
 					self.getDocumentsDescription();
@@ -5968,7 +5978,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_document.activity_id;
 				self.current_document = self.documents[ self.current_document_index ];
 				self.showDocument();
-				if (activity_id != self.current_document.activity_id) {
+				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && activity_id != self.current_document.activity_id ) {
 					self.getDocumentsActivity();
 				} else {
 					self.getDocumentsDescription();
@@ -6234,6 +6244,7 @@ window.bp = window.bp || {};
 			}
 
 			$('ul.media-privacy').removeClass('bb-open');
+			$('ul.document-privacy').removeClass('bb-open');
 		},
 
 		togglePrivacyDropdown: function (event) {
@@ -6349,6 +6360,52 @@ window.bp = window.bp || {};
 						} else {
 							target.parents('.activity-media-description').prepend(response.data.feedback);
 						}
+					}
+				}
+			);
+		},
+
+		toggleDocumentPrivacyDropdown: function (event) {
+			var target = $(event.target);
+
+			// Stop event propagation.
+			event.preventDefault();
+
+			target.closest('.bb-document-privacy-wrap').find('.document-privacy').toggleClass('bb-open');
+		},
+
+		documentPrivacyChange: function (event) {
+			var target = $(event.target), self = this, privacy = target.data('value'), older_privacy = 'public';
+
+			event.preventDefault();
+
+			if (target.hasClass('selected')) {
+				return false;
+			}
+
+			target.closest('.bb-document-privacy-wrap').find('.privacy').addClass('loading');
+			older_privacy = target.closest('.bb-document-privacy-wrap').find('ul.document-privacy li.selected').data('value');
+			target.closest('.bb-document-privacy-wrap').find('ul.document-privacy li').removeClass('selected');
+			target.addClass('selected');
+
+			$.ajax(
+				{
+					type   : 'POST',
+					url    : BP_Nouveau.ajaxurl,
+					data   : {
+						action  : 'document_save_privacy',
+						item_id : self.current_document.id,
+						_wpnonce: BP_Nouveau.nonces.media,
+						value   : privacy,
+						type    : 'document',
+					},
+					success: function () {
+						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading').removeClass(older_privacy);
+						target.closest('.bb-document-privacy-wrap').find('.privacy').addClass(privacy);
+						target.closest('.bb-document-privacy-wrap').find('.bp-tooltip').attr('data-bp-tooltip', target.text());
+					},
+					error  : function () {
+						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading');
 					}
 				}
 			);
