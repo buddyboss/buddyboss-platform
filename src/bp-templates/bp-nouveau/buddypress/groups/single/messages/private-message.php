@@ -40,9 +40,9 @@ if ( 0 === $total_count ) {
     ?>
     <div class="bb-groups-messages-private-full">
         <div class="bp-messages-feedback bp-messages-feedback-hide">
-            <div class="bp-feedback error">
+            <div class="bp-feedback info">
                 <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php esc_html_e( 'You don\'t have a access to send the private message to any group members. ', 'buddyboss' ); ?></p>
+                <p><?php esc_html_e( 'You don\'t have access to send a private message to any member of this group.', 'buddyboss' ); ?></p>
             </div>
         </div>
     </div>
