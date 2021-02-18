@@ -346,7 +346,7 @@ window.bp = window.bp || {};
 											memberListUlLast.html( response.data.pagination );
 											$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
 											if ( 'all' === type ) {
-												$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled' );
+												$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled selected' );
 											}
 										} else {
 											$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
