@@ -910,11 +910,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		);
 	}
 
-	$group_members = groups_get_group_members( $args );
-	$html          = '';
-	$paginate      = '';
-	$result        = array();
-	$total_page    = 0;
+	$group_members   = groups_get_group_members( $args );
+	$html            = '';
+	$paginate        = '';
+	$result          = array();
+	$total_page      = 0;
 
 	if ( empty( $group_members['members'] ) ) {
 		wp_send_json_success( array( 'results' => 'no_member' ) );
@@ -944,7 +944,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
                 }
             }
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; echo ( $can_send_group_message && $is_friends_connection ) ? '' : ' is_disabled '; ?>">
+			<li class="group-message-member-li <?php echo $member->ID; echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg'; ?>">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
@@ -957,7 +957,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						</a>
 					</div>
 				</div>
-				<div class="action">
+				<div class="action <?php echo ( $can_send_group_message && $is_friends_connection ) ? esc_attr( 'can-grp-msg' ) : esc_attr( 'can-not-grp-msg' ); ?>">
 					<?php
 					if ( $can_send_group_message && $is_friends_connection ) {
 						?>
@@ -965,9 +965,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
 								data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
 								data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Add Member', 'buddyboss' ); ?>">
 							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
-							<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Add Member', 'buddyboss' ); ?>
 						</span>
 						</button>
 						<?php
@@ -1031,7 +1031,6 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$total_page  = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
 		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
 		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
-		$total_count = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total', $group_members['count'] );
 
 		wp_send_json_success(
 			array(
@@ -1178,7 +1177,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		}
 
 		// Check if force friendship is enabled and check recipients.
-        $not_friends =array();
+        $not_friends = array();
 		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 			foreach ( $members as $member ) {
 				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
