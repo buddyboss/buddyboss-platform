@@ -4662,7 +4662,8 @@ define({ "api": [
             "allowedValues": [
               "invite",
               "invite-friends",
-              "invited"
+              "invited",
+              "message"
             ],
             "optional": true,
             "field": "scope",

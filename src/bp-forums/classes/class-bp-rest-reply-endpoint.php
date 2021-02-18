@@ -850,8 +850,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		$reply_forum = ! empty( $forum_id ) ? $forum_id : 0;
-		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bp_user_has_access_upload_media' ) ) {
-			$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
@@ -863,8 +863,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bp_user_has_access_upload_document' ) ) {
-			$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
@@ -876,8 +876,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bp_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
@@ -1393,8 +1393,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		$reply_forum = ! empty( $forum_id ) ? $forum_id : 0;
-		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bp_user_has_access_upload_media' ) ) {
-			$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), $reply_forum, 0 );
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $reply_forum, 0 );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
@@ -1406,8 +1406,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bp_user_has_access_upload_document' ) ) {
-			$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), $reply_forum, 0 );
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $reply_forum, 0 );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
@@ -1419,8 +1419,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bp_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $reply_forum, 0 );
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $reply_forum, 0 );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',

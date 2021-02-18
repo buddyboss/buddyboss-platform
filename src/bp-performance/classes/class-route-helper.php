@@ -69,7 +69,7 @@ class Route_Helper {
 	 * Fetch parameters passed into the endpoint.
 	 *
 	 * @param string $endpoint_pattern "bbpress/v1/topic/<id>".
-	 * @param string $full_url         "http://localhost/wp-json/appboss/bbpress/v1/topic/488".
+	 * @param string $full_url         "http://localhost/wp-json/buddyboss-app/bbpress/v1/topic/488".
 	 * @param string $parameter        "id".
 	 *
 	 * @return mixed|null
