@@ -1097,7 +1097,7 @@ span.icons:before {
 	.group-messages-members-listing .all-members .group-message-member-li.is_disabled {
 
 		.action > span i {
-			font-size: 26px;
+			font-size: 27px;
 			opacity: 0.25;
 		}
 
@@ -1108,6 +1108,12 @@ span.icons:before {
 			cursor: default;
 			opacity: 0.5;
 		}
+
+		&.can-not-grp-msg > .action {
+			pointer-events: auto;
+			opacity: 1;
+		}
+
 	}
 
 	.group-messages-members-listing .all-members .group-message-member-li {
