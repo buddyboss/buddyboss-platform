@@ -580,7 +580,20 @@ function bp_nouveau_get_groups_directory_nav_items() {
 
 	if ( is_user_logged_in() ) {
 
-		$my_groups_count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+		$group_type = bp_get_current_group_directory_type();
+
+		if ( ! empty( $group_type ) ) {
+			$result_groups   = groups_get_groups(
+				array(
+					'user_id'    => bp_loggedin_user_id(),
+					'group_type' => $group_type,
+					'fields'     => 'ids',
+				)
+			);
+			$my_groups_count = isset( $result_groups['total'] ) ? (int) $result_groups['total'] : 0;
+		} else {
+			$my_groups_count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+		}
 
 		// If the user has groups create a nav item
 		if ( $my_groups_count ) {
