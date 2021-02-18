@@ -54,7 +54,7 @@ if ( 0 === $total_count ) {
 				<div class="bb-panel-head">
 					<div class="bb-panel-subhead">
 						<h4 class="total-members-text"><?php esc_html_e( 'Group Members', 'buddyboss' ); ?></h4>
-                        <div class="bp-group-message-wrap" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_html_e( 'Not allowed to create new thread with all group members', 'buddyboss' ); ?>">
+                        <div class="bp-group-message-wrap" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_html_e( 'You are not allowed to Create New Thread with all group members.', 'buddyboss' ); ?>">
                             <input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
                             <label for="bp-group-message-switch-checkbox" class="bp-group-message-label"><span class="select-members-text"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></span></label>
                         </div>
