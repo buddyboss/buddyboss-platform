@@ -1048,6 +1048,10 @@ span.icons:before {
 			.bb-groups-messages-right-top {
 				padding-bottom: 20px;
 
+				.group-messages-helper-text {
+					display: none;
+				}
+
 				.bb-title-wrap {
 					padding: 20px 20px 0;
 
@@ -1109,8 +1113,16 @@ span.icons:before {
 				border: 2px solid #b8c1ca;
 				display: inline-block;
 				border-radius: 100%;
+
+				&:before {
+					display: none;
+				}
 			}
 
+		}
+
+		div.action span i {
+			font-size: 26px;
 		}
 
 		&.selected .invite-button .icons {
@@ -1176,6 +1188,10 @@ span.icons:before {
 
 		&.full_width .bb-groups-messages-right-top {
 			padding-bottom: 20px;
+
+			.group-messages-helper-text {
+				display: none;
+			}
 
 			.bb-title-wrap {
 				flex-flow: row;

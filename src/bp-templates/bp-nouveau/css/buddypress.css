@@ -19221,6 +19221,10 @@ span.icons:before {
   padding-bottom: 20px;
 }
 
+.group-messages.public-message .bb-groups-messages-right.full_width .bb-groups-messages-right-top .group-messages-helper-text {
+  display: none;
+}
+
 .group-messages.public-message .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap {
   padding: 20px 20px 0;
 }
@@ -19261,6 +19265,14 @@ span.icons:before {
   border: 2px solid #b8c1ca;
   display: inline-block;
   border-radius: 100%;
+}
+
+.group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li .invite-button .icons:before {
+  display: none;
+}
+
+.group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li div.action span i {
+  font-size: 26px;
 }
 
 .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.selected .invite-button .icons {
@@ -19318,6 +19330,10 @@ span.icons:before {
 
 .group-messages.private-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top {
   padding-bottom: 20px;
+}
+
+.group-messages.private-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top .group-messages-helper-text {
+  display: none;
 }
 
 .group-messages.private-message #group-messages-container .bb-groups-messages-right.full_width .bb-groups-messages-right-top .bb-title-wrap {
