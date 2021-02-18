@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.5.7\n"
+"Project-Id-Version: BuddyBoss Platform 1.5.7.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-02-11 17:25:56+00:00\n"
+"POT-Creation-Date: 2021-02-16 13:02:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -965,7 +965,7 @@ msgstr ""
 #: bp-activity/bp-activity-template.php:1189
 #: bp-groups/bp-groups-template.php:915
 #: bp-groups/classes/class-bp-groups-list-table.php:598
-#: bp-messages/bp-messages-functions.php:1053
+#: bp-messages/bp-messages-functions.php:1062
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:820
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:868
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1772
@@ -1940,7 +1940,7 @@ msgstr ""
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:119
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
-#: bp-messages/bp-messages-functions.php:295
+#: bp-messages/bp-messages-functions.php:304
 #: bp-messages/bp-messages-template.php:2131
 #: bp-search/bp-search-settings.php:988 bp-settings/actions/export.php:35
 msgid "%s"
@@ -3437,6 +3437,7 @@ msgstr ""
 #: bp-media/bp-media-settings.php:29 bp-media/bp-media-settings.php:1369
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1199
 #: bp-moderation/classes/class-bp-moderation-document.php:102
+#: bp-performance/classes/class-settings.php:155
 #: bp-search/bp-search-settings.php:800
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:30
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
@@ -4995,6 +4996,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1168
 #: bp-moderation/classes/class-bp-moderation-media.php:103
+#: bp-performance/classes/class-settings.php:147
 #: bp-search/bp-search-settings.php:756
 #: bp-templates/bp-nouveau/buddypress/groups/single/photos.php:24
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:11
@@ -5163,7 +5165,6 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2581
-#: bp-performance/classes/class-settings.php:147
 msgid "Media Uploading"
 msgstr ""
 
@@ -20865,41 +20866,41 @@ msgstr ""
 msgid "Re"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:173
+#: bp-messages/bp-messages-functions.php:182
 msgid "Message could not be sent. Please enter a recipient."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:181
+#: bp-messages/bp-messages-functions.php:190
 msgid "No Subject"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:238
+#: bp-messages/bp-messages-functions.php:247
 msgid ""
 "Message could not be sent because you have entered an invalid username. "
 "Please try again."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:306
+#: bp-messages/bp-messages-functions.php:315
 msgid "You need to be connected with this member in order to send a message."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:307
+#: bp-messages/bp-messages-functions.php:316
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1708
 msgid "You need to be connected with this member to continue this conversation."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:308
+#: bp-messages/bp-messages-functions.php:317
 msgid ""
 "You need to be connected with all recipients in order to send them a "
 "message."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:309
+#: bp-messages/bp-messages-functions.php:318
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1703
 msgid "You need to be connected with all recipients to continue this conversation."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:349
+#: bp-messages/bp-messages-functions.php:358
 msgid "Message was not sent. Please try again."
 msgstr ""
 
@@ -22575,7 +22576,7 @@ msgstr ""
 
 #: bp-performance/classes/class-performance.php:366
 msgid ""
-"To enable caching you need to install the \"BuddyBoss API Caching\" plugin "
+"To enable caching, you need to install the \"BuddyBoss API Caching\" plugin "
 "in your"
 msgstr ""
 
@@ -22598,7 +22599,9 @@ msgid "Cache Activity Feeds"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:93
-msgid "Plugins that interact with Activity Feeds may show expired data."
+msgid ""
+"Plugins that interact with Activity Feeds may not be compatible with API "
+"caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:100
@@ -22606,7 +22609,9 @@ msgid "Cache Member Profiles"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:101
-msgid "Plugins that interact with Member Profiles may show expired data."
+msgid ""
+"Plugins that interact with Member Profiles may not be compatible with API "
+"caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:108
@@ -22614,7 +22619,9 @@ msgid "Cache Member Connections"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:109
-msgid "Plugins that interact with Member Connections may show expired data."
+msgid ""
+"Plugins that interact with Member Connections may not be compatible with "
+"API caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:116
@@ -22622,7 +22629,9 @@ msgid "Cache Social Groups"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:117
-msgid "Plugins that interact with Social Groups may show expired data."
+msgid ""
+"Plugins that interact with Social Groups may not be compatible with API "
+"caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:124
@@ -22630,7 +22639,9 @@ msgid "Cache Private Messaging"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:125
-msgid "Plugins that interact with Private Messaging may show expired data."
+msgid ""
+"Plugins that interact with Private Messaging may not be compatible with API "
+"caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:132
@@ -22638,7 +22649,9 @@ msgid "Cache Forum Discussions"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:133
-msgid "Plugins that interact with Forum Discussions may show expired data."
+msgid ""
+"Plugins that interact with Forum Discussions may not be compatible with API "
+"caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:140
@@ -22646,27 +22659,27 @@ msgid "Cache Notifications"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:141
-msgid "Plugins that interact with Notifications may show expired data."
+msgid ""
+"Plugins that interact with Notifications may not be compatible with API "
+"caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:148
-msgid "Cache Media photos/albums"
+msgid "Cache Photos and Albums"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:149
-msgid "Plugins that interact with Media photos/albums may show expired data."
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:155
-msgid "Documents Uploading"
+msgid ""
+"Plugins that interact with Photos and Albums may not be compatible with API "
+"caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:156
-msgid "Cache Document files/folders"
+msgid "Cache Document Files and Folders"
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:157
-msgid "Plugins that interact with Document files/folder may show expired data."
+msgid "Plugins that interact with Documents may not be compatible with API caching."
 msgstr ""
 
 #: bp-performance/classes/class-settings.php:245
