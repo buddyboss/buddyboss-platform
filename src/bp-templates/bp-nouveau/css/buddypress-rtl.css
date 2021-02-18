@@ -19248,7 +19248,7 @@ span.icons:before {
 }
 
 .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.is_disabled .action > span i {
-  font-size: 27px;
+  font-size: 25px;
   opacity: 0.25;
 }
 
@@ -19272,8 +19272,8 @@ span.icons:before {
 .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li .invite-button .icons {
   opacity: 1;
   visibility: visible;
-  height: 26px;
-  width: 26px;
+  height: 24px;
+  width: 24px;
   border: 2px solid #b8c1ca;
   display: inline-block;
   border-radius: 100%;
@@ -19293,10 +19293,10 @@ span.icons:before {
 
 .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.selected .invite-button .icons:before {
   content: "\e876";
-  font-size: 18px;
-  line-height: 26px;
-  height: 26px;
-  width: 26px;
+  font-size: 15px;
+  line-height: 24px;
+  height: 24px;
+  width: 24px;
   display: inline-block;
   border-radius: 100%;
   background-color: #5087e5;

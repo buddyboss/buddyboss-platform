@@ -176,8 +176,7 @@ window.bp = window.bp || {};
 							$group_messages_select.select2().prop( 'disabled', true );
 							$group_messages_select.select2( 'data', { id: BP_Nouveau.group_messages.select_default_value, text: BP_Nouveau.group_messages.select_default_text } );
 							$group_messages_select.val( 'all' ).trigger( 'change' );
-							$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled' );
-							$( '.group-messages-members-listing #members-list li' ).removeClass( 'selected' );
+							$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled selected' );
 							$( '.bp-select-members-wrap .select2-selection__choice__remove' ).hide();
 							$( '#item-body #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-bottom .group-messages-type' ).val( 'private' );
 						} else {
@@ -188,7 +187,7 @@ window.bp = window.bp || {};
 							);
 							$group_messages_select.select2().prop( 'disabled', false );
 							$( '#group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
-							$( '.group-messages-members-listing #members-list li.can-grp-msg' ).removeClass( 'is_disabled' );
+							$( '.group-messages-members-listing #members-list li.can-grp-msg' ).removeClass( 'is_disabled selected' );
 							$( '.bp-select-members-wrap .select2-selection__choice__remove' ).show();
 						}
 					}
