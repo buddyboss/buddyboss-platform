@@ -311,6 +311,10 @@ window.bp = window.bp || {};
 								return false;
 							}
 
+							if ( ! $( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).length && ! $( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).length && ! $( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).length ) {
+								return false;
+							}
+
 							page = page + 1;
 
 							$( '.bb-icon-loader' ).show();
@@ -967,11 +971,10 @@ window.bp = window.bp || {};
 
 		// Members autoload.
 		loadMoreMessageMembers: function ( event ) {
-
 			var target = $( event.currentTarget );
 			if ( ( target[0].scrollHeight - ( target.scrollTop() ) ) === target.innerHeight() ) {
 				var element = $( '#group-messages-container .group-messages-members-listing #members-list li.load-more' );
-				if ( element.length ) {
+				if ( element.length && $( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).length && $( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).length ) {
 					$( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).trigger( 'click' );
 				}
 			}
