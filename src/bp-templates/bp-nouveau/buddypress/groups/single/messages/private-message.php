@@ -33,7 +33,7 @@ if ( ! empty( $group_members ) && isset( $group_members['members'] ) && ! empty(
 }
 
 if ( $total_count > 0 ) {
-	$all_text = sprintf( __( '%s Members', 'buddyboss' ), $total_count );
+	$all_text = sprintf( _n( '%s Member', '%s Members', $total_count, 'buddyboss' ), $total_count );
 }
 
 if ( 0 === $total_count ) {
