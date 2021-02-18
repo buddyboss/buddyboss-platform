@@ -527,3 +527,55 @@ function bp_core_set_uri_elementor_show_on_front( $bool ) {
 	return $bool;
 }
 add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_front', 10, 3 );
+
+/**
+ * Prevent BB template redering and Redirect to the Elementor "Maintenance Mode" template.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @return void
+ */
+function bp_prevent_template_rendering() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return;
+	}
+
+	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+		return;
+	}
+
+	$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
+
+	if ( $is_login_page ) {
+		return;
+	}
+
+	$user         = wp_get_current_user();
+	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
+
+	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
+		return;
+	}
+
+	if ( 'custom' === $exclude_mode ) {
+		$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
+		$user_roles    = $user->roles;
+
+		if ( is_multisite() && is_super_admin() ) {
+			$user_roles[] = 'super_admin';
+		}
+
+		$compare_roles = array_intersect( $user_roles, $exclude_roles );
+
+		if ( ! empty( $compare_roles ) ) {
+			return;
+		}
+	}
+
+	$mode = get_option( 'elementor_maintenance_mode_mode' );
+
+	if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
+		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+	}
+}
+add_action( 'bp_loaded', 'bp_prevent_template_rendering' );
