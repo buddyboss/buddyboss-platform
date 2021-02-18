@@ -19243,7 +19243,8 @@ span.icons:before {
 }
 
 .group-messages.private-message #group-messages-container .bb-groups-messages-private-full {
-  padding: 0 10px 0 0;
+  padding: 10px 20px 10px 20px;
+  width: 100%;
 }
 
 .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.is_disabled .action > span i {
