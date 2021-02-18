@@ -3972,6 +3972,11 @@ function bp_document_remove_temp_directory( $dir ) {
 	}
 }
 
+/**
+ * Generate the document preview.
+ *
+ * @param int $attachment_id attachment id.
+ */
 function bp_document_generate_document_previews( $attachment_id ) {
 	$is_preview_generated = get_post_meta( $attachment_id, 'document_preview_generated', true );
 
@@ -4060,6 +4065,13 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 	return array( $cnt, $num_updates, $num_fails, $time );
 }
 
+/**
+ * Generate the document code preview.
+ *
+ * @param $attachment_id
+ *
+ * @return false
+ */
 function bp_document_generate_code_previews( $attachment_id ) {
 	$extension = bp_document_extension( $attachment_id );
 	if ( ! in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
@@ -4105,6 +4117,13 @@ function bp_document_generate_code_previews( $attachment_id ) {
 	}
 }
 
+/**
+ * Get the extension descriptions.
+ *
+ * @param $extension
+ *
+ * @return mixed|string
+ */
 function bp_document_get_extension_description( $extension ) {
 	$extension_lists       = bp_document_extensions_list();
 	$extension_description = '';
