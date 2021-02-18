@@ -349,6 +349,16 @@ window.bp = window.bp || {};
 											$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
 											if ( 'all' === type ) {
 												$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled selected' );
+											}else{
+												
+												var selected_user_ids = $group_messages_select.val();
+												for (var select_index = 0; select_index < selected_user_ids.length; select_index++) {
+													var user_id = selected_user_ids[ select_index ];
+													var user_li_sel = $( '.group-messages-members-listing #members-list li.can-grp-msg.'+user_id );
+													if( user_li_sel.length > 0 ){
+														user_li_sel.addClass( 'selected' );
+													}
+												}
 											}
 										} else {
 											$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
@@ -746,8 +756,18 @@ window.bp = window.bp || {};
 									feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 								}
 								if ( 'all' === type ) {
-									$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled' );
+									$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled selected' );
 								} else {
+
+									var selected_user_ids = $group_messages_select.val();
+									for (var select_index = 0; select_index < selected_user_ids.length; select_index++) {
+										var user_id = selected_user_ids[ select_index ];
+										var user_li_sel = $( '.group-messages-members-listing #members-list li.can-grp-msg.'+user_id );
+										if( user_li_sel.length > 0 ){
+											user_li_sel.addClass( 'selected' );
+										}
+									}
+
 									$( '.group-messages-members-listing #members-list li.can-grp-msg' ).removeClass( 'is_disabled' );
 								}
 							}
