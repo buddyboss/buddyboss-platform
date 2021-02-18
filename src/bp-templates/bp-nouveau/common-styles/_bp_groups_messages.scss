@@ -1005,16 +1005,17 @@ span.icons:before {
 		flex: auto;
 
 		.bp-select-members-wrap {
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
-			-webkit-box-align: center;
-			-ms-flex-align: center;
-			align-items: center;
 
 			.group-messages-helper-text {
 				min-width: 70px;
 				color: #c3c6c9;
+				float: left;
+				margin-top: 6px;
+			}
+
+			.select2.select2-container {
+				float: left;
+				width: calc(100% - 100px) !important;
 			}
 
 		}
@@ -1147,16 +1148,17 @@ span.icons:before {
 	.bb-groups-messages-right {
 
 		.bp-select-members-wrap {
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
-			-webkit-box-align: center;
-			-ms-flex-align: center;
-			align-items: center;
 
 			.group-messages-helper-text {
 				min-width: 70px;
 				color: #c3c6c9;
+				float: left;
+				margin-top: 6px;
+			}
+
+			.select2.select2-container {
+				float: left;
+				width: calc(100% - 100px) !important;
 			}
 
 		}
