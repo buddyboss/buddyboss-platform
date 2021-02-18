@@ -93,7 +93,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Activity Feeds may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-activity&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_members'            => array(
 						'label'          => __( 'Member Profiles', 'buddyboss' ),
@@ -101,7 +101,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Member Profiles may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-members&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_member_connections' => array(
 						'label'          => __( 'Member Connections', 'buddyboss' ),
@@ -109,7 +109,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Member Connections may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => admin_url( $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce ),
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_social_groups'      => array(
 						'label'          => __( 'Social Groups', 'buddyboss' ),
@@ -117,7 +117,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Social Groups may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-groups&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_private_messaging'  => array(
 						'label'          => __( 'Private Messaging', 'buddyboss' ),
@@ -125,7 +125,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Private Messaging may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-messages&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_forum_discussions'  => array(
 						'label'          => __( 'Forum Discussions', 'buddyboss' ),
@@ -133,7 +133,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Forum Discussions may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bbp-forums,bbp-topics,bbp-replies&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_notifications'      => array(
 						'label'          => __( 'Notifications', 'buddyboss' ),
@@ -141,7 +141,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Notifications may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-notifications&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_media'              => array(
 						'label'          => __( 'Photos', 'buddyboss' ),
@@ -149,7 +149,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Photos and Albums may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-media&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 					'cache_bb_document'           => array(
 						'label'          => __( 'Documents', 'buddyboss' ),
@@ -157,7 +157,7 @@ class Settings {
 						'desc'           => __( 'Plugins that interact with Documents may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-document&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
-						'value'          => false,
+						'value'          => true,
 					),
 				),
 			),
@@ -238,7 +238,7 @@ class Settings {
 	 */
 	public static function handle_purge_cache() {
 
-		if ( ! empty( $_GET['cache_purge'] ) && 1 === $_GET['cache_purge'] ) {
+		if ( ! empty( $_GET['cache_purge'] ) && 1 === (int) $_GET['cache_purge'] && empty( $_POST ) ) {
 			add_action(
 				'admin_notices',
 				function () {
