@@ -356,9 +356,9 @@ window.bp = window.bp || {};
 											memberListUlLast.html( response.data.pagination );
 											$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
 											if ( 'all' === type ) {
-												$( '.group-messages-members-listing #members-list li .action' ).hide();
+												$( '.group-messages-members-listing #members-list li' ).addClass( 'is_disabled' );
 											} else {
-												$( '.group-messages-members-listing #members-list li .action' ).show();
+												$( '.group-messages-members-listing #members-list li' ).addClass( 'is_disabled' );
 											}
 											if ( typeof response.data.total_page !== 'undefined' ) {
 												total_pages = response.data.total_page;
