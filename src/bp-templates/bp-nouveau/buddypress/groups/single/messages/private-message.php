@@ -36,7 +36,19 @@ if ( $total_count > 0 ) {
 	$all_text = sprintf( __( '%s Members', 'buddyboss' ), $total_count );
 }
 
-if ( $group_members['count'] != 0 ) { ?>
+if ( 0 === $total_count ) {
+    ?>
+    <div class="bb-groups-messages-private-full">
+        <div class="bp-messages-feedback bp-messages-feedback-hide">
+            <div class="bp-feedback error">
+                <span class="bp-icon" aria-hidden="true"></span>
+                <p><?php esc_html_e( 'You don\'t have a access to send the private message to any group members. ', 'buddyboss' ); ?></p>
+            </div>
+        </div>
+    </div>
+    <?php
+} else {
+    if ( $group_members['count'] != 0 ) { ?>
     <div class="bb-groups-messages-left">
 			<div class="bb-groups-messages-left-inner">
 				<div class="bb-panel-head">
@@ -88,7 +100,7 @@ if ( $group_members['count'] != 0 ) { ?>
 	<?php
 } ?>
 
-<div class="bb-groups-messages-right">
+    <div class="bb-groups-messages-right">
     <form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
         <input type="hidden" class="count-all-members-text" value="<?php echo esc_attr( $all_text ); ?>">
         <div class="bb-groups-messages-right-top">
@@ -209,3 +221,6 @@ if ( $group_members['count'] != 0 ) { ?>
 			<?php } ?>
 		</form>
 </div>
+
+<?php
+}
