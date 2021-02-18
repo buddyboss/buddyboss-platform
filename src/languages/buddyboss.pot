@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-02-18 12:10:57+00:00\n"
+"POT-Creation-Date: 2021-02-18 14:58:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23805,15 +23805,17 @@ msgid "All Group Members"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:36
-msgid "%s Members"
-msgstr ""
+msgid "%s Member"
+msgid_plural "%s Members"
+msgstr[0] ""
+msgstr[1] ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:45
-msgid "You don't have a access to send the private message to any group members. "
+msgid "You don't have access to send a private message to any member of this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:57
-msgid "Not allowed to create new thread with all group members"
+msgid "You are not allowed to Create New Thread with all group members."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:108

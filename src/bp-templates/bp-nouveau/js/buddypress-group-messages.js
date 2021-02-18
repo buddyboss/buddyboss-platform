@@ -300,12 +300,13 @@ window.bp = window.bp || {};
 
 				var membersDiv = document.getElementById( 'members-list' );
 				$( '.bb-icon-loader' ).hide();
+				var scroll_xhr;
 				membersDiv.addEventListener(
 					'scroll',
 					function () {
 						if ( membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight ) {
 
-							if ( page >= total_pages ) {
+							if ( page >= total_pages || scroll_xhr != null ) {
 								return false;
 							}
 
@@ -333,12 +334,13 @@ window.bp = window.bp || {};
 								'show_all'  : show_all
 							};
 
-							$.ajax(
+							scroll_xhr = $.ajax(
 								{
 									type: 'POST',
 									url: BP_Nouveau.ajaxurl,
 									data: data,
 									success: function ( response ) {
+										scroll_xhr = null;
 										if ( response.success && 'no_member' !== response.data.results ) {
 											$( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).remove();
 											memberListUl.append( response.data.results );
