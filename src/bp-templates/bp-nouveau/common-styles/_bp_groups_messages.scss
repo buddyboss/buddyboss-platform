@@ -1016,6 +1016,10 @@ span.icons:before {
 			.select2.select2-container {
 				float: left;
 				width: calc(100% - 100px) !important;
+
+				.select2-selection__choice .select2-selection__choice__remove {
+					display: none !important;
+				}
 			}
 
 		}
@@ -1084,6 +1088,10 @@ span.icons:before {
 }
 
 .group-messages.private-message #group-messages-container {
+
+	.bb-groups-messages-private-full {
+		padding: 0 0 0 10px;
+	}
 
 	.group-messages-members-listing .all-members .group-message-member-li.is_disabled {
 
