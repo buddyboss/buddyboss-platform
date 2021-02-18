@@ -90,7 +90,6 @@ class Settings {
 					'cache_bb_activity_feeds'     => array(
 						'label'          => __( 'Activity Feeds', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Activity Feeds', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Activity Feeds may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-activity&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
@@ -98,7 +97,6 @@ class Settings {
 					'cache_bb_members'            => array(
 						'label'          => __( 'Member Profiles', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Member Profiles', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Member Profiles may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-members&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
@@ -106,7 +104,6 @@ class Settings {
 					'cache_bb_member_connections' => array(
 						'label'          => __( 'Member Connections', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Member Connections', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Member Connections may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => admin_url( $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce ),
 						'type'           => 'checkbox',
 						'value'          => true,
@@ -114,7 +111,6 @@ class Settings {
 					'cache_bb_social_groups'      => array(
 						'label'          => __( 'Social Groups', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Social Groups', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Social Groups may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-groups&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
@@ -122,7 +118,6 @@ class Settings {
 					'cache_bb_private_messaging'  => array(
 						'label'          => __( 'Private Messaging', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Private Messaging', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Private Messaging may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-messages&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
@@ -138,23 +133,20 @@ class Settings {
 					'cache_bb_notifications'      => array(
 						'label'          => __( 'Notifications', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Notifications', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Notifications may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-notifications&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
 					'cache_bb_media'              => array(
 						'label'          => __( 'Photos', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Photos and Albums', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Photos and Albums may not be compatible with API caching.', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Photos/Albums', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-media&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
 					'cache_bb_document'           => array(
 						'label'          => __( 'Documents', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Document Files and Folders', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Documents may not be compatible with API caching.', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Document Files/Folders', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-document&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
