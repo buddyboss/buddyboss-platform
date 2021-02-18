@@ -588,7 +588,7 @@ function bp_nouveau_ajax_post_update() {
 		$posted_media   = wp_list_pluck( $_POST['media'], 'media_id' ); //phpcs:ignore
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
-		if ( ! bp_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
+		if ( ! bb_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
 				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
@@ -611,7 +611,7 @@ function bp_nouveau_ajax_post_update() {
 		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
 
 
-		if ( ! bp_document_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
+		if ( ! bb_document_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
 				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
@@ -629,6 +629,15 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
+
+		if ( ! bb_user_can_create_activity() ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You don\'t have access to do a activity.', 'buddyboss' ),
+				)
+			);
+		}
+
 		$content = $_POST['content'];
 
 		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {

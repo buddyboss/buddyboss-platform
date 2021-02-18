@@ -12,11 +12,8 @@ $args = array(
 
 $group_members = groups_get_group_members( $args );
 
-?>
-
-
-	<?php if ( $group_members['count'] != 0 ) { ?>
-		<div class="bb-groups-messages-left">
+if ( $group_members['count'] != 0 ) { ?>
+    <div class="bb-groups-messages-left">
 			<div class="bb-groups-messages-left-inner">
 				<div class="bb-panel-head">
 					<div class="bb-panel-subhead">
@@ -60,11 +57,12 @@ $group_members = groups_get_group_members( $args );
 				</div>
 			</div>
 		</div>
-	<?php } ?>
+	<?php
+} ?>
 
-	<div class="bb-groups-messages-right">
-		<form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
-			<div class="bb-groups-messages-right-top">
+<div class="bb-groups-messages-right">
+    <form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
+        <div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></h2>
 					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></a>
@@ -83,7 +81,6 @@ $group_members = groups_get_group_members( $args );
 					<?php } ?>
 				</div>
 			</div>
-
 			<?php if ( 0 !== $group_members['count'] ) { ?>
 				<div class="bb-groups-messages-right-bottom">
 					<div id="bp-group-message-content">
@@ -123,21 +120,21 @@ $group_members = groups_get_group_members( $args );
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-camera-small"></span>
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-attach"></span>
 									</a>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
 										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Post a GIF', 'buddyboss' ); ?>">
@@ -160,7 +157,7 @@ $group_members = groups_get_group_members( $args );
 									</div>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 							<?php endif; ?>
 							<div id="group-messages-new-submit" class="submit">
@@ -169,18 +166,7 @@ $group_members = groups_get_group_members( $args );
 									<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>
 								</select>
 								<?php
-
 								$disabled = '';
-								$args     = array(
-									'page'                => 1,
-									'per_page'            => 12,
-									'group_id'            => bp_get_current_group_id(),
-									'exclude'             => array( bp_loggedin_user_id() ),
-									'exclude_admins_mods' => false,
-								);
-
-								$group_members = groups_get_group_members( $args );
-
 								if ( empty( $group_members['members'] ) ) {
 									$disabled = 'disabled';
 								}
@@ -192,4 +178,4 @@ $group_members = groups_get_group_members( $args );
 				</div>
 			<?php } ?>
 		</form>
-	</div>
+</div>

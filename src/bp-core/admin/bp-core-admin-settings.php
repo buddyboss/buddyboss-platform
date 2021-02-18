@@ -1358,28 +1358,3 @@ function bp_admin_moderation_report_setting_tutorial() {
 
 	<?php
 }
-
-
-
-/**
- * Link to Access Control tutorial
- *
- * @since BuddyBoss 1.5.7
- */
-function bp_admin_access_control_setting_tutorial() {
-	?>
-
-    <p>
-        <a class="button" href="<?php echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 121712, // Pending: link to right article id
-				),
-				'admin.php'
-			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-    </p>
-
-	<?php
-}

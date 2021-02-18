@@ -402,8 +402,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			function_exists( 'bp_document_user_can_upload' ) &&
-			! bp_document_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
+			function_exists( 'bb_document_user_can_upload' ) &&
+			! bb_document_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $args['group_id'] ) ? $args['group_id'] : 0 ) )
 		) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
@@ -472,8 +472,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if (
 			! is_user_logged_in() ||
 			(
-				function_exists( 'bp_document_user_can_upload' ) &&
-				! bp_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
+				function_exists( 'bb_document_user_can_upload' ) &&
+				! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
 			)
 		) {
 			$retval = new WP_Error(
@@ -741,8 +741,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			(
 				! bp_folder_user_can_edit( $folder ) ||
 				(
-					function_exists( 'bp_media_user_can_upload' ) &&
-					! bp_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $folder->group_id ) )
+					function_exists( 'bb_media_user_can_upload' ) &&
+					! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $folder->group_id ) )
 				)
 			)
 		) {

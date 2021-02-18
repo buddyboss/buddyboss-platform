@@ -9,7 +9,7 @@
 
 	<?php bp_nouveau_before_activity_directory_content(); ?>
 
-	<?php if ( is_user_logged_in() && bp_user_can_create_activity() ) : ?>
+	<?php if ( is_user_logged_in() ) : ?>
 
 		<?php bp_get_template_part( 'activity/post-form' ); ?>
 
