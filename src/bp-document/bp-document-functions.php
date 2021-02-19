@@ -3819,74 +3819,79 @@ function bp_document_create_symlinks( $document ) {
 		return;
 	}
 
-	// Get documents previews symlink directory path.
-	$document_symlinks_path = bp_document_symlink_path();
-	$attachment_id          = $document->attachment_id;
-	$extension              = bp_document_extension( $attachment_id );
-	$attached_file          = get_attached_file( $attachment_id );
-	$privacy                = $document->privacy;
+	$do_symlink = apply_filters( 'bb_document_do_symlink', true, $document->id, $document->attachment_id, 'medium' );
 
-	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
-		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			symlink( $attached_file, $attachment_path );
-		}
-	}
+	if ( $do_symlink ) {
 
-	if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
-		$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
-		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			symlink( $attached_file, $attachment_path );
-		}
-	}
+		// Get documents previews symlink directory path.
+		$document_symlinks_path = bp_document_symlink_path();
+		$attachment_id          = $document->attachment_id;
+		$extension              = bp_document_extension( $attachment_id );
+		$attached_file          = get_attached_file( $attachment_id );
+		$privacy                = $document->privacy;
 
-	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-
-		$attachment_path    = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
-		$file               = image_get_intermediate_size( $attachment_id, 'medium' );
-
-		if ( ! $file ) {
-			bp_document_generate_document_previews( $attachment_id );
-			$file = image_get_intermediate_size( $attachment_id, 'medium' );
-		}
-
-		$attached_file_info = pathinfo( $attached_file );
-		$file_path          = '';
-		if ( ! empty( $attached_file_info['dirname'] ) ) {
-			$file_path = $attached_file_info['dirname'];
-			$file_path = $file_path . '/' . $file['file'];
-		}
-
-		if ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) {
-			// Regenerate attachment thumbnails.
-			bp_core_regenerate_attachment_thumbnails( $attachment_id );
-			$file      = image_get_intermediate_size( $attachment_id, 'medium' );
-			$file_path = $file_path . '/' . $file['file'];
-		}
-
-		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			symlink( $file_path, $attachment_path );
-		}
-
-		$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'large' );
-		$file            = image_get_intermediate_size( $attachment_id, 'large' );
-
-		if ( ! $file ) {
-			$file = image_get_intermediate_size( $attachment_id, 'full' );
-			if ( ! $file ) {
-				bp_document_generate_document_previews( $attachment_id );
-				$file = image_get_intermediate_size( $attachment_id, 'full' );
+		if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
+			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+				symlink( $attached_file, $attachment_path );
 			}
 		}
 
-		$file_path = '';
-		if ( ! empty( $attached_file_info['dirname'] ) ) {
-			$file_path = $attached_file_info['dirname'];
-			$file_path = $file_path . '/' . $file['file'];
+		if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
+			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
+			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+				symlink( $attached_file, $attachment_path );
+			}
 		}
 
-		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			symlink( $file_path, $attachment_path );
+		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+
+			$attachment_path    = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
+			$file               = image_get_intermediate_size( $attachment_id, 'medium' );
+
+			if ( ! $file ) {
+				bp_document_generate_document_previews( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, 'medium' );
+			}
+
+			$attached_file_info = pathinfo( $attached_file );
+			$file_path          = '';
+			if ( ! empty( $attached_file_info['dirname'] ) ) {
+				$file_path = $attached_file_info['dirname'];
+				$file_path = $file_path . '/' . $file['file'];
+			}
+
+			if ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) {
+				// Regenerate attachment thumbnails.
+				bp_core_regenerate_attachment_thumbnails( $attachment_id );
+				$file      = image_get_intermediate_size( $attachment_id, 'medium' );
+				$file_path = $file_path . '/' . $file['file'];
+			}
+
+			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+				symlink( $file_path, $attachment_path );
+			}
+
+			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'large' );
+			$file            = image_get_intermediate_size( $attachment_id, 'large' );
+
+			if ( ! $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'full' );
+				if ( ! $file ) {
+					bp_document_generate_document_previews( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, 'full' );
+				}
+			}
+
+			$file_path = '';
+			if ( ! empty( $attached_file_info['dirname'] ) ) {
+				$file_path = $attached_file_info['dirname'];
+				$file_path = $file_path . '/' . $file['file'];
+			}
+
+			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+				symlink( $file_path, $attachment_path );
+			}
 		}
 	}
 }
