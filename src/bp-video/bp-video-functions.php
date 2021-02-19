@@ -3107,6 +3107,7 @@ function bp_video_get_activity_video( $activity_id ) {
 			?>
 			">
 				<?php
+				bp_get_template_part( 'video/video-move' );
 				bp_get_template_part( 'video/add-video-thumbnail' );
 				while ( bp_video() ) {
 					bp_the_video();
