@@ -369,7 +369,7 @@ window.bp = window.bp || {};
 				'focus',
 				BP_Mentions_Options.selectors.join( ',' ) ,
 				function() {
-					// Issue - When we type @username and then click on it then the username disappears. Please check the below issue video.
+					// Issue - When we type @username and then click on it then the username disappears.
 					// if ( $( this ).data( 'bp_mentions_activated' ) ) {
 					// 	return;
 					// }
