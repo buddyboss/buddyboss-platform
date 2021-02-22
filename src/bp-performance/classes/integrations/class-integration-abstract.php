@@ -7,9 +7,9 @@
 
 namespace BuddyBoss\Performance\Integration;
 
+use BuddyBoss\Performance\Cache;
 use BuddyBoss\Performance\Performance;
 use BuddyBoss\Performance\Route_Helper;
-use BuddyBoss\Performance\Cache;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -405,7 +405,7 @@ abstract class Integration_Abstract {
 				echo wp_json_encode(
 					array(
 						'code'    => 'cache_invalid_user',
-						'message' => __( 'This error is formed by the API cache probably because of miss matched of user auth provider.', 'buddyboss' ),
+						'message' => __( 'Sorry, something went wrong. Please try again later.', 'buddyboss' ),
 						'data'    => array(
 							'status' => 500,
 						),

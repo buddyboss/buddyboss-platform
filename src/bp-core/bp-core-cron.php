@@ -3,7 +3,7 @@
  * BuddyBoss Core Cron Loader.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * to declare the global.
  *
  * @return BP_Core_Cron|null The one true BP_Core_Cron Instance.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_core_cron() {
 	return BP_Core_Cron::instance();
@@ -30,7 +30,7 @@ function bp_core_cron() {
  * @param string $recurrence How often the event should subsequently recur. See bp_core_cron_schedules() for accepted values.
  *
  * @return bool True if cron is scheduled, otherwise false.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_core_schedule_cron( $hook, $callback, $recurrence = 'bb_schedule_5min' ) {
 	// Add cron to schedule.

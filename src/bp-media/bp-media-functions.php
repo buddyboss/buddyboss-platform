@@ -28,13 +28,11 @@ function bp_media_upload() {
 		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
 	}
 
-	add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-	add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+	do_action( 'bb_before_media_upload_handler' );
 
 	$attachment = bp_media_upload_handler();
 
-	remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-	remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+	do_action( 'bb_after_media_upload_handler' );
 
 	if ( is_wp_error( $attachment ) ) {
 		return $attachment;
@@ -3497,59 +3495,65 @@ function bp_media_create_symlinks( $media ) {
 		return;
 	}
 
-	$upload_dir = wp_upload_dir();
-	$upload_dir = $upload_dir['basedir'];
+	$do_symlink = apply_filters( 'bb_media_do_symlink', true, $media->id, $media->attachment_id, 'medium' );
 
-	// Get media previews symlink directory path.
-	$symlinks_path = bp_media_symlink_path();
-	$attachment_id = $media->attachment_id;
+	if ( $do_symlink ) {
 
-	$privacy         = $media->privacy;
-	$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bp-media-thumbnail' );
-	$file            = image_get_intermediate_size( $attachment_id, 'bp-media-thumbnail' );
+		$upload_dir = wp_upload_dir();
+		$upload_dir = $upload_dir['basedir'];
 
-	if ( ! empty( $file['path'] ) ) {
-		$output_file_src = $upload_dir . '/' . $file['path'];
+		// Get media previews symlink directory path.
+		$symlinks_path = bp_media_symlink_path();
+		$attachment_id = $media->attachment_id;
 
-		// Regenerate attachment thumbnails.
-		if ( ! file_exists( $output_file_src ) ) {
-			bp_media_regenerate_attachment_thumbnails( $attachment_id );
+		$privacy         = $media->privacy;
+		$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bp-media-thumbnail' );
+		$file            = image_get_intermediate_size( $attachment_id, 'bp-media-thumbnail' );
+
+		if ( ! empty( $file['path'] ) ) {
+			$output_file_src = $upload_dir . '/' . $file['path'];
+
+			// Regenerate attachment thumbnails.
+			if ( ! file_exists( $output_file_src ) ) {
+				bp_media_regenerate_attachment_thumbnails( $attachment_id );
+			}
+
+			// Check if file exists.
+			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+				symlink( $output_file_src, $attachment_path );
+			}
 		}
 
-		// Check if file exists.
-		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-			symlink( $output_file_src, $attachment_path );
+		$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bp-activity-media-thumbnail' );
+		$file            = image_get_intermediate_size( $attachment_id, 'bp-activity-media-thumbnail' );
+
+		if ( ! empty( $file['path'] ) ) {
+			$output_file_src = $upload_dir . '/' . $file['path'];
+
+			// Regenerate attachment thumbnails.
+			if ( ! file_exists( $output_file_src ) ) {
+				bp_media_regenerate_attachment_thumbnails( $attachment_id );
+			}
+
+			// Check if file exists.
+			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+				symlink( $output_file_src, $attachment_path );
+			}
 		}
+
+		/**
+		 * Actions to execute to create symlinks.
+		 *
+		 * @param int    $media_id      Media ID.
+		 * @param int    $attachment_id Attachment ID.
+		 * @param object $media         BP_Media Object.
+		 * @param string $symlinks_path Path to symlinks directory.
+		 *
+		 * @since BuddyBoss 1.5.7
+		 */
+		do_action( 'bp_media_create_symlinks', $media->id, $attachment_id, $media, $symlinks_path );
+
 	}
-
-	$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . 'bp-activity-media-thumbnail' );
-	$file            = image_get_intermediate_size( $attachment_id, 'bp-activity-media-thumbnail' );
-
-	if ( ! empty( $file['path'] ) ) {
-		$output_file_src = $upload_dir . '/' . $file['path'];
-
-		// Regenerate attachment thumbnails.
-		if ( ! file_exists( $output_file_src ) ) {
-			bp_media_regenerate_attachment_thumbnails( $attachment_id );
-		}
-
-		// Check if file exists.
-		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-			symlink( $output_file_src, $attachment_path );
-		}
-	}
-
-	/**
-	 * Actions to execute to create symlinks.
-	 *
-	 * @param int    $media_id      Media ID.
-	 * @param int    $attachment_id Attachment ID.
-	 * @param object $media         BP_Media Object.
-	 * @param string $symlinks_path Path to symlinks directory.
-	 *
-	 * @since BuddyBoss 1.5.7
-	 */
-	do_action( 'bp_media_create_symlinks', $media->id, $attachment_id, $media, $symlinks_path );
 }
 
 /**

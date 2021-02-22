@@ -1518,7 +1518,7 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 /**
  * Clear a user's symlinks media when attachment media delete.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  *
  * @param array $medias DB results of media items.
  */
