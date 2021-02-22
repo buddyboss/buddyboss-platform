@@ -606,40 +606,23 @@ class BP_Video {
 			}
 
 			// fetch video thumbnail attachment data.
-			$attachment_data       = new stdClass();
-			$attachment_data->meta = new stdClass();
-
-			$attachment_data->full           = '';
-			$attachment_data->thumb          = '';
-			$attachment_data->activity_thumb = '';
-
-			$get_video_thumb_ids = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
-			$get_video_thumb_id  = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
-
+			$attachment_data                         = new stdClass();
+			$attachment_data->meta                   = new stdClass();
 			$attachment_data->meta->mime_type        = get_post_mime_type( $video->attachment_id );
 			$length_formatted                        = wp_get_attachment_metadata( $video->attachment_id );
 			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+			$attachment_thumb_id                     = bb_get_video_thumb_id( $video->attachment_id );
+			$default_thumb                           = bb_get_video_default_placeholder_image();
+			$attachment_data->full                   = $default_thumb;
+			$attachment_data->thumb                  = $default_thumb;
+			$attachment_data->activity_thumb         = $default_thumb;
+			$attachment_data->thumb_meta             = array();
 
-			if ( $get_video_thumb_id ) {
-				$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
-				$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
-				$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
-				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
-
-			} elseif ( $get_video_thumb_ids ) {
-				$get_video_thumb_ids_arr = explode( ',', $get_video_thumb_ids );
-				if ( $get_video_thumb_ids_arr ) {
-					$get_video_thumb_id              = current( $get_video_thumb_ids_arr );
-					$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
-					$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
-					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
-					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
-				}
-			} else {
-				$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-				$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-				$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-				$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+			if ( $attachment_thumb_id ) {
+				$attachment_data->full           = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'full' );
+				$attachment_data->thumb          = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bp-video-thumbnail' );
+				$attachment_data->activity_thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bp-activity-video-thumbnail' );
+				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $attachment_thumb_id );
 			}
 
 			$video->attachment_data = $attachment_data;
@@ -669,7 +652,7 @@ class BP_Video {
 			$video->group_name = $group_name;
 			$video->visibility = $visibility;
 
-			$video->video_link = wp_get_attachment_url( $video->attachment_id );
+			$video->video_link = bb_video_get_symlink( $video );
 
 			$videos[] = $video;
 		}

@@ -182,6 +182,7 @@ function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 add_filter( 'bb_media_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
 add_filter( 'bb_document_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
 add_filter( 'bb_video_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_create_thumb_symlinks', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
 
 /**
  * Copy to local media file when the offload media used and remove local file setting used in offload media plugin to regenerate the thumb of the PDF.
@@ -302,6 +303,8 @@ function bb_offload_media_set_private() {
 add_action( 'bb_before_document_upload_handler', 'bb_offload_media_set_private' );
 add_action( 'bb_before_media_upload_handler', 'bb_offload_media_set_private' );
 add_action( 'bb_before_video_upload_handler', 'bb_offload_media_set_private' );
+add_action( 'bb_before_video_preview_image_by_js', 'bb_offload_media_set_private' );
+add_action( 'bb_video_before_preview_generate', 'bb_offload_media_set_private' );
 
 /**
  * Remove the private URL generate document preview.
@@ -318,6 +321,8 @@ function bb_offload_media_unset_private() {
 add_action( 'bb_after_document_upload_handler', 'bb_offload_media_unset_private' );
 add_action( 'bb_after_media_upload_handler', 'bb_offload_media_unset_private' );
 add_action( 'bb_after_video_upload_handler', 'bb_offload_media_unset_private' );
+add_action( 'bb_after_video_preview_image_by_js', 'bb_offload_media_unset_private' );
+add_action( 'bb_video_after_preview_generate', 'bb_offload_media_unset_private' );
 
 /**
  * Return the offload media plugin attachment url.
@@ -731,3 +736,83 @@ function bb_media_private_upload_acl( $acl ) {
 	$acl = 'private';
 	return $acl;
 }
+
+/**
+ * Filter to download the video on local server.
+ *
+ * @param int    $video_id video id to recreate the preview image attachment.
+ * @param object $video    video object.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_video_set_wp_offload_download_video_local( $video_id, $video ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+			add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+			add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+		}
+	}
+}
+add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_offload_download_video_local', 99999, 2 );
+
+/**
+ * Filter to download the video on local server.
+ *
+ * @param int    $video_id video id to recreate the preview image attachment.
+ * @param object $video    video object.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_video_unset_wp_offload_download_video_local( $video_id, $video ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+			remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+			remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+		}
+	}
+}
+add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp_offload_download_video_local', 99999, 2 );
+
+/**
+ * Return the offload media plugin attachment url.
+ *
+ * @param string $attachment_url attachment url.
+ * @param int    $document_id    media id.
+ * @param string $extension      extension.
+ * @param string $size           size of the media.
+ * @param int    $attachment_id  attachment id.
+ *
+ * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_video_offload_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+            $get_metadata = wp_get_attachment_metadata( $attachment_id );
+            if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+                $attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+            } else {
+                $attachment_url = wp_get_attachment_url( $attachment_id );
+            }
+		}
+	}
+	return $attachment_url;
+}
+add_filter( 'bb_video_get_thumb_url', 'bp_video_offload_get_thumb_preview_url', PHP_INT_MAX, 4 );
+
+function bp_video_offload_get_video_url( $attachment_url, $video_id, $attachment_id ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			$attachment_url = wp_get_attachment_url( $attachment_id );
+		}
+	}
+	return $attachment_url;
+}
+add_filter( 'bb_video_get_symlink', 'bp_video_offload_get_video_url', PHP_INT_MAX, 3 );

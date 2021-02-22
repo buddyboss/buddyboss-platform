@@ -2539,7 +2539,7 @@ add_action( 'bp_init', 'bp_media_check_download_album_protection', 9999 );
 function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
 	global $wpdb;
 	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
-		$join .= " LEFT JOIN {$wpdb->postmeta} AS bb_mt1 ON ({$wpdb->posts}.ID = bb_mt1.post_id AND bb_mt1.meta_key = 'bp_media_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt2 ON ({$wpdb->posts}.ID = bb_mt2.post_id AND bb_mt2.meta_key = 'bp_document_upload' )";
+		$join .= " LEFT JOIN {$wpdb->postmeta} AS bb_mt1 ON ({$wpdb->posts}.ID = bb_mt1.post_id AND bb_mt1.meta_key = 'bp_media_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt2 ON ({$wpdb->posts}.ID = bb_mt2.post_id AND bb_mt2.meta_key = 'bp_document_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt3 ON ({$wpdb->posts}.ID = bb_mt3.post_id AND bb_mt3.meta_key = 'bp_video_upload' )";
 	}
 
 	return $join;
@@ -2558,7 +2558,7 @@ function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
 function bp_media_filter_attachments_query_posts_where( $where, $wp_query ) {
 	global $wpdb;
 	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
-		$where .= " AND ( ( bb_mt1.post_id IS NULL AND bb_mt2.post_id IS NULL ) OR ( {$wpdb->posts}.post_parent != 0 ) )";
+		$where .= " AND ( ( bb_mt1.post_id IS NULL AND bb_mt2.post_id IS NULL AND bb_mt3.post_id IS NULL ) OR ( {$wpdb->posts}.post_parent != 0 ) )";
 	}
 
 	return $where;

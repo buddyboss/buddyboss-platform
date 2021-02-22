@@ -57,6 +57,12 @@ add_action( 'bp_activity_after_email_content', 'bp_video_activity_after_email_co
 add_image_size( 'bp-video-thumbnail', 400, 400 );
 add_image_size( 'bp-activity-video-thumbnail', 1600, 1600 );
 
+// Delete symlinks for videos when before saved.
+add_action( 'bp_video_before_save', 'bb_video_delete_symlinks' );
+
+// Create symlinks for videos when saved.
+add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
+
 /**
  * Add video theatre template for activity pages.
  *
