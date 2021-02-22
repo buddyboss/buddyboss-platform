@@ -42,7 +42,7 @@ if ( 'video' === $media_template->media->type ) {
 	}
 
 	?>
-	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
+	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-video-li" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 		<div class="bb-video-thumb bb-item-thumb">
 			<div class="video-action-wrap item-action-wrap">
 				<?php
@@ -136,7 +136,7 @@ if ( 'video' === $media_template->media->type ) {
 	$is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 
 	?>
-	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
+	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-photo-li" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
 	<div class="bb-photo-thumb bb-item-thumb">
 		<div class="media-action-wrap">
