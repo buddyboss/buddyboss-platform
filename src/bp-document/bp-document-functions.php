@@ -3752,6 +3752,13 @@ function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
 	return false;
 }
 
+/**
+ * Return the document symlink path.
+ *
+ * @return string The symlink path.
+ *
+ * @since BuddyBoss X.X.X
+ */
 function bp_document_symlink_path() {
 	add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 	$upload_dir = wp_upload_dir();
@@ -3776,7 +3783,7 @@ function bp_document_symlink_path() {
 /**
  * Delete document previews/symlinks.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_document_delete_document_previews() {
 	$upload_dir = wp_upload_dir();
@@ -3806,7 +3813,7 @@ function bp_document_delete_document_previews() {
  *
  * @param object $document BP_Document Object.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_document_create_symlinks( $document ) {
 	// Check if document is id of document, create document object.
@@ -3901,7 +3908,7 @@ function bp_document_create_symlinks( $document ) {
  *
  * @param object $document BP_Document Object.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_document_delete_symlinks( $document ) {
 	// Check if document is id of document, create document object.
@@ -3939,6 +3946,9 @@ function bp_document_delete_symlinks( $document ) {
 /**
  * Called on 'wp_image_editors' action.
  * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
+ *
+ * @param array $image_editors image editors.
+ * @return void
  */
 function bp_document_include_wp_image_editors( $image_editors ) {
 	if ( ! in_array( 'BP_GOPP_Image_Editor_GS', $image_editors, true ) ) {
@@ -3956,7 +3966,7 @@ function bp_document_include_wp_image_editors( $image_editors ) {
 /**
  * Remove all temp directory.
  *
- * @param $dir
+ * @param string $dir directory to remove.
  *
  * @since BuddyBoss 1.4.0
  */

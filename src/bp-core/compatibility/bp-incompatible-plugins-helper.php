@@ -165,6 +165,8 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
  * @param string $size          preview size.
  *
  * @return bool true if the offload media used.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_document_offload_do_symlink( $can, $document_id, $attachment_id, $size ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -186,6 +188,8 @@ add_filter( 'bb_document_do_symlink', 'bb_media_offload_do_symlink', PHP_INT_MAX
  * @param string $size          preview size.
  *
  * @return bool true if the offload media used.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_media_offload_do_symlink( $can, $media_id, $attachment_id, $size ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -207,6 +211,8 @@ add_filter( 'bb_media_do_symlink', 'bb_media_offload_do_symlink', PHP_INT_MAX, 4
  * @param Media_Library_Item $as3cf_item media library object.
  *
  * @return bool
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file, $attachment_id, $as3cf_item ) {
 	$default = true;
@@ -217,6 +223,8 @@ function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file
  * Regenerate the the media attachments.
  *
  * @param int $attachment_id attachment id to recreate the media attachment.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_document_wp_offload_regenerate_pdf_metadata( $attachment_id ) {
 	add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
@@ -235,10 +243,12 @@ function bb_document_wp_offload_regenerate_pdf_metadata( $attachment_id ) {
  * @param string $attachment_url attachment url.
  * @param int    $document_id    media id.
  * @param string $extension      extension.
- * @param int    $attachment_id  attachment id.
  * @param string $size           size of the media.
+ * @param int    $attachment_id  attachment id.
  *
  * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -296,6 +306,8 @@ add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url'
 
 /**
  * Set the uploaded document to make private on offload media plugin.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_offload_media_set_private() {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -311,6 +323,8 @@ add_action( 'bb_before_media_upload_handler', 'bb_offload_media_set_private' );
 
 /**
  * Remove the private URL generate document preview.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_offload_media_unset_private() {
 	$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
@@ -331,6 +345,8 @@ add_action( 'bb_after_media_upload_handler', 'bb_offload_media_unset_private' );
  * @param string $size           size of the media.
  *
  * @return false|mixed|string return the original media URL.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -349,7 +365,7 @@ add_filter( 'bp_media_get_preview_image_url', 'bp_media_offload_get_preview_url'
  *
  * @since BuddyBoss 1.1.9
  *
- * @param int $user_id Register member user id
+ * @param int $user_id Register member user id.
  */
 function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
 	$user_id = empty( $user_id ) ? bp_loggedin_user_id() : $user_id;
@@ -725,6 +741,8 @@ add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_
  * @param string $acl defaults to 'public-read'.
  *
  * @return string $acl make the media to private with signed url.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_media_private_upload_acl( $acl ) {
 	$acl = 'private';
