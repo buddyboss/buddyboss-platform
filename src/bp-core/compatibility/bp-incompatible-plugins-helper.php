@@ -159,33 +159,10 @@ function bp_helper_plugins_loaded_callback() {
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
 /**
- * Function to set the false to use the default document symlink instead use the offload media URL of document.
- *
- * @param bool   $can           default true.
- * @param int    $document_id   document id.
- * @param int    $attachment_id attachment id.
- * @param string $size          preview size.
- *
- * @return bool true if the offload media used.
- *
- * @since BuddyBoss X.X.X
- */
-function bb_document_offload_do_symlink( $can, $document_id, $attachment_id, $size ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$can = false;
-		}
-	}
-	return $can;
-}
-add_filter( 'bb_document_do_symlink', 'bb_media_offload_do_symlink', PHP_INT_MAX, 4 );
-
-/**
  * Function to set the false to use the default media symlink instead use the offload media URL of media.
  *
  * @param bool   $can           default true.
- * @param int    $media_id      media id.
+ * @param int    $id            media/document id.
  * @param int    $attachment_id attachment id.
  * @param string $size          preview size.
  *
@@ -193,7 +170,7 @@ add_filter( 'bb_document_do_symlink', 'bb_media_offload_do_symlink', PHP_INT_MAX
  *
  * @since BuddyBoss X.X.X
  */
-function bb_media_offload_do_symlink( $can, $media_id, $attachment_id, $size ) {
+function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
@@ -202,7 +179,8 @@ function bb_media_offload_do_symlink( $can, $media_id, $attachment_id, $size ) {
 	}
 	return $can;
 }
-add_filter( 'bb_media_do_symlink', 'bb_media_offload_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_media_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_document_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
 
 /**
  * Copy to local media file when the offload media used and remove local file setting used in offload media plugin to regenerate the thumb of the PDF.
