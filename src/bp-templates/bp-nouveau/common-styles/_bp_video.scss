@@ -785,6 +785,20 @@
 				&.dz-complete .dz-remove {
 					background: #fd4343 !important;
 					color: #fff !important;
+					display: -webkit-box;
+					display: -ms-flexbox;
+					display: flex;
+					-webkit-box-align: center;
+					-ms-flex-align: center;
+					align-items: center;
+					-webkit-box-pack: center;
+					-ms-flex-pack: center;
+					justify-content: center;
+
+					&:after {
+						top: -1px;
+					}
+
 				}
 
 			}
@@ -1047,13 +1061,14 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			background-color: #fd4343;
 			height: 14px;
 			width: 14px;
+			line-height: inherit;
 
 			&:after {
-				position: absolute;
-				top: -1px;
-				left: 2px;
 				font-size: 14px;
 				line-height: 1;
+				position: relative;
+				top: -2px;
+				left: inherit;
 			}
 		}
 

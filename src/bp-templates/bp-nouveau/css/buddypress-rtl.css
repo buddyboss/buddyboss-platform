@@ -19546,6 +19546,19 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove {
   background: #fd4343 !important;
   color: #fff !important;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove:after {
+  top: -1px;
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated {
@@ -19848,6 +19861,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   background-color: #fd4343;
   height: 14px;
   width: 14px;
+  line-height: inherit;
 }
 
 #activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
@@ -19859,11 +19873,11 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
 #video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
-  position: absolute;
-  top: -1px;
-  right: 2px;
   font-size: 14px;
   line-height: 1;
+  position: relative;
+  top: -2px;
+  right: inherit;
 }
 
 #activity-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
