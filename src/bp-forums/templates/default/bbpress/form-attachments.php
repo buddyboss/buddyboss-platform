@@ -26,13 +26,13 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 
 <div id="whats-new-attachments">
 
-	<?php if ( bp_is_active( 'media' ) && bp_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
+	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
 		<div class="dropzone closed" id="forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
 		<input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bp_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
+	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
 		?>
 		<div class="forums-attached-gif-container closed" data-key="<?php echo esc_attr( bp_unique_id( 'forums_attached_gif_container_' ) ); ?>">
 			<div class="gif-image-container">
@@ -46,7 +46,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bp_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
 		?>
 		<div class="dropzone closed" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
@@ -65,7 +65,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bp_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
+	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-media media-support">
 			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
@@ -76,7 +76,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bp_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 
 		<div class="post-elements-buttons-item post-media document-support">
@@ -88,7 +88,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bp_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
+	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
@@ -112,7 +112,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bp_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
+	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 	<?php endif; ?>

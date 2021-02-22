@@ -358,12 +358,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
 
 			if ( strpos( $file_location, 'buddyboss-app' ) !== false ) {
-				$download_path = admin_url( 'admin.php?page=appboss-settings&setting=cache_support&download_mu_file=' . $bp_performance_download_nonce );
+				$download_path = admin_url( 'admin.php?page=bbapp-settings&setting=cache_support&download_mu_file=' . $bp_performance_download_nonce );
 			}
 
 			$notice = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'To enable caching you need to install the "BuddyBoss API Caching" plugin in your', 'buddyboss' ),
+				__( 'To enable caching, you need to install the "BuddyBoss API Caching" plugin in your', 'buddyboss' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
 				__( 'must-use plugins', 'buddyboss' ),
 				$download_path,
