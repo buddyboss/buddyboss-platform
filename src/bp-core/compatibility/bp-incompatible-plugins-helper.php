@@ -162,7 +162,7 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
  * Function to set the false to use the default media symlink instead use the offload media URL of media.
  *
  * @param bool   $can           default true.
- * @param int    $id            media/document id.
+ * @param int    $id            media/document/video id.
  * @param int    $attachment_id attachment id.
  * @param string $size          preview size.
  *
@@ -181,6 +181,7 @@ function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 }
 add_filter( 'bb_media_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
 add_filter( 'bb_document_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
 
 /**
  * Copy to local media file when the offload media used and remove local file setting used in offload media plugin to regenerate the thumb of the PDF.
@@ -300,6 +301,7 @@ function bb_offload_media_set_private() {
 }
 add_action( 'bb_before_document_upload_handler', 'bb_offload_media_set_private' );
 add_action( 'bb_before_media_upload_handler', 'bb_offload_media_set_private' );
+add_action( 'bb_before_video_upload_handler', 'bb_offload_media_set_private' );
 
 /**
  * Remove the private URL generate document preview.
@@ -315,6 +317,7 @@ function bb_offload_media_unset_private() {
 }
 add_action( 'bb_after_document_upload_handler', 'bb_offload_media_unset_private' );
 add_action( 'bb_after_media_upload_handler', 'bb_offload_media_unset_private' );
+add_action( 'bb_after_video_upload_handler', 'bb_offload_media_unset_private' );
 
 /**
  * Return the offload media plugin attachment url.

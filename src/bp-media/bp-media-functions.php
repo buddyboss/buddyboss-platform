@@ -3793,22 +3793,6 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 }
 
 /**
- * Make all the media to private signed URL if someone using the offload media to store in AWS.
- *
- * @handles `as3cf_upload_acl`
- * @handles `as3cf_upload_acl_sizes`
- *
- * @param string $acl defaults to 'public-read'.
- *
- * @return string $acl make the document to private with signed url.
- *
- */
-function bb_media_private_upload_acl( $acl ) {
-	$acl = 'private';
-	return $acl;
-}
-
-/**
  * Return download link of the album.
  *
  * @param int $album_id album id.

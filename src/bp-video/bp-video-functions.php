@@ -28,11 +28,17 @@ function bp_video_upload() {
 		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file video.', 'buddyboss' ), array( 'status' => 500 ) );
 	}
 
+	do_action( 'bb_before_video_upload_handler' );
+
 	$attachment = bp_video_upload_handler();
+
+	do_action( 'bb_after_video_upload_handler' );
 
 	if ( is_wp_error( $attachment ) ) {
 		return $attachment;
 	}
+
+	do_action( 'bb_video_upload', $attachment );
 
 	$name = $attachment->post_title;
 
