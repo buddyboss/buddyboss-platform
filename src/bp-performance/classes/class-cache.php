@@ -117,13 +117,11 @@ class Cache {
 	 * @param string $cache_name   Cache name.
 	 * @param string $cache_value  Cache value.
 	 * @param string $cache_expire Time until expiration in seconds from now.
-	 * @param array  $purge_events Array of events.
-	 * @param array  $event_groups Array of cache groups.
 	 * @param string $cache_group  Cache group name.
 	 *
 	 * @return bool
 	 */
-	public function set( $cache_name, $cache_value, $cache_expire, $purge_events, $event_groups, $cache_group = 'buddyboss-api' ) {
+	public function set( $cache_name, $cache_value, $cache_expire, $cache_group = 'buddyboss-api' ) {
 
 		$value = false;
 
@@ -151,8 +149,6 @@ class Cache {
 						'cache_group'  => $cache_group,
 						'cache_value'  => base64_encode( gzcompress( maybe_serialize( $cache_value ) ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 						'cache_expire' => $cache_expire,
-						'purge_events' => maybe_unserialize( $purge_events ),
-						'event_groups' => maybe_unserialize( $event_groups ),
 					)
 				);
 			} else {
@@ -162,8 +158,6 @@ class Cache {
 					array(
 						'cache_value'  => base64_encode( gzcompress( maybe_serialize( $cache_value ) ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 						'cache_expire' => $cache_expire,
-						'purge_events' => maybe_unserialize( $purge_events ),
-						'event_groups' => maybe_unserialize( $event_groups ),
 					),
 					array(
 						'user_id'     => get_current_user_id(),
@@ -266,43 +260,6 @@ class Cache {
 		}
 	}
 
-
-	/**
-	 * Set cache to be purged by events
-	 * Set or Modify
-	 *
-	 * @param string $cache_name Cache name.
-	 * @param array  $events     Cache events.
-	 */
-	public function set_purge_by_events( $cache_name, $events ) {
-
-	}
-
-
-	/**
-	 * Purge cache by events
-	 */
-	public function purge_by_events() {
-		global $wpdb;
-
-		$action_name = current_filter();
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$caches = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table}" ) );
-		if ( ! empty( $caches ) ) {
-			foreach ( $caches as $key => $cache ) {
-
-				$events = maybe_unserialize( $cache->purge_events );
-
-				if ( in_array( $action_name, array_values( $events ), true ) ) {
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_name=%s", $cache->cache_name ) );
-				}
-			}
-		}
-
-	}
-
 	/**
 	 * Purge cache by Component for setting screen
 	 *
@@ -334,13 +291,5 @@ class Cache {
 		} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
 			// Operation failed.
 		}
-	}
-
-
-	/**
-	 * Pre Build Cache
-	 */
-	public function pre_build_cache() {
-
 	}
 }
