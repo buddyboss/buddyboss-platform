@@ -46,7 +46,6 @@ window.bp = window.bp || {};
 				insertTpl:         BP_Mentions_Options.insert_tpl,
 				limit:             10,
 				startWithSpace:    false,
-				// suffix:            '', //Issue with space in android firefox
 
 				callbacks: {
 					/**
@@ -159,8 +158,8 @@ window.bp = window.bp || {};
 					 * @return {string}
 					 * @since BuddyPress 2.1.0
 					 */
-					inserting_wrapper: function( $inputor, content ) { //suffix
-						return '' + content + ''; //suffix
+					inserting_wrapper: function( $inputor, content ) {
+						return '' + content + '';
 					}
 				}
 			},
@@ -369,11 +368,6 @@ window.bp = window.bp || {};
 				'focus',
 				BP_Mentions_Options.selectors.join( ',' ) ,
 				function() {
-					// Issue - When we type @username and then click on it then the username disappears.
-					// if ( $( this ).data( 'bp_mentions_activated' ) ) {
-					// 	return;
-					// }
-
 					if ( typeof( bp ) === 'undefined' ) {
 						return;
 					}
