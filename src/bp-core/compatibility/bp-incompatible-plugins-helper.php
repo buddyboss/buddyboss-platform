@@ -305,6 +305,7 @@ add_action( 'bb_before_media_upload_handler', 'bb_offload_media_set_private' );
 add_action( 'bb_before_video_upload_handler', 'bb_offload_media_set_private' );
 add_action( 'bb_before_video_preview_image_by_js', 'bb_offload_media_set_private' );
 add_action( 'bb_video_before_preview_generate', 'bb_offload_media_set_private' );
+add_action( 'bb_before_bp_video_thumbnail_upload_handler', 'bb_offload_media_set_private' );
 
 /**
  * Remove the private URL generate document preview.
@@ -312,10 +313,12 @@ add_action( 'bb_video_before_preview_generate', 'bb_offload_media_set_private' )
  * @since BuddyBoss X.X.X
  */
 function bb_offload_media_unset_private() {
-	$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-	if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-		remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-		remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
+			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+			remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+		}
 	}
 }
 add_action( 'bb_after_document_upload_handler', 'bb_offload_media_unset_private' );
@@ -323,6 +326,7 @@ add_action( 'bb_after_media_upload_handler', 'bb_offload_media_unset_private' );
 add_action( 'bb_after_video_upload_handler', 'bb_offload_media_unset_private' );
 add_action( 'bb_after_video_preview_image_by_js', 'bb_offload_media_unset_private' );
 add_action( 'bb_video_after_preview_generate', 'bb_offload_media_unset_private' );
+add_action( 'bb_after_bp_video_thumbnail_upload_handler', 'bb_offload_media_unset_private' );
 
 /**
  * Return the offload media plugin attachment url.
