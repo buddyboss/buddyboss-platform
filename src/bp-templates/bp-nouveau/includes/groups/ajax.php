@@ -283,6 +283,10 @@ function bp_nouveau_ajax_joinleave_group() {
 					'type'     => 'success',
 				);
 
+				if ( 'hidden' === $group->status ) {
+					$response['group_url'] = esc_url( bp_get_groups_directory_permalink() );
+				}
+
 				// Reset the message if not in a Group or in a loggedin user's group memberships one!
 				if ( ! $bp_is_group && isset( $bp->template_message ) && isset( $bp->template_message_type ) ) {
 					unset( $bp->template_message, $bp->template_message_type );
@@ -906,11 +910,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		);
 	}
 
-	$group_members = groups_get_group_members( $args );
-	$html          = '';
-	$paginate      = '';
-	$result        = array();
-	$total_page    = 0;
+	$group_members   = groups_get_group_members( $args );
+	$html            = '';
+	$paginate        = '';
+	$result          = array();
+	$total_page      = 0;
 
 	if ( empty( $group_members['members'] ) ) {
 		wp_send_json_success( array( 'results' => 'no_member' ) );
@@ -933,8 +937,14 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			$name = bp_core_get_user_displayname( $member->ID );
 
 			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
+			$is_friends_connection  = true;
+            if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+                if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
+                    $is_friends_connection  = false;
+                }
+            }
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; echo !$can_send_group_message ? ' is_disabled ' : ''; ?>">
+			<li class="group-message-member-li <?php echo $member->ID; echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg'; ?>">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
@@ -947,17 +957,17 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						</a>
 					</div>
 				</div>
-				<div class="action">
+				<div class="action <?php echo ( $can_send_group_message && $is_friends_connection ) ? esc_attr( 'can-grp-msg' ) : esc_attr( 'can-not-grp-msg' ); ?>">
 					<?php
-					if ( $can_send_group_message ) {
+					if ( $can_send_group_message && $is_friends_connection ) {
 						?>
 						<button type="button"
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
 								data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
 								data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Add Member', 'buddyboss' ); ?>">
 							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
-							<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Add Member', 'buddyboss' ); ?>
 						</span>
 						</button>
 						<?php
@@ -1021,7 +1031,6 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$total_page  = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
 		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
 		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
-		$total_count = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total', $group_members['count'] );
 
 		wp_send_json_success(
 			array(
@@ -1121,7 +1130,29 @@ function bp_nouveau_ajax_groups_send_message() {
 			$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
 		}
 
-		// We get members array from $_POST['users_list'] because user already selected them.
+		if ( 'private' === $message_type ) {
+
+			// Check Membership Access.
+			foreach ( $members as $k => $member ) {
+				$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+				if ( ! $can_send_group_message ) {
+					unset( $members[ $k ] );
+				}
+			}
+
+			// Check if force friendship is enabled and check recipients.
+			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+				foreach ( $members as $f => $member ) {
+					if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+						unset( $members[ $f ] );
+					}
+				}
+			}
+
+			$members = array_values( $members );
+        }
+
+	// We get members array from $_POST['users_list'] because user already selected them.
 	} else {
 		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
@@ -1146,7 +1177,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		}
 
 		// Check if force friendship is enabled and check recipients.
-        $not_friends =array();
+        $not_friends = array();
 		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 			foreach ( $members as $member ) {
 				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
@@ -1955,7 +1986,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			if ( 'all' !== $message_users ) {
 				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
 			} else {
-				$response['feedback'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
+				$response['feedback'] = __( 'Your message was sent privately to all members of this group you can message.', 'buddyboss' );
 			}
 
 			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
