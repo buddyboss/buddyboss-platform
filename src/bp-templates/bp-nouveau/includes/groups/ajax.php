@@ -283,6 +283,10 @@ function bp_nouveau_ajax_joinleave_group() {
 					'type'     => 'success',
 				);
 
+				if ( 'hidden' === $group->status ) {
+					$response['group_url'] = esc_url( bp_get_groups_directory_permalink() );
+				}
+
 				// Reset the message if not in a Group or in a loggedin user's group memberships one!
 				if ( ! $bp_is_group && isset( $bp->template_message ) && isset( $bp->template_message_type ) ) {
 					unset( $bp->template_message, $bp->template_message_type );
