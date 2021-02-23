@@ -279,19 +279,15 @@ window.bp = window.bp || {};
 			jQuery(this).on('keydown', function (e) {
 
 				// Check backspace key down event
-				if (!isAndroid()) {
-					if(e.keyCode == 8){
-
+				if ( ! isAndroid() ) {
+					if ( e.keyCode == 8 ) {
 						jQuery(this).find('.atwho-inserted').each(function (  ){
 							jQuery(this).removeAttr('contenteditable');
 						});
-
-					}else{
-
+					} else {
 						jQuery(this).find('.atwho-inserted').each(function (  ){
 							jQuery(this).attr('contenteditable',false);
 						});
-
 					}
 				}
 			});
@@ -341,7 +337,7 @@ window.bp = window.bp || {};
 			 * It was preventing the backspace somehow. So whenever
 			 * we try to backspace, keyboard was automatically closed.
 			 */
-			if (isAndroid()) {
+			if ( isAndroid() ) {
 
 				var new_length = jQuery(this).text().length; // Get the new text length.
 				localStorage.setItem('charCount', new_length); // Set length to local storage.
