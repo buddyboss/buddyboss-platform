@@ -3286,7 +3286,33 @@ function bp_video_get_report_link( $args = array() ) {
 	return apply_filters( 'bp_video_get_report_link', $report_btn, $args );
 }
 
+/**
+ * Return the video symlink path.
+ *
+ * @return string The symlink path.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_video_symlink_original_video_path() {
+	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
 
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 );
+	}
+
+	$video_symlinks_path = $platform_previews_path . '/' . md5( 'bb-videos-symlink' );
+	if ( ! is_dir( $video_symlinks_path ) ) {
+		wp_mkdir_p( $video_symlinks_path );
+		chmod( $video_symlinks_path, 0755 );
+	}
+	remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+
+	return $video_symlinks_path;
+}
 
 /**
  * Return the video symlink path.
@@ -3684,15 +3710,13 @@ function bb_video_get_symlink( $video ) {
 	if ( $do_symlink ) {
 
 		// Get videos previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_path();
+		$video_symlinks_path = bb_video_symlink_original_video_path();
 		$attached_file       = get_attached_file( $attachment_id );
 		$privacy             = $video->privacy;
 		$upload_directory    = wp_get_upload_dir();
-		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy );
+		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . time() );
 
-		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			symlink( $attached_file, $attachment_path );
-		}
+        symlink( $attached_file, $attachment_path );
 
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
 
@@ -3783,3 +3807,41 @@ function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size 
 
 	return $attachment_url;
 }
+
+/**
+ * A simple function that uses mtime to delete files older than a given age (in seconds)
+ * Very handy to rotate backup or log files, for example...
+ *
+ * @return array|void the list of deleted files
+ */
+function bb_video_delete_older_symlinks() {
+
+	// Get videos previews symlink directory path.
+	$dir     = bb_video_symlink_original_video_path();
+	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day
+	$list    = array();
+	$limit   = time() - $max_age;
+	$dir     = realpath( $dir );
+
+	if ( ! is_dir( $dir ) ) {
+		return;
+	}
+
+	$dh = opendir( $dir );
+	if ( false === $dh ) {
+		return;
+	}
+
+	while ( ( $file = readdir( $dh ) ) !== false ) {
+		$file = $dir . '/' . $file;
+		if ( filemtime( $file ) < $limit ) {
+			$list[] = $file;
+			unlink( $file );
+		}
+	}
+	closedir( $dh );
+
+	return $list;
+
+}
+bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks' );
