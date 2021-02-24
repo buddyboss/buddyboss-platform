@@ -19877,7 +19877,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   line-height: 1;
   position: relative;
   top: -2px;
-  right: inherit;
+  right: -0.5px;
 }
 
 #activity-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
@@ -20115,6 +20115,12 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 .bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview:last-child,
 #video-uploader.dropzone .dz-preview.dz-file-preview:last-child {
   margin-left: 0;
+}
+
+#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove:after,
+.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview .dz-remove:after,
+#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove:after {
+  right: inherit !important;
 }
 
 @media screen and (max-width: 768px) {

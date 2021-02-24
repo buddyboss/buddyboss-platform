@@ -1068,7 +1068,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 				line-height: 1;
 				position: relative;
 				top: -2px;
-				left: inherit;
+				left: -0.5px;
 			}
 		}
 
@@ -1200,6 +1200,10 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 		&:last-child {
 			margin-right: 0;
+		}
+
+		.dz-remove:after {
+			left: inherit !important;
 		}
 
 	}
