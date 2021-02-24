@@ -608,7 +608,9 @@ class BP_Video {
 			// fetch video thumbnail attachment data.
 			$attachment_data                         = new stdClass();
 			$attachment_data->meta                   = new stdClass();
-			$attachment_data->meta->mime_type        = get_post_mime_type( $video->attachment_id );
+			$file_url                                = wp_get_attachment_url( $video->attachment_id );
+			$filetype                                = wp_check_filetype( $file_url );
+			$attachment_data->meta->mime_type        = 'video/' . $filetype['ext'];
 			$length_formatted                        = wp_get_attachment_metadata( $video->attachment_id );
 			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
 			$attachment_thumb_id                     = bb_get_video_thumb_id( $video->attachment_id );
@@ -626,8 +628,8 @@ class BP_Video {
 			}
 
 			$video->attachment_data = $attachment_data;
+			$group_name             = '';
 
-			$group_name = '';
 			if ( bp_is_active( 'groups' ) && $video->group_id > 0 ) {
 				$group      = groups_get_group( $video->group_id );
 				$group_name = bp_get_group_name( $group );
@@ -649,12 +651,12 @@ class BP_Video {
 					$visibility = ( isset( $video_privacy[ $video->privacy ] ) ) ? ucfirst( $video_privacy[ $video->privacy ] ) : '';
 				}
 			}
+
 			$video->group_name = $group_name;
 			$video->visibility = $visibility;
-
 			$video->video_link = bb_video_get_symlink( $video );
+			$videos[]          = $video;
 
-			$videos[] = $video;
 		}
 
 		// Then fetch user data.

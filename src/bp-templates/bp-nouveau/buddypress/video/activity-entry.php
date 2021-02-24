@@ -87,7 +87,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 
 	<?php if ( 1 === $video_template->video_count ) { ?>
 		<video id="video-<?php bp_video_id(); ?>" class="video-js single-activity-video" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_attachment_image(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
-			<source src="<?php bp_video_link(); ?>"></source>
+			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
 		</video>
 		<?php if ( ! empty( bp_get_video_length() ) ) { ?>
 		<p class="bb-video-duration"><?php bp_video_length(); ?></p>
