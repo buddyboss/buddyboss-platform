@@ -163,8 +163,6 @@ abstract class Integration_Abstract {
 	 */
 	public function prepare_endpoint_cache() {
 
-		$user_id = $this->get_loggedin_user_id();
-
 		// Check if we are in WP API.
 		if ( strpos( $this->get_current_path(), 'wp-json/' ) !== false ) {
 
@@ -172,6 +170,8 @@ abstract class Integration_Abstract {
 			if ( ! empty( self::$cache_endpoints[ $this->integration_name ] ) ) {
 				// Scan the current register endpoints and cache them.
 				foreach ( self::$cache_endpoints[ $this->integration_name ] as $endpoint => $args ) {
+
+					$user_id = ( ! empty( $args ) && ! empty( $args['user_cache'] ) ) ? $this->get_loggedin_user_id() : 0;
 
 					$found_matches = Route_Helper::is_matched_from_route( $endpoint, $current_endpoint, $args['request_method'] );
 
@@ -193,6 +193,7 @@ abstract class Integration_Abstract {
 							}
 						} else {
 							$cache_group = $this->integration_name;
+							$param_value = apply_filters( 'bbapp_performance_deep_filter_param_value', $param_value, $args, $this->integration_name );
 							if ( isset( $param_value ) && ! empty( $param_value ) ) {
 								$cache_group = $this->integration_name . '_' . $param_value;
 							}
@@ -301,7 +302,7 @@ abstract class Integration_Abstract {
 	 */
 	private function prepare_endpoint_cache_deep( $args, $generate_cache = false ) {
 
-		$user_id = $this->get_loggedin_user_id();
+		$user_id = ( ! empty( $args ) && ! empty( $args['user_cache'] ) ) ? $this->get_loggedin_user_id() : 0;
 		$results = false;
 
 		$cache_val = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name );
@@ -309,11 +310,10 @@ abstract class Integration_Abstract {
 		$include_param = isset( $args['include_param'] ) ? $args['include_param'] : 'include';
 		$unique_id     = isset( $args['unique_id'] ) ? $args['unique_id'] : 'id';
 
-		$cache_val['data'] = apply_filters( 'bbapp_performance_deep_filter_cached_data', $cache_val['data'], $args, $this->integration_name );
-
 		if ( ! empty( $cache_val ) && isset( $cache_val['data'] ) && ! empty( $cache_val['data'] ) ) {
+			$cache_val['data'] = apply_filters( 'bbapp_performance_deep_filter_cached_data', $cache_val['data'], $args, $this->integration_name );
 			$results           = array();
-			$results['header'] = $cache_val['header'];
+			$results['header'] = (isset( $cache_val['header'] ) ) ? $cache_val['header'] : array();
 			foreach ( $cache_val['data'] as $item_id ) {
 				$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name . '_' . $item_id );
 				if ( false !== $get_cache ) {
@@ -372,7 +372,7 @@ abstract class Integration_Abstract {
 								/**
 								 * Set retrieve items response in cache for future use
 								 */
-								Cache::instance()->set( $this->get_current_endpoint_cache_key(), $retval->data[0], $args['expire'], $this->integration_name . '_' . $item_id );
+								Cache::instance()->set( $this->get_current_endpoint_cache_key(), $retval->data[0], $args['expire'], $this->integration_name . '_' . $item_id, $user_id );
 							}
 							$results['data'][] = $retval->data[0];
 						}
@@ -410,7 +410,7 @@ abstract class Integration_Abstract {
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
 			// Here we avoid passing another user cached instead of logged in.
-			if ( get_current_user_id() !== (int) $this->prepared_cached_user_id ) {
+			if ( ! empty( $this->prepared_cached_user_id ) && get_current_user_id() !== (int) $this->prepared_cached_user_id ) {
 				header( 'HTTP/1.0 500 Internal Server Error' );
 				header( 'Content-Type: application/json' );
 				echo wp_json_encode(
@@ -462,6 +462,8 @@ abstract class Integration_Abstract {
 				// Scan the current register endpoints and cache them.
 				foreach ( self::$cache_endpoints[ $this->integration_name ] as $endpoint => $args ) {
 
+					$user_id = ( ! empty( $args ) && ! empty( $args['user_cache'] ) ) ? $this->get_loggedin_user_id() : 0;
+
 					/**
 					 * As this function also called for embed data so we need to ignore that as embed data added with items response
 					 */
@@ -506,7 +508,7 @@ abstract class Integration_Abstract {
 										$cache_group = $cache_group . '_' . $item_id;
 									}
 
-									Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $cache_group );
+									Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $cache_group, $user_id );
 								}
 							}
 						}
@@ -528,6 +530,9 @@ abstract class Integration_Abstract {
 	 * @param WP_REST_Server   $server  Server instance.
 	 */
 	private function do_endpoint_cache_deep( $results, $args, $server ) {
+
+		$user_id = ( ! empty( $args ) && ! empty( $args['user_cache'] ) ) ? $this->get_loggedin_user_id() : 0;
+
 		$unique_key = isset( $args['unique_id'] ) ? $args['unique_id'] : 'id';
 		if ( is_array( $unique_key ) ) {
 			$item_ids = array_map(
@@ -546,7 +551,7 @@ abstract class Integration_Abstract {
 				'header' => $this->prepare_header( $results ),
 			);
 
-			Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $this->integration_name );
+			Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $this->integration_name, $user_id );
 
 			// Prepare Embed links inside the request.
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Recommended
@@ -565,7 +570,7 @@ abstract class Integration_Abstract {
 						$item_id = $this->prepare_key( $item, $unique_key );;
 					}
 					if ( ! empty( $item ) && in_array( $item_id, $item_ids ) ) {
-						Cache::instance()->set( $this->get_current_endpoint_cache_key(), $item, $args['expire'], $this->integration_name . '_' . $item_id );
+						Cache::instance()->set( $this->get_current_endpoint_cache_key(), $item, $args['expire'], $this->integration_name . '_' . $item_id, $user_id );
 					}
 				}
 			}
@@ -626,10 +631,11 @@ abstract class Integration_Abstract {
 	 * @param string  $expire     When should cache be expired, by default endpoint cache will expire in sec from now.
 	 * @param array   $args       Argument passed.
 	 * @param boolean $deep_cache Checked for deep cache.
+	 * @param bool    $user_cache Store user specific cache or global cache.
 	 *
 	 * @todo : we should add a setting in args which allow it to cache based on headers or not.
 	 */
-	public function cache_endpoint( $endpoint, $expire, $args = array(), $deep_cache = false ) {
+	public function cache_endpoint( $endpoint, $expire, $args = array(), $deep_cache = false, $user_cache = true ) {
 		$defaults = array(
 			'request_method' => 'GET',
 		);
@@ -637,6 +643,7 @@ abstract class Integration_Abstract {
 		$args               = wp_parse_args( $args, $defaults );
 		$args['expire']     = $expire;
 		$args['deep_cache'] = $deep_cache;
+		$args['user_cache'] = $user_cache;
 
 		self::$cache_endpoints[ $this->integration_name ][ $endpoint ] = $args;
 	}

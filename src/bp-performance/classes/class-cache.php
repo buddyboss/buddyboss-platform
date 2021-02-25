@@ -118,12 +118,11 @@ class Cache {
 	 * @param string $cache_value  Cache value.
 	 * @param string $cache_expire Time until expiration in seconds from now.
 	 * @param string $cache_group  Cache group name.
+	 * @param array  $user_id      user Id
 	 *
 	 * @return bool
 	 */
-	public function set( $cache_name, $cache_value, $cache_expire, $cache_group = 'buddyboss-api' ) {
-
-		$value = false;
+	public function set( $cache_name, $cache_value, $cache_expire, $cache_group = 'buddyboss-api', $user_id  = 0  ) {
 
 		// If the memcache based are available.
 		// Currently we bypass this condition as we not support purge with memcache.
@@ -136,14 +135,14 @@ class Cache {
 			$cache_expire = gmdate( 'Y-m-d H:i:s', time() + $cache_expire );
 
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get = $wpdb->get_row( $wpdb->prepare( "SELECT *FROM {$this->cache_table} WHERE cache_name=%s AND user_id=%s AND cache_group=%s", $cache_name, get_current_user_id(), $cache_group ) );
+			$get = $wpdb->get_row( $wpdb->prepare( "SELECT *FROM {$this->cache_table} WHERE cache_name=%s AND user_id=%s AND cache_group=%s", $cache_name, $user_id, $cache_group ) );
 
 			if ( empty( $get ) ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$value = $wpdb->insert(
 					$this->cache_table,
 					array(
-						'user_id'      => get_current_user_id(),
+						'user_id'      => $user_id,
 						'blog_id'      => get_current_blog_id(),
 						'cache_name'   => $cache_name,
 						'cache_group'  => $cache_group,
@@ -160,7 +159,7 @@ class Cache {
 						'cache_expire' => $cache_expire,
 					),
 					array(
-						'user_id'     => get_current_user_id(),
+						'user_id'     => $user_id,
 						'blog_id'     => get_current_blog_id(),
 						'cache_name'  => $cache_name,
 						'cache_group' => $cache_group,
