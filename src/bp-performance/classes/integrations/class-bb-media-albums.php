@@ -7,8 +7,8 @@
 
 namespace BuddyBoss\Performance\Integration;
 
-use BuddyBoss\Performance\Cache;
 use BuddyBoss\Performance\Helper;
+use BuddyBoss\Performance\Cache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();

@@ -7,9 +7,9 @@
 
 namespace BuddyBoss\Performance\Integration;
 
-use BP_Notifications_Notification;
-use BuddyBoss\Performance\Cache;
 use BuddyBoss\Performance\Helper;
+use BuddyBoss\Performance\Cache;
+use BP_Notifications_Notification;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
