@@ -547,7 +547,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'user_id' => $u2,
 		) );
 
-		$keys = array( 'id', 'item_id', 'secondary_item_id', 'user_id', 'primary_link', 'component', 'type', 'action', 'content', 'date_recorded', 'hide_sitewide', 'mptt_left', 'mptt_right', 'is_spam' );
+		$keys = array( 'id', 'item_id', 'secondary_item_id', 'user_id', 'primary_link', 'component', 'type', 'action', 'content', 'date_recorded', 'hide_sitewide', 'mptt_left', 'mptt_right', 'is_spam', 'privacy' );
 
 		$a2_obj = new BP_Activity_Activity( $a2 );
 
