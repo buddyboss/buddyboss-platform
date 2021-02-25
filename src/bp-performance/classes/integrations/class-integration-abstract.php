@@ -7,9 +7,9 @@
 
 namespace BuddyBoss\Performance\Integration;
 
+use BuddyBoss\Performance\Cache;
 use BuddyBoss\Performance\Performance;
 use BuddyBoss\Performance\Route_Helper;
-use BuddyBoss\Performance\Cache;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * All Integration written should be extending this abstract.
  * Class Integration_Abstract
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 abstract class Integration_Abstract {
 
@@ -405,7 +405,7 @@ abstract class Integration_Abstract {
 				echo wp_json_encode(
 					array(
 						'code'    => 'cache_invalid_user',
-						'message' => __( 'This error is formed by the API cache probably because of miss matched of user auth provider.', 'buddyboss' ),
+						'message' => __( 'Sorry, something went wrong. Please try again later.', 'buddyboss' ),
 						'data'    => array(
 							'status' => 500,
 						),
@@ -571,8 +571,8 @@ abstract class Integration_Abstract {
 	private function prepare_header( $results ) {
 		$headers          = array();
 		$disallow_headers = array(
-			'appboss-logged-in',
-			'ab-unread-notifications',
+			'bbapp-logged-in',
+			'bbapp-unread-notifications',
 			'bbp-unread-notifications',
 			'Expires',
 			'Cache-Control',
