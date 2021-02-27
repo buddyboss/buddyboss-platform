@@ -125,7 +125,6 @@ class Settings {
 					'cache_bb_forum_discussions'  => array(
 						'label'          => __( 'Forum Discussions', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Forum Discussions', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Forum Discussions may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bbp-forums,bbp-topics,bbp-replies&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
