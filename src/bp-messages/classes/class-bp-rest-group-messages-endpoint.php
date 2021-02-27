@@ -1055,7 +1055,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					count( $all_members )
 				);
 			} else {
-				$retval['message'] = __( 'Your message was sent privately to all members of this group you can message.', 'buddyboss' );
+				$retval['message'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
 			}
 
 			if ( ! empty( $messages_all ) ) {
