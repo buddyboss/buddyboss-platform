@@ -5541,39 +5541,52 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 add_action( 'init', 'bb_comment_data' );
 function bb_comment_data() {
 	global $wpdb;
-	$args         = array(
+	$args              = array(
 		'display_comments' => true,
 		'show_hidden'      => true,
 		'sort'             => 'ASC',
 	);
-	$all_comments = bp_activity_get( $args );
+	$all_comments      = bp_activity_get( $args );
 	$new_seq           = array();
 	$sub_data          = array();
 	$i                 = 0;
 	$activity_id_store = array();
 	foreach ( $all_comments['activities'] as $key => $comment_data ) {
-		if ( ! in_array( $key, $activity_id_store ) ||  ! in_array( $comment_data->id, $activity_id_store ) ) {
-			$i ++;
-			if ( $i === 1 ) {
-				$main_root_id = $comment_data->id;
-			}
-			$activity_id_store[] = $comment_data->id;
-			if ( $comment_data->children ) {
-				$sub_data                                          = getChildrenData( $activity_id_store, $sub_data, $comment_data->id, $comment_data->children, $i, $main_root_id );
+		$i ++;
+		if ( $i === 1 ) {
+			$main_root_id = $comment_data->id;
+		}
+		if ( $comment_data->children ) {
+			if ( ! in_array( $comment_data->id, $activity_id_store ) ) {
+				$sub_data                                          = getChildrenData(
+					$activity_id_store,
+					$sub_data,
+					$comment_data->id,
+					$comment_data->children,
+					$i,
+					$main_root_id
+				);
 				$new_seq[ $comment_data->id ]['id']                = $comment_data->id;
 				$new_seq[ $comment_data->id ]['mptt_left']         = $comment_data->mptt_left;
 				$new_seq[ $comment_data->id ]['mptt_right']        = $comment_data->mptt_right;
 				$new_seq[ $comment_data->id ]['item_id']           = $comment_data->item_id;
 				$new_seq[ $comment_data->id ]['secondary_item_id'] = $comment_data->secondary_item_id;
-				$new_seq[ $comment_data->id ]['child'] = $sub_data;
+				$new_seq[ $comment_data->id ]['type']              = $comment_data->type;
+				$new_seq[ $comment_data->id ]['privacy']           = $comment_data->privacy;
+				$new_seq[ $comment_data->id ]['child']             = $sub_data['child_array'];
+				$activity_id_store                                 = $sub_data['activity_id_store'];
 			}
 		}
+	}
+	if ( ! empty( $new_seq ) ) {
+		//updateFeedActivity( $new_seq );
 	}
 }
 function getChildrenData( $activity_id_store, $sub_data, $parent_id, $children_array, $i, $main_root_id ) {
 	global $wpdb;
 	$child_array = array();
 	foreach ( $children_array as $children_data ) {
+		$activity_id_store[]      = $children_data->id;
 		$check_both_ii_or_sii_sql = "SELECT id from {$wpdb->prefix}bp_activity WHERE item_id='" . $children_data->id . "'
             OR secondary_item_id='" . $children_data->id . "'";
 		$get_sub_data             = $wpdb->get_results( $check_both_ii_or_sii_sql );
@@ -5588,127 +5601,278 @@ function getChildrenData( $activity_id_store, $sub_data, $parent_id, $children_a
 				);
 				$get_activity_data = bp_activity_get_specific( $args );
 				$sub_child_array   = array();
-				foreach ( $get_activity_data['activities'] as $key=> $comment_data ) {
+				foreach ( $get_activity_data['activities'] as $key => $comment_data ) {
 					if ( $comment_data->children ) {
-						$sub_child_array['id']                = $comment_data->id;
-						$sub_child_array['mptt_left']         = $comment_data->mptt_left;
-						$sub_child_array['mptt_right']        = $comment_data->mptt_right;
-						$sub_child_array['item_id']           = $comment_data->item_id;
-						$sub_child_array['secondary_item_id'] = $comment_data->secondary_item_id;
-						if ( 'media' === $comment_data->privacy ) {
-							$sub_child_array['new_mptt_left']         = $comment_data->mptt_left + $i;
-							$sub_child_array['new_mptt_right']        = $comment_data->mptt_right + $i;
-							$sub_child_array['new_item_id']           = $main_root_id;
-							$sub_child_array['new_secondary_item_id'] = $main_root_id;
-							$fetch_parent_id_for_child                = "SELECT id from {$wpdb->prefix}bp_activity
-								WHERE item_id='" . $main_root_id . "' AND
-								secondary_item_id='" . $main_root_id . "'";
-							$get_fpifc                                = $wpdb->get_row( $fetch_parent_id_for_child );
-							if ( isset( $get_fpifc->id ) && ! empty( $get_fpifc->id ) ) {
-								feedUpdateData(
-									$main_root_id,
-									$main_root_id,
-									$comment_data->mptt_left + $i,
-									$comment_data->mptt_right + $i,
-									$get_fpifc->id
-								);
-							}
+						$activity_id_store[] = $children_data->id;
+						$activity_id_store[] = $get_sub_sub_data->id;
+						$activity_id_store[] = $comment_data->id;
+						if ( 'media' == $comment_data->privacy && 'activity_update' == $comment_data->type ) {
+							$sub_child_d                  = getChildrenData1( $activity_id_store, $sub_data, $children_data->id, $comment_data->children, $i, $main_root_id );
+							$sub_child_array['new_child'] = $sub_child_d['child_array'];
+							$main_sub_child_array         = $sub_child_array;
+						} else {
+							$sub_child_d                                   = getChildrenData( $activity_id_store, $sub_data, $get_sub_sub_data->id, $comment_data->children, $i, $main_root_id );
+							$sub_child_array['id']                         = $comment_data->id;
+							$sub_child_array['mptt_left']                  = $comment_data->mptt_left;
+							$sub_child_array['mptt_right']                 = $comment_data->mptt_right;
+							$sub_child_array['item_id']                    = $comment_data->item_id;
+							$sub_child_array['secondary_item_id']          = $comment_data->secondary_item_id;
+							$sub_child_array['type']                       = $comment_data->type;
+							$sub_child_array['privacy']                    = $comment_data->privacy;
+							$sub_child_array['move_mptt_left']             = $comment_data->mptt_left;
+							$sub_child_array['move_mptt_right']            = $comment_data->mptt_right + $i;
+							$sub_child_array['child']                      = $sub_child_d['child_array'];
+							$main_sub_child_array[ $get_sub_sub_data->id ] = $sub_child_array;
 						}
-						$activity_id_store[]      = $get_sub_sub_data->id;
-						$sub_child_array['child'] = getChildrenData( $activity_id_store, $sub_data, $get_sub_sub_data->id, $comment_data->children, $i, $main_root_id );
+						$activity_id_store = $sub_child_d['activity_id_store'];
 					} else {
-						$sub_child_array['id']                = $comment_data->id;
-						$sub_child_array['mptt_left']         = $comment_data->mptt_left;
-						$sub_child_array['mptt_right']        = $comment_data->mptt_right;
-						$sub_child_array['item_id']           = $comment_data->item_id;
-						$sub_child_array['secondary_item_id'] = $comment_data->secondary_item_id;
-						if ( 'media' === $comment_data->privacy ) {
-							$sub_child_array['new_mptt_left']         = $comment_data->mptt_left + $i;
-							$sub_child_array['new_mptt_right']        = $comment_data->mptt_right + $i;
-							$sub_child_array['new_item_id']           = $parent_id;
-							$sub_child_array['new_secondary_item_id'] = $children_data->id;
-							feedUpdateData(
-								$parent_id,
-								$children_data->id,
-								$comment_data->mptt_left + $i,
-								$comment_data->mptt_right + $i,
-								$get_sub_sub_data->id
-							);
-						}
-						$activity_id_store[]      = $comment_data->id;
-						$sub_child_array['child'] = $comment_data->id;
+						$sub_child_array['id']                     = $comment_data->id;
+						$sub_child_array['mptt_left']              = $comment_data->mptt_left;
+						$sub_child_array['mptt_right']             = $comment_data->mptt_right;
+						$sub_child_array['item_id']                = $comment_data->item_id;
+						$sub_child_array['secondary_item_id']      = $comment_data->secondary_item_id;
+						$sub_child_array['type']                   = $comment_data->type;
+						$sub_child_array['privacy']                = $comment_data->privacy;
+						$sub_child_array['move_mptt_left']         = $comment_data->mptt_left;
+						$sub_child_array['move_mptt_right']        = $comment_data->mptt_right + $i;
+						$main_sub_child_array[ $comment_data->id ] = $sub_child_array;
+						$activity_id_store[]                       = $comment_data->id;
 					}
 				}
-				$main_sub_child_array[ $get_sub_sub_data->id ] = $sub_child_array;
 			}
 			$main_sub_child_array_seq['id']                = $children_data->id;
 			$main_sub_child_array_seq['mptt_left']         = $children_data->mptt_left;
 			$main_sub_child_array_seq['mptt_right']        = $children_data->mptt_right;
 			$main_sub_child_array_seq['item_id']           = $children_data->item_id;
 			$main_sub_child_array_seq['secondary_item_id'] = $children_data->secondary_item_id;
-			if ( 'media' === $children_data->privacy ) {
-				$main_sub_child_array_seq['new_mptt_left']  = $children_data->mptt_left + $i;
-				$main_sub_child_array_seq['new_mptt_right'] = $children_data->mptt_right + $i;
-				$main_sub_child_array_seq['new_item_id']    = $main_root_id;
-				$fetch_secondary_item_id_for_child          = "SELECT secondary_item_id from {$wpdb->prefix}bp_activity
-					WHERE id='" . $children_data->secondary_item_id . "'";
-				$get_fsiifc                                 = $wpdb->get_row( $fetch_secondary_item_id_for_child );
-				if ( isset( $get_fsiifc->secondary_item_id ) && ! empty( $get_fsiifc->secondary_item_id ) ) {
-					$main_sub_child_array_seq['new_secondary_item_id'] = $get_fsiifc->secondary_item_id;
-				}
-				feedUpdateData( $main_root_id,
-					$get_fsiifc->secondary_item_id,
-					$children_data->mptt_left + $i,
-					$children_data->mptt_right + $i,
-					$children_data->id
-				);
-			}
-			$main_sub_child_array_seq['child'] = $main_sub_child_array;
-			$activity_id_store[]               = $children_data->id;
-			$child_array[ $children_data->id ] = $main_sub_child_array_seq;
+			$main_sub_child_array_seq['type']              = $children_data->type;
+			$main_sub_child_array_seq['privacy']           = $children_data->privacy;
+			$main_sub_child_array_seq['move_mptt_left']    = $children_data->mptt_left;
+			$main_sub_child_array_seq['move_mptt_right']   = $children_data->mptt_right + $i;
+			$main_sub_child_array_seq['move_mptt_right']   = $children_data->mptt_right + $i;
+			$main_sub_child_array_seq['child']             = $main_sub_child_array;
+			$activity_id_store[]                           = $children_data->id;
+			$child_array[ $children_data->id ]             = $main_sub_child_array_seq;
 		} else {
-			$new_seq['id']                = $children_data->id;
-			$new_seq['mptt_left']         = $children_data->mptt_left;
-			$new_seq['mptt_right']        = $children_data->mptt_right;
-			$new_seq['item_id']           = $children_data->item_id;
-			$new_seq['secondary_item_id'] = $children_data->secondary_item_id;
-			if ( 'media' === $children_data->privacy ) {
-				$new_seq['new_mptt_left']         = $children_data->mptt_left + $i;
-				$new_seq['new_mptt_right']        = $children_data->mptt_right + $i;
-				$new_seq['new_item_id']           = $main_root_id;
-				$new_seq['new_secondary_item_id'] = $children_data->secondary_item_id;
-				feedUpdateData(
-					$main_root_id,
-					$children_data->secondary_item_id,
-					$children_data->mptt_left + $i,
-					$children_data->mptt_right + $i,
-					$children_data->id
+			$new_seq['id']                     = $children_data->id;
+			$new_seq['mptt_left']              = $children_data->mptt_left;
+			$new_seq['mptt_right']             = $children_data->mptt_right;
+			$new_seq['item_id']                = $children_data->item_id;
+			$new_seq['secondary_item_id']      = $children_data->secondary_item_id;
+			$new_seq['type']                   = $children_data->type;
+			$new_seq['privacy']                = $children_data->privacy;
+			$new_seq['move_mptt_left']         = $children_data->mptt_left;
+			$new_seq['move_mptt_right']        = $children_data->mptt_right + $i;
+			$new_seq['child']                  = $children_data->id;
+			$activity_id_store[]               = $children_data->id;
+			$child_array[ $children_data->id ] = $new_seq;
+		}
+	}
+	return array(
+		'child_array'       => $child_array,
+		'activity_id_store' => $activity_id_store,
+	);
+}
+function getChildrenData1( $activity_id_store, $sub_data, $parent_id, $children_array, $i, $main_root_id ) {
+	global $wpdb;
+	$child_array = array();
+	$i           = 0;
+	foreach ( $children_array as $children_data ) {
+		$i ++;
+		$secondary_item_id_for_mcd = $parent_id;
+		//for first child - get mptt_left and right based on parent
+		$paren_id_args = array(
+			'display_comments' => true,
+			'show_hidden'      => true,
+			'sort'             => 'ASC',
+			'activity_ids'     => $parent_id,
+		);
+		$paren_id_data = bp_activity_get_specific( $paren_id_args );
+		foreach ( $paren_id_data['activities'] as $key => $parent_comment_data ) {
+			$parent_comment_mptt_left  = $parent_comment_data->mptt_left + 1;
+			$parent_comment_mptt_right = $parent_comment_data->mptt_right + 1;
+		}
+		if ( $i === 1 ) {
+			$new_mptt_left  = $parent_comment_mptt_left + $i;
+			$new_mptt_right = $parent_comment_mptt_right + $i;
+		} else {
+			$new_mptt_left  = $parent_comment_mptt_right + $i;
+			$new_mptt_right = $parent_comment_mptt_left + $i;
+		}
+		$activity_id_store[]      = $children_data->id;
+		$check_both_ii_or_sii_sql = "SELECT id from {$wpdb->prefix}bp_activity WHERE item_id='" . $children_data->id . "'
+            OR secondary_item_id='" . $children_data->id . "'";
+		$get_sub_data             = $wpdb->get_results( $check_both_ii_or_sii_sql );
+		if ( ! empty( $get_sub_data ) ) {
+			$main_sub_child_array = array();
+			foreach ( $get_sub_data as $get_sub_sub_data ) {
+				$args                               = array(
+					'display_comments' => true,
+					'show_hidden'      => true,
+					'sort'             => 'ASC',
+					'activity_ids'     => $get_sub_sub_data->id,
 				);
+				$get_activity_data                  = bp_activity_get_specific( $args );
+				$sub_child_array                    = array();
+				$sub_child_array['move_mptt_left']  = $new_mptt_left;
+				$sub_child_array['move_mptt_right'] = $new_mptt_right;
+				foreach ( $get_activity_data['activities'] as $key => $comment_data ) {
+					$new_mptt_left       = $comment_data->mptt_right + $i;
+					$new_mptt_right      = $new_mptt_left + $i;
+					$get_parent_item_sql = "SELECT id from {$wpdb->prefix}bp_activity
+												WHERE item_id='" . $comment_data->id . "'";
+					$get_parent_data     = $wpdb->get_row( $get_parent_item_sql );
+					$secondary_item_id   = $comment_data->secondary_item_id;
+					if ( ! empty( $get_parent_data ) && isset( $get_parent_data->id ) ) {
+						$secondary_item_id = $get_parent_data->id;
+					}
+					if ( $comment_data->children ) {
+						$activity_id_store[] = $children_data->id;
+						$activity_id_store[] = $get_sub_sub_data->id;
+						$activity_id_store[] = $comment_data->id;
+						if ( 'media' == $comment_data->privacy && 'activity_update' == $comment_data->type ) {
+							$sub_child_d                  = getChildrenData1( $activity_id_store, $sub_data, $get_sub_sub_data->id, $comment_data->children, $i, $main_root_id );
+							$sub_child_array['new_child'] = $sub_child_d['child_array'];
+							$main_sub_child_array         = $sub_child_array;
+						} else {
+							$sub_child_d                                   = getChildrenData( $activity_id_store, $sub_data, $get_sub_sub_data->id, $comment_data->children, $i, $main_root_id );
+							$sub_child_array['id']                         = $comment_data->id;
+							$sub_child_array['mptt_left']                  = $comment_data->mptt_left;
+							$sub_child_array['mptt_right']                 = $comment_data->mptt_right;
+							$sub_child_array['item_id']                    = $comment_data->item_id;
+							$sub_child_array['secondary_item_id']          = $comment_data->secondary_item_id;
+							$sub_child_array['type']                       = $comment_data->type;
+							$sub_child_array['privacy']                    = $comment_data->privacy;
+							$sub_child_array['move_item_id']               = $main_root_id;
+							$sub_child_array['move_secondary_item_id']     = $secondary_item_id;
+							$sub_child_array['child']                      = $sub_child_d['child_array'];
+							$main_sub_child_array[ $get_sub_sub_data->id ] = $sub_child_array;
+						}
+						$activity_id_store = $sub_child_d['activity_id_store'];
+					} else {
+						$sub_child_array['id']                     = $comment_data->id;
+						$sub_child_array['mptt_left']              = $comment_data->mptt_left;
+						$sub_child_array['mptt_right']             = $comment_data->mptt_right;
+						$sub_child_array['item_id']                = $comment_data->item_id;
+						$sub_child_array['secondary_item_id']      = $comment_data->secondary_item_id;
+						$sub_child_array['type']                   = $comment_data->type;
+						$sub_child_array['privacy']                = $comment_data->privacy;
+						$sub_child_array['move_item_id']           = $main_root_id;
+						$sub_child_array['move_secondary_item_id'] = $secondary_item_id;
+						$main_sub_child_array[ $comment_data->id ] = $sub_child_array;
+						$activity_id_store[]                       = $comment_data->id;
+					}
+				}
 			}
+			if ( empty( $secondary_item_id_for_mcd ) ) {
+				$secondary_item_id_for_mcd = $children_data->secondary_item_id;
+			}
+			$main_sub_child_array_seq['id']                     = $children_data->id;
+			$main_sub_child_array_seq['mptt_left']              = $children_data->mptt_left;
+			$main_sub_child_array_seq['mptt_right']             = $children_data->mptt_right;
+			$main_sub_child_array_seq['item_id']                = $children_data->item_id;
+			$main_sub_child_array_seq['secondary_item_id']      = $children_data->secondary_item_id;
+			$main_sub_child_array_seq['type']                   = $children_data->type;
+			$main_sub_child_array_seq['privacy']                = $children_data->privacy;
+			$main_sub_child_array_seq['move_item_id']           = $main_root_id;
+			$main_sub_child_array_seq['move_secondary_item_id'] = $secondary_item_id_for_mcd;
+			$main_sub_child_array_seq['move_mptt_left']         = $new_mptt_left;
+			$main_sub_child_array_seq['move_mptt_right']        = $new_mptt_right;
+			$main_sub_child_array_seq['child']                  = $main_sub_child_array;
+			$activity_id_store[]                                = $children_data->id;
+			$child_array[ $children_data->id ]                  = $main_sub_child_array_seq;
+		} else {
+			if ( empty( $secondary_item_id_for_mcd ) ) {
+				$secondary_item_id_for_mcd = $children_data->secondary_item_id;
+			}
+			$new_seq['id']                     = $children_data->id;
+			$new_seq['mptt_left']              = $children_data->mptt_left;
+			$new_seq['mptt_right']             = $children_data->mptt_right;
+			$new_seq['item_id']                = $children_data->item_id;
+			$new_seq['secondary_item_id']      = $children_data->secondary_item_id;
+			$new_seq['type']                   = $children_data->type;
+			$new_seq['privacy']                = $children_data->privacy;
+			$new_seq['move_item_id']           = $main_root_id;
+			$new_seq['move_secondary_item_id'] = $secondary_item_id_for_mcd;
 			$new_seq['child']                  = $children_data->id;
 			$activity_id_store[]               = $children_data->id;
 			$child_array[ $children_data->id ] = $new_seq;//$children_data->id;
 		}
 	}
-	return $child_array;
+	return array(
+		'child_array'       => $child_array,
+		'activity_id_store' => $activity_id_store,
+	);
 }
-function feedUpdateData( $new_item_id, $new_secondary_item_id, $new_mptt_left, $new_mptt_right, $id ) {
-	//	global $wpdb;
-	//	$wpdb->update(
-	//		$wpdb->prefix . 'bp_activity',
-	//		array(
-	//			'item_id'           => $new_item_id,
-	//			'secondary_item_id' => $new_secondary_item_id,
-	//			'mptt_left'         => $new_mptt_left,
-	//			'mptt_right'        => $new_mptt_right,
-	//		),
-	//		array( 'id' => $id ),
-	//		array(
-	//			'%d',
-	//			'%d',
-	//			'%d',
-	//			'%d',
-	//		),
-	//		array( '%d' )
-	//	);
+function updateFeedActivity( $new_seq ) {
+	global $wpdb;
+	if ( ! empty( $new_seq ) ) {
+		foreach ( $new_seq as $id => $main_data ) {
+			$check_options_exists = get_option( 'activity_data_' . $main_data['id'] );
+			if ( ! $check_options_exists ) {
+				if ( isset( $main_data['new_item_id'] ) &&
+				     isset( $main_data['new_secondary_item_id'] ) &&
+				     isset( $main_data['new_mptt_left'] ) &&
+				     isset( $main_data['new_mptt_right'] ) &&
+				     isset( $main_data['id'] ) ) {
+					$wpdb->update(
+						$wpdb->prefix . 'bp_activity',
+						array(
+							'item_id'           => $main_data['new_item_id'],
+							'secondary_item_id' => $main_data['new_secondary_item_id'],
+							'mptt_left'         => $main_data['new_mptt_left'],
+							'mptt_right'        => $main_data['new_mptt_right'],
+						),
+						array( 'id' => $main_data['id'] ),
+						array(
+							'%d',
+							'%d',
+							'%d',
+							'%d',
+						),
+						array( '%d' )
+					);
+					$data                      = array();
+					$data['item_id']           = $main_data['new_item_id'];
+					$data['secondary_item_id'] = $main_data['new_secondary_item_id'];
+					$data['mptt_left']         = $main_data['new_mptt_left'];
+					$data['mptt_right']        = $main_data['new_mptt_right'];
+					update_option( 'activity_data_' . $main_data['id'], json_encode( $data ) );
+				}
+				if ( isset( $main_data['child'] ) && is_array( $main_data['child'] ) ) {
+					updateFeedActivity( $main_data['child'] );
+				} else {
+					if ( isset( $main_data['new_item_id'] ) &&
+					     isset( $main_data['new_secondary_item_id'] ) &&
+					     isset( $main_data['new_mptt_left'] ) &&
+					     isset( $main_data['new_mptt_right'] ) &&
+					     isset( $main_data['id'] ) ) {
+						$wpdb->update(
+							$wpdb->prefix . 'bp_activity',
+							array(
+								'item_id'           => $main_data['new_item_id'],
+								'secondary_item_id' => $main_data['new_secondary_item_id'],
+								'mptt_left'         => $main_data['new_mptt_left'],
+								'mptt_right'        => $main_data['new_mptt_right'],
+							),
+							array( 'id' => $main_data['id'] ),
+							array(
+								'%d',
+								'%d',
+								'%d',
+								'%d',
+							),
+							array( '%d' )
+						);
+						$data                      = array();
+						$data['item_id']           = $main_data['new_item_id'];
+						$data['secondary_item_id'] = $main_data['new_secondary_item_id'];
+						$data['mptt_left']         = $main_data['new_mptt_left'];
+						$data['mptt_right']        = $main_data['new_mptt_right'];
+						update_option( 'activity_data_' . $main_data['id'], json_encode( $data ) );
+					}
+				}
+			}
+		}
+	}
 }
