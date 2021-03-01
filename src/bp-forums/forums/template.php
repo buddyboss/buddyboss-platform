@@ -2530,13 +2530,15 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 	}
 
 	// Used variables
-	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$tab        = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$can_update = bbp_can_update_forum_type( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start(); ?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>
+            <?php echo $can_update ? '' : 'disabled="disabled"'; ?>>
 
 		<?php foreach ( bbp_get_forum_types() as $key => $label ) : ?>
 
@@ -2550,6 +2552,59 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 
 	// Return the results
 	return apply_filters( 'bbp_get_form_forum_type_dropdown', ob_get_clean(), $r );
+}
+
+/**
+ * Checking whether you can update or not forum type.
+ *
+ * Disable "Type" field when the main Forum associated with Group.
+ *
+ * @since bbPress (r3563)
+ *
+ * @param int $forum_id The forum id to use
+ *
+ * @uses  bbp_has_forum_groups() checking Is the forum contain any group.
+ *
+ * @return boolean
+ */
+function bbp_can_update_forum_type( $forum_id ) {
+	return bbp_has_forum_groups( $forum_id );
+}
+
+/**
+ * Checking whether you can update or not forum parent.
+ *
+ * Disable "Forum Parent" field when the main Forum associated with Group.
+ *
+ * @since bbPress (r3563)
+ *
+ * @param int $forum_id The forum id to use
+ *
+ * @uses  bbp_has_forum_groups() checking Is the forum contain any group.
+ *
+ * @return boolean
+ */
+function bbp_can_update_forum_parent( $forum_id ) {
+	return bbp_has_forum_groups( $forum_id );
+}
+
+/**
+ * Is the forum contain any group.
+ *
+ * @since bbPress (r3563)
+ *
+ * @param int $forum_id The forum id to use.
+ *
+ * @return boolean
+ */
+function bbp_has_forum_groups( $forum_id ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	
+	if ( ! empty( $group_ids ) ) {
+		return false;
+	}
+
+	return true;
 }
 
 /**
@@ -2717,14 +2772,14 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	// Used variables
 	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
 
-	$group_ids = bbp_get_forum_group_ids( $r['forum_id'] );
+	$has_visibility = bbp_can_update_forum_visibility( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
 	?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?> <?php echo ! empty( $group_ids ) ? 'disabled="disabled"' : ''; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?> <?php echo ! $has_visibility ? 'disabled="disabled"' : ''; ?>>
 
 		<?php foreach ( bbp_get_forum_visibilities() as $key => $label ) : ?>
 
@@ -2738,6 +2793,42 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 
 	// Return the results
 	return apply_filters( 'bbp_get_form_forum_type_dropdown', ob_get_clean(), $r );
+}
+
+/**
+ * Checking whether you can update or not forum visibility.
+ *
+ * When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
+ *
+ * @since bbPress (r3563)
+ *
+ * @param int $forum_id The forum id to use
+ *
+ * @uses  bbp_get_forum() To get the forum.
+ * @uses  bbp_get_forum_group_ids() To get the forum group ids.
+ *
+ * @return boolean
+ */
+function bbp_can_update_forum_visibility( $forum_id ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+
+	if ( ! empty( $group_ids ) ) {
+		return false;
+	}
+
+	$forum = bbp_get_forum( $forum_id );
+	
+	// When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
+	while ( ! empty( (int) $forum->post_parent ) ) {
+		$forum     = bbp_get_forum( $forum->post_parent );
+		$group_ids = bbp_get_forum_group_ids( $forum->ID );
+		
+		if ( ! empty( $group_ids ) ) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 /** Feeds *********************************************************************/

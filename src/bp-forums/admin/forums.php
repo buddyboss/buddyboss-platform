@@ -80,6 +80,36 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 
 			// Set forum states
 			add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
+
+			// Filter post parent for forum type post.
+			add_filter( 'wp_insert_post_parent', array( $this, 'filter_forum_parent' ), 10, 4 );
+		}
+
+		/**
+		 * Can update forum parent, If not then return the current parent.
+		 *
+		 * Disable "Forum Parent" when the main Forum associated with Group
+		 *
+		 * @since bbPress (r4067)
+		 *
+		 * @param init   post_parent post parent.
+		 * @param init   post_ID     post ID.
+		 * @param array  new_postarr submited post data.
+		 * @param object postarr     post attributes.
+		 *
+		 * @return init
+		 */
+		function filter_forum_parent( $post_parent, $post_ID, $new_postarr, $postarr ) {
+			if ( $new_postarr['post_type'] != 'forum' ) {
+				return $post_parent;
+			}
+
+			if ( ! bbp_can_update_forum_parent( $post_ID ) ) {
+				$forum = bbp_get_forum( $post_ID );
+				return $forum->post_parent;
+			}
+
+			return $post_parent;
 		}
 
 		/**

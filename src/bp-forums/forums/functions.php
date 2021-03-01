@@ -652,7 +652,7 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 
 	/** Forum Type */
 
-	if ( ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) {
+	if ( bbp_can_update_forum_type( $forum_id ) && ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) {
 		if ( 'category' === $_POST['bbp_forum_type'] && ! bbp_is_forum_category( $forum_id ) ) {
 			bbp_categorize_forum( $forum_id );
 		} elseif ( 'forum' === $_POST['bbp_forum_type'] && bbp_is_forum_category( $forum_id ) ) {
@@ -662,7 +662,7 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 
 	/** Forum Visibility */
 
-	if ( ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ) ) ) {
+	if ( bbp_can_update_forum_visibility( $forum_id ) && ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ) ) ) {
 
 		// Get forums current visibility
 		$visibility = bbp_get_forum_visibility( $forum_id );
