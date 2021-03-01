@@ -605,12 +605,20 @@ class BP_Video {
 				$video->menu_order    = (int) $video->menu_order;
 			}
 
+
+			$file_url = wp_get_attachment_url( $video->attachment_id );
+			$filetype = wp_check_filetype( $file_url );
+			$ext      = $filetype['ext'];
+			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234
+			// https://stackoverflow.com/a/44858204
+			if ( in_array( $filetype['ext'], array( 'mov' ) ) ) {
+				$ext = 'mp4';
+			}
+
 			// fetch video thumbnail attachment data.
 			$attachment_data                         = new stdClass();
 			$attachment_data->meta                   = new stdClass();
-			$file_url                                = wp_get_attachment_url( $video->attachment_id );
-			$filetype                                = wp_check_filetype( $file_url );
-			$attachment_data->meta->mime_type        = 'video/' . $filetype['ext'];
+			$attachment_data->meta->mime_type        = apply_filters( 'bb_video_extension', 'video/' . $ext, $video );
 			$length_formatted                        = wp_get_attachment_metadata( $video->attachment_id );
 			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
 			$attachment_thumb_id                     = bb_get_video_thumb_id( $video->attachment_id );
