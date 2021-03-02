@@ -3890,14 +3890,24 @@ function bp_document_create_symlinks( $document ) {
 				}
 			}
 
-			$file_path = '';
-			if ( ! empty( $attached_file_info['dirname'] ) ) {
-				$file_path = $attached_file_info['dirname'];
-				$file_path = $file_path . '/' . $file['file'];
+			if ( ! $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'original' );
+				if ( ! $file ) {
+					bp_document_generate_document_previews( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, 'original' );
+				}
 			}
 
-			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-				symlink( $file_path, $attachment_path );
+			if ( $file ) {
+				$file_path = '';
+				if ( ! empty( $attached_file_info['dirname'] ) ) {
+					$file_path = $attached_file_info['dirname'];
+					$file_path = $file_path . '/' . $file['file'];
+				}
+
+				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+					symlink( $file_path, $attachment_path );
+				}
 			}
 		}
 	}

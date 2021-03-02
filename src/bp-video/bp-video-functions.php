@@ -3713,7 +3713,9 @@ function bb_video_get_symlink( $video ) {
 		$upload_directory    = wp_get_upload_dir();
 		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . time() );
 
-		symlink( $attached_file, $attachment_path );
+		if ( ! file_exists( $attachment_path ) ) {
+			symlink( $attached_file, $attachment_path );
+        }
 
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
 
@@ -3829,6 +3831,9 @@ function bb_video_delete_older_symlinks() {
 	}
 
 	while ( ( $file = readdir( $dh ) ) !== false ) {
+		if ( $file === '.' || $file === '..' || ! is_dir( $file ) ) {
+			continue;
+		}
 		$file = $dir . '/' . $file;
 		if ( filemtime( $file ) < $limit ) {
 			$list[] = $file;
