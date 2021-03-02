@@ -5540,50 +5540,53 @@ function bp_activity_comment_get_report_link( $args = array() ) {
  */
 add_action( 'init', 'bb_comment_data' );
 function bb_comment_data() {
-	$args              = array(
-		'display_comments' => true,
-		'show_hidden'      => true,
-		'sort'             => 'ASC',
-	);
-	$all_comments      = bp_activity_get( $args );
-	$new_seq           = array();
-	$sub_data          = array();
-	$i                 = 0;
-	$activity_id_store = array();
-	foreach ( $all_comments['activities'] as $key => $comment_data ) {
-		$i ++;
-		//Get main root comment id
-		if ( 0 === $comment_data->item_id && 0 === $comment_data->secondary_item_id ) {
-			$get_main_root_id = $comment_data->id;
-		}
-		$activity_id_store = array_unique( $activity_id_store );
-		if ( $comment_data->children ) {
-			if ( ! in_array( $comment_data->id, $activity_id_store ) ) {
-				$sub_data                              = getChildrenData(
-					$activity_id_store,
-					$sub_data,
-					$comment_data->id,
-					$comment_data->children,
-					$i,
-					$get_main_root_id
-				);
-				$new_seq[ $comment_data->id ]          = getActivityExtraData(
-					$comment_data->id,
-					$comment_data->mptt_left,
-					$comment_data->mptt_right,
-					$comment_data->item_id,
-					$comment_data->secondary_item_id,
-					$get_main_root_id
-				);
-				$new_seq[ $comment_data->id ]['child'] = $sub_data['child_array'];
-				$activity_id_store                     = $sub_data['activity_id_store'];
+	$get_request = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+	if ( 'migration' === $get_request ) {
+		$args              = array(
+			'display_comments' => true,
+			'show_hidden'      => true,
+			'sort'             => 'ASC',
+		);
+		$all_comments      = bp_activity_get( $args );
+		$new_seq           = array();
+		$sub_data          = array();
+		$i                 = 0;
+		$activity_id_store = array();
+		foreach ( $all_comments['activities'] as $key => $comment_data ) {
+			$i ++;
+			//Get main root comment id
+			if ( 0 === $comment_data->item_id && 0 === $comment_data->secondary_item_id ) {
+				$get_main_root_id = $comment_data->id;
+			}
+			$activity_id_store = array_unique( $activity_id_store );
+			if ( $comment_data->children ) {
+				if ( ! in_array( $comment_data->id, $activity_id_store ) ) {
+					$sub_data                              = getChildrenData(
+						$activity_id_store,
+						$sub_data,
+						$comment_data->id,
+						$comment_data->children,
+						$i,
+						$get_main_root_id
+					);
+					$new_seq[ $comment_data->id ]          = getActivityExtraData(
+						$comment_data->id,
+						$comment_data->mptt_left,
+						$comment_data->mptt_right,
+						$comment_data->item_id,
+						$comment_data->secondary_item_id,
+						$get_main_root_id
+					);
+					$new_seq[ $comment_data->id ]['child'] = $sub_data['child_array'];
+					$activity_id_store                     = $sub_data['activity_id_store'];
+				}
 			}
 		}
+		//	echo 'new seq';
+		//	echo '<pre>';
+		//	print_r( $new_seq );
+		//	echo '</pre>';
 	}
-	echo 'new seq';
-	echo '<pre>';
-	print_r( $new_seq );
-	echo '</pre>';
 }
 function getChildrenData( $activity_id_store, $sub_data, $parent_id, $children_array, $i, $main_root_id ) {
 	global $wpdb;
@@ -5751,6 +5754,7 @@ function getChildrenData( $activity_id_store, $sub_data, $parent_id, $children_a
 }
 function getActivityExtraData( $comment_id, $mppt_left, $mptt_right, $item_id, $secondary_item_id, $main_root_id ) {
 	global $wpdb;
+	$bp = buddypress();
 	if ( (int) $item_id === (int) $secondary_item_id ) {
 		$new_seq         = array();
 		$gmiosi_get_data = "SELECT secondary_item_id FROM {$wpdb->prefix}bp_activity WHERE id= '" . $item_id . "'";
@@ -5765,28 +5769,107 @@ function getActivityExtraData( $comment_id, $mppt_left, $mptt_right, $item_id, $
 	} else {
 		$new_secondary_item_id = $secondary_item_id;
 	}
-	$new_seq['id'] = $comment_id;
-	//$new_seq['mptt_left']         = $mppt_left;
-	//$new_seq['mptt_right']        = $mptt_right;
+	$new_seq['id']                    = $comment_id;
+	$new_seq['mptt_left']             = $mppt_left;
+	$new_seq['mptt_right']            = $mptt_right;
 	$new_seq['item_id']               = $item_id;
 	$new_seq['secondary_item_id']     = $secondary_item_id;
 	$new_seq['new_item_id']           = $main_root_id;
 	$new_seq['new_secondary_item_id'] = $new_secondary_item_id;
+	$new_seq['new_mptt_left']         = $mppt_left;
+	$new_seq['new_mptt_right']        = $mptt_right + 1;
+	//Update current mptt_right, item_id & secondary_item_id for current comment
+	if ( $comment_id !== $main_root_id && $comment_id !== $new_secondary_item_id ) {
+		$c_sql = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET
+						mptt_right = %d,
+						item_id = %d,
+						secondary_item_id = %d
+						WHERE id = %d", intval( $mptt_right + 1 ),
+			$main_root_id, $new_secondary_item_id, $comment_id );
+		//echo $c_sql . ';<br>';
+		$wpdb->query( $c_sql );
+		if ( $comment_id !== $main_root_id ) {
+			//Get mptt_right for root comment
+			$get_main_root_id_sql = "SELECT mptt_left, mptt_right FROM {$wpdb->prefix}bp_activity WHERE id= '" . $main_root_id . "'";
+			//echo $get_main_root_id_sql . ';<br>';
+			$get_main_root_id_row = $wpdb->get_row( $get_main_root_id_sql );
+			if ( ! empty( $get_main_root_id_row ) ) {
+				//Update mptt_right for root comment
+				$new_mppt_right_for_parent_id = intval( $get_main_root_id_row->mptt_right + 1 );
+				$main_root_sql                = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET
+						mptt_right = %d
+						WHERE id = %d", $new_mppt_right_for_parent_id, $main_root_id );
+				//echo $main_root_sql . ';<br>';
+				$wpdb->query( $main_root_sql );
+			}
+		}
+		if ( $comment_id !== $new_secondary_item_id ) {
+			//Get mptt_right for secondary comment
+			$get_secondary_item_root_sql = "SELECT mptt_left, mptt_right FROM {$wpdb->prefix}bp_activity WHERE id= '" . $new_secondary_item_id . "'";
+			$get_secondary_item_root_row = $wpdb->get_row( $get_secondary_item_root_sql );
+			if ( ! empty( $get_secondary_item_root_row ) ) {
+				//Update mptt_right for root comment
+				$new_mppt_right_for_si_id = intval( $get_secondary_item_root_row->mptt_right + 1 );
+				$secon_sql                = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET
+						mptt_right = %d
+						WHERE id = %d", $new_mppt_right_for_si_id, $new_secondary_item_id );
+				//echo $secon_sql . ';<br>';
+				$wpdb->query( $secon_sql );
+			}
+		}
+	}
 	return $new_seq;
 }
 function getDataWhichTypeIsActivityUpdate( $get_sub_id, $main_root_id ) {
+	$bp = buddypress();
 	global $wpdb;
 	$new_seq         = array();
 	$gmiocc_get_data = "SELECT * FROM {$wpdb->prefix}bp_activity WHERE id= '" . $get_sub_id . "'";
 	$gmiocc_get_row  = $wpdb->get_row( $gmiocc_get_data );
 	if ( ! empty( $gmiocc_get_row ) ) {
-		$new_seq['id'] = $gmiocc_get_row->id;
-		//$new_seq['mptt_left']         = $gmiocc_get_row->mptt_left;
-		//$new_seq['mptt_right']        = $gmiocc_get_row->mptt_right;
-		$new_seq['item_id']               = $gmiocc_get_row->item_id;
-		$new_seq['secondary_item_id']     = $gmiocc_get_row->secondary_item_id;
-		$new_seq['new_item_id']           = $main_root_id;
-		$new_seq['new_secondary_item_id'] = $gmiocc_get_row->secondary_item_id;
+		//update_option( 'mppt_right_' . $gmiocc_get_row->id, $gmiocc_get_row->mptt_right );
+		$new_seq['id']                = $gmiocc_get_row->id;
+		$new_seq['mptt_left']         = $gmiocc_get_row->mptt_left;
+		$new_seq['mptt_right']        = $gmiocc_get_row->mptt_right;
+		$new_seq['item_id']           = $gmiocc_get_row->item_id;
+		$new_seq['secondary_item_id'] = $gmiocc_get_row->secondary_item_id;
+		if ( $gmiocc_get_row->id !== $main_root_id && $gmiocc_get_row->id !== $gmiocc_get_row->secondary_item_id ) {
+			$c_sql = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET
+						mptt_right = %d,
+						item_id = %d,
+						secondary_item_id = %d
+						WHERE id = %d",
+				intval( $gmiocc_get_row->mptt_right + 1 ),
+				$main_root_id, $gmiocc_get_row->secondary_item_id, $gmiocc_get_row );
+			//echo $c_sql . ';<br>';
+			$wpdb->query( $c_sql );
+			if ( $gmiocc_get_row->id !== $main_root_id ) {
+				$get_main_root_id_sql = "SELECT mptt_left, mptt_right FROM {$wpdb->prefix}bp_activity
+								WHERE id= '" . $main_root_id . "'";
+				$get_main_root_id_row = $wpdb->get_row( $get_main_root_id_sql );
+				if ( ! empty( $get_main_root_id_row ) ) {
+					$new_mppt_right_for_parent_id = intval( $get_main_root_id_row->mptt_right + 1 );
+					$root_sql                     = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET
+										mptt_right = %d
+										WHERE id = %d", $new_mppt_right_for_parent_id, $main_root_id );
+					//echo $root_sql . ';<br>';
+					$wpdb->query( $root_sql );
+				}
+			}
+			if ( $gmiocc_get_row->id !== $gmiocc_get_row->secondary_item_id ) {
+				$get_secondary_item_root_sql = "SELECT mptt_left, mptt_right FROM {$wpdb->prefix}bp_activity
+										WHERE id= '" . $gmiocc_get_row->secondary_item_id . "'";
+				$get_secondary_item_root_row = $wpdb->get_row( $get_secondary_item_root_sql );
+				if ( ! empty( $get_secondary_item_root_row ) ) {
+					$new_mppt_right_for_si_id = intval( $get_secondary_item_root_row->mptt_right + 1 );
+					$m_root_sql               = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET
+						mptt_right = %d
+						WHERE id = %d", $new_mppt_right_for_si_id, $gmiocc_get_row->secondary_item_id );
+					//echo $m_root_sql . ';<br>';
+					$wpdb->query( $m_root_sql );
+				}
+			}
+		}
 	}
 	return $new_seq;
 }
