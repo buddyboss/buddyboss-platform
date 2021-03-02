@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.6.1
+Tested up to: 5.6.2
 Requires PHP: 5.6.20
-Stable tag: 1.5.7.2
+Stable tag: 1.5.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform-pro.zip'
+3. Upload the file 'buddyboss-platform-plugin.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
@@ -56,6 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.7.3 =
+* Groups - Fixed redirection issue when member leave the hidden social group
+* REST API - Performance Improvements
 
 = 1.5.7.2 =
 * Messages - Provided 'select all' option in Group Send Private Message screen
