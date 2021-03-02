@@ -43,10 +43,16 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
                         </a>
 
 						<?php
-						if ( $can_add ) { ?>
-                        <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-                            <?php _e( 'Add Photos', 'buddyboss' ); ?>
-                        </a>
+						if ( $can_add ) {
+						    if ( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() ) { ?>
+                                <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
+                                    <?php _e( 'Add Photos', 'buddyboss' ); ?>
+                                </a> <?php
+						    } elseif( bp_is_group() ) { ?>
+                                <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
+                                    <?php _e( 'Add Photos', 'buddyboss' ); ?>
+                                </a> <?php
+						    } ?>
                         <?php } ?>
 
 	                    <?php if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() ) : ?>
@@ -61,9 +67,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
                     </div>
 
 					<?php
-					if ( $can_manage ) {
-						bp_get_template_part( 'media/uploader' );
-					}
+                    bp_get_template_part( 'media/uploader' );
 				endif;
 
 				if ( $can_manage ) {

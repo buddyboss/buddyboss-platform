@@ -103,7 +103,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -401,7 +401,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				&& true === bp_enable_group_auto_join()
 			) {
 				$schema['properties']['bp-group-type-auto-join'] = array(
-					'description' => __( 'Group types will automatically approve all membership requests from users of this profile type.', 'buddyboss' ),
+					'description' => __( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types below other than Hidden Groups.', 'buddyboss' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,

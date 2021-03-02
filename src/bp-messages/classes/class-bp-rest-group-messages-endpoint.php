@@ -94,19 +94,83 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		if ( 'all' === $message_users ) {
 
 			// Fetch all the group members.
-			$args = array(
-				'per_page'            => 9999999999999999999,
-				'group_id'            => $group,
-				'exclude'             => array( bp_loggedin_user_id() ),
-				'exclude_admins_mods' => false,
-			);
+			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
 
-			$group_members = groups_get_group_members( $args );
-			$members       = wp_list_pluck( $group_members['members'], 'ID' );
+			// Exclude logged-in user ids from the members list.
+			if ( in_array( bp_loggedin_user_id(), $members ) ) {
+				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+			}
+
+			if ( 'private' === $message_type ) {
+
+				// Check Membership Access.
+				foreach ( $members as $k => $member ) {
+					$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+					if ( ! $can_send_group_message ) {
+						unset( $members[ $k ] );
+					}
+				}
+
+				// Check if force friendship is enabled and check recipients.
+				if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+					foreach ( $members as $f => $member ) {
+						if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+							unset( $members[ $f ] );
+						}
+					}
+				}
+			}
 
 			// We get members array from $_POST['users_list'] because user already selected them.
 		} else {
 			$members = $users_list;
+
+			// Check Membership Access.
+			$not_access_list = array();
+			foreach ( $members as $member ) {
+				$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+				if ( ! $can_send_group_message ) {
+					$not_access_list[] = bp_core_get_user_displayname( $member );
+				}
+			}
+
+			if ( ! empty( $not_access_list ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_group_members_message',
+					sprintf(
+						'%1$s %2$s',
+						( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
+						implode( ', ', $not_access_list )
+					),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+
+			// Check if force friendship is enabled and check recipients.
+			$not_friends = array();
+			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+				foreach ( $members as $member ) {
+					if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+						$not_friends[] = bp_core_get_user_displayname( $member );
+					}
+				}
+			}
+
+			if ( ! empty( $not_friends ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_group_members_message',
+					sprintf(
+						'%1$s %2$s',
+						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss' ),
+						implode( ', ', $not_friends )
+					),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		if ( empty( $group ) ) {
@@ -127,6 +191,69 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		if (
+			empty( $message )
+			&& ! (
+				! empty( $request['bp_media_ids'] ) ||
+				(
+					! empty( $request['media_gif']['url'] ) &&
+					! empty( $request['media_gif']['mp4'] )
+				) ||
+				! empty( $request['bp_documents'] )
+			)
+		) {
+			return new WP_Error(
+				'bp_rest_messages_empty_message',
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_media ) {
+				return new WP_Error(
+					'bp_rest_bp_message_media',
+					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_document ) {
+				return new WP_Error(
+					'bp_rest_bp_message_document',
+					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_gif ) {
+				return new WP_Error(
+					'bp_rest_bp_message_document',
+					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( empty( $message ) ) {
+			$message = '&nbsp;';
 		}
 
 		$_POST            = array();
@@ -1078,7 +1205,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		$params['message'] = array(
 			'description'       => __( 'Content of the Message to add to the Thread.', 'buddyboss' ),
 			'type'              => 'string',
-			'required'          => true,
+			'required'          => false,
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
