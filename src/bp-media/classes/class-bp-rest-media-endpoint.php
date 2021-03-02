@@ -634,7 +634,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) ) {
+				} elseif ( function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) && empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_media_upload_id',
 						sprintf(
