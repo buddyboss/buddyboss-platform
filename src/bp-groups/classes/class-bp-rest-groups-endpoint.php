@@ -219,7 +219,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -290,7 +290,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -731,6 +731,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'plural_role'        => '',
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
 			'can_post'           => $this->bp_rest_user_can_post( $item ),
+			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
+			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
 		);
 
 		// BuddyBoss Platform support.
@@ -1029,7 +1031,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @param  BP_Groups_Group $group Group object.
 	 * @return bool
 	 */
-	protected function can_see( $group ) {
+	public function can_see( $group ) {
 
 		// If it is not a hidden group, user can see it.
 		if ( 'hidden' !== $group->status ) {
@@ -1395,6 +1397,18 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Forum id of the group.', 'buddyboss' ),
 					'type'        => 'integer',
+					'readonly'    => true,
+				),
+				'create_media'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to upload media to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'create_document'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to upload document to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			),

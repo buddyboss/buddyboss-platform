@@ -192,7 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'messages', 'documents', 'folders' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -202,6 +202,10 @@ class BP_Groups_Component extends BP_Component {
 
 				if ( bp_is_group_invites() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/invite.php';
+				}
+
+				if ( bp_is_group_messages() && is_user_logged_in() ) {
+					require $this->path . 'bp-groups/screens/single/messages.php';
 				}
 
 				// Admin nav items.
@@ -491,7 +495,7 @@ class BP_Groups_Component extends BP_Component {
 		 * @param string $value BP_GROUPS_DEFAULT_EXTENSION constant if defined,
 		 *                      else 'members'.
 		 */
-		$default_tab = ( '' === $default_tab ) ? 'members' : $default_tab;
+		$default_tab             = ( '' === $default_tab ) ? 'members' : $default_tab;
 		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : $default_tab );
 
 		$bp = buddypress();
@@ -551,8 +555,8 @@ class BP_Groups_Component extends BP_Component {
 
 		// Only grab count if we're on a user page.
 		if ( bp_is_user() ) {
-			$class = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
-			$nav_name = __( 'Groups', 'buddyboss' );
+			$class     = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
+			$nav_name  = __( 'Groups', 'buddyboss' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
@@ -721,7 +725,6 @@ class BP_Groups_Component extends BP_Component {
 						'position'        => 30,
 					);
 				}
-
 			}
 
 			if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() ) {
@@ -840,6 +843,34 @@ class BP_Groups_Component extends BP_Component {
 					'position'        => 70,
 					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
+				);
+
+				$admin_link_message = trailingslashit( $group_link . 'messages' );
+				// Common params to all nav items.
+				$default_params_message = array(
+					'parent_url'        => $admin_link_message,
+					'parent_slug'       => $this->current_group->slug . '_messages',
+					'screen_function'   => 'groups_screen_group_messages',
+					'user_has_access'   => $this->current_group->user_has_access,
+					'show_in_admin_bar' => true,
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Send Group Message', 'buddyboss' ),
+						'slug'     => 'public-message',
+						'position' => 0,
+					),
+					$default_params_message
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Send Private Message', 'buddyboss' ),
+						'slug'     => 'private-message',
+						'position' => 1,
+					),
+					$default_params_message
 				);
 			}
 
