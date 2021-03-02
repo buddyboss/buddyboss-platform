@@ -3406,7 +3406,7 @@ function bb_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
  * @param string $pathdata Path.
  *
  * @return mixed
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_upload_dir( $pathdata ) {
 	if ( isset( $_POST['action'] ) && 'media_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
@@ -3433,7 +3433,7 @@ function bp_media_upload_dir( $pathdata ) {
  * @param string $pathdata Path.
  *
  * @return mixed
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_upload_dir_script( $pathdata ) {
 
@@ -3456,7 +3456,7 @@ function bp_media_upload_dir_script( $pathdata ) {
  * Media symlink directory path.
  *
  * @return string Path to media symlink directory.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_symlink_path() {
 	$upload_dir = wp_upload_dir();
@@ -3482,7 +3482,7 @@ function bp_media_symlink_path() {
  *
  * @param object $media BP_Media Object.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_create_symlinks( $media ) {
 	// Check if media is id of media, create document object.
@@ -3549,7 +3549,7 @@ function bp_media_create_symlinks( $media ) {
 		 * @param object $media         BP_Media Object.
 		 * @param string $symlinks_path Path to symlinks directory.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss X.X.X
 		 */
 		do_action( 'bp_media_create_symlinks', $media->id, $attachment_id, $media, $symlinks_path );
 
@@ -3561,7 +3561,7 @@ function bp_media_create_symlinks( $media ) {
  *
  * @param object $media BP_Media Object.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_delete_symlinks( $media ) {
 	// Check if media is id of media, create media object.
@@ -3607,7 +3607,7 @@ function bp_media_delete_symlinks( $media ) {
 	 * @param object $media         BP_Media Object.
 	 * @param string $symlinks_path Path to symlinks directory.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss X.X.X
 	 */
 	do_action( 'bp_media_delete_symlinks', $media->id, $attachment_id, $media, $symlinks_path );
 }
@@ -3621,7 +3621,7 @@ function bp_media_delete_symlinks( $media ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bp-media-thumbnail' ) {
 	$attachment_url = '';
@@ -3654,7 +3654,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bp-
 	 * @param int    $attachment_id  Attachment ID.
 	 * @param string $size           Preview size.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss X.X.X
 	 */
 	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size );
 }
@@ -3695,7 +3695,7 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
  *
  * @return array Image sizes.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_get_image_sizes() {
 	$image_sizes = array(
@@ -3715,7 +3715,7 @@ function bp_media_get_image_sizes() {
 /**
  * Add media upload filters.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_add_upload_filters() {
 	add_filter( 'upload_dir', 'bp_media_upload_dir' );
@@ -3727,7 +3727,7 @@ function bp_media_add_upload_filters() {
 /**
  * Remove media upload filters.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_remove_upload_filters() {
 	remove_filter( 'upload_dir', 'bp_media_upload_dir' );
@@ -3739,7 +3739,7 @@ function bp_media_remove_upload_filters() {
 /**
  * Register media image sizes.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_register_image_sizes() {
 	$image_sizes = bp_media_get_image_sizes();
@@ -3756,7 +3756,7 @@ function bp_media_register_image_sizes() {
 /**
  * Deregister media image sizes.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_deregister_image_sizes() {
 	$image_sizes = bp_media_get_image_sizes();
@@ -3773,7 +3773,7 @@ function bp_media_deregister_image_sizes() {
  *
  * @param int $attachment_id Attachment ID.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss X.X.X
  */
 function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 	// Add upload filters.
