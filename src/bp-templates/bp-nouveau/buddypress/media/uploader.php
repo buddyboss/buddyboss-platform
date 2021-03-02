@@ -41,7 +41,7 @@
 									<?php
 									if ( bp_is_profile_albums_support_enabled() ) {
 										?>
-										<a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#">
+										<a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
 											<i class="bb-icon-folder"></i>
 											<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 										</a>

@@ -702,6 +702,7 @@ class BuddyPress {
 			'BP_REST_Settings_Endpoint'                    => 'core',
 			'BP_REST_Mention_Endpoint'                     => 'core',
 			'BP_REST_Members_Endpoint'                     => 'members',
+			'BP_REST_Members_Permissions_Endpoint'         => 'members',
 			'BP_REST_Members_Actions_Endpoint'             => 'members',
 			'BP_REST_Members_Details_Endpoint'             => 'members',
 			'BP_REST_Attachments_Member_Avatar_Endpoint'   => 'members',
