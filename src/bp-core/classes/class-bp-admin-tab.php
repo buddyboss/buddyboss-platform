@@ -470,11 +470,11 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				if ( $section['title'] ) {
-					echo "<h2>{$section['title']}</h2>\n";
-				}
-
-				if ( $section['callback'] ) {
-					call_user_func( $section['callback'], $section );
+					echo "<h2> {$section['title']}";
+					if ( $section['callback'] ) {
+						call_user_func( $section['callback'], $section );
+					}
+					echo "</h2>\n";
 				}
 
 				if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $page ] ) || ! isset( $wp_settings_fields[ $page ][ $section['id'] ] ) ) {
