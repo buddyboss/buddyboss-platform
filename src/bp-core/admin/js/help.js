@@ -14,8 +14,8 @@
 			var article_id = getArticleParam();
 
 			// Hide Both Section by Default.
-            $('#bp-help-main-menu-wrap').hide();
-            $('.bp-help-content-wrap').hide();
+			$('#bp-help-main-menu-wrap').hide();
+			$('.bp-help-content-wrap').hide();
 
 			var bp_help_wpapi = new WPAPI({ endpoint: 'https://buddyboss.com/resources/wp-json' });
 			
@@ -25,8 +25,8 @@
 			var bp_help_page_url = new URL(window.location.href);
 
 			/**
-             * Loads Main Page.
-             */
+			 * Loads Main Page.
+			 */
 			if (!article_id) {
 
 				$( '#bp-help-main-menu-wrap' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
@@ -58,8 +58,8 @@
 			}
 
 			/**
-             * Loads Inner Section Page.
-             */
+			 * Loads Inner Section Page.
+			 */
 			if (article_id) {
 
 				// show loading animation
