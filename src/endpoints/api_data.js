@@ -5256,7 +5256,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php",
+    "filename": "src/bp-core/classes/class-bp-rest-learndash-courses-endpoint.php",
     "groupTitle": "Learndash"
   },
   {
@@ -5446,7 +5446,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-learndash-courses-endpoint.php",
+    "filename": "src/bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php",
     "groupTitle": "Learndash"
   },
   {
@@ -9035,35 +9035,6 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/wp-json/buddyboss/v1/signup/:id",
-    "title": "Signup",
-    "name": "GetBBSignups",
-    "group": "Signups",
-    "description": "<p>Retrieve signup</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
-    "groupTitle": "Signups"
-  },
-  {
-    "type": "GET",
     "url": "/wp-json/buddyboss/v1/signup",
     "title": "Signups",
     "name": "GetBBSignups",
@@ -9124,6 +9095,35 @@ define({ "api": [
             "optional": true,
             "field": "offset",
             "description": "<p>'Offset the result set by a specific number of items.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "groupTitle": "Signups"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/signup/:id",
+    "title": "Signup",
+    "name": "GetBBSignups",
+    "group": "Signups",
+    "description": "<p>Retrieve signup</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
           }
         ]
       }
