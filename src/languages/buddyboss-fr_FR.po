@@ -4044,7 +4044,7 @@ msgstr "Repeuplement des enregistrements de blogs %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:587
 msgid "Counting the number of active members on the site&hellip; %s"
-msgstr "Comptage du nombre de pasteurs actifs sur le site&hellip; %s"
+msgstr "Comptage du nombre de membres actifs sur le site&hellip; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:605
 msgid "Determining last activity dates for each user&hellip; %s"
@@ -6216,7 +6216,7 @@ msgstr ""
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3863
 msgid "[{{{site.name}}}] Group details updated"
-msgstr "[{{{site.name}}}] Mise à jour des informations de la structure"
+msgstr "[{{{site.name}}}] Mise à jour des informations du groupe"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3865
@@ -6255,7 +6255,7 @@ msgstr ""
 msgid ""
 "[{{{site.name}}}] You have an invitation to the group: \"{{group.name}}\""
 msgstr ""
-"[{{{site.name}}}] Vous êtes invité par la structure: \"{{group.name}}\""
+"[{{{site.name}}}] Vous êtes invité par le groupe: \"{{group.name}}\""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3873
@@ -7101,7 +7101,7 @@ msgstr "Activez votre compte"
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:547
 #: bp-templates/bp-nouveau/includes/groups/functions.php:605
 msgid "Create a Group"
-msgstr "Enregistrer une structure"
+msgstr "Créer un groupe"
 
 #: bp-core/bp-core-tools-default-data.php:12
 msgid "Everything was deleted."
@@ -9463,7 +9463,7 @@ msgstr "Un membre accepte votre demande de connexion"
 #: bp-groups/bp-groups-notifications.php:1238
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:651
 msgid "A member invites you to join a group"
-msgstr "Un pasteur vous invite à rejoindre un groupe"
+msgstr "Un membre vous invite à rejoindre un groupe"
 
 #: bp-core/gdpr/class-bp-settings-export.php:166
 #: bp-groups/bp-groups-notifications.php:1254
@@ -10834,7 +10834,7 @@ msgstr "Pas de 'en_réponse_à' à convertir"
 
 #: bp-forums/admin/converter.php:519
 msgid "Calculating reply_to parents (%1$s - %2$s)"
-msgstr "Recalcul de la structure des 'répondre_à' (%1$s - %2$s)"
+msgstr "Recalcul des parents des 'répondre_à' (%1$s - %2$s)"
 
 #: bp-forums/admin/converters/AEF.php:688
 #: bp-forums/admin/converters/FluxBB.php:643
@@ -15790,7 +15790,7 @@ msgstr "Autres raisons pour l'édition:"
 #: bp-forums/templates/default/bbpress/form-topic.php:186
 #: bp-templates/bp-nouveau/includes/functions.php:1481
 msgid "Post"
-msgstr "Article"
+msgstr "Publier"
 
 #: bp-forums/templates/default/bbpress/form-reply.php:153
 msgid "The discussion \"%s\" is closed to new replies."
@@ -16850,7 +16850,7 @@ msgstr "%s n'a encore créé aucune connexion."
 #: bp-friends/bp-friends-template.php:189
 msgid "There aren't enough site members to show a random sample just yet."
 msgstr ""
-"Il n'y a pas encore assez de pasteurs pour afficher une liste aléatoire."
+"Il n'y a pas encore assez de membres pour afficher une liste aléatoire."
 
 #: bp-friends/bp-friends-template.php:206
 msgid "Filter Connections"
@@ -17269,7 +17269,7 @@ msgstr "Sauvegarder"
 
 #: bp-groups/bp-groups-admin.php:167
 msgid "Add New Members"
-msgstr "Ajouter de nouveaux pasteurs"
+msgstr "Ajouter de nouveaux membres"
 
 #: bp-groups/bp-groups-admin.php:186
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:882
@@ -17311,7 +17311,7 @@ msgid ""
 msgstr ""
 "En cliquant sur \"Editer\" vous accèderez à un tableau de bord depuis lequel "
 "vous pourrez gérer différents détails concernant le groupe, tels que son nom "
-"et sa description, ses pasteurs et d'autres réglages."
+"et sa description, ses membres et d'autres réglages."
 
 #: bp-groups/bp-groups-admin.php:230
 msgid ""
@@ -17327,11 +17327,11 @@ msgstr ""
 #. translators: accessibility text
 #: bp-groups/bp-groups-admin.php:244
 msgid "Groups list navigation"
-msgstr "Navigation dans la liste de structures"
+msgstr "Navigation dans la liste de groupes"
 
 #: bp-groups/bp-groups-admin.php:257
 msgid "Start typing a username to add a new member."
-msgstr "Saisissez un nom d'usager pour ajouter un nouveau pasteur."
+msgstr "Saisissez un nom d'usager pour ajouter un nouveau membre."
 
 #: bp-groups/bp-groups-admin.php:258
 msgid ""
@@ -17365,7 +17365,7 @@ msgstr "Les usagers suivants ont bien été ajoutés au groupe: %s"
 
 #: bp-groups/bp-groups-admin.php:670
 msgid "An error occurred when trying to modify the following members: %s"
-msgstr "Une erreur est survenue pendant la modification du pasteur: %s"
+msgstr "Une erreur est survenue pendant la modification du membre: %s"
 
 #: bp-groups/bp-groups-admin.php:675
 msgid "The following members were successfully modified: %s"
@@ -17578,7 +17578,7 @@ msgstr "Bannir"
 
 #: bp-groups/bp-groups-admin.php:1504
 msgid "No members of this type"
-msgstr "Aucun pasteur de ce type"
+msgstr "Aucun membre de ce type"
 
 #: bp-groups/bp-groups-admin.php:1568
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:804
@@ -17600,7 +17600,7 @@ msgstr "&raquo;"
 msgid "Viewing 1 member"
 msgid_plural "Viewing %1$s - %2$s of %3$s members"
 msgstr[0] "Aperçu: 1 membre"
-msgstr[1] "%1$s - %2$s sur %3$s pasteurs"
+msgstr[1] "%1$s - %2$s sur %3$s membres"
 
 #. Translators: 1: user_login, 2: user_email.
 #: bp-groups/bp-groups-admin.php:1748
@@ -18244,7 +18244,7 @@ msgstr "Aucun groupe de champs trouvés."
 #. translators: accessibility text
 #: bp-groups/classes/class-bp-groups-list-table.php:251
 msgid "Groups list"
-msgstr "Liste des structures"
+msgstr "Liste des groupes"
 
 #. translators: accessibility text
 #: bp-groups/classes/class-bp-groups-list-table.php:344
@@ -18312,7 +18312,7 @@ msgstr "Aucun groupe à afficher."
 
 #: bp-groups/classes/class-bp-groups-widget.php:234
 msgid "Link widget title to Groups directory"
-msgstr "Lier le titre du widget au répertoire des structures"
+msgstr "Lier le titre du widget au répertoire des groupes"
 
 #: bp-groups/classes/class-bp-groups-widget.php:236
 msgid "Max groups to show:"
@@ -19427,7 +19427,7 @@ msgstr "Le groupe a été supprimé avec succès."
 #: bp-groups/screens/single/admin/edit-details.php:35
 msgid "Groups must have a name and a description. Please try again."
 msgstr ""
-"Les structures doivent avoir un nom et une description. Veuillez réessayer."
+"Les groupes doivent avoir un nom et une description. Veuillez réessayer."
 
 #: bp-groups/screens/single/admin/edit-details.php:45
 msgid "There was an error updating group details. Please try again."
@@ -19531,7 +19531,7 @@ msgstr ""
 
 #: bp-groups/screens/single/invite.php:126
 msgid "The member requested to join the group"
-msgstr "Ce pasteur demande son adhésion au groupe"
+msgstr "Ce membre demande son adhésion au groupe"
 
 #: bp-groups/screens/single/invite.php:129
 msgid "There was an error removing the invite"
@@ -21738,7 +21738,7 @@ msgstr[1] "Aperçu: %1$s - %2$s sur %3$s membres avec leurs connexions"
 msgid "Viewing 1 online member"
 msgid_plural "Viewing %1$s - %2$s of %3$s online members"
 msgstr[0] "Aperçu: 1 membre en ligne"
-msgstr[1] "Affichage %1$s - %2$s sur %3$s pasteurs en ligne"
+msgstr[1] "Affichage %1$s - %2$s sur %3$s membres en ligne"
 
 #: bp-members/bp-members-template.php:2010
 msgid "Viewing all members who are %s"
@@ -21827,7 +21827,7 @@ msgstr "Photos de profil des membres récemment actifs"
 #: bp-members/classes/class-bp-core-recently-active-widget.php:107
 #: bp-members/classes/class-bp-core-recently-active-widget.php:241
 msgid "There are no recently active members"
-msgstr "Aucun pasteur n'a été actif récemment"
+msgstr "Aucun membre n'a été actif récemment"
 
 #: bp-members/classes/class-bp-core-recently-active-widget.php:181
 msgid "Recently Active Members"
@@ -21846,7 +21846,7 @@ msgstr "Photos de profil des usagers en ligne"
 #: bp-members/classes/class-bp-core-whos-online-widget.php:361
 #: bp-members/classes/class-bp-core-whos-online-widget.php:405
 msgid "There are no users currently online"
-msgstr "Aucun pasteur ne se trouve actuellement sur le site"
+msgstr "Aucun membre ne se trouve actuellement sur le site"
 
 #: bp-members/classes/class-bp-core-whos-online-widget.php:169
 msgid "Online"
@@ -23029,7 +23029,7 @@ msgstr[1] "Vous avez %s nouveaux messages privés"
 #: bp-messages/bp-messages-notifications.php:311
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:625
 msgid "A member sends you a new message"
-msgstr "Un pasteur vous a envoyé un message"
+msgstr "Un membre vous a envoyé un message"
 
 #: bp-messages/bp-messages-star.php:108
 #: bp-templates/bp-nouveau/includes/messages/functions.php:136
@@ -26073,7 +26073,7 @@ msgstr "Tous les membres du groupe"
 #: bp-templates/bp-nouveau/buddypress/groups/single/parts/invite-subnav.php:9
 #: bp-templates/bp-nouveau/buddypress/groups/single/parts/members-subnav.php:10
 msgid "Group administration menu"
-msgstr "Menu d’administration des structures"
+msgstr "Menu d’administration des groupes"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/parts/header-item-actions.php:18
 msgid "Group %s"
@@ -27442,7 +27442,7 @@ msgstr "Chargement des mises à jour du projet. Veuillez patienter."
 
 #: bp-templates/bp-nouveau/includes/functions.php:858
 msgid "Requesting the group members. Please wait."
-msgstr "Demande des membres de la structure en cours. Veuillez patienter."
+msgstr "Demande des membres du groupe en cours. Veuillez patienter."
 
 #: bp-templates/bp-nouveau/includes/functions.php:862
 msgid "Requesting the group leaders. Please wait."
@@ -29515,7 +29515,7 @@ msgstr "(Types de profil: %s)"
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:840
 msgid "(Unavailable to all members)"
-msgstr "(Non disponible pour tous les pasteurs)"
+msgstr "(Non disponible pour tous les membres)"
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1170
 msgid "Profile fields must have a name."
