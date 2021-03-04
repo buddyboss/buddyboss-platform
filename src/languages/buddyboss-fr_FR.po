@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
 "POT-Creation-Date: 2021-02-18 17:04:31+00:00\n"
-"PO-Revision-Date: 2021-03-04 14:42+0100\n"
+"PO-Revision-Date: 2021-03-04 15:15+0100\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: Jean-David Daviet <contact@jeandaviddaviet.fr>\n"
 "Language: fr_FR\n"
@@ -258,7 +258,7 @@ msgid ""
 msgstr ""
 "<strong>Tapez</strong> - Chaque type d’activité distinct a son propre type. "
 "Par exemple: <code>created_group</code> est utilisé quand un groupe est créé "
-"et <code>joined_group</code> quand un usager se joint à un groupe."
+"et <code>joined_group</code> quand un utilisateur se joint à un groupe."
 
 #: bp-activity/bp-activity-admin.php:262 bp-activity/bp-activity-admin.php:317
 #: bp-core/admin/bp-core-admin-functions.php:937
@@ -341,7 +341,7 @@ msgid ""
 msgstr ""
 "Il existe de nombreux types d'activités différentes. Certaines sont générées "
 "automatiquement par BuddyBoss Platform et d'autres plugins, d'autres sont "
-"saisis directement par un usager sous forme de mise à jour du Statut. Pour "
+"saisis directement par un utilisateur sous forme de mise à jour du Statut. Pour "
 "vous aider à gérer les différents types d'activités, utilisez le menu "
 "déroulant Filtre pour passer d'un type d'activité à l'autre."
 
@@ -1121,7 +1121,7 @@ msgstr "Effacer le filtre"
 
 #: bp-activity/bp-activity-template.php:3281
 msgid "a user"
-msgstr "un usager"
+msgstr "un utilisateur"
 
 #: bp-activity/bp-activity-template.php:3874
 msgid "Site Wide Activity RSS Feed"
@@ -2150,7 +2150,7 @@ msgid ""
 "have at it!"
 msgstr ""
 "Si vous n\\'utilisez pas bien pas un domaine, laissez-le pour un nouvel "
-"usager. Maintenant, allez-y!"
+"utilisateur. Maintenant, allez-y!"
 
 #: bp-blogs/bp-blogs-template.php:1087
 msgid "Create Site"
@@ -2727,8 +2727,8 @@ msgid ""
 "Your users will distinguish themselves through their profile page. Create "
 "relevant profile fields that will show on each users profile."
 msgstr ""
-"Vos usagers se présentent sur leur page de profil. Créez des champs de "
-"profils pertinents qui seront affichés sur le profil de chaque usager."
+"Vos utilisateurs se présentent sur leur page de profil. Créez des champs de "
+"profils pertinents qui seront affichés sur le profil de chaque utilisateur."
 
 #: bp-core/admin/bp-core-admin-functions.php:1032
 msgid "Note: Any fields in the first group will appear on the signup page."
@@ -2755,13 +2755,13 @@ msgid ""
 "<em>Logged-In</em> links are relative to the current user, and are not "
 "visible to visitors who are not logged in."
 msgstr ""
-"Les liens <em>Logged-In</em> sont relatifs à l’usager en cours, et ne sont "
+"Les liens <em>Logged-In</em> sont relatifs à l’utilisateur en cours, et ne sont "
 "pas visibles aux visiteurs non-connectés."
 
 #: bp-core/admin/bp-core-admin-functions.php:1246
 msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
-"Les liens<em>déconnectés</em> ne sont pas visibles pour les usagers "
+"Les liens<em>déconnectés</em> ne sont pas visibles pour les utilisateurs "
 "connectés."
 
 #: bp-core/admin/bp-core-admin-functions.php:1279
@@ -2916,7 +2916,7 @@ msgid ""
 "Allow users to self-select as this profile type from the \"Profile Type\" "
 "profile field dropdown."
 msgstr ""
-"Autoriser les usagers à sélectionner ce type de profil dans le champ "
+"Autoriser les utilisateurs à sélectionner ce type de profil dans le champ "
 "déroulant \"Type de profil\" du profil."
 
 #: bp-core/admin/bp-core-admin-functions.php:1845
@@ -2987,8 +2987,8 @@ msgid ""
 "Users of this profile type will be auto-assigned to the following WordPress "
 "roles (includes existing users):"
 msgstr ""
-"Les usagers de ce type de profil seront automatiquement affectés aux rôles "
-"WordPress suivants (y compris les usagers existants):"
+"Les utilisateurs de ce type de profil seront automatiquement affectés aux rôles "
+"WordPress suivants (y compris les utilisateurs existants):"
 
 #: bp-core/admin/bp-core-admin-functions.php:2103
 msgid "(None)"
@@ -3285,7 +3285,7 @@ msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
-"Étant donné que <a href=\"%s\">Email Invités</a> est activé, les usagers "
+"Étant donné que <a href=\"%s\">Email Invités</a> est activé, les utilisateurs "
 "invités seront toujours autorisés à enregistrer de nouveaux comptes."
 
 #: bp-core/admin/bp-core-admin-pages.php:258
@@ -3341,7 +3341,7 @@ msgstr "Pseudo"
 
 #: bp-core/admin/bp-core-admin-settings.php:21
 msgid "Show the Toolbar for logged out users"
-msgstr "Montrer la barre d'outils pour les usagers déconnectés"
+msgstr "Montrer la barre d'outils pour les utilisateurs déconnectés"
 
 #: bp-core/admin/bp-core-admin-settings.php:35
 msgid "Allow members to delete their profiles"
@@ -3595,7 +3595,7 @@ msgstr "Articles de blog"
 #: bp-core/admin/bp-core-admin-settings.php:853
 msgid "When users publish new blog posts, show them in the activity feed."
 msgstr ""
-"Lorsque les usagers publient de nouveaux articles de blog, affichez-les dans "
+"Lorsque les utilisateurs publient de nouveaux articles de blog, affichez-les dans "
 "le fil d'activités."
 
 #: bp-core/admin/bp-core-admin-settings.php:887
@@ -3703,7 +3703,7 @@ msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
-"Entrez une URL personnalisée pour rediriger les usagers vers votre site. "
+"Entrez une URL personnalisée pour rediriger les utilisateurs vers votre site. "
 "Utile pour les plugins d'adhésion."
 
 #: bp-core/admin/bp-core-admin-settings.php:1309
@@ -3920,7 +3920,7 @@ msgstr "Réparer le comptage total des membres."
 
 #: bp-core/admin/bp-core-admin-tools.php:324
 msgid "Repair member \"last activity\" data."
-msgstr "Réparer les données des \"dernières activités\" de l'usager."
+msgstr "Réparer les données des \"dernières activités\" de l'utilisateur."
 
 #: bp-core/admin/bp-core-admin-tools.php:332
 msgid "Repair default profile set and fields."
@@ -3984,7 +3984,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:449
 msgid "Counting the number of connections for each user&hellip; %s"
-msgstr "Comptage du nombre de connexions pour chaque usager&hellip ; %s"
+msgstr "Comptage du nombre de connexions pour chaque utilisateur&hellip ; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:450
 #: bp-core/admin/bp-core-admin-tools.php:511
@@ -4036,7 +4036,7 @@ msgstr "Terminé!"
 
 #: bp-core/admin/bp-core-admin-tools.php:510
 msgid "Counting the number of groups for each user&hellip; %s"
-msgstr "Comptage du nombre de régions de chaque usager&hellip; %s"
+msgstr "Comptage du nombre de régions de chaque utilisateur&hellip; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:556
 msgid "Repopulating Blogs records&hellip; %s"
@@ -4048,7 +4048,7 @@ msgstr "Comptage du nombre de membres actifs sur le site&hellip; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:605
 msgid "Determining last activity dates for each user&hellip; %s"
-msgstr "Détermination des dernières dates d'activité pour chaque usager %s"
+msgstr "Détermination des dernières dates d'activité pour chaque utilisateur %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:664
 msgid "Repair default profile set and fields&hellip; %s"
@@ -4064,12 +4064,12 @@ msgstr "%s membres mis à jour avec succès."
 
 #: bp-core/admin/bp-core-admin-tools.php:702
 msgid "Re-sync user profile data to WordPress; %s"
-msgstr "Synchronisation des données du profil usager dans WordPress ; %s"
+msgstr "Synchronisation des données du profil utilisateur dans WordPress ; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:753
 msgid "Re-sync user WordPress data to BuddyBoss profile fields; %s"
 msgstr ""
-"Resynchroniser les données WordPress de l'usager dans les champs de profil "
+"Resynchroniser les données WordPress de l'utilisateur dans les champs de profil "
 "BuddyBoss ; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:798
@@ -4087,7 +4087,7 @@ msgid ""
 "activity items. Occasionally these relationships become out of sync, most "
 "often after an import, update, or migration."
 msgstr ""
-"BuddyBoss assure le suivi des différentes relations entre les usagers, les "
+"BuddyBoss assure le suivi des différentes relations entre les utilisateurs, les "
 "groupes et les éléments d'activité. Parfois, ces relations sont "
 "désynchronisées, le plus souvent après une importation, une mise à jour ou "
 "une migration."
@@ -4114,7 +4114,7 @@ msgid ""
 "Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
-"Affectez les usagers sans type de profil aux enregistrements de type de "
+"Affectez les utilisateurs sans type de profil aux enregistrements de type de "
 "profil par défaut&hellip; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:1080
@@ -4510,20 +4510,20 @@ msgstr "Répertoires des profils"
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 "Utiliser une page WordPress comme tableau de bord de profil personnel de "
-"chaque usager"
+"chaque utilisateur"
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:222
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page and "
 "assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
-"Cette page n'est accessible qu'aux usagers connectés. Créez une page "
+"Cette page n'est accessible qu'aux utilisateurs connectés. Créez une page "
 "WordPress et attribuez-la dans les paramètres <a href=\"%s\">Pages</a>."
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:241
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
-"Rediriger les usagers vers leur tableau de bord du profil lors de la "
+"Rediriger les utilisateurs vers leur tableau de bord du profil lors de la "
 "connexion"
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:248
@@ -4536,7 +4536,7 @@ msgid ""
 "Community</a> tools to update all the users."
 msgstr ""
 "Une fois le format mis à jour, n'oubliez pas d'exécuter les outils <a href="
-"\"%s\">Repair Community</a> pour mettre à jour tous les usagers."
+"\"%s\">Repair Community</a> pour mettre à jour tous les utilisateurs."
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:294
 msgid ""
@@ -4581,9 +4581,9 @@ msgid ""
 "users."
 msgstr ""
 "Sélectionnez un type de profil par défaut à attribuer automatiquement aux "
-"usagers lors de l'enregistrement. Une fois le type de profil sélectionné, "
+"utilisateurs lors de l'enregistrement. Une fois le type de profil sélectionné, "
 "vous pouvez exécuter les outils <a href=\"%s\">Réparer Communauté</a> pour "
-"affecter le type de profil aux usagers existants."
+"affecter le type de profil aux utilisateurs existants."
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:430
 msgid ""
@@ -5175,7 +5175,7 @@ msgid ""
 "This user has been marked as a spammer. Only site admins can view this "
 "profile."
 msgstr ""
-"Cet usager a été signalé comme spammeur. Seuls les administrateurs du site "
+"Cet utilisateur a été signalé comme spammeur. Seuls les administrateurs du site "
 "peuvent voir son profil."
 
 #: bp-core/bp-core-catchuri.php:672 bp-core/bp-core-catchuri.php:782
@@ -5518,7 +5518,7 @@ msgid ""
 "users are given member profiles."
 msgstr ""
 "Tout dans un site communautaire tourne autour de ses membres. Tous les "
-"usagers du site Web reçoivent un profil de membre."
+"utilisateurs du site Web reçoivent un profil de membre."
 
 #: bp-core/bp-core-functions.php:2520 bp-xprofile/bp-xprofile-admin.php:160
 #: bp-xprofile/bp-xprofile-admin.php:168 bp-xprofile/bp-xprofile-admin.php:177
@@ -7132,7 +7132,7 @@ msgstr "%s de nouveaux groupes sociaux"
 
 #: bp-core/bp-core-tools-default-data.php:63
 msgid "%s group members (1 user can be in several groups)"
-msgstr "%s membres du groupe (1 usager peut être dans plusieurs groupes)"
+msgstr "%s membres du groupe (1 utilisateur peut être dans plusieurs groupes)"
 
 #: bp-core/bp-core-tools-default-data.php:69
 msgid "%s group activity items"
@@ -7273,7 +7273,7 @@ msgstr "[%1$s] Demande de modération pour: \"%2$s\""
 #. translators: %s: user name
 #: bp-core/bp-core-wp-emails.php:639
 msgid "Password changed for user: %s"
-msgstr "Mot de passe modifié pour l'usager: %s"
+msgstr "Mot de passe modifié pour l'utilisateur: %s"
 
 #. translators: Password change notification email subject. %s: Site title
 #: bp-core/bp-core-wp-emails.php:647
@@ -7283,12 +7283,12 @@ msgstr "[%s] Mot de passe modifié"
 #. translators: %s: site title
 #: bp-core/bp-core-wp-emails.php:721
 msgid "New user registration on your site %s:"
-msgstr "Enregistrement d'un nouvel usager sur votre site %s:"
+msgstr "Enregistrement d'un nouvel utilisateur sur votre site %s:"
 
 #. translators: %s: user login
 #: bp-core/bp-core-wp-emails.php:723 bp-core/bp-core-wp-emails.php:871
 msgid "Username: <b>%s</b>"
-msgstr "Nom d'usager: <b>%s</b>"
+msgstr "Nom d'utilisateur: <b>%s</b>"
 
 #. translators: %s: user email address
 #: bp-core/bp-core-wp-emails.php:725
@@ -7298,12 +7298,12 @@ msgstr "Email: <b>%s</b>"
 #. translators: Password change notification email subject. %s: Site title
 #: bp-core/bp-core-wp-emails.php:730
 msgid "[%s] New User Registration"
-msgstr "[%s] Inscription d'un nouvel usager"
+msgstr "[%s] Inscription d'un nouvel utilisateur"
 
 #. translators: %s: user login
 #: bp-core/bp-core-wp-emails.php:793
 msgid "Username: %s"
-msgstr "Nom d’usager: %s"
+msgstr "Nom d’utilisateur: %s"
 
 #: bp-core/bp-core-wp-emails.php:794
 msgid "To set your password <a href=\"%s\">Click here</a>."
@@ -7312,7 +7312,7 @@ msgstr "Pour définir votre mot de passe <a href=\"%s\">Cliquez ici</a>."
 #. translators: Password change notification email subject. %s: Site title
 #: bp-core/bp-core-wp-emails.php:800
 msgid "[%s] Your username and password info"
-msgstr "[%s] Info sur votre nom d'usager et mot de passe"
+msgstr "[%s] Info sur votre nom d'utilisateur et mot de passe"
 
 #: bp-core/bp-core-wp-emails.php:867
 msgid "Someone has requested a password reset for the following account:"
@@ -7441,7 +7441,7 @@ msgstr "Bonjour,"
 #: bp-core/bp-core-wp-emails.php:1075
 msgid "A user data privacy request has been confirmed on ###SITENAME###:"
 msgstr ""
-"Une demande de confidentialité des données usager a été confirmée sur "
+"Une demande de confidentialité des données utilisateur a été confirmée sur "
 "###SITENAME###:"
 
 #: bp-core/bp-core-wp-emails.php:1076
@@ -7557,7 +7557,7 @@ msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1341
 msgid "Username: USERNAME"
-msgstr "Nom d'usager: USERNAME"
+msgstr "Nom d'utilisateur: USERNAME"
 
 #: bp-core/bp-core-wp-emails.php:1342
 msgid "Password: PASSWORD"
@@ -7970,7 +7970,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:25
 msgid "A list of member avatars that are following the logged-in user."
-msgstr "Affiche une liste des avatars membres qui suivent l'usager connecté."
+msgstr "Affiche une liste des avatars membres qui suivent l'utilisateur connecté."
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:31
 msgid "(BB) Members Following Me"
@@ -8015,7 +8015,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:25
 msgid "A list of member avatars that the logged-in user is following."
-msgstr "Une liste d'avatars membres que l'usager suit."
+msgstr "Une liste d'avatars membres que l'utilisateur suit."
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:31
 msgid "(BB) Members I'm Following"
@@ -8052,7 +8052,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:142
 #: bp-search/bp-search-functions.php:510
 msgid "Username"
-msgstr "Nom d'usager"
+msgstr "Nom d'utilisateur"
 
 #: bp-core/classes/class-bp-core-login-widget.php:113
 #: bp-forums/common/widgets.php:99
@@ -9083,7 +9083,7 @@ msgstr "Éditer la photo de profil %s"
 
 #: bp-core/deprecated/buddypress/2.1.php:512
 msgid "User Capabilities"
-msgstr "Capacités de l'usager"
+msgstr "Capacités de l'utilisateur"
 
 #: bp-core/deprecated/buddypress/2.1.php:514
 msgid "Delete %s's Account"
@@ -9120,7 +9120,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:488
 msgid "User marked as spammer. Spam users are visible only to site admins."
 msgstr ""
-"Usager marqué comme spammeur. Les usagers spammeurs ne sont visibles que des "
+"Usager marqué comme spammeur. Les utilisateurs spammeurs ne sont visibles que des "
 "admins du site."
 
 #: bp-core/deprecated/buddypress/3.0.php:139
@@ -9494,7 +9494,7 @@ msgstr "Message du groupe Envoyer un message"
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:29
 msgid "User Profile Information"
-msgstr "Renseignements sur le profil de l'usager"
+msgstr "Renseignements sur le profil de l'utilisateur"
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:87
 msgid "Avatar"
@@ -9513,7 +9513,7 @@ msgstr "Image de couverture"
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:97
 msgid "User Profile - Avatar & Cover Photos"
-msgstr "Profil de l'usager - Photos de l'avatar et de la couverture"
+msgstr "Profil de l'utilisateur - Photos de l'avatar et de la couverture"
 
 #: bp-core/libraries/wp-background-process.php:437
 msgid "Every %d Minutes"
@@ -10757,11 +10757,11 @@ msgstr "Suppression des données converties précédemment (%1$s - %2$s)"
 
 #: bp-forums/admin/converter.php:371
 msgid "No users to convert"
-msgstr "Aucun usager à convertir"
+msgstr "Aucun utilisateur à convertir"
 
 #: bp-forums/admin/converter.php:375
 msgid "Converting users (%1$s - %2$s)"
-msgstr "Conversion des usagers (%1$s -%2$s)"
+msgstr "Conversion des utilisateurs (%1$s -%2$s)"
 
 #: bp-forums/admin/converter.php:391
 msgid "No passwords to clear"
@@ -10770,7 +10770,7 @@ msgstr "Aucun mot de passe à effacer"
 #: bp-forums/admin/converter.php:395
 msgid "Delete users WordPress default passwords (%1$s - %2$s)"
 msgstr ""
-"Supprimer les mots de passe par défaut des usagers WordPress (%1$s - %2$s)"
+"Supprimer les mots de passe par défaut des utilisateurs WordPress (%1$s - %2$s)"
 
 #: bp-forums/admin/converter.php:410
 msgid "No forums to convert"
@@ -11097,7 +11097,7 @@ msgid ""
 "users are allowed to access it."
 msgstr ""
 "<strong>Visibilité</strong> vous permet de choisir la portée de chaque forum "
-"et ce que les usagers sont autorisés à y accéder."
+"et ce que les utilisateurs sont autorisés à y accéder."
 
 #: bp-forums/admin/forums.php:250
 msgid ""
@@ -11724,7 +11724,7 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:25
 msgid "Forum User Settings"
-msgstr "Réglages des usagers du forum"
+msgstr "Réglages des utilisateurs du forum"
 
 #: bp-forums/admin/settings.php:30
 msgid "Forum Features"
@@ -11844,7 +11844,7 @@ msgstr "Utiliser Akismet"
 
 #: bp-forums/admin/settings.php:450
 msgid "Setting time limits and other user posting capabilities"
-msgstr "Définition des délais et autres options de publication de l'usager"
+msgstr "Définition des délais et autres options de publication de l'utilisateur"
 
 #: bp-forums/admin/settings.php:467 bp-forums/common/functions.php:124
 msgid "minutes"
@@ -11857,7 +11857,7 @@ msgstr "secondes"
 #: bp-forums/admin/settings.php:504
 msgid "Allow guest users without accounts to create discussions and replies"
 msgstr ""
-"Permettre aux usagers invités (sans compte) de créer des discussions et des "
+"Permettre aux utilisateurs invités (sans compte) de créer des discussions et des "
 "réponses"
 
 #: bp-forums/admin/settings.php:519
@@ -11866,11 +11866,11 @@ msgstr "Options du forum pouvant être activées ou désactivées"
 
 #: bp-forums/admin/settings.php:540
 msgid "Allow users to mark discussions as favorites"
-msgstr "Autoriser les usagers à marquer les discussions comme favorites"
+msgstr "Autoriser les utilisateurs à marquer les discussions comme favorites"
 
 #: bp-forums/admin/settings.php:561
 msgid "Allow users to subscribe to forums and discussions"
-msgstr "Permettre aux usagers de s'abonner aux forums et discussions"
+msgstr "Permettre aux utilisateurs de s'abonner aux forums et discussions"
 
 #: bp-forums/admin/settings.php:582
 msgid "Allow discussions to have tags"
@@ -12091,7 +12091,7 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:1446
 msgid "Attempt to import user accounts from previous forums"
-msgstr "Tenter d' importer des comptes usagers de forums précédents"
+msgstr "Tenter d' importer des comptes utilisateurs de forums précédents"
 
 #: bp-forums/admin/settings.php:1447
 msgid ""
@@ -12099,7 +12099,7 @@ msgid ""
 "converted as each user logs in."
 msgstr ""
 "Les mots de passe n’appartenant pas aux Forums ne peuvent pas être convertis "
-"automatiquement. Ils seront convertis au fur et à mesure que chaque usager "
+"automatiquement. Ils seront convertis au fur et à mesure que chaque utilisateur "
 "se connecte."
 
 #: bp-forums/admin/settings.php:1481
@@ -12144,7 +12144,7 @@ msgid ""
 "between posting to the forum."
 msgstr ""
 "\"Le délai d'envoi\" est le laps de temps requis entre les messages d'un "
-"même auteur. Le plus ce laps de temps est élevé, le plus longtemps un usager "
+"même auteur. Le plus ce laps de temps est élevé, le plus longtemps un utilisateur "
 "aura besoin d'attendre entre ses messages sur le forum."
 
 #: bp-forums/admin/settings.php:1532
@@ -12152,7 +12152,7 @@ msgid ""
 "Saving discussions allows users to return later to discussions they are "
 "interested in. This is enabled by default."
 msgstr ""
-"L'enregistrement des discussions permet aux usagers de revenir "
+"L'enregistrement des discussions permet aux utilisateurs de revenir "
 "ultérieurement aux discussions qui les intéressent. Ceci est activé par "
 "défaut."
 
@@ -12161,7 +12161,7 @@ msgid ""
 "Subscriptions allow users to subscribe for notifications to discussions that "
 "interest them. This is enabled by default."
 msgstr ""
-"Les abonnements permettent aux usagers de s'abonner aux notifications des "
+"Les abonnements permettent aux utilisateurs de s'abonner aux notifications des "
 "discussions qui les intéressent. Ceci est activé par défaut."
 
 #: bp-forums/admin/settings.php:1534
@@ -12169,7 +12169,7 @@ msgid ""
 "Discussion-Tags allow users to filter discussions between forums. This is "
 "enabled by default."
 msgstr ""
-"Les étiquettes de discussion permettent aux usagers de filtrer les "
+"Les étiquettes de discussion permettent aux utilisateurs de filtrer les "
 "discussions entre les forums. Ceci est activé par défaut."
 
 #: bp-forums/admin/settings.php:1535
@@ -12177,7 +12177,7 @@ msgid ""
 "\"Anonymous Posting\" allows guest users who do not have accounts on your "
 "site to both create discussions as well as replies."
 msgstr ""
-"\"Affichage Anonyme\" permet aux usagers invités qui n'ont pas de comptes "
+"\"Affichage Anonyme\" permet aux utilisateurs invités qui n'ont pas de comptes "
 "sur votre site de créer des discussions ainsi que des réponses."
 
 #: bp-forums/admin/settings.php:1536
@@ -12261,7 +12261,7 @@ msgid ""
 "discussion, reply, user, or view."
 msgstr ""
 "\"Les percalines simples\" sont utilisés comme préfixe lors de l'affichage "
-"d'un forum individuel, d'une discussion, d'une réponse, d'un usager ou d'une "
+"d'un forum individuel, d'une discussion, d'une réponse, d'un utilisateur ou d'une "
 "vue."
 
 #: bp-forums/admin/settings.php:1563
@@ -12310,7 +12310,7 @@ msgstr "Trace des réponses"
 
 #: bp-forums/admin/settings.php:1743
 msgid "User base"
-msgstr "Base usager"
+msgstr "Base utilisateur"
 
 #: bp-forums/admin/settings.php:1750
 msgid "View base"
@@ -12340,7 +12340,7 @@ msgid ""
 "manually recalculate these relationships."
 msgstr ""
 "BuddyBoss assure le suivi des relations entre les forums, les discussions, "
-"les réponses, les étiquettes de discussion et les usagers. Parfois, ces "
+"les réponses, les étiquettes de discussion et les utilisateurs. Parfois, ces "
 "relations sont désynchronisées, le plus souvent après une importation ou une "
 "migration. Utilisez les outils ci-dessous pour recalculer manuellement ces "
 "relations."
@@ -12408,29 +12408,29 @@ msgstr ""
 
 #: bp-forums/admin/tools.php:211
 msgid "Count discussions for each user"
-msgstr "Compter les discussions pour chaque usager"
+msgstr "Compter les discussions pour chaque utilisateur"
 
 #: bp-forums/admin/tools.php:212
 msgid "Count replies for each user"
-msgstr "Compter les réponses pour chaque usager"
+msgstr "Compter les réponses pour chaque utilisateur"
 
 #: bp-forums/admin/tools.php:213
 msgid "Remove trashed discussions from user favorites"
 msgstr ""
-"Supprimer les discussions qui ont été supprimées des favoris de l'usager"
+"Supprimer les discussions qui ont été supprimées des favoris de l'utilisateur"
 
 #: bp-forums/admin/tools.php:214
 msgid "Remove trashed discussions from user subscriptions"
 msgstr ""
-"Supprimer les discussions des abonnements d'usagers mises à la corbeille"
+"Supprimer les discussions des abonnements d'utilisateurs mises à la corbeille"
 
 #: bp-forums/admin/tools.php:215
 msgid "Remove trashed forums from user subscriptions"
-msgstr "Retirer les forums mis à la corbeille des abonnements de l'usager"
+msgstr "Retirer les forums mis à la corbeille des abonnements de l'utilisateur"
 
 #: bp-forums/admin/tools.php:216
 msgid "Remap existing users to default forum roles"
-msgstr "Réattribuer les rôles du forum par défaut aux usagers existants"
+msgstr "Réattribuer les rôles du forum par défaut aux utilisateurs existants"
 
 #: bp-forums/admin/tools.php:217
 msgid "Remove and restore Wordpress default role capabilities"
@@ -12478,20 +12478,20 @@ msgstr "Compter le nombre de réponses dans chaque forum&hellip; %s"
 
 #: bp-forums/admin/tools.php:696
 msgid "Counting the number of discussions each user has created&hellip; %s"
-msgstr "Compter le nombre de discussions que chaque usager a créées&hellip; %s"
+msgstr "Compter le nombre de discussions que chaque utilisateur a créées&hellip; %s"
 
 #: bp-forums/admin/tools.php:770
 msgid ""
 "Counting the number of discussions to which each user has replied&hellip; %s"
 msgstr ""
-"Comptage du nombre de discussions auxquelles chaque usager a répondu "
+"Comptage du nombre de discussions auxquelles chaque utilisateur a répondu "
 "&hellip; %s"
 
 #: bp-forums/admin/tools.php:844
 msgid "Removing trashed discussions from user favorites&hellip; %s"
 msgstr ""
 "Suppression des discussions mise à la corbeille des favoris de "
-"l'usager&hellip ; %s"
+"l'utilisateur&hellip ; %s"
 
 #: bp-forums/admin/tools.php:888 bp-forums/admin/tools.php:984
 #: bp-forums/admin/tools.php:1080
@@ -12502,21 +12502,21 @@ msgstr "Rien à supprimer!"
 msgid "Removing trashed discussions from user subscriptions&hellip; %s"
 msgstr ""
 "Suppression des discussions mise à la corbeille des abonnements "
-"d'usagers&hellip; %s"
+"d'utilisateurs&hellip; %s"
 
 #: bp-forums/admin/tools.php:1037
 msgid "Removing trashed forums from user subscriptions&hellip; %s"
 msgstr ""
 "Suppression des forums mis à la corbeille des abonnements de "
-"l'usager&hellip; %s"
+"l'utilisateur&hellip; %s"
 
 #: bp-forums/admin/tools.php:1134
 msgid "Remapping forum role for each user on this site&hellip; %s"
-msgstr "Réattribution du rôle de chaque usager du forum sur ce site&hellip; %s"
+msgstr "Réattribution du rôle de chaque utilisateur du forum sur ce site&hellip; %s"
 
 #: bp-forums/admin/tools.php:1180
 msgid "Complete! %s users updated."
-msgstr "Achevée! %s usagers mis à jour."
+msgstr "Achevée! %s utilisateurs mis à jour."
 
 #: bp-forums/admin/tools.php:1201
 msgid "Recomputing latest post in every discussion and forum&hellip; %s"
@@ -12585,7 +12585,7 @@ msgstr "Activité du Forum"
 
 #: bp-forums/admin/tools.php:1779
 msgid "Forum User Roles"
-msgstr "Rôles usager du forum"
+msgstr "Rôles utilisateur du forum"
 
 #: bp-forums/admin/tools.php:1780
 msgid "Importer Helper Data"
@@ -12593,7 +12593,7 @@ msgstr "Importateur des données de l'aide"
 
 #: bp-forums/admin/tools.php:1784
 msgid "Delete imported users?"
-msgstr "Supprimer les usagers importés ?"
+msgstr "Supprimer les utilisateurs importés ?"
 
 #: bp-forums/admin/tools.php:1787 bp-forums/admin/tools.php:1797
 msgid "Say it ain't so!"
@@ -12603,7 +12603,7 @@ msgstr "Dites que ce n'est pas le cas!"
 msgid ""
 "This option will delete all previously imported users, and cannot be undone."
 msgstr ""
-"Cette option supprimera tous les usagers précédemment importés et ne pourra "
+"Cette option supprimera tous les utilisateurs précédemment importés et ne pourra "
 "pas être annulée."
 
 #: bp-forums/admin/tools.php:1789
@@ -12612,7 +12612,7 @@ msgid ""
 "delete these users."
 msgstr ""
 "Remarque: La réinitialisation sans que cela soit activé supprimera les "
-"métadonnées nécessaires pour supprimer ces usagers."
+"métadonnées nécessaires pour supprimer ces utilisateurs."
 
 #: bp-forums/admin/tools.php:1794
 msgid "Are you sure you want to do this?"
@@ -12649,11 +12649,11 @@ msgstr "Suppression des Étiquettes de Discussions&hellip ; %s"
 
 #: bp-forums/admin/tools.php:1887
 msgid "Deleting User&hellip; %s"
-msgstr "Suppression de l'usager&hellip; %s"
+msgstr "Suppression de l'utilisateur&hellip; %s"
 
 #: bp-forums/admin/tools.php:1892 bp-forums/admin/tools.php:1900
 msgid "Deleting User Meta&hellip; %s"
-msgstr "Suppression des métas d'usager&hellip; %s"
+msgstr "Suppression des métas d'utilisateur&hellip; %s"
 
 #: bp-forums/admin/tools.php:1908
 msgid "Deleting Conversion Table&hellip; %s"
@@ -15090,7 +15090,7 @@ msgid ""
 "that user."
 msgstr ""
 "<strong>ERREUR:</strong> Vous n'avez pas la permission de créer des "
-"notifications pour cet usager."
+"notifications pour cet utilisateur."
 
 #: bp-forums/replies/functions.php:150
 msgid "<strong>ERROR</strong>: You do not have permission to reply."
@@ -16104,7 +16104,7 @@ msgstr "Vous n'avez actuellement aucune discussion préférée."
 
 #: bp-forums/templates/default/bbpress/user-favorites.php:29
 msgid "This user has no liked discussions."
-msgstr "Cet usager n'a pas aimé de discussions."
+msgstr "Cet utilisateur n'a pas aimé de discussions."
 
 #: bp-forums/templates/default/bbpress/user-profile.php:14
 #: bp-members/classes/class-bp-members-admin.php:837
@@ -16139,7 +16139,7 @@ msgstr "Vous n'avez répondu à aucune discussion."
 
 #: bp-forums/templates/default/bbpress/user-replies-created.php:29
 msgid "This user has not replied to any topics."
-msgstr "Cet usager n’a répondu à aucun sujet."
+msgstr "Cet utilisateur n’a répondu à aucun sujet."
 
 #: bp-forums/templates/default/bbpress/user-subscriptions.php:18
 msgid "Subscribed Forums"
@@ -16151,7 +16151,7 @@ msgstr "Vous n’êtes encore abonné à aucun forum."
 
 #: bp-forums/templates/default/bbpress/user-subscriptions.php:29
 msgid "This user is not currently subscribed to any forums."
-msgstr "Cet usager n’est actuellement abonné à aucun forum."
+msgstr "Cet utilisateur n’est actuellement abonné à aucun forum."
 
 #: bp-forums/templates/default/bbpress/user-subscriptions.php:38
 msgid "Subscribed Discussions"
@@ -16163,7 +16163,7 @@ msgstr "Vous n'êtes actuellement abonné(e) à aucune discussion."
 
 #: bp-forums/templates/default/bbpress/user-subscriptions.php:53
 msgid "This user is not currently subscribed to any discussions."
-msgstr "Cet usager n'est actuellement abonné à aucune discussion."
+msgstr "Cet utilisateur n'est actuellement abonné à aucune discussion."
 
 #: bp-forums/templates/default/bbpress/user-topics-created.php:14
 msgid "Forum Discussions Started"
@@ -16175,7 +16175,7 @@ msgstr "Vous n'avez pas créé de discussions."
 
 #: bp-forums/templates/default/bbpress/user-topics-created.php:29
 msgid "This user has not created any discussions."
-msgstr "Cet usager n'a créé aucune discussion."
+msgstr "Cet utilisateur n'a créé aucune discussion."
 
 #: bp-forums/templates/default/bbpress-functions.php:235
 msgid "Add Tags:"
@@ -16654,7 +16654,7 @@ msgid ""
 "that user!"
 msgstr ""
 "<strong>ERREUR:</strong> Vous n'avez pas la permission d'éditer les favoris "
-"de cet usager!"
+"de cet utilisateur!"
 
 #: bp-forums/users/functions.php:502
 msgid ""
@@ -16731,7 +16731,7 @@ msgstr "Vous avez des privilèges de super admin."
 
 #: bp-forums/users/template.php:1237
 msgid "This user has super admin privileges."
-msgstr "Cet usager a des privilèges de super-admin."
+msgstr "Cet utilisateur a des privilèges de super-admin."
 
 #: bp-forums/users/template.php:1312
 msgid "- No role for this site -"
@@ -16747,7 +16747,7 @@ msgstr "Votre déconnexion a été effectuée."
 
 #: bp-forums/users/template.php:1514
 msgid "New user registration is currently not allowed."
-msgstr "L'enregistrement d'un nouvel usager n'est pas autorisé actuellement."
+msgstr "L'enregistrement d'un nouvel utilisateur n'est pas autorisé actuellement."
 
 #: bp-forums/users/template.php:1523
 msgid "Check your e-mail for the confirmation link."
@@ -16773,12 +16773,12 @@ msgstr "Demande d’amis"
 
 #: bp-friends/actions/add-friend.php:41
 msgid "You are already connected with this user"
-msgstr "Vous êtes déjà connecté(e) avec cet(te) usager(trice)"
+msgstr "Vous êtes déjà connecté(e) avec cet(te) utilisateur(trice)"
 
 #: bp-friends/actions/add-friend.php:43
 msgid "You already have a pending connection request with this user"
 msgstr ""
-"Vous avez déjà une demande de connexion en attente avec cet(te) usager(trice)"
+"Vous avez déjà une demande de connexion en attente avec cet(te) utilisateur(trice)"
 
 #: bp-friends/actions/remove-friend.php:36
 msgid "Connection could not be canceled."
@@ -16790,12 +16790,12 @@ msgstr "Connexion annulée"
 
 #: bp-friends/actions/remove-friend.php:41
 msgid "You are not connected with this user"
-msgstr "Vous n'êtes pas connecté(e) avec cet(te) usager(trice)"
+msgstr "Vous n'êtes pas connecté(e) avec cet(te) utilisateur(trice)"
 
 #: bp-friends/actions/remove-friend.php:43
 msgid "You have a pending connection request with this user"
 msgstr ""
-"Vous avez une demande de connexion en attente avec cet(te) usager(trice)"
+"Vous avez une demande de connexion en attente avec cet(te) utilisateur(trice)"
 
 #: bp-friends/bp-friends-activity.php:108
 msgid "Connections accepted"
@@ -16901,7 +16901,7 @@ msgid ""
 "A list of members that are connected to the logged-in user or member profile "
 "containing the widget."
 msgstr ""
-"Une liste de membres connectés à l'usager connecté ou le profil membre "
+"Une liste de membres connectés à l'utilisateur connecté ou le profil membre "
 "contenant le widget."
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:30
@@ -17331,7 +17331,7 @@ msgstr "Navigation dans la liste de groupes"
 
 #: bp-groups/bp-groups-admin.php:257
 msgid "Start typing a username to add a new member."
-msgstr "Saisissez un nom d'usager pour ajouter un nouveau membre."
+msgstr "Saisissez un nom d'utilisateur pour ajouter un nouveau membre."
 
 #: bp-groups/bp-groups-admin.php:258
 msgid ""
@@ -17357,11 +17357,11 @@ msgstr "Le groupe a été mis à jour avec succès."
 
 #: bp-groups/bp-groups-admin.php:661
 msgid "The following users could not be added to the group: %s"
-msgstr "L'usager suivant n'a pas pu être ajouté au groupe: %s"
+msgstr "L'utilisateur suivant n'a pas pu être ajouté au groupe: %s"
 
 #: bp-groups/bp-groups-admin.php:665
 msgid "The following users were successfully added to the group: %s"
-msgstr "Les usagers suivants ont bien été ajoutés au groupe: %s"
+msgstr "Les utilisateurs suivants ont bien été ajoutés au groupe: %s"
 
 #: bp-groups/bp-groups-admin.php:670
 msgid "An error occurred when trying to modify the following members: %s"
@@ -17369,7 +17369,7 @@ msgstr "Une erreur est survenue pendant la modification du membre: %s"
 
 #: bp-groups/bp-groups-admin.php:675
 msgid "The following members were successfully modified: %s"
-msgstr "Les usagers suivants ont bien été modifiés: %s"
+msgstr "Les utilisateurs suivants ont bien été modifiés: %s"
 
 #: bp-groups/bp-groups-admin.php:705 bp-groups/bp-groups-admin.php:727
 #: bp-groups/bp-groups-adminbar.php:45
@@ -17535,7 +17535,7 @@ msgstr "Ajouter de nouveaux membres"
 
 #: bp-groups/bp-groups-admin.php:1321
 msgid "Enter a comma-separated list of user logins."
-msgstr "Entrez une liste séparée par des virgules des connexions usager."
+msgstr "Entrez une liste séparée par des virgules des connexions utilisateur."
 
 #: bp-groups/bp-groups-admin.php:1393 bp-groups/bp-groups-admin.php:2024
 #: bp-groups/bp-groups-functions.php:3984
@@ -18700,7 +18700,7 @@ msgstr "Aucun membre trouvé dans le groupe parent."
 
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1242
 msgid "You are not authorized to send invites to other users."
-msgstr "Vous n'êtes pas autorisé à envoyer des invitations à d'autres usagers."
+msgstr "Vous n'êtes pas autorisé à envoyer des invitations à d'autres utilisateurs."
 
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1270
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:451
@@ -18917,7 +18917,7 @@ msgstr "Ce groupe est masqué"
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:583
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:69
 msgid "Only people who are invited can join the group."
-msgstr "Seuls des usagers invités peuvent adhérer au groupe."
+msgstr "Seuls des utilisateurs invités peuvent adhérer au groupe."
 
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:584
 msgid "This group will not be listed in the groups directory or search results"
@@ -19446,7 +19446,7 @@ msgstr "Le nouveau logo du groupe a été téléversé avec succès."
 #: bp-groups/screens/single/admin/manage-members.php:38
 msgid "There was an error when promoting that user. Please try again."
 msgstr ""
-"Il y a eu une erreur lors de la promotion de cet usager. Veuillez réessayer."
+"Il y a eu une erreur lors de la promotion de cet utilisateur. Veuillez réessayer."
 
 #: bp-groups/screens/single/admin/manage-members.php:40
 msgid "User promoted successfully"
@@ -19459,17 +19459,17 @@ msgstr "Ce groupe doit avoir au moins un(e) organisateur(trice)"
 #: bp-groups/screens/single/admin/manage-members.php:74
 msgid "There was an error when demoting that user. Please try again."
 msgstr ""
-"Il y a eu une erreur lors de rétrogradation cet usager(rice). Veuillez "
+"Il y a eu une erreur lors de rétrogradation cet utilisateur(rice). Veuillez "
 "réessayer."
 
 #: bp-groups/screens/single/admin/manage-members.php:76
 msgid "User demoted successfully"
-msgstr "Statut de l'usager(rice) modifié avec succès"
+msgstr "Statut de l'utilisateur(rice) modifié avec succès"
 
 #: bp-groups/screens/single/admin/manage-members.php:102
 msgid "There was an error when banning that user. Please try again."
 msgstr ""
-"Il y a eu une erreur lors de l'interdiction de cet usager. Veuillez "
+"Il y a eu une erreur lors de l'interdiction de cet utilisateur. Veuillez "
 "réessayer."
 
 #: bp-groups/screens/single/admin/manage-members.php:104
@@ -19479,17 +19479,17 @@ msgstr "Usager banni avec succès"
 #: bp-groups/screens/single/admin/manage-members.php:130
 msgid "There was an error when unbanning that user. Please try again."
 msgstr ""
-"Il y a eu une erreur lors de l'interdiction de cet usager. Veuillez "
+"Il y a eu une erreur lors de l'interdiction de cet utilisateur. Veuillez "
 "réessayer."
 
 #: bp-groups/screens/single/admin/manage-members.php:132
 msgid "User ban removed successfully"
-msgstr "Interdiction de l'usager annulée avec succès"
+msgstr "Interdiction de l'utilisateur annulée avec succès"
 
 #: bp-groups/screens/single/admin/manage-members.php:158
 msgid "There was an error removing that user from the group. Please try again."
 msgstr ""
-"Une erreur s'est produite en supprimant cet usager du groupe. Veuillez "
+"Une erreur s'est produite en supprimant cet utilisateur du groupe. Veuillez "
 "réessayer."
 
 #: bp-groups/screens/single/admin/manage-members.php:160
@@ -19663,7 +19663,7 @@ msgstr "Tout le monde"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:153
 msgid "Loggedin Users"
-msgstr "Réservé aux usagers de le LoggedIn"
+msgstr "Réservé aux utilisateurs de le LoggedIn"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:155
 msgid "No one"
@@ -19842,7 +19842,7 @@ msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:356
 msgid "Sync Users"
-msgstr "Synchroniser les usagers"
+msgstr "Synchroniser les utilisateurs"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:365
 msgid ""
@@ -20182,7 +20182,7 @@ msgstr "ID du cours"
 
 #: bp-integrations/learndash/library/ReportsGenerator.php:349
 msgid "User ID"
-msgstr "ID de l’usager"
+msgstr "ID de l’utilisateur"
 
 #: bp-integrations/learndash/library/ReportsGenerator.php:364
 msgid "Start Date"
@@ -20508,11 +20508,11 @@ msgid_plural ""
 "Welcome! You've been invited to join the site by the following users: %s. "
 "Please fill out the information below to create your account."
 msgstr[0] ""
-"Bienvenue! Vous avez été invité(e) à rejoindre le site par l'usager(trice) "
+"Bienvenue! Vous avez été invité(e) à rejoindre le site par l'utilisateur(trice) "
 "suivant(e): %s. Veuillez remplir les informations ci-dessous pour créer "
 "votre compte."
 msgstr[1] ""
-"Bienvenue! Vous avez été invité à rejoindre le site par les usagers "
+"Bienvenue! Vous avez été invité à rejoindre le site par les utilisateurs "
 "suivants: %s. Veuillez remplir les informations ci-dessous pour créer votre "
 "compte."
 
@@ -21535,16 +21535,16 @@ msgid ""
 "User last_activity data is no longer stored in usermeta. Use "
 "bp_get_user_last_activity() instead."
 msgstr ""
-"Les données last_activity de l'usager ne sont plus stockées dans le méta "
-"usager. Utilisez bp_get_user_last_activity() à la place."
+"Les données last_activity de l'utilisateur ne sont plus stockées dans le méta "
+"utilisateur. Utilisez bp_get_user_last_activity() à la place."
 
 #: bp-members/bp-members-functions.php:1193
 msgid ""
 "User last_activity data is no longer stored in usermeta. Use "
 "bp_update_user_last_activity() instead."
 msgstr ""
-"Les données last_activity de l'usager ne sont plus stockées dans le méta "
-"usager. Utilisez bp_update_user_last_activity() à la place."
+"Les données last_activity de l'utilisateur ne sont plus stockées dans le méta "
+"utilisateur. Utilisez bp_update_user_last_activity() à la place."
 
 #: bp-members/bp-members-functions.php:1410
 #: bp-members/bp-members-functions.php:2517
@@ -21567,11 +21567,11 @@ msgstr "Désolé, cette adresse de messagerie est déjà utilisée&nbsp;!"
 
 #: bp-members/bp-members-functions.php:1697
 msgid "Please enter a username"
-msgstr "Veuillez saisir votre nom d'usager"
+msgstr "Veuillez saisir votre nom d'utilisateur"
 
 #: bp-members/bp-members-functions.php:1703
 msgid "That username is not allowed"
-msgstr "Ce nom d'usager n'est pas autorisé"
+msgstr "Ce nom d'utilisateur n'est pas autorisé"
 
 #: bp-members/bp-members-functions.php:1709
 #: bp-xprofile/bp-xprofile-filters.php:787
@@ -21580,7 +21580,7 @@ msgstr "%s invalide. Seuls \"a-z\", \"0-9\", \"-\" et \".\" sont autorisés."
 
 #: bp-members/bp-members-functions.php:1714
 msgid "Username must be at least 3 characters"
-msgstr "Le nom d'usager doit comporter au moins 3 caractères"
+msgstr "Le nom d'utilisateur doit comporter au moins 3 caractères"
 
 #: bp-members/bp-members-functions.php:1728
 msgid "Sorry, that username already exists!"
@@ -21593,19 +21593,19 @@ msgstr "Clé d’activation invalide."
 
 #: bp-members/bp-members-functions.php:1953
 msgid "The user is already active."
-msgstr "Cet usager est déjà activé."
+msgstr "Cet utilisateur est déjà activé."
 
 #: bp-members/bp-members-functions.php:1955
 msgid "The site is already active."
-msgstr "Cet usager est déjà actif."
+msgstr "Cet utilisateur est déjà actif."
 
 #: bp-members/bp-members-functions.php:1985
 msgid "Could not create user"
-msgstr "Impossible de créer l&#8217;usager"
+msgstr "Impossible de créer l&#8217;utilisateur"
 
 #: bp-members/bp-members-functions.php:2001
 msgid "That username is already activated."
-msgstr "Ce nom d’usager est déjà activé."
+msgstr "Ce nom d’utilisateur est déjà activé."
 
 #: bp-members/bp-members-functions.php:2370
 msgid ""
@@ -21775,7 +21775,7 @@ msgstr "Changement de membre"
 #: bp-members/classes/class-bp-core-members-switching.php:176
 #: bp-members/classes/class-bp-core-members-switching.php:204
 msgid "Could not switch users."
-msgstr "Impossible de changer d'usager."
+msgstr "Impossible de changer d'utilisateur."
 
 #. Translators: 1: user display name; 2: username;
 #: bp-members/classes/class-bp-core-members-switching.php:252
@@ -21839,7 +21839,7 @@ msgstr "(BB) Qui est en ligne"
 
 #: bp-members/classes/class-bp-core-whos-online-widget.php:26
 msgid "Profile photos of online users"
-msgstr "Photos de profil des usagers en ligne"
+msgstr "Photos de profil des utilisateurs en ligne"
 
 #: bp-members/classes/class-bp-core-whos-online-widget.php:109
 #: bp-members/classes/class-bp-core-whos-online-widget.php:153
@@ -21872,11 +21872,11 @@ msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:512
 msgid "User could not be removed as spammer."
-msgstr "L'usager n'a pu être supprimé en tant que spammeur."
+msgstr "L'utilisateur n'a pu être supprimé en tant que spammeur."
 
 #: bp-members/classes/class-bp-members-admin.php:518
 msgid "User could not be marked as spammer."
-msgstr "L'usager n'a pas pu être signalé comme spammeur."
+msgstr "L'utilisateur n'a pas pu être signalé comme spammeur."
 
 #: bp-members/classes/class-bp-members-admin.php:524
 msgid "An error occurred while trying to update the profile."
@@ -21912,25 +21912,25 @@ msgstr "Profil étendu"
 
 #: bp-members/classes/class-bp-members-admin.php:863
 msgid "You cannot edit the requested user."
-msgstr "Vous ne pouvez pas modifier l'usager demandé."
+msgstr "Vous ne pouvez pas modifier l'utilisateur demandé."
 
 #: bp-members/classes/class-bp-members-admin.php:912
 msgid "This is the admin view of a user's profile."
-msgstr "Il s'agit de la vue administrateur du profil d'un usager."
+msgstr "Il s'agit de la vue administrateur du profil d'un utilisateur."
 
 #: bp-members/classes/class-bp-members-admin.php:913
 msgid ""
 "In the main column, you can edit the fields of the user's extended profile."
 msgstr ""
 "Dans la colonne principale, vous pouvez modifier les zones du profil étendu "
-"de l'usager."
+"de l'utilisateur."
 
 #: bp-members/classes/class-bp-members-admin.php:914
 msgid ""
 "In the right-hand column, you can update the user's status, delete the "
 "user's avatar, and view recent statistics."
 msgstr ""
-"Dans la colonne de droite, vous pouvez mettre à jour le statut de l'usager, "
+"Dans la colonne de droite, vous pouvez mettre à jour le statut de l'utilisateur, "
 "supprimer son avatar et afficher les statistiques récentes."
 
 #: bp-members/classes/class-bp-members-admin.php:961
@@ -21939,11 +21939,11 @@ msgstr "Statistiques de %s"
 
 #: bp-members/classes/class-bp-members-admin.php:1052
 msgid "Edit User"
-msgstr "Editer l'usager"
+msgstr "Editer l'utilisateur"
 
 #: bp-members/classes/class-bp-members-admin.php:1081
 msgid "&larr; Back to Users"
-msgstr "&larr; Retour à tous les usagers"
+msgstr "&larr; Retour à tous les utilisateurs"
 
 #: bp-members/classes/class-bp-members-admin.php:1102
 #: bp-members/classes/class-bp-members-admin.php:1122
@@ -21954,7 +21954,7 @@ msgstr "Créer un formulaire"
 
 #: bp-members/classes/class-bp-members-admin.php:1166
 msgid "No user found with this ID."
-msgstr "Aucun usager trouvé avec cet ID."
+msgstr "Aucun utilisateur trouvé avec cet ID."
 
 #: bp-members/classes/class-bp-members-admin.php:1201
 msgid "User account has not yet been activated"
@@ -21976,7 +21976,7 @@ msgid ""
 "has been removed."
 msgstr ""
 "%s a été marqué comme spammeur. Toutes les données de BuddyBoss associées à "
-"l'usager ont été supprimées."
+"l'utilisateur ont été supprimées."
 
 #: bp-members/classes/class-bp-members-admin.php:1291
 msgid ""
@@ -22039,7 +22039,7 @@ msgid ""
 "Username, Email or Registered column headers."
 msgstr ""
 "Vous pouvez réorganiser la liste de vos comptes en attente en cliquant sur "
-"le nom d'usager, le courriel ou les en-têtes de colonne enregistrées."
+"le nom d'utilisateur, le courriel ou les en-têtes de colonne enregistrées."
 
 #: bp-members/classes/class-bp-members-admin.php:1809
 msgid ""
@@ -22083,7 +22083,7 @@ msgid ""
 "By clicking on a Username you will be able to activate a pending account "
 "from the confirmation screen."
 msgstr ""
-"En cliquant sur un nom d'usager, vous pourrez activer un compte en attente à "
+"En cliquant sur un nom d'utilisateur, vous pourrez activer un compte en attente à "
 "partir de l'écran de confirmation."
 
 #: bp-members/classes/class-bp-members-admin.php:1822
@@ -22096,17 +22096,17 @@ msgstr ""
 #. translators: accessibility text
 #: bp-members/classes/class-bp-members-admin.php:1836
 msgid "Filter users list"
-msgstr "Liste des usagers de filtrage"
+msgstr "Liste des utilisateurs de filtrage"
 
 #. translators: accessibility text
 #: bp-members/classes/class-bp-members-admin.php:1838
 msgid "Pending users list navigation"
-msgstr "Navigation dans la liste de usagers en attente"
+msgstr "Navigation dans la liste de utilisateurs en attente"
 
 #. translators: accessibility text
 #: bp-members/classes/class-bp-members-admin.php:1840
 msgid "Pending users list"
-msgstr "Liste de usagers en attente"
+msgstr "Liste de utilisateurs en attente"
 
 #: bp-members/classes/class-bp-members-admin.php:2001
 msgid "%s activation email successfully sent! "
@@ -22160,7 +22160,7 @@ msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:2299
 msgid "Search Pending Users"
-msgstr "Recherche d'usagers en attente"
+msgstr "Recherche d'utilisateurs en attente"
 
 #: bp-members/classes/class-bp-members-admin.php:2349
 msgid "Delete Pending Accounts"
@@ -22280,7 +22280,7 @@ msgstr "L'enregistrement est désactivé. %s"
 #: bp-members/classes/class-bp-members-list-table.php:272
 #: bp-members/classes/class-bp-members-ms-list-table.php:266
 msgid "Select user: %s"
-msgstr "Sélectionner l'usager: %s"
+msgstr "Sélectionner l'utilisateur: %s"
 
 #: bp-members/classes/class-bp-registration-theme-compat.php:105
 msgid "We're almost there!"
@@ -22460,7 +22460,7 @@ msgstr "Exporter les données"
 #: bp-notifications/classes/class-bp-notifications-component.php:182
 #: bp-notifications/classes/class-bp-notifications-component.php:239
 msgid "Unread"
-msgstr "Non lu"
+msgstr "Non lues"
 
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:976
 #: bp-notifications/bp-notifications-template.php:561
@@ -22966,7 +22966,7 @@ msgid ""
 "Message could not be sent because you have entered an invalid username. "
 "Please try again."
 msgstr ""
-"Le message n'a pas pu être envoyé, vous avez entré un nom d'usager invalide. "
+"Le message n'a pas pu être envoyé, vous avez entré un nom d'utilisateur invalide. "
 "Veuillez réessayer."
 
 #: bp-messages/bp-messages-functions.php:315
@@ -24849,11 +24849,11 @@ msgstr "Poster un Commentaire"
 #: bp-search/bp-search-functions.php:507
 #: bp-search/classes/class-bp-search-members.php:353
 msgid "User Meta"
-msgstr "Meta usager"
+msgstr "Meta utilisateur"
 
 #: bp-search/bp-search-functions.php:509
 msgid "User Email"
-msgstr "Email de l'usager"
+msgstr "Email de l'utilisateur"
 
 #: bp-search/bp-search-settings.php:29
 msgid "Pages and Posts Search"
@@ -24905,11 +24905,11 @@ msgstr "Dossiers"
 
 #: bp-search/classes/class-bp-search-members.php:350
 msgid "Username/Login"
-msgstr "Nom d’usager / Identifiant"
+msgstr "Nom d’utilisateur / Identifiant"
 
 #: bp-search/classes/class-bp-search-posts.php:186
 msgid "%s Meta"
-msgstr "%s mot(s)-clé(s) usager"
+msgstr "%s mot(s)-clé(s) utilisateur"
 
 #: bp-search/classes/class-bp-search.php:361
 msgid "View all"
@@ -25033,7 +25033,7 @@ msgstr "Vos paramètres de notification ont été sauvegardés."
 
 #: bp-settings/actions/notifications.php:43
 msgid "This user's notification settings have been saved."
-msgstr "Les paramètres de notification de cet usager ont été enregistrés."
+msgstr "Les paramètres de notification de cet utilisateur ont été enregistrés."
 
 #: bp-settings/bp-settings-template.php:89
 msgid "There is a pending change of your email address to %s."
@@ -26201,7 +26201,7 @@ msgid ""
 "username and password you provided when you signed up."
 msgstr ""
 "Votre compte a été activé avec succès! Vous pouvez maintenant vous connecter "
-"avec le nom d'usager et le mot de passe que vous avez fournis lors de votre "
+"avec le nom d'utilisateur et le mot de passe que vous avez fournis lors de votre "
 "inscription."
 
 #: bp-templates/bp-nouveau/buddypress/members/activate.php:35
@@ -26860,7 +26860,7 @@ msgid ""
 "navigate to a user to preview your changes."
 msgstr ""
 "Personnalisez le menu de navigation pour les profils des membres. Dans la "
-"fenêtre de prévisualisation, naviguez jusqu'à un usager pour prévisualiser "
+"fenêtre de prévisualisation, naviguez jusqu'à un utilisateur pour prévisualiser "
 "vos modifications."
 
 #: bp-templates/bp-nouveau/includes/customizer.php:48
@@ -27335,11 +27335,11 @@ msgstr "Aucun membre trouvé avec cet ID."
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:104
 msgid "There was a problem when trying to unfollow this user."
-msgstr "Il y a eu un problème lors du désabonnement à cet usager."
+msgstr "Il y a eu un problème lors du désabonnement à cet utilisateur."
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:131
 msgid "There was a problem when trying to follow this user."
-msgstr "Il y a eu un problème lors de l'abonnement à cet usager."
+msgstr "Il y a eu un problème lors de l'abonnement à cet utilisateur."
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:153
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:232
@@ -27766,8 +27766,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:769
 msgid "Invitation failed for %s user."
 msgid_plural "Invitation failed for %s users."
-msgstr[0] "L'invitation a échoué pour l'usager %s."
-msgstr[1] "L'invitation a échoué pour les usagers %s."
+msgstr[0] "L'invitation a échoué pour l'utilisateur %s."
+msgstr[1] "L'invitation a échoué pour les utilisateurs %s."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:782
 msgid "Invitations sent."
@@ -29478,7 +29478,7 @@ msgid ""
 "icons in the user's profile."
 msgstr ""
 "Veuillez sélectionner les réseaux sociaux à autoriser. S'ils sont entrés, "
-"ils s'afficheront sous forme d'icônes dans le profil de l'usager."
+"ils s'afficheront sous forme d'icônes dans le profil de l'utilisateur."
 
 #. translators: accessibility text
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:28
@@ -29631,7 +29631,7 @@ msgid ""
 "the user can add multiple instances of their data."
 msgstr ""
 "Autorisez les champs de profil de cet ensemble à être répétés encore et "
-"encore, afin que l'usager puisse ajouter plusieurs instances de ses données."
+"encore, afin que l'utilisateur puisse ajouter plusieurs instances de ses données."
 
 #: bp-xprofile/classes/class-bp-xprofile-group.php:971
 msgid "Disabled"
@@ -29643,7 +29643,7 @@ msgstr "Activé"
 
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:29
 msgid "Show Logged in user Profile Completion Progress."
-msgstr "Afficher Connecté dans le profil de l’usager Progrès d’achèvement."
+msgstr "Afficher Connecté dans le profil de l’utilisateur Progrès d’achèvement."
 
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:35
 msgid "(BB) Profile Completion"
@@ -30048,7 +30048,7 @@ msgstr "En attente"
 #~ "from users of this profile type:"
 #~ msgstr ""
 #~ "Les types de groupes sélectionnés approuveront automatiquement toutes les "
-#~ "demandes d'adhésion des usagers de ce type de profil:"
+#~ "demandes d'adhésion des utilisateurs de ce type de profil:"
 
 #~ msgid "AppBoss"
 #~ msgstr "AppBoss"
@@ -30154,7 +30154,7 @@ msgstr "En attente"
 #~ "email with a link to join the site."
 #~ msgstr ""
 #~ "Nous avons ajouté un composant natif d'invitation par courriel. Vos "
-#~ "membres peuvent maintenant inviter des usagers externes dans votre "
+#~ "membres peuvent maintenant inviter des utilisateurs externes dans votre "
 #~ "communauté. Les destinataires recevront un email avec un lien pour "
 #~ "rejoindre le site."
 
@@ -30169,7 +30169,7 @@ msgstr "En attente"
 #~ msgstr ""
 #~ "Nous avons ajouté une option de réseau privé natif pour votre communauté. "
 #~ "Avec une seule case à cocher, vous pouvez restreindre l'accès à tout "
-#~ "votre contenu, tout en permettant aux usagers d'enregistrer des comptes "
+#~ "votre contenu, tout en permettant aux utilisateurs d'enregistrer des comptes "
 #~ "et d'accéder à d'autres URL de votre choix."
 
 #~ msgid "<strong>Thank you for using BuddyBoss!</strong>"
@@ -30260,12 +30260,12 @@ msgstr "En attente"
 
 #~ msgid "Usernames can contain only letters, numbers, ., -, and @"
 #~ msgstr ""
-#~ "Les noms d'usager ne peuvent contenir que des lettres, des chiffres,. ,-"
+#~ "Les noms d'utilisateur ne peuvent contenir que des lettres, des chiffres,. ,-"
 #~ "et @"
 
 #~ msgid "Sorry, usernames may not contain the character \"_\"!"
 #~ msgstr ""
-#~ "Désolé, mais le nom d'usager ne peut pas contenir le caractère  \"_\"!"
+#~ "Désolé, mais le nom d'utilisateur ne peut pas contenir le caractère  \"_\"!"
 
 #~ msgid "Sorry, usernames must have letters too!"
 #~ msgstr "Désolé, les identifiants doivent aussi avoir des lettres!"
