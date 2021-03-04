@@ -269,9 +269,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		public function add_section( $id, $title, $callback = '__return_null' ) {
+		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '' ) {
+			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
+			if( !empty( $tutorial_callback ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ][ 'tutorial_callback' ] = $tutorial_callback;
+			}
 
 			return $this;
 		}
@@ -470,7 +474,11 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				if ( $section['title'] ) {
-					echo "<h2>{$section['title']}</h2>\n";
+					echo "<h2>{$section['title']}";
+					if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
+						call_user_func( $section['tutorial_callback'], $section );
+					}
+					echo "</h2>\n";
 				}
 
 				if ( $section['callback'] ) {
