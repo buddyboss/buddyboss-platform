@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
 "POT-Creation-Date: 2021-02-18 17:04:31+00:00\n"
-"PO-Revision-Date: 2021-03-04 14:30+0100\n"
+"PO-Revision-Date: 2021-03-04 14:42+0100\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: Jean-David Daviet <contact@jeandaviddaviet.fr>\n"
 "Language: fr_FR\n"
@@ -5784,7 +5784,7 @@ msgstr "Mes photos"
 
 #: bp-core/bp-core-functions.php:2930
 msgid "My  %s"
-msgstr "Mon %s"
+msgstr "Mes %s"
 
 #: bp-core/bp-core-functions.php:2959 bp-members/bp-members-adminbar.php:185
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:878
