@@ -363,6 +363,38 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				add_filter( 'bbp_current_user_can_access_create_topic_form', array( $this, 'form_permissions' ) );
 				add_filter( 'bbp_current_user_can_access_create_reply_form', array( $this, 'form_permissions' ) );
 			}
+
+			// Child forums are not associate with group but its parent forum associate with group.
+			add_filter( 'bbp_has_forums', array( $this, 'has_forum' ), 10 ,2 );
+		}
+
+		/**
+		 * To check the child forum associate with current group or not.
+		 * Child forums are not associate with group but its parent forum associate with group.
+		 * 
+		 * @since bbPress (r4552)
+		 *
+		 * @param Object $post
+		 * @param Object $forum_query
+		 * @uses  get_forum_id_from_froum_post_name() To get current group forum id.
+		 *
+		 * @return Boolean
+		 */
+		public function has_forum( $post, $forum_query ) {
+			global $wp_query;
+
+			if ( ! bp_is_group_single() ) {
+				return $post;
+			}
+
+			$post_name = $wp_query->query_vars['name'];
+			$forum     = $this->get_forum_id_from_froum_post_name( $post_name );
+
+			if ( ! empty( $forum ) ) {
+				return true;
+			}
+
+			return $post;
 		}
 
 		/**
