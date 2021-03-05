@@ -2731,11 +2731,11 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 	}
 
 	// Update main parent folder.
-	$folder                = new BP_Document_Folder( $folder_id );
-	$folder->privacy       = $destination_privacy;
-	$folder->parent        = $destination_folder_id;
-	$folder->date_modified = bp_core_current_time();
-	$folder->save();
+	$update_folder                = new BP_Document_Folder( $folder_id );
+	$update_folder->privacy       = $destination_privacy;
+	$update_folder->parent        = $destination_folder_id;
+	$update_folder->date_modified = bp_core_current_time();
+	$update_folder->save();
 
 	// Get all the documents of main folder.
 	$document_ids = bp_document_get_folder_document_ids( $folder_id );
@@ -2766,9 +2766,9 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 	$get_children = bp_document_get_folder_children( $folder_id );
 
 	foreach ( $get_children as $child ) {
-		$update_document          = new BP_Document( $child );
-		$update_document->privacy = $destination_privacy;
-		$update_document->save();
+		$update_folder          = new BP_Document_Folder( $child );
+		$update_folder->privacy = $destination_privacy;
+		$update_folder->save();
 
 		// Get all the documents of particular folder.
 		$document_ids = bp_document_get_folder_document_ids( $child );
@@ -2832,10 +2832,10 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			}
 		}
 
-		$update_document                = new BP_Document( $document_id );
-		$update_document->privacy       = $privacy;
-		$update_document->date_modified = bp_core_current_time();
-		$update_document->save();
+		$update_folder                = new BP_Document_Folder( $document_id );
+		$update_folder->privacy       = $privacy;
+		$update_folder->date_modified = bp_core_current_time();
+		$update_folder->save();
 
 		// Get main folder's child folders.
 		$get_children = bp_document_get_folder_children( $document_id );
