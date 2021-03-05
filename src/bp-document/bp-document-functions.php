@@ -2835,10 +2835,10 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			}
 		}
 
-		$update_document                = new BP_Document( $document_id );
-		$update_document->privacy       = $privacy;
-		$update_document->date_modified = bp_core_current_time();
-		$update_document->save();
+		$update_folder                = new BP_Document_Folder( $document_id );
+		$update_folder->privacy       = $privacy;
+		$update_folder->date_modified = bp_core_current_time();
+		$update_folder->save();
 
 		// Get main folder's child folders.
 		$get_children = bp_document_get_folder_children( $document_id );
