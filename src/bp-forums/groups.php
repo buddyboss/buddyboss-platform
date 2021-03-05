@@ -98,40 +98,43 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 		/**
 		 * Nested forum are not associate with group. 
-		 * This method help you to find the group associte forum id for any level of chld forum,
-		 * Which is not associate with gorup.
+		 * This method help to find out the group associte forum id with the help of forum name.
+		 * Or any level of child forum id, Which are not associated with gorup.
 		 *
 		 * @since bbPress (r4612)
 		 *
 		 * @param string $forum_name Form post_name.
-		 * @uses get_closest_forum_group_ids() Searching group id any level of child to parent forum.
+		 * @uses get_closest_forum_group_ids() Searching group id for any level of child forum.
 		 *
 		 * @return int
 		 */
 		public function get_forum_id_from_froum_post_name( $forum_name = '' ) {
-			global $wp_query;
+			global $wp_query, $wpdb;
 
 			// Set initial forum ID
 			$forum_id = false;
 
 			// get current forums by forum name.
-			$current_forums = get_posts(
-			    array(
-					'name'        => empty( $forum_name ) ? $wp_query->query_vars['name'] : $forum_name,
-					'post_type'   => 'forum',
-					'post_status' => 'publish'
-			    )
+			if ( empty( $forum_name ) ) {
+				$forum_name = empty( $wp_query->query_vars['name'] ) ? '' : $wp_query->query_vars['name'];
+			}
+
+			// get current topics by topic post_name.
+			$current_forum = $wpdb->get_row( 
+				$wpdb->prepare( 
+					"SELECT * FROM $wpdb->posts WHERE post_type=%s AND post_name=%s AND post_status IN('publish', 'private')",
+					bbp_get_forum_post_type(),
+					$forum_name
+				)
 			);
 			
-			if ( ! empty( $current_forums ) ) {
-				$current_forums = array_shift( $current_forums );
-
-				// Searching group id nested leve of child to parent forum.
-				$group_ids      = $this->get_closest_forum_group_ids( $current_forums->ID );
+			if ( ! empty( $current_forum ) ) {
+				// Searching group id for nested leve of child forum.
+				$group_ids = $this->get_closest_forum_group_ids( $current_forum->ID );
 
 				// Set forum id if it associate with current group.
 				if ( ! empty( $group_ids ) && in_array( bp_get_current_group_id(), $group_ids ) ) {
-					$forum_id = $current_forums->ID; 
+					$forum_id = $current_forum->ID; 
 				}
 			}
 
@@ -140,38 +143,40 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 		/**
 		 * Nested forum-topic are not associate with group. 
-		 * This method help you to find the group associte forum id for any level of chld forum-topic,
-		 * Which is not associate with gorup.
+		 * This method help you to find the group associte forum id for any level of chld forum-topic.
 		 *
 		 * @since bbPress (r4612)
 		 *
 		 * @param strin $topic_name Topic post_name.
 		 *
-		 * @uses get_closest_forum_group_ids() Searching group id nested leve of child to parent forum.
+		 * @uses get_closest_forum_group_ids() Searching group id nested leve of child forum.
 		 * @uses bbp_get_topic_forum_id() To get topic forum id.
 		 *
 		 * @return int
 		 */
 		public function get_forum_id_from_topic_post_name( $topic_name = '' ) {
-			global $wp_query;
+			global $wp_query, $wpdb;
 
 			// Set initial forum ID
 			$forum_id = false;
 
-			// get current topics by topic post_name.
-			$current_topics = get_posts(
-			    array(
-					'name'        => empty( $topic_name ) ? $wp_query->query_vars['name'] : $topic_name,
-					'post_type'   => 'topic',
-					'post_status' => 'publish'	
-			    )
-			);
+			if ( empty( $topic_name ) ) {
+				$topic_name = empty( $wp_query->query_vars['name'] ) ? '' : $wp_query->query_vars['name'];
+			}
 
-			if ( ! empty( $current_topics ) ) {
-				$current_topics = array_shift( $current_topics );
-				$topic_forum_id = bbp_get_topic_forum_id( $current_topics->ID );
+			// get current topics by topic post_name.
+			$current_topic = $wpdb->get_row( 
+				$wpdb->prepare( 
+					"SELECT * FROM $wpdb->posts WHERE post_type=%s AND post_name=%s AND post_status IN('publish', 'closed', 'pending')",
+					bbp_get_topic_post_type(),
+					$topic_name
+				)
+			);
+			   
+			if ( ! empty( $current_topic ) ) {
+				$topic_forum_id = bbp_get_topic_forum_id( $current_topic->ID );
 				
-				// Searching group id nested leve of child to parent forum.
+				// Searching group id for nested leve of child forum.
 				$group_ids = $this->get_closest_forum_group_ids( $topic_forum_id );
 
 				// Set forum id if it associate with current group.
@@ -1561,6 +1566,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return string
 		 */
 		private function maybe_map_permalink_to_group( $post_id = 0, $url = false ) {
+			global $groups_template;
 
 			switch ( get_post_type( $post_id ) ) {
 
@@ -1602,8 +1608,21 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return $url;
 			}
 
-			// @todo Multiple group forums/forum groups
-			$group_id = $group_ids[0];
+			/**
+			 * For backward compatibility,
+			 * Get the currrent group id from front-end, when same forum associte with multiple group.
+			 */
+			if ( ! empty( $groups_template ) && in_array( $groups_template->group->id, $group_ids ) ) {
+				$group_id = bp_get_group_id();
+			} else {
+				/**
+				 * For the admin panel dashboard forum lists.
+				 * From the forum lists there is no current group, 
+				 * So get the first group id when same forum associate with multiple gorup. 
+				 */
+				$group_id = $group_ids[0];
+			}
+
 			$group    = groups_get_group( array( 'group_id' => $group_id ) );
 
 			if ( bp_is_group_admin_screen( $this->slug ) ) {
