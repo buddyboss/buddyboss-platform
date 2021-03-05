@@ -119,10 +119,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$forum_name = empty( $wp_query->query_vars['name'] ) ? '' : $wp_query->query_vars['name'];
 			}
 
-			// get current topics by topic post_name.
+			// get current forum by forum post_name.
 			$current_forum = $wpdb->get_row( 
 				$wpdb->prepare( 
-					"SELECT * FROM $wpdb->posts WHERE post_type=%s AND post_name=%s AND post_status IN('publish', 'private')",
+					"SELECT * FROM $wpdb->posts WHERE post_type=%s AND post_name=%s AND post_status IN('publish', 'private', 'hidden')",
 					bbp_get_forum_post_type(),
 					$forum_name
 				)
