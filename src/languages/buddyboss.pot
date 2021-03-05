@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-02-27 11:51:11+00:00\n"
+"POT-Creation-Date: 2021-03-05 11:36:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1936,7 +1936,7 @@ msgid "New post published"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:106
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:367
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:352
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:119
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
@@ -2887,8 +2887,8 @@ msgid "All Groups"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2750
+#: bp-core/admin/settings/bp-admin-setting-groups.php:54
 #: bp-core/admin/settings/bp-admin-setting-groups.php:57
-#: bp-core/admin/settings/bp-admin-setting-groups.php:60
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
 #: bp-groups/bp-groups-admin.php:2551 bp-groups/bp-groups-functions.php:3476
@@ -3029,10 +3029,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1295
 #: bp-core/admin/bp-core-admin-settings.php:1332
 #: bp-core/admin/bp-core-admin-settings.php:1356
-#: bp-core/admin/settings/bp-admin-setting-friends.php:95
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:411
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:541
+#: bp-core/admin/settings/bp-admin-setting-friends.php:92
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:526
 #: bp-core/classes/class-bp-admin-tab.php:254
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
@@ -3100,7 +3100,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:977
 #: bp-core/admin/bp-core-admin-settings.php:1005
 #: bp-core/admin/bp-core-admin-settings.php:1033
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:247
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:232
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
@@ -3116,7 +3116,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:987
 #: bp-core/admin/bp-core-admin-settings.php:1015
 #: bp-core/admin/bp-core-admin-settings.php:1052
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:249
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:234
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -3373,21 +3373,21 @@ msgid "Add Password confirmation to register form"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1164
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:476
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:461
 msgid "Grid and List"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1165
 #: bp-core/admin/bp-core-admin-settings.php:1196
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:477
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:508
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:462
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:493
 msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1166
 #: bp-core/admin/bp-core-admin-settings.php:1197
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:478
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:509
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:494
 msgid "List"
 msgstr ""
 
@@ -3866,7 +3866,7 @@ msgid "Migrated invitations!"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
-#: bp-core/admin/settings/bp-admin-setting-general.php:120
+#: bp-core/admin/settings/bp-admin-setting-general.php:116
 msgid "Activity Settings"
 msgstr ""
 
@@ -3901,7 +3901,7 @@ msgstr ""
 msgid "Relevant Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:114
+#: bp-core/admin/settings/bp-admin-setting-activity.php:111
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -3909,15 +3909,15 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:158
+#: bp-core/admin/settings/bp-admin-setting-activity.php:155
 msgid "WordPress"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:160
+#: bp-core/admin/settings/bp-admin-setting-activity.php:157
 msgid "Post Type Comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:169
+#: bp-core/admin/settings/bp-admin-setting-activity.php:166
 msgid "Custom Post Types"
 msgstr ""
 
@@ -3933,7 +3933,7 @@ msgstr ""
 msgid "Messaging"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-friends.php:58
+#: bp-core/admin/settings/bp-admin-setting-friends.php:55
 msgid "Require non-admin members to be connected before they can message each other"
 msgstr ""
 
@@ -3949,21 +3949,21 @@ msgstr ""
 msgid "Toolbar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:49
+#: bp-core/admin/settings/bp-admin-setting-general.php:48
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 msgid "Registration"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:54
+#: bp-core/admin/settings/bp-admin-setting-general.php:53
 msgid "Enable Registration"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:60
-#: bp-core/admin/settings/bp-admin-setting-general.php:78
+#: bp-core/admin/settings/bp-admin-setting-general.php:59
+#: bp-core/admin/settings/bp-admin-setting-general.php:77
 msgid "Registration Form"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:97
+#: bp-core/admin/settings/bp-admin-setting-general.php:94
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:854
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:19
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:19
@@ -3972,20 +3972,20 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:100
+#: bp-core/admin/settings/bp-admin-setting-general.php:97
 msgid "Private Website"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:103
+#: bp-core/admin/settings/bp-admin-setting-general.php:100
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:111
+#: bp-core/admin/settings/bp-admin-setting-general.php:107
 #: bp-forums/admin/settings.php:1526
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:117
+#: bp-core/admin/settings/bp-admin-setting-general.php:113
 msgid "Groups Settings"
 msgstr ""
 
@@ -4012,37 +4012,37 @@ msgstr ""
 msgid "Group Messages"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:63
+#: bp-core/admin/settings/bp-admin-setting-groups.php:60
 msgid "Auto Membership Approval"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:69
+#: bp-core/admin/settings/bp-admin-setting-groups.php:63
 msgid "Group Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:74
+#: bp-core/admin/settings/bp-admin-setting-groups.php:68
 msgid "Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:79
+#: bp-core/admin/settings/bp-admin-setting-groups.php:73
 msgid "Hide Subgroups"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:84
+#: bp-core/admin/settings/bp-admin-setting-groups.php:78
 msgid "Restrict Invitations"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:90
+#: bp-core/admin/settings/bp-admin-setting-groups.php:81
 msgid "Group Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:95
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:187
+#: bp-core/admin/settings/bp-admin-setting-groups.php:86
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:175
 msgid "Enabled View(s)"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:102
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:194
+#: bp-core/admin/settings/bp-admin-setting-groups.php:93
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:182
 msgid "Default View"
 msgstr ""
 
@@ -4135,24 +4135,24 @@ msgstr ""
 msgid "Display Name Fields"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:120
 msgid "Profile Photos"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:126
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
 msgid "Profile Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:130
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:127
 msgid "Profile Gravatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:135
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:132
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:153
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:156
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:147
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:150
 #: bp-members/bp-members-functions.php:3055
 #: bp-members/bp-members-functions.php:3058
 #: bp-xprofile/bp-xprofile-admin.php:1100
@@ -4161,16 +4161,16 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:161
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:155
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:166
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:160
 msgid "Default Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:173
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:176
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:164
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:167
 #: bp-core/profile-search/bps-start.php:59
 #: bp-core/profile-search/bps-start.php:62
 #: bp-core/profile-search/bps-start.php:247
@@ -4178,53 +4178,53 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:182
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:170
 msgid "Profile Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:202
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:222
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:207
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:241
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:226
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:248
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:233
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:268
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:253
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:294
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:279
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:305
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:290
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:318
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:303
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:336
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:321
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:351
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:336
 #: bp-members/classes/class-bp-members-admin.php:1372
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:240
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:263
@@ -4236,7 +4236,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:377
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:362
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -4244,15 +4244,15 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:430
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:415
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:441
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:426
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:495
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:480
 msgid ""
 "Display profile/member directories in Grid View, List View, or allow "
 "toggling between both views."
@@ -5216,15 +5216,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2655
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\n"
+"content will be unhidden</li>\r\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
-"\t\t\t</ul>\n"
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -7991,13 +7991,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -18343,11 +18343,15 @@ msgid ""
 "order to sync LearnDash groups with Social groups."
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:20
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:21
 msgid "LearnDash <span>&mdash; requires plugin to activate</span>"
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:24
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:31
+msgid "View Tutorials"
+msgstr ""
+
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:37
 msgid ""
 "BuddyBoss Platform has integration settings for %s. If using LearnDash we "
 "add the ability to sync LearnDash groups with social groups, to connect "
@@ -18355,12 +18359,8 @@ msgid ""
 "we also include styling for LearnDash."
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:28
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:41
 msgid "LearnDash LMS"
-msgstr ""
-
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:43
-msgid "View Tutorials"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/learndash/sync-meta-box.php:11
@@ -27310,7 +27310,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:114
+#: bp-core/admin/settings/bp-admin-setting-general.php:110
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""

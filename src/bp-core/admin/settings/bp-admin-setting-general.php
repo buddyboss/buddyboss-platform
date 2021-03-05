@@ -26,7 +26,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 	public function register_fields() {
 
 		// Main General Settings Section
-		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ), 'bp_admin_setting_tutorial' );
+		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ), '', 'bp_admin_setting_tutorial' );
 
 		// Account Deletion Settings.
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
@@ -45,7 +45,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 
 		// Main Registration Settings Section
-		$this->add_section( 'bp_registration', __( 'Registration', 'buddyboss' ), 'bp_admin_registration_setting_tutorial' );
+		$this->add_section( 'bp_registration', __( 'Registration', 'buddyboss' ), '', 'bp_admin_registration_setting_tutorial' );
 
 		// Registration Settings.
 		$args          = array();
@@ -90,9 +90,8 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
-
 		// Main Privacy Settings Section
-		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ), 'bp_privacy_tutorial' );
+		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ), '', 'bp_privacy_tutorial' );
 
 		// Private Network Settings.
 		$this->add_field( 'bp-enable-private-network', __( 'Private Website', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
