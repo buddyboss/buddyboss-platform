@@ -2474,7 +2474,7 @@ function bp_activity_media_migration_process() {
 			$offset ++;
 			bp_migration_write_log( ' increment offset ' + $offset );
 		}
-		if ( $recipients_count_row_data->ids === $offset ) {
+		if ( 1 === $recipients_count_row_data->ids ) {
 			return array(
 				'status'  => 1,
 				'message' => __( 'media comment migration complete!', 'buddyboss' ),
