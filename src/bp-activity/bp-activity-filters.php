@@ -2423,12 +2423,15 @@ function bp_activity_media_migration_process() {
 	
 	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
 	$recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
+	bp_migration_write_log( ' recipients_count_row_data->ids - ' . $recipients_count_row_data->ids );
 	if ( 1 === $recipients_count_row_data->ids ) {
 		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
 	} else {
 		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 LIMIT 5 OFFSET $offset";
 	}
 	bp_migration_write_log( 'recipients_query - ' . $recipients_query );
+	
+//	exit();
 	$recipients        = $wpdb->get_results( $recipients_query );
 	if ( ! empty( $recipients ) ) {
 		$debug              = false;
@@ -2437,6 +2440,7 @@ function bp_activity_media_migration_process() {
 		$pr                 = 0;
 		$activity_id_store  = array();
 		foreach ( $recipients as $get_parent_id ) {
+			$pr ++;
 			bp_migration_write_log( ' increment offset ' + $offset );
 			bp_migration_write_log( 'pr - ' . $pr );
 			$args = array(
@@ -2465,10 +2469,9 @@ function bp_activity_media_migration_process() {
 			}
 			bp_migration_write_log( $sub_activity_id_store );
 			if ( ! empty( $sub_activity_id_store ) ) {
-				$pr ++;
 				bp_migration_write_log( 'if' );
 				bp_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id, $debug );
-				$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+				$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $pr ) );
 			}
 			$activity_id_store[ $get_parent_id->id ] = $sub_activity_id_store;
 			$offset ++;
