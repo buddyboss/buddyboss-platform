@@ -365,7 +365,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Child forums are not associate with group but its parent forum associate with group.
-			add_filter( 'bbp_has_forums', array( $this, 'has_forum' ), 10 ,2 );
+			add_filter( 'bbp_has_forums', array( $this, 'is_forum_associate_with_grop' ), 10 ,2 );
 		}
 
 		/**
@@ -376,25 +376,35 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @param Object $post
 		 * @param Object $forum_query
-		 * @uses  get_forum_id_from_froum_post_name() To get current group forum id.
+		 * @uses  bp_is_group_single() 
+		 * @uses  bbp_get_group_forum_ids()
+		 * @uses  bbp_get_forum()
 		 *
 		 * @return Boolean
 		 */
-		public function has_forum( $post, $forum_query ) {
-			global $wp_query;
+		public function is_forum_associate_with_grop( $post, $forum_query ) {
+			global $wp_query, $groups_template;
 
-			if ( ! bp_is_group_single() ) {
+			if ( ! bp_is_group_single() || empty( $groups_template ) ) {
 				return $post;
 			}
 
-			$post_name = $wp_query->query_vars['name'];
-			$forum     = $this->get_forum_id_from_froum_post_name( $post_name );
+			$group_id = empty( $groups_template->group ) ? false : $groups_template->group->id;
 
-			if ( ! empty( $forum ) ) {
-				return true;
+			if ( empty( $group_id ) ) {
+				return $post;
 			}
 
-			return $post;
+			$forum_ids = bbp_get_group_forum_ids( $group_id );
+
+			if ( empty( $forum_ids ) ) {
+				return $post;
+			}
+
+			$forum_id = array_shift( $forum_ids );
+			$forum    = bbp_get_forum( $forum_id );
+
+			return empty( $forum ) ? false : true;
 		}
 
 		/**
