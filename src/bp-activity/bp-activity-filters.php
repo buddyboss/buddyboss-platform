@@ -2419,28 +2419,30 @@ function bp_activity_media_migration_process() {
 	global $wpdb;
 	
 	$offset           = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	if ( 1 === $offset ) {
+		$offset = 0; //staring with zero
+	} else {
+		$offset = $offset - 1; //pass Limit 1) 0,5 2) 5,5
+	}
 	$bp               = buddypress();
-	
 	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
 	$recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
 	bp_migration_write_log( ' recipients_count_row_data->ids - ' . $recipients_count_row_data->ids );
 	if ( 1 === $recipients_count_row_data->ids ) {
 		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
 	} else {
-		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 LIMIT 5 OFFSET $offset";
+		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 LIMIT $offset, 5";
 	}
 	bp_migration_write_log( 'recipients_query - ' . $recipients_query );
-	
-//	exit();
 	$recipients        = $wpdb->get_results( $recipients_query );
 	if ( ! empty( $recipients ) ) {
-		$debug              = false;
+		$debug              = true;
 		$new_seq            = array();
 		$sub_data           = array();
 		$pr                 = 0;
 		$activity_id_store  = array();
+		$total_id_update    = 0;
 		foreach ( $recipients as $get_parent_id ) {
-			$pr ++;
 			bp_migration_write_log( ' increment offset ' + $offset );
 			bp_migration_write_log( 'pr - ' . $pr );
 			$args = array(
@@ -2452,32 +2454,36 @@ function bp_activity_media_migration_process() {
 			bp_migration_write_log( 'Main Parent Id - ' . $get_parent_id->id );
 			$get_activity_data     = bp_activity_get_specific( $args );
 			$sub_activity_id_store = array();
-			foreach ( $get_activity_data['activities'] as $key => $comment_data ) {
-				if ( $comment_data->children ) {
-					$sub_data                              = bp_migration_get_children_data(
-						$debug,
-						$sub_activity_id_store,
-						$sub_data,
-						$comment_data->id,
-						$comment_data->children,
-						$pr,
-						$get_parent_id->id
-					);
-					$new_seq[ $comment_data->id ]['child'] = $sub_data['child_array'];
-					$sub_activity_id_store                 = $sub_data['activity_id_store'];
+			if ( isset( $get_activity_data['activities'] ) ) {
+				$pr ++;
+				foreach ( $get_activity_data['activities'] as $key => $comment_data ) {
+					if ( $comment_data->children ) {
+						$sub_data                              = bp_migration_get_children_data(
+							$debug,
+							$sub_activity_id_store,
+							$sub_data,
+							$comment_data->id,
+							$comment_data->children,
+							$get_parent_id->id
+						);
+						$new_seq[ $comment_data->id ]['child'] = $sub_data['child_array'];
+						$sub_activity_id_store                 = $sub_data['activity_id_store'];
+					}
 				}
+				bp_migration_write_log( $sub_activity_id_store );
+				if ( ! empty( $sub_activity_id_store ) ) {
+					bp_migration_write_log( 'if' );
+					bp_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id, $debug );
+					$total_id_update = $offset + $pr;
+					$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+					$offset ++;
+					bp_migration_write_log( ' increment offset ' . $offset );
+				}
+				$activity_id_store[ $get_parent_id->id ] = $sub_activity_id_store;
 			}
-			bp_migration_write_log( $sub_activity_id_store );
-			if ( ! empty( $sub_activity_id_store ) ) {
-				bp_migration_write_log( 'if' );
-				bp_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id, $debug );
-				$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $pr ) );
-			}
-			$activity_id_store[ $get_parent_id->id ] = $sub_activity_id_store;
-			$offset ++;
-			bp_migration_write_log( ' increment offset ' + $offset );
 		}
-		if ( 1 === $recipients_count_row_data->ids ) {
+		bp_migration_write_log( ' total id update - ' . $total_id_update );
+		if ( 1 === (int) $recipients_count_row_data->ids || (int) $total_id_update === (int) $recipients_count_row_data->ids  ) {
 			return array(
 				'status'  => 1,
 				'message' => __( 'media comment migration complete!', 'buddyboss' ),
@@ -2496,7 +2502,7 @@ function bp_activity_media_migration_process() {
 		);
 	}
 }
-function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, $parent_id, $children_array, $i, $main_root_id ) {
+function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, $parent_id, $children_array, $main_root_id ) {
 	global $wpdb;
 	$bp                   = buddypress();
 	$child_array          = array();
@@ -2538,7 +2544,6 @@ function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, 
 					$sub_data,
 					$comment_data->id,
 					$comment_data->children,
-					$i,
 					$main_root_id
 				);
 				//$sub_child_array['child'] = $sub_child_d['child_array'];
@@ -2551,7 +2556,6 @@ function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, 
 				$get_sub_data = $wpdb->get_results( $check_both_ii_or_sii_sql );
 				if ( ! empty( $get_sub_data ) ) {
 					foreach ( $get_sub_data as $get_sub_sub_data ) {
-						//echo ' did ' . $get_sub_sub_data->id . ' <br>';
 						$media_update_id    = $get_sub_sub_data->id;
 						$sargs              = array(
 							'display_comments' => true,
@@ -2583,7 +2587,6 @@ function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, 
 									$sub_data,
 									$get_sub_sub_data->id,
 									$scomment_data->children,
-									$i,
 									$main_root_id
 								);
 								$sub_child_array[ $media_update_id ]['new_child'] = $sub_child_d['child_array'];
@@ -2627,7 +2630,6 @@ function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, 
 				);
 				//if children empty then check media comment exists for that's activity id
 				$check_both_ii_or_sii_sql = "SELECT id from {$bp->activity->table_name} WHERE item_id='" . $comment_data->id . "' OR secondary_item_id='" . $comment_data->id . "'";
-				//echo ' id ' . $comment_data->id . ' <br>';
 				$get_sub_data = $wpdb->get_results( $check_both_ii_or_sii_sql );
 				if ( ! empty( $get_sub_data ) ) {
 					foreach ( $get_sub_data as $get_sub_sub_data ) {
@@ -2637,7 +2639,6 @@ function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, 
 							'sort'             => 'ASC',
 							'activity_ids'     => $get_sub_sub_data->id,
 						);
-						//						echo ' get_sub_sub_data ' . $get_sub_sub_data->id . ' <br>';
 						//Get secondary item id based on media activity comment id - Which type will activity_update
 						$gmiocc            = "SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id= '" . $get_sub_sub_data->id . "'";
 						$gmiocc_row        = $wpdb->get_row( $gmiocc );
@@ -2665,7 +2666,6 @@ function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, 
 									$sub_data,
 									$get_sub_sub_data->id,
 									$m_comment_data->children,
-									$i,
 									$main_root_id
 								);
 								$sub_child_array[ $get_sub_sub_data->id ]['new_child'] = $sub_child_d['child_array'];
@@ -2675,7 +2675,6 @@ function bp_migration_get_children_data( $debug, $activity_id_store, $sub_data, 
 								}
 							} else {
 								$activity_id_store[] = $m_comment_data->id;
-								//echo ' m_comment_data id ' . $m_comment_data->id . ' <br>';
 								bp_migration_get_activity_data_and_update(
 									$debug,
 									$m_comment_data->id,
