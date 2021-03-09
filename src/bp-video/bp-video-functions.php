@@ -745,7 +745,7 @@ function bp_video_preview_image_by_js( $video ) {
  */
 function bp_video_add_generate_thumb_background_process( $attachment_id, $video ) {
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-
+		global $bp_background_updater;
         $error = '';
         try {
             $ffmpeg = FFMpeg\FFMpeg::create();
@@ -771,7 +771,6 @@ function bp_video_add_generate_thumb_background_process( $attachment_id, $video 
 		$thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
 
 		if ( ! $thumbnails ) {
-			global $bp_background_updater;
 
 			$bp_background_updater->push_to_queue(
 				array(
