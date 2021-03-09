@@ -746,6 +746,18 @@ function bp_video_preview_image_by_js( $video ) {
 function bp_video_add_generate_thumb_background_process( $attachment_id, $video ) {
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 
+        $error = '';
+        try {
+            $ffmpeg = FFMpeg\FFMpeg::create();
+        } catch ( Exception $ffmpeg ) {
+            $error = $ffmpeg->getMessage();
+            $bp_background_updater->cancel_process();
+        }
+
+        if ( ! empty( trim( $error ) ) ) {
+            return;
+        }
+
 		/**
 		 * Hook for before background process create.
 		 *
@@ -822,6 +834,24 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 
 	$error = '';
 	global $bp_background_updater;
+
+	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
+		$bp_background_updater->cancel_process();
+		return;
+	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+		$error = '';
+		try {
+			$ffmpeg = FFMpeg\FFMpeg::create();
+		} catch ( Exception $ffmpeg ) {
+			$error = $ffmpeg->getMessage();
+			$bp_background_updater->cancel_process();
+		}
+		if ( ! empty( trim( $error ) ) ) {
+			$bp_background_updater->cancel_process();
+			return;
+		}
+	}
+
 	try {
 		$ffmpeg = FFMpeg\FFMpeg::create();
 	} catch ( Exception $ffmpeg ) {
