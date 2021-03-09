@@ -184,7 +184,7 @@ function bp_core_admin_register_registration_page_fields() {
 	}
 
 	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
-	$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ][ 'tutorial_callback' ] = 'bp_registration_page_tutorial';
+	$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ][ 'tutorial_callback' ] = 'bb_registration_page_tutorial';
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages   = bp_core_admin_get_static_pages();
@@ -226,9 +226,9 @@ function bp_core_admin_directory_pages_description() {
 /**
  * Link to Registration page tutorial
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.8
  */
-function bp_registration_page_tutorial() {
+function bb_registration_page_tutorial() {
 	?>
 
 	<p>

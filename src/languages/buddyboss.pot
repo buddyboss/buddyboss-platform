@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-03-08 07:50:12+00:00\n"
+"POT-Creation-Date: 2021-03-09 13:29:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1023,8 +1023,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2882
 #: bp-core/admin/bp-core-admin-functions.php:1562
-#: bp-core/admin/bp-core-admin-pages.php:315
-#: bp-core/admin/bp-core-admin-pages.php:349
+#: bp-core/admin/bp-core-admin-pages.php:335
+#: bp-core/admin/bp-core-admin-pages.php:369
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:243 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
@@ -2982,39 +2982,58 @@ msgstr ""
 msgid "You need to switch to your Default language in WPML to save these settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:138
+#: bp-core/admin/bp-core-admin-pages.php:145
 msgid "Component Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:142
+#: bp-core/admin/bp-core-admin-pages.php:149
 msgid "This directory shows a listing of all members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:144
+#: bp-core/admin/bp-core-admin-pages.php:151
 msgid "This directory shows a listing of all groups."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:146
+#: bp-core/admin/bp-core-admin-pages.php:153
 msgid "This directory shows a listing of all forums."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:148
+#: bp-core/admin/bp-core-admin-pages.php:155
 msgid "This directory shows all sitewide activity."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:150
+#: bp-core/admin/bp-core-admin-pages.php:157
 msgid "This directory shows all photos uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:152
+#: bp-core/admin/bp-core-admin-pages.php:159
 msgid "This directory shows all documents uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:177
+#: bp-core/admin/bp-core-admin-pages.php:186
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:193
+#: bp-core/admin/bp-core-admin-pages.php:197
+msgid "New users fill out this form to register their accounts."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:199
+#: bp-core/admin/bp-core-admin-pages.php:201
+msgid ""
+"If a page is added, its contents will display in a popup on the register "
+"form."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:203
+msgid "After registering, users are sent to this page to activate their accounts."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:223
+msgid "Associate a WordPress page with each of the following components."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:243
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -3043,50 +3062,31 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:200
-msgid "New users fill out this form to register their accounts."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:202
-#: bp-core/admin/bp-core-admin-pages.php:204
-msgid ""
-"If a page is added, its contents will display in a popup on the register "
-"form."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:206
-msgid "After registering, users are sent to this page to activate their accounts."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:226
-msgid "Associate a WordPress page with each of the following components."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:236
+#: bp-core/admin/bp-core-admin-pages.php:256
 msgid "Associate a WordPress page with the following Registration sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:242
+#: bp-core/admin/bp-core-admin-pages.php:262
 #: bp-core/admin/bp-core-admin-settings.php:893
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:258
+#: bp-core/admin/bp-core-admin-pages.php:278
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:306
-#: bp-core/admin/bp-core-admin-pages.php:340
+#: bp-core/admin/bp-core-admin-pages.php:326
+#: bp-core/admin/bp-core-admin-pages.php:360
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:322
-#: bp-core/admin/bp-core-admin-pages.php:356
+#: bp-core/admin/bp-core-admin-pages.php:342
+#: bp-core/admin/bp-core-admin-pages.php:376
 msgid "Create Page"
 msgstr ""
 
