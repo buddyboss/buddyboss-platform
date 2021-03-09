@@ -3713,9 +3713,9 @@ function bb_video_get_symlink( $video ) {
 		$upload_directory    = wp_get_upload_dir();
 		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . time() );
 
-		if ( ! file_exists( $attachment_path ) ) {
+		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
 			symlink( $attached_file, $attachment_path );
-        }
+		}
 
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
 
