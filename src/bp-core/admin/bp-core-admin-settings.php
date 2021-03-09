@@ -1223,7 +1223,7 @@ function bp_group_directories_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => '',
+					'article' => '83107',
 				),
 				'admin.php'
 			)
