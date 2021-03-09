@@ -365,7 +365,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Child forums are not associate with group but its parent forum associate with group.
-			add_filter( 'bbp_has_forums', array( $this, 'is_forum_associate_with_grop' ), 10 ,2 );
+			add_filter( 'bbp_has_forums', array( $this, 'is_forum_associate_with_group' ), 10 ,2 );
 		}
 
 		/**
@@ -382,7 +382,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return Boolean
 		 */
-		public function is_forum_associate_with_grop( $post, $forum_query ) {
+		public function is_forum_associate_with_group( $post, $forum_query ) {
 			global $wp_query, $groups_template;
 
 			if ( ! bp_is_group_single() || empty( $groups_template ) ) {
