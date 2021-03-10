@@ -13,7 +13,11 @@
 		<?php esc_html_e( 'Upload Cover Photo', 'buddyboss' ); ?>
 	</h2>
 
-	<div id="header-cover-image"></div>
+	<?php
+		$group_cover_image = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups', 'item_id'    => bp_get_current_group_id() ) );
+	?>
+
+	<div id="header-cover-image" style="<?php echo $group_cover_image ? 'display: block;' : ''; ?>"></div>
 
 <?php else : ?>
 

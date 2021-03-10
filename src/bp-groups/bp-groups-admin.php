@@ -2201,7 +2201,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?>
+						<?php _e( 'Select which profile types can join private groups with this group type without approval.', 'buddyboss' ); ?>
 					</td>
 				</tr>
 
@@ -2223,6 +2223,21 @@ function bp_group_type_permissions_meta_box( $post ) {
 				</tr>
 
 			<?php } ?>
+
+			<?php
+			if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+				$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+				$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
+				if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
+					echo '<tr><td>';
+					echo sprintf( __( 'If members are restricted from joining groups in the <a href="%s">Group Access</a> settings, they will be unable to join this group type even if they have the profile type specified above.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-groups#group_access_control_block'
+					), 'admin.php' ) ) ) );
+					echo '</td></tr>';
+				}
+			}
+			?>
 
 			</tbody>
 		</table>
@@ -2465,7 +2480,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_remove = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
 
 	$member_type                           = ( isset( $_POST['bp-member-type'] ) ) ? $_POST['bp-member-type'] : '';
-	$member_type_group_invites             = $_POST['bp-member-type-group-invites'];
+	$member_type_group_invites             = ( isset( $_POST['bp-member-type-group-invites'] ) ) ? $_POST['bp-member-type-group-invites'] : '';
 	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 
 	$term = term_exists( sanitize_key( $key ), 'bp_group_type' );

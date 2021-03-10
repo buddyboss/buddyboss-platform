@@ -90,6 +90,10 @@ function bp_document_add_theatre_template() {
  */
 function bp_document_activity_entry() {
 
+	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profile_document_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_group_document_support_enabled() ) ) {
+		return false;
+	}
+
 	$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
 
 	// Add document to single activity page.
@@ -571,6 +575,40 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 
 	// Do not embed attachment in wp-admin area.
 	if ( is_admin() ) {
+		return $content;
+	}
+
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_document_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_group_document_support_enabled()
+		)
+	) {
 		return $content;
 	}
 
@@ -1390,8 +1428,11 @@ function bp_document_admin_repair_document() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-						$wpdb->query( $update_query );
+						$up_document           = new BP_Document( $document->id );
+						$up_document->privacy  = 'grouponly';
+						$up_document->group_id = $activity->item_id;
+						$up_document->save();
+
 					}
 					if ( 'document' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1401,8 +1442,10 @@ function bp_document_admin_repair_document() {
 									$document_activity = new BP_Activity_Activity( $document_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $document_activity->component ) {
-									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-									$wpdb->query( $update_query );
+									$up_document           = new BP_Document( $document->id );
+									$up_document->privacy  = 'grouponly';
+									$up_document->group_id = $document_activity->item_id;
+									$up_document->save();
 									$activity->item_id   = $document_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1682,6 +1725,10 @@ function bp_document_get_edit_activity_data( $activity ) {
 				);
 			}
 		}
+
+		$activity['profile_document'] = bp_is_profile_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_document']   = bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
+
 	}
 
 	return $activity;
