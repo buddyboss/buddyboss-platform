@@ -111,6 +111,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>"
 		data-document-title="<?php echo esc_html( $filename ); ?>"
 		data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
+        data-can-edit="<?php echo esc_attr( bp_document_user_can_edit( bp_get_document_id() ) ); ?>"
 		data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>"
