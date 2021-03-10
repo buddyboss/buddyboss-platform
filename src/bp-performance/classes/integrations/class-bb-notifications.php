@@ -31,19 +31,12 @@ class BB_Notifications extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bp-notifications' );
 
-		$event_groups = array( 'buddypress', 'buddypress-notifications' );
-
-		// @todo : Allow custom plugin to modify below array; To support custom
 		$purge_events = array(
 			'bp_notification_after_save', // When new notification created.
 			'bp_notification_before_update', // When notification updated.
 			'bp_notification_before_delete', // When notification deleted.
 		);
 
-		/**
-		 * Add Custom events to purge notifications endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_notifications', $purge_events );
 		$this->purge_event( 'bp-notifications', $purge_events );
 
 		/**
@@ -75,11 +68,7 @@ class BB_Notifications extends Integration_Abstract {
 			'bp_core_delete_existing_avatar'  => 1, // User avatar photo deleted.
 		);
 
-		/**
-		 * Add Custom events to purge single message endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_notifications_single', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-notifications_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active    = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings               = Helper::instance()->get_app_settings( 'cache_bb_notifications', 'buddyboss-app' );
@@ -90,11 +79,8 @@ class BB_Notifications extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/notifications',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -102,8 +88,6 @@ class BB_Notifications extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/notifications/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);

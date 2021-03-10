@@ -7,8 +7,8 @@
 
 namespace BuddyBoss\Performance\Integration;
 
-use BuddyBoss\Performance\Helper;
 use BuddyBoss\Performance\Cache;
+use BuddyBoss\Performance\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -30,8 +30,6 @@ class BB_Replies extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bbp-replies' );
 
-		$event_groups = array( 'bbpress', 'bbpress-replies' );
-
 		$purge_events = array(
 			'save_post_reply', // When reply created.
 			'edit_post_reply', // When reply updated.
@@ -47,10 +45,6 @@ class BB_Replies extends Integration_Abstract {
 			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge forums endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bbp_replies', $purge_events );
 		$this->purge_event( 'bbp-replies', $purge_events );
 
 		/**
@@ -81,11 +75,7 @@ class BB_Replies extends Integration_Abstract {
 			'bp_core_delete_existing_avatar'     => 1, // User avatar photo deleted.
 		);
 
-		/**
-		 * Add Custom events to purge single activity endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bbp_replies', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bbp-replies_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'buddyboss-app' );
@@ -96,11 +86,8 @@ class BB_Replies extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/reply',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -108,8 +95,6 @@ class BB_Replies extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/reply/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
@@ -123,7 +108,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_save_post_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -132,7 +117,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_edit_post_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -141,7 +126,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_trashed_post( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -150,7 +135,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_untrashed_post( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -159,7 +144,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_deleted_post( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -168,7 +153,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_spammed_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -177,7 +162,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_unspammed_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -186,7 +171,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_approved_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -195,7 +180,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bbp_unapproved_reply( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -206,7 +191,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_move_reply( $reply_id, $source_topic_id, $destination_topic_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -217,7 +202,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_split_topic( $reply_id, $source_topic_id, $destination_topic_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -228,7 +213,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $forum_id Forum ID.
 	 */
 	public function event_bbp_new_reply( $reply_id, $topic_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/******************************* Moderation Support ******************************/
@@ -238,7 +223,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bp_suspend_forum_reply_suspended( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/**
@@ -247,7 +232,7 @@ class BB_Replies extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
-		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		$this->purge_item_cache_by_item_id( $reply_id );
 	}
 
 	/****************************** Author Embed Support *****************************/
@@ -260,7 +245,7 @@ class BB_Replies extends Integration_Abstract {
 		$replies_ids = $this->get_reply_ids_by_userid( $user_id );
 		if ( ! empty( $replies_ids ) ) {
 			foreach ( $replies_ids as $reply_id ) {
-				Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+				$this->purge_item_cache_by_item_id( $reply_id );
 			}
 		}
 	}
@@ -274,7 +259,7 @@ class BB_Replies extends Integration_Abstract {
 		$replies_ids = $this->get_reply_ids_by_userid( $user_id );
 		if ( ! empty( $replies_ids ) ) {
 			foreach ( $replies_ids as $reply_id ) {
-				Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+				$this->purge_item_cache_by_item_id( $reply_id );
 			}
 		}
 	}
@@ -288,7 +273,7 @@ class BB_Replies extends Integration_Abstract {
 		$replies_ids = $this->get_reply_ids_by_userid( $user_id );
 		if ( ! empty( $replies_ids ) ) {
 			foreach ( $replies_ids as $reply_id ) {
-				Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+				$this->purge_item_cache_by_item_id( $reply_id );
 			}
 		}
 	}
@@ -305,7 +290,7 @@ class BB_Replies extends Integration_Abstract {
 				$replies_ids = $this->get_reply_ids_by_userid( $user_id );
 				if ( ! empty( $replies_ids ) ) {
 					foreach ( $replies_ids as $reply_id ) {
-						Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+						$this->purge_item_cache_by_item_id( $reply_id );
 					}
 				}
 			}
@@ -326,5 +311,15 @@ class BB_Replies extends Integration_Abstract {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Purge item cache by item id.
+	 *
+	 * @param $reply_id
+	 */
+	private function purge_item_cache_by_item_id( $reply_id ) {
+		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( get_permalink( $reply_id ) ) );
 	}
 }
