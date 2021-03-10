@@ -114,9 +114,10 @@ class BP_Registration_Theme_Compat {
 			}
 		}
 
+		$register_page_id = bp_core_get_directory_page_id( 'register' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => !empty ( $register_page_id ) ? $register_page_id : 0,
 				'post_title'     => $title,
 				'post_author'    => 0,
 				'post_date'      => 0,
