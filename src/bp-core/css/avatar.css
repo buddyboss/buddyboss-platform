@@ -314,6 +314,10 @@ div.bp-avatar-nav {
 	margin-right: 20px;
 }
 
+.bp-profile-wrapper .bp-profile-content .profile.change-avatar #avatar-upload-form {
+	opacity: 0;
+}
+
 @media screen and (max-width: 480px) {
 
 	#bp-webcam-avatar .avatar-crop-management #avatar-crop-actions,
