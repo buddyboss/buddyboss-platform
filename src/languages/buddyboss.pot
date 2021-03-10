@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-03-09 13:29:19+00:00\n"
+"POT-Creation-Date: 2021-03-09 14:27:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1106,7 +1106,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:738 bp-groups/bp-groups-template.php:739
 #: bp-groups/bp-groups-template.php:1474
 #: bp-groups/classes/class-bp-groups-list-table.php:646
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:304
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:282
 #: bp-media/classes/class-bp-media-component.php:163
 #: bp-media/classes/class-bp-media-privacy.php:52
 #: bp-xprofile/classes/class-bp-xprofile-component.php:182
@@ -3053,9 +3053,9 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:526
 #: bp-core/classes/class-bp-admin-tab.php:254
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:248
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:391
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:485
+#: bp-integrations/learndash/bp-learndash-functions.php:421
+#: bp-integrations/learndash/bp-learndash-functions.php:444
+#: bp-integrations/learndash/bp-learndash-functions.php:467
 #: bp-media/bp-media-settings.php:577 bp-media/bp-media-settings.php:604
 #: bp-media/bp-media-settings.php:773 bp-media/bp-media-settings.php:987
 #: bp-search/bp-search-settings.php:462
@@ -3481,7 +3481,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:635
 #: bp-groups/classes/class-bp-groups-component.php:944
 #: bp-groups/classes/class-bp-groups-list-table.php:439
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:514
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:443
 #: bp-members/classes/class-bp-core-members-widget.php:307
 #: bp-members/classes/class-bp-members-component.php:37
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:507
@@ -4113,7 +4113,7 @@ msgid "Registration Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:21
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:453
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:405
 #: bp-media/bp-media-settings.php:63 bp-media/bp-media-settings.php:82
 #: bp-media/bp-media-settings.php:113 bp-media/bp-media-settings.php:121
 #: bp-media/bp-media-settings.php:129 bp-xprofile/bp-xprofile-admin.php:29
@@ -7292,7 +7292,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1196 bp-groups/bp-groups-template.php:743
 #: bp-groups/bp-groups-template.php:744
 #: bp-groups/classes/class-bp-groups-list-table.php:652
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:306
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:284
 #: bp-moderation/classes/class-bp-moderation-list-table.php:298
 msgid "Hidden"
 msgstr ""
@@ -7303,7 +7303,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1195 bp-groups/bp-groups-template.php:748
 #: bp-groups/bp-groups-template.php:749 bp-groups/bp-groups-template.php:1476
 #: bp-groups/classes/class-bp-groups-list-table.php:649
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:305
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:283
 msgid "Private"
 msgstr ""
 
@@ -9025,7 +9025,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-privacy.php:58
 #: bp-document/classes/class-bp-document.php:710
 #: bp-document/classes/class-bp-document.php:1369
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:154
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:156
 #: bp-media/classes/class-bp-media-album.php:517
 #: bp-media/classes/class-bp-media-privacy.php:59
 #: bp-media/classes/class-bp-media.php:627
@@ -13073,8 +13073,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3988
 #: bp-groups/bp-groups-functions.php:4007
 #: bp-groups/bp-groups-functions.php:4024
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:343
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:359
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:321
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:337
 #. translators: user role
 msgid "Organizer"
 msgstr ""
@@ -13084,8 +13084,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3990
 #: bp-groups/bp-groups-functions.php:4009
 #: bp-groups/bp-groups-functions.php:4026
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:344
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:360
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:322
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:338
 #. translators: user role
 msgid "Moderator"
 msgstr ""
@@ -13843,8 +13843,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3992
 #: bp-groups/bp-groups-functions.php:4011
 #: bp-groups/bp-groups-functions.php:4028
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:345
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:361
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:323
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:339
 #: bp-members/bp-members-functions.php:3821
 #: bp-members/classes/class-bp-members-admin.php:955
 msgid "Member"
@@ -15774,7 +15774,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3982
 #: bp-groups/bp-groups-functions.php:4001
 #: bp-groups/bp-groups-functions.php:4018
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:512
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:441
 msgid "Organizers"
 msgstr ""
 
@@ -15789,7 +15789,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:687
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:717
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:747
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:319
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:297
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:83
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:104
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:127
@@ -15866,7 +15866,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3984
 #: bp-groups/bp-groups-functions.php:4003
 #: bp-groups/bp-groups-functions.php:4020
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:513
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:442
 msgid "Moderators"
 msgstr ""
 
@@ -17769,244 +17769,244 @@ msgstr ""
 msgid "Social groups <span>&rarr; LearnDash groups</span>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:107
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:109
 msgid "Social Group Sync"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:110
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:112
 msgid ""
 "Enable group sync functionality <b>FROM</b> <a href=\"%1$s\">BuddyBoss "
 "Social Groups</a> <b>TO</b> <a href=\"%2$s\">LearnDash Groups</a>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:130
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:132
 msgid "Create LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:132
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:134
 msgid ""
 "Allow social group organizers to create associated LearnDash groups during "
 "the group creation process"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:140
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:142
 msgid "Manage LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:142
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:144
 msgid ""
 "Allow social group organizers to manage associated LearnDash groups after "
 "the group creation process"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:149
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:151
 msgid "Course Tab Visibility"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:152
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 msgid "Anyone"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:153
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:155
 msgid "Loggedin Users"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:155
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:157
 msgid "No one"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:158
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:160
 msgid "Select who can see the course tab in social groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:165
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:167
 msgid "Auto Create LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:167
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:169
 msgid "Automatically create and associate a LearnDash group upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:168
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:170
 msgid ""
 "Required if you want an associated LearnDash group, and course tab is "
 "disabled during creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:175
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:177
 msgid "Auto Delete LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:177
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:179
 msgid ""
 "Automatically delete the associated LearnDash group when the social group "
 "is deleted"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:178
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:180
 msgid "Uncheck this to delete the group manually"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:185
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:187
 msgid "Sync Organizers"
-msgstr ""
-
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:188
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:203
-msgid "Group Leader"
-msgstr ""
-
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:189
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:204
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:218
-msgid "Group User"
 msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:190
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:205
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:219
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:346
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:362
+msgid "Group Leader"
+msgstr ""
+
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:191
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:206
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:220
+msgid "Group User"
+msgstr ""
+
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:192
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:207
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:221
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:324
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:340
 #: bp-integrations/learndash/templates/admin/buddypress/sync-meta-box.php:19
 #: bp-integrations/learndash/templates/admin/learndash/sync-meta-box.php:18
 msgid "None"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:193
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:195
 msgid ""
 "Social group \"Organizers\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:200
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:202
 msgid "Sync Moderators"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:208
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:210
 msgid ""
 "Social group \"Moderators\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:215
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:217
 msgid "Sync Members"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:222
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:224
 msgid ""
 "Social group \"Members\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:264
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:240
 msgid "LearnDash groups <span>&rarr; Social groups</span>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:269
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:247
 msgid "LearnDash Group Sync"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:272
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:250
 msgid ""
 "Enable group sync functionality <b>FROM</b> <a href=\"%1$s\">LearnDash "
 "Groups</a> <b>TO</b> <a href=\"%2$s\">BuddyBoss Social Groups</a>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:292
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:270
 msgid "Auto Create Social Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:294
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:272
 msgid "Automatically create and associate a Social Group upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:301
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:279
 msgid "Social Group Privacy"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:309
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:287
 msgid "Select the default social group Privacy setting upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:316
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:294
 msgid "Social Group Invite Status"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:320
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:298
 msgid "Group organizers and moderators only"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:321
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:299
 msgid "Group organizers only"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:324
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:302
 msgid "Select which group members can invite others to join the group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:331
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:309
 msgid "Auto Delete Social Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:333
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:311
 msgid ""
 "Automatically delete the associated Social Group when the LearnDash group "
 "is deleted"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:340
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:318
 msgid "Sync Leaders"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:349
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:327
 msgid ""
 "LearnDash \"Group Leaders\" will be assigned to the above role in social "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:356
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:334
 msgid "Sync Users"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:365
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:343
 msgid ""
 "LearnDash \"Group Users\" will be assigned to the above role in social "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:410
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:362
 msgid "Group Reports Settings"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:416
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:368
 msgid "Group Reports"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:418
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:370
 msgid "Enable Social Group Report for LearnDash"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:425
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:377
 msgid "Report Access"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:435
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:387
 msgid "Report Results Per Page"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:438
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:390
 msgid "Number of report results displayed per page"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:457
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:412
 msgid "My Courses Tab"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:459
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:414
 msgid "Display \"Courses\" tab in profiles"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:460
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:415
 msgid ""
 "Adds a tab to the logged in member's profile displaying all courses they "
 "are enrolled in, and a matching link in the profile dropdown. If any "
@@ -18014,11 +18014,11 @@ msgid ""
 "member has earned."
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:498
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:427
 msgid "Control the setting for social group's reports."
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:534
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:463
 msgid "Select which roles can view reports"
 msgstr ""
 
