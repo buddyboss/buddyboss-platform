@@ -3536,7 +3536,9 @@ function bb_video_create_thumb_symlinks( $video ) {
 		}
 
 		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			symlink( $file_path, $attachment_path );
+			if ( ! is_link( $attachment_path ) ) {
+				symlink( $file_path, $attachment_path );
+			}
 		}
 
 		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . 'large' );
@@ -3549,7 +3551,9 @@ function bb_video_create_thumb_symlinks( $video ) {
 		}
 
 		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			symlink( $file_path, $attachment_path );
+			if ( ! is_link( $attachment_path ) ) {
+				symlink( $file_path, $attachment_path );
+			}
 		}
 	}
 }
@@ -3705,7 +3709,9 @@ function bb_video_create_symlinks( $video ) {
 		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy );
 
 		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			symlink( $attached_file, $attachment_path );
+			if ( ! is_link( $attachment_path ) ) {
+				symlink( $attached_file, $attachment_path );
+			}
 		}
 	}
 }
@@ -3743,7 +3749,9 @@ function bb_video_get_symlink( $video ) {
 		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . time() );
 
 		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			symlink( $attached_file, $attachment_path );
+			if ( ! is_link( $attachment_path ) ) {
+				symlink( $attached_file, $attachment_path );
+            }
 		}
 
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
@@ -3797,7 +3805,9 @@ function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size 
 		}
 
 		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			symlink( $file_path, $attachment_path );
+			if ( ! is_link( $attachment_path ) ) {
+				symlink( $file_path, $attachment_path );
+			}
 		}
 
 		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $auto_gen_thumb_id . $privacy . 'large' );
@@ -3810,7 +3820,9 @@ function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size 
 		}
 
 		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			symlink( $file_path, $attachment_path );
+			if ( ! is_link( $attachment_path ) ) {
+				symlink( $file_path, $attachment_path );
+			}
 		}
 
 		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $auto_gen_thumb_id . $privacy . $size );
@@ -3823,7 +3835,9 @@ function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size 
 		}
 
 		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			symlink( $file_path, $attachment_path );
+			if ( ! is_link( $attachment_path ) ) {
+				symlink( $file_path, $attachment_path );
+			}
 		}
 
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );

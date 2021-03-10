@@ -3840,14 +3840,18 @@ function bp_document_create_symlinks( $document ) {
 		if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
 			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-				symlink( $attached_file, $attachment_path );
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $attached_file, $attachment_path );
+				}
 			}
 		}
 
 		if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
 			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
 			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-				symlink( $attached_file, $attachment_path );
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $attached_file, $attachment_path );
+				}
 			}
 		}
 
@@ -3876,7 +3880,9 @@ function bp_document_create_symlinks( $document ) {
 			}
 
 			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-				symlink( $file_path, $attachment_path );
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $file_path, $attachment_path );
+				}
 			}
 
 			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'large' );
@@ -3906,7 +3912,9 @@ function bp_document_create_symlinks( $document ) {
 				}
 
 				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					symlink( $file_path, $attachment_path );
+					if ( ! is_link( $attachment_path ) ) {
+						symlink( $file_path, $attachment_path );
+					}
 				}
 			}
 		}

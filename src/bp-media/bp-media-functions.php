@@ -3520,7 +3520,9 @@ function bp_media_create_symlinks( $media ) {
 
 			// Check if file exists.
 			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-				symlink( $output_file_src, $attachment_path );
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $output_file_src, $attachment_path );
+				}
 			}
 		} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 
@@ -3533,7 +3535,9 @@ function bp_media_create_symlinks( $media ) {
 
 			// Check if file exists.
 			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-				symlink( $output_file_src, $attachment_path );
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $output_file_src, $attachment_path );
+				}
 			}
 		}
 
@@ -3550,7 +3554,9 @@ function bp_media_create_symlinks( $media ) {
 
 			// Check if file exists.
 			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-				symlink( $output_file_src, $attachment_path );
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $output_file_src, $attachment_path );
+				}
 			}
 		} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 
@@ -3563,7 +3569,9 @@ function bp_media_create_symlinks( $media ) {
 
 			// Check if file exists.
 			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-				symlink( $output_file_src, $attachment_path );
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $output_file_src, $attachment_path );
+				}
 			}
         }
 
