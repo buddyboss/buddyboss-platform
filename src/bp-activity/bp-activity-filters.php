@@ -2101,7 +2101,7 @@ function bp_activity_media_migration_process() {
 		$activity_id_store = array();
 		$total_id_update   = 0;
 		foreach ( $recipients as $get_parent_id ) {
-			bp_migration_write_log( ' increment offset ' + $offset );
+			bp_migration_write_log( ' increment offset ' + (int) $offset );
 			bp_migration_write_log( 'pr - ' . $pr );
 			$args = array(
 				'display_comments' => true,
