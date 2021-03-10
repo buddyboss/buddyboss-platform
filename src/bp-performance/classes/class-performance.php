@@ -7,19 +7,18 @@
 
 namespace BuddyBoss\Performance;
 
-use BuddyBoss\Performance\Route_Helper;
-use BuddyBoss\Performance\Integration\BB_Groups;
-use BuddyBoss\Performance\Integration\BB_Members;
 use BuddyBoss\Performance\Integration\BB_Activity;
-use BuddyBoss\Performance\Integration\BB_Friends;
-use BuddyBoss\Performance\Integration\BB_Notifications;
-use BuddyBoss\Performance\Integration\BB_Messages;
-use BuddyBoss\Performance\Integration\BB_Forums;
-use BuddyBoss\Performance\Integration\BB_Topics;
-use BuddyBoss\Performance\Integration\BB_Replies;
-use BuddyBoss\Performance\Integration\BB_Media_Photos;
-use BuddyBoss\Performance\Integration\BB_Media_Albums;
 use BuddyBoss\Performance\Integration\BB_Documents;
+use BuddyBoss\Performance\Integration\BB_Forums;
+use BuddyBoss\Performance\Integration\BB_Friends;
+use BuddyBoss\Performance\Integration\BB_Groups;
+use BuddyBoss\Performance\Integration\BB_Media_Albums;
+use BuddyBoss\Performance\Integration\BB_Media_Photos;
+use BuddyBoss\Performance\Integration\BB_Members;
+use BuddyBoss\Performance\Integration\BB_Messages;
+use BuddyBoss\Performance\Integration\BB_Notifications;
+use BuddyBoss\Performance\Integration\BB_Replies;
+use BuddyBoss\Performance\Integration\BB_Topics;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -243,13 +242,10 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 	            cache_group varchar(200) NOT NULL,
 	            cache_value mediumtext DEFAULT NULL,
 	            cache_expire datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-	            purge_events text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-	            event_groups varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
 	            UNIQUE KEY id (id),
 	            KEY cache_name (cache_name),
 	            KEY cache_group (cache_group),
-	            KEY cache_expire (cache_expire),
-	            KEY event_groups (event_groups)
+	            KEY cache_expire (cache_expire)
 	        ) $charset_collate;";
 
 			dbDelta( $sql );
