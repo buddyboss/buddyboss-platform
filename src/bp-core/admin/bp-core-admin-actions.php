@@ -281,6 +281,6 @@ function bp_check_user_nickname( &$errors, $update, &$user ) {
 	);
 
 	if ( $wpdb->get_var( $sql ) > 0 ) {
-		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname has already been taken.' ), array( 'form-field' => 'nickname' ) );
+		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname has already been taken.', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
 	}
 }
