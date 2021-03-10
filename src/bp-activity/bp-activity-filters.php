@@ -2078,9 +2078,9 @@ function bp_activity_media_migration_process() {
 	global $wpdb;
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	if ( 1 === $offset ) {
-		$offset = 0; //staring with zero
+		$offset = 0;
 	} else {
-		$offset = $offset - 1; //pass Limit 1) 0,5 2) 5,5
+		$offset = $offset;
 	}
 	$bp                        = buddypress();
 	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
@@ -2089,12 +2089,12 @@ function bp_activity_media_migration_process() {
 	if ( 1 === $recipients_count_row_data->ids ) {
 		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
 	} else {
-		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 LIMIT $offset, 5";
+		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 LIMIT $offset, 2";
 	}
 	bp_migration_write_log( 'recipients_query - ' . $recipients_query );
 	$recipients = $wpdb->get_results( $recipients_query );
 	if ( ! empty( $recipients ) ) {
-		$debug             = false;
+		$debug             = true;
 		$new_seq           = array();
 		$sub_data          = array();
 		$pr                = 0;
@@ -2128,12 +2128,12 @@ function bp_activity_media_migration_process() {
 						$sub_activity_id_store                 = $sub_data['activity_id_store'];
 					}
 				}
-				bp_migration_write_log( $sub_activity_id_store );
+				//bp_migration_write_log( $sub_activity_id_store );
 				if ( ! empty( $sub_activity_id_store ) ) {
-					bp_migration_write_log( 'if' );
+					//bp_migration_write_log( 'if' );
 					bp_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id, $debug );
 					$total_id_update = $offset + $pr;
-					$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+					$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $pr ) );
 					$offset ++;
 					bp_migration_write_log( ' increment offset ' . $offset );
 				}
@@ -2383,23 +2383,23 @@ function bb_activity_update_data( $debug, $comment_id, $new_secondary_item_id, $
 	$bp = buddypress();
 	global $wpdb;
 	//Update current mptt_right, item_id & secondary_item_id for current comment
-	bp_migration_write_log( 'comment_id - ' . $comment_id );
+	//bp_migration_write_log( 'comment_id - ' . $comment_id );
 	if ( (int) $comment_id !== (int) $main_root_id ) {
 		$c_sql = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET mptt_right = %d,item_id = %d, secondary_item_id = %d WHERE id = %d", intval( $mptt_right + 1 ), $main_root_id, $new_secondary_item_id, $comment_id );
-		bp_migration_write_log( $c_sql );
+		//bp_migration_write_log( $c_sql );
 		if ( false == $debug ) {
 			$wpdb->query( $c_sql );
 		}
 		//Get mptt_right for root comment
 		//		if ( 'new_child' === $child_type ) {
 		$get_main_root_id_sql = "SELECT mptt_left, mptt_right FROM {$bp->activity->table_name} WHERE id= '" . $main_root_id . "'";
-		bp_migration_write_log( $get_main_root_id_sql );
+		//bp_migration_write_log( $get_main_root_id_sql );
 		$get_main_root_id_row = $wpdb->get_row( $get_main_root_id_sql );
 		if ( ! empty( $get_main_root_id_row ) ) {
 			//Update mptt_right for root comment
 			$new_mppt_right_for_parent_id = intval( $get_main_root_id_row->mptt_right + 1 );
 			$main_root_sql                = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET	mptt_right = %d WHERE id = %d", $new_mppt_right_for_parent_id, $main_root_id );
-			bp_migration_write_log( $main_root_sql );
+			//bp_migration_write_log( $main_root_sql );
 			if ( false == $debug ) {
 				$wpdb->query( $main_root_sql );
 			}
@@ -2410,13 +2410,13 @@ function bb_activity_update_data( $debug, $comment_id, $new_secondary_item_id, $
 		//Get mptt_right for secondary comment
 		//		if ( 'new_child' === $child_type ) {
 		$get_secondary_item_root_sql = "SELECT mptt_left, mptt_right FROM {$bp->activity->table_name} WHERE id= '" . $new_secondary_item_id . "'";
-		bp_migration_write_log( $get_secondary_item_root_sql );
+		//bp_migration_write_log( $get_secondary_item_root_sql );
 		$get_secondary_item_root_row = $wpdb->get_row( $get_secondary_item_root_sql );
 		if ( ! empty( $get_secondary_item_root_row ) ) {
 			//Update mptt_right for root comment
 			$new_mppt_right_for_si_id = intval( $get_secondary_item_root_row->mptt_right + 1 );
 			$secon_sql                = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET mptt_right = %d WHERE id = %d", $new_mppt_right_for_si_id, $new_secondary_item_id );
-			bp_migration_write_log( $secon_sql );
+			//bp_migration_write_log( $secon_sql );
 			if ( false == $debug ) {
 				$wpdb->query( $secon_sql );
 			}
@@ -2426,20 +2426,20 @@ function bb_activity_update_data( $debug, $comment_id, $new_secondary_item_id, $
 	// Update privacy in activity table and media table
 	if ( 'activity_update' !== $comment_type ) {
 		$update_activity_privacy_sql = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET privacy = %s WHERE id = %d", 'public', $comment_id );
-		bp_migration_write_log( $update_activity_privacy_sql );
+		//bp_migration_write_log( $update_activity_privacy_sql );
 		if ( false == $debug ) {
 			$wpdb->query( $update_activity_privacy_sql );
 		}
 	} elseif ( 'activity_update' === $comment_type ) {
 		if ( (int) $comment_id !== (int) $main_root_id ) {
 			$get_au_sql = "SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id= '" . $comment_id . "' AND type= '" . $comment_type . "'";
-			bp_migration_write_log( $get_au_sql );
+			//bp_migration_write_log( $get_au_sql );
 			$get_au_row = $wpdb->get_row( $get_au_sql );
 			if ( ! empty( $get_au_row ) ) {
 				$get_au_id = $get_au_row->secondary_item_id;
 				// Update activity id in media table
 				$update_media_sql = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET privacy = %s,activity_id = %d WHERE activity_id = %d", 'comment', $get_au_id, $comment_id );
-				bp_migration_write_log( $update_media_sql );
+				//bp_migration_write_log( $update_media_sql );
 				if ( false == $debug ) {
 					$wpdb->query( $update_media_sql );
 				}
@@ -2467,7 +2467,7 @@ function bp_migration_remove_activity_id_activity_update_type( $activity_ids, $m
 		$bp = buddypress();
 		global $wpdb;
 		$delete_sql = $wpdb->prepare( "DELETE FROM {$bp->activity->table_name} WHERE id = %d AND item_id=%s AND type=%s AND privacy=%s", $child_id, $main_root_id, 'activity_update', 'media' );
-		bp_migration_write_log( $delete_sql );
+		//bp_migration_write_log( $delete_sql );
 		if ( false == $debug ) {
 			$wpdb->query( $delete_sql );
 		}
