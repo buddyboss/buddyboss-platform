@@ -130,6 +130,27 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
 
 	}
+
+	if ( in_array( 'instructor-role/instructor.php', $bp_plugins, true ) ) {
+
+		/**
+		 * Function to exclude group type post to prevent group role overriding.
+		 *
+		 * @param array $exclude_posts excluded post types.
+		 *
+		 * @return array|mixed
+		 */
+		function bp_core_instructor_role_post_exclude( $exclude_posts ) {
+
+			if ( is_array( $exclude_posts ) ) {
+				$exclude_posts[] = 'bp-group-type';
+			}
+
+			return $exclude_posts;
+		}
+
+		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -292,7 +313,7 @@ add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db
  *
  * @return array Return the names or objects of the taxonomies which are registered for the requested object or object type
  */
-function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies = array(), $post_type ) {
+function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type ) {
 
 	delete_blog_option( bp_get_root_blog_id(), "bp_search_{$post_type}_tax_author" );
 	return array_diff( $taxonomies, array( 'author' ) );

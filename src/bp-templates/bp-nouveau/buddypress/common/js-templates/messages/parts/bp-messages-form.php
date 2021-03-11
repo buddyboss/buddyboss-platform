@@ -6,6 +6,8 @@
 		<a href="#" class="bp-close-compose-form"><span class="bb-icons bb-icon-x"></span></a>
 	</div>
 
+	<div class="bp-messages-feedback"></div>
+
 	<select
 		name="send_to[]"
 		class="send-to-input"

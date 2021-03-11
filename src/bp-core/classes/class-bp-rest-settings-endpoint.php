@@ -270,23 +270,52 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( bp_is_active( 'moderation' ) ) {
+			$confirmation = array();
+			if ( bp_is_active( 'activity' ) ) {
+				$confirmation[] = esc_html__( 'See blocked member\'s posts', 'buddyboss' );
+			}
+
+			$confirmation[] = esc_html__( 'Mention this member in posts', 'buddyboss' );
+
+			if ( bp_is_active( 'groups' ) ) {
+				$confirmation[] = esc_html__( 'Invite this member to groups', 'buddyboss' );
+			}
+
+			if ( bp_is_active( 'messages' ) ) {
+				$confirmation[] = esc_html__( 'Message this member', 'buddyboss' );
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$confirmation[] = esc_html__( 'Add this member as a connection', 'buddyboss' );
+			}
+
+			$notes = '';
+			if ( bp_is_active( 'friends' ) ) {
+				$notes .= esc_html__( 'This action will also remove this member from your connections and send a report to the site admin. ', 'buddyboss' );
+			}
+
+			$notes .= esc_html__( 'Please allow a few minutes for this process to complete.', 'buddyboss' );
+
 			// Blocking Settings.
 			$results['bpm_blocking_member_blocking']        = bp_is_moderation_member_blocking_enable( false );
 			$results['bpm_blocking_auto_suspend']           = bp_is_moderation_auto_suspend_enable( false );
 			$results['bpm_blocking_auto_suspend_threshold'] = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 			$results['bpm_blocking_email_notification']     = bp_is_moderation_blocking_email_notification_enable( false );
+			$results['bpm_blocking_confirmation']           = $confirmation;
+			$results['bpm_blocking_note']                   = $notes;
 
 			// Reporting Settings.
 			$results['bpm_reporting_content_reporting']   = $this->bp_rest_reporting_content_type();
 			$results['bpm_reporting_auto_hide']           = $this->bp_rest_reporting_auto_hide();
 			$results['bpm_reporting_auto_hide_threshold'] = $this->bp_rest_reporting_auto_hide_threshold();
 			$results['bpm_reporting_email_notification']  = bp_is_moderation_reporting_email_notification_enable( false );
+
 		}
 
 		// Groups settings.
 		if ( bp_is_active( 'groups' ) ) {
 			// Group Settings.
-			$results['bp_restrict_group_creation']           = bp_restrict_group_creation();
+			$results['bp_restrict_group_creation']           = ! bp_user_can_create_groups();
 			$results['bp-disable-group-avatar-uploads']      = bp_disable_group_avatar_uploads();
 			$results['bp-disable-group-cover-image-uploads'] = bp_disable_group_cover_image_uploads();
 

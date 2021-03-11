@@ -241,7 +241,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -325,7 +325,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -484,6 +484,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			if (
 				! bp_is_active( 'groups' )
 				|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+				|| ! bp_is_group_albums_support_enabled()
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -493,6 +494,23 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					)
 				);
 			}
+		}
+
+		if (
+			true === $retval &&
+			(
+				! isset( $request['group_id'] ) ||
+				empty( $request['group_id'] )
+			) &&
+			! bp_is_profile_albums_support_enabled()
+		) {
+			$retval = new WP_Error(
+				'bp_rest_invalid_permission',
+				__( 'You don\'t have a permission to create an album.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
 		}
 
 		/**
@@ -647,6 +665,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			if (
 				! bp_is_active( 'groups' )
 				|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+				|| ! bp_is_group_albums_support_enabled()
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -656,6 +675,23 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					)
 				);
 			}
+		}
+
+		if (
+			true === $retval &&
+			(
+				! isset( $request['group_id'] ) ||
+				empty( $request['group_id'] )
+			) &&
+			! bp_is_profile_albums_support_enabled()
+		) {
+			$retval = new WP_Error(
+				'bp_rest_invalid_permission',
+				__( 'You don\'t have a permission to update an album.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
 		}
 
 		/**
