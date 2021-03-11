@@ -118,7 +118,7 @@ class BP_Registration_Theme_Compat {
 
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => !empty ( $actual_page_id ) ? $actual_page_id : 0,
+				'ID'             => ! empty( $actual_page_id ) ? $actual_page_id : 0,
 				'post_title'     => $title,
 				'post_author'    => 0,
 				'post_date'      => 0,

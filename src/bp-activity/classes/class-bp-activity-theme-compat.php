@@ -103,7 +103,7 @@ class BP_Activity_Theme_Compat {
 		$activity_page_id = bp_core_get_directory_page_id( 'activity' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => !empty( $activity_page_id ) ? $activity_page_id : 0,
+				'ID'             => ! empty( $activity_page_id ) ? $activity_page_id : 0,
 				'post_title'     => bp_get_directory_title( 'activity' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -169,7 +169,7 @@ class BP_Activity_Theme_Compat {
 		$activity_page_id = bp_core_get_directory_page_id( 'activity' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => !empty( $activity_page_id ) ? $activity_page_id : 0,
+				'ID'             => ! empty( $activity_page_id ) ? $activity_page_id : 0,
 				'post_title'     => __( 'News Feed', 'buddyboss' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
