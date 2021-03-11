@@ -1500,9 +1500,11 @@ function bp_video_get_edit_activity_data( $activity ) {
 				$thumb        = '';
 				if ( $get_existing ) {
 					$file  = get_attached_file( $get_existing );
-					$type  = pathinfo( $file, PATHINFO_EXTENSION );
-					$data  = file_get_contents( $file ); // phpcs:ignore
-					$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+					if ( file_exists( $file ) ) {
+						$type  = pathinfo( $file, PATHINFO_EXTENSION );
+						$data  = file_get_contents( $file ); // phpcs:ignore
+						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+                    }
 				}
 
 				$activity['video'][] = array(
@@ -1515,7 +1517,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'activity_id' => $video->activity_id,
 					'type'        => 'video',
 					'url'         => wp_get_attachment_url( $video->attachment_id ),
-					'size'        => filesize( get_attached_file( ( $video->attachment_id ) ) ),
+					'size'        => ( file_exists( get_attached_file( ( $video->attachment_id ) ) ) ) ? filesize( get_attached_file( ( $video->attachment_id ) ) ) : 0,
 					'saved'       => true,
 					'menu_order'  => $video->menu_order,
 				);
