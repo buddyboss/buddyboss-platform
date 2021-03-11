@@ -1676,6 +1676,7 @@ function bp_activity_media_add( $media ) {
 
 				// update activity meta
 				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+				bp_activity_update_meta( $activity_id, 'bp_media_id', $media->id );
 
 				// save attachment meta for activity
 				update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
@@ -1853,6 +1854,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 						// update activity meta to tell it is media activity.
 						bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+						bp_activity_update_meta( $activity_id, 'bp_media_id', $old_media->id );
 
 						// save attachment meta for activity.
 						update_post_meta( $old_media->attachment_id, 'bp_media_activity_id', $activity_id );
@@ -1998,12 +2000,12 @@ function bp_activity_document_add( $document ) {
 
 				// update activity meta.
 				bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+				bp_activity_update_meta( $activity_id, 'bp_document_id', $document->id );
 
 				// save attachment meta for activity.
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 				if ( ! empty( $parent_activity_id ) ) {
-
 					$document_activity                    = new BP_Activity_Activity( $activity_id );
 					$document_activity->secondary_item_id = $parent_activity_id;
 					$document_activity->save();
@@ -2175,6 +2177,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 						// update activity meta to tell it is document activity.
 						bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+						bp_activity_update_meta( $activity_id, 'bp_document_id', $old_document->id );
 
 						// save attachment meta for activity.
 						update_post_meta( $old_document->attachment_id, 'bp_document_activity_id', $activity_id );
@@ -2295,7 +2298,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if( is_a( $blog_post, 'WP_Post' ) ) {
-			$content = bp_create_excerpt( html_entity_decode( $blog_post->post_content ) );
+			$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
 			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );

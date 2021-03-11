@@ -462,7 +462,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -501,7 +501,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$topic = get_post( $request['id'] );
+		$topic = bbp_get_topic( $request['id'] );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $topic, $request )
@@ -534,7 +534,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -544,7 +544,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$topic = get_post( $request['id'] );
+		$topic = bbp_get_topic( $request['id'] );
 
 		if ( true === $retval && empty( $topic->ID ) ) {
 			$retval = new WP_Error(
@@ -700,21 +700,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if (
 			empty( $topic_content )
 			&& ! (
+				! empty( $request['bbp_media'] ) ||
+				! empty( $request['bbp_documents'] ) ||
 				(
-					function_exists( 'bp_is_forums_media_support_enabled' )
-					&& false !== bp_is_forums_media_support_enabled()
-					&& ! empty( $request['bbp_media'] )
-				)
-				|| (
-					function_exists( 'bp_is_forums_gif_support_enabled' )
-					&& false !== bp_is_forums_gif_support_enabled()
-					&& ! empty( $request['bbp_media_gif']['url'] )
-					&& ! empty( $request['bbp_media_gif']['mp4'] )
-				)
-				|| (
-					function_exists( 'bp_is_forums_document_support_enabled' )
-					&& false !== bp_is_forums_document_support_enabled()
-					&& ! empty( $request['bbp_documents'] )
+					! empty( $request['bbp_media_gif']['url'] ) &&
+					! empty( $request['bbp_media_gif']['mp4'] )
 				)
 			)
 		) {
@@ -870,6 +860,46 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 						);
 					}
 				}
+			}
+		}
+
+		$topic_forum = ! empty( $forum_id ) ? $forum_id : 0;
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_media ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_document ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_gif ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
 			}
 		}
 
@@ -1075,7 +1105,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_new_topic_post_extras', $topic_id );
 
-		$topic         = get_post( $topic_id );
+		$topic         = bbp_get_topic( $topic_id );
 		$fields_update = $this->update_additional_fields_for_object( $topic, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
@@ -1379,21 +1409,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if (
 			empty( $topic_content )
 			&& ! (
+				! empty( $request['bbp_media'] ) ||
+				! empty( $request['bbp_documents'] ) ||
 				(
-					function_exists( 'bp_is_forums_media_support_enabled' )
-					&& false !== bp_is_forums_media_support_enabled()
-					&& ! empty( $request['bbp_media'] )
-				)
-				|| (
-					function_exists( 'bp_is_forums_gif_support_enabled' )
-					&& false !== bp_is_forums_gif_support_enabled()
-					&& ! empty( $request['bbp_media_gif']['url'] )
-					&& ! empty( $request['bbp_media_gif']['mp4'] )
-				)
-				|| (
-					function_exists( 'bp_is_forums_document_support_enabled' )
-					&& false !== bp_is_forums_document_support_enabled()
-					&& ! empty( $request['bbp_documents'] )
+					! empty( $request['bbp_media_gif']['url'] ) &&
+					! empty( $request['bbp_media_gif']['mp4'] )
 				)
 			)
 		) {
@@ -1404,6 +1424,46 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		$topic_forum = ! empty( $forum_id ) ? $forum_id : 0;
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_media ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_document ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_gif ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		/** Topic Blacklist */
@@ -1610,7 +1670,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_edit_topic_post_extras', $topic_id );
 
-		$topic         = get_post( $topic_id );
+		$topic         = bbp_get_topic( $topic_id );
 		$topic->edit   = true;
 		$fields_update = $this->update_additional_fields_for_object( $topic, $request );
 
@@ -1664,7 +1724,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( true === $retval ) {
-			$topic = get_post( $request['id'] );
+			$topic = bbp_get_topic( $request['id'] );
 			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'delete_topic', $request['id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -1705,7 +1765,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$topic = get_post( $request['id'] );
+		$topic = bbp_get_topic( $request['id'] );
 
 		$previous = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $topic, $request )
@@ -2492,6 +2552,24 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$form_base      = sprintf( '/%s/%s/', $this->forum_endpoint->namespace, $this->forum_endpoint->rest_base );
 			$links['forum'] = array(
 				'href'       => rest_url( $form_base . $form_id ),
+				'embeddable' => true,
+			);
+		}
+
+		if (
+			function_exists( 'bbp_is_forum_group_forum' )
+			&& bbp_get_topic_forum_id( $post->ID )
+			&& bbp_is_forum_group_forum( bbp_get_topic_forum_id( $post->ID ) )
+			&& function_exists( 'groups_get_group' )
+		) {
+			$group = (
+				! empty( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $post->ID ) ) )
+				? groups_get_group( current( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $post->ID ) ) ) )
+				: ''
+			);
+
+			$links['group'] = array(
+				'href'       => rest_url( sprintf( '/%s/%s/', $this->namespace, 'groups' ) . $group->id ),
 				'embeddable' => true,
 			);
 		}

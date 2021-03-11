@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.5.3
+Tested up to: 5.6.2
 Requires PHP: 5.6.20
-Stable tag: 1.5.5
+Stable tag: 1.5.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform-pro.zip'
+3. Upload the file 'buddyboss-platform-plugin.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
@@ -56,6 +56,63 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.7.3 =
+* Groups - Fixed redirection issue when member leave the hidden social group
+* REST API - Performance Improvements
+
+= 1.5.7.2 =
+* Messages - Provided 'select all' option in Group Send Private Message screen
+* Messages - Improved and Fixed UI issues related to Group Message and Private Message screen
+* REST API - Code refactoring
+* Translations - Updates to refactor Hungarian, French, German, and German (formal) language files
+
+= 1.5.7.1 =
+* Messages - Fixed critical issue with sending a message when Social Groups component is not active
+* REST API - Code refactoring
+
+= 1.5.7 =
+* Member Access Controls - Added support to restrict list of social interaction based on Access Control settings provided in BuddyBoss Platform Pro
+* Activity - Fixed blog post activity showing Gutenberg block code issue
+* Activity - Fixed issue with comments disappearing when blog post updated
+* Messages - Fixed message threads listing scroll issue in the private message screen
+* Media - Fixed 'select album' option shows even when it is disabled in the settings
+* Media - Fixed media dropdown and popup layout issues
+* Groups - Fixed send invite members listing scroll issue at the time of creating and managing group
+* Groups - Fixed cover image layout issue at the time of creating a group
+* Groups - Fixed group status not translatable issue in the email
+* Forums - Fixed issue with Forum and Discussion non-English slug
+* Profiles - Fixed issue with radio and checkbox fields in Profile Search
+* LearnDash - Fixed issue with group name not synced on update
+* Moderation - Fixed Reporting Category taxonomy showing in nav menu issue
+* Compatibility - Fixed group roles label not working with 'Instructor Role for LearnDash' plugin
+* Compatibility - Fixed issue registration issue with 'Google Captcha Pro' plugin
+* Compatibility - Fixes for WordPress 5.6 and PHP 8.0
+* REST API - Provided support and new endpoints added for the 'Access Control' feature
+* REST API - Added caching support for all REST APIs
+
+= 1.5.6 =
+* Moderation - New Moderation Component added
+* Moderation - Added option to allow members Block each other
+* Moderation - Added option to allow members Report other members content
+* Groups - Fixed activity access for hidden social groups
+* Groups - Fixed send message members listing scroll issue
+* Forums - Fixed forum reply copy-paste content formatting
+* Forums - Fixed Forum directory search option not working as expected
+* Forums - Fixed discussion and reply, photos documents attachment issue
+* Activity - Fixed member profile, friend activity scope
+* Media - Improved photos directory page
+* Media - Provided option to Create Album and Move Photos while uploading
+* Media - Provided option to Create Folder and Move Document while uploading
+* Media - Provided option to Move Photos into Album from Activity
+* Media - Provided option to limit the number of Photos/Documents uploaded per batch
+* Messages - Code refactoring
+* REST API - New endpoints added for 'Moderation' feature
+* REST API - New endpoints added for 'Relevant Activity' feature
+
+= 1.5.5.1 =
+* Messages - Fixed message threads critical security bug
+* Messages - code refactoring
 
 = 1.5.5 =
 * Groups - Fixed group message media shows in the photos tab

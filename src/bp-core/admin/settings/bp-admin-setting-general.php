@@ -97,7 +97,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ) );
 
 		// Private Network Settings.
-		$this->add_field( 'bp-enable-private-network', __( 'Private Network', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
+		$this->add_field( 'bp-enable-private-network', __( 'Private Website', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
 		$enable_private_network = bp_enable_private_network();
 		if ( ! $enable_private_network ) {
 			$this->add_field( 'bp-enable-private-network-public-content', __( 'Public Content', 'buddyboss' ), 'bp_admin_setting_callback_private_network_public_content' );
