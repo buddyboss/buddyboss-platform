@@ -370,8 +370,10 @@ function bp_nouveau_ajax_new_activity_comment() {
 	if ( ! is_user_logged_in() ) {
 		wp_send_json_error( $response );
 	}
+	
+	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
 
-	if ( empty( $_POST['content'] ) ) {
+	if ( empty( $content ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => sprintf(
@@ -389,7 +391,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	$comment_id = bp_activity_new_comment(
 		array(
 			'activity_id' => $_POST['form_id'],
-			'content'     => $_POST['content'],
+			'content'     => $content,
 			'parent_id'   => $_POST['comment_id'],
 		)
 	);

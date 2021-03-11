@@ -65,6 +65,9 @@ add_action( 'init', 'bp_media_download_url_file' );
 add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
+//Check content empty or not for activity gif
+add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
+
 /**
  * Add Media items for search
  */
@@ -1010,8 +1013,8 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
  */
 function bp_media_activity_embed_gif_content( $activity_id ) {
 
-	$gif_data = bp_activity_get_meta( bp_get_activity_id(), '_gif_data', true );
-
+	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+	
 	if ( empty( $gif_data ) ) {
 		return;
 	}
@@ -2300,4 +2303,16 @@ function bp_media_get_edit_activity_data( $activity ) {
 	}
 
 	return $activity;
+}
+/**
+ * Check content empty for activity GIF
+ *
+ * @return string
+ */
+function bb_check_is_activity_content_empty() {
+	if ( empty( $_POST['content'] ) && isset( $_POST['gif_data']) ) {
+		return '&nbsp;';
+	} else {
+		return $_POST['content'];
+	}
 }
