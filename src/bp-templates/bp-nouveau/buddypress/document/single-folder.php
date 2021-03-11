@@ -56,7 +56,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
-									} elseif ( ! bp_is_group() && $can_add_btn ) {
+									} elseif ( ! bp_is_group() && $can_add_btn && bb_user_can_create_document() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>

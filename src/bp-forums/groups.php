@@ -50,9 +50,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$this->nav_item_name = __( 'Discussions', 'buddyboss' );
 
 			// Component slugs (hardcoded to match Forums 1.x functionality)
-			$this->slug       = get_option( '_bbp_forum_slug', 'forum' );
-			$this->topic_slug = get_option( '_bbp_topic_slug', 'discussions' );
-			$this->reply_slug = get_option( '_bbp_reply_slug', 'reply' );
+			$this->slug       = urlencode( get_option( '_bbp_forum_slug', 'forum' ) );
+			$this->topic_slug = urlencode( get_option( '_bbp_topic_slug', 'discussions' ) );
+			$this->reply_slug = urlencode( get_option( '_bbp_reply_slug', 'reply' ) );
 
 			// Forum component is visible
 			$this->visibility = 'public';
@@ -131,7 +131,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			/** Caps */
 
 			// Only add these filters if inside a group forum
-			if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) ) {
+			if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( $this->slug ) ) {
 
 				// Allow group member to view private/hidden forums
 				add_filter( 'bbp_map_meta_caps', array( $this, 'map_group_forum_meta_caps' ), 10, 4 );

@@ -99,11 +99,11 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api {GET} /wp-json/buddyboss/v1/members/details Members Details
-	 * @apiName GetBBMembersDetails
-	 * @apiGroup Members
+	 * @api            {GET} /wp-json/buddyboss/v1/members/details Members Details
+	 * @apiName        GetBBMembersDetails
+	 * @apiGroup       Members
 	 * @apiDescription Retrieve Members details(includes tabs and order_options)
-	 * @apiVersion 1.0.0
+	 * @apiVersion     1.0.0
 	 */
 	public function get_items( $request ) {
 		$retval = array();
@@ -172,17 +172,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @apiDescription Retrieve Member detail tabs.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
-	 * @apiParam {Number} id A unique numeric ID for the member.
+	 * @apiParam       {Number} id A unique numeric ID for the member.
 	 */
 	public function get_item( $request ) {
 		$retval = array();
 		global $bp;
+		$tmp_bp = $bp;
 
 		$current_user_id = $request->get_param( 'id' );
-		$this->user_id   = $current_user_id;
 		if ( empty( $current_user_id ) ) {
 			$current_user_id = bp_loggedin_user_id();
 		}
+
+		$this->user_id = $current_user_id;
 
 		if ( empty( $current_user_id ) ) {
 			return new WP_Error(
@@ -206,7 +208,53 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
+		$url = bp_core_get_user_domain( $current_user_id );
+
+		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
+
+		/**
+		 * Member navigation tabs creation start
+		 *
+		 * Member Navigation tab only setup on member page request so for fetch member's tabs we need set member url as `REQUEST_URI` forcefully and
+		 * Once our job done switch back to original url.
+		 * With below process BuddyPress state might be change so we need to rest it once our job done.
+		 *
+		 * After set Member url forcefully we need to re-execute core hook which load component and setup tabs for given group.
+		 */
+		$_SERVER['REQUEST_URI'] = $url;
+
+		bp_core_set_uri_globals();
+
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
+
+		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
+		remove_action( 'bp_init', 'bp_register_post_types', 2 );
+		remove_action( 'bp_init', 'bp_setup_title', 8 );
+		remove_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
+		remove_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
+		remove_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
+		remove_action( 'bp_init', 'bp_add_permastructs', 40 );
+		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
+		remove_all_actions( 'bp_actions' );
+
+		/**
+		 * Remove other hooks if needed.
+		 */
+		do_action( 'bp_rest_member_detail' );
+
+		do_action( 'bp_init' );
+
+		add_action( 'bp_init', 'bp_register_taxonomies', 2 );
+		add_action( 'bp_init', 'bp_register_post_types', 2 );
+		add_action( 'bp_init', 'bp_setup_title', 8 );
+		add_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
+		add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
+		add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
+		add_action( 'bp_init', 'bp_add_permastructs', 40 );
+		add_action( 'bp_init', 'bp_init_background_updater', 50 );
+
+		$_SERVER['REQUEST_URI'] = $tempurl;
 
 		$profile_tabs = array();
 		$default_tab  = 'profile';
@@ -234,8 +282,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				$id   = $nav['slug'];
 
 				$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
-				if (
-					is_array( $hidden_tabs )
+				if ( is_array( $hidden_tabs )
 					&& ! empty( $hidden_tabs )
 					&& in_array( $id, $hidden_tabs, true )
 				) {
@@ -292,6 +339,11 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$retval['tabs'] = array_values( $profile_tabs );
 
+		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
+		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+
+		$bp = $tmp_bp;
+		unset( $tmp_bp );
 		$response = rest_ensure_response( $retval );
 
 		/**
@@ -318,7 +370,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -708,7 +760,6 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					$menu       = wp_get_nav_menu_object( $locations['header-my-account'] );
 					$menu_items = wp_get_nav_menu_items( $menu->term_id );
 					return $this->bp_rest_build_tree( $menu_items, 0 );
-
 				} else {
 					return $this->bp_rest_default_menu();
 				}
@@ -850,8 +901,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				'count' => '',
 			);
 
-			if (
-				function_exists( 'bp_is_activity_tabs_active' )
+			if ( function_exists( 'bp_is_activity_tabs_active' )
 				&& bp_is_activity_tabs_active()
 			) {
 
@@ -1065,7 +1115,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		if ( bp_is_active( 'forums' ) ) {
 			$user_domain = bp_loggedin_user_domain();
-			$forums_link = trailingslashit( $user_domain . BP_FORUMS_SLUG );
+			$forums_link = trailingslashit( $user_domain . bbp_get_root_slug() );
 
 			$item_forums = array(
 				'ID'       => 'forums',
@@ -1194,8 +1244,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'count' => '',
 		);
 
-		// phpcs:ignore
-		$items = json_decode( json_encode( $items ), false );
+	     // phpcs:ignore
+	     $items = json_decode( wp_json_encode( $items ), false );
 
 		return $items;
 	}
@@ -1203,7 +1253,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Recursive function to create child level elements.
 	 *
-	 * @param array $elements Array elements.
+	 * @param array $elements  Array elements.
 	 * @param int   $parent_id Parent element id.
 	 *
 	 * @return array
@@ -1225,5 +1275,20 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		return $branch;
 	}
 
+	/**
+	 * Unset group component while using this
+	 * - added for phpunit fix.
+	 *
+	 * @param boolean $is_current_component Check is valid component.
+	 * @param string  $component            Current component name.
+	 *
+	 * @return boolean
+	 */
+	public function bp_rest_is_current_component( $is_current_component, $component ) {
+		if ( 'groups' !== $component ) {
+			return $is_current_component;
+		}
+		return false;
+	}
 
 }

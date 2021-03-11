@@ -488,6 +488,7 @@ function bp_core_get_packaged_component_ids() {
 		'settings',
 		'notifications',
 		'search',
+        'moderation'
 	);
 
 	return $components;
@@ -787,6 +788,7 @@ function bp_core_get_directory_page_default_titles() {
 		'new_forums_page' => __( 'Forums', 'buddyboss' ),
 		'terms'           => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
+		'moderation'      => __( 'Moderation', 'buddyboss' ),
 	);
 
 	/**
@@ -2636,6 +2638,46 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
+		'moderation'    => array(
+			'title'                => __( 'Moderation', 'buddyboss' ),
+			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
+			'settings'             => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-moderation',
+					),
+					'admin.php'
+				)
+			),
+			'default'              => false,
+			'deactivation_confirm' => true,
+			'deactivation_message' => __( '<p>Please confirm you want to deactivate the Moderation component.</p>
+			<h4>On Deactivation:</h4>
+			<ul>
+				<li>All suspended members will regain permission to login and their content will be unhidden</li>
+				<li>Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.</li>
+				<li>All hidden content will be unhidden.</li>
+			</ul>
+			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
+		),
+        // @todo: used for bp-performance will enable in feature.
+        /*
+		'performance'       => array(
+			'title'       => __( 'API Caching', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-performance',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss' ),
+			'default'     => false,
+		),
+        */
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -2656,6 +2698,22 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => false,
 		),
 	);
+
+	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+		$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ).'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+		$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
+		if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>') ) {
+			$optional_components['messages']['settings'] = bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-messages',
+					),
+					'admin.php'
+				)
+			);
+		}
+	}
 
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
@@ -3896,6 +3954,22 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
+		'content-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}' style='color: #007CFF;font-size: 14px;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px; display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
+		),
+		'user-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}' style='font-size: 14px;color: #007CFF;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px;display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
+		),
 	);
 
 	/**
@@ -4057,7 +4131,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$bbp_new_forum_reply = array(
-		'description' => __( 'A member has replied to a forum discussion that the participant is following.', 'buddyboss' ),
+		'description' => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_bbp_new_forum_reply',
 			'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
@@ -4075,6 +4149,16 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_group_messages_new_message',
 			'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
 		),
+	);
+
+	$content_moderation_email = array(
+		'description' => __( 'When content is automatically hidden due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
+	);
+
+	$user_moderation_email = array(
+		'description' => __( 'When a member has been automatically suspended due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
 	);
 
 	$types = array(
@@ -4098,6 +4182,8 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
 		'group-message-email'                => $group_message_email,
+		'content-moderation-email'           => $content_moderation_email,
+		'user-moderation-email'              => $user_moderation_email,
 	);
 
 	/**
@@ -5089,36 +5175,149 @@ function bp_core_upload_max_size() {
 }
 
 /**
- * Function deletes Transient based on the transient name specified.
+ * Function will return the default fields groups and avatar/cover is enabled or not.
  *
- * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
- *
- * @global type $wpdb
- *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.4
  */
-function bp_core_delete_transient_query( $transient_name_prefix ) {
-	global $wpdb;
-	$sql = $wpdb->prepare(
-		"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
-		$transient_name_prefix
-	);
+function bp_core_profile_completion_steps_options() {
 
-	$keys = $wpdb->get_col( $sql );
+	/* Profile Groups and Profile Cover Photo VARS. */
+	$options                              = array();
+	$options['profile_groups']            = bp_xprofile_get_groups();
+	$options['is_profile_photo_disabled'] = bp_disable_avatar_uploads();
+	$options['is_cover_photo_disabled']   = bp_disable_cover_image_uploads();
 
-	if ( ! empty( $keys ) ) {
-		foreach ( $keys as $transient ) {
-			delete_transient( str_replace( '_transient_', '', $transient ) );
-		}
-	}
+	/**
+	 * Filters will return the default fields groups and avatar/cover is enabled or not.
+	 *
+	 * @param array $options of default Profile Groups and Profile Cover/Photo enabled.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	return apply_filters( 'bp_core_profile_completion_steps_options', $options );
 }
 
 /**
- * Function which return the profile completion key.
+ * Function trigger when profile updated. Profile field added/updated/deleted.
+ * Deletes Profile Completion Transient here.
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_core_get_profile_completion_key() {
+function bp_core_xprofile_update_profile_completion_user_progress() {
 
-	return 'bbprofilecompletion';
+	$user_id            = get_current_user_id();
+	$steps_options      = bp_core_profile_completion_steps_options();
+	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
+	$profile_photo_type = array();
+
+	if ( ! $steps_options['is_profile_photo_disabled'] ) {
+		$profile_photo_type[] = 'profile_photo';
+	}
+	if ( ! $steps_options['is_cover_photo_disabled'] ) {
+		$profile_photo_type[] = 'cover_photo';
+	}
+
+	// Get logged in user Progress.
+	$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_photo_type );
+	bp_update_user_meta( $user_id, 'bp_profile_completion_widgets', $user_progress_arr );
+
+}
+
+/**
+ * Function will return the user progress based on the settings you provided.
+ *
+ * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in
+ *                        progress.
+ *
+ * @return array $response user progress based on widget settings.
+ */
+function bp_xprofile_get_selected_options_user_progress( $settings ) {
+
+	$profile_groups     = $settings['profile_groups'];
+	$profile_photo_type = $settings['profile_photo_type'];
+
+	// Get logged in user Progress.
+	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	if ( ! $get_user_data ) {
+		bp_core_xprofile_update_profile_completion_user_progress();
+		$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	}
+
+	$response                     = array();
+	$response['photo_type']       = array();
+	$response['groups']           = array();
+	$response['total_fields']     = 0;
+	$response['completed_fields'] = 0;
+	$total_count                  = 0;
+	$total_completed_count        = 0;
+
+	if ( ! empty( $profile_photo_type ) ) {
+		foreach ( $profile_photo_type as $option ) {
+			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
+				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
+				$total_count                             = ++ $total_count;
+				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
+					$total_completed_count = ++ $total_completed_count;
+				}
+			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
+				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
+				$total_count                           = ++ $total_count;
+				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
+					$total_completed_count = ++ $total_completed_count;
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $profile_groups ) ) {
+		foreach ( $profile_groups as $group ) {
+			if ( isset( $get_user_data['groups'][ $group ] ) ) {
+				$response['groups'][ $group ] = $get_user_data['groups'][ $group ];
+				$total_count                  = $total_count + (int) $get_user_data['groups'][ $group ]['group_total_fields'];
+				if ( isset( $get_user_data['groups'][ $group ]['group_completed_fields'] ) && (int) $get_user_data['groups'][ $group ]['group_completed_fields'] > 0 ) {
+					$total_completed_count = $total_completed_count + (int) $get_user_data['groups'][ $group ]['group_completed_fields'];
+				}
+			}
+
+		}
+	}
+
+	if ( $total_count > 0 ) {
+		$response['total_fields'] = $total_count;
+	}
+
+	if ( $total_completed_count > 0 ) {
+		$response['completed_fields'] = $total_completed_count;
+	}
+
+	/**
+	 * Filters will return the user progress based on the settings you provided.
+	 *
+	 * @param array $response           user progress array.
+	 * @param array $profile_groups     user profile groups.
+	 * @param array $profile_photo_type user profile photo/cover data.
+	 * @param array $get_user_data      user profile cached data.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 */
+	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
+
+}
+
+/**
+ * Function trigger when admin make an profile field or settings changes on backend.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_core_xprofile_clear_all_user_progress_cache() {
+
+	delete_metadata(
+		'user',        // the meta type.
+		0,             // this doesn't actually matter in this call.
+		'bp_profile_completion_widgets', // the meta key to be removed everywhere.
+		'',            // this also doesn't actually matter in this call.
+		true           // tells the function "yes, please remove them all".
+	);
+
 }

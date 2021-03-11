@@ -185,7 +185,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					'description' => '',
 					'type'        => $field['type'],
 					'required'    => $field['required'],
-					'options'     => '',
+					'options'     => array(),
 					'member_type' => '',
 				);
 			}
@@ -227,8 +227,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						$field    = $fields_endpoint->assemble_response_data( $field, $request );
 						$fields[] = array(
 							'id'          => 'field_' . $field['id'],
-							'label'       => $field['name'],
-							'description' => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'label'       => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'description' => $field['description']['rendered'],
 							'type'        => $field['type'],
 							'required'    => $field['is_required'],
 							'options'     => $field['options'],
@@ -254,16 +254,19 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				'description' => '',
 				'type'        => 'checkbox',
 				'required'    => '',
-				'options'     => '',
+				'options'     => array(),
 			);
+
+			$not_required = array( 'signup_blog_url', 'signup_blog_title' );
+
 			foreach ( $blog_fields as $k => $field ) {
 				$fields[] = array(
 					'id'          => $k,
 					'label'       => $field['label'],
 					'description' => '',
 					'type'        => $field['type'],
-					'required'    => $field['required'],
-					'options'     => '',
+					'required'    => ( ! in_array( $k, $not_required, true ) ? $field['required'] : false ),
+					'options'     => array(),
 				);
 			}
 
@@ -275,15 +278,17 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				'required'    => true,
 				'options'     => array(
 					array(
-						'id'                => 'public',
+						'id'                => '',
 						'type'              => 'option',
 						'name'              => __( 'Yes', 'buddyboss' ),
+						'value'             => 'public',
 						'is_default_option' => true,
 					),
 					array(
-						'id'                => 'private',
+						'id'                => '',
 						'type'              => 'option',
 						'name'              => __( 'No', 'buddyboss' ),
+						'value'             => 'private',
 						'is_default_option' => false,
 					),
 				),
@@ -601,7 +606,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			? bp_get_signup_username_value()
 			: (
 				isset( $_POST['signup_username'] )
-				? filter_input( INPUT_POST, 'signup_username' )
+				? sanitize_text_field( wp_unslash( $_POST['signup_username'] ) )
 				: ''
 			)
 		);
@@ -610,7 +615,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			? bp_get_signup_email_value()
 			: (
 				isset( $_POST['signup_email'] )
-				? filter_input( INPUT_POST, 'signup_email' )
+				? sanitize_text_field( wp_unslash( $_POST['signup_email'] ) )
 				: ''
 			)
 		);
@@ -718,11 +723,11 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		// Finally, let's check the blog details, if the user wants a blog and blog creation is enabled.
-		if ( isset( $_POST['signup_with_blog'] ) ) {
+		if ( isset( $_POST['signup_with_blog'] ) && ! empty( $_POST['signup_with_blog'] ) ) {
 			$active_signup = bp_core_get_root_option( 'registration' );
 
 			if ( 'blog' === $active_signup || 'all' === $active_signup ) {
-				$blog_details = bp_core_validate_blog_signup( $_POST['signup_blog_url'], $_POST['signup_blog_title'] ); // phpcs:ignore
+				$blog_details = bp_core_validate_blog_signup( ( isset( $_POST['signup_blog_url'] ) ? $_POST['signup_blog_url'] : '' ), ( isset( $_POST['signup_blog_title'] ) ? $_POST['signup_blog_title'] : '' ) ); // phpcs:ignore
 
 				// If there are errors with blog details, set them for display.
 				if ( ! empty( $blog_details['errors']->errors['blogname'] ) ) {
@@ -825,7 +830,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		} else {
 			$wp_user_id = bp_core_signup_user(
 				$user_name,
-				filter_input( INPUT_POST, 'signup_password' ),
+				sanitize_text_field( wp_unslash( $_POST['signup_password'] ) ),
 				$user_email,
 				$usermeta
 			);

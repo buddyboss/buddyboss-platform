@@ -253,7 +253,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			foreach ( $nav_items as $nav ) {
 				$nav = $nav->getArrayCopy();
 
-				if ( 'public' !== $group->status && $nav['slug'] === 'courses' && ( ! groups_is_user_member( bp_loggedin_user_id(), $group->id ) && ! bp_current_user_can( 'bp_moderate' ) ) ) {
+				if ( 'public' !== $group->status && 'courses' === $nav['slug'] && ( ! groups_is_user_member( bp_loggedin_user_id(), $group->id ) && ! bp_current_user_can( 'bp_moderate' ) ) ) {
 					continue;
 				}
 
@@ -289,6 +289,8 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 					$parent_slug .= '_media';
 				} elseif ( 'members' === $nav['slug'] ) {
 					$parent_slug .= '_members';
+				} elseif ( 'messages' === $nav['slug'] ) {
+					$parent_slug .= '_messages';
 				}
 
 				$sub_navs = array();
@@ -371,7 +373,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -472,6 +474,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			'type' => array(
 				'description'       => __( 'Filter by.. active(Last Active), popular(Most Members), newest(Newly Created), alphabetical(Alphabetical)', 'buddyboss' ),
 				'type'              => 'string',
+				'default'           => 'active',
 				'enum'              => array( 'active', 'popular', 'newest', 'alphabetical' ),
 				'validate_callback' => 'rest_validate_request_arg',
 			),
@@ -514,35 +517,35 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return mixed|void
 	 */
-	public function bp_rest_legacy_get_groups_directory_nav_items(){
+	public function bp_rest_legacy_get_groups_directory_nav_items() {
 		$nav_items = array();
 
 		$nav_items['all'] = array(
-			'text'      => __( 'All Groups', 'buddyboss' ),
-			'slug'      => 'all',
-			'count'     => bp_get_total_group_count(),
-			'position'  => 5,
+			'text'     => __( 'All Groups', 'buddyboss' ),
+			'slug'     => 'all',
+			'count'    => bp_get_total_group_count(),
+			'position' => 5,
 		);
 
 		if ( is_user_logged_in() ) {
 
 			$my_groups_count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
 
-			// If the user has groups create a nav item
+			// If the user has groups create a nav item.
 			if ( $my_groups_count ) {
 				$nav_items['personal'] = array(
 					'text'     => __( 'My Groups', 'buddyboss' ),
-					'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'slug'     => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 					'count'    => $my_groups_count,
 					'position' => 15,
 				);
 			}
 
-			// If the user can create groups, add the create nav
+			// If the user can create groups, add the create nav.
 			if ( bp_user_can_create_groups() ) {
 				$nav_items['create'] = array(
 					'text'     => __( 'Create a Group', 'buddyboss' ),
-					'slug'      => 'create', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'slug'     => 'create', // slug is used because BP_Core_Nav requires it, but it's the scope.
 					'count'    => false,
 					'position' => 999,
 				);
@@ -562,7 +565,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 */
 	protected function get_group_tab_count( $slug, $type ) {
 		$count   = 0;
-		$user_id = ! empty( get_current_user_id() ) ? ( get_current_user_id() ) : false;
+		$user_id = ( ! empty( get_current_user_id() ) ? get_current_user_id() : false );
 		switch ( $slug ) {
 			case 'all':
 				$args = array( 'type' => $type );
@@ -579,7 +582,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 					array(
 						'type'        => $type,
 						'user_id'     => $user_id,
-						'show_hidden' => true
+						'show_hidden' => true,
 					)
 				);
 				if ( ! empty( $groups ) && isset( $groups['total'] ) ) {

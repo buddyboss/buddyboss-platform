@@ -304,7 +304,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -336,10 +336,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -651,6 +651,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		$response->add_links( $this->prepare_links( $user ) );
 
+		// Update current user's last activity.
+		if ( strpos( $request->get_route(), 'members/me' ) !== false && get_current_user_id() === $user->ID ) {
+			bp_update_user_last_activity();
+		}
+
 		/**
 		 * Filters user data returned from the API.
 		 *
@@ -710,6 +715,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			: ''
 		);
 
+		$data['create_friendship'] = ( bp_is_active( 'friends' ) && is_user_logged_in() && apply_filters( 'bp_rest_user_can_create_friendship', true, $user->ID ) );
+
 		$data['is_following'] = (bool) (
 		function_exists( 'bp_is_following' )
 			? bp_is_following(
@@ -722,7 +729,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		if ( 'edit' === $context ) {
-			$user_data = get_userdata( $user->ID );
+			$user_data                  = get_userdata( $user->ID );
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
 			$data['capabilities']       = (array) array_keys( $user_data->allcaps );
@@ -843,9 +850,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			$groups = bp_xprofile_get_groups(
 				array(
-					'user_id'          => $user_id,
-					'fetch_fields'     => true,
-					'fetch_field_data' => true,
+					'user_id'                        => $user_id,
+					'fetch_fields'                   => true,
+					'fetch_field_data'               => true,
+					'hide_empty_fields'              => true,
+					'repeater_show_main_fields_only' => false,
 				)
 			);
 
@@ -876,8 +885,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					$data['groups'][ $group->id ]['fields'][ $item->id ] = array(
 						'name'  => $item->name,
 						'value' => array(
-							'raw'          => $item->data->value,
-							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $item->data->value ),
+							'raw'          => $fields_endpoint->get_profile_field_raw_value( $item->data->value, $item ),
+							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $item->data->value, $item ),
 							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $item->data->value, $item ),
 						),
 					);
@@ -1133,6 +1142,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				'friendship_id'      => array(
 					'description' => __( 'A unique numeric ID for the friendship.', 'buddyboss' ),
 					'type'        => 'integer',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'create_friendship'  => array(
+					'description' => __( 'Logged in user can create friendship with current user.', 'buddyboss' ),
+					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
