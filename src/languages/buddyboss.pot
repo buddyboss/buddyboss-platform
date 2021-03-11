@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-03-09 14:27:44+00:00\n"
+"POT-Creation-Date: 2021-03-11 12:11:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -155,7 +155,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
 #: bp-core/bp-core-cssjs.php:259
 #: bp-moderation/classes/class-bp-moderation-activity.php:105
-#: bp-search/bp-search-functions.php:376 bp-search/bp-search-settings.php:908
+#: bp-search/bp-search-functions.php:376 bp-search/bp-search-settings.php:909
 msgid "Activity"
 msgstr ""
 
@@ -730,7 +730,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1725
 #: bp-moderation/classes/class-bp-moderation-activity-comment.php:104
-#: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:943
+#: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:944
 msgid "Activity Comments"
 msgstr ""
 
@@ -1023,8 +1023,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2882
 #: bp-core/admin/bp-core-admin-functions.php:1562
-#: bp-core/admin/bp-core-admin-pages.php:335
-#: bp-core/admin/bp-core-admin-pages.php:369
+#: bp-core/admin/bp-core-admin-pages.php:315
+#: bp-core/admin/bp-core-admin-pages.php:349
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:243 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
@@ -1106,7 +1106,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:738 bp-groups/bp-groups-template.php:739
 #: bp-groups/bp-groups-template.php:1474
 #: bp-groups/classes/class-bp-groups-list-table.php:646
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:282
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:304
 #: bp-media/classes/class-bp-media-component.php:163
 #: bp-media/classes/class-bp-media-privacy.php:52
 #: bp-xprofile/classes/class-bp-xprofile-component.php:182
@@ -1290,9 +1290,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:278
 #: bp-forums/classes/class-bp-forums-component.php:329
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:49
-#: bp-media/bp-media-filters.php:1374 bp-media/bp-media-settings.php:212
-#: bp-media/bp-media-settings.php:219 bp-media/bp-media-settings.php:226
-#: bp-media/bp-media-settings.php:233
+#: bp-media/bp-media-filters.php:1374 bp-media/bp-media-settings.php:208
+#: bp-media/bp-media-settings.php:215 bp-media/bp-media-settings.php:222
+#: bp-media/bp-media-settings.php:229
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1122
 #: bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:202
@@ -1936,13 +1936,13 @@ msgid "New post published"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:106
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:352
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:367
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:119
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
 #: bp-messages/bp-messages-functions.php:304
 #: bp-messages/bp-messages-template.php:2131
-#: bp-search/bp-search-settings.php:987 bp-settings/actions/export.php:35
+#: bp-search/bp-search-settings.php:988 bp-settings/actions/export.php:35
 msgid "%s"
 msgstr ""
 
@@ -2410,7 +2410,7 @@ msgstr ""
 #: bp-core/profile-search/bps-admin.php:85
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
-#: bp-media/bp-media-settings.php:1178 bp-media/bp-media-settings.php:1211
+#: bp-media/bp-media-settings.php:1194 bp-media/bp-media-settings.php:1227
 msgid "Description"
 msgstr ""
 
@@ -2601,7 +2601,7 @@ msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1279
-#: bp-search/bp-search-settings.php:477 bp-search/bp-search-settings.php:491
+#: bp-search/bp-search-settings.php:478 bp-search/bp-search-settings.php:492
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:14
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:59
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
@@ -2887,8 +2887,8 @@ msgid "All Groups"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2750
-#: bp-core/admin/settings/bp-admin-setting-groups.php:54
 #: bp-core/admin/settings/bp-admin-setting-groups.php:57
+#: bp-core/admin/settings/bp-admin-setting-groups.php:60
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
 #: bp-groups/bp-groups-admin.php:2551 bp-groups/bp-groups-functions.php:3476
@@ -2949,7 +2949,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3201
 #: bp-moderation/bp-moderation-admin.php:572
-#: bp-moderation/bp-moderation-settings.php:104
+#: bp-moderation/bp-moderation-settings.php:102
 #: bp-moderation/classes/class-bp-moderation-component.php:180
 msgid "Reporting Categories"
 msgstr ""
@@ -2982,58 +2982,39 @@ msgstr ""
 msgid "You need to switch to your Default language in WPML to save these settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:145
+#: bp-core/admin/bp-core-admin-pages.php:138
 msgid "Component Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:149
+#: bp-core/admin/bp-core-admin-pages.php:142
 msgid "This directory shows a listing of all members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:151
+#: bp-core/admin/bp-core-admin-pages.php:144
 msgid "This directory shows a listing of all groups."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:153
+#: bp-core/admin/bp-core-admin-pages.php:146
 msgid "This directory shows a listing of all forums."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:155
+#: bp-core/admin/bp-core-admin-pages.php:148
 msgid "This directory shows all sitewide activity."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:157
+#: bp-core/admin/bp-core-admin-pages.php:150
 msgid "This directory shows all photos uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:159
+#: bp-core/admin/bp-core-admin-pages.php:152
 msgid "This directory shows all documents uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:186
+#: bp-core/admin/bp-core-admin-pages.php:177
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:197
-msgid "New users fill out this form to register their accounts."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:199
-#: bp-core/admin/bp-core-admin-pages.php:201
-msgid ""
-"If a page is added, its contents will display in a popup on the register "
-"form."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:203
-msgid "After registering, users are sent to this page to activate their accounts."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:223
-msgid "Associate a WordPress page with each of the following components."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-pages.php:243
+#: bp-core/admin/bp-core-admin-pages.php:193
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -3048,45 +3029,64 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1295
 #: bp-core/admin/bp-core-admin-settings.php:1332
 #: bp-core/admin/bp-core-admin-settings.php:1356
-#: bp-core/admin/settings/bp-admin-setting-friends.php:92
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:526
+#: bp-core/admin/settings/bp-admin-setting-friends.php:95
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:411
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:541
 #: bp-core/classes/class-bp-admin-tab.php:254
-#: bp-integrations/learndash/bp-learndash-functions.php:421
-#: bp-integrations/learndash/bp-learndash-functions.php:444
-#: bp-integrations/learndash/bp-learndash-functions.php:467
-#: bp-media/bp-media-settings.php:577 bp-media/bp-media-settings.php:604
-#: bp-media/bp-media-settings.php:773 bp-media/bp-media-settings.php:987
-#: bp-search/bp-search-settings.php:462
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:248
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:391
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:485
+#: bp-media/bp-media-settings.php:593 bp-media/bp-media-settings.php:620
+#: bp-media/bp-media-settings.php:789 bp-media/bp-media-settings.php:1003
+#: bp-search/bp-search-settings.php:463
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:256
+#: bp-core/admin/bp-core-admin-pages.php:200
+msgid "New users fill out this form to register their accounts."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:202
+#: bp-core/admin/bp-core-admin-pages.php:204
+msgid ""
+"If a page is added, its contents will display in a popup on the register "
+"form."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:206
+msgid "After registering, users are sent to this page to activate their accounts."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:226
+msgid "Associate a WordPress page with each of the following components."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:236
 msgid "Associate a WordPress page with the following Registration sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:262
+#: bp-core/admin/bp-core-admin-pages.php:242
 #: bp-core/admin/bp-core-admin-settings.php:893
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:278
+#: bp-core/admin/bp-core-admin-pages.php:258
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:326
-#: bp-core/admin/bp-core-admin-pages.php:360
+#: bp-core/admin/bp-core-admin-pages.php:306
+#: bp-core/admin/bp-core-admin-pages.php:340
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:342
-#: bp-core/admin/bp-core-admin-pages.php:376
+#: bp-core/admin/bp-core-admin-pages.php:322
+#: bp-core/admin/bp-core-admin-pages.php:356
 msgid "Create Page"
 msgstr ""
 
@@ -3100,7 +3100,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:977
 #: bp-core/admin/bp-core-admin-settings.php:1005
 #: bp-core/admin/bp-core-admin-settings.php:1033
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:232
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:247
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
@@ -3116,7 +3116,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:987
 #: bp-core/admin/bp-core-admin-settings.php:1015
 #: bp-core/admin/bp-core-admin-settings.php:1052
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:234
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:249
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -3317,7 +3317,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:846
-#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:656
+#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:657
 msgid "Blog Posts"
 msgstr ""
 
@@ -3373,21 +3373,21 @@ msgid "Add Password confirmation to register form"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1164
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:461
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:476
 msgid "Grid and List"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1165
 #: bp-core/admin/bp-core-admin-settings.php:1196
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:462
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:493
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:477
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:508
 msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1166
 #: bp-core/admin/bp-core-admin-settings.php:1197
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:494
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:478
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:509
 msgid "List"
 msgstr ""
 
@@ -3435,11 +3435,11 @@ msgstr ""
 #: bp-document/classes/class-bp-document-component.php:313
 #: bp-document/classes/class-bp-document-theme-compat.php:163
 #: bp-groups/classes/class-bp-groups-component.php:802
-#: bp-media/bp-media-settings.php:30 bp-media/bp-media-settings.php:1353
+#: bp-media/bp-media-settings.php:29 bp-media/bp-media-settings.php:1369
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1199
 #: bp-moderation/classes/class-bp-moderation-document.php:102
 #: bp-performance/classes/class-settings.php:147
-#: bp-search/bp-search-settings.php:799
+#: bp-search/bp-search-settings.php:800
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:30
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:22
@@ -3481,10 +3481,10 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:635
 #: bp-groups/classes/class-bp-groups-component.php:944
 #: bp-groups/classes/class-bp-groups-list-table.php:439
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:443
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:514
 #: bp-members/classes/class-bp-core-members-widget.php:307
 #: bp-members/classes/class-bp-members-component.php:37
-#: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:507
+#: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:508
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1041
 #: bp-templates/bp-nouveau/includes/groups/classes.php:260
@@ -3542,12 +3542,12 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:1014
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:219
-#: bp-media/bp-media-settings.php:138 bp-media/bp-media-settings.php:145
-#: bp-media/bp-media-settings.php:163 bp-media/bp-media-settings.php:170
+#: bp-media/bp-media-settings.php:134 bp-media/bp-media-settings.php:141
+#: bp-media/bp-media-settings.php:159 bp-media/bp-media-settings.php:166
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:929
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1057
 #: bp-moderation/classes/class-bp-moderation-groups.php:105
-#: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:733
+#: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:734
 #: bp-templates/bp-nouveau/includes/activity/functions.php:297
 #: bp-templates/bp-nouveau/includes/customizer.php:199
 msgid "Groups"
@@ -3866,7 +3866,7 @@ msgid "Migrated invitations!"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
-#: bp-core/admin/settings/bp-admin-setting-general.php:116
+#: bp-core/admin/settings/bp-admin-setting-general.php:120
 msgid "Activity Settings"
 msgstr ""
 
@@ -3901,7 +3901,7 @@ msgstr ""
 msgid "Relevant Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:111
+#: bp-core/admin/settings/bp-admin-setting-activity.php:114
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -3909,15 +3909,15 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:155
+#: bp-core/admin/settings/bp-admin-setting-activity.php:158
 msgid "WordPress"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:157
+#: bp-core/admin/settings/bp-admin-setting-activity.php:160
 msgid "Post Type Comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:166
+#: bp-core/admin/settings/bp-admin-setting-activity.php:169
 msgid "Custom Post Types"
 msgstr ""
 
@@ -3933,7 +3933,7 @@ msgstr ""
 msgid "Messaging"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-friends.php:55
+#: bp-core/admin/settings/bp-admin-setting-friends.php:58
 msgid "Require non-admin members to be connected before they can message each other"
 msgstr ""
 
@@ -3949,21 +3949,21 @@ msgstr ""
 msgid "Toolbar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:48
+#: bp-core/admin/settings/bp-admin-setting-general.php:49
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 msgid "Registration"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:53
+#: bp-core/admin/settings/bp-admin-setting-general.php:54
 msgid "Enable Registration"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:59
-#: bp-core/admin/settings/bp-admin-setting-general.php:77
+#: bp-core/admin/settings/bp-admin-setting-general.php:60
+#: bp-core/admin/settings/bp-admin-setting-general.php:78
 msgid "Registration Form"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:94
+#: bp-core/admin/settings/bp-admin-setting-general.php:97
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:854
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:19
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:19
@@ -3972,20 +3972,20 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:97
+#: bp-core/admin/settings/bp-admin-setting-general.php:100
 msgid "Private Website"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:100
+#: bp-core/admin/settings/bp-admin-setting-general.php:103
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:107
+#: bp-core/admin/settings/bp-admin-setting-general.php:111
 #: bp-forums/admin/settings.php:1526
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:113
+#: bp-core/admin/settings/bp-admin-setting-general.php:117
 msgid "Groups Settings"
 msgstr ""
 
@@ -4012,37 +4012,37 @@ msgstr ""
 msgid "Group Messages"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:60
+#: bp-core/admin/settings/bp-admin-setting-groups.php:63
 msgid "Auto Membership Approval"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:63
+#: bp-core/admin/settings/bp-admin-setting-groups.php:69
 msgid "Group Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:68
+#: bp-core/admin/settings/bp-admin-setting-groups.php:74
 msgid "Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:73
+#: bp-core/admin/settings/bp-admin-setting-groups.php:79
 msgid "Hide Subgroups"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:78
+#: bp-core/admin/settings/bp-admin-setting-groups.php:84
 msgid "Restrict Invitations"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:81
+#: bp-core/admin/settings/bp-admin-setting-groups.php:90
 msgid "Group Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:86
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:175
+#: bp-core/admin/settings/bp-admin-setting-groups.php:95
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:187
 msgid "Enabled View(s)"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:93
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:182
+#: bp-core/admin/settings/bp-admin-setting-groups.php:102
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:194
 msgid "Default View"
 msgstr ""
 
@@ -4080,8 +4080,8 @@ msgid "Media"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-messages.php:21
-#: bp-media/bp-media-settings.php:181 bp-media/bp-media-settings.php:188
-#: bp-media/bp-media-settings.php:195 bp-media/bp-media-settings.php:202
+#: bp-media/bp-media-settings.php:177 bp-media/bp-media-settings.php:184
+#: bp-media/bp-media-settings.php:191 bp-media/bp-media-settings.php:198
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:995
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1001
 #: bp-messages/bp-messages-notifications.php:30
@@ -4113,10 +4113,10 @@ msgid "Registration Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:21
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:405
-#: bp-media/bp-media-settings.php:63 bp-media/bp-media-settings.php:82
-#: bp-media/bp-media-settings.php:113 bp-media/bp-media-settings.php:121
-#: bp-media/bp-media-settings.php:129 bp-xprofile/bp-xprofile-admin.php:29
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:453
+#: bp-media/bp-media-settings.php:59 bp-media/bp-media-settings.php:78
+#: bp-media/bp-media-settings.php:109 bp-media/bp-media-settings.php:117
+#: bp-media/bp-media-settings.php:125 bp-xprofile/bp-xprofile-admin.php:29
 #: bp-xprofile/bp-xprofile-admin.php:30
 msgid "Profiles"
 msgstr ""
@@ -4135,24 +4135,24 @@ msgstr ""
 msgid "Display Name Fields"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:120
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
 msgid "Profile Photos"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:126
 msgid "Profile Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:127
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:130
 msgid "Profile Gravatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:132
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:135
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:147
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:150
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:153
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:156
 #: bp-members/bp-members-functions.php:3055
 #: bp-members/bp-members-functions.php:3058
 #: bp-xprofile/bp-xprofile-admin.php:1100
@@ -4161,16 +4161,16 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:155
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:161
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:160
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:166
 msgid "Default Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:164
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:167
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:173
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:176
 #: bp-core/profile-search/bps-start.php:59
 #: bp-core/profile-search/bps-start.php:62
 #: bp-core/profile-search/bps-start.php:247
@@ -4178,53 +4178,53 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:170
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:182
 msgid "Profile Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:202
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:207
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:222
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:226
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:241
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:233
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:248
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:253
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:268
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:279
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:294
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:290
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:305
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:303
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:318
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:321
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:336
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:336
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:351
 #: bp-members/classes/class-bp-members-admin.php:1372
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:240
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:263
@@ -4236,7 +4236,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:362
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:377
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -4244,15 +4244,15 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:415
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:430
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:426
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:441
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:480
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:495
 msgid ""
 "Display profile/member directories in Grid View, List View, or allow "
 "toggling between both views."
@@ -4418,7 +4418,7 @@ msgid "Your uploaded file's MIME type is: "
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:44
-#: bp-media/bp-media-settings.php:1180 bp-media/bp-media-settings.php:1241
+#: bp-media/bp-media-settings.php:1196 bp-media/bp-media-settings.php:1257
 msgid "MIME Type"
 msgstr ""
 
@@ -4997,7 +4997,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1168
 #: bp-moderation/classes/class-bp-moderation-media.php:103
 #: bp-performance/classes/class-settings.php:140
-#: bp-search/bp-search-settings.php:755
+#: bp-search/bp-search-settings.php:756
 #: bp-templates/bp-nouveau/buddypress/groups/single/photos.php:24
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:11
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:23
@@ -5216,15 +5216,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2655
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
+"content will be unhidden</li>\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -7292,7 +7292,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1196 bp-groups/bp-groups-template.php:743
 #: bp-groups/bp-groups-template.php:744
 #: bp-groups/classes/class-bp-groups-list-table.php:652
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:284
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:306
 #: bp-moderation/classes/class-bp-moderation-list-table.php:298
 msgid "Hidden"
 msgstr ""
@@ -7303,7 +7303,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1195 bp-groups/bp-groups-template.php:748
 #: bp-groups/bp-groups-template.php:749 bp-groups/bp-groups-template.php:1476
 #: bp-groups/classes/class-bp-groups-list-table.php:649
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:283
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:305
 msgid "Private"
 msgstr ""
 
@@ -7991,13 +7991,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9025,7 +9025,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-privacy.php:58
 #: bp-document/classes/class-bp-document.php:710
 #: bp-document/classes/class-bp-document.php:1369
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:156
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 #: bp-media/classes/class-bp-media-album.php:517
 #: bp-media/classes/class-bp-media-privacy.php:59
 #: bp-media/classes/class-bp-media.php:627
@@ -13073,8 +13073,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3988
 #: bp-groups/bp-groups-functions.php:4007
 #: bp-groups/bp-groups-functions.php:4024
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:321
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:337
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:343
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:359
 #. translators: user role
 msgid "Organizer"
 msgstr ""
@@ -13084,8 +13084,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3990
 #: bp-groups/bp-groups-functions.php:4009
 #: bp-groups/bp-groups-functions.php:4026
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:322
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:338
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:344
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:360
 #. translators: user role
 msgid "Moderator"
 msgstr ""
@@ -13843,8 +13843,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3992
 #: bp-groups/bp-groups-functions.php:4011
 #: bp-groups/bp-groups-functions.php:4028
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:323
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:339
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:345
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:361
 #: bp-members/bp-members-functions.php:3821
 #: bp-members/classes/class-bp-members-admin.php:955
 msgid "Member"
@@ -15774,7 +15774,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3982
 #: bp-groups/bp-groups-functions.php:4001
 #: bp-groups/bp-groups-functions.php:4018
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:441
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:512
 msgid "Organizers"
 msgstr ""
 
@@ -15789,7 +15789,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:687
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:717
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:747
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:297
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:319
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:83
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:104
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:127
@@ -15866,7 +15866,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3984
 #: bp-groups/bp-groups-functions.php:4003
 #: bp-groups/bp-groups-functions.php:4020
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:442
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:513
 msgid "Moderators"
 msgstr ""
 
@@ -16484,7 +16484,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:787
 #: bp-media/bp-media-filters.php:76 bp-media/bp-media-filters.php:1362
 #: bp-media/classes/class-bp-media-component.php:294
-#: bp-search/bp-search-settings.php:777
+#: bp-search/bp-search-settings.php:778
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:22
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
@@ -17188,7 +17188,7 @@ msgid "Which members of this group are allowed to manage photos?"
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:680
-#: bp-media/bp-media-settings.php:152
+#: bp-media/bp-media-settings.php:148
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:146
 msgid "Group Albums"
 msgstr ""
@@ -17769,244 +17769,244 @@ msgstr ""
 msgid "Social groups <span>&rarr; LearnDash groups</span>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:109
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:107
 msgid "Social Group Sync"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:112
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:110
 msgid ""
 "Enable group sync functionality <b>FROM</b> <a href=\"%1$s\">BuddyBoss "
 "Social Groups</a> <b>TO</b> <a href=\"%2$s\">LearnDash Groups</a>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:132
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:130
 msgid "Create LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:134
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:132
 msgid ""
 "Allow social group organizers to create associated LearnDash groups during "
 "the group creation process"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:142
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:140
 msgid "Manage LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:144
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:142
 msgid ""
 "Allow social group organizers to manage associated LearnDash groups after "
 "the group creation process"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:151
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:149
 msgid "Course Tab Visibility"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:154
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:152
 msgid "Anyone"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:155
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:153
 msgid "Loggedin Users"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:157
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:155
 msgid "No one"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:160
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:158
 msgid "Select who can see the course tab in social groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:167
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:165
 msgid "Auto Create LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:169
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:167
 msgid "Automatically create and associate a LearnDash group upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:170
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:168
 msgid ""
 "Required if you want an associated LearnDash group, and course tab is "
 "disabled during creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:177
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:175
 msgid "Auto Delete LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:179
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:177
 msgid ""
 "Automatically delete the associated LearnDash group when the social group "
 "is deleted"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:180
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:178
 msgid "Uncheck this to delete the group manually"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:187
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:185
 msgid "Sync Organizers"
+msgstr ""
+
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:188
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:203
+msgid "Group Leader"
+msgstr ""
+
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:189
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:204
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:218
+msgid "Group User"
 msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:190
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:205
-msgid "Group Leader"
-msgstr ""
-
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:191
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:206
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:220
-msgid "Group User"
-msgstr ""
-
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:192
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:207
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:221
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:324
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:340
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:219
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:346
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:362
 #: bp-integrations/learndash/templates/admin/buddypress/sync-meta-box.php:19
 #: bp-integrations/learndash/templates/admin/learndash/sync-meta-box.php:18
 msgid "None"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:195
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:193
 msgid ""
 "Social group \"Organizers\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:202
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:200
 msgid "Sync Moderators"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:210
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:208
 msgid ""
 "Social group \"Moderators\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:217
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:215
 msgid "Sync Members"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:224
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:222
 msgid ""
 "Social group \"Members\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:240
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:264
 msgid "LearnDash groups <span>&rarr; Social groups</span>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:247
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:269
 msgid "LearnDash Group Sync"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:250
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:272
 msgid ""
 "Enable group sync functionality <b>FROM</b> <a href=\"%1$s\">LearnDash "
 "Groups</a> <b>TO</b> <a href=\"%2$s\">BuddyBoss Social Groups</a>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:270
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:292
 msgid "Auto Create Social Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:272
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:294
 msgid "Automatically create and associate a Social Group upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:279
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:301
 msgid "Social Group Privacy"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:287
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:309
 msgid "Select the default social group Privacy setting upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:294
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:316
 msgid "Social Group Invite Status"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:298
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:320
 msgid "Group organizers and moderators only"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:299
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:321
 msgid "Group organizers only"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:302
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:324
 msgid "Select which group members can invite others to join the group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:309
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:331
 msgid "Auto Delete Social Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:311
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:333
 msgid ""
 "Automatically delete the associated Social Group when the LearnDash group "
 "is deleted"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:318
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:340
 msgid "Sync Leaders"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:327
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:349
 msgid ""
 "LearnDash \"Group Leaders\" will be assigned to the above role in social "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:334
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:356
 msgid "Sync Users"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:343
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:365
 msgid ""
 "LearnDash \"Group Users\" will be assigned to the above role in social "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:362
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:410
 msgid "Group Reports Settings"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:368
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:416
 msgid "Group Reports"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:370
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:418
 msgid "Enable Social Group Report for LearnDash"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:377
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:425
 msgid "Report Access"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:387
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:435
 msgid "Report Results Per Page"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:390
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:438
 msgid "Number of report results displayed per page"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:412
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:457
 msgid "My Courses Tab"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:414
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:459
 msgid "Display \"Courses\" tab in profiles"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:415
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:460
 msgid ""
 "Adds a tab to the logged in member's profile displaying all courses they "
 "are enrolled in, and a matching link in the profile dropdown. If any "
@@ -18014,11 +18014,11 @@ msgid ""
 "member has earned."
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:427
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:498
 msgid "Control the setting for social group's reports."
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:463
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:534
 msgid "Select which roles can view reports"
 msgstr ""
 
@@ -18343,15 +18343,11 @@ msgid ""
 "order to sync LearnDash groups with Social groups."
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:21
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:20
 msgid "LearnDash <span>&mdash; requires plugin to activate</span>"
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:31
-msgid "View Tutorials"
-msgstr ""
-
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:37
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:24
 msgid ""
 "BuddyBoss Platform has integration settings for %s. If using LearnDash we "
 "add the ability to sync LearnDash groups with social groups, to connect "
@@ -18359,8 +18355,12 @@ msgid ""
 "we also include styling for LearnDash."
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:41
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:28
 msgid "LearnDash LMS"
+msgstr ""
+
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:43
+msgid "View Tutorials"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/learndash/sync-meta-box.php:11
@@ -18899,233 +18899,238 @@ msgstr ""
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:36
+#: bp-media/bp-media-settings.php:34
 msgid "Emoji"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:41
+#: bp-media/bp-media-settings.php:38
 msgid "Animated GIFs"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:70 bp-media/bp-media-settings.php:89
+#: bp-media/bp-media-settings.php:66 bp-media/bp-media-settings.php:85
 msgid "Profile Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:101 bp-media/bp-media-settings.php:786
+#: bp-media/bp-media-settings.php:97 bp-media/bp-media-settings.php:802
 msgid "GIPHY API Key"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:241 bp-media/bp-media-settings.php:255
+#: bp-media/bp-media-settings.php:237 bp-media/bp-media-settings.php:251
 msgid "Upload Size"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:248 bp-media/bp-media-settings.php:262
+#: bp-media/bp-media-settings.php:244 bp-media/bp-media-settings.php:258
 msgid "Upload Limit"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:269
+#: bp-media/bp-media-settings.php:265
 msgid "File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:365
+#: bp-media/bp-media-settings.php:270 bp-media/bp-media-settings.php:275
+#: bp-media/bp-media-settings.php:280 bp-media/bp-media-settings.php:285
+msgid "&#160;"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:381
 msgid ""
 "Allow members to upload photos in <strong>profiles</strong> and "
 "<strong>activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:367
+#: bp-media/bp-media-settings.php:383
 msgid "Allow members to upload photos in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:380
+#: bp-media/bp-media-settings.php:396
 msgid "Enable albums in profiles"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:423 bp-media/bp-media-settings.php:634
-#: bp-media/bp-media-settings.php:847 bp-media/bp-media-settings.php:1035
+#: bp-media/bp-media-settings.php:439 bp-media/bp-media-settings.php:650
+#: bp-media/bp-media-settings.php:863 bp-media/bp-media-settings.php:1051
 msgid "groups"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:427 bp-media/bp-media-settings.php:638
-#: bp-media/bp-media-settings.php:851 bp-media/bp-media-settings.php:1039
+#: bp-media/bp-media-settings.php:443 bp-media/bp-media-settings.php:654
+#: bp-media/bp-media-settings.php:867 bp-media/bp-media-settings.php:1055
 msgid "activity posts"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:431 bp-media/bp-media-settings.php:642
-#: bp-media/bp-media-settings.php:855 bp-media/bp-media-settings.php:1043
+#: bp-media/bp-media-settings.php:447 bp-media/bp-media-settings.php:658
+#: bp-media/bp-media-settings.php:871 bp-media/bp-media-settings.php:1059
 msgid "messages"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:435 bp-media/bp-media-settings.php:646
-#: bp-media/bp-media-settings.php:859 bp-media/bp-media-settings.php:1047
+#: bp-media/bp-media-settings.php:451 bp-media/bp-media-settings.php:662
+#: bp-media/bp-media-settings.php:875 bp-media/bp-media-settings.php:1063
 msgid "forums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:453
+#: bp-media/bp-media-settings.php:469
 msgid "Allow members to upload photos in"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:468
+#: bp-media/bp-media-settings.php:484
 msgid "Enable albums in groups"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:507
+#: bp-media/bp-media-settings.php:523
 msgid "Allow members to upload photos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:539
+#: bp-media/bp-media-settings.php:555
 msgid ""
 "Allow members to upload photos in <strong>forum discussions</strong> and "
 "<strong>replies</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:619
+#: bp-media/bp-media-settings.php:635
 msgid "Allow members to use emoji in <strong>profile activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:667
+#: bp-media/bp-media-settings.php:683
 msgid "Allow members to use emoji in"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:684
+#: bp-media/bp-media-settings.php:700
 msgid "Allow members to use emoji in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:699
+#: bp-media/bp-media-settings.php:715
 msgid ""
 "Allow members to use emoji in <strong>forum discussions</strong> and "
 "<strong>replies</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:791
+#: bp-media/bp-media-settings.php:807
 msgid "This feature requires an account at"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:793
+#: bp-media/bp-media-settings.php:809
 msgid "Create your account, and then click"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:795
+#: bp-media/bp-media-settings.php:811
 msgid "Once done, copy the API key and paste it in the field above."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:832
+#: bp-media/bp-media-settings.php:848
 msgid ""
 "Allow members to use animated GIFs in <strong>profile activity "
 "posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:880
+#: bp-media/bp-media-settings.php:896
 msgid "Allow members to use animated GIFs in"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:898
+#: bp-media/bp-media-settings.php:914
 msgid "Allow members to use animated GIFs in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:913
+#: bp-media/bp-media-settings.php:929
 msgid ""
 "Allow members to use animated GIFs in <strong>forum discussions</strong> "
 "and <strong>replies</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1003
+#: bp-media/bp-media-settings.php:1019
 msgid "Allow members to upload documents in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1065
+#: bp-media/bp-media-settings.php:1081
 msgid "Allow members to upload documents in"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1099
+#: bp-media/bp-media-settings.php:1115
 msgid ""
 "Allow members to upload documents in <strong>forum discussions and "
 "replies</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1132
+#: bp-media/bp-media-settings.php:1148
 msgid ""
 "Allow members to upload documents in <strong>profiles</strong> and "
 "<strong>activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1134
+#: bp-media/bp-media-settings.php:1150
 msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1177 bp-media/bp-media-settings.php:1207
+#: bp-media/bp-media-settings.php:1193 bp-media/bp-media-settings.php:1223
 msgid "Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1179 bp-media/bp-media-settings.php:1214
+#: bp-media/bp-media-settings.php:1195 bp-media/bp-media-settings.php:1230
 msgid "Icon"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1208 bp-media/bp-media-settings.php:1264
+#: bp-media/bp-media-settings.php:1224 bp-media/bp-media-settings.php:1280
 msgid ".extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1212 bp-media/bp-media-settings.php:1268
+#: bp-media/bp-media-settings.php:1228 bp-media/bp-media-settings.php:1284
 msgid "description"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1242 bp-media/bp-media-settings.php:1283
+#: bp-media/bp-media-settings.php:1258 bp-media/bp-media-settings.php:1299
 msgid "MIME type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1246 bp-media/bp-media-settings.php:1284
+#: bp-media/bp-media-settings.php:1262 bp-media/bp-media-settings.php:1300
 msgid "MIME Checker"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1292
+#: bp-media/bp-media-settings.php:1308
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1305
+#: bp-media/bp-media-settings.php:1321
 msgid "<a href=\"%s\">Manage</a> which file extensions are allowed to be uploaded."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1354
+#: bp-media/bp-media-settings.php:1370
 msgid "&#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1397
+#: bp-media/bp-media-settings.php:1413
 msgid "Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1416
+#: bp-media/bp-media-settings.php:1432
 msgid ""
 "Check which file extensions are allowed to be uploaded. Add custom "
 "extensions at the bottom of the table."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1438 bp-media/bp-media-settings.php:1483
+#: bp-media/bp-media-settings.php:1454 bp-media/bp-media-settings.php:1499
 msgid "MB"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1443
+#: bp-media/bp-media-settings.php:1459
 msgid ""
 "Set a maximum file size for photo uploads, in megabytes. Your server's "
 "maximum upload size is "
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1488
+#: bp-media/bp-media-settings.php:1504
 msgid ""
 "Set a maximum file size for document uploads, in megabytes. Your server's "
 "maximum upload size is "
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1523 bp-media/bp-media-settings.php:1557
+#: bp-media/bp-media-settings.php:1539 bp-media/bp-media-settings.php:1573
 msgid "per batch"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1526
+#: bp-media/bp-media-settings.php:1542
 msgid ""
 "Set a maximum number of images that can be added to one activity post or "
 "photo upload."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1560
+#: bp-media/bp-media-settings.php:1576
 msgid ""
 "Set a maximum number of files that can be added to one activity post or "
 "document upload."
@@ -20351,7 +20356,7 @@ msgid "Newest Registered"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:830
-#: bp-search/bp-search-settings.php:590
+#: bp-search/bp-search-settings.php:591
 #: bp-search/classes/class-bp-search-members.php:347
 #: bp-settings/classes/class-bp-settings-component.php:27
 #: bp-settings/classes/class-bp-settings-component.php:144
@@ -21762,66 +21767,66 @@ msgstr ""
 msgid "Blocking"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:30
+#: bp-moderation/bp-moderation-settings.php:29
 msgid "Reporting"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:51
+#: bp-moderation/bp-moderation-settings.php:49
 msgid "Member Blocking"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:58
+#: bp-moderation/bp-moderation-settings.php:56
 msgid "Auto Suspend"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:70
-#: bp-moderation/bp-moderation-settings.php:97
+#: bp-moderation/bp-moderation-settings.php:68
+#: bp-moderation/bp-moderation-settings.php:95
 msgid "Email Notification"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:79
+#: bp-moderation/bp-moderation-settings.php:77
 msgid "Content Reporting"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:86
+#: bp-moderation/bp-moderation-settings.php:84
 msgid "Auto Hide"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:187
+#: bp-moderation/bp-moderation-settings.php:185
 msgid "Allow members to block each other."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:189
+#: bp-moderation/bp-moderation-settings.php:187
 msgid ""
 "When a member is blocked, their profile and all of their content is hidden "
 "from the member who blocked them."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:211
+#: bp-moderation/bp-moderation-settings.php:209
 #. translators: html for threshold fields.
 msgid ""
 "Automatically suspend members after they have been blocked at least %s "
 "times."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:242
+#: bp-moderation/bp-moderation-settings.php:240
 msgid "Notify administrators when members have been automatically suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:262
+#: bp-moderation/bp-moderation-settings.php:260
 msgid "Allow the following content types to be reported:"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:287
+#: bp-moderation/bp-moderation-settings.php:285
 #. translators: html for threshold fields.
 msgid "Auto hide %s after %s reports."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:324
+#: bp-moderation/bp-moderation-settings.php:322
 msgid "Notify administrators when content has been automatically hidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:338
+#: bp-moderation/bp-moderation-settings.php:336
 msgid ""
 "<a href=\"%s\">Manage</a> the categories members see when reporting content "
 "in the frontend."
@@ -22670,43 +22675,47 @@ msgstr ""
 msgid "User Email"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:30
+#: bp-search/bp-search-settings.php:29
 msgid "Pages and Posts Search"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:36
+#: bp-search/bp-search-settings.php:34
 msgid "Autocomplete Settings"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:58
+#: bp-search/bp-search-settings.php:55
 msgid "Enable Autocomplete"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:65
+#: bp-search/bp-search-settings.php:62
 msgid "Number of Results"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:407
+#: bp-search/bp-search-settings.php:69
+msgid "&#65279"
+msgstr ""
+
+#: bp-search/bp-search-settings.php:408
 msgid "Enable autocomplete dropdown when typing into search inputs."
 msgstr ""
 
-#: bp-search/bp-search-settings.php:436
+#: bp-search/bp-search-settings.php:437
 msgid "results"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:475
+#: bp-search/bp-search-settings.php:476
 msgid "Search the following BuddyBoss components:"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:489
+#: bp-search/bp-search-settings.php:490
 msgid "Search the following WordPress content and custom post types:"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:698
+#: bp-search/bp-search-settings.php:699
 msgid "Meta Data"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:821
+#: bp-search/bp-search-settings.php:822
 msgid "Folders"
 msgstr ""
 
@@ -27301,7 +27310,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:110
+#: bp-core/admin/settings/bp-admin-setting-general.php:114
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
@@ -27433,7 +27442,7 @@ msgctxt "Course Content Label"
 msgid "%s Content"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1160
+#: bp-media/bp-media-settings.php:1176
 #. translators: 1: Imagick status
 msgctxt "extension notification"
 msgid ""
