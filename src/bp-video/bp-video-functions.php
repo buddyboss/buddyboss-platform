@@ -3749,7 +3749,7 @@ function bb_video_get_symlink( $video ) {
 		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . time() );
 
 		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			if ( ! is_link( $attachment_path ) ) {
+			if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
 				symlink( $attached_file, $attachment_path );
             }
 		}
@@ -3814,31 +3814,56 @@ function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size 
 		$file            = image_get_intermediate_size( $auto_gen_thumb_id, 'large' );
 		$file_path       = '';
 
-		if ( ! empty( $attached_file_info['dirname'] ) ) {
-			$file_path = $attached_file_info['dirname'];
-			$file_path = $file_path . '/' . $file['file'];
-		}
-
-		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			if ( ! is_link( $attachment_path ) ) {
-				symlink( $file_path, $attachment_path );
+		if ( $file ) {
+			if ( ! empty( $attached_file_info['dirname'] ) ) {
+				$file_path = $attached_file_info['dirname'];
+				$file_path = $file_path . '/' . $file['file'];
 			}
+
+			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $file_path, $attachment_path );
+				}
+			}
+		} elseif ( wp_get_attachment_image_src( $auto_gen_thumb_id ) ) {
+
+			$output_file_src = get_attached_file( $auto_gen_thumb_id );
+
+			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $output_file_src, $attachment_path );
+				}
+			}
+
 		}
 
 		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $auto_gen_thumb_id . $privacy . $size );
 		$file            = image_get_intermediate_size( $auto_gen_thumb_id, $size );
 		$file_path       = '';
 
-		if ( ! empty( $attached_file_info['dirname'] ) ) {
-			$file_path = $attached_file_info['dirname'];
-			$file_path = $file_path . '/' . $file['file'];
+		if ( $file ) {
+			if ( ! empty( $attached_file_info['dirname'] ) ) {
+				$file_path = $attached_file_info['dirname'];
+				$file_path = $file_path . '/' . $file['file'];
+			}
+
+			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $file_path, $attachment_path );
+				}
+			}
+        } elseif ( wp_get_attachment_image_src( $auto_gen_thumb_id ) ) {
+
+			$output_file_src = get_attached_file( $auto_gen_thumb_id );
+
+			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+				if ( ! is_link( $attachment_path ) ) {
+					symlink( $output_file_src, $attachment_path );
+				}
+			}
+
 		}
 
-		if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-			if ( ! is_link( $attachment_path ) ) {
-				symlink( $file_path, $attachment_path );
-			}
-		}
 
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
 
