@@ -30,8 +30,6 @@ class BB_Media_Albums extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bp-media-albums' );
 
-		$event_groups = array( 'buddypress', 'buddypress-media-albums' );
-
 		$purge_events = array(
 			'bp_media_album_after_save',   // Any Media Album add.
 			'bp_media_album_after_delete', // Any Media Album deleted.
@@ -43,10 +41,6 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_suspend_media_album_unsuspended', // Any Media Album Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge media albums endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_media_albums', $purge_events );
 		$this->purge_event( 'bp-media-albums', $purge_events );
 
 		/**
@@ -78,11 +72,7 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_core_delete_existing_avatar'     => 1, // User avatar photo deleted.
 		);
 
-		/**
-		 * Add Custom events to purge single album endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_media_albums_single', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-media_albums_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_media', 'buddyboss-app' );
@@ -93,11 +83,8 @@ class BB_Media_Albums extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/media/albums',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -105,8 +92,6 @@ class BB_Media_Albums extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/media/albums/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
