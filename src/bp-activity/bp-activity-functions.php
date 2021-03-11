@@ -2989,7 +2989,7 @@ function bp_activity_new_comment( $args = '' ) {
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
 
 	// Bail if missing necessary data.
-	if ( (empty( $r['content'] ) && empty($_POST['gif_data'])) || empty( $r['user_id'] ) || empty( $r['activity_id'] )  ) {
+	if ( empty( $r['content'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] )  ) {
 		$error = new WP_Error( 'missing_data', $feedback );
 
 		if ( 'wp_error' === $r['error_type'] ) {

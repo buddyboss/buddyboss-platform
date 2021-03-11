@@ -21,7 +21,7 @@ add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_med
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' ); // Delete activity medias.
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_gif' ); // Delete activity gif.
-add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+add_filter( 'bp_activity_entry_content', 'bp_media_activity_embed_gif' );
 add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
@@ -64,9 +64,6 @@ add_action( 'init', 'bp_media_download_url_file' );
 
 add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
-
-// set temp content to GIF activity.
-add_action( 'bp_before_activity_activity_content', 'bp_activity_content_set_temp_gif_content');
 
 /**
  * Add Media items for search
@@ -1013,7 +1010,7 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
  */
 function bp_media_activity_embed_gif_content( $activity_id ) {
 
-	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+	$gif_data = bp_activity_get_meta( bp_get_activity_id(), '_gif_data', true );
 
 	if ( empty( $gif_data ) ) {
 		return;
@@ -1055,20 +1052,18 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
  *
  * @return string
  */
-function bp_media_activity_embed_gif( $content, $activity ) {
+function bp_media_activity_embed_gif() {
 
 	// check if profile and groups activity gif support enabled.
-	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
-		return $content;
+	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_groups_gif_support_enabled() ) ) {
+		return false;
 	}
 
-	$gif_content = bp_media_activity_embed_gif_content( $activity->id );
+	$gif_content = bp_media_activity_embed_gif_content( bp_get_activity_id() );
 
 	if ( ! empty( $gif_content ) ) {
-		$content .= $gif_content;
+		echo $gif_content;
 	}
-
-	return $content;
 }
 
 /**
@@ -2305,20 +2300,4 @@ function bp_media_get_edit_activity_data( $activity ) {
 	}
 
 	return $activity;
-}
-
-/**
- * Function which set the temporary content on the blog post activity when there is gif content.
- *
- * @since BuddyBoss 1.5.6
- */
-function bp_activity_content_set_temp_gif_content() {
-	global $activities_template;
-	$activity_id = $activities_template->activity->id;
-	if( empty( $activities_template->activity->content ) ) {
-		$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
-		if( $gif_data ) {
-			$activities_template->activity->content = '&#8203;';
-		}
-	}
 }
