@@ -13,6 +13,21 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 <li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>">
 
+	<div class="activity_more_options">
+
+		<span class="activity_more_options_action" data-balloon-pos="up" data-balloon="<?php _e( 'More Options', 'buddyboss' ); ?>">
+			<i class="bb-icon bb-icon-menu-dots-h"></i>
+		</span>
+		<div class="activity_more_options_list">
+			<p>
+				<a href="#content-report" id="report-content-forum_topic-7154" class="button item-button bp-secondary-action outline report-content" data-bp-content-id="7154" data-bp-content-type="forum_topic" data-bp-nonce="c58f593b49">
+					<span class="bp-screen-reader-text">Report</span><span class="report-label">Report</span>
+				</a>
+			</p>
+		</div>
+
+	</div><!-- .activity_more_options -->
+
 	<div class="activity-avatar item-avatar">
 
 		<a href="<?php bp_activity_user_link(); ?>">

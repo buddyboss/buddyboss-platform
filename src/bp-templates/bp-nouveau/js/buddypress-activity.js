@@ -131,6 +131,9 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
+			//Activity More Option Dropdown
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
+
 			// Activity autoload.
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
@@ -1820,6 +1823,23 @@ window.bp = window.bp || {};
 				}
 			});
 		},
+
+		toggleActivityOption: function( event ) {
+
+			if( $( event.target ).hasClass( 'activity_more_options_action' ) || $( event.target ).parent().hasClass( 'activity_more_options_action' ) ) {
+				
+				if( $( event.target ).closest( '.activity_more_options' ).find( '.activity_more_options_list' ).hasClass( 'is_visible' ) ) {
+					$( '.activity_more_options' ).find( '.activity_more_options_list' ).removeClass( 'is_visible' );
+				} else {
+					$( '.activity_more_options' ).find( '.activity_more_options_list' ).removeClass( 'is_visible' );
+					$( event.target ).closest( '.activity_more_options' ).find( '.activity_more_options_list' ).addClass( 'is_visible' );
+				}
+
+			} else {
+				$( '.activity_more_options' ).find( '.activity_more_options_list' ).removeClass( 'is_visible' );
+			}
+		},
+
 	};
 
 	// Launch BP Nouveau Activity.
