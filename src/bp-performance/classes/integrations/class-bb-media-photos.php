@@ -29,8 +29,6 @@ class BB_Media_Photos extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bp-media-photos' );
 
-		$event_groups = array( 'buddypress', 'buddypress-media-photos' );
-
 		$purge_events = array(
 			'bp_media_add',              // Any Media Photo add.
 			'bp_media_after_save',       // Any Media Photo updated.
@@ -41,10 +39,6 @@ class BB_Media_Photos extends Integration_Abstract {
 			'bp_suspend_media_unsuspended',       // Any Media Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge media photos endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_media_photos', $purge_events );
 		$this->purge_event( 'bp-media-photos', $purge_events );
 
 		/**
@@ -71,11 +65,7 @@ class BB_Media_Photos extends Integration_Abstract {
 			'bp_core_delete_existing_avatar' => 1, // User avatar photo deleted.
 		);
 
-		/**
-		 * Add Custom events to purge single media endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_media_photos_single', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-media_photos_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_media', 'buddyboss-app' );
@@ -86,11 +76,8 @@ class BB_Media_Photos extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/media',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -98,8 +85,6 @@ class BB_Media_Photos extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/media/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
