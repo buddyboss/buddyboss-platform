@@ -962,6 +962,25 @@
 
 }
 
+//All Uploader UI
+div.dropzone.dz-started {
+	margin: 0 0 20px;
+
+	.dz-default.dz-message {
+		flex-basis: 100%;
+		max-width: inherit;
+		min-height: 20vh;
+
+		.dz-button {
+			font-size: 16px !important;
+			background-size: 48px !important;
+			padding: 50px 0 0 0 !important;
+		}
+
+	}
+
+}
+
 //Video Uploader
 #activity-post-video-uploader,
 #bp-video-dropzone-content,
@@ -974,7 +993,7 @@
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments {
 
 	.dz-default.dz-message {
-		flex-basis: calc(100% - 12px);
+		flex-basis: 100%;
 		max-width: inherit;
 		min-height: 20vh;
 
@@ -1040,6 +1059,10 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 		.dz-filename {
 			color: #fff;
+		}
+
+		.dz-progress {
+			display: none;
 		}
 
 		.dz-progress-count {
