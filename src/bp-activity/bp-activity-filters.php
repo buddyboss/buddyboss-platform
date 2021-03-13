@@ -114,7 +114,7 @@ add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activ
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
-add_filter( 'bp_repair_list', 'bb_activity_media_migration' );
+add_filter( 'bp_repair_list', 'bb_activity_media_document_migration' );
 /** Functions *****************************************************************/
 /**
  * Types of activity feed items to moderate.
@@ -2060,18 +2060,18 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
  *
  * @return array Repair list items.
  */
-function bb_activity_media_migration( $repair_list ) {
+function bb_activity_media_document_migration( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-activity-media',
 		__( 'Repair Media Comments on the Activity/News Feed.', 'buddyboss' ),
-		'bb_activity_media_migration_process',
+		'bb_activity_media_document_migration_process',
 	);
 	return $repair_list;
 }
 /**
  * Activity media migration process
  */
-function bb_activity_media_migration_process() {
+function bb_activity_media_document_migration_process() {
 	global $wpdb;
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	if ( 1 === $offset ) {
@@ -2080,10 +2080,10 @@ function bb_activity_media_migration_process() {
 		$offset = $offset;
 	}
 	$bp                        = buddypress();
-	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
+	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 AND";
 	$recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
-	//bb_migration_write_log( ' recipients_count_row_data->ids - ' . $recipients_count_row_data->ids );
-	if ( 1 === $recipients_count_row_data->ids ) {
+	bb_migration_write_log( ' count_recepient_qry - ' . $count_recepient_qry );
+	if ( 1 === (int) $recipients_count_row_data->ids ) {
 		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
 	} else {
 		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 LIMIT $offset, 2";
@@ -2091,13 +2091,12 @@ function bb_activity_media_migration_process() {
 	bb_migration_write_log( 'recipients_query - ' . $recipients_query );
 	$recipients = $wpdb->get_results( $recipients_query );
 	if ( ! empty( $recipients ) ) {
-		$new_seq               = array();
-		$sub_data              = array();
-		$sub_activity_id_store = array();
+		$new_seq  = array();
+		$sub_data = array();
 		foreach ( $recipients as $get_parent_id ) {
-			$check_media_migration = bp_activity_get_meta( $get_parent_id->id, 'bp_media_comment_migration', true );
-			bb_migration_write_log( '  check_media_migration ' . $check_media_migration );
-			if ( 'success' !== $check_media_migration ) {
+			$check_media_document_migration = bp_activity_get_meta( $get_parent_id->id, 'bp_media_comment_migration', true );
+			bb_migration_write_log( '  check_media_document_migration ' . $check_media_document_migration );
+			if ( 'success' !== $check_media_document_migration ) {
 				$args = array(
 					'display_comments' => true,
 					'show_hidden'      => true,
@@ -2105,11 +2104,12 @@ function bb_activity_media_migration_process() {
 					'activity_ids'     => $get_parent_id->id,
 				);
 				bb_migration_write_log( 'Main Parent Id - ' . $get_parent_id->id );
-				$get_activity_data = bp_activity_get_specific( $args );
+				$get_activity_data     = bp_activity_get_specific( $args );
+				$sub_activity_id_store = array();
 				if ( isset( $get_activity_data['activities'] ) ) {
 					foreach ( $get_activity_data['activities'] as $key => $comment_data ) {
 						if ( $comment_data->children ) {
-							$sub_data                              = bb_migration_get_children_data(
+							$sub_data                              = bb_md_migration_get_children_data(
 								$sub_activity_id_store,
 								$sub_data,
 								$comment_data->children,
@@ -2120,15 +2120,15 @@ function bb_activity_media_migration_process() {
 						}
 					}
 				}
+				if ( ! empty( $sub_activity_id_store ) ) {
+					//Remove id which type is activity_update and privacy is media.
+					bb_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id );
+					//Update in meta when migration complete for the root id.
+						bp_activity_update_meta( $get_parent_id->id, 'bp_media_comment_migration', 'success' );
+					$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+				}
 			} else {
 				$records_updated = sprintf( __( '%s media already migrated.', 'buddyboss' ), number_format_i18n( $offset ) );
-			}
-			if ( ! empty( $sub_activity_id_store ) ) {
-				//Remove id which type is activity_update and privacy is media.
-				bb_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id );
-				//Update in meta when migration complete for the root id.
-				bp_activity_update_meta( $get_parent_id->id, 'bp_media_comment_migration', 'success' );
-				$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
 			}
 			$offset ++;
 		}
@@ -2165,7 +2165,7 @@ function bb_activity_media_migration_process() {
  *
  * @return array|void Return array with child_array and activity_id_store
  */
-function bb_migration_get_children_data( $activity_id_store, $sub_data, $children_array, $main_root_id ) {
+function bb_md_migration_get_children_data( $activity_id_store, $sub_data, $children_array, $main_root_id ) {
 	global $wpdb;
 	$bp                   = buddypress();
 	$child_array          = array();
@@ -2189,7 +2189,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 			//if current activity has children then check get all the children for this activity
 			if ( ! empty( $comment_data->children ) ) {
 				$activity_id_store[] = $comment_data->id;
-				bb_migration_get_activity_data_and_update(
+				bb_md_migration_get_activity_data_and_update(
 					$comment_data->id,
 					$comment_data->mptt_left,
 					$comment_data->mptt_right,
@@ -2199,7 +2199,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 					$comment_data->privacy,
 					$main_root_id
 				);
-				$sub_child_d           = bb_migration_get_children_data(
+				$sub_child_d           = bb_md_migration_get_children_data(
 					$activity_id_store,
 					$sub_data,
 					$comment_data->children,
@@ -2227,7 +2227,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 							if ( ! empty( $scomment_data->children ) ) {
 								$activity_id_store[] = $get_sub_sub_data->id;
 								$activity_id_store[] = $scomment_data->id;
-								bb_migration_get_activity_data_and_update(
+								bb_md_migration_get_activity_data_and_update(
 									$scomment_data->id,
 									$scomment_data->mptt_left,
 									$scomment_data->mptt_right,
@@ -2237,7 +2237,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 									$scomment_data->privacy,
 									$main_root_id
 								);
-								$sub_child_d                                      = bb_migration_get_children_data(
+								$sub_child_d                                      = bb_md_migration_get_children_data(
 									$activity_id_store,
 									$sub_data,
 									$scomment_data->children,
@@ -2251,7 +2251,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 							} else {
 								//Which comment have type is activity then just update
 								$activity_id_store[] = $scomment_data->id;
-								bb_migration_get_activity_data_and_update(
+								bb_md_migration_get_activity_data_and_update(
 									$scomment_data->id,
 									$scomment_data->mptt_left,
 									$scomment_data->mptt_right,
@@ -2268,7 +2268,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 			} else {
 				//Not child data for activity id
 				$activity_id_store[] = $comment_data->id;
-				bb_migration_get_activity_data_and_update(
+				bb_md_migration_get_activity_data_and_update(
 					$comment_data->id,
 					$comment_data->mptt_left,
 					$comment_data->mptt_right,
@@ -2298,7 +2298,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 							if ( ! empty( $m_comment_data->children ) ) {
 								$activity_id_store[] = $get_sub_sub_data->id;
 								$activity_id_store[] = $m_comment_data->id;
-								bb_migration_get_activity_data_and_update(
+								bb_md_migration_get_activity_data_and_update(
 									$m_comment_data->id,
 									$m_comment_data->mptt_left,
 									$m_comment_data->mptt_right,
@@ -2308,7 +2308,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 									$m_comment_data->privacy,
 									$main_root_id
 								);
-								$sub_child_d                                           = bb_migration_get_children_data(
+								$sub_child_d                                           = bb_md_migration_get_children_data(
 									$activity_id_store,
 									$sub_data,
 									$m_comment_data->children,
@@ -2321,7 +2321,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 								}
 							} else {
 								$activity_id_store[] = $m_comment_data->id;
-								bb_migration_get_activity_data_and_update(
+								bb_md_migration_get_activity_data_and_update(
 									$m_comment_data->id,
 									$m_comment_data->mptt_left,
 									$m_comment_data->mptt_right,
@@ -2363,9 +2363,9 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
  *
  * @param int    $main_root_id      Main root comment id.
  *
- * @uses bb_activity_update_data() Use this function for the update data based data.
+ * @uses bb_md_migration_activity_update_data() Use this function for the update data based data.
  */
-function bb_migration_get_activity_data_and_update( $comment_id, $mppt_left, $mptt_right, $item_id, $secondary_item_id, $comment_type, $comment_privacy, $main_root_id ) {
+function bb_md_migration_get_activity_data_and_update( $comment_id, $mppt_left, $mptt_right, $item_id, $secondary_item_id, $comment_type, $comment_privacy, $main_root_id ) {
 	global $wpdb;
 	$bp                    = buddypress();
 	$new_secondary_item_id = $secondary_item_id;
@@ -2381,7 +2381,7 @@ function bb_migration_get_activity_data_and_update( $comment_id, $mppt_left, $mp
 		}
 	}
 	//Update activity id in media table. Update activity privacy.
-	bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_root_id, $mptt_right, $comment_type );
+	bb_md_migration_activity_update_data( $comment_id, $new_secondary_item_id, $main_root_id, $mptt_right, $comment_type );
 }
 /**
  * @param int    $comment_id            Comment id.
@@ -2394,7 +2394,7 @@ function bb_migration_get_activity_data_and_update( $comment_id, $mppt_left, $mp
  *
  * @param string $comment_type          Type of comment.
  */
-function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_root_id, $mptt_right, $comment_type ) {
+function bb_md_migration_activity_update_data( $comment_id, $new_secondary_item_id, $main_root_id, $mptt_right, $comment_type ) {
 	$bp = buddypress();
 	global $wpdb;
 	//Update current mptt_right, item_id & secondary_item_id for current comment
@@ -2432,31 +2432,26 @@ function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_roo
 			$get_au_row = $wpdb->get_row( $get_au_sql );
 			if ( ! empty( $get_au_row ) ) {
 				$get_au_id = $get_au_row->secondary_item_id;
-				// Update activity id in media table
-				$update_media_sql = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET privacy = %s,activity_id = %d WHERE activity_id = %d", 'comment', $get_au_id, $comment_id );
-				$wpdb->query( $update_media_sql );
+				// Check activity id exists in media table
+				$check_activity_id_exists_for_media_sql = $wpdb->prepare( "SELECT activity_id FROM {$bp->media->table_name} WHERE activity_id=%d", $comment_id );
+				//bb_migration_write_log( ' check_activity_id_exists_for_media_sql - ' . $check_activity_id_exists_for_media_sql );
+				$get_activity_id_exists_for_media_sql = $wpdb->get_row( $check_activity_id_exists_for_media_sql );
+				if ( ! empty( $get_activity_id_exists_for_media_sql ) && isset( $get_activity_id_exists_for_media_sql->activity_id ) ) {
+					// Update activity id in media table
+					$update_media_sql = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET privacy = %s,activity_id = %d WHERE activity_id = %d", 'comment', $get_au_id, $comment_id );
+					$wpdb->query( $update_media_sql );
+				}
+				// Check activity id exists in document table
+				$check_activity_id_exists_for_doc_sql = $wpdb->prepare( "SELECT activity_id FROM {$bp->document->table_name} WHERE activity_id=%d", $comment_id );
+				//bb_migration_write_log( ' check_activity_id_exists_for_doc_sql - ' . $check_activity_id_exists_for_doc_sql );
+				$get_activity_id_exists_for_doc_sql = $wpdb->get_row( $check_activity_id_exists_for_doc_sql );
+				if ( ! empty( $get_activity_id_exists_for_doc_sql ) && isset( $get_activity_id_exists_for_doc_sql->activity_id ) ) {
+					// Update activity id in media table
+					$update_document_sql = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s,activity_id = %d WHERE activity_id = %d", 'comment', $get_au_id, $comment_id );
+					$wpdb->query( $update_document_sql );
+				}
 			}
 		}
-	}
-}
-/**
- * Here create separate log file for media migration. Like we can insert main root activity ids.
- *
- * @param $log string|array|object Its message or data which we add in log file.
- */
-function bb_migration_write_log( $log ) {
-	$message = date( "Y-m-d H:i:s - " );
-	if ( is_string( $log ) ) {
-		$message .= $log . "\r\n";
-	}
-	$log_file_path = WP_CONTENT_DIR . '/media_migration_debug.log';
-	if ( ! file_exists( $log_file_path ) ) {
-		fopen( $log_file_path, "w" );
-	}
-	if ( is_array( $log ) || is_object( $log ) ) {
-		error_log( print_r( $log, true ), 3, $log_file_path );
-	} else {
-		error_log( $message, 3, $log_file_path );
 	}
 }
 /**
@@ -2471,7 +2466,27 @@ function bb_migration_remove_activity_id_activity_update_type( $activity_ids, $m
 	foreach ( $activity_ids as $child_id ) {
 		$bp = buddypress();
 		global $wpdb;
-		$delete_sql = $wpdb->prepare( "DELETE FROM {$bp->activity->table_name} WHERE id = %d AND item_id=%s AND type=%s AND privacy=%s", $child_id, $main_root_id, 'activity_update', 'media' );
+		$delete_sql = $wpdb->prepare( "DELETE FROM {$bp->activity->table_name} WHERE id = %d AND item_id=%s AND type=%s AND privacy=%s OR privacy=%s", $child_id, $main_root_id, 'activity_update', 'media', 'document' );
 		$wpdb->query( $delete_sql );
+	}
+}
+/**
+ * Here create separate log file for media migration. Like we can insert main root activity ids.
+ *
+ * @param $log string|array|object Its message or data which we add in log file.
+ */
+function bb_migration_write_log( $log ) {
+	$message = date( "Y-m-d H:i:s - " );
+	if ( is_string( $log ) ) {
+		$message .= $log . "\r\n";
+	}
+	$log_file_path = WP_CONTENT_DIR . '/media_document_migration_debug.log';
+	if ( ! file_exists( $log_file_path ) ) {
+		fopen( $log_file_path, "w" );
+	}
+	if ( is_array( $log ) || is_object( $log ) ) {
+		error_log( print_r( $log, true ), 3, $log_file_path );
+	} else {
+		error_log( $message, 3, $log_file_path );
 	}
 }
