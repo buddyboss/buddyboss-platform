@@ -58,10 +58,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
                                 <input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
                                 <div class="forum-post-video-template" style="display:none;">
                                     <div class="dz-preview dz-file-preview well" id="dz-preview-template">
-                                        <div class="dz-details">
-                                            <div class="dz-filename"><span data-dz-name></span></div>
-                                            <div class="dz-size" data-dz-size></div>
-                                        </div>
+										<div class="dz-video-icon"></span></div>
                                         <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
                                         <div class="dz-error-message"><span data-dz-errormessage></span></div>
                                         <div class="dz-success-mark">

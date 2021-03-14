@@ -1018,11 +1018,29 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		padding: 0 30px 0 10px;
 		font-size: 14px;
 		line-height: 2;
-		min-width: 160px;
+		min-width: 150px;
 	}
 
 	.dz-preview {
 		background: #f0f3f7;
+	}
+
+	.dz-video-icon {
+		max-width: 70%;
+		margin: auto;
+		background: url(../images/video-play.svg) !important;
+		background-color: #ccc !important;
+		height: 52px;
+		width: 52px;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -65px);
+		z-index: 11;
+		opacity: 0.8;
+		border: 0;
+		transition: all ease 0.3s !important;
+		border-radius: 50%;
 	}
 
 	.dz-preview .dz-progress {
@@ -1041,7 +1059,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		bottom: 18%;
 		top: inherit;
 		left: 50%;
-		margin-left: 65px;
+		margin-left: 60px;
 		transform: translateX(-50%);
 		background-color: transparent;
 		line-height: 1;
@@ -1070,8 +1088,12 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		}
 
 		&.dz-preview.dz-file-preview {
-			background-color: #111;
+			background-color: #ddd;
 			border-radius: 4px;
+		}
+
+		.dz-video-icon {
+			transform: translate(-50%, -50%);
 		}
 
 		.dz-remove {
@@ -1091,7 +1113,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 				line-height: 1;
 				position: relative;
 				top: -2px;
-				left: -0.5px;
+				left: 0;
 			}
 		}
 
@@ -1134,7 +1156,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	}
 
 	.dz-preview.dz-file-preview .dz-details {
-		min-height: 140px;
+		min-height: 165px;
 
 		.dz-size {
 			display: none !important;
@@ -1148,21 +1170,18 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	}
 
 	.dz-success-mark {
-		top: 60%;
+		top: 70%;
 	}
 
 	.dz-preview.dz-file-preview {
-		width: calc(33.33333% - 11px);
+		width: 165px;
+		min-height: 165px;
 
 		.dz-details {
 			width: 100%;
 			color: #fff;
 			background-color: rgba(0, 0, 0, 0.3);
 			z-index: 1;
-		}
-
-		.bb-media-model-wrapper & {
-			width: calc(100% - 11px);
 		}
 
 	}
@@ -1199,49 +1218,6 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	}
 
 	@media screen and (max-width: 480px ) {
-
-		.dz-preview.dz-file-preview {
-			width: calc(100% - 10px);
-			margin: 0 5px 10px;
-		}
-
-	}
-
-}
-
-// Profile Video, Message Video and Group Message Video Uploader
-#bp-group-messages-post-video-uploader,
-.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone,
-#video-uploader.dropzone {
-	-webkit-box-pack: start;
-	-ms-flex-pack: start;
-	justify-content: flex-start;
-
-	.dz-preview.dz-file-preview {
-		width: calc(50% - 11.5px);
-		margin: 0 5px 10px;
-
-		&:last-child {
-			margin-right: 0;
-		}
-
-		.dz-remove:after {
-			left: inherit !important;
-		}
-
-	}
-
-	@media screen and (max-width: 768px ) {
-
-		.dz-preview.dz-file-preview {
-			width: calc(50% - 11.5px);
-			margin: 0 5px 10px;
-
-			&:last-child {
-				margin-right: 0;
-			}
-
-		}
 
 		.dz-preview.dz-file-preview {
 			width: calc(100% - 10px);
