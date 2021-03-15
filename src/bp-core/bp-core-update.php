@@ -323,6 +323,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16401 ) {
 			bb_update_to_1_5_6();
 		}
+
+		if ( $raw_db_version < 16501 ) {
+			bp_update_to_1_5_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -661,6 +665,15 @@ function bp_update_to_1_5_1() {
 		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
+}
+
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_update_to_1_5_7() {
+	bp_core_install_media();
 }
 
 function bp_update_default_doc_extensions() {

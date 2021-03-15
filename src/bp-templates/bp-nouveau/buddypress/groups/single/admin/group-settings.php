@@ -190,6 +190,31 @@
 
 	<?php endif; ?>
 
+	<?php if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) : ?>
+
+		<fieldset class="radio group-video">
+			<legend><?php esc_html_e( 'Group Videos', 'buddyboss' ); ?></legend>
+
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage videos?', 'buddyboss' ); ?></p>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-video-status" id="group-video-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_video_status_setting( 'members' ); ?> />
+				<label for="group-video-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+			</div>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-video-status" id="group-video-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_video_status_setting( 'mods' ); ?> />
+				<label for="group-video-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+			</div>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-video-status" id="group-video-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_video_status_setting( 'admins' ); ?> />
+				<label for="group-video-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+			</div>
+		</fieldset>
+
+	<?php endif; ?>
+
 	<?php if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() ) : ?>
 
 		<fieldset class="radio group-messages">

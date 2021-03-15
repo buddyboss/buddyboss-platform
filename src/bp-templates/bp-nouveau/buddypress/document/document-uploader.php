@@ -13,7 +13,7 @@
 			<div class="modal-wrapper">
 				<div class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 						<a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
 							<span class="bb-icon bb-icon-close"></span>

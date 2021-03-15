@@ -62,7 +62,7 @@ function bp_media_upload() {
  */
 function bp_media_allowed_mimes( $mime_types ) {
 
-	// Creating a new array will reset the allowed filetypes
+	// Creating a new array will reset the allowed filetypes.
 	$mime_types = array(
 		'jpg|jpeg|jpe' => 'image/jpeg',
 		'gif'          => 'image/gif',
@@ -88,9 +88,9 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	 */
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 
 	if ( ! function_exists( 'media_handle_upload' ) ) {
@@ -129,7 +129,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		return $aid;
 	}
 
-	// Image rotation fix
+	// Image rotation fix.
 	do_action( 'bp_media_attachment_uploaded', $aid );
 
 	$attachment = get_post( $aid );
@@ -262,9 +262,9 @@ function bp_media_get( $args = '' ) {
 			'max'              => false,        // Maximum number of results to return.
 			'fields'           => 'all',
 			'page'             => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'         => false,        // results per page
-			'sort'             => 'DESC',       // sort ASC or DESC
-			'order_by'         => false,        // order by
+			'per_page'         => false,        // results per page.
+			'sort'             => 'DESC',       // sort ASC or DESC.
+			'order_by'         => false,        // order by.
 
 			'scope'            => false,
 
@@ -273,11 +273,12 @@ function bp_media_get( $args = '' ) {
 			'activity_id'      => false,
 			'album_id'         => false,
 			'group_id'         => false,
-			'search_terms'     => false,        // Pass search terms as a string
-			'privacy'          => false,        // privacy of media
+			'search_terms'     => false,        // Pass search terms as a string.
+			'privacy'          => false,        // privacy of media.
 			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'      => false,
-			'moderation_query' => true,         // Filter for exclude moderation query
+			'moderation_query' => true,         // Filter for exclude moderation query.
+			'video'            => false,         // Whether to include videos.
 		),
 		'media_get'
 	);
@@ -300,6 +301,7 @@ function bp_media_get( $args = '' ) {
 			'count_total'      => $r['count_total'],
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
+			'video'            => $r['video'],
 		)
 	);
 
@@ -1261,9 +1263,9 @@ function bp_media_sideload_attachment( $file ) {
 	$file = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
 
 	if ( ! function_exists( 'download_url' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 	$file_array['tmp_name'] = download_url( $file );
 
@@ -1344,7 +1346,7 @@ function bp_media_handle_sideload( $file_array, $post_data = array() ) {
 		unset( $attachment['ID'] );
 	}
 
-	// Save the attachment metadata
+	// Save the attachment metadata.
 	$id = wp_insert_attachment( $attachment, $file );
 
 	if ( ! is_wp_error( $id ) ) {
@@ -2299,7 +2301,7 @@ function bp_media_default_scope( $scope ) {
 
 	$new_scope = array();
 
-	$allowed_scopes = array( 'public' );
+	$allowed_scopes = array( 'public', 'all' );
 	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
 		$allowed_scopes[] = 'friends';
 	}
@@ -2331,7 +2333,7 @@ function bp_media_default_scope( $scope ) {
 	}
 
 	if ( empty( $new_scope ) ) {
-		$new_scope = (array) $scope;
+		$new_scope = (array) ( ! is_array( $scope ) ? explode( ',', trim( $scope ) ) : $scope );
 	}
 
 	// Remove duplicate scope if added.
@@ -3335,4 +3337,32 @@ function bb_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
 	}
 
 	return false;
+}
+
+/**
+ * Return download link of the album.
+ *
+ * @param int $album_id album id.
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.5.7
+ */
+function bp_media_album_download_link( $album_id ) {
+
+	if ( empty( $album_id ) ) {
+		return;
+	}
+
+	$link = site_url() . '/?attachment=' . $album_id . '&media_type=album&download_media_file=1&media_file=' . $album_id;
+
+	/**
+	 * Filter for album download link.
+	 *
+	 * @param string $link     Downloadable album link.
+	 * @param int    $album_id Album id.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
+	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
+
 }

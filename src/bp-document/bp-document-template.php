@@ -132,8 +132,6 @@ function bp_has_document( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	$privacy = false;
-
 	// folder filtering.
 	$folder_id = 0;
 	if ( ! isset( $args['folder_id'] ) && empty( $args['include'] ) ) {
@@ -146,6 +144,14 @@ function bp_has_document( $args = '' ) {
 	}
 
 	$group_id = false;
+	$privacy  = false;
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$group_id = bp_get_current_group_id();
+		$privacy  = array( 'grouponly' );
+		if ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) {
+			$privacy = false;
+		}
+	}
 
 	// The default scope should recognize custom slugs.
 	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
@@ -2319,6 +2325,23 @@ function bp_get_document_parent_activity_id() {
 function bp_get_document_preview_music_extensions() {
 
 	return apply_filters( 'bp_get_document_preview_music_extensions', array( 'mp3', 'wav', 'ogg' ) );
+}
+
+/**
+ * Return the document preview functions extensions.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_get_document_preview_video_extensions() {
+
+	/**
+	 * Return the document preview functions extensions.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
+	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4' ) );
 }
 
 /**

@@ -12,10 +12,10 @@
 				<div class="modal-container has-folderlocationUI">
 
 					<header class="bb-model-header">
-						<a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-upload-tab  bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 
 						<?php if ( bp_is_single_album() ) : ?>
-							<a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss' ); ?></a>
+							<a href="#" class="bp-media-upload-tab  bp-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss' ); ?></a>
 						<?php endif; ?>
 
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
@@ -27,7 +27,7 @@
 
 					<div class="bb-field-steps bb-field-steps-1">
 
-						<div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
+						<div class="bb-dropzone-wrap bp-media-upload-tab-content bp-upload-tab-content" id="bp-dropzone-content">
 							<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() && bp_is_active( 'activity' ) ) : ?>
 								<div class="media-uploader-post-content">
 									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your photos, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your photos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
@@ -53,7 +53,7 @@
 					</div>
 
 					<?php if ( bp_is_single_album() ) : ?>
-						<div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
+						<div class="bp-existing-media-wrap bp-media-upload-tab-content bp-upload-tab-content" id="bp-existing-media-content" style="display: none;">
 
 							<?php if ( bp_has_media( array( 'album_id' => 'existing-media' ) ) ) : ?>
 

@@ -444,7 +444,7 @@ function bp_document_update_document_privacy( $folder ) {
 /**
  * Save document when new topic or reply is saved
  *
- * @param $post_id
+ * @param int $post_id post id of the topic or reply.
  *
  * @since BuddyBoss 1.4.0
  */
@@ -833,7 +833,7 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		foreach ( $document_ids as $document_id ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
 				$document->privacy = $activity->privacy;
 				$document->save();
 			}

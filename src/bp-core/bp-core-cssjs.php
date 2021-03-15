@@ -178,6 +178,26 @@ function bp_core_register_common_scripts() {
 				'dependencies' => array( 'jquery' ),
 				'footer'       => true,
 		),
+		'bp-media-videojs'   => array(
+			'file'         => "{$url}vendor/video{$min}.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-seek-buttons'   => array(
+			'file'         => "{$url}vendor/videojs-seek-buttons.min.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-flv'   => array(
+			'file'         => "{$url}vendor/flv.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-flash'   => array(
+			'file'         => "{$url}vendor/videojs-flash.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
 
 	);
 
@@ -346,6 +366,10 @@ function bp_core_register_common_styles() {
 			'jquery-datetimepicker' => array(
 					'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
 					'dependencies' => array(),
+			),
+			'bp-media-videojs-css' => array(
+				'file'         => "{$url}vendor/video-js{$min}.css",
+				'dependencies' => array(),
 			),
 		)
 	);

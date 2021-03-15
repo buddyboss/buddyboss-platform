@@ -427,6 +427,7 @@ function bp_document_get_specific( $args = '' ) {
 			'folder_id'    => false,      // Sort ASC or DESC.
 			'folder'       => false,
 			'meta_query'   => false,
+			'privacy'      => false,      // privacy to filter.
 		),
 		'document_get_specific'
 	);
@@ -440,6 +441,7 @@ function bp_document_get_specific( $args = '' ) {
 		'order_by'   => $r['order_by'],
 		'folder_id'  => $r['folder_id'],
 		'folder'     => $r['folder'],
+		'privacy'    => $r['privacy'],      // privacy to filter.
 		'meta_query' => $r['meta_query'],
 	);
 
@@ -1262,9 +1264,9 @@ function bp_document_sideload_attachment( $file ) {
 	$file = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
 
 	if ( ! function_exists( 'download_url' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 	$file_array['tmp_name'] = download_url( $file );
 
@@ -1339,9 +1341,9 @@ function bp_document_handle_sideload( $file_array, $post_data = array() ) {
 	$id = wp_insert_attachment( $attachment, $file );
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 
 	if ( ! is_wp_error( $id ) ) {
@@ -1398,9 +1400,9 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 	 */
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 
 	if ( ! function_exists( 'media_handle_upload' ) ) {
@@ -2526,9 +2528,9 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	}
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 	update_post_meta( $attachment_document_id, '_wp_attached_file', $new_file_rel_path );
 	wp_update_attachment_metadata( $attachment_document_id, wp_generate_attachment_metadata( $attachment_document_id, $new_file_abs_path ) );
@@ -2972,7 +2974,7 @@ function bp_document_folder_download_link( $folder_id ) {
 		return;
 	}
 
-	$link = site_url() . '/?attachment=' . $folder_id . '&document_type=folder&download_document_file=1' . '&document_file=' . $folder_id;
+	$link = site_url() . '/?attachment=' . $folder_id . '&document_type=folder&download_document_file=1&document_file=' . $folder_id;
 
 	return apply_filters( 'bp_document_folder_download_link', $link, $folder_id );
 
@@ -3532,12 +3534,10 @@ function bp_document_default_scope( $scope = 'all' ) {
 		}
 	} elseif ( bp_is_user_document() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'personal';
-	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
-		$new_scope[] = 'groups';
 	}
 
 	if ( empty( $new_scope ) ) {
-		$new_scope = (array) $scope;
+		$new_scope = (array) ( ! is_array( $scope ) ? explode( ',', trim( $scope ) ) : $scope );
 	}
 
 	// Remove duplicate scope if added.

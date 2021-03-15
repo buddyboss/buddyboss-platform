@@ -144,10 +144,19 @@ function bp_has_media( $args = '' ) {
 		$album_id = ( isset( $args['album_id'] ) ? $args['album_id'] : false );
 	}
 
+	if ( $album_id && ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) ) {
+		$args['video'] = true;
+	}
+
 	$group_id = false;
+	$privacy  = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
-		$user_id  = false;
+		$privacy  = array( 'grouponly' );
+		if ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) {
+			$privacy = false;
+		}
+		$user_id = false;
 	}
 
 	// The default scope should recognize custom slugs.
@@ -187,7 +196,8 @@ function bp_has_media( $args = '' ) {
 			'user_id'      => $user_id,        // user_id to filter on.
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
-			'privacy'      => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'video'        => false,            // Whether to include videos.
 
 		// Searching.
 			'search_terms' => $search_terms_default,
@@ -1135,7 +1145,7 @@ function bp_has_albums( $args = '' ) {
 			// get the login user id.
 			$current_user_id = get_current_user_id();
 
-			// check if the login user is friends of the display user
+			// check if the login user is friends of the display user.
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
 
 			/**
@@ -1178,7 +1188,7 @@ function bp_has_albums( $args = '' ) {
 			'fields'       => 'all',
 			'count_total'  => false,
 
-			// Filtering
+			// Filtering.
 			'user_id'      => $user_id,     // user_id to filter on.
 			'group_id'     => $group_id,    // group_id to filter on.
 			'privacy'      => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.

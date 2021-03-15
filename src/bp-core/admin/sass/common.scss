@@ -552,6 +552,12 @@ tr.bp-search-parent-field label {
 	width: 1px;
 }
 
+/* Video */
+.bp-admin-card.section-bp_media_settings_videos h2:before,
+.bp-admin-card.section-bp_video_settings_extensions h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/solid/video.svg);
+}
+
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
 	background-image: url(../../images/admin/icons/buddyboss/page.svg);
@@ -699,6 +705,7 @@ table.extension-listing {
 	tfoot td {
 
 		#btn-add-extensions,
+		#btn-add-video-extensions,
 		#btn-check-mime-type {
 			cursor: pointer;
 			float: right;

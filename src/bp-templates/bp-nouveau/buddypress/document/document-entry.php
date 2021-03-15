@@ -22,6 +22,7 @@ $document_id         = bp_get_document_id();
 $filename            = basename( get_attached_file( $attachment_id ) );
 $mirror_text         = '';
 $audio_url           = '';
+$video_url           = '';
 $can_add             = false;
 $data_action         = '';
 $is_comment_doc      = false;
@@ -57,6 +58,11 @@ if ( $attachment_id ) {
 	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 		$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 	}
+
+	if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
+		$video_url = bp_document_get_preview_video_url( bp_get_document_id(), $extension, $attachment_id );
+	}
+
 } else {
 	$svg_icon       = bp_document_svg_icon( 'folder' );
 	$download_link  = bp_document_folder_download_link( bp_get_document_folder_id() );
@@ -108,6 +114,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
 		data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
 		data-mp3-preview="<?php echo $audio_url ? esc_url( $audio_url ) : ''; ?>"
+		data-video-preview="<?php echo $video_url ? esc_url( $video_url ) : ''; ?>"
 		data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>"
 		data-document-title="<?php echo esc_html( $filename ); ?>"
 		data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"

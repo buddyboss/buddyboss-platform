@@ -41,8 +41,6 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
-	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
-
 	if ( bp_is_user_media() ||
 		 bp_is_single_album() ||
 		 bp_is_media_directory() ||
@@ -182,7 +180,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'unselect'             => __( 'Unselect', 'buddyboss' ),
 		'selectall'            => __( 'Select All', 'buddyboss' ),
 		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'      => __( 'Sorry, no photos were found', 'buddyboss' ),
+		'no_photos_found'      => ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
 		'upload'               => __( 'Upload', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
@@ -231,7 +229,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'component' => 'media',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-media/',
+			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/groups-media/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
 			'count'     => bp_media_get_user_total_group_media_count(),
 			'position'  => 15,

@@ -272,6 +272,27 @@ function bp_nouveau_ajax_delete_activity() {
 		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
 	}
 
+
+	$activity_html      = '';
+	$parent_activity_id = 0;
+	if ( isset( $activity->secondary_item_id ) && ! empty( $activity->secondary_item_id ) ) {
+		$parent_activity_id = $activity->secondary_item_id;
+		ob_start();
+		if ( bp_has_activities(
+			array(
+				'include' => $parent_activity_id,
+			)
+		) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				bp_get_template_part( 'activity/entry' );
+			}
+		}
+		$activity_html = ob_get_contents();
+		ob_end_clean();
+		$response['activity']           = $activity_html;
+		$response['parent_activity_id'] = $parent_activity_id;
+	}
 	wp_send_json_success( $response );
 }
 
@@ -328,6 +349,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
+		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
 		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
 	}
 
@@ -544,6 +566,8 @@ function bp_nouveau_ajax_post_update() {
 		} elseif ( bp_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
 			$toolbar_option = true;
 		} elseif ( bp_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
+			$toolbar_option = true;
+		} elseif ( bp_is_active( 'video' ) && ! empty( $_POST['video'] ) ) {
 			$toolbar_option = true;
 		}
 

@@ -5,18 +5,18 @@
  * @package BuddyBoss\Core
  */
 
-$listing_class  = '';
-$attachment_id  = bp_get_media_attachment_id();
-$media_id       = bp_get_media_id();
-$filename       = basename( get_attached_file( $attachment_id ) );
-$photo_title    = '';
-$media_type     = '';
-$download_link  = '';
+$listing_class = '';
+$attachment_id = bp_get_media_attachment_id();
+$media_id      = bp_get_media_id();
+$filename      = basename( get_attached_file( $attachment_id ) );
+$photo_title   = '';
+$media_type    = '';
+$download_link = '';
 if ( $attachment_id ) {
-	$download_link  = bp_media_download_link( $attachment_id, $media_id );
-	$listing_class  = 'ac-media-list';
-	$media_type     = 'photos';
-	$photo_title    = bp_get_media_title();
+	$download_link = bp_media_download_link( $attachment_id, $media_id );
+	$listing_class = 'ac-media-list';
+	$media_type    = 'photos';
+	$photo_title   = bp_get_media_title();
 }
 
 $class = ''; // used.

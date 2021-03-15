@@ -5519,7 +5519,7 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 		array(
 			'id'                => 'activity_comment_report',
 			'component'         => 'moderation',
-			'position'          => 50,
+			'position'          => 10,
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
 				'data-bp-content-id'   => bp_get_activity_comment_id(),

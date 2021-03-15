@@ -304,75 +304,76 @@ window.bp = window.bp || {};
 				membersDiv.addEventListener(
 					'scroll',
 					function () {
-						if ( membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight ) {
+					if ( membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight ) {
 
 							if ( page >= total_pages || scroll_xhr != null ) {
 								return false;
 							}
 
 							if ( ! $( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).length && ! $( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).length && ! $( '#group-messages-container .group-messages-members-listing .last #bp-group-messages-next-page' ).length ) {
-								return false;
-							}
+							return false;
+						}
 
-							page = page + 1;
+						page = page + 1;
 
-							$( '.bb-icon-loader' ).show();
+						$( '.bb-icon-loader' ).show();
 
-							var type = '';
-							if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
-								type = 'all';
-							} else {
-								type = 'individual';
-							}
+						var type = '';
+						if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
+							type = 'all';
+						} else {
+							type = 'individual';
+						}
 
-							var data = {
+						var data = {
 								'action'    : 'groups_get_group_members_listing',
 								'nonce'     : BP_Nouveau.group_messages.nonces.retrieve_group_members,
 								'group'     : BP_Nouveau.group_messages.group_id,
 								'type'      : type,
 								'page'      : page,
 								'show_all'  : show_all
-							};
+						};
 
 							scroll_xhr = $.ajax(
-								{
-									type: 'POST',
-									url: BP_Nouveau.ajaxurl,
-									data: data,
-									success: function ( response ) {
+							{
+								type: 'POST',
+								url: BP_Nouveau.ajaxurl,
+								data: data,
+								success: function ( response ) {
 										scroll_xhr = null;
-										if ( response.success && 'no_member' !== response.data.results ) {
-											$( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).remove();
-											memberListUl.append( response.data.results );
-											memberListUlLast.html( '' );
-											memberListUlLast.html( response.data.pagination );
-											$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
-											if ( 'all' === type ) {
+									if ( response.success && 'no_member' !== response.data.results ) {
+										$( '#group-messages-container .group-messages-members-listing #members-list li.load-more' ).remove();
+										memberListUl.append( response.data.results );
+										memberListUlLast.html( '' );
+										memberListUlLast.html( response.data.pagination );
+										$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback' ).hide();
+										if ( 'all' === type ) {
 												$( '.group-messages-members-listing #members-list li.can-grp-msg' ).addClass( 'is_disabled selected' );
 											}else{
-												
+
 												var selected_user_ids = $group_messages_select.val();
 												for (var select_index = 0; select_index < selected_user_ids.length; select_index++) {
 													var user_id = selected_user_ids[ select_index ];
 													var user_li_sel = $( '.group-messages-members-listing #members-list li.can-grp-msg.'+user_id );
 													if( user_li_sel.length > 0 ){
 														user_li_sel.addClass( 'selected' );
-													}
-												}
-											}
-										} else {
-											$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
-											feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 										}
-										$( '.bb-icon-loader' ).hide();
+												}
+										}
+									} else {
+										$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
+										feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 									}
+									$( '.bb-icon-loader' ).hide();
 								}
-							);
-						}
+							}
+						);
+					}
 					}
 				);
 
 			}
+
 
 			$( document ).on(
 				'click',
@@ -567,11 +568,12 @@ window.bp = window.bp || {};
 
 					var media   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val();
 					var document   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val();
+					var video   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_video' ).val();
 					var gif     	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_gif' ).val();
 					var contentError   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-content-no-error' );
 					var recipientError = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-recipient-no-error' );
 
-					if ( $( $.parseHTML( content ) ).text().trim() === '' && '' === media && '' === document && '' === gif ) {
+					if ( $( $.parseHTML( content ) ).text().trim() === '' && '' === media && '' === document && '' === video && '' === gif ) {
 						if ( ! contentError.length ) {
 							$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback' ).removeClass( 'bp-messages-feedback-hide' );
 							$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
@@ -613,6 +615,7 @@ window.bp = window.bp || {};
 						'content' 	 	: content,
 						'media'   	 	: media,
 						'document'   	: document,
+						'video'   	    : video,
 						'users'   		: user,
 						'users_list'    : users_list,
 						'type'    		: type,
@@ -676,6 +679,9 @@ window.bp = window.bp || {};
 
 										$( 'div#bp-group-messages-post-document-uploader' ).html( '' );
 										$( 'div#bp-group-messages-post-document-uploader' ).addClass( 'closed' ).removeClass( 'open' );
+
+										$( 'div#bp-group-messages-post-video-uploader' ).html( '' );
+										$( 'div#bp-group-messages-post-video-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 									}
 
 									if ( containerAttachment.length ) {
@@ -815,6 +821,7 @@ window.bp = window.bp || {};
 					medium_editor.toggleClass( 'active' );
 				}
 			);
+
 			$( document ).on(
 				'click',
 				'#group-messages-container .medium-editor-toolbar-actions',
@@ -824,10 +831,11 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
 			$( document ).on(
 				'input',
 				'#group_message_content',
-				function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text
+				function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
 					var medium_editor = $( e.currentTarget ).closest( '#bp-group-message-content' ).find( '.medium-editor-toolbar' );
 					setTimeout(
 						function(){
@@ -922,10 +930,10 @@ window.bp = window.bp || {};
 					);
 				}
 
-				// check for mentions in the url, if set any then focus to editor
+				// check for mentions in the url, if set any then focus to editor.
 				var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
 
-				// Check for mention
+				// Check for mention.
 				if ( ! _.isNull( mention ) ) {
 					$( '#message_content' ).focus();
 				}
@@ -936,7 +944,7 @@ window.bp = window.bp || {};
 		},
 
 		addMentions: function() {
-			// Add autocomplete to send_to field
+			// Add autocomplete to send_to field.
 			$( this.el ).find( '#group-messages-send-to-input' ).bp_mentions(
 				{
 					data: [],

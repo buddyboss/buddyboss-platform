@@ -19,6 +19,17 @@
 		</div>
 
 		<?php
+		$video_extensions = bp_video_get_allowed_extension();
+		if ( bp_is_messages_video_support_enabled() && ! empty( $video_extensions ) ) :
+			?>
+            <div class="post-elements-buttons-item post-video">
+                <a href="#" id="messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">
+                    <i class="bb-icon bb-icon-video-alt"></i>
+                </a>
+            </div>
+		<?php endif; ?>
+
+		<?php
 		$extensions = bp_document_get_allowed_extension();
 		if ( ! empty( $extensions ) ) :
 			?>
