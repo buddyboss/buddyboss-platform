@@ -13608,6 +13608,19 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 20px;
 }
 
+.modal-container#boss-media-create-album-popup #bp-video-create-album-submit.saving:after, .modal-container#boss-video-create-album-popup #bp-video-create-album-submit.saving:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+}
+
 .modal-container .bp-video-upload-tab.selected {
   color: #122b46;
 }
