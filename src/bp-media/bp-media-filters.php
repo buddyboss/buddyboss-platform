@@ -1133,9 +1133,6 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 /**
  * Embed gif in activity content
  *
- * @param $content
- * @param $activity
- *
  * @since BuddyBoss 1.0.0
  *
  * @return string
@@ -1157,8 +1154,7 @@ function bp_media_activity_embed_gif() {
 /**
  * Embed gif in activity comment content
  *
- * @param $content
- * @param $activity
+ * @param int $comment_id Comment id for the activity.
  *
  * @since BuddyBoss 1.0.0
  *
