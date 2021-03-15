@@ -21040,7 +21040,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 }
 
 .group-messages-members-listing #members-list {
-  max-height: 50vh;
+  max-height: 550px;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 -20px;
