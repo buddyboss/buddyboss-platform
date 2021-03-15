@@ -66,8 +66,7 @@ add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
-
-// Check content empty or not for activity gif.
+//Check content empty or not for activity gif
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 /**
  * Add Media items for search
@@ -1100,6 +1099,7 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
 function bp_media_activity_embed_gif_content( $activity_id ) {
 
 	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+	
 	if ( empty( $gif_data ) ) {
 		return;
 	}
@@ -1114,8 +1114,8 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
 			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo esc_url( $preview_url ); ?>" loop muted playsinline>
-					<source src="<?php echo esc_url( $video_url ); ?>" type="video/mp4">
+				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted playsinline>
+					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
 					<span class="bb-icon-play-thin"></span>
@@ -1131,7 +1131,10 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 }
 
 /**
- * Embed gif in activity content.
+ * Embed gif in activity content
+ *
+ * @param $content
+ * @param $activity
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1154,7 +1157,8 @@ function bp_media_activity_embed_gif() {
 /**
  * Embed gif in activity comment content
  *
- * @param int $comment_id Comment id for the activity.
+ * @param $content
+ * @param $activity
  *
  * @since BuddyBoss 1.0.0
  *
@@ -2422,7 +2426,7 @@ function bp_media_activity_entry_css_class( $class ) {
 }
 
 /**
- * Check content empty for activity GIF.
+ * Check content empty for activity GIF
  *
  * @return string
  */
