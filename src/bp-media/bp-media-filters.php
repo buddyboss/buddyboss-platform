@@ -66,7 +66,8 @@ add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
-//Check content empty or not for activity gif
+
+// Check content empty or not for activity gif.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 /**
  * Add Media items for search
