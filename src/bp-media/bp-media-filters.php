@@ -1089,11 +1089,11 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
 }
 
 /**
- * Return activity gif embed HTML
+ * Return activity gif embed HTML.
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $activity_id
+ * @param int $activity_id
  *
  * @return false|string|void
  */
@@ -1132,7 +1132,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 }
 
 /**
- * Embed gif in activity content
+ * Embed gif in activity content.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1153,7 +1153,7 @@ function bp_media_activity_embed_gif() {
 }
 
 /**
- * Embed gif in activity comment content
+ * Embed gif in activity comment content.
  *
  * @param int $comment_id Comment id for the activity.
  *
