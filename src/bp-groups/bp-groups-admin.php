@@ -2232,7 +2232,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 					echo '<tr><td>';
 					echo sprintf( __( 'If members are restricted from joining groups in the <a href="%s">Group Access</a> settings, they will be unable to join this group type even if they have the profile type specified above.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array(
 						'page' => 'bp-settings',
-						'tab'  => 'bp-groups#group_membership_block'
+						'tab'  => 'bp-groups#group_access_control_block'
 					), 'admin.php' ) ) ) );
 					echo '</td></tr>';
 				}

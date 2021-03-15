@@ -1428,8 +1428,11 @@ function bp_document_admin_repair_document() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-						$wpdb->query( $update_query );
+						$up_document           = new BP_Document( $document->id );
+						$up_document->privacy  = 'grouponly';
+						$up_document->group_id = $activity->item_id;
+						$up_document->save();
+
 					}
 					if ( 'document' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1439,8 +1442,10 @@ function bp_document_admin_repair_document() {
 									$document_activity = new BP_Activity_Activity( $document_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $document_activity->component ) {
-									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-									$wpdb->query( $update_query );
+									$up_document           = new BP_Document( $document->id );
+									$up_document->privacy  = 'grouponly';
+									$up_document->group_id = $document_activity->item_id;
+									$up_document->save();
 									$activity->item_id   = $document_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1721,8 +1726,8 @@ function bp_document_get_edit_activity_data( $activity ) {
 			}
 		}
 
-		$activity['profile_document'] = bp_is_profile_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), 0 );
-		$activity['group_document']   = bp_is_group_document_support_enabled() && bp_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
+		$activity['profile_document'] = bp_is_profile_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_document']   = bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 
 	}
 
