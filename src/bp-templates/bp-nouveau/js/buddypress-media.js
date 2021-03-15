@@ -1019,14 +1019,13 @@ window.bp = window.bp || {};
 									$( document ).find( 'li#document-all' ).trigger( 'click' );
 								}
 							} else {
-
-								if ( parseInt( BP_Nouveau.media.current_folder ) > 0 ) {
-									$( '#document-stream ul.media-list li[data-id="' + document_id + '"]' ).remove();
-								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]' ).length && !$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]' ).parent().hasClass( 'bb-media-length-1' ) ) {
-									$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]' ).remove();
-									if ( activityId && activityId.length ) {
-										$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-media-wrap' ).remove();
-										$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner' ).append( response.data.document_content );
+								if (parseInt(BP_Nouveau.media.current_folder) > 0) {
+									$('#document-stream ul.media-list li[data-id="' + document_id + '"]').remove();
+								} else if ($('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').length && !$('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').parent().hasClass('bb-media-length-1')) {
+									$('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').remove();
+									if (activityId && activityId.length) {
+										$('#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-media-wrap').remove();
+										$('#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner').append(response.data.document_content);
 									}
 								}
 
