@@ -2374,7 +2374,6 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 	switch ( $media->privacy ) {
 
 		case 'public':
-		case 'comment': // Allow access for activity media - comment - 2121
 			if ( $media->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;

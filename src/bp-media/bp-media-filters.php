@@ -292,10 +292,10 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 		'user_id'  => false,
 	);
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ||
-	     bp_is_active( 'activity' ) && buddypress()->activity->id === $activity->component ) { // Set privacy for activity - comment - 2121
+
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_media_support_enabled() ) {
-			$args['privacy'] = array( 'comment' ); //grouponly
+			$args['privacy'] = array( 'grouponly' );
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-media';
 			}
@@ -322,6 +322,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
+
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap
