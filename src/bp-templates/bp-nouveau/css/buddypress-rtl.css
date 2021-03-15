@@ -19816,7 +19816,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   top: 50%;
   transform: translate(50%, -65px);
   z-index: 11;
-  opacity: 0.8;
+  opacity: 1;
   border: 0;
   transition: all ease 0.3s !important;
   border-radius: 50%;
@@ -20076,6 +20076,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #video-uploader.dropzone .dz-success-mark,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-success-mark {
   top: 70%;
+  right: -5px;
 }
 
 #activity-post-video-uploader .dz-preview.dz-file-preview,
