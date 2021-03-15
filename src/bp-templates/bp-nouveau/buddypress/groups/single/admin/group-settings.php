@@ -120,7 +120,7 @@
 		<fieldset class="radio group-media">
 			<legend><?php esc_html_e( 'Group Photos', 'buddyboss' ); ?></legend>
 
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage photos?', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload photos?', 'buddyboss' ); ?></p>
 
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-media-status" id="group-media-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_media_status_setting( 'members' ); ?> />
@@ -145,7 +145,7 @@
 		<fieldset class="radio group-albums">
 			<legend><?php esc_html_e( 'Group Albums', 'buddyboss' ); ?></legend>
 
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage albums?', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to create albums?', 'buddyboss' ); ?></p>
 
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-album-status" id="group-albums-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_albums_status_setting( 'members' ); ?> />
@@ -170,7 +170,7 @@
 		<fieldset class="radio group-document">
 			<legend><?php esc_html_e( 'Group Documents', 'buddyboss' ); ?></legend>
 
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage documents?', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload documents?', 'buddyboss' ); ?></p>
 
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-document-status" id="group-document-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_document_status_setting( 'members' ); ?> />
@@ -195,7 +195,7 @@
 		<fieldset class="radio group-video">
 			<legend><?php esc_html_e( 'Group Videos', 'buddyboss' ); ?></legend>
 
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage videos?', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload videos?', 'buddyboss' ); ?></p>
 
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-video-status" id="group-video-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_video_status_setting( 'members' ); ?> />
