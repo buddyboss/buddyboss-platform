@@ -13608,7 +13608,9 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 20px;
 }
 
-.modal-container#boss-media-create-album-popup #bp-video-create-album-submit.saving:after, .modal-container#boss-video-create-album-popup #bp-video-create-album-submit.saving:after {
+.modal-container#boss-media-create-album-popup #bp-media-create-album-submit.saving:after,
+.modal-container#boss-media-create-album-popup #bp-video-create-album-submit.saving:after, .modal-container#boss-video-create-album-popup #bp-media-create-album-submit.saving:after,
+.modal-container#boss-video-create-album-popup #bp-video-create-album-submit.saving:after {
   content: "\e838";
   font-family: "bb-icons";
   /* stylelint-disable-line */
