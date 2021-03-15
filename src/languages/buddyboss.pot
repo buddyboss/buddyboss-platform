@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-03-14 14:23:34+00:00\n"
+"POT-Creation-Date: 2021-03-15 06:10:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -922,8 +922,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:459
 #: bp-document/bp-document-template.php:333
-#: bp-document/bp-document-template.php:1340 bp-media/bp-media-template.php:325
-#: bp-media/bp-media-template.php:1334 bp-video/bp-video-template.php:329
+#: bp-document/bp-document-template.php:1334 bp-media/bp-media-template.php:325
+#: bp-media/bp-media-template.php:1323 bp-video/bp-video-template.php:329
 #: bp-video/bp-video-template.php:1281
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
@@ -3460,8 +3460,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:785
 #: bp-document/bp-document-filters.php:73
+#: bp-document/bp-document-functions.php:2105
 #: bp-document/bp-document-functions.php:2108
-#: bp-document/bp-document-functions.php:2111
 #: bp-document/classes/class-bp-document-component.php:69
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -5314,15 +5314,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
+"content will be unhidden</li>\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -8101,13 +8101,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9030,21 +9030,21 @@ msgstr ""
 msgid "Repair document on the site."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1457
+#: bp-document/bp-document-filters.php:1462
 msgid "%s document updated successfully."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1467
+#: bp-document/bp-document-filters.php:1472
 msgid "document update complete!"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1664
+#: bp-document/bp-document-filters.php:1669
 msgid "%s document"
 msgid_plural "%s documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-document/bp-document-filters.php:1669 bp-media/bp-media-filters.php:2345
+#: bp-document/bp-document-filters.php:1674 bp-media/bp-media-filters.php:2345
 #: bp-video/bp-video-filters.php:1464
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
@@ -9109,27 +9109,27 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2115
+#: bp-document/bp-document-functions.php:2112
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2502
+#: bp-document/bp-document-functions.php:2499
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2505
+#: bp-document/bp-document-functions.php:2502
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2508
+#: bp-document/bp-document-functions.php:2505
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2511
+#: bp-document/bp-document-functions.php:2508
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2530
+#: bp-document/bp-document-functions.php:2527
 msgid "File renaming error!"
 msgstr ""
 
@@ -28000,32 +28000,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3608
+#: bp-document/bp-document-functions.php:3583
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3610
+#: bp-document/bp-document-functions.php:3585
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3612
+#: bp-document/bp-document-functions.php:3587
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3614
+#: bp-document/bp-document-functions.php:3589
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3616
-#: bp-document/bp-document-functions.php:3621
+#: bp-document/bp-document-functions.php:3591
+#: bp-document/bp-document-functions.php:3596
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"
