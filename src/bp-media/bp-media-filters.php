@@ -1094,7 +1094,7 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $activity_id
+ * @param int $activity_id Activity id.
  *
  * @return false|string|void
  */
