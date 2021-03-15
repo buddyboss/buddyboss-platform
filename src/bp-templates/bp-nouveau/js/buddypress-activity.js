@@ -1122,9 +1122,6 @@ window.bp = window.bp || {};
 					model                 = this.models[activity_id];
 					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
 
-					if ( _.isEmpty( comment_data.content ) ) {
-						comment_data.content = '&#8203;';
-					}
 				}
 
 				parent.ajax( comment_data, 'activity' ).done(
