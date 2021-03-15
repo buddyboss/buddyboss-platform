@@ -1722,3 +1722,35 @@ function bp_core_display_name_format( $default = 'first_name' ) {
 	 */
 	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
 }
+
+/**
+ * Enable private REST APIs.
+ * - Wrapper function to check settings with BuddyBoss APP and Platform both.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool True if  private REST APIs is enabled, otherwise false.
+ */
+function bp_rest_enable_private_network() {
+
+	$retval = (
+		function_exists( 'bp_enable_private_network' ) &&
+		true !== bp_enable_private_network() &&
+		(
+			! function_exists( 'bbapp_is_private_app_enabled' ) ||
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled() // Check for buddyboss app private network.
+			)
+		)
+	);
+
+	/**
+	 * Filters whether private private REST APIs is enabled.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param bool $value Whether private REST APIs is enabled.
+	 */
+	return apply_filters( 'bp_rest_enable_private_network', $retval );
+}

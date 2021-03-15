@@ -440,7 +440,7 @@ function bp_admin_setting_callback_group_creation() {
 	?>
 
 	<input id="bp_restrict_group_creation" name="bp_restrict_group_creation" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( ! bp_restrict_group_creation( false ) ); ?> />
-	<label for="bp_restrict_group_creation"><?php _e( 'Enable social group creation by all users', 'buddyboss' ); ?></label>
+	<label for="bp_restrict_group_creation"><?php _e( 'Enable social group creation by all members', 'buddyboss' ); ?></label>
 	<p class="description" id="bp_group_creation_description"><?php _e( 'Administrators can always create groups, regardless of this setting.', 'buddyboss' ); ?></p>
 
 	<?php
@@ -1307,5 +1307,54 @@ function bp_admin_setting_callback_group_messages() {
 	?>
 	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
 	<label for="bp-disable-group-messages"><?php _e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
+	<?php
+}
+
+
+
+/**
+ * Link to Moderation Block tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_moderation_block_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 121711,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+
+
+/**
+ * Link to Moderation Report tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_moderation_report_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 121712,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
 	<?php
 }
