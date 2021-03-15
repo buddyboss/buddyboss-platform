@@ -2429,7 +2429,7 @@ function bp_media_activity_entry_css_class( $class ) {
  */
 function bb_check_is_activity_content_empty() {
 	if ( empty( $_POST['content'] ) && isset( $_POST['gif_data'] ) ) {
-		return '&nbsp;';
+		return ' ';
 	} else {
 		return $_POST['content'];
 	}
