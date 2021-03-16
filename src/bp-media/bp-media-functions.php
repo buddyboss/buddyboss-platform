@@ -2353,187 +2353,6 @@ function bp_media_default_scope( $scope ) {
 
 }
 
-/**
- * Check user have a permission to manage the media.
- *
- * @param int $media_id
- * @param int $user_id
- * @param int $thread_id
- * @param int $message_id
- *
- * @return mixed|void
- * @since BuddyBoss 1.4.4
- */
-function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
-
-	$can_manage   = false;
-	$can_view     = false;
-	$can_download = false;
-	$can_add      = false;
-	$media        = new BP_Media( $media_id );
-	$data         = array();
-
-	switch ( $media->privacy ) {
-
-		case 'public':
-			if ( $media->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} else {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'grouponly':
-			if ( bp_is_active( 'groups' ) ) {
-
-				$manage = groups_can_user_manage_media( $user_id, $media->group_id );
-				if ( $manage ) {
-					$can_manage   = true;
-					$can_add      = true;
-					$can_view     = true;
-					$can_download = true;
-				} else {
-					$the_group = groups_get_group( (int) $media->group_id );
-					if ( $the_group->id > 0 && $the_group->user_has_access ) {
-						$can_view     = true;
-						$can_download = true;
-					}
-				}
-			}
-
-			break;
-
-		case 'loggedin':
-			if ( ! is_user_logged_in() ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-			} elseif ( $media->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( bp_loggedin_user_id() === $user_id ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'friends':
-			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $media->user_id, $user_id ) : false;
-			if ( $media->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $is_friend ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'forums':
-			$args = array(
-				'user_id'         => $user_id,
-				'forum_id'        => bp_media_get_forum_id( $media_id ),
-				'check_ancestors' => false,
-			);
-
-			$has_access = bbp_user_can_view_forum( $args );
-			if ( $media->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $has_access ) {
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_manage = true;
-				}
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'message':
-			$thread_id  = bp_media_get_thread_id( $media_id );
-			$has_access = messages_check_thread_access( $thread_id, $user_id );
-			if ( ! is_user_logged_in() ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-			} elseif ( ! $thread_id ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-			} elseif ( $media->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $has_access > 0 ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'onlyme':
-			if ( $media->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			}
-			break;
-
-	}
-
-	$data['can_manage']   = $can_manage;
-	$data['can_view']     = $can_view;
-	$data['can_download'] = $can_download;
-	$data['can_add']      = $can_add;
-
-	return apply_filters( 'bp_media_user_can_manage_media', $data, $media_id, $user_id );
-}
-
 function bp_media_get_thread_id( $media_id ) {
 
 	$thread_id = 0;
@@ -2592,8 +2411,7 @@ function bp_media_download_link( $attachment_id, $media_id ) {
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['media_type'] ) {
-			$media_privacy = bp_media_user_can_manage_media( $_GET['media_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
-
+			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo' ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {
@@ -2726,130 +2544,6 @@ function bp_media_get_forum_id( $media_id ) {
 
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
-}
-
-/**
- * Check user have a permission to manage the album.
- *
- * @param int $album_id
- * @param int $user_id
- *
- * @return mixed|void
- * @since BuddyBoss 1.4.7
- */
-function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
-
-	$can_manage   = false;
-	$can_view     = false;
-	$can_download = false;
-	$can_add      = false;
-	$album        = new BP_Media_Album( $album_id );
-	$data         = array();
-
-	switch ( $album->privacy ) {
-
-		case 'public':
-			if ( $album->user_id === $user_id ) {
-				$can_add      = true;
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} else {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'grouponly':
-			if ( bp_is_active( 'groups' ) ) {
-
-				$manage = groups_can_user_manage_albums( $user_id, $album->group_id );
-				if ( $manage ) {
-					$can_manage   = true;
-					$can_add      = true;
-					$can_view     = true;
-					$can_download = true;
-				} else {
-					$the_group = groups_get_group( absint( $album->group_id ) );
-					if ( $the_group->id > 0 && $the_group->user_has_access ) {
-						$can_view     = true;
-						$can_download = true;
-					}
-				}
-			}
-
-			break;
-
-		case 'loggedin':
-			if ( ! is_user_logged_in() ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-			} elseif ( $album->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_add      = true;
-				$can_view     = true;
-				$can_download = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( bp_loggedin_user_id() === $user_id ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'friends':
-			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $album->user_id, $user_id ) : false;
-			if ( $album->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_add      = true;
-				$can_view     = true;
-				$can_download = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $is_friend ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'onlyme':
-			if ( $album->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_add      = true;
-				$can_view     = true;
-				$can_download = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			}
-			break;
-
-	}
-
-	$data['can_manage']   = $can_manage;
-	$data['can_view']     = $can_view;
-	$data['can_download'] = $can_download;
-	$data['can_add']      = $can_add;
-
-	return apply_filters( 'bp_media_user_can_manage_album', $data, $album_id, $user_id );
 }
 
 
@@ -3364,5 +3058,249 @@ function bp_media_album_download_link( $album_id ) {
 	 * @since BuddyBoss 1.5.7
 	 */
 	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
+
+}
+
+/**
+ * Function which return the access based on the current user.
+ *
+ * @param int    $id       Media|Document|Video|Folder|Album id.
+ * @param string $type     Media|Document|Video|Folder|Album type.
+ *
+ * @since BuddyBoss 1.5.8
+ */
+function bb_media_user_can_access( $id, $type ) {
+
+	$can_view        = false;
+	$can_download    = false;
+	$can_add         = false;
+	$can_delete      = false;
+	$can_edit        = false;
+	$can_move        = false;
+	$status          = '';
+	$data            = array();
+	$current_user_id = bp_loggedin_user_id();
+	$media_user_id   = 0;
+	$media_privacy   = '';
+	$group_manage    = false;
+	$media_group_id  = 0;
+	$forum_id        = 0;
+	$thread_id       = 0;
+
+	if ( 'album' === $type ) {
+		$album          = new BP_Media_Album( $id );
+		$media_user_id  = (int) $album->user_id;
+		$media_privacy  = $album->privacy;
+		$media_group_id = (int) $album->group_id;
+	} elseif ( 'folder' === $type ) {
+		$folder         = new BP_Document_Folder( $id );
+		$media_user_id  = (int) $folder->user_id;
+		$media_privacy  = $folder->privacy;
+		$media_group_id = (int) $folder->group_id;
+	} elseif ( 'photo' === $type ) {
+		$photo          = new BP_Media( $id );
+		$media_user_id  = (int) $photo->user_id;
+		$media_privacy  = $photo->privacy;
+		$media_group_id = (int) $photo->group_id;
+		$forum_id       = bp_media_get_forum_id( $id );
+		$thread_id      = bp_media_get_thread_id( $id );
+	} elseif ( 'video' === $type ) {
+		$video          = new BP_Video( $id );
+		$media_user_id  = (int) $video->user_id;
+		$media_privacy  = $video->privacy;
+		$media_group_id = (int) $video->group_id;
+		$forum_id       = bp_video_get_forum_id( $id );
+		$thread_id      = bp_video_get_thread_id( $id );
+	} elseif ( 'document' === $type ) {
+		$document       = new BP_Document( $id );
+		$media_user_id  = (int) $document->user_id;
+		$media_privacy  = $document->privacy;
+		$media_group_id = (int) $document->group_id;
+		$forum_id       = bp_document_get_forum_id( $id );
+		$thread_id      = bp_document_get_thread_id( $id );
+	}
+
+	switch ( $media_privacy ) {
+
+		case 'public':
+			if ( $media_user_id === $current_user_id ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = true;
+				$can_delete   = true;
+				$can_edit     = true;
+				$can_move     = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_delete   = true;
+			} else {
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'grouponly':
+			if ( bp_is_active( 'groups' ) ) {
+
+				$is_admin = groups_is_user_admin( $current_user_id, $media_group_id );
+				$is_mod   = groups_is_user_mod( $current_user_id, $media_group_id );
+
+				if ( $media_user_id === $current_user_id || $is_admin ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $is_mod ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				}
+
+				$the_group = groups_get_group( $media_group_id );
+				if ( $the_group->id > 0 && $the_group->user_has_access ) {
+					$can_view     = true;
+					$can_download = true;
+				}
+
+			}
+
+			break;
+
+		case 'loggedin':
+			if ( ! is_user_logged_in() ) {
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+				$can_delete   = false;
+				$can_edit     = false;
+				$can_move     = false;
+			} elseif ( $media_user_id === $current_user_id ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = true;
+				$can_delete   = true;
+				$can_edit     = true;
+				$can_move     = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_delete   = true;
+			} else {
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'friends':
+			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $media_user_id, $current_user_id ) : false;
+			if ( $media_user_id === $current_user_id ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = true;
+				$can_delete   = true;
+				$can_edit     = true;
+				$can_move     = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_delete   = true;
+			} elseif ( $is_friend ) {
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'onlyme':
+			if ( $media_user_id === $current_user_id ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = true;
+				$can_delete   = true;
+				$can_edit     = true;
+				$can_move     = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_delete   = true;
+			}
+			break;
+
+		case 'forums':
+			$args = array(
+				'user_id'         => $current_user_id,
+				'forum_id'        => $forum_id,
+				'check_ancestors' => false,
+			);
+
+			$has_access = bbp_user_can_view_forum( $args );
+			if ( $media_user_id === $user_id ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = true;
+				$can_delete   = true;
+				$can_edit     = true;
+				$can_move     = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_delete   = true;
+			} elseif ( $has_access ) {
+				if ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_delete   = true;
+				}
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'message':
+			$has_access = messages_check_thread_access( $thread_id, $user_id );
+			if ( ! is_user_logged_in() ) {
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+				$can_delete   = false;
+				$can_edit     = false;
+				$can_move     = false;
+			} elseif ( ! $thread_id ) {
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+				$can_delete   = false;
+				$can_edit     = false;
+				$can_move     = false;
+			} elseif ( $media->user_id === $user_id ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = true;
+				$can_delete   = true;
+				$can_edit     = true;
+				$can_move     = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_view     = true;
+				$can_download = true;
+				$can_delete   = true;
+			} elseif ( $has_access > 0 ) {
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+	}
+
+	$data['can_view']     = $can_view;
+	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
+	$data['can_edit']     = $can_add;
+	$data['can_delete']   = $can_add;
+	$data['can_move']     = $can_move;
+
+	return apply_filters( 'bb_media_user_can_access', $data, $id, $type, $group_id );
 
 }

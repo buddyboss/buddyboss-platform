@@ -1046,10 +1046,10 @@ function bp_nouveau_ajax_media_get_media_description() {
 
 	$content = get_post_field( 'post_content', $attachment_id );
 
-	$media_privacy    = bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
-	$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
-	$can_manage_btn   = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
-	$can_view         = ( true === (bool) $media_privacy['can_view'] ) ? true : false;
+	$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
+	$can_download_btn = true === (bool) $media_privacy['can_download'];
+	$can_edit_btn     = true === (bool) $media_privacy['can_edit'];
+	$can_view         = true === (bool) $media_privacy['can_view'];
 
 	$media        = new BP_Media( $media_id );
 	$user_domain  = bp_core_get_user_domain( $media->user_id );
@@ -1081,7 +1081,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 			<div class="activity-media-description">
 				<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
 				<?php
-				if ( $can_manage_btn ) {
+				if ( $can_edit_btn ) {
 					?>
 					<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 						<span class="bb-icon-edit-thin"></span>

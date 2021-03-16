@@ -1818,9 +1818,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$document_privacy = array();
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$document_privacy = bp_document_user_can_manage_document( $document->id, bp_loggedin_user_id() );
+			$document_privacy = bb_media_user_can_access( $document->id, 'document' );
 		} else {
-			$document_privacy = bp_document_user_can_manage_folder( $document->id, bp_loggedin_user_id() );
+			$document_privacy = bb_media_user_can_access( $document->id, 'folder' );
 		}
 
 		if ( ! empty( $document_privacy ) ) {
@@ -1829,9 +1829,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				$retval['copy_download_link'] = 1;
 			}
 
-			if ( isset( $document_privacy['can_manage'] ) && true === (bool) $document_privacy['can_manage'] ) {
-				$retval['rename'] = 1;
+			if ( isset( $document_privacy['can_delete'] ) && true === (bool) $document_privacy['can_delete'] ) {
 				$retval['delete'] = 1;
+			}
+
+			if ( isset( $document_privacy['edit'] ) && true === (bool) $document_privacy['edit'] ) {
+				$retval['rename'] = 1;
 
 				if ( 0 === (int) $document->group_id && 0 === (int) $document->parent ) {
 					if ( ! empty( $document->attachment_id ) && bp_is_active( 'activity' ) ) {
@@ -1847,7 +1850,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( isset( $document_privacy['can_add'] ) && true === (bool) $document_privacy['can_add'] ) {
+			if ( isset( $document_privacy['can_move'] ) && true === (bool) $document_privacy['can_move'] ) {
 				$retval['move'] = 1;
 			}
 		}

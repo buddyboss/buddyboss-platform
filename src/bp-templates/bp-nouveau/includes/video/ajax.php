@@ -1148,18 +1148,16 @@ function bp_nouveau_ajax_video_get_video_description() {
 		wp_send_json_error( $response );
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
-
-	$video_privacy    = bp_video_user_can_manage_video( $video_id, bp_loggedin_user_id() );
+	$content          = get_post_field( 'post_content', $attachment_id );
+	$video_privacy    = bb_media_user_can_access( $video_id, 'video' );
 	$can_download_btn = true === (bool) $video_privacy['can_download'];
-	$can_manage_btn   = true === (bool) $video_privacy['can_manage'];
+	$can_edit_btn     = true === (bool) $video_privacy['can_edit'];
 	$can_view         = true === (bool) $video_privacy['can_view'];
-
-	$video        = new BP_Video( $video_id );
-	$user_domain  = bp_core_get_user_domain( $video->user_id );
-	$display_name = bp_core_get_user_displayname( $video->user_id );
-	$time_since   = bp_core_time_since( $video->date_created );
-	$avatar       = bp_core_fetch_avatar(
+	$video            = new BP_Video( $video_id );
+	$user_domain      = bp_core_get_user_domain( $video->user_id );
+	$display_name     = bp_core_get_user_displayname( $video->user_id );
+	$time_since       = bp_core_time_since( $video->date_created );
+	$avatar           = bp_core_fetch_avatar(
 		array(
 			'item_id' => $video->user_id,
 			'object'  => 'user',
@@ -1185,7 +1183,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 			<div class="activity-video-description">
 				<div class="bp-video-activity-description"><?php echo esc_html( $content ); ?></div>
 				<?php
-				if ( $can_manage_btn ) {
+				if ( $can_edit_btn ) {
 					?>
 					<a class="bp-add-video-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 						<span class="bb-icon-edit-thin"></span>

@@ -783,10 +783,10 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 function bp_document_download_url_file() {
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['document_type'] ) {
-			$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$document_privacy = bb_media_user_can_access( $_GET['document_file'], 'document' ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		} else {
-			$folder_privacy   = bp_document_user_can_manage_folder( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$folder_privacy   = bb_media_user_can_access( $_GET['document_file'], 'folder' ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {

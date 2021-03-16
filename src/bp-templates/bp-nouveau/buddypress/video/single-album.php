@@ -10,9 +10,10 @@
 global $video_album_template;
 
 $album_id      = (int) bp_action_variable( 0 );
-$album_privacy = bp_video_user_can_manage_album( $album_id, bp_loggedin_user_id() );
-$can_manage    = true === (bool) $album_privacy['can_manage'];
+$album_privacy = bb_media_user_can_access( $album_id, 'album' );
+$can_edit      = true === (bool) $album_privacy['can_edit'];
 $can_add       = true === (bool) $album_privacy['can_add'];
+
 if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
 	while ( bp_video_album() ) :
@@ -25,12 +26,14 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_video_album_title(); ?></h4>
-					<?php if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_manage ) ) : ?>
+					<?php
+					if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_add ) ) { ?>
 						<input type="text" value="<?php bp_video_album_title(); ?>" placeholder="<?php esc_html_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
 						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'edit', 'buddyboss' ); ?></a>
 						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'save', 'buddyboss' ); ?></a>
 						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'cancel', 'buddyboss' ); ?></a>
-					<?php endif; ?>
+					    <?php
+					} ?>
 					<p>
 						<span><?php bp_core_format_date( $video_album_template->album->date_created ); ?></span>
 						<span class="bb-sep">&middot;</span>
@@ -47,7 +50,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 				</div>
 
 				<?php
-				if ( ( ( bp_is_my_profile() || bp_is_user_video() ) && $can_manage ) || ( bp_is_group() && $can_manage ) ) :
+				if ( ( ( bp_is_my_profile() || bp_is_user_video() ) && $can_add ) || ( bp_is_group() && $can_add ) ) :
 					?>
 
 					<div class="bb-album-actions">
@@ -83,7 +86,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 						bp_get_template_part( 'video/uploader' );
 				endif;
 
-				if ( $can_manage ) {
+				if ( $can_add ) {
 					bp_get_template_part( 'video/actions' );
 				}
 				?>
