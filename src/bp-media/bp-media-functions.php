@@ -3297,8 +3297,8 @@ function bb_media_user_can_access( $id, $type ) {
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
 	$data['can_add']      = $can_add;
-	$data['can_edit']     = $can_add;
-	$data['can_delete']   = $can_add;
+	$data['can_edit']     = $can_edit;
+	$data['can_delete']   = $can_delete;
 	$data['can_move']     = $can_move;
 
 	return apply_filters( 'bb_media_user_can_access', $data, $id, $type, $media_group_id );
