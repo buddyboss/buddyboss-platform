@@ -3168,7 +3168,6 @@ function bb_media_user_can_access( $id, $type ) {
 					$can_view     = true;
 					$can_download = true;
 				}
-
 			}
 
 			break;
@@ -3240,7 +3239,7 @@ function bb_media_user_can_access( $id, $type ) {
 			);
 
 			$has_access = bbp_user_can_view_forum( $args );
-			if ( $media_user_id === $user_id ) {
+			if ( $media_user_id === $current_user_id ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
@@ -3253,7 +3252,7 @@ function bb_media_user_can_access( $id, $type ) {
 				$can_delete   = true;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_delete   = true;
+					$can_delete = true;
 				}
 				$can_view     = true;
 				$can_download = true;
@@ -3261,7 +3260,7 @@ function bb_media_user_can_access( $id, $type ) {
 			break;
 
 		case 'message':
-			$has_access = messages_check_thread_access( $thread_id, $user_id );
+			$has_access = messages_check_thread_access( $thread_id, $current_user_id );
 			if ( ! is_user_logged_in() ) {
 				$can_view     = false;
 				$can_download = false;
@@ -3276,7 +3275,7 @@ function bb_media_user_can_access( $id, $type ) {
 				$can_delete   = false;
 				$can_edit     = false;
 				$can_move     = false;
-			} elseif ( $media->user_id === $user_id ) {
+			} elseif ( $media_user_id === $current_user_id ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
