@@ -243,7 +243,7 @@ window.bp = window.bp || {};
 					 * @since BuddyBoss 1.2.9
 					 */
 					beforeInsert: function( value ) {
-						value += '&nbsp;';
+						value += ' ';
 						return value;
 					}
 				},
