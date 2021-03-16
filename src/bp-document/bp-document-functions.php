@@ -3434,7 +3434,7 @@ function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
  */
 function bp_document_get_forum_id( $document_id ) {
 
-	$forum_id           = 0;
+	$forum_id              = 0;
 	$forums_document_query = new WP_Query(
 		array(
 			'post_type'      => bbp_get_forum_post_type(),
@@ -3539,7 +3539,7 @@ function bp_document_get_forum_id( $document_id ) {
 /**
  * Return the thread id if document belongs to message.
  *
- * @param int $document_id document id to fetch the thread id.
+ * @param int|string $document_id document id to fetch the thread id.
  *
  * @return mixed|void
  *
@@ -3559,7 +3559,7 @@ function bp_document_get_thread_id( $document_id ) {
 		);
 
 		// Check if there is already previously individual group thread created.
-		if( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+		if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
 			while ( bp_message_threads() ) {
 				bp_message_thread();
 				$thread_id = bp_get_message_thread_id();
