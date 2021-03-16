@@ -1274,9 +1274,6 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#activity-document-button' ) ) {
 								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
-							if ( tool_box.find( '#activity-video-button' ) ) {
-								tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
-							}
 						}
 					}
 				);
@@ -2667,9 +2664,9 @@ window.bp = window.bp || {};
 
 			activeButton: function ( event ) {
 				if ( $( event.currentTarget ).hasClass( 'active' ) ) {
-					this.$el.find( '.post-elements-buttons-item:not( .post-gif ):not( .post-media )' ).removeClass( 'active' );
+					this.$el.find( '.post-elements-buttons-item:not( .post-gif ):not( .post-media ):not( .post-video )' ).removeClass( 'active' );
 				} else {
-					this.$el.find( '.post-elements-buttons-item:not( .post-gif ):not( .post-media )' ).removeClass( 'active' );
+					this.$el.find( '.post-elements-buttons-item:not( .post-gif ):not( .post-media ):not( .post-video )' ).removeClass( 'active' );
 					event.currentTarget.classList.add( 'active' );
 				}
 
