@@ -371,8 +371,6 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 	
-//	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
-
 	if ( empty( $_POST['content'] ) ) {
 		wp_send_json_error(
 			array(
