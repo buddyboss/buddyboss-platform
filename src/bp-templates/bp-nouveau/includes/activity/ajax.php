@@ -371,9 +371,9 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 	
-	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
+//	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
 
-	if ( empty( $content ) ) {
+	if ( empty( $_POST['content'] ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => sprintf(
@@ -391,7 +391,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	$comment_id = bp_activity_new_comment(
 		array(
 			'activity_id' => $_POST['form_id'],
-			'content'     => $content,
+			'content'     => $_POST['content'],
 			'parent_id'   => $_POST['comment_id'],
 		)
 	);
