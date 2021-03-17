@@ -26,7 +26,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
 					<?php
-                    if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_edit ) ) : ?>
+					if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_edit ) ) :
+						?>
 						<input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
 						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'edit', 'buddyboss' ); ?></a>
 						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
@@ -43,63 +44,66 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				if ( ( bp_is_my_profile() || bp_is_user_media() ) || ( bp_is_group() ) ) :
 					?>
 					<div class="bb-album-actions">
-                        <?php
-                        if ( $can_delete ) {
-	                        ?>
-                            <a class="bb-delete button small outline error" id="bb-delete-album" href="#">
-		                        <?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
-                            </a>
-	                        <?php
-                        }
+						<?php
+						if ( $can_delete ) {
+							?>
+							<a class="bb-delete button small outline error" id="bb-delete-album" href="#">
+								<?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
+							</a>
+							<?php
+						}
 
-                        if ( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() && $can_edit ) { ?>
-                            <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-                                <?php _e( 'Add Photos', 'buddyboss' ); ?>
-                            </a> <?php
-                        } elseif( bp_is_active( 'groups' ) && bp_is_group() && $can_edit ) {
-	                        $manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
-	                        if ( $manage ) {
-		                        ?>
-                                <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-			                        <?php _e( 'Add Photos', 'buddyboss' ); ?>
-                                </a>
-		                        <?php
-                            }
-                        }
+						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() && $can_edit ) {
+							?>
+							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
+								<?php _e( 'Add Photos', 'buddyboss' ); ?>
+							</a> 
+							<?php
+						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit ) {
+							$manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
+							if ( $manage ) {
+								?>
+								<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
+									<?php _e( 'Add Photos', 'buddyboss' ); ?>
+								</a>
+								<?php
+							}
+						}
 
-                        if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit ) {
-                            ?>
-                            <a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
-                            <?php
-                        } elseif( bp_is_active( 'groups' ) && bp_is_group() && $can_edit && bp_is_group_video_support_enabled() ) {
-	                        $manage = groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() );
-	                        if ( $manage ) {
-		                        ?>
-                                <a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
-		                        <?php
-	                        }
-                        }
+						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit ) {
+							?>
+							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+							<?php
+						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit && bp_is_group_video_support_enabled() ) {
+							$manage = groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() );
+							if ( $manage ) {
+								?>
+								<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+								<?php
+							}
+						}
 
-                        if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() && $can_edit ) {
+						if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() && $can_edit ) {
 
-                            ?>
-                            <select id="bb-album-privacy">
-                                <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
-                                    <?php
-                                    $selected = '';
-                                    if ( bp_get_album_privacy() === $k ) {
-                                        $selected = 'selected="selected"';
-                                    }
-                                    ?>
-                                    <option <?php echo esc_html( $selected ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
-                                <?php } ?>
-                            </select>
-                            <?php
-                        } ?>
+							?>
+							<select id="bb-album-privacy">
+								<?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
+									<?php
+									$selected = '';
+									if ( bp_get_album_privacy() === $k ) {
+										$selected = 'selected="selected"';
+									}
+									?>
+									<option <?php echo esc_html( $selected ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
+								<?php } ?>
+							</select>
+							<?php
+						}
+						?>
 					</div>
 
 					<?php
-                    bp_get_template_part( 'media/uploader' );
+					bp_get_template_part( 'media/uploader' );
 					bp_get_template_part( 'video/uploader' );
 				endif;
 

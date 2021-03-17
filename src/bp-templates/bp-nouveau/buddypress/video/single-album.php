@@ -27,13 +27,15 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_video_album_title(); ?></h4>
 					<?php
-					if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_add ) ) { ?>
+					if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_add ) ) {
+						?>
 						<input type="text" value="<?php bp_video_album_title(); ?>" placeholder="<?php esc_html_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
 						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'edit', 'buddyboss' ); ?></a>
 						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
 						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-					    <?php
-					} ?>
+						<?php
+					}
+					?>
 					<p>
 						<span><?php bp_core_format_date( $video_album_template->album->date_created ); ?></span>
 						<span class="bb-sep">&middot;</span>
