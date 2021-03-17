@@ -13608,6 +13608,21 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 20px;
 }
 
+.modal-container#boss-media-create-album-popup #bp-media-create-album-submit.saving:after,
+.modal-container#boss-media-create-album-popup #bp-video-create-album-submit.saving:after, .modal-container#boss-video-create-album-popup #bp-media-create-album-submit.saving:after,
+.modal-container#boss-video-create-album-popup #bp-video-create-album-submit.saving:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+}
+
 .modal-container .bp-video-upload-tab.selected {
   color: #122b46;
 }
@@ -19653,6 +19668,19 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-top: 25px;
 }
 
+.bp-video-thumbnail-uploader .button.bp-video-thumbnail-submit.saving:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+}
+
 @media screen and (max-width: 540px) {
   .bp-video-thumbnail-uploader .modal-container {
     padding: 20px 15px 30px;
@@ -19688,6 +19716,22 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
 }
 
+div.dropzone.dz-started {
+  margin: 0 0 20px;
+}
+
+div.dropzone.dz-started .dz-default.dz-message {
+  flex-basis: 100%;
+  max-width: inherit;
+  min-height: 20vh;
+}
+
+div.dropzone.dz-started .dz-default.dz-message .dz-button {
+  font-size: 16px !important;
+  background-size: 48px !important;
+  padding: 50px 0 0 0 !important;
+}
+
 #activity-post-video-uploader .dz-default.dz-message,
 #bp-video-dropzone-content .dz-default.dz-message,
 #forums-post-video-uploader .dz-default.dz-message,
@@ -19697,7 +19741,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-default.dz-message,
 #video-uploader.dropzone .dz-default.dz-message,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-default.dz-message {
-  flex-basis: calc(100% - 12px);
+  flex-basis: 100%;
   max-width: inherit;
   min-height: 20vh;
 }
@@ -19737,7 +19781,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   padding: 0 10px 0 30px;
   font-size: 14px;
   line-height: 2;
-  min-width: 160px;
+  min-width: 150px;
 }
 
 #activity-post-video-uploader .dz-preview,
@@ -19750,6 +19794,32 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #video-uploader.dropzone .dz-preview,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview {
   background: #f0f3f7;
+}
+
+#activity-post-video-uploader .dz-video-icon,
+#bp-video-dropzone-content .dz-video-icon,
+#forums-post-video-uploader .dz-video-icon,
+#messages-post-video-uploader .dz-video-icon,
+#bp-group-messages-post-video-uploader .dz-video-icon,
+#boss-video-create-album-popup .dz-video-icon,
+.ac-reply-content .ac-reply-attachments .dropzone.video .dz-video-icon,
+#video-uploader.dropzone .dz-video-icon,
+body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-video-icon {
+  max-width: 70%;
+  margin: auto;
+  background: url(../images/video-play.svg) !important;
+  background-color: #ccc !important;
+  height: 52px;
+  width: 52px;
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -65px);
+  z-index: 11;
+  opacity: 1;
+  border: 0;
+  transition: all ease 0.3s !important;
+  border-radius: 50%;
 }
 
 #activity-post-video-uploader .dz-preview .dz-progress,
@@ -19784,7 +19854,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   bottom: 18%;
   top: inherit;
   right: 50%;
-  margin-right: 65px;
+  margin-right: 60px;
   transform: translateX(50%);
   background-color: transparent;
   line-height: 1;
@@ -19818,6 +19888,18 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   color: #fff;
 }
 
+#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
+#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-progress,
+#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
+#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
+#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
+#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress,
+.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress,
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress,
+body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-progress {
+  display: none;
+}
+
 #activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
 #bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
 #forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
@@ -19839,8 +19921,20 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
 #video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview {
-  background-color: #111;
+  background-color: #ddd;
   border-radius: 4px;
+}
+
+#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-video-icon,
+body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-video-icon {
+  transform: translate(50%, -50%);
 }
 
 #activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove,
@@ -19877,7 +19971,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   line-height: 1;
   position: relative;
   top: -2px;
-  right: -0.5px;
+  right: 0;
 }
 
 #activity-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
@@ -19944,7 +20038,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details,
 #video-uploader.dropzone .dz-preview.dz-file-preview .dz-details,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview .dz-details {
-  min-height: 140px;
+  min-height: 165px;
 }
 
 #activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
@@ -19981,7 +20075,8 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-success-mark,
 #video-uploader.dropzone .dz-success-mark,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-success-mark {
-  top: 60%;
+  top: 70%;
+  right: -5px;
 }
 
 #activity-post-video-uploader .dz-preview.dz-file-preview,
@@ -19993,7 +20088,8 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
 #video-uploader.dropzone .dz-preview.dz-file-preview,
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview {
-  width: calc(33.33333% - 11px);
+  width: 165px;
+  min-height: 165px;
 }
 
 #activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
@@ -20009,18 +20105,6 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   color: #fff;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 1;
-}
-
-.bb-media-model-wrapper #activity-post-video-uploader .dz-preview.dz-file-preview, .bb-media-model-wrapper
-#bp-video-dropzone-content .dz-preview.dz-file-preview, .bb-media-model-wrapper
-#forums-post-video-uploader .dz-preview.dz-file-preview, .bb-media-model-wrapper
-#messages-post-video-uploader .dz-preview.dz-file-preview, .bb-media-model-wrapper
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview, .bb-media-model-wrapper
-#boss-video-create-album-popup .dz-preview.dz-file-preview, .bb-media-model-wrapper
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview, .bb-media-model-wrapper
-#video-uploader.dropzone .dz-preview.dz-file-preview, .bb-media-model-wrapper
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview {
-  width: calc(100% - 11px);
 }
 
 #activity-post-video-uploader .dz-video-thumbnail,
@@ -20091,53 +20175,6 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
   #video-uploader.dropzone .dz-preview.dz-file-preview,
   body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview {
-    width: calc(100% - 10px);
-    margin: 0 5px 10px;
-  }
-}
-
-#bp-group-messages-post-video-uploader,
-.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone,
-#video-uploader.dropzone {
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
-.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview,
-#video-uploader.dropzone .dz-preview.dz-file-preview {
-  width: calc(50% - 11.5px);
-  margin: 0 5px 10px;
-}
-
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview:last-child,
-.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview:last-child,
-#video-uploader.dropzone .dz-preview.dz-file-preview:last-child {
-  margin-left: 0;
-}
-
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove:after,
-.bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview .dz-remove:after,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove:after {
-  right: inherit !important;
-}
-
-@media screen and (max-width: 768px) {
-  #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
-  .bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview,
-  #video-uploader.dropzone .dz-preview.dz-file-preview {
-    width: calc(50% - 11.5px);
-    margin: 0 5px 10px;
-  }
-  #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview:last-child,
-  .bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview:last-child,
-  #video-uploader.dropzone .dz-preview.dz-file-preview:last-child {
-    margin-left: 0;
-  }
-  #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
-  .bp-messages-content-wrapper #messages-post-video-uploader.open.dropzone .dz-preview.dz-file-preview,
-  #video-uploader.dropzone .dz-preview.dz-file-preview {
     width: calc(100% - 10px);
     margin: 0 5px 10px;
   }
@@ -21032,7 +21069,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 }
 
 .group-messages-members-listing #members-list {
-  max-height: 50vh;
+  max-height: 550px;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 -20px;
