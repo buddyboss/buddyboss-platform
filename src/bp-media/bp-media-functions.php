@@ -3573,7 +3573,7 @@ function bp_media_create_symlinks( $media ) {
 					symlink( $output_file_src, $attachment_path );
 				}
 			}
-        }
+		}
 
 		/**
 		 * Actions to execute to create symlinks.
@@ -3603,6 +3603,8 @@ function bp_media_delete_symlinks( $media ) {
 		$media_id = $media->id;
 	} elseif ( is_int( (int) $media ) ) {
 		$media_id = $media;
+	} elseif ( is_string( $media ) ) {
+		$media_id = (int) $media;
 	}
 
 	if ( empty( $media_id ) ) {
@@ -3677,7 +3679,6 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bp-
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		}
-
 	}
 
 	/**

@@ -1399,7 +1399,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 
 	if ( ! $video ) {
 		wp_send_json_error( $response );
-    }
+	}
 
 	$auto_generated_thumbnails = bb_video_get_auto_generated_preview_ids( $attachment_id );
 	$preview_thumbnail_id      = bb_get_video_thumb_id( $attachment_id );
@@ -1496,7 +1496,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 
 	if ( $pre_selected_id !== $old_thumbnail_id && ! in_array( $old_thumbnail_id, $auto_generated_thumbnails, true ) ) {
 		bb_video_delete_thumb_symlink( $video_id, $old_thumbnail_id );
-	    wp_delete_post( $old_thumbnail_id, true );
+		wp_delete_post( $old_thumbnail_id, true );
 	}
 
 	if ( $video_attachment_id && $thumbnail ) {

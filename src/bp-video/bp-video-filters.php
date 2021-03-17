@@ -57,6 +57,9 @@ add_action( 'bp_activity_after_email_content', 'bp_video_activity_after_email_co
 // Delete symlinks for videos when before saved.
 add_action( 'bp_video_before_save', 'bb_video_delete_symlinks' );
 
+// Clear video symlinks on delete.
+add_action( 'bp_video_before_delete', 'bp_video_clear_video_symlinks_on_delete', 10 );
+
 // Create symlinks for videos when saved.
 add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
 
@@ -1594,3 +1597,20 @@ Options -ExecCGI
 	}
 }
 add_action( 'bp_init', 'bp_video_check_download_album_protection', 9999 );
+
+/**
+ * Clear a user's symlinks video when attachment video delete.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param array $videos DB results of video items.
+ */
+function bp_video_clear_video_symlinks_on_delete( $videos ) {
+	if ( ! empty( $videos[0] ) ) {
+		foreach ( (array) $videos as $deleted_video ) {
+			if ( isset( $deleted_video->id ) ) {
+				bb_video_delete_symlinks( (int) $deleted_video->id );
+			}
+		}
+	}
+}
