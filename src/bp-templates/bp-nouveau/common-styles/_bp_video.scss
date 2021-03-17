@@ -908,6 +908,19 @@
 
 	.button.bp-video-thumbnail-submit {
 		margin-top: 25px;
+
+		&.saving:after {
+			content: "\e838";
+			font-family: "bb-icons";/* stylelint-disable-line */
+			font-size: 18px;
+			line-height: 1;
+			margin-left: 10px;
+			text-align: center;
+			display: inline-block;
+			-webkit-animation: spin 3s infinite linear;
+			animation: spin 3s infinite linear;
+		}
+
 	}
 
 }
@@ -1037,7 +1050,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		top: 50%;
 		transform: translate(-50%, -65px);
 		z-index: 11;
-		opacity: 0.8;
+		opacity: 1;
 		border: 0;
 		transition: all ease 0.3s !important;
 		border-radius: 50%;
@@ -1171,6 +1184,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 	.dz-success-mark {
 		top: 70%;
+		left: -5px;
 	}
 
 	.dz-preview.dz-file-preview {

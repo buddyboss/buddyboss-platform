@@ -2165,7 +2165,7 @@ window.bp = window.bp || {};
 							var canvas    = document.createElement( 'canvas' );
 							canvas.width  = video.videoWidth;
 							canvas.height = video.videoHeight;
-							canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width * 2, canvas.height * 2 );
+							canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
 							var image   = canvas.toDataURL();
 							var success = image.length > 100000;
 							if ( success ) {

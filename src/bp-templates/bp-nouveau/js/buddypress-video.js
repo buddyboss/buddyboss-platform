@@ -1361,7 +1361,7 @@ window.bp = window.bp || {};
 		},
 
 		saveAlbum: function ( event ) {
-			console.log( 'HelloWorld!' );
+
 			var target  = $( event.currentTarget ), self = this, title = $( '#bb-album-title' ),
 				privacy = $( '#bb-album-privacy' );
 

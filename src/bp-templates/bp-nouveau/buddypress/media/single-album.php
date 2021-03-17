@@ -29,10 +29,9 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
                     if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_edit ) ) : ?>
 						<input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
 						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'edit', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'save', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'cancel', 'buddyboss' ); ?></a>
-					    <?php
-                    endif; ?>
+						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
+						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+					<?php endif; ?>
 					<p>
 						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
 						<span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep">&middot;</span>
