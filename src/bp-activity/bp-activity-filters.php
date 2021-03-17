@@ -2080,13 +2080,13 @@ function bb_activity_media_document_migration_process() {
 		$offset = $offset;
 	}
 	$bp                        = buddypress();
-	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
+	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' )";
 	$recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
 	bb_migration_write_log( ' count_recepient_qry - ' . $count_recepient_qry );
 	if ( 1 === (int) $recipients_count_row_data->ids ) {
-		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0";
+		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' )";
 	} else {
-		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE item_id=0 AND secondary_item_id=0 LIMIT $offset, 2";
+		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' ) LIMIT $offset, 2";
 	}
 	bb_migration_write_log( 'recipients_query - ' . $recipients_query );
 	$recipients = $wpdb->get_results( $recipients_query );
