@@ -3972,7 +3972,7 @@ function bb_video_delete_older_symlinks() {
 	}
 
 	while ( ( $file = readdir( $dh ) ) !== false ) {
-		if ( $file === '.' || $file === '..' || ! is_dir( $file ) ) {
+		if ( $file === '.' || $file === '..' ) {
 			continue;
 		}
 		$file = $dir . '/' . $file;
