@@ -276,7 +276,7 @@ function bp_nouveau_group_manage_screen() {
 		$action = bp_action_variable( 1 );
 	}
 
-	$screen_id = sanitize_file_name( $action );
+	$screen_id = urlencode( sanitize_file_name( urldecode( $action ) ) );
 	if ( ! bp_is_group_admin_screen( $screen_id ) && ! bp_is_group_creation_step( $screen_id ) ) {
 		return;
 	}

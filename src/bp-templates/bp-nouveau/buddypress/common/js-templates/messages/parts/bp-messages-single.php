@@ -3,6 +3,7 @@
 
 	<div id="bp-message-thread-header" class="message-thread-header"></div>
 	<div id="bp-message-load-more"></div>
+	<div class="bp-messages-feedback"></div>
 
 	<?php bp_nouveau_messages_hook( 'before', 'thread_list' ); ?>
 

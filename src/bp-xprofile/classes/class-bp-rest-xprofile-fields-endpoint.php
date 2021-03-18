@@ -220,7 +220,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -317,7 +317,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -863,7 +863,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'option_order'      => (int) $field->option_order,
 			'order_by'          => $field->order_by,
 			'is_default_option' => (bool) $field->is_default_option,
-			'options'           => '',
+			'options'           => array(),
 		);
 
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
