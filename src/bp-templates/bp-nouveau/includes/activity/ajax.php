@@ -839,6 +839,10 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		wp_send_json_error();
 	}
 
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error();
+	}
+
 	if ( ! in_array( $_POST['privacy'], array( 'public', 'loggedin', 'onlyme', 'friends' ) ) ) {
 		wp_send_json_error();
 	}
@@ -851,7 +855,9 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		$activity->save();
 		add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 
-		wp_send_json_success( array() );
+		$response = apply_filters( 'bb_ajax_activity_update_privacy', array(), $_POST );
+
+		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error();
 	}

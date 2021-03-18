@@ -605,13 +605,12 @@ class BP_Video {
 				$video->menu_order    = (int) $video->menu_order;
 			}
 
-
 			$file_url = wp_get_attachment_url( $video->attachment_id );
 			$filetype = wp_check_filetype( $file_url );
 			$ext      = $filetype['ext'];
 			if ( empty( $ext ) ) {
-				$path	= parse_url($file_url, PHP_URL_PATH);
-				$ext	= pathinfo(basename($path), PATHINFO_EXTENSION);
+				$path = parse_url( $file_url, PHP_URL_PATH );
+				$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 			}
 			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234
 			// https://stackoverflow.com/a/44858204

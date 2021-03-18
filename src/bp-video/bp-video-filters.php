@@ -63,6 +63,8 @@ add_action( 'bp_video_before_delete', 'bp_video_clear_video_symlinks_on_delete',
 // Create symlinks for videos when saved.
 add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
 
+add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 99, 2 );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -1502,12 +1504,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 				$thumb        = '';
 				if ( $get_existing ) {
-					$file  = get_attached_file( $get_existing );
+					$file = get_attached_file( $get_existing );
 					if ( file_exists( $file ) ) {
 						$type  = pathinfo( $file, PATHINFO_EXTENSION );
 						$data  = file_get_contents( $file ); // phpcs:ignore
 						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
-                    }
+					}
 				}
 
 				$activity['video'][] = array(
@@ -1523,6 +1525,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'size'        => ( file_exists( get_attached_file( ( $video->attachment_id ) ) ) ) ? filesize( get_attached_file( ( $video->attachment_id ) ) ) : 0,
 					'saved'       => true,
 					'menu_order'  => $video->menu_order,
+					'video_count' => count( $video_ids ),
 				);
 			}
 		}
@@ -1613,4 +1616,48 @@ function bp_video_clear_video_symlinks_on_delete( $videos ) {
 			}
 		}
 	}
+}
+
+/**
+ * Added the video symlink data to update when privacy update.
+ *
+ * @param array $response  Response array.
+ * @param array $post_data The post data.
+ *
+ * @return array $response data.
+ */
+function bb_video_update_video_symlink( $response, $post_data ) {
+
+	if ( ! empty( $post_data['id'] ) ) {
+
+		// Fetch video ids of activity.
+		$video_ids = bp_activity_get_meta( $post_data['id'], 'bp_video_ids', true );
+
+		if ( ! empty( $video_ids ) ) {
+			$activity['video'] = array();
+
+			$video_ids = explode( ',', $video_ids );
+			$count     = count( $video_ids );
+			if ( 1 === $count ) {
+				$video    = new BP_Video( (int) current( $video_ids ) );
+				$file_url = wp_get_attachment_url( $video->attachment_id );
+				$filetype = wp_check_filetype( $file_url );
+				$ext      = $filetype['ext'];
+				if ( empty( $ext ) ) {
+					$path = wp_parse_url( $file_url, PHP_URL_PATH );
+					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+				}
+
+				$symlink                       = bb_video_get_symlink( (int) current( $video_ids ) );
+				$response['video_symlink']     = $symlink;
+				$response['video_extension']   = 'video/' . $ext;
+				$response['video_id']          = (int) current( $video_ids );
+				$response['video_link_update'] = true;
+				$response['video_js_id']       = 'video-' . (int) current( $video_ids ) . '_html5_api';
+			}
+		}
+	}
+
+	return $response;
+
 }
