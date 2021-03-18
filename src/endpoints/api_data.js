@@ -1690,6 +1690,19 @@ define({ "api": [
           },
           {
             "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "both",
+              "document",
+              "folder"
+            ],
+            "optional": true,
+            "field": "type",
+            "defaultValue": "both",
+            "description": "<p>Ensure result set includes specific document type.</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Boolean",
             "optional": true,
             "field": "count_total",
@@ -4649,7 +4662,8 @@ define({ "api": [
             "allowedValues": [
               "invite",
               "invite-friends",
-              "invited"
+              "invited",
+              "message"
             ],
             "optional": true,
             "field": "scope",
@@ -6398,6 +6412,22 @@ define({ "api": [
       }
     },
     "filename": "src/bp-members/classes/class-bp-rest-attachments-member-cover-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/members/me/permissions",
+    "title": "Member Permissions",
+    "name": "GetBBMemberPermissions",
+    "group": "Members",
+    "description": "<p>Retrieve Member Permissions</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-members/classes/class-bp-rest-members-permissions-endpoint.php",
     "groupTitle": "Members"
   },
   {

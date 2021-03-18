@@ -63,6 +63,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		// Moderation support for Members.
 		$this->bp_rest_moderation_member_support();
+
+		// Moderation support for Blog comments.
+		// EX: /wp-json/wp/v2/comments?post=4662.
+		$this->bp_rest_moderation_blog_comments_support();
 	}
 
 	/**
@@ -233,7 +237,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Please login to view blocked members.', 'buddyboss' ),
+				__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -315,7 +319,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Please login to view blocked members.', 'buddyboss' ),
+				__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -369,7 +373,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Content already reported.', 'buddyboss' ),
+				__( 'Already reported this item.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -387,7 +391,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) && empty( $moderation->report_id ) && ! empty( $moderation->errors ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_moderation',
-				__( 'Something went wrong. Please try again.', 'buddyboss' ),
+				__( 'Sorry, something goes wrong please try again.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -396,7 +400,8 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $moderation->id ) ) {
 
-			if ( bp_is_friend( $item_id ) ) {
+			$friend_status = bp_is_friend( $item_id );
+			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
 
@@ -484,7 +489,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! empty( $user->roles ) && in_array( 'administrator', $user->roles, true ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you are not allowed to block admin members.', 'buddyboss' ),
+				__( 'Sorry, you can not able to block admin users.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -494,7 +499,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && (int) bp_loggedin_user_id() === (int) $item_id ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you can not allowed to block yourself.', 'buddyboss' ),
+				__( 'Sorry, you can not able to block him self.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -580,7 +585,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $moderation_deleted->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_block_error',
-				__( 'Sorry something went wrong. Please try again.', 'buddyboss' ),
+				__( 'Sorry, Something happened wrong', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -1985,5 +1990,134 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		return false;
+	}
+
+	/********************** Blog Comment Support *****************************************/
+	/**
+	 * Added support for blogs comments.
+	 */
+	protected function bp_rest_moderation_blog_comments_support() {
+		register_rest_field(
+			'comment',
+			'can_report',
+			array(
+				'get_callback' => array( $this, 'bp_rest_blog_comment_can_report' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'comment',
+			'reported',
+			array(
+				'get_callback' => array( $this, 'bp_rest_blog_comment_is_reported' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the comment is reported or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		add_filter( 'rest_prepare_comment', array( $this, 'bp_rest_moderation_prepare_comment' ), 9999, 4 );
+	}
+
+	/**
+	 * The function to use to get can_report of the activity REST Field.
+	 *
+	 * @param WP_Post $post Post Array.
+	 *
+	 * @return string The value of the REST Field to include into the REST response.
+	 */
+	public function bp_rest_blog_comment_can_report( $post ) {
+		$comment_id = $post['id'];
+
+		if ( empty( $comment_id ) ) {
+			return false;
+		}
+
+		if ( is_user_logged_in() && bp_moderation_user_can( $comment_id, BP_Suspend_Comment::$type ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * The function to use to get reported of the activity REST Field.
+	 *
+	 * @param WP_Post $post Post Array.
+	 *
+	 * @return string The value of the REST Field to include into the REST response.
+	 */
+	public function bp_rest_blog_comment_is_reported( $post ) {
+		$comment_id = $post['id'];
+
+		if ( empty( $comment_id ) ) {
+			return false;
+		}
+
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $comment_id, BP_Suspend_Comment::$type ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Filters a comment returned from the REST API.
+	 *
+	 * @param WP_REST_Response $response The response object.
+	 * @param WP_Comment       $comment  The original comment object.
+	 * @param WP_REST_Request  $request  Request used to generate the response.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function bp_rest_moderation_prepare_comment( $response, $comment, $request ) {
+
+		$data = $response->get_data();
+
+		$type = BP_Suspend_Comment::$type;
+
+		$is_user_suspended = bp_moderation_is_user_suspended( $comment->user_id );
+		$is_user_blocked   = bp_moderation_is_user_blocked( $comment->user_id );
+		$is_hidden         = bp_moderation_is_content_hidden( $comment->comment_ID, $type );
+
+		if ( empty( $is_user_suspended ) && empty( $is_user_blocked ) && empty( $is_hidden ) ) {
+			return $response;
+		}
+
+		if ( $is_user_suspended || $is_user_blocked ) {
+			if ( $is_user_suspended ) {
+				$data['author_name'] = esc_html__( 'Suspended Member', 'buddyboss' );
+				$data['author_url']  = '';
+			} elseif ( $is_user_blocked ) {
+				$data['author_name'] = esc_html__( 'Blocked Member', 'buddyboss' );
+				$data['author_url']  = '';
+			}
+		}
+
+		if ( $is_user_suspended ) {
+			$content = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+		} elseif ( $is_user_blocked ) {
+			$content = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+		} else {
+			$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+		}
+
+		$data['content'] = array(
+			'raw'      => $content,
+			'rendered' => wpautop( $content ),
+		);
+
+		$response->set_data( $data );
+
+		return $response;
 	}
 }
