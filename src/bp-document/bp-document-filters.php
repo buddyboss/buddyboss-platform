@@ -180,7 +180,7 @@ function bp_document_activity_comment_entry( $comment_id ) {
 	$comment  = new BP_Activity_Activity( $comment_id );
 	$activity = new BP_Activity_Activity( $comment->item_id );
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ||
-	     bp_is_active( 'activity' ) && buddypress()->activity->id === $activity->component ) { // Set privacy for activity - comment - 2121
+	     bp_is_active( 'activity' ) && ( buddypress()->activity->id === $activity->component || buddypress()->blogs->id === $activity->component ) ) { // Set privacy for activity - comment - 2121
 		$args['privacy'] = array( 'comment' );
 	}
 
@@ -837,7 +837,8 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		foreach ( $document_ids as $document_id ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) 
+			&& ('comment' !== $document->privacy && ! empty( $document->blog_id ) ) ) {
 				$document->privacy = $activity->privacy;
 				$document->save();
 			}
