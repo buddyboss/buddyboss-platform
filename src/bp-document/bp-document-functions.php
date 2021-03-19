@@ -3896,6 +3896,21 @@ function bp_document_create_symlinks( $document ) {
 				if ( ! is_link( $attachment_path ) ) {
 					symlink( $file_path, $attachment_path );
 				}
+			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+				$output_file_src = get_attached_file( $attachment_id );
+				if ( ! empty( $output_file_src ) ) {
+					// Regenerate attachment thumbnails.
+					if ( ! file_exists( $output_file_src ) ) {
+						bp_media_regenerate_attachment_thumbnails( $attachment_id );
+					}
+
+					// Check if file exists.
+					if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+						if ( ! is_link( $attachment_path ) ) {
+							symlink( $output_file_src, $attachment_path );
+						}
+					}
+				}
 			}
 
 			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'large' );
