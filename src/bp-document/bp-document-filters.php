@@ -1428,8 +1428,11 @@ function bp_document_admin_repair_document() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-						$wpdb->query( $update_query );
+						$up_document           = new BP_Document( $document->id );
+						$up_document->privacy  = 'grouponly';
+						$up_document->group_id = $activity->item_id;
+						$up_document->save();
+
 					}
 					if ( 'document' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1439,8 +1442,10 @@ function bp_document_admin_repair_document() {
 									$document_activity = new BP_Activity_Activity( $document_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $document_activity->component ) {
-									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-									$wpdb->query( $update_query );
+									$up_document           = new BP_Document( $document->id );
+									$up_document->privacy  = 'grouponly';
+									$up_document->group_id = $document_activity->item_id;
+									$up_document->save();
 									$activity->item_id   = $document_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
