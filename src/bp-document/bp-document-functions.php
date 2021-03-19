@@ -1488,11 +1488,11 @@ function bp_document_extension( $attachment_id ) {
 
 	$file_url  = wp_get_attachment_url( $attachment_id );
 	$file_type = wp_check_filetype( $file_url );
-	$extension = trim( $file_type[ 'ext' ] );
+	$extension = trim( $file_type['ext'] );
 
 	if ( '' === $extension ) {
 		$file      = pathinfo( $file_url );
-		$extension = ( isset( $file[ 'extension' ] ) ) ? $file[ 'extension' ] : '';
+		$extension = ( isset( $file['extension'] ) ) ? $file['extension'] : '';
 	}
 
 	return strtok( $extension, '?' );
@@ -1993,7 +1993,6 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-
 	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
@@ -2002,15 +2001,13 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 	}
 
 	if ( 'group' === $type && ! $group_id ) {
-		$group_id = $id;
+		$group_id               = $id;
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-	} elseif( 'group' === $type && $group_id ) {
+	} elseif ( 'group' === $type && $group_id ) {
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
 	} else {
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 	}
-
-
 
 	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
@@ -2851,7 +2848,7 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 		if ( ! empty( $get_children ) ) {
 			foreach ( $get_children as $child ) {
 
-				$update_folder = new BP_Document_Folder( $child );
+				$update_folder          = new BP_Document_Folder( $child );
 				$update_folder->privacy = $privacy;
 				$update_folder->save();
 
@@ -3725,16 +3722,18 @@ function bp_document_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$report_btn = bp_moderation_get_report_button( array(
-		'id'                => 'document_report',
-		'component'         => 'moderation',
-		'must_be_logged_in' => true,
-		'button_attr'       => array(
-			'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
-			'data-bp-content-type' => BP_Moderation_Document::$moderation_type,
+	$report_btn = bp_moderation_get_report_button(
+		array(
+			'id'                => 'document_report',
+			'component'         => 'moderation',
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
+				'data-bp-content-type' => BP_Moderation_Document::$moderation_type,
+			),
 		),
-	),
-		true );
+		true
+	);
 
 	return apply_filters( 'bp_document_get_report_link', $report_btn, $args );
 }
@@ -3871,8 +3870,8 @@ function bp_document_create_symlinks( $document ) {
 
 		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 
-			$attachment_path    = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
-			$file               = image_get_intermediate_size( $attachment_id, 'medium' );
+			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
+			$file            = image_get_intermediate_size( $attachment_id, 'medium' );
 
 			if ( ! $file ) {
 				bp_document_generate_document_previews( $attachment_id );
@@ -3928,6 +3927,21 @@ function bp_document_create_symlinks( $document ) {
 				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
 					if ( ! is_link( $attachment_path ) ) {
 						symlink( $file_path, $attachment_path );
+					}
+				}
+			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+
+				$output_file_src = get_attached_file( $attachment_id );
+
+				// Regenerate attachment thumbnails.
+				if ( ! file_exists( $output_file_src ) ) {
+					bp_media_regenerate_attachment_thumbnails( $attachment_id );
+				}
+
+				// Check if file exists.
+				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+					if ( ! is_link( $attachment_path ) ) {
+						symlink( $output_file_src, $attachment_path );
 					}
 				}
 			}
@@ -4036,7 +4050,7 @@ function bp_document_generate_document_previews( $attachment_id ) {
 
 	$extension = bp_document_extension( $attachment_id );
 	$file      = image_get_intermediate_size( $attachment_id, 'full' );
-	if( 'pdf' === $extension && ! $file ) {
+	if ( 'pdf' === $extension && ! $file ) {
 		add_filter( 'wp_image_editors', 'bp_document_wp_image_editors' );
 		bp_document_pdf_previews( array( $attachment_id ), true );
 		remove_filter( 'wp_image_editors', 'bp_document_wp_image_editors' );
@@ -4062,7 +4076,7 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 	$cnt = $num_updates = $num_fails = $time = 0;
 	if ( $ids ) {
 		$time = microtime( true );
-		$cnt = count( $ids );
+		$cnt  = count( $ids );
 		bp_document_set_time_limits( max( $cnt * 20, 300 ) );
 
 		foreach ( $ids as $idx => $id ) {
@@ -4242,8 +4256,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'med
  * @since BuddyBoss 1.4.1
  */
 function bp_document_scaled_image_path( $attachment_id ) {
-	$is_image = wp_attachment_is_image( $attachment_id );
-	$img_url  = get_attached_file( $attachment_id );
+	$is_image         = wp_attachment_is_image( $attachment_id );
+	$img_url          = get_attached_file( $attachment_id );
 	$meta             = wp_get_attachment_metadata( $attachment_id );
 	$img_url_basename = wp_basename( $img_url );
 	if ( ! $is_image ) {
@@ -4261,12 +4275,12 @@ function bp_document_scaled_image_path( $attachment_id ) {
  * @param $path
  * @since BuddyBoss 1.4.1
  */
-function bp_document_chmod_r($path) {
-	$dir = new DirectoryIterator($path);
-	foreach ($dir as $item) {
-		chmod($item->getPathname(), 0777);
-		if ($item->isDir() && !$item->isDot()) {
-			bp_document_chmod_r($item->getPathname());
+function bp_document_chmod_r( $path ) {
+	$dir = new DirectoryIterator( $path );
+	foreach ( $dir as $item ) {
+		chmod( $item->getPathname(), 0777 );
+		if ( $item->isDir() && ! $item->isDot() ) {
+			bp_document_chmod_r( $item->getPathname() );
 		}
 	}
 }
@@ -4283,7 +4297,7 @@ function bp_document_mirror_text( $attachment_id ) {
 	$mirror_text = '';
 
 	$extension = bp_document_extension( $attachment_id );
-	if ( isset( $extension ) && !empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
+	if ( isset( $extension ) && ! empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
 		$words = 8000;
 		$more  = '...';
 		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
