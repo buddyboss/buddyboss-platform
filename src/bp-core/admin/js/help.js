@@ -127,18 +127,18 @@
 
 			function bbapp_help_empty_everything() {
 				// Empty everything
-				$(".bp-help-menu").html('');
-				$(".bp-help-content-area").html('');
-				$(".bp-help-sidebar").html('');
-				$(".bp-help-main-menu-wrap").find("*").not(".bp_loading").remove();
-				jQuery('.article-child').find("*").not("#article-child-title").remove(); // remove all child but #article-child-title
-				jQuery("#article-child-title").hide();
+				$('.bp-help-menu').html('');
+				$('.bp-help-content-area').html('');
+				$('.bp-help-sidebar').html('');
+				$('.bp-help-main-menu-wrap').find('*').not('.bp_loading').remove();
+				jQuery('.article-child').find('*').not('#article-child-title').remove(); // remove all child but #article-child-title
+				jQuery('#article-child-title').hide();
 			}
 
 			function getArticleParam() {
 				var bbapp_help_page_url = new URL(window.location.href);
 				var article_id = bbapp_help_page_url.searchParams.get('article');
-				if (!article_id || typeof article_id == "undefined") {
+				if (!article_id || typeof article_id == 'undefined') {
 					return false;
 				}
 				return article_id;
