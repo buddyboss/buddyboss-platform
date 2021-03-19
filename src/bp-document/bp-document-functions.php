@@ -3144,7 +3144,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	switch ( $document->privacy ) {
 
 		case 'public':
-		case 'comment': // Allow access for activity doc - comment - 2121
+		case 'comment':
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;

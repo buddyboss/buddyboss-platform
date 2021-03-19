@@ -292,9 +292,9 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'user_id'  => false,
 	);
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ||
-	     bp_is_active( 'activity' ) && ( buddypress()->activity->id === $activity->component || buddypress()->blogs->id === $activity->component ) ) { // Set privacy for activity - comment - 2121
+	     bp_is_active( 'activity' ) && ( buddypress()->activity->id === $activity->component || buddypress()->blogs->id === $activity->component ) ) {
 		if ( bp_is_group_media_support_enabled() ) {
-			$args['privacy'] = array( 'comment' ); //grouponly
+			$args['privacy'] = array( 'comment' );
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-media';
 			}
@@ -1516,7 +1516,7 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		foreach ( $media_ids as $media_id ) {
 			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
-			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly' ) ) 
+			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly' ) )
 			&& ('comment' !== $media->privacy && ! empty( $media->blog_id ) ) ) {
 				$media->privacy = $activity->privacy;
 				$media->save();
