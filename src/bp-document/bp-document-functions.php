@@ -4244,7 +4244,11 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'med
 			if ( ! file_exists( $preview_attachment_path ) ) {
 				bp_document_create_symlinks( $document );
 			}
-			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+			if ( ! file_exists( $preview_attachment_path ) ) {
+				$attachment_url = '';
+			} else {
+				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+			}
 		}
 
 		if ( in_array( $extension, array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() ), true ) ) {
