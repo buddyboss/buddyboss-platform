@@ -751,8 +751,10 @@ window.bp = window.bp || {};
 
 			var target            = $( event.currentTarget );
 			var videoAttachmentId = target.attr( 'data-video-attachment-id' );
+			var videoAttachments  = target.attr( 'data-video-attachments' );
 			var videoId           = target.attr( 'data-video-id' );
 			var popupSelector     = '';
+			var dropzone_data_set = false;
 
 			if ( $( event.currentTarget ).closest( '.activity-inner' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '.activity-inner' );
@@ -893,6 +895,71 @@ window.bp = window.bp || {};
 					}
 				);
 
+				if( typeof videoAttachments !== 'undefined') {
+					var default_images_html = '';
+					videoAttachments = JSON.parse( videoAttachments );
+					if( typeof videoAttachments.default_images !== 'undefined') {
+						$.each(videoAttachments.default_images, function( key, value ) {
+							var checked_str = '';
+							if( typeof videoAttachments.preview !== 'undefined' ) {
+								if( typeof videoAttachments.preview.id !== 'undefined' && value.id == videoAttachments.preview.id ) {
+									checked_str = 'checked="checked"';
+								}
+							}
+							default_images_html += '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">';
+							default_images_html += '<div class="">';
+							default_images_html += '<a class="" href="#">';
+							default_images_html += '<img src="'+value.url+'" class=""/>';
+							default_images_html += '</a>';
+							default_images_html += '<div class="bb-action-check-wrap">';
+							default_images_html += '<input '+checked_str+' id="bb-video-'+value.id+'" class="bb-custom-check" type="radio" value="'+value.id+'" name="bb-video-thumbnail-select" />';
+							default_images_html += '<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-'+value.id+'"><span class="bb-icon bb-icon-check"></span></label>';
+							default_images_html += '</div>';
+							default_images_html += '</div>';
+							default_images_html += '</li>';
+						});
+						if( default_images_html != '' ) {
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).html( default_images_html );
+						}
+					}
+
+					if( typeof videoAttachments.preview !== 'undefined') {
+						if ( typeof videoAttachments.preview.dropzone !== 'undefined' && videoAttachments.preview.dropzone == true ) {
+							var mock_file = false;
+							mock_file = {
+								name: videoAttachments.preview.name,
+								accepted: true,
+								kind: 'image',
+								upload: {
+									filename: videoAttachments.preview.name,
+									uuid: videoAttachments.preview.attachment_id
+								},
+								dataURL: videoAttachments.preview.url,
+								id: videoAttachments.preview.attachment_id,
+								video_thumbnail_edit_data: {
+									'id': videoAttachments.preview.attachment_id,
+									'media_id': videoAttachments.preview.id,
+									'name': videoAttachments.preview.name,
+									'thumb': videoAttachments.preview.thumb,
+									'url': videoAttachments.preview.url,
+									'uuid': videoAttachments.preview.attachment_id,
+									'menu_order': 0,
+									'saved': true
+								}
+							};
+
+							if ( self.video_thumb_dropzone_obj ) {
+								dropzone_data_set = videoAttachments.preview.attachment_id;
+								self.video_thumb_dropzone_obj.files.push( mock_file );
+								self.video_thumb_dropzone_obj.emit( 'addedfile', mock_file );
+								self.createThumbnailFromUrl( mock_file );
+								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
+
+							}
+						}
+					}
+				}
+
 				var data = {
 					'action': 'video_get_edit_thumbnail_data',
 					'_wpnonce': BP_Nouveau.nonces.video,
@@ -941,7 +1008,7 @@ window.bp = window.bp || {};
 										}
 									};
 
-									if ( self.video_thumb_dropzone_obj ) {
+									if ( self.video_thumb_dropzone_obj && dropzone_data_set != response.data.dropzone_edit.attachment_id ) {
 										self.video_thumb_dropzone_obj.files.push( mock_file );
 										self.video_thumb_dropzone_obj.emit( 'addedfile', mock_file );
 										self.createThumbnailFromUrl( mock_file );

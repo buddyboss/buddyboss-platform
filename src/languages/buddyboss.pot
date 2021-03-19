@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-03-18 04:39:37+00:00\n"
+"POT-Creation-Date: 2021-03-19 14:57:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1020,7 +1020,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:81
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:184
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:14
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:78
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:114
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:81
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:560
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:561
@@ -5316,15 +5316,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
+"content will be unhidden</li>\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -8103,13 +8103,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -14065,8 +14065,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:157
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:164
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:64
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:70
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:100
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:106
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:54
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:61
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:25
@@ -23561,7 +23561,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:52
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:52
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:147
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:50
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:86
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:41
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:700
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2487
@@ -24087,7 +24087,7 @@ msgid "Enter Album Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:61
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:56
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:92
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:47
 #: bp-templates/bp-nouveau/includes/video/functions.php:149
@@ -24095,7 +24095,7 @@ msgid "Add Thumbnail"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:67
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:63
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:99
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:53
 msgid "Video inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
@@ -24540,8 +24540,8 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:101
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:116
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:137
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:152
 msgid "More Videos"
 msgstr ""
 
