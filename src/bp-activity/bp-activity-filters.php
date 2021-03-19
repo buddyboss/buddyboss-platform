@@ -2079,18 +2079,45 @@ function bb_activity_media_document_migration_process() {
 	} else {
 		$offset = $offset;
 	}
+	$get_active_post_types = get_post_types( array( 'public' => true ) );
+	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+	$new_post_type_arr = array();
+	foreach ( $get_active_post_types as $post_type_name ) {
+		if ( ! in_array( $post_type_name, $bp_exclude_cpt ) ) {
+			$new_post_type_arr[] = $post_type_name;
+		}
+	}
 	$bp                        = buddypress();
-	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' )";
+	$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 )";
+	if ( ! empty( $new_post_type_arr ) ) {
+		foreach ( $new_post_type_arr as $get_post_type ) {
+			$db_type_name = 'new_blog_' . $get_post_type;
+			$count_recepient_qry .= " OR ( component='blogs' AND type='" .$db_type_name . "' )";
+		}
+	}
+	//$count_recepient_qry       = "SELECT COUNT(id) as ids FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' )";
 	$recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
 	bb_migration_write_log( ' count_recepient_qry - ' . $count_recepient_qry );
-	if ( 1 === (int) $recipients_count_row_data->ids ) {
-		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' )";
-	} else {
-		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' ) LIMIT $offset, 2";
+	//	if ( 1 === (int) $recipients_count_row_data->ids ) {
+	//		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' )";
+	//	} else {
+	//		$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 ) OR ( component='blogs' AND type='new_blog_post' ) LIMIT $offset, 2";
+	//	}
+	$recipients_query = "SELECT id FROM {$bp->activity->table_name} WHERE ( item_id=0 AND secondary_item_id=0 )";
+	if ( ! empty( $new_post_type_arr ) ) {
+		foreach ( $new_post_type_arr as $get_post_type ) {
+			$db_type_name = 'new_blog_' . $get_post_type;
+			$recipients_query .= " OR ( component='blogs' AND type='" .$db_type_name . "' )";
+		}
+	}
+	if ( 1 < (int) $recipients_count_row_data->ids ) {
+		$recipients_query .= " LIMIT $offset, 2";
 	}
 	bb_migration_write_log( 'recipients_query - ' . $recipients_query );
+//	exit();
 	$recipients = $wpdb->get_results( $recipients_query );
 	if ( ! empty( $recipients ) ) {
+		$records_updated = '';
 		foreach ( $recipients as $get_parent_id ) {
 			$check_media_migration = bp_activity_get_meta( $get_parent_id->id, 'bp_media_comment_migration', true );
 			if ( 'success' !== $check_media_migration ) {
@@ -2118,19 +2145,23 @@ function bb_activity_media_document_migration_process() {
 							$sub_activity_id_store                 = $sub_data['activity_id_store'];
 						}
 					}
-				}
-				if ( ! empty( $sub_activity_id_store ) ) {
-					//Remove id which type is activity_update and privacy is media.
-					//Update in meta when migration complete for the root id.
-					bb_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id );
-					bp_activity_update_meta( $get_parent_id->id, 'bp_media_comment_migration', 'success' );
-					$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+					if ( ! empty( $sub_activity_id_store ) ) {
+						//Remove id which type is activity_update and privacy is media.
+						//Update in meta when migration complete for the root id.
+						bb_migration_remove_activity_id_activity_update_type( $sub_activity_id_store, $get_parent_id->id );
+						bp_activity_update_meta( $get_parent_id->id, 'bp_media_comment_migration', 'success' );
+						$records_updated = sprintf( __( '%s media comment migrated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+					} else {
+						$records_updated = sprintf( __( '%s no media comment available.', 'buddyboss' ), number_format_i18n( $offset ) );
+					}
 				}
 			} else {
 				$records_updated = sprintf( __( '%s media already migrated.', 'buddyboss' ), number_format_i18n( $offset ) );
 			}
 			$offset ++;
 		}
+		bb_migration_write_log( 'offset - ' . $offset );
+		bb_migration_write_log( '$recipients_count_row_data->ids - ' . $recipients_count_row_data->ids );
 		if ( 1 === (int) $recipients_count_row_data->ids || (int) $offset === (int) $recipients_count_row_data->ids ) {
 			return array(
 				'status'  => 1,
