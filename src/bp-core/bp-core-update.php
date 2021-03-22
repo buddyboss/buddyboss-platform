@@ -324,9 +324,9 @@ function bp_version_updater() {
 			bb_update_to_1_5_6();
 		}
 
-		// Version 1.5.8
+		// Version 1.5.9
 		if ( $raw_db_version < 16450 ) {
-			bb_update_to_1_5_8();
+			bb_update_to_1_5_9();
 		}
 	}
 
@@ -1149,9 +1149,9 @@ function bb_update_to_1_5_6() {
  * - Migrate group id to associate forum.
  * - Update forum meta _bbp_group_ids, associated with group id.
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.5.9
  */
-function bb_update_to_1_5_8() {
+function bb_update_to_1_5_9() {
 	global $bp_background_updater;
 
 	// Return, when group or forum component deactive.
@@ -1159,10 +1159,10 @@ function bb_update_to_1_5_8() {
 		return;
 	}
 
-	foreach ( bb_update_to_1_5_8_get_pages() as $page ) {
+	foreach ( bb_update_to_1_5_9_get_pages() as $page ) {
 		$bp_background_updater->push_to_queue(
 			array(
-				'callback' => 'bb_update_to_1_5_8_migrate_group_id_associate_forum',
+				'callback' => 'bb_update_to_1_5_9_migrate_group_id_associate_forum',
 				'args'     => array( 'page' => $page ),
 			)
 		);
@@ -1174,11 +1174,11 @@ function bb_update_to_1_5_8() {
 /**
  * Chunk the total groups as pages.
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.5.9
  *
  * @return array
  */
-function bb_update_to_1_5_8_get_pages() {
+function bb_update_to_1_5_9_get_pages() {
 	// Return, when group component deactive.
 	if ( ! bp_is_active( 'groups' ) ) {
 		return arrray();
@@ -1205,13 +1205,13 @@ function bb_update_to_1_5_8_get_pages() {
 /**
  * Migrate group id, associate its forum group id.
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.5.9
  *
  * @param int $page
  *
  * @return boolean
  */
-function bb_update_to_1_5_8_migrate_group_id_associate_forum( $page ) {
+function bb_update_to_1_5_9_migrate_group_id_associate_forum( $page ) {
 	// Return, when group or forum component deactive.
 	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
 		return;
@@ -1227,7 +1227,7 @@ function bb_update_to_1_5_8_migrate_group_id_associate_forum( $page ) {
 
 	foreach ( $groups as $group ) {
 		$forum_ids = groups_get_groupmeta( $group->id, 'forum_id' );
-		bb_update_to_1_5_8_update_forums_group_id( $group->id, $forum_ids );
+		bb_update_to_1_5_9_update_forums_group_id( $group->id, $forum_ids );
 	}
 
 	return false;
@@ -1236,14 +1236,14 @@ function bb_update_to_1_5_8_migrate_group_id_associate_forum( $page ) {
 /**
  * Update group ID's for a forum.
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.5.9
  *
  * @param int   $group_id
  * @param array $forum_ids
  *
  * @return void
  */
-function bb_update_to_1_5_8_update_forums_group_id( $group_id, $forum_ids ) {
+function bb_update_to_1_5_9_update_forums_group_id( $group_id, $forum_ids ) {
 	// Return, when forum component deactive.
 	if ( ! bp_is_active( 'forums' ) ) {
 		return arrray();

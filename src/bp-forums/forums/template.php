@@ -2559,7 +2559,7 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
  *
  * Disable "Type" field when the main Forum associated with Group.
  *
- * @since bbPress (r3563)
+ * @since bbPress 1.5.9
  *
  * @param int $forum_id The forum id to use
  *
@@ -2576,7 +2576,7 @@ function bbp_can_update_forum_type( $forum_id ) {
  *
  * Disable "Forum Parent" field when the main Forum associated with Group.
  *
- * @since bbPress (r3563)
+ * @since bbPress 1.5.9
  *
  * @param int $forum_id The forum id to use
  *
@@ -2591,7 +2591,7 @@ function bbp_can_update_forum_parent( $forum_id ) {
 /**
  * Is the forum contain any group.
  *
- * @since bbPress (r3563)
+ * @since bbPress 1.5.9
  *
  * @param int $forum_id The forum id to use.
  *
@@ -2800,7 +2800,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
  *
  * When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
  *
- * @since bbPress (r3563)
+ * @since bbPress 1.5.9
  *
  * @param int $forum_id The forum id to use
  *

@@ -47,7 +47,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Redirect 404 page when user will input wrong URL from groups forum screen.
 		 *
-		 * @since bbPress (r3552)
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @uses bp_current_action() To get groups forum slug from URL.   
 		 * @uses bp_action_variables() To get rest of query var as an array.
@@ -101,7 +101,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * This method help to find out the group associte forum id with the help of forum name.
 		 * Or any level of child forum id, Which are not associated with gorup.
 		 *
-		 * @since bbPress (r4612)
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param string $forum_name Form post_name.
 		 * @uses get_closest_forum_group_ids() Searching group id for any level of child forum.
@@ -145,7 +145,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Nested forum-topic are not associate with group. 
 		 * This method help you to find the group associte forum id for any level of chld forum-topic.
 		 *
-		 * @since bbPress (r4612)
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param strin $topic_name Topic post_name.
 		 *
@@ -191,7 +191,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Nested forum are not associate with group. This method help you to find the nested forum group id.
 		 *
-		 * @since bbPress (r4612)
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param int $forum_id Forum id.
 		 *
@@ -229,7 +229,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Nested forum and forum-topic are not associate with group. 
 		 * This method help you to find the group associte forum id for any level of forum and forum-topic.
 		 *
-		 * @since bbPress (r4612)
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @uses get_forum_id_from_froum_post_name() To get group associate forum id 
 		 *       by forum post_name for any level of childs forum.
@@ -372,7 +372,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * To check the child forum associate with current group or not.
 		 * Child forums are not associate with group but its parent forum associate with group.
 		 * 
-		 * @since bbPress (r4552)
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param Object $post
 		 * @param Object $forum_query
@@ -635,7 +635,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Set the selected forum in the forum dropdown from the group edit screen.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param string $where        where condition forum post query.
 		 * @param object $query_object forum post query property.
@@ -673,7 +673,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Exclude if the forum is child forum.
 		 * 
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param array $forum_ids
 		 * @param int   $group_id
