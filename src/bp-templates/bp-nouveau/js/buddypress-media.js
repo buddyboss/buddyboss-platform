@@ -949,6 +949,10 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			if ('yes' !== BP_Nouveau.media.is_document_directory) {
+				this.current_page = 1;
+			}
+
 			target.closest('.modal-container').find('.location-folder-list').removeClass('has-error');
 			target.addClass('loading');
 
@@ -982,7 +986,6 @@ window.bp = window.bp || {};
 									$(document).find('li#document-all').trigger('click');
 								}
 							} else {
-
 								if (parseInt(BP_Nouveau.media.current_folder) > 0) {
 									$('#document-stream ul.media-list li[data-id="' + document_id + '"]').remove();
 								} else if ($('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').length && !$('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').parent().hasClass('bb-media-length-1')) {
