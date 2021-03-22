@@ -8917,21 +8917,21 @@ msgstr ""
 msgid "Repair document on the site."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1457
+#: bp-document/bp-document-filters.php:1462
 msgid "%s document updated successfully."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1467
+#: bp-document/bp-document-filters.php:1472
 msgid "document update complete!"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1664
+#: bp-document/bp-document-filters.php:1669
 msgid "%s document"
 msgid_plural "%s documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-document/bp-document-filters.php:1669 bp-media/bp-media-filters.php:2343
+#: bp-document/bp-document-filters.php:1674 bp-media/bp-media-filters.php:2343
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -27365,32 +27365,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3608
+#: bp-document/bp-document-functions.php:3622
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3610
+#: bp-document/bp-document-functions.php:3624
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3612
+#: bp-document/bp-document-functions.php:3626
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3614
+#: bp-document/bp-document-functions.php:3628
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3616
-#: bp-document/bp-document-functions.php:3621
+#: bp-document/bp-document-functions.php:3630
+#: bp-document/bp-document-functions.php:3635
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"
