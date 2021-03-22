@@ -100,7 +100,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		 * @return init
 		 */
 		function filter_forum_parent( $post_parent, $post_ID, $new_postarr, $postarr ) {
-			if ( $new_postarr['post_type'] != 'forum' ) {
+			if ( 'forum' != $new_postarr['post_type'] ) {
 				return $post_parent;
 			}
 
