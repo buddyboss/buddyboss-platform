@@ -919,6 +919,7 @@ window.bp = window.bp || {};
 							default_images_html += '</li>';
 						});
 						if( default_images_html != '' ) {
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).html( default_images_html );
 						}
 					}
