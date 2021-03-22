@@ -681,7 +681,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return array
 		 */
-		public function get_validate_forum_ids( $forum_ids, $group_id ) {
+		public function validate_forum_ids( $forum_ids, $group_id ) {
 			
 			$update_forum_ids = array();
 
@@ -786,7 +786,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Is the forum associated with others group then exclude it.
-			$filter_forum_ids = $this->get_validate_forum_ids( $forum_ids, $group_id );
+			$filter_forum_ids = $this->validate_forum_ids( $forum_ids, $group_id );
 
 			if ( 
 				// If no forum is seleted from forum dropdown.
