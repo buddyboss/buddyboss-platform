@@ -1228,6 +1228,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 
 		if ( ! empty( $video_id ) ) {
 			$args = array(
+				'user_id' => false,
 				'include' => $video_id,
 			);
 			ob_start();
