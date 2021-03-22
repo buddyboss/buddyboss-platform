@@ -555,7 +555,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 					<?php
 						// Fiter forum query for set the selected forum (Group associate forum).
-						add_filter( 'posts_where', array( $this, 'update_forum_dropdown_qeury' ), 10, 2 );
+						add_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
 
 						bbp_dropdown(
 							array(
@@ -610,7 +610,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						);
 
 						// Remove forum query filters to prevent the conflict with others queries.
-						remove_filter( 'posts_where', array( $this, 'update_forum_dropdown_qeury' ), 10, 2 );
+						remove_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
 					?>
 				</div>
 			<?php endif; ?>
@@ -642,7 +642,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * 
 		 * @return string
 		 */
-		public function update_forum_dropdown_qeury( $where, $query_object ) {
+		public function update_forum_dropdown_query( $where, $query_object ) {
 			global $wpdb;
 
 			// Prevent update query when post type is not forum.
