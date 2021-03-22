@@ -1154,6 +1154,11 @@ function bb_update_to_1_5_6() {
 function bb_update_to_1_5_8() {
 	global $bp_background_updater;
 
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
 	foreach ( bb_update_to_1_5_8_get_pages() as $page ) {
 		$bp_background_updater->push_to_queue(
 			array(
@@ -1174,6 +1179,11 @@ function bb_update_to_1_5_8() {
  * @return array
  */
 function bb_update_to_1_5_8_get_pages() {
+	// Return, when group component deactive.
+	if ( ! bp_is_active( 'groups' ) ) {
+		return arrray();
+	}
+
 	$total_groups = groups_get_total_group_count();
 
 	$per_page  = 20;   
@@ -1202,6 +1212,11 @@ function bb_update_to_1_5_8_get_pages() {
  * @return boolean
  */
 function bb_update_to_1_5_8_migrate_group_id_associate_forum( $page ) {
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
 	$group_data = groups_get_groups( array(
 		'per_page' => 20,             
 		'page'     => $page,
@@ -1229,6 +1244,11 @@ function bb_update_to_1_5_8_migrate_group_id_associate_forum( $page ) {
  * @return void
  */
 function bb_update_to_1_5_8_update_forums_group_id( $group_id, $forum_ids ) {
+	// Return, when forum component deactive.
+	if ( ! bp_is_active( 'forums' ) ) {
+		return arrray();
+	}
+
 	$group_ids = array( $group_id );
 	
 	foreach ( $forum_ids as $forum_id ) {
