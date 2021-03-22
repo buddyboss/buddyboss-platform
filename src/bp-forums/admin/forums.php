@@ -90,7 +90,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		 *
 		 * Disable "Forum Parent" when the main Forum associated with Group
 		 *
-		 * @since bbPress (r4067)
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param init   post_parent post parent.
 		 * @param init   post_ID     post ID.
