@@ -1149,7 +1149,7 @@ function bb_update_to_1_5_6() {
  * @since BuddyBoss 1.5.9
  */
 function bb_update_to_1_5_9() {
-	bp_update_to_1_5_9_ativity_setting_feed_comments_migration();
+	bb_update_to_1_5_9_ativity_setting_feed_comments_migration();
 }
 
 /**
@@ -1160,7 +1160,7 @@ function bb_update_to_1_5_9() {
  *
  * @return void
  */
-function bp_update_to_1_5_9_ativity_setting_feed_comments_migration() {
+function bb_update_to_1_5_9_ativity_setting_feed_comments_migration() {
 	$custom_post_types = bp_feed_post_types();
 	
 	// Run over all custom post type.
