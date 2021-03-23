@@ -207,7 +207,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/groups/:group_id/cover Create Group Cover
 	 * @apiName        CreateBBGroupCover
 	 * @apiGroup       Groups
-	 * @apiDescription Create group cover
+	 * @apiDescription Create group cover. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
