@@ -325,7 +325,7 @@ abstract class Integration_Abstract {
 		if ( ! empty( $cache_val ) && isset( $cache_val['data'] ) && ! empty( $cache_val['data'] ) ) {
 			$cache_val['data'] = apply_filters( 'bbapp_performance_deep_filter_cached_data', $cache_val['data'], $args, $this->integration_name );
 			$results           = array();
-			$results['header'] = (isset( $cache_val['header'] ) ) ? $cache_val['header'] : array();
+			$results['header'] = ( isset( $cache_val['header'] ) ) ? $cache_val['header'] : array();
 			foreach ( $cache_val['data'] as $item_id ) {
 				$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name . '_' . $item_id );
 				if ( false !== $get_cache ) {
@@ -350,7 +350,7 @@ abstract class Integration_Abstract {
 						/**
 						 * Fetch Single item data if any single item cache is cleared
 						 */
-						$embed         = isset( $_GET['_embed'] ) ? rest_parse_embed_param( $_GET['_embed'] ) : false;
+						$embed   = isset( $_GET['_embed'] ) ? rest_parse_embed_param( $_GET['_embed'] ) : false;
 						$request = new WP_REST_Request( $args['request_method'], '/' . $rest_endpoint . '?_embed=' . $embed );
 						if ( is_array( $unique_id ) ) {
 							$args = explode( '_', $item_id );
@@ -377,7 +377,6 @@ abstract class Integration_Abstract {
 							$results = false;
 							break;
 						}
-
 
 						if ( ! empty( $retval->data[0] ) ) {
 							$is_cache_enabled = apply_filters( 'bbapp_performance_deep_cache_filter_item', true, $retval->data[0], $args, $this->integration_name );
