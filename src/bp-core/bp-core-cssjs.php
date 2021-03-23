@@ -340,7 +340,7 @@ function bp_core_register_common_styles() {
 				'dependencies' => array(),
 			),
 			'bp-select2'              => array(
-				'file'         => "{$url}select2.min.css",
+				'file'         => "{$url}select2{$min}.css", // select2.min.css was issuing with rtl.
 				'dependencies' => array(),
 			),
 			'jquery-datetimepicker' => array(
