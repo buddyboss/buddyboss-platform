@@ -223,7 +223,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/groups/:group_id/avatar Create Group Avatar
 	 * @apiName        CreateBBGroupAvatar
 	 * @apiGroup       Groups
-	 * @apiDescription Create group avatar
+	 * @apiDescription Create group avatar. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.

@@ -23,19 +23,23 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_photos'    => array(
 			'page'  => 'media',
 			'title' => __( 'Photos', 'buddyboss' ),
+			'tutorial_callback' => 'bp_photo_uploading_tutorial',
 		),
 		'bp_media_settings_documents' => array(
 			'page'     => 'doc',
 			'title'    => __( 'Documents', 'buddyboss' ),
 			'callback' => 'bp_media_admin_setting_callback_document_section',
+			'tutorial_callback' => 'bp_document_uploading_tutorial',
 		),
 		'bp_media_settings_emoji'     => array(
 			'page'  => 'media',
 			'title' => __( 'Emoji', 'buddyboss' ),
+			'tutorial_callback' => 'bp_emoji_tutorial',
 		),
 		'bp_media_settings_gifs'      => array(
 			'page'  => 'media',
 			'title' => __( 'Animated GIFs', 'buddyboss' ),
+			'tutorial_callback' => 'bp_animated_gifs_tutorial',
 		),
 	);
 
@@ -264,26 +268,6 @@ function bp_media_get_settings_fields() {
 	$fields['bp_media_settings_documents']['bp_media_extension_document_support'] = array(
 		'title'    => __( 'File Extensions', 'buddyboss' ),
 		'callback' => 'bp_media_settings_callback_extension_link',
-	);
-
-	$fields['bp_media_settings_documents']['bp_document_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_document_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_photo_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_emoji']['bp_emoji_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_emoji_tutorial',
-	);
-
-	$fields['bp_media_settings_gifs']['bp_animated_gifs_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_animated_gifs_tutorial',
 	);
 
 	return (array) apply_filters( 'bp_media_get_settings_fields', $fields );

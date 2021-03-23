@@ -41,7 +41,7 @@ class BP_Admin_Setting_Search extends BP_Admin_Setting_tab {
 			}
 
 			// Add the section
-			$this->add_section( $section_id, $section['title'], $section['callback'] );
+			$this->add_section( $section_id, $section['title'], $section['callback'], $section['tutorial_callback'] );
 
 			// Loop through fields for this section
 			foreach ( (array) $fields as $field_id => $field ) {

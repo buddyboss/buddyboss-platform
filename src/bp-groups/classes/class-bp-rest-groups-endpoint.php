@@ -716,6 +716,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'slug'               => bp_get_group_slug( $item ),
 			'status'             => bp_get_group_status( $item ),
 			'types'              => bp_groups_get_group_type( $item->id, false ),
+			'group_type_label'   => $this->get_group_type_label( $item ),
 			'subgroups_id'       => $this->bp_rest_get_sub_groups( $item->id ),
 			'admins'             => array(),
 			'mods'               => array(),
@@ -1057,7 +1058,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				return true;
 			}
 
-			if ( is_user_logged_in() && isset( $request['user_id'] ) && absint( $request['user_id'] ) === bp_loggedin_user_id() ) {
+			if ( ( is_user_logged_in() && empty( $request['user_id'] ) ) || ( isset( $request['user_id'] ) && absint( $request['user_id'] ) === bp_loggedin_user_id() ) ) {
 				return true;
 			}
 
@@ -1291,6 +1292,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'items'       => array(
 						'type' => 'string',
 					),
+				),
+				'group_type_label'   => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Name of the group type.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
 				),
 				'subgroups_id'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -1813,5 +1820,24 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		return $user_group_role_title;
 
+	}
+
+	/**
+	 * Fetch group type label.
+	 *
+	 * @param BP_Groups_Group $group Group object.
+	 *
+	 * @return mixed|string|void
+	 */
+	public function get_group_type_label( $group ) {
+
+		if ( function_exists( 'bp_disable_group_type_creation' ) && true !== bp_disable_group_type_creation() ) {
+			return '';
+		}
+
+		$group_type = bp_groups_get_group_type( $group->id );
+		$group_type = bp_groups_get_group_type_object( $group_type );
+
+		return isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : __( 'Group', 'buddyboss' );
 	}
 }
