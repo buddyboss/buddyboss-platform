@@ -46,6 +46,7 @@ class BB_Replies extends Integration_Abstract {
 		);
 
 		$this->purge_event( 'bbp-replies', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge
