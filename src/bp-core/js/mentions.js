@@ -35,8 +35,8 @@ window.bp = window.bp || {};
 		
 		// Auto-suggestion field.
 		var userAgent = navigator.userAgent.toLowerCase();
-		// we can slo use this - userAgent.indexOf("mobile");
-		var isAndroid = userAgent.indexOf("android") > -1;
+		// we can slo use this - userAgent.indexOf('mobile');
+		var isAndroid = userAgent.indexOf('android') > -1;
 		
 		/**
 		 * Default options for at.js; see https://github.com/ichord/At.js/.
