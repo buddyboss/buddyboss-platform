@@ -10,18 +10,29 @@
 		'load',
 		function() {
 
+			bbapp_help_empty_everything();
+			var article_id = getArticleParam();
+
+			// Hide Both Section by Default.
+			$('#bp-help-main-menu-wrap').hide();
+			$('.bp-help-content-wrap').hide();
+
 			var bp_help_wpapi = new WPAPI({ endpoint: 'https://buddyboss.com/resources/wp-json' });
-			//var bp_help_wpapi = new WPAPI({ endpoint: 'http://localhost/buddyboss/wp-json' });
+			
 			bp_help_wpapi.docs = bp_help_wpapi.registerRoute( 'wp/v2', '/docs/(?P<id>)', {
-				params: [ 'before', 'after', 'author', 'parent', 'post', 'order', 'orderby' ]
+				params: [ 'before', 'after', 'author', 'parent', 'post', 'order', 'orderby', 'per_page' ]
 			} );
 			var bp_help_page_url = new URL(window.location.href);
 
-			if ( $( '#bp-help-main-menu-wrap' ).length ) {
+			/**
+			 * Loads Main Page.
+			 */
+			if (!article_id) {
 
 				$( '#bp-help-main-menu-wrap' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
+				$('#bp-help-main-menu-wrap').show();
 
-				bp_help_wpapi.docs().parent(0).order('asc').orderby('menu_order').then(function (docs) {
+				bp_help_wpapi.docs().parent(0).order('asc').orderby('menu_order').per_page(100).then(function (docs) {
 
 					$( '#bp-help-main-menu-wrap' ).removeClass( 'loading' );
 
@@ -46,20 +57,62 @@
 				});
 			}
 
-			if ( $( '#bp-help-content-area' ).length ) {
+			/**
+			 * Loads Inner Section Page.
+			 */
+			if (article_id) {
 
-				$( '#bp-help-content-area' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
-				$( '.bp-help-sidebar' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
+				// show loading animation
+				$( '#bp-help-main-menu-wrap' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
+				$('#bp-help-main-menu-wrap').show();
 
-				var article_id = bp_help_page_url.searchParams.get('article');
+				// Fetch all articles
 				bp_help_wpapi.docs().id( article_id ).then(function (doc) {
+					
+					// IF layout is GRID
+					if( typeof( doc.layout_type ) !== 'undefined' && doc.layout_type == 'view' ){
 
-					$( '#bp-help-content-area' ).removeClass( 'loading' );
-					$( '.bp-help-sidebar' ).removeClass( 'loading' );
+						bbapp_help_empty_everything();
 
-					$( '#bp-help-content-area' ).html('<h1>' + doc.title.rendered + '</h1>' + doc.content.rendered);
-					$( '#bp-help-content-area' ).find('a').attr( 'target', '_blank' );
-					bp_help_js_render_hierarchy_dom( doc );
+						$( '#bp-help-main-menu-wrap' ).removeClass( 'loading' );
+
+						var bp_help_cards = '';
+						$.each( doc.hierarchy, function ( index, value ) {
+
+							var card_excerpt = value.post_excerpt;
+							// If excerpt empty then show post content
+							if( !(card_excerpt) ){
+							card_excerpt = value.post_content;
+							}
+
+							bp_help_cards += '<div class="bp-help-card bp-help-menu-wrap">\n' +
+								'\t\t\t<div class="inside">';
+							bp_help_cards += '<h2><a href="'+BP_HELP.bb_help_url+'&article='+value.ID+'">'+value.post_title+'</a></h2>';
+							bp_help_cards += card_excerpt;
+							bp_help_cards += '</div>\n' +
+								'\t\t</div>';
+						} );
+
+						$( '#bp-help-main-menu-wrap' ).html(bp_help_cards);
+
+					// Default layout is article
+					}else{
+
+						$( '#bp-help-content-area' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
+						$( '.bp-help-sidebar' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
+						$('.bp-help-content-wrap').show();
+
+						bbapp_help_empty_everything();
+
+						$( '#bp-help-content-area' ).removeClass( 'loading' );
+						$( '.bp-help-sidebar' ).removeClass( 'loading' );
+
+						$( '#bp-help-content-area' ).html('<h1>' + doc.title.rendered + '</h1>' + doc.content.rendered);
+						$( '#bp-help-content-area' ).find('a').attr( 'target', '_blank' );
+						bp_help_js_render_hierarchy_dom( doc );
+					}
+
+					
 				}).catch(function( err ) {
 					$( '#bp-help-content-area' ).removeClass( 'loading' );
 					$( '.bp-help-sidebar' ).removeClass( 'loading' ).html('');
@@ -70,6 +123,25 @@
 						$( '#bp-help-content-area' ).html( err );
 					}
 				});
+			}
+
+			function bbapp_help_empty_everything() {
+				// Empty everything
+				$('.bp-help-menu').html('');
+				$('.bp-help-content-area').html('');
+				$('.bp-help-sidebar').html('');
+				$('.bp-help-main-menu-wrap').find('*').not('.bp_loading').remove();
+				jQuery('.article-child').find('*').not('#article-child-title').remove(); // remove all child but #article-child-title
+				jQuery('#article-child-title').hide();
+			}
+
+			function getArticleParam() {
+				var bbapp_help_page_url = new URL(window.location.href);
+				var article_id = bbapp_help_page_url.searchParams.get('article');
+				if (!article_id || typeof article_id == 'undefined') {
+					return false;
+				}
+				return article_id;
 			}
 
 			function bp_help_js_render_hierarchy_dom( doc ) {
