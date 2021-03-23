@@ -40,6 +40,7 @@ class BB_Groups extends Integration_Abstract {
 		);
 
 		$this->purge_event( 'bp-groups', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge

@@ -2051,7 +2051,7 @@ define({ "api": [
     "title": "Upload Document",
     "name": "UploadBBDocument",
     "group": "Document",
-    "description": "<p>Upload Document.</p>",
+    "description": "<p>Upload Document. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -3626,7 +3626,7 @@ define({ "api": [
     "title": "Create Group Avatar",
     "name": "CreateBBGroupAvatar",
     "group": "Groups",
-    "description": "<p>Create group avatar</p>",
+    "description": "<p>Create group avatar. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -3665,7 +3665,7 @@ define({ "api": [
     "title": "Create Group Cover",
     "name": "CreateBBGroupCover",
     "group": "Groups",
-    "description": "<p>Create group cover</p>",
+    "description": "<p>Create group cover. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -5520,7 +5520,7 @@ define({ "api": [
     "title": "Create Photos",
     "name": "CreateBBPhotos",
     "group": "Media",
-    "description": "<p>Create Media Photos.</p>",
+    "description": "<p>Create Media Photos. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -6145,7 +6145,7 @@ define({ "api": [
     "title": "Upload Media",
     "name": "UploadBBMedia",
     "group": "Media",
-    "description": "<p>Upload Media.</p>",
+    "description": "<p>Upload Media. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -6174,7 +6174,7 @@ define({ "api": [
     "title": "Create Member Avatar",
     "name": "CreateBBMemberAvatar",
     "group": "Members",
-    "description": "<p>Create member avatar</p>",
+    "description": "<p>Create member avatar. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -6213,7 +6213,7 @@ define({ "api": [
     "title": "Create Member Cover",
     "name": "CreateBBMemberCover",
     "group": "Members",
-    "description": "<p>Create member cover</p>",
+    "description": "<p>Create member cover. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
