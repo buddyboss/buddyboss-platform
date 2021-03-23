@@ -414,10 +414,8 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$updated = BP_Notifications_Notification::update(
-			array( 'is_new' => $request['is_new'] ),
-			array( 'id' => $notification->id )
-		);
+		$notification->is_new = $request['is_new'];
+		$updated              = $notification->save();
 
 		if ( ! (bool) $updated ) {
 			return new WP_Error(
