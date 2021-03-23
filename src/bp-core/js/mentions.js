@@ -14,7 +14,6 @@ window.bp = window.bp || {};
 	}
 
 	bp.mentions.xhr = null;
-
 	/**
 	 * Adds BuddyPress @mentions to form inputs.
 	 *
