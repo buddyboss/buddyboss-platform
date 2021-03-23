@@ -415,11 +415,10 @@ function bp_has_groups( $args = '' ) {
     }
 
 	$show_hidden = true;
-	if( !empty( bp_displayed_user_id() ) && !empty( bp_current_user_id() ) &&
-		bp_displayed_user_id() == bp_current_user_id()
-	) {
+	if ( ! empty( bp_displayed_user_id() ) && ! empty( bp_current_user_id() ) && bp_displayed_user_id() === bp_current_user_id() ) {
 		$show_hidden = false;
 	}
+
 	// Parse defaults and requested arguments.
 	$r = bp_parse_args(
 		$args,
