@@ -688,7 +688,7 @@ function bp_activity_type_supports( $activity_type = '', $feature = '' ) {
 			// Post Type activities
 			if ( ! empty( $bp->activity->track[ $activity_type ] ) ) {
 				if ( isset( $bp->activity->track[ $activity_type ]->activity_comment ) ) {
-					$retval = $bp->activity->track[ $activity_type ]->activity_comment;
+					$retval = $bp->activity->track[ $activity_type ]->activity_comment && ! bp_disable_blogforum_comments();
 				}
 
 				// Eventually override with comment synchronization feature.

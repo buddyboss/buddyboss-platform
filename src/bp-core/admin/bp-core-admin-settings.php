@@ -823,9 +823,8 @@ function bp_admin_setting_callback_member_invite_member_type() {
  */
 function bp_feed_settings_callback_post_type( $args ) {
 
-	$post_type   = $args['post_type'];
-	$option_name = 'bp-feed-custom-post-type-' . $post_type;
-
+	$post_type     = $args['post_type'];
+	$option_name   = bp_post_type_feed_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
 
 	// Description for the last option of CPT
@@ -836,6 +835,8 @@ function bp_feed_settings_callback_post_type( $args ) {
 	}
 	?>
 	<input
+		class="bp-feed-post-type-checkbox <?php echo 'bp-feed-post-type-' . $post_type; ?>"
+		data-post_type="<?php echo $post_type; ?>"
 		name="<?php echo $option_name; ?>"
 		id="<?php echo $option_name; ?>"
 		type="checkbox"
@@ -853,7 +854,39 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<p class="description"><?php _e( 'When users publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
 		<?php
 	}
+}
 
+/**
+ * Allow activity comments on posts and comments.
+ *
+ * @since BuddyBoss 1.5.9
+ */
+function bp_feed_settings_callback_post_type_comments( $args ) {
+	
+	$post_type     = $args['post_type'];
+	$option_name   = bp_post_type_feed_comment_option_name( $post_type );
+	$post_type_obj = get_post_type_object( $post_type );
+	?>
+
+	<input
+		class="bp-feed-post-type-commenet-checkbox <?php echo 'bp-feed-post-type-comment-' . $post_type; ?>"
+		name="<?php echo $option_name; ?>"
+		id="<?php echo $option_name; ?>"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
+	/>
+	<label for="<?php echo $option_name; ?>">
+		<?php echo $post_type === 'post' ? esc_html__( 'Show blog post comments', 'buddyboss' ) : 'Enable comments in ' . $post_type_obj->labels->name . ' activity posts.'; ?>
+	</label>
+	<?php
+
+	// Description for the WordPress Blog Posts
+	if ( 'post' === $post_type ) {
+		?>
+		<p class="description"><?php _e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ); ?></p>
+		<?php
+	}
 }
 
 /**

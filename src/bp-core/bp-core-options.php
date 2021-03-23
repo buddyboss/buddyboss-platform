@@ -828,6 +828,24 @@ function bp_enable_private_network( $default = false ) {
  *              items, otherwise false.
  */
 function bp_disable_blogforum_comments( $default = false ) {
+	global $activities_template;
+	
+	$bb = buddypress();
+	
+	if ( empty( $activities_template->activity ) ) {
+		return $default;
+	}
+	
+	$activity_type  = bp_get_activity_type();
+	
+	if( empty( $bb->activity->track[ $activity_type ] ) ) {
+		return $default;
+	}
+
+	$track_activity =  $bb->activity->track[ $activity_type ];
+	
+	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
+	$disable = (bool) bp_is_post_type_feed_comment_enable( $track_activity->post_type, $default ) ? false : true;
 
 	/**
 	 * Filters whether or not blog and forum activity feed comments are disabled.
@@ -836,7 +854,31 @@ function bp_disable_blogforum_comments( $default = false ) {
 	 *
 	 * @param bool $value Whether or not blog and forum activity feed comments are disabled.
 	 */
-	return (bool) apply_filters( 'bp_disable_blogforum_comments', (bool) bp_get_option( 'bp-disable-blogforum-comments', $default ) );
+	return (bool) apply_filters( 'bp_disable_blogforum_comments', $disable );
+}
+
+/**
+ * Are any post type/comment activity feed comments enable?
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param bool $post_type custom post type.
+ * @param bool $default   Optional. Fallback value if not found in the database.
+ *                        Default: false.
+ * @return bool True if activity comments are enable for blog and forum
+ *              items, otherwise false.
+ */
+function bp_is_post_type_feed_comment_enable( $post_type, $default = false ) {
+	$option_name = bp_post_type_feed_comment_option_name( $post_type );;
+	
+	/**
+	 * Filters whether or not custom post type feed comments are enable.
+	 *
+	 * @since BuddyBoss 1.5.9
+	 *
+	 * @param bool $value Whether or not custom post type activity feed comments are enable.
+	 */
+	return (bool) apply_filters( 'bp_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
 }
 
 /**
@@ -1289,7 +1331,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether post type feed enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( 'bp-feed-custom-post-type-' . $post_type, $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bp_post_type_feed_option_name( $post_type ), $default ) );
 }
 
 /**
@@ -1753,4 +1795,60 @@ function bp_rest_enable_private_network() {
 	 * @param bool $value Whether private REST APIs is enabled.
 	 */
 	return apply_filters( 'bp_rest_enable_private_network', $retval );
+}
+
+/**
+ * Option name for custom post type.
+ * From the activity settings whether any custom post enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bp_post_type_feed_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type;
+}
+
+/**
+ * Option name for custom post type comments.
+ * From the activity settings whether any custom post comments are enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bp_post_type_feed_comment_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type . '-comments';
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @return array.
+ */
+function bp_feed_post_types() {
+	// Get all active custom post type.
+	$post_types = get_post_types( array( 'public' => true ) );
+
+	// Exclude BP CPT
+	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+
+	$bp_excluded_cpt = array();
+	
+	foreach ( $post_types as $post_type ) {
+		// Exclude all the custom post type which is already in BuddyPress Activity support.
+		if ( in_array( $post_type, $bp_exclude_cpt ) ) {
+			continue;
+		}
+
+		$bp_excluded_cpt[] = $post_type;
+	}
+
+	return $bp_excluded_cpt;
 }
