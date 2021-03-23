@@ -67,7 +67,14 @@ function bp_custom_pages_do_settings_sections( $page ) {
 	foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 		echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 		if ( $section['title'] ) {
-			echo "<h2>{$section['title']}</h2>\n";
+			$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
+			echo "<h2 class=". $has_tutorial_btn .">{$section['title']}";
+			if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
+				?> <div class="bbapp-tutorial-btn"> <?php
+				call_user_func( $section['tutorial_callback'], $section );
+				?> </div> <?php
+			}
+			echo "</h2>\n";
 		}
 
 		if ( $section['callback'] ) {
@@ -164,6 +171,8 @@ add_action( 'admin_init', 'bp_core_admin_register_page_fields' );
  */
 function bp_core_admin_register_registration_page_fields() {
 
+	global $wp_settings_sections;
+
 	$allow_custom_registration = bp_allow_custom_registration();
 
 	if ( $allow_custom_registration ) {
@@ -175,23 +184,11 @@ function bp_core_admin_register_registration_page_fields() {
 	}
 
 	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
+	$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ][ 'tutorial_callback' ] = 'bb_registration_page_tutorial';
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages   = bp_core_admin_get_static_pages();
 
-	// add view tutorial button.
-	$static_pages['button'] = array(
-		'link'  => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62795,
-				),
-				'admin.php'
-			)
-		),
-		'label' => __( 'View Tutorial', 'buddyboss' ),
-	);
 	$description            = '';
 
 	foreach ( $static_pages as $name => $label ) {
@@ -224,6 +221,29 @@ add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
  */
 function bp_core_admin_directory_pages_description() {
 	echo wpautop( __( 'Associate a WordPress page with each of the following components.', 'buddyboss' ) );
+}
+
+/**
+ * Link to Registration page tutorial
+ *
+ * @since BuddyBoss 1.5.8
+ */
+function bb_registration_page_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62795,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
 }
 
 /**
