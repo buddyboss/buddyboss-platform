@@ -975,7 +975,7 @@ window.bp = window.bp || {};
 
 			if ( $( disabledControl ).prop( 'disabled', true ) && !$( this ).hasClass( 'enabled' ) ) {
 				$( this ).addClass( 'enabled' ).removeClass( 'disabled' );
-				$( disabledControl ).removeProp( 'disabled' );
+				$( disabledControl ).prop( 'disabled', false );
 
 			} else if ( $( disabledControl ).prop( 'disabled', false ) && $( this ).hasClass( 'enabled' ) ) {
 				$( this ).removeClass( 'enabled' ).addClass( 'disabled' );

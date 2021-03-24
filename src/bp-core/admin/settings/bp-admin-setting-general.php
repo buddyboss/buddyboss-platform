@@ -26,7 +26,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 	public function register_fields() {
 
 		// Main General Settings Section
-		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ), '', 'bp_admin_setting_tutorial' );
 
 		// Account Deletion Settings.
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
@@ -42,11 +42,10 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$args['class'] = 'child-no-padding';
 		$this->add_field( 'hide-loggedout-adminbar', '', 'bp_admin_setting_callback_admin_bar', 'intval', $args );
 		$args = array();
-		$this->add_field( 'bp-admin-setting-tutorial', '', 'bp_admin_setting_tutorial' );
 
 
 		// Main Registration Settings Section
-		$this->add_section( 'bp_registration', __( 'Registration', 'buddyboss' ) );
+		$this->add_section( 'bp_registration', __( 'Registration', 'buddyboss' ), '', 'bp_admin_registration_setting_tutorial' );
 
 		// Registration Settings.
 		$args          = array();
@@ -91,10 +90,8 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
-		$this->add_field( 'bp-admin-registration-setting-tutorial', '', 'bp_admin_registration_setting_tutorial' );
-
 		// Main Privacy Settings Section
-		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ) );
+		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ), '', 'bp_privacy_tutorial' );
 
 		// Private Network Settings.
 		$this->add_field( 'bp-enable-private-network', __( 'Private Website', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
@@ -102,7 +99,6 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		if ( ! $enable_private_network ) {
 			$this->add_field( 'bp-enable-private-network-public-content', __( 'Public Content', 'buddyboss' ), 'bp_admin_setting_callback_private_network_public_content' );
 		}
-		$this->add_field( 'bp-privacy-tutorial', '', 'bp_privacy_tutorial' );
 
 		/**
 		 * For Backward compatibility
