@@ -358,7 +358,7 @@ window.bp = window.bp || {};
 		 * Remove all remaining element ( if there is any ) if no text remaining in the
 		 * what's new text box.
 		 */
-		this.on('keyup', function (e) {
+		this.on('keyup', function () {
 			/**
 			 * Removing the "contenteditable" in android devices.
 			 * It was preventing the backspace somehow. So whenever
@@ -384,7 +384,7 @@ window.bp = window.bp || {};
 	$(document).ready(function () {
 		// Reset counter for textbox character length.
 		localStorage.setItem('charCount', 0);
-		$(document).on('focus click', BP_Mentions_Options.selectors.join(','), function (e) {
+		$(document).on('focus', BP_Mentions_Options.selectors.join(','), function () {
 			if (typeof ( bp ) === 'undefined') {
 				return;
 			}
