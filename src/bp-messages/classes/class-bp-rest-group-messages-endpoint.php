@@ -163,7 +163,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'bp_rest_invalid_group_members_message',
 					sprintf(
 						'%1$s %2$s',
-						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss' ),
+						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message: ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message: ', 'buddyboss' ),
 						implode( ', ', $not_friends )
 					),
 					array(
@@ -1055,7 +1055,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					count( $all_members )
 				);
 			} else {
-				$retval['message'] = __( 'Your message was sent privately to all members of this group you can message.', 'buddyboss' );
+				$retval['message'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
 			}
 
 			if ( ! empty( $messages_all ) ) {

@@ -2281,6 +2281,8 @@ function bp_blogs_activity_content_set_temp_content() {
 		if ( is_a( $content, 'WP_Post' ) ) {
 			$activities_template->activity->content = '&#8203;';
 		}
+	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+		$activities_template->activity->content = '&#8203;';
 	}
 
 }
@@ -2334,6 +2336,15 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 					}
 				}
 			}
+		}
+
+	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+		$comment = get_comment( $activity->secondary_item_id );
+		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+		if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
 		}
 
 	}

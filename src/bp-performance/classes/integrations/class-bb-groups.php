@@ -7,8 +7,8 @@
 
 namespace BuddyBoss\Performance\Integration;
 
-use BuddyBoss\Performance\Helper;
 use BuddyBoss\Performance\Cache;
+use BuddyBoss\Performance\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -30,8 +30,6 @@ class BB_Groups extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bp-groups' );
 
-		$event_groups = array( 'buddypress', 'buddypress-groups' );
-
 		$purge_events = array(
 			'bp_group_admin_edit_after',         // When Group change form admin.
 			'groups_create_group_step_complete', // When Group created from Manage.
@@ -41,11 +39,8 @@ class BB_Groups extends Integration_Abstract {
 			'bp_suspend_groups_unsuspended',     // Any Group Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge group endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_groups', $purge_events );
 		$this->purge_event( 'bp-groups', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge
@@ -85,11 +80,7 @@ class BB_Groups extends Integration_Abstract {
 			// 'bp_core_delete_existing_avatar'     => 1, //User avatar photo deleted. Manage with group as both use same action.
 		);
 
-		/**
-		 * Add Custom events to purge single group endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_groups', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-groups_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_social_groups', 'buddyboss-app' );
@@ -100,11 +91,8 @@ class BB_Groups extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/groups',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -112,8 +100,6 @@ class BB_Groups extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/groups/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
@@ -127,7 +113,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_bp_group_admin_edit_after( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -137,7 +123,7 @@ class BB_Groups extends Integration_Abstract {
 		$bp       = buddypress();
 		$group_id = $bp->groups->new_group_id;
 		if ( ! empty( $group_id ) ) {
-			Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+			$this->purge_item_cache_by_item_id( $group_id );
 		}
 	}
 
@@ -147,7 +133,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_group_details_edited( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -156,7 +142,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_group_settings_edited( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -165,7 +151,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_avatar_uploaded( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -174,7 +160,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_cover_image_uploaded( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -183,7 +169,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_cover_image_deleted( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -192,7 +178,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_bp_group_admin_after_edit_screen_save( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -201,7 +187,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_join_group( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -210,8 +196,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param object $member Member object.
 	 */
 	public function event_groups_member_after_save( $member ) {
-		$group_id = $member->group_id;
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $member->group_id );
 	}
 
 	/**
@@ -220,8 +205,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param object $member Member object.
 	 */
 	public function event_groups_member_after_remove( $member ) {
-		$group_id = $member->group_id;
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $member->group_id );
 	}
 
 	/**
@@ -232,7 +216,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int   $group_id Group id.
 	 */
 	public function event_groups_membership_requested( $user_id, $admins, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -242,7 +226,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_membership_accepted( $user_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -252,7 +236,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_membership_rejected( $user_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -261,8 +245,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_groups_invite_user( $r ) {
-		$group_id = $r['group_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['group_id'] );
 	}
 
 	/**
@@ -271,8 +254,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_bp_invitations_accepted_request( $r ) {
-		$group_id = $r['item_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['item_id'] );
 	}
 
 	/**
@@ -281,8 +263,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_bp_invitations_accepted_invite( $r ) {
-		$group_id = $r['item_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['item_id'] );
 	}
 
 	/**
@@ -291,8 +272,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_bp_invitation_after_delete( $r ) {
-		$group_id = $r['item_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['item_id'] );
 	}
 
 	/**
@@ -302,7 +282,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_added_group_meta( $meta_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -312,7 +292,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_updated_group_meta( $meta_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -322,7 +302,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_delete_group_meta( $meta_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/******************************* Moderation Support ******************************/
@@ -332,7 +312,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group ID.
 	 */
 	public function event_bp_suspend_groups_suspended( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -341,7 +321,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group ID.
 	 */
 	public function event_bp_suspend_groups_unsuspended( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/****************************** Author Embed Support *****************************/
@@ -354,7 +334,7 @@ class BB_Groups extends Integration_Abstract {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $group_id );
 			}
 		}
 	}
@@ -368,7 +348,7 @@ class BB_Groups extends Integration_Abstract {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $group_id );
 			}
 		}
 	}
@@ -382,7 +362,7 @@ class BB_Groups extends Integration_Abstract {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $group_id );
 			}
 		}
 	}
@@ -400,12 +380,11 @@ class BB_Groups extends Integration_Abstract {
 				$group_ids = $this->get_group_ids_by_userid( $user_id );
 				if ( ! empty( $group_ids ) ) {
 					foreach ( $group_ids as $group_id ) {
-						Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+						$this->purge_item_cache_by_item_id( $group_id );
 					}
 				}
 			} elseif ( isset( $args['object'] ) && 'group' === $args['object'] ) {
-				$group_id = $item_id;
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $item_id );
 			}
 		}
 	}
@@ -426,5 +405,16 @@ class BB_Groups extends Integration_Abstract {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Purge item cache by item id.
+	 *
+	 * @param $group_id
+	 */
+	private function purge_item_cache_by_item_id( $group_id ) {
+		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$group = new \BP_Groups_Group( $group_id );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) ) );
 	}
 }

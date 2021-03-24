@@ -125,7 +125,6 @@ class Settings {
 					'cache_bb_forum_discussions'  => array(
 						'label'          => __( 'Forum Discussions', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Forum Discussions', 'buddyboss' ),
-						'desc'           => __( 'Plugins that interact with Forum Discussions may not be compatible with API caching.', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bbp-forums,bbp-topics,bbp-replies&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
@@ -258,7 +257,7 @@ class Settings {
 				foreach ( $components as $component ) {
 					Cache::instance()->purge_by_component( $component );
 				}
-
+				Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
 				$purge_url = self::get_performance_purge_url();
 				wp_safe_redirect( $purge_url . '&cache_purge=1' );
 				exit();

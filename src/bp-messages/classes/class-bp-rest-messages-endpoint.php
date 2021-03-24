@@ -621,8 +621,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		$args = array(
-			'term' => sanitize_text_field( $term ),
-			'type' => 'members',
+			'term'         => sanitize_text_field( $term ),
+			'type'         => 'members',
+			'only_friends' => bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message(),
 		);
 
 		if ( ! empty( $group_id ) ) {
