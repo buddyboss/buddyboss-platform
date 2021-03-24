@@ -348,11 +348,6 @@ if ( class_exists( 'Walker' ) ) :
 			$id_field = $this->db_fields['id'];
 			$id       = $element->$id_field;
 
-			// Limit child reply.
-			if ( isset( $children_elements[ $id ] ) && is_array( $children_elements[ $id ] ) && count( $children_elements[ $id ] ) > (int) bbp_get_replies_per_page() ) {
-				$children_elements[ $id ] = array_slice( $children_elements[ $id ], 0, bbp_get_replies_per_page(), true );
-			}
-
 			// Display element
 			parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 
