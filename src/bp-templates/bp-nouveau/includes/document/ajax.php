@@ -846,6 +846,9 @@ function bp_nouveau_ajax_document_move() {
 
 	$document = bp_document_move_document_to_folder( $document_id, $folder_id, $group_id );
 
+	// Flush the cache.
+	wp_cache_flush();
+
 	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
 
 	if ( $document > 0 ) {
