@@ -227,9 +227,8 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
-	$link_url    = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
-	$link_embed  = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
-	$activity_id = FILTER_INPUT( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
@@ -244,7 +243,7 @@ function bp_activity_save_link_data( $activity ) {
 	}
 
 	// return if link embed was used activity is in edit.
-	if ( true === $link_embed && isset( $_POST['edit'] ) && $activity->id !== $activity_id ) {
+	if ( true === $link_embed && 'activity_comment' === $activity->type ) {
 		return;
 	}
 
