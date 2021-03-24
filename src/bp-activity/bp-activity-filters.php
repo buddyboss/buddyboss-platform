@@ -242,7 +242,7 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
-	// return if link embed was used activity is in edit.
+	// Return if link embed was used activity is in edit.
 	if ( true === $link_embed && 'activity_comment' === $activity->type ) {
 		return;
 	}
