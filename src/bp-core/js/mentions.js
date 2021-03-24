@@ -282,18 +282,29 @@ window.bp = window.bp || {};
 		this.on('inserted.atwho', function (event) {
 			if (isChrome) {
 				/**
-				 * Issue with chrome - When select any user name and hit enter then create p tag with space. So, focus will goes to next line.
+				 * Issue with chrome only on news feed - When select any user name and hit enter then create p tag with space. So, focus will goes to next line.
 				 */
 				jQuery(this).on('keyup', function (e) {
 					keyCode = e.keyCode;
 					if (13 === keyCode) {
-						jQuery(this).attr('contenteditable', 'false');
+						if (jQuery(this).hasClass('medium-editor-element')) {
+							var checkCeAttr = jQuery(this).attr('contenteditable');
+							if (typeof checkCeAttr !== 'undefined' && checkCeAttr !== false) {
+								jQuery(this).attr('contenteditable', 'false');
+							}
+						}
+						setTimeout(function () {
+							$.each(BP_Mentions_Options.selectors, function (index, value) {
+								if (jQuery(value).hasClass('medium-editor-element')) {
+									var checkCeAttrForAll = jQuery(value).attr('contenteditable');
+									if (typeof checkCeAttrForAll !== 'undefined' && checkCeAttrForAll !== false) {
+										jQuery(value).attr('contenteditable', 'true');
+										jQuery(value).find('.atwho-inserted').parent().focus();
+									}
+								}
+							});
+						}, 10);
 					}
-					setTimeout(function () {
-						$.each(BP_Mentions_Options.selectors, function (index, value) {
-							jQuery(value).attr('contenteditable', 'true');
-						});
-					}, 10);
 				});
 			}
 			
