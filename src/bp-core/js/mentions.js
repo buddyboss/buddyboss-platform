@@ -299,7 +299,7 @@ window.bp = window.bp || {};
 									var checkCeAttrForAll = jQuery(value).attr('contenteditable');
 									if (typeof checkCeAttrForAll !== 'undefined' && checkCeAttrForAll !== false) {
 										jQuery(value).attr('contenteditable', 'true');
-										jQuery(value).find('.atwho-inserted').parent().focus();
+										jQuery(value).find('.atwho-inserted').closest('.medium-editor-element').focus();
 									}
 								}
 							});
