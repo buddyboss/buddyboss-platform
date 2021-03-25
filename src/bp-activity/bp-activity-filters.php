@@ -138,6 +138,7 @@ function bp_activity_get_moderated_activity_types() {
 	 */
 	return apply_filters( 'bp_activity_check_activity_types', $types );
 }
+
 /**
  * Moderate the posted activity item, if it contains moderate keywords.
  *
@@ -160,6 +161,7 @@ function bp_activity_check_moderation_keys( $activity ) {
 		$activity->component = false;
 	}
 }
+
 /**
  * Mark the posted activity as spam, if it contains blacklist keywords.
  *
@@ -182,6 +184,7 @@ function bp_activity_check_blacklist_keys( $activity ) {
 		$activity->component = false;
 	}
 }
+
 /**
  * Save link preview data into activity meta key "_link_preview_data"
  *
@@ -193,7 +196,7 @@ function bp_activity_check_blacklist_keys( $activity ) {
 function bp_activity_save_link_data( $activity ) {
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
-	// check if link url is set or not
+	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
 		if ( false === $link_embed ) {
 			bp_activity_update_meta( $activity->id, '_link_embed', '0' );
@@ -202,10 +205,14 @@ function bp_activity_save_link_data( $activity ) {
 		}
 		return;
 	}
+	// Return if link embed was used activity is in edit.
+	if ( true === $link_embed && 'activity_comment' === $activity->type ) {
+		return;
+	}
 	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
 	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
 	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
-	// check if link embed was used
+	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
 		return;
@@ -228,6 +235,7 @@ function bp_activity_save_link_data( $activity ) {
 	}
 	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
 }
+
 /**
  * Update activity comment privacy with parent activity privacy update.
  *
@@ -252,6 +260,7 @@ function bp_activity_update_comment_privacy( $activity ) {
 		}
 	}
 }
+
 /**
  * Recursive function to update privacy of comment with nested level.
  *
@@ -271,6 +280,7 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
 		}
 	}
 }
+
 /**
  * Custom kses filtering for activity content.
  *
@@ -292,6 +302,7 @@ function bp_activity_filter_kses( $content ) {
 	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', bp_get_allowedtags() );
 	return wp_kses( $content, $activity_allowedtags );
 }
+
 /**
  * Find and link @-mentioned users in the contents of a given item.
  *
@@ -341,6 +352,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 	// Return the content.
 	return $content;
 }
+
 /**
  * Catch mentions in an activity item before it is saved into the database.
  *
@@ -375,6 +387,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 		buddypress()->activity->mentioned_users = $usernames;
 	}
 }
+
 /**
  * Sends emails and BP notifications for users @-mentioned in an activity item.
  *
@@ -417,6 +430,7 @@ function bp_activity_at_name_send_emails( $activity ) {
 		}
 	}
 }
+
 /**
  * Catch links in activity text so rel=nofollow can be added.
  *
@@ -429,6 +443,7 @@ function bp_activity_at_name_send_emails( $activity ) {
 function bp_activity_make_nofollow_filter( $text ) {
 	return preg_replace_callback( '|<a (.+?)>|i', 'bp_activity_make_nofollow_filter_callback', $text );
 }
+
 /**
  * Add rel=nofollow to a link.
  *
@@ -453,6 +468,7 @@ function bp_activity_make_nofollow_filter_callback( $matches ) {
 		return "<a target='_blank' $text rel=\"nofollow\">";
 	}
 }
+
 /**
  * Truncate long activity entries when viewed in activity feeds.
  *
@@ -521,6 +537,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 */
 	return apply_filters( 'bp_activity_truncate_entry', $excerpt, $text, $append_text );
 }
+
 /**
  * Embed link preview in activity content
  *
@@ -564,6 +581,7 @@ function bp_activity_link_preview( $content, $activity ) {
 	$content .= '</div>';
 	return $content;
 }
+
 /**
  * Include extra JavaScript dependencies for activity component.
  *
@@ -579,6 +597,7 @@ function bp_activity_get_js_dependencies( $js_handles = array() ) {
 	}
 	return $js_handles;
 }
+
 // add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10, 1 );
 // NOTICE: this dependency breaks activity stream when heartbeat is dequed via external sources
 /**
@@ -591,6 +610,7 @@ function bp_activity_enqueue_heartbeat_js() {
 		wp_enqueue_script( 'heartbeat' );
 	}
 }
+
 add_action( 'bp_nouveau_enqueue_scripts', 'bp_activity_enqueue_heartbeat_js' );
 /**
  * Add a just-posted classes to the most recent activity item.
@@ -612,6 +632,7 @@ function bp_activity_newest_class( $classes = '' ) {
 	$classes .= ' just-posted';
 	return $classes;
 }
+
 /**
  * Returns $args to force display of all member activity types on members activity feed.
  *
@@ -646,6 +667,7 @@ function bp_activity_display_all_types_on_just_me( $args ) {
 	$args['scope'] = implode( ',', $scope );
 	return $args;
 }
+
 /**
  * Check if Activity Heartbeat feature i on to add a timestamp class.
  *
@@ -666,6 +688,7 @@ function bp_activity_timestamp_class( $classes = '' ) {
 	$classes .= ' date-recorded-' . strtotime( $activity_date );
 	return $classes;
 }
+
 add_filter( 'bp_get_activity_css_class', 'bp_activity_timestamp_class', 9, 1 );
 /**
  * Use WordPress Heartbeat API to check for latest activity update.
@@ -716,6 +739,7 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 	}
 	return $response;
 }
+
 add_filter( 'heartbeat_received', 'bp_activity_heartbeat_last_recorded', 10, 2 );
 add_filter( 'heartbeat_nopriv_received', 'bp_activity_heartbeat_last_recorded', 10, 2 );
 /**
@@ -774,6 +798,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	);
 	return $strings;
 }
+
 add_filter( 'bp_core_get_js_strings', 'bp_activity_heartbeat_strings', 10, 1 );
 /** Scopes ********************************************************************/
 /**
@@ -841,6 +866,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 	);
 	return $retval;
 }
+
 add_filter( 'bp_activity_set_just-me_scope_args', 'bp_activity_filter_just_me_scope', 10, 2 );
 /**
  * Set up activity arguments for use with the 'public' scope.
@@ -871,6 +897,7 @@ function bp_activity_filter_public_scope( $retval = array(), $filter = array() )
 	);
 	return $retval;
 }
+
 add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scope', 10, 2 );
 /**
  * Set up activity arguments for use with the 'favorites' scope.
@@ -999,6 +1026,7 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 	}
 	return $retval;
 }
+
 add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorites_scope', 10, 2 );
 /**
  * Set up activity arguments for use with the 'favorites' scope.
@@ -1134,6 +1162,7 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 	);
 	return $retval;
 }
+
 add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_scope', 10, 2 );
 /**
  * Filter the members loop on a follow page.
@@ -1168,6 +1197,7 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 	}
 	return $qs;
 }
+
 add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
 /**
  * Set up activity arguments for use with the 'following' scope.
@@ -1265,6 +1295,7 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 	);
 	return $retval;
 }
+
 add_filter( 'bp_activity_set_following_scope_args', 'bp_users_filter_activity_following_scope', 10, 2 );
 /**
  * Do not add the activity if uncheck the options from the
@@ -1279,6 +1310,7 @@ function bp_activity_remove_platform_updates( $activity_object ) {
 		$activity_object->type = false;
 	}
 }
+
 /**
  * Fix to BuddyBoss media activity data
  *
@@ -1311,6 +1343,7 @@ function bp_activity_media_fix_data() {
 		}
 	}
 }
+
 /**
  * Filter the activities of friends privacy
  *
@@ -1348,6 +1381,7 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 	}
 	return $has_activities;
 }
+
 /**
  * Filter the activities for document and media privacy
  *
@@ -1414,6 +1448,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 	}
 	return $has_activities;
 }
+
 /**
  * Create media activity for each media uploaded
  *
@@ -1495,6 +1530,7 @@ function bp_activity_media_add( $media ) {
 		}
 	}
 }
+
 /**
  * Create main activity for the media uploaded and saved.
  *
@@ -1573,6 +1609,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 	}
 	return $media_ids;
 }
+
 /**
  * Update media and activity for media updation and deletion while editing the activity.
  *
@@ -1661,6 +1698,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 	}
 	return $media_ids;
 }
+
 /**
  * Generate permalink for comment mention notification.
  *
@@ -1691,6 +1729,7 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 	}
 	return $link;
 }
+
 /**
  * Create document activity for each document uploaded
  *
@@ -1770,6 +1809,7 @@ function bp_activity_document_add( $document ) {
 		}
 	}
 }
+
 /**
  * Create main activity for the media uploaded and saved.
  *
@@ -1848,6 +1888,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 	}
 	return $document_ids;
 }
+
 /**
  * Update document and activity for document updation and deletion while editing the activity.
  *
@@ -1936,6 +1977,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 	}
 	return $document_ids;
 }
+
 /**
  * We removing the Edit Button on Document/Media Activity popup until we fully support on popup.
  *
@@ -1955,6 +1997,7 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 	}
 	return $buttons;
 }
+
 add_action( 'bp_before_activity_activity_content', 'bp_blogs_activity_content_set_temp_content' );
 /**
  * Function which set the temporary content on the blog post activity.
@@ -1970,10 +2013,11 @@ function bp_blogs_activity_content_set_temp_content() {
 		if ( is_a( $content, 'WP_Post' ) ) {
 			$activities_template->activity->content = '&#8203;';
 		}
-	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$activities_template->activity->content = '&#8203;';
 	}
 }
+
 add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 9999, 2 );
 /**
  * Function which set the content on activity blog post.
@@ -2021,10 +2065,10 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				}
 			}
 		}
-	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
 		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-		if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
@@ -2032,6 +2076,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 	}
 	return $content;
 }
+
 add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_read_more', 9999, 2 );
 /**
  * Function which set the content on activity blog post comment.
@@ -2063,8 +2108,9 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 	}
 	return $content;
 }
+
 /**
- * Media comment migration for activity.
+ * Function which register a new checkbox for media comment migration for activity in Repair community in the tool menu.
  *
  * @param array $repair_list List of all repair items.
  *
@@ -2078,22 +2124,24 @@ function bb_activity_media_document_migration( $repair_list ) {
 	);
 	return $repair_list;
 }
+
 /**
- * Activity media migration process.
+ * Function which set the media/document migration for the activity section.
+ *
+ * @return array Return array with next offset and message.
  */
 function bb_activity_media_document_migration_process() {
 	global $wpdb;
 	$bp                  = buddypress();
 	$activity_table_name = $bp->activity->table_name;
-	$get_offset          = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
-	$offset              = isset( $get_offset ) ? (int) ( $get_offset ) : 0;
+	$offset              = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
 	if ( 1 === $offset ) {
 		$offset = 0;
 	} else {
 		$offset = $offset;
 	}
-	$get_active_post_types = get_post_types( array( 'public' => true ) );
-	$bp_exclude_cpt        = array(
+	$active_post_types = get_post_types( array( 'public' => true ) );
+	$bp_exclude_cpt    = array(
 		'forum',
 		'topic',
 		'reply',
@@ -2102,25 +2150,26 @@ function bb_activity_media_document_migration_process() {
 		'bp-group-type',
 		'bp-member-type',
 	);
-	$new_post_type_arr     = array();
-	foreach ( $get_active_post_types as $post_type_name ) {
+	$post_type_arr     = array();
+	foreach ( $active_post_types as $post_type_name ) {
 		if ( ! in_array( $post_type_name, $bp_exclude_cpt, true ) ) {
-			$new_post_type_arr[] = $post_type_name;
+			$post_type_arr[] = $post_type_name;
 		}
 	}
+	// Get root elements id for the activity.
 	$count_recepient_qry = 'SELECT COUNT(id) as ids FROM ' . $activity_table_name . ' WHERE ( item_id=0 AND secondary_item_id=0 )';
-	if ( ! empty( $new_post_type_arr ) ) {
-		foreach ( $new_post_type_arr as $get_post_type ) {
-			$db_type_name         = 'new_blog_' . $get_post_type;
+	if ( ! empty( $post_type_arr ) ) {
+		foreach ( $post_type_arr as $get_post_type ) {
+			$db_type_name        = 'new_blog_' . $get_post_type;
 			$count_recepient_qry .= " OR ( component='blogs' AND type='" . $db_type_name . "' )";
 		}
 	}
 	$recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
 	bb_migration_write_log( ' count_recepient_qry - ' . $count_recepient_qry );
 	$recipients_query = 'SELECT id FROM ' . $activity_table_name . ' WHERE ( item_id=0 AND secondary_item_id=0 )';
-	if ( ! empty( $new_post_type_arr ) ) {
-		foreach ( $new_post_type_arr as $get_post_type ) {
-			$db_type_name      = 'new_blog_' . $get_post_type;
+	if ( ! empty( $post_type_arr ) ) {
+		foreach ( $post_type_arr as $get_post_type ) {
+			$db_type_name     = 'new_blog_' . $get_post_type;
 			$recipients_query .= ' OR ( component="blogs" AND type="' . $db_type_name . '" )';
 		}
 	}
@@ -2141,13 +2190,15 @@ function bb_activity_media_document_migration_process() {
 					'activity_ids'     => $get_parent_id->id,
 				);
 				bb_migration_write_log( 'Main Parent Id - ' . $get_parent_id->id );
-				$get_activity_data     = bp_activity_get_specific( $args );
+				$activity_data         = bp_activity_get_specific( $args );
 				$new_seq               = array();
 				$sub_data              = array();
 				$sub_activity_id_store = array();
-				if ( isset( $get_activity_data['activities'] ) ) {
-					foreach ( $get_activity_data['activities'] as $comment_data ) {
+				if ( isset( $activity_data['activities'] ) ) {
+					foreach ( $activity_data['activities'] as $comment_data ) {
+						// Check if current activity has children.
 						if ( $comment_data->children ) {
+							// if current activity has children then get all the children for this activity.
 							$sub_data                              = bb_migration_get_children_data(
 								$sub_activity_id_store,
 								$sub_data,
@@ -2197,16 +2248,14 @@ function bb_activity_media_document_migration_process() {
 		);
 	}
 }
+
 /**
- * Get children data based on root element id. Its also get child data based on his parent id.
+ * Function which get children data based on root element id. Its also get child data based on his parent id.
  *
- * @param array $activity_id_store store children data and check it should not call second time.
- *
+ * @param array $activity_id_store Store children data and check for the duplicate.
  * @param array $sub_data          Get array of parent ids children data. Its work as herarchical array.
- *
  * @param array $children_array    Array of children data. Here all childrens check his own children.
  *                                 If any children have its own child data then it will store in $sub_data array.
- *
  * @param int   $main_root_id      Main root element id.
  *
  * @return array|void Return array with child_array and activity_id_store
@@ -2223,18 +2272,20 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 			return;
 		}
 		$activity_id_store[] = $children_data->id;
-		$args                = array(
+		//Get children data based on its parent id.
+		$args            = array(
 			'display_comments' => true,
 			'show_hidden'      => true,
 			'sort'             => 'ASC',
 			'activity_ids'     => $children_data->id,
 		);
-		$get_activity_data   = bp_activity_get_specific( $args );
-		$sub_child_array     = array();
-		foreach ( $get_activity_data['activities'] as $comment_data ) {
-			// if current activity has children then check get all the children for this activity.
+		$activity_data   = bp_activity_get_specific( $args );
+		$sub_child_array = array();
+		foreach ( $activity_data['activities'] as $comment_data ) {
+			// Check if current activity has children.
 			if ( ! empty( $comment_data->children ) ) {
 				$activity_id_store[] = $comment_data->id;
+				// Update mptt_right and secondary_item_id for the activity.
 				bb_migration_get_activity_data_and_update(
 					$comment_data->id,
 					$comment_data->mptt_left,
@@ -2245,6 +2296,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 					$comment_data->privacy,
 					$main_root_id
 				);
+				// if current activity has children then get all the children for this activity.
 				$sub_child_d           = bb_migration_get_children_data(
 					$activity_id_store,
 					$sub_data,
@@ -2256,11 +2308,10 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 				if ( ! empty( $new_activity_id_store ) ) {
 					$activity_id_store = array_unique( array_merge( $activity_id_store, $new_activity_id_store ), SORT_REGULAR );
 				}
-				// Get media activity exists in the activity id - If yes then get all comments for this media activity.
 				// Check media activity exists in the activity id - If yes then get all comments for this media activity.
-				$get_sub_data = $wpdb->get_results( $wpdb->prepare( 'SELECT id FROM ' . $activity_table_name . ' WHERE item_id=0 AND secondary_item_id=%d', (int) $comment_data->id ) );
-				if ( ! empty( $get_sub_data ) ) {
-					foreach ( $get_sub_data as $get_sub_sub_data ) {
+				$sub_data = $wpdb->get_results( $wpdb->prepare( 'SELECT id FROM ' . $activity_table_name . ' WHERE item_id=0 AND secondary_item_id=%d', (int) $comment_data->id ) );
+				if ( ! empty( $sub_data ) ) {
+					foreach ( $sub_data as $get_sub_sub_data ) {
 						$media_update_id    = $get_sub_sub_data->id;
 						$sargs              = array(
 							'display_comments' => true,
@@ -2274,6 +2325,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 							if ( ! empty( $scomment_data->children ) ) {
 								$activity_id_store[] = $get_sub_sub_data->id;
 								$activity_id_store[] = $scomment_data->id;
+								// It will update mptt_right and secondary_item_id for the media's activity which have children.
 								bb_migration_get_activity_data_and_update(
 									$scomment_data->id,
 									$scomment_data->mptt_left,
@@ -2284,6 +2336,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 									$scomment_data->privacy,
 									$main_root_id
 								);
+								// if current activity has children then get all the children for this activity.
 								$sub_child_d                                      = bb_migration_get_children_data(
 									$activity_id_store,
 									$sub_data,
@@ -2296,8 +2349,8 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 									$activity_id_store = array_unique( array_merge( $activity_id_store, $new_activity_id_store ), SORT_REGULAR );
 								}
 							} else {
-								// Which comment have type is activity then just update.
 								$activity_id_store[] = $scomment_data->id;
+								// It will update mptt_right and secondary_item_id for the media's activity which have not children.
 								bb_migration_get_activity_data_and_update(
 									$scomment_data->id,
 									$scomment_data->mptt_left,
@@ -2313,8 +2366,8 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 					}
 				}
 			} else {
-				// Not child data for activity id.
 				$activity_id_store[] = $comment_data->id;
+				// It will update mptt_right and secondary_item_id for the parents activity id which have not children.
 				bb_migration_get_activity_data_and_update(
 					$comment_data->id,
 					$comment_data->mptt_left,
@@ -2326,23 +2379,23 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 					$main_root_id
 				);
 				// if children empty then check media comment exists for that's activity id.
-				$get_sub_data = $wpdb->get_results( $wpdb->prepare( 'SELECT id from ' . $activity_table_name . ' WHERE item_id=%d OR secondary_item_id=%d', (int) $comment_data->id, (int) $comment_data->id ) );
-				if ( ! empty( $get_sub_data ) ) {
-					foreach ( $get_sub_data as $get_sub_sub_data ) {
+				$sub_data = $wpdb->get_results( $wpdb->prepare( 'SELECT id from ' . $activity_table_name . ' WHERE item_id=%d OR secondary_item_id=%d', (int) $comment_data->id, (int) $comment_data->id ) );
+				if ( ! empty( $sub_data ) ) {
+					foreach ( $sub_data as $sub_sub_data ) {
 						$args = array(
 							'display_comments' => true,
 							'show_hidden'      => true,
 							'sort'             => 'ASC',
-							'activity_ids'     => $get_sub_sub_data->id,
+							'activity_ids'     => $sub_sub_data->id,
 						);
 						// Get secondary item id based on media activity comment id - Which type will activity_update.
-						$gmiocc_row        = $wpdb->get_row( $wpdb->prepare( 'SELECT secondary_item_id FROM ' . $activity_table_name . ' WHERE id=%d', (int) $get_sub_sub_data->id ) );
-						$get_activity_data = bp_activity_get_specific( $args );
-						foreach ( $get_activity_data['activities'] as $key => $m_comment_data ) {
+						$activity_data = bp_activity_get_specific( $args );
+						foreach ( $activity_data['activities'] as $key => $m_comment_data ) {
 							// Check children exists in the media comments activity.
 							if ( ! empty( $m_comment_data->children ) ) {
-								$activity_id_store[] = $get_sub_sub_data->id;
+								$activity_id_store[] = $sub_sub_data->id;
 								$activity_id_store[] = $m_comment_data->id;
+								// It will update mptt_right and secondary_item_id for the media's activity which have children.
 								bb_migration_get_activity_data_and_update(
 									$m_comment_data->id,
 									$m_comment_data->mptt_left,
@@ -2353,19 +2406,21 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 									$m_comment_data->privacy,
 									$main_root_id
 								);
-								$sub_child_d = bb_migration_get_children_data(
+								// if current activity has children then get all the children for this activity.
+								$sub_child_d                                       = bb_migration_get_children_data(
 									$activity_id_store,
 									$sub_data,
 									$m_comment_data->children,
 									$main_root_id
 								);
-								$sub_child_array[ $get_sub_sub_data->id ]['new_child'] = $sub_child_d['child_array'];
-								$new_activity_id_store                                 = $sub_child_d['activity_id_store'];
+								$sub_child_array[ $sub_sub_data->id ]['new_child'] = $sub_child_d['child_array'];
+								$new_activity_id_store                             = $sub_child_d['activity_id_store'];
 								if ( ! empty( $new_activity_id_store ) ) {
 									$activity_id_store = array_unique( array_merge( $activity_id_store, $new_activity_id_store ), SORT_REGULAR );
 								}
 							} else {
 								$activity_id_store[] = $m_comment_data->id;
+								// It will update mptt_right and secondary_item_id for the media's activity which have not children.
 								bb_migration_get_activity_data_and_update(
 									$m_comment_data->id,
 									$m_comment_data->mptt_left,
@@ -2391,23 +2446,17 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 	);
 	return $return_array;
 }
+
 /**
- * Get activity data content which will update.
+ * Function which get new secondary item for the media/document comments.
  *
  * @param int    $comment_id        Comment id.
- *
  * @param int    $mppt_left         Left position of comment.
- *
  * @param int    $mptt_right        Right position of comment.
- *
  * @param int    $item_id           Item id of the comment.
- *
  * @param int    $secondary_item_id Secondary item id of the comment.
- *
  * @param string $comment_type      Type of the comment.
- *
  * @param string $comment_privacy   Privacy of the comment.
- *
  * @param int    $main_root_id      Main root comment id.
  *
  * @uses bb_activity_update_data() Use this function for the update data based data.
@@ -2421,26 +2470,23 @@ function bb_migration_get_activity_data_and_update( $comment_id, $mppt_left, $mp
 		$gmiosi_get_row = $wpdb->get_row( $wpdb->prepare( 'SELECT secondary_item_id FROM ' . $activity_table_name . ' WHERE id=%d', $item_id ) );
 		if ( ! empty( $gmiosi_get_row ) ) {
 			$new_secondary_item_id = $gmiosi_get_row->secondary_item_id;
-			// If secondary item id is zero then it consider old secondary item.
+			// If secondary item id is zero then it will consider old secondary item.
 			if ( 0 === (int) $new_secondary_item_id ) {
 				$new_secondary_item_id = $secondary_item_id;
 			}
 		}
 	}
-	// Update activity id in media table. Update activity privacy.
+	// Update activity id in media table and also update privacy for activity.
 	bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_root_id, $mptt_right, $comment_type );
 }
+
 /**
- * Update data in activity and media table.
+ * Function which update fields in activity table. It will update mppt_right, secondary_item_id based on its parent id.
  *
  * @param int    $comment_id            Comment id.
- *
  * @param int    $new_secondary_item_id Change secondary item id of the comment based on move.
- *
  * @param int    $main_root_id          Main root comment id.
- *
  * @param int    $mptt_right            Right position of comment.
- *
  * @param string $comment_type          Type of comment.
  */
 function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_root_id, $mptt_right, $comment_type ) {
@@ -2493,15 +2539,15 @@ function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_roo
 		}
 	}
 }
+
 /**
- * Delete activity id which type is activity_update and privacy is media.
+ * Function which will deletes activity id whose type would activity_update and privacy would media from the activity table.
  *
  * @param array $activity_ids Array of activity_ids.
- *
  * @param int   $main_root_id Main root activity id.
  */
 function bb_migration_remove_activity_id_activity_update_type( $activity_ids, $main_root_id ) {
-	// Delete activity id which type is activity_update and privacy is media.
+	//Deletes activity id whose type would activity_update and privacy would media from the activity table.
 	global $wpdb;
 	$bp                  = buddypress();
 	$activity_table_name = $bp->activity->table_name;
@@ -2509,10 +2555,11 @@ function bb_migration_remove_activity_id_activity_update_type( $activity_ids, $m
 		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $activity_table_name . ' WHERE id = %d AND item_id=%s AND type=%s AND ( privacy=%s OR privacy=%s )', $child_id, $main_root_id, 'activity_update', 'media', 'document' ) );
 	}
 }
+
 /**
- * Here create separate log file for media migration. Like we can insert main root activity ids.
+ * Function which set error log for the migration data.
  *
- * @param string|array $log string|array|object Its message or data which we add in log file.
+ * @param string|array $log string|array|object Its message or data which we will add in log file.
  */
 function bb_migration_write_log( $log ) {
 	$message = gmdate( 'Y-m-d H:i:s - ' );
