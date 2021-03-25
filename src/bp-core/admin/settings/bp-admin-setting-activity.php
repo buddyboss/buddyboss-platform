@@ -74,7 +74,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
-		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
 
 		// Allow Activity edit setting.
 		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
@@ -108,10 +108,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
 
-		// Activity Settings Tutorial
-		$this->add_field( 'bp-activity-settings-tutorial', '', 'bp_activity_settings_tutorial' );
-
-		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
+		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ), '', 'bp_posts_in_activity_tutorial' );
 
 		// create field for default Platform activity feed.
 		$get_default_platform_activity_types = bp_platform_default_activity_types();
@@ -175,9 +172,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				$count++;
 			}
 		}
-
-		// Posts in Activity Tutorial
-		$this->add_field( 'bp-posts-in-activity-tutorial', '', 'bp_posts_in_activity_tutorial' );
 
 		/**
 		 * Fires to register Activity tab settings fields and section.
