@@ -671,7 +671,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 /**
  * Set the Preview image came via JS.
  *
- * @param array  $video video array.
+ * @param array $video video array.
  *
  * @since BuddyBoss 1.5.7
  */
@@ -739,8 +739,8 @@ function bp_video_preview_image_by_js( $video ) {
 /**
  * Put the video in background process to create thumbnails.
  *
- * @param int  	$attachment_id video attachment id.
- * @param array	$videos videos array.
+ * @param int   $attachment_id video attachment id.
+ * @param array $videos videos array.
  *
  * @since BuddyBoss 1.5.7
  */
@@ -825,7 +825,18 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 	$error = '';
 	global $bp_background_updater;
 	try {
-		$ffmpeg = FFMpeg\FFMpeg::create();
+		if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+			$ffmpeg = FFMpeg\FFMpeg::create(
+				array(
+					'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+					'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+					'timeout'          => 3600, // The timeout for the underlying process.
+					'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+				)
+			);
+		} else {
+			$ffmpeg = FFMpeg\FFMpeg::create();
+		}
 	} catch ( Exception $ffmpeg ) {
 		$error = $ffmpeg->getMessage();
 		$bp_background_updater->cancel_process();
@@ -875,14 +886,27 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 				$thumbnail_list = array();
 				foreach ( $random_seconds as $second ) {
 
-					$str          = wp_rand();
-					$unique_file  = md5( $str );
-					$image_name   = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $unique_file );
-					$thumbnail    = $upload_dir . '/' . $image_name . '.jpg';
-					$file_name    = $image_name . '.jpg';
-					$thumb_ffmpeg = FFMpeg\FFMpeg::create();
-					$video_thumb  = $thumb_ffmpeg->open( get_attached_file( $video['id'] ) );
-					$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
+					$str         = wp_rand();
+					$unique_file = md5( $str );
+					$image_name  = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $unique_file );
+					$thumbnail   = $upload_dir . '/' . $image_name . '.jpg';
+					$file_name   = $image_name . '.jpg';
+
+					if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+						$thumb_ffmpeg = FFMpeg\FFMpeg::create(
+							array(
+								'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+								'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+								'timeout'          => 3600, // The timeout for the underlying process.
+								'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+							)
+						);
+					} else {
+						$thumb_ffmpeg = FFMpeg\FFMpeg::create();
+					}
+
+					$video_thumb = $thumb_ffmpeg->open( get_attached_file( $video['id'] ) );
+					$thumb_frame = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
 
 					$error = '';
 					try {
@@ -1242,7 +1266,7 @@ function bp_get_total_video_count() {
 function bp_video_object_results_video_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = 'all';
+	$querystring['scope']       = 'all';
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
 	$querystring['user_id']     = 0;
