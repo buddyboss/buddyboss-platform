@@ -569,7 +569,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		switch ( $slug ) {
 			case 'all':
 				$args = array( 'type' => $type );
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
+				if ( is_user_logged_in() ) {
 					$args['show_hidden'] = true;
 				}
 				$groups = groups_get_groups( $args );

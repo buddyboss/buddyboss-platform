@@ -215,7 +215,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/members/:user_id/avatar Create Member Avatar
 	 * @apiName        CreateBBMemberAvatar
 	 * @apiGroup       Members
-	 * @apiDescription Create member avatar
+	 * @apiDescription Create member avatar. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} user_id A unique numeric ID for the Member.
