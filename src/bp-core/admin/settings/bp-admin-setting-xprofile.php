@@ -87,7 +87,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function register_fields() {
 
 		// Section for Profile Names
-		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ) );
+		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ), '', 'bp_profile_names_tutorial' );
 
 		// Display name format.
 		$this->add_field(
@@ -116,11 +116,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
-		// Profile Names Tutorial
-		$this->add_field( 'bp-profile-names-tutorial', '', 'bp_profile_names_tutorial' );
-
 		// Section for Profile Photos
-		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ) );
+		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ), '', 'bp_profile_photos_tutorial' );
 
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
@@ -135,9 +132,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
 
-		// Profile Settings Tutorial
-		$this->add_field( 'bp-profile-setting-tutorial', '', 'bp_profile_photos_tutorial' );
-
 		// @todo will use this later on
 		// Section for profile dashboard.
 		// $this->add_section( 'bp_profile_dashboard_settings', __( 'Profile Dashboard', 'buddyboss' ) );
@@ -150,7 +144,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// $this->add_field( 'bp-enable-member-dashboard-redirect', __( 'Redirect on Login', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard_redirect'], 'intval' );
 
 		// Section for profile types.
-		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
+		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ), '', array( $this, 'bp_profile_types_tutorial' ) );
 
 		// Enable/Disable profile types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_enable_disable' ), 'intval' );
@@ -166,20 +160,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-member-type-default-on-registration', __( 'Default Profile Type', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_default_on_registration' ) );
 		}
 
-		// Profile Types Tutorial
-		$this->add_field( 'bp-profile-types-tutorial', '', array( $this, 'bp_profile_types_tutorial' ) );
-
 		// Section for profile search.
-		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ), '', array( $this, 'bp_profile_search_tutorial' ) );
 
 		// Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_profile_search' ), 'intval' );
 
-		// Profile Search Tutorial
-		$this->add_field( 'bp-profile-search-tutorial', '', array( $this, 'bp_profile_search_tutorial' ) );
-
 		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views
 		$this->add_field(
@@ -192,9 +180,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
-
-		// Profile Directories Tutorial
-		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 		/**
 		 * Fires to register xProfile tab settings fields and section.

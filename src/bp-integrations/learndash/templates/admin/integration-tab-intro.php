@@ -17,7 +17,20 @@
 				?>
 			</p>
 		<?php else: ?>
-			<h2><?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
+			<h2 class="has_tutorial_btn">
+				<?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?>
+				<div class="bbapp-tutorial-btn">
+					<a class="button" href="<?php echo bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 62873,
+							),
+							'admin.php'
+						)
+					); ?>"><?php _e( 'View Tutorials', 'buddyboss' ); ?></a>
+				</div>
+			</h2>
 			<p>
 			<?php
 				printf(
@@ -30,18 +43,6 @@
 				)
 				?>
 			</p>
-			<br />
-			<div class="bp-admin-card-bottom">
-				<a class="button" href="<?php echo bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62873,
-					),
-					'admin.php'
-				)
-			); ?>"><?php _e( 'View Tutorials', 'buddyboss' ); ?></a>
-			</div>
 		<?php endif; ?>
 	</div>
 
