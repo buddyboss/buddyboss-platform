@@ -2467,9 +2467,9 @@ function bb_migration_get_activity_data_and_update( $comment_id, $mppt_left, $mp
 	$activity_table_name   = $bp->activity->table_name;
 	$new_secondary_item_id = $secondary_item_id;
 	if ( (int) $item_id === (int) $secondary_item_id ) {
-		$gmiosi_get_row = $wpdb->get_row( $wpdb->prepare( 'SELECT secondary_item_id FROM ' . $activity_table_name . ' WHERE id=%d', $item_id ) );
-		if ( ! empty( $gmiosi_get_row ) ) {
-			$new_secondary_item_id = $gmiosi_get_row->secondary_item_id;
+		$old_secondary_item_id = $wpdb->get_row( $wpdb->prepare( 'SELECT secondary_item_id FROM ' . $activity_table_name . ' WHERE id=%d', $item_id ) );
+		if ( ! empty( $old_secondary_item_id ) ) {
+			$new_secondary_item_id = $old_secondary_item_id->secondary_item_id;
 			// If secondary item id is zero then it will consider old secondary item.
 			if ( 0 === (int) $new_secondary_item_id ) {
 				$new_secondary_item_id = $secondary_item_id;
@@ -2499,19 +2499,19 @@ function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_roo
 	if ( (int) $comment_id !== (int) $main_root_id ) {
 		$wpdb->query( $wpdb->prepare( 'UPDATE ' . $activity_table_name . ' SET mptt_right = %d,item_id = %d, secondary_item_id = %d WHERE id = %d', intval( $mptt_right + 1 ), $main_root_id, $new_secondary_item_id, $comment_id ) );
 		// Get mptt_right for root comment.
-		$get_main_root_id_row = $wpdb->get_row( $wpdb->prepare( 'SELECT mptt_left, mptt_right FROM ' . $activity_table_name . ' WHERE id=%d', $main_root_id ) );
-		if ( ! empty( $get_main_root_id_row ) ) {
+		$mptt_data_for_main_root_id = $wpdb->get_row( $wpdb->prepare( 'SELECT mptt_left, mptt_right FROM ' . $activity_table_name . ' WHERE id=%d', $main_root_id ) );
+		if ( ! empty( $mptt_data_for_main_root_id ) ) {
 			// Update mptt_right for root comment.
-			$new_mppt_right_for_parent_id = intval( $get_main_root_id_row->mptt_right + 1 );
+			$new_mppt_right_for_parent_id = intval( $mptt_data_for_main_root_id->mptt_right + 1 );
 			$wpdb->query( $wpdb->prepare( 'UPDATE ' . $activity_table_name . ' SET mptt_right = %d WHERE id = %d', $new_mppt_right_for_parent_id, $main_root_id ) );
 		}
 	}
 	if ( (int) $comment_id !== (int) $new_secondary_item_id ) {
 		// Get mptt_right for secondary comment.
-		$get_secondary_item_root_row = $wpdb->get_row( $wpdb->prepare( 'SELECT mptt_left, mptt_right FROM ' . $activity_table_name . ' WHERE id=%d', $new_secondary_item_id ) );
-		if ( ! empty( $get_secondary_item_root_row ) ) {
+		$mptt_data_for_new_secondary_item_id = $wpdb->get_row( $wpdb->prepare( 'SELECT mptt_left, mptt_right FROM ' . $activity_table_name . ' WHERE id=%d', $new_secondary_item_id ) );
+		if ( ! empty( $mptt_data_for_new_secondary_item_id ) ) {
 			// Update mptt_right for secondary comment.
-			$new_mppt_right_for_si_id = intval( $get_secondary_item_root_row->mptt_right + 1 );
+			$new_mppt_right_for_si_id = intval( $mptt_data_for_new_secondary_item_id->mptt_right + 1 );
 			$wpdb->query( $wpdb->prepare( 'UPDATE ' . $activity_table_name . ' SET mptt_right = %d WHERE id = %d', $new_mppt_right_for_si_id, $new_secondary_item_id ) );
 		}
 	}
@@ -2520,18 +2520,18 @@ function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_roo
 		$wpdb->query( $wpdb->prepare( 'UPDATE ' . $activity_table_name . ' SET privacy = %s WHERE id = %d', 'public', $comment_id ) );
 	} elseif ( 'activity_update' === $comment_type ) {
 		if ( (int) $comment_id !== (int) $main_root_id ) {
-			$get_au_row = $wpdb->get_row( $wpdb->prepare( 'SELECT secondary_item_id FROM ' . $activity_table_name . ' WHERE id=%d AND type=%s', $comment_id, $comment_type ) );
-			if ( ! empty( $get_au_row ) ) {
-				$get_au_id = $get_au_row->secondary_item_id;
+			$secondary_item_id_for_current_comment_id = $wpdb->get_row( $wpdb->prepare( 'SELECT secondary_item_id FROM ' . $activity_table_name . ' WHERE id=%d AND type=%s', $comment_id, $comment_type ) );
+			if ( ! empty( $secondary_item_id_for_current_comment_id ) ) {
+				$get_au_id = $secondary_item_id_for_current_comment_id->secondary_item_id;
 				// Check activity id exists in media table.
-				$get_activity_id_exists_for_media_sql = $wpdb->get_row( $wpdb->prepare( 'SELECT activity_id FROM ' . $media_table_name . ' WHERE activity_id=%d', $comment_id ) );
-				if ( ! empty( $get_activity_id_exists_for_media_sql ) && isset( $get_activity_id_exists_for_media_sql->activity_id ) ) {
+				$check_activity_id_exists_for_media_sql = $wpdb->get_row( $wpdb->prepare( 'SELECT activity_id FROM ' . $media_table_name . ' WHERE activity_id=%d', $comment_id ) );
+				if ( ! empty( $check_activity_id_exists_for_media_sql ) && isset( $check_activity_id_exists_for_media_sql->activity_id ) ) {
 					// Update activity id in media table.
 					$wpdb->query( $wpdb->prepare( 'UPDATE ' . $media_table_name . ' SET privacy = %s,activity_id = %d WHERE activity_id = %d', 'comment', $get_au_id, $comment_id ) );
 				}
 				// Check activity id exists in document table.
-				$get_activity_id_exists_for_doc_sql = $wpdb->get_row( $wpdb->prepare( 'SELECT activity_id FROM ' . $document_table_name . ' WHERE activity_id=%d', $comment_id ) );
-				if ( ! empty( $get_activity_id_exists_for_doc_sql ) && isset( $get_activity_id_exists_for_doc_sql->activity_id ) ) {
+				$check_activity_id_exists_for_doc_sql = $wpdb->get_row( $wpdb->prepare( 'SELECT activity_id FROM ' . $document_table_name . ' WHERE activity_id=%d', $comment_id ) );
+				if ( ! empty( $check_activity_id_exists_for_doc_sql ) && isset( $check_activity_id_exists_for_doc_sql->activity_id ) ) {
 					// Update activity id in media table.
 					$wpdb->query( $wpdb->prepare( 'UPDATE ' . $document_table_name . ' SET privacy = %s,activity_id = %d WHERE activity_id = %d', 'comment', $get_au_id, $comment_id ) );
 				}
@@ -2551,8 +2551,10 @@ function bb_migration_remove_activity_id_activity_update_type( $activity_ids, $m
 	global $wpdb;
 	$bp                  = buddypress();
 	$activity_table_name = $bp->activity->table_name;
-	foreach ( $activity_ids as $child_id ) {
-		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $activity_table_name . ' WHERE id = %d AND item_id=%s AND type=%s AND ( privacy=%s OR privacy=%s )', $child_id, $main_root_id, 'activity_update', 'media', 'document' ) );
+	if ( ! empty( $activity_ids ) ) {
+		foreach ( $activity_ids as $child_id ) {
+			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $activity_table_name . ' WHERE id = %d AND item_id=%s AND type=%s AND ( privacy=%s OR privacy=%s )', $child_id, $main_root_id, 'activity_update', 'media', 'document' ) );
+		}
 	}
 }
 
