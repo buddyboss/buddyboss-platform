@@ -535,7 +535,7 @@ add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_
  *
  * @return void
  */
-function bp_prevent_template_rendering() {
+function bb_get_elementor_maintenance_mode_template() {
 	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
 		return;
 	}
@@ -578,4 +578,4 @@ function bp_prevent_template_rendering() {
 		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
 	}
 }
-add_action( 'bp_loaded', 'bp_prevent_template_rendering' );
+add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
