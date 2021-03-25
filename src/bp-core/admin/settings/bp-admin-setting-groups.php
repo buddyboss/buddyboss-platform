@@ -32,7 +32,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 	// Register setting fields
 	public function register_fields() {
-		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
 
 		// Allow subscriptions setting.
 		$this->add_field( 'bp_restrict_group_creation', __( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
@@ -50,11 +50,8 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-messages', __( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 		}
 
-		// Group Settings Tutorial
-		$this->add_field( 'bp-group-setting-tutorial', '', 'bp_group_setting_tutorial' );
-
 		// Register Group Types sections.
-		$this->add_section( 'bp_groups_types', __( 'Group Types', 'buddyboss' ) );
+		$this->add_section( 'bp_groups_types', __( 'Group Types', 'buddyboss' ), '', 'bp_group_types_tutorial' );
 
 		// enable or disable group types.
 		$this->add_field( 'bp-disable-group-type-creation', __( 'Group Types', 'buddyboss' ), 'bp_admin_setting_callback_group_type_creation', 'intval' );
@@ -62,11 +59,8 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// enable or disable group automatically approve memberships.
 		$this->add_field( 'bp-enable-group-auto-join', __( 'Auto Membership Approval', 'buddyboss' ), 'bp_admin_setting_callback_group_auto_join', 'intval' );
 
-		// Group Types Tutorial
-		$this->add_field( 'bp-group-types-tutorial', '', 'bp_group_types_tutorial' );
-
 		// Register Group Hierarchies sections.
-		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ) );
+		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ), '', 'bp_group_hierarchies_tutorial' );
 
 		// enable or disable group hierarchies.
 		$type          = array();
@@ -83,11 +77,8 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$type['class'] = 'bp-enable-group-restrict-invites';
 		$this->add_field( 'bp-enable-group-restrict-invites', __( 'Restrict Invitations', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval', $type );
 
-		// Group Hierarchies Tutorial
-		$this->add_field( 'bp-group-hierarchies-tutorial','', 'bp_group_hierarchies_tutorial' );
-
 		// Section for group list.
-		$this->add_section( 'bp_group_list_settings', __( 'Group Directories', 'buddyboss' ) );
+		$this->add_section( 'bp_group_list_settings', __( 'Group Directories', 'buddyboss' ), '', 'bp_group_directories_tutorial' );
 
 		// Admin Settings for Settings > Groups > Group Directories > Enabled Views
 		$this->add_field(
@@ -100,9 +91,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$args = array();
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option',  'radio', $args );
-
-		// Group Directories Tutorial
-		$this->add_field( 'bp-group-directories-tutorial', '', 'bp_group_directories_tutorial' );
 
 		/**
 		 * Fires to register Groups tab settings fields and section.
