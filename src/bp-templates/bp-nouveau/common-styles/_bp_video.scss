@@ -1028,10 +1028,10 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		background-color: #333;
 		color: #fff;
 		border-radius: 30px;
-		padding: 0 30px 0 10px;
-		font-size: 14px;
+		padding: 0 20px 0 10px;
+		font-size: 13px;
 		line-height: 2;
-		min-width: 150px;
+		min-width: 130px;
 	}
 
 	.dz-preview {
@@ -1059,7 +1059,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	.dz-preview .dz-progress {
 		position: absolute;
 		top: inherit;
-		bottom: 50%;
+		bottom: 45%;
 		opacity: 1;
 		height: 6px;
 		border-radius: 3px;
@@ -1069,10 +1069,10 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
-		bottom: 18%;
+		bottom: 16%;
 		top: inherit;
 		left: 50%;
-		margin-left: 60px;
+		margin-left: 52px;
 		transform: translateX(-50%);
 		background-color: transparent;
 		line-height: 1;
@@ -1103,10 +1103,6 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		&.dz-preview.dz-file-preview {
 			background-color: #ddd;
 			border-radius: 4px;
-		}
-
-		.dz-video-icon {
-			transform: translate(-50%, -50%);
 		}
 
 		.dz-remove {

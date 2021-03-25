@@ -23,11 +23,13 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_photos'    => array(
 			'page'  => 'media',
 			'title' => __( 'Photos', 'buddyboss' ),
+			'tutorial_callback' => 'bp_photo_uploading_tutorial',
 		),
 		'bp_media_settings_documents' => array(
 			'page'     => 'doc',
 			'title'    => __( 'Documents', 'buddyboss' ),
 			'callback' => 'bp_media_admin_setting_callback_document_section',
+			'tutorial_callback' => 'bp_document_uploading_tutorial',
 		),
 		'bp_media_settings_videos'    => array(
 			'page'     => 'video',
@@ -37,10 +39,12 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_emoji'     => array(
 			'page'  => 'media',
 			'title' => __( 'Emoji', 'buddyboss' ),
+			'tutorial_callback' => 'bp_emoji_tutorial',
 		),
 		'bp_media_settings_gifs'      => array(
 			'page'  => 'media',
 			'title' => __( 'Animated GIFs', 'buddyboss' ),
+			'tutorial_callback' => 'bp_animated_gifs_tutorial',
 		),
 	);
 

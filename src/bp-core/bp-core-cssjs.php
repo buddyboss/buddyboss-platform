@@ -360,12 +360,12 @@ function bp_core_register_common_styles() {
 				'dependencies' => array(),
 			),
 			'bp-select2'              => array(
-				'file'         => "{$url}select2.min.css",
+				'file'         => "{$url}vendor/select2{$min}.css", // select2.min.css was issuing with rtl.
 				'dependencies' => array(),
 			),
 			'jquery-datetimepicker' => array(
-					'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
-					'dependencies' => array(),
+				'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
+				'dependencies' => array(),
 			),
 			'bp-media-videojs-css' => array(
 				'file'         => "{$url}vendor/video-js{$min}.css",
