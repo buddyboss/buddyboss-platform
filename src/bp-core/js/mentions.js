@@ -4,7 +4,7 @@ window.bp = window.bp || {};
 
 ( function (bp, $, undefined) {
 	var mentionsQueryCache = [],
-		mentionsItem;
+		mentionsItem, keyCode;
 	
 	bp.mentions = bp.mentions || {};
 	bp.mentions.users = window.bp.mentions.users || [];
@@ -37,6 +37,7 @@ window.bp = window.bp || {};
 		var userAgent = navigator.userAgent.toLowerCase();
 		// we can slo use this - userAgent.indexOf('mobile');
 		var isAndroid = userAgent.indexOf('android') > -1;
+		var isChrome = userAgent.indexOf('chrome') > -1;
 		
 		/**
 		 * Default options for at.js; see https://github.com/ichord/At.js/.
@@ -279,9 +280,35 @@ window.bp = window.bp || {};
 		
 		// Update medium editors when mention inserted into editor.
 		this.on('inserted.atwho', function (event) {
+			if (isChrome) {
+				/**
+				 * Issue with chrome only on news feed - When select any user name and hit enter then create p tag with space. So, focus will goes to next line.
+				 */
+				jQuery(this).on('keyup', function (e) {
+					keyCode = e.keyCode;
+					if (13 === keyCode) {
+						if (jQuery(this).hasClass('medium-editor-element')) {
+							var checkCeAttr = jQuery(this).attr('contenteditable');
+							if (typeof checkCeAttr !== 'undefined' && checkCeAttr !== false) {
+								jQuery(this).attr('contenteditable', 'false');
+							}
+						}
+						setTimeout(function () {
+							$.each(BP_Mentions_Options.selectors, function (index, value) {
+								if (jQuery(value).hasClass('medium-editor-element')) {
+									var checkCeAttrForAll = jQuery(value).attr('contenteditable');
+									if (typeof checkCeAttrForAll !== 'undefined' && checkCeAttrForAll !== false) {
+										jQuery(value).attr('contenteditable', 'true');
+										jQuery(value).find('.atwho-inserted').closest('.medium-editor-element').focus();
+									}
+								}
+							});
+						}, 10);
+					}
+				});
+			}
 			
 			jQuery(this).on('keydown', function (e) {
-				
 				// Check backspace key down event
 				if (!isAndroid) {
 					if (e.keyCode == 8) {
@@ -332,7 +359,6 @@ window.bp = window.bp || {};
 		 * what's new text box.
 		 */
 		this.on('keyup', function () {
-			
 			/**
 			 * Removing the "contenteditable" in android devices.
 			 * It was preventing the backspace somehow. So whenever
@@ -355,26 +381,17 @@ window.bp = window.bp || {};
 		return $.fn.atwho.call(this, opts);
 	};
 	
-	$(document).ready(
-		function () {
-			
-			// Reset counter for textbox character length.
-			localStorage.setItem('charCount', 0);
-			
-			$(document).on(
-				'focus',
-				BP_Mentions_Options.selectors.join(','),
-				function () {
-					if (typeof ( bp ) === 'undefined') {
-						return;
-					}
-					
-					$(this).bp_mentions(bp.mentions.users);
-					$(this).data('bp_mentions_activated', true);
-				}
-			);
-		}
-	);
+	$(document).ready(function () {
+		// Reset counter for textbox character length.
+		localStorage.setItem('charCount', 0);
+		$(document).on('focus', BP_Mentions_Options.selectors.join(','), function () {
+			if (typeof ( bp ) === 'undefined') {
+				return;
+			}
+			$(this).bp_mentions(bp.mentions.users);
+			$(this).data('bp_mentions_activated', true);
+		});
+	});
 	
 	bp.mentions.tinyMCEinit = function () {
 		if (typeof window.tinyMCE === 'undefined' || window.tinyMCE.activeEditor === null || typeof window.tinyMCE.activeEditor === 'undefined') {
