@@ -527,3 +527,95 @@ function bp_core_set_uri_elementor_show_on_front( $bool ) {
 	return $bool;
 }
 add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_front', 10, 3 );
+
+/**
+ * Get the forum page id from settings.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @return int|bool.
+ */
+function bp_get_forum_page_id() {
+	// Get the page id from the options.
+	$id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+
+	// Check the status of current set value.
+	$status = get_post_status( $id );
+
+	// Set the page id if page exists and in publish otherwise set false.
+	return ( '' !== $status && 'publish' === $status ) ? $id : false;
+}
+
+/**
+ * Generate Yoast SEO title.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param string $title        Default SEO title 
+ * @param object $presentation Collection data for presentation
+ *
+ * @return string.
+ */
+function bp_wpseo_title( $title, $presentation ) {
+	// Get forum page id
+	$page_id = bp_get_forum_page_id();
+
+	if ( empty( $page_id ) ) {
+		return $title;
+	}
+
+	// Yoast SEO title regarding page id.
+	$title = get_post_meta( $page_id, '_yoast_wpseo_title', true );
+
+	return $title;
+}
+
+/**
+ * Generate Yoast SEO description.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param string $meta_description Default SEO description
+ * @param object $presentation     Collection data for presentation
+ *
+ * @return string.
+ */
+function bp_wpseo_meta_description( $meta_description, $presentation ) {
+	// Get forum page id
+	$page_id = bp_get_forum_page_id();
+
+	if ( empty( $page_id ) ) {
+		return $meta_description;
+	}
+
+	// Yoast SEO description regarding page id.
+	$meta_description = get_post_meta( $page_id, '_yoast_wpseo_metadesc', true );
+
+	return $meta_description;
+}
+
+/**
+ * Generate Yoast SEO meta.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @return void.
+ */
+function set_yoast_meta_tags() {
+	// Prevent execution when form is disabled.
+	if ( ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Is current post type is forum.
+	if ( bbp_get_forum_post_type() == get_post_type() ) {
+		// Filter default SEO title for yoast.
+		add_filter( 'wpseo_title', 'bp_wpseo_title', 10, 2 );
+
+		// Filter default SEO description for yoast.
+		add_filter( 'wpseo_metadesc', 'bp_wpseo_meta_description', 10, 2 );
+	}
+}
+
+// Trigger before template load.
+add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
