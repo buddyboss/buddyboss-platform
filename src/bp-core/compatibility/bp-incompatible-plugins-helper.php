@@ -602,7 +602,7 @@ function bp_wpseo_meta_description( $meta_description, $presentation ) {
  * @return void.
  */
 function set_yoast_meta_tags() {
-	// Prevent execution when form is disabled.
+	// Prevent execution when forum is disabled.
 	if ( ! bp_is_active( 'forums' ) ) {
 		return;
 	}
