@@ -585,7 +585,7 @@ function bp_wpseo_title( $title, $presentation ) {
  *
  * @return string.
  */
-function bp_set_wpseo_meta_description( $meta_description, $presentation ) {
+function bp_wpseo_meta_description( $meta_description, $presentation ) {
 	// Get forum page id
 	$page_id = bp_get_forum_page_id();
 
