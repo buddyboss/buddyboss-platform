@@ -1102,29 +1102,17 @@ window.bp = window.bp || {};
 				// add media data if enabled or uploaded.
 				if ( this.dropzone_media.length ) {
 					comment_data.media = this.dropzone_media;
-
-					if ( _.isEmpty( comment_data.content ) ) {
-						comment_data.content =' ';
-					}
 				}
 
 				// add media data if enabled or uploaded.
 				if ( this.dropzone_document.length ) {
 					comment_data.document = this.dropzone_document;
-
-					if ( _.isEmpty( comment_data.content ) ) {
-						comment_data.content = ' ';
-					}
 				}
 
 				// add gif data if enabled or uploaded.
 				if ( ! _.isUndefined( this.models[activity_id] ) ) {
 					model                 = this.models[activity_id];
 					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
-					
-					if ( _.isEmpty( comment_data.content ) ) {
-						comment_data.content = ' ';
-					}
 				}
 
 				parent.ajax( comment_data, 'activity' ).done(

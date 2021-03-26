@@ -2975,6 +2975,7 @@ function bp_activity_new_comment( $args = '' ) {
 			'primary_link'      => '',
 			'skip_notification' => false,
 			'error_type'        => 'bool',
+			'skip_error'        => true,
 		)
 	);
 
@@ -2987,9 +2988,11 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
-
+	
+	// Check content empty or not for the media, document and gif.
+	// If content will empty for the media, document and gif then allow empty content in DB.
 	// Bail if missing necessary data.
-	if ( empty( $r['content'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+	if ( ( empty( $content ) && false === $r['skip_error'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
 		$error = new WP_Error( 'missing_data', $feedback );
 
 		if ( 'wp_error' === $r['error_type'] ) {
