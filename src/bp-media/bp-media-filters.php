@@ -1526,7 +1526,7 @@ function bp_media_clear_media_symlinks_on_delete( $medias ) {
 	if ( ! empty( $medias[0] ) ) {
 		foreach ( (array) $medias as $deleted_media ) {
 		    if ( isset( $deleted_media->id ) ){
-			    bp_media_delete_symlinks( (int) $deleted_media->id );
+			    bp_media_delete_symlinks( $deleted_media->id );
             }
 		}
 	}

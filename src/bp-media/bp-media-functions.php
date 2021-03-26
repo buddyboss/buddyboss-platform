@@ -3635,6 +3635,18 @@ function bp_media_delete_symlinks( $media ) {
 		unlink( $attachment_path );
 	}
 
+	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'medium' );
+
+	if ( file_exists( $attachment_path ) ) {
+		unlink( $attachment_path );
+	}
+
+	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bp-activity-media-thumbnail' );
+
+	if ( file_exists( $attachment_path ) ) {
+		unlink( $attachment_path );
+	}
+
 	/**
 	 * Actions to execute when delete symlinks.
 	 *
