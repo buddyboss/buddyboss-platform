@@ -556,16 +556,21 @@ function bp_get_forum_page_id() {
  *
  * @return string.
  */
-function bp_wpseo_title( $title, $presentation ) {
+function bp_set_wpseo_title( $title, $presentation ) {
 	// Get forum page id
 	$page_id = bp_get_forum_page_id();
 
-	if ( empty( $page_id ) ) {
+	if ( empty( $page_id ) || ! class_exists( 'WPSEO_Replace_Vars' ) ) {
 		return $title;
 	}
 
 	// Yoast SEO title regarding page id.
 	$title = get_post_meta( $page_id, '_yoast_wpseo_title', true );
+
+	// Replace title tag with actual value.
+	$replace_vars = new WPSEO_Replace_Vars();
+	$page         = get_post( $page_id );
+	$title        = $replace_vars->replace( $title, $page );
 
 	return $title;
 }
@@ -580,16 +585,21 @@ function bp_wpseo_title( $title, $presentation ) {
  *
  * @return string.
  */
-function bp_wpseo_meta_description( $meta_description, $presentation ) {
+function bp_set_wpseo_meta_description( $meta_description, $presentation ) {
 	// Get forum page id
 	$page_id = bp_get_forum_page_id();
 
-	if ( empty( $page_id ) ) {
+	if ( empty( $page_id ) || ! class_exists( 'WPSEO_Replace_Vars' ) ) {
 		return $meta_description;
 	}
 
 	// Yoast SEO description regarding page id.
 	$meta_description = get_post_meta( $page_id, '_yoast_wpseo_metadesc', true );
+
+	// Replace title tag with actual value.
+	$replace_vars     = new WPSEO_Replace_Vars();
+	$page             = get_post( $page_id );
+	$meta_description = $replace_vars->replace( $meta_description, $page );
 
 	return $meta_description;
 }
