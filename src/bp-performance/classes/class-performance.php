@@ -326,22 +326,6 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' );
 				}
-
-				$purge_nonce = filter_input( INPUT_GET, 'download_mu_file', FILTER_SANITIZE_STRING );
-				if ( wp_verify_nonce( $purge_nonce, 'bp_performance_mu_download' ) && ! empty( $bp_mu_plugin_file_path ) ) {
-					if ( file_exists( $bp_mu_plugin_file_path ) ) {
-						header( 'Content-Type: application/force-download' );
-						header( 'Content-Disposition: attachment; filename="' . basename( $bp_mu_plugin_file_path ) . '"' );
-						header( 'Expires: 0' );
-						header( 'Cache-Control: must-revalidate' );
-						header( 'Pragma: public' );
-						header( 'Content-Length: ' . filesize( $bp_mu_plugin_file_path ) );
-						flush();
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo $wp_files_system->get_contents( $bp_mu_plugin_file_path );
-						die();
-					}
-				}
 			} elseif ( ! empty( $mu_plugins ) && array_key_exists( 'buddyboss-api-caching-mu.php', $mu_plugins ) && version_compare( $mu_plugins['buddyboss-api-caching-mu.php']['Version'], '1.0.1', '<' ) ) {
 
 				// Try to automatically install MU plugin.
@@ -349,6 +333,22 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php', true );
+				}
+			}
+
+			$purge_nonce = filter_input( INPUT_GET, 'download_mu_file', FILTER_SANITIZE_STRING );
+			if ( wp_verify_nonce( $purge_nonce, 'bp_performance_mu_download' ) && ! empty( $bp_mu_plugin_file_path ) ) {
+				if ( file_exists( $bp_mu_plugin_file_path ) ) {
+					header( 'Content-Type: application/force-download' );
+					header( 'Content-Disposition: attachment; filename="' . basename( $bp_mu_plugin_file_path ) . '"' );
+					header( 'Expires: 0' );
+					header( 'Cache-Control: must-revalidate' );
+					header( 'Pragma: public' );
+					header( 'Content-Length: ' . filesize( $bp_mu_plugin_file_path ) );
+					flush();
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $wp_files_system->get_contents( $bp_mu_plugin_file_path );
+					die();
 				}
 			}
 
