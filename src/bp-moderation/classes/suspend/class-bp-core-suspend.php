@@ -92,7 +92,8 @@ class BP_Core_Suspend {
 		}
 
 		$members = false;
-		if ( ! empty( $args['blocked_user'] ) ) {
+
+		if ( isset( $args['blocked_user'] ) ) {
 			$members = $args['blocked_user'];
 			unset( $args['blocked_user'] );
 		}

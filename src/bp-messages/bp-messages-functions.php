@@ -82,7 +82,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['media'] ) ) {
-		$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
@@ -91,7 +91,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['document'] ) ) {
-		$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_document ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
@@ -100,7 +100,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	if ( ! empty( $_POST['gif_data'] ) ) {
-		$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
@@ -149,16 +149,25 @@ function messages_new_message( $args = '' ) {
 		$first_message = BP_Messages_Thread::get_first_message( (int) $r['thread_id'] );
 		$message_id    = $first_message->id;
 		if ( isset( $message_id ) ) {
-			$group        = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
-			$group_thread = (int) groups_get_groupmeta( $group, 'group_message_thread' );
-			if ( ! empty( $group ) && bp_is_active( 'groups' ) && $group_thread > 0 && (int) $r['thread_id'] === $group_thread ) {
-				$is_group_thread = true;
+			$group = (int) bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+			if ( ! empty( $group ) && bp_is_active( 'groups' ) && $group > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $group, 'group_message_thread' );
+				if ( (int) $r['thread_id'] === $group_thread ) {
+					$is_group_thread = true;
+				}
+			} elseif ( ! empty( $group ) && ! bp_is_active( 'groups' ) && $group > 0 ) {
+				$prefix             = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_meta_table  = $prefix . 'bp_groups_groupmeta';
+				$thread_id          = (int) $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$groups_meta_table} WHERE meta_key = %s AND group_id = %d", 'group_message_thread', $group ) ); // db call ok; no-cache ok;
+				if ( (int) $r['thread_id'] === $thread_id ) {
+					$is_group_thread = true;
+				}
 			}
 		}
 
 		// Check user can send the reply.
 		if ( ! $is_group_thread ) {
-			$has_access = bp_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
+			$has_access = bb_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
 			if ( is_wp_error( $has_access ) ) {
 				return $has_access;
 			}
@@ -330,7 +339,7 @@ function messages_new_message( $args = '' ) {
 
 	// Check user can send the message.
 	if ( true !== $is_group_thread ) {
-		$has_access = bp_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
+		$has_access = bb_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
 		if ( is_wp_error( $has_access ) ) {
 			return $has_access;
 		}
@@ -1119,7 +1128,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
  *
  * @return bool
  */
-function bp_messages_is_group_thread( $thread_id ) {
+function bb_messages_is_group_thread( $thread_id ) {
 
 	if ( ! $thread_id || ! bp_is_active( 'messages' ) ) {
 		return false;

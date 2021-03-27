@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Documents Integration Class.
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 class BB_Documents extends Integration_Abstract {
 
@@ -29,8 +29,6 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function set_up() {
 		$this->register( 'bp-document' );
-
-		$event_groups = array( 'buddypress', 'buddypress-document' );
 
 		$purge_events = array(
 			'bp_document_add',                  // Any Document File add.
@@ -47,10 +45,6 @@ class BB_Documents extends Integration_Abstract {
 			'bp_suspend_document_folder_unsuspended', // Any Document Folder Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge media photos endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_document', $purge_events );
 		$this->purge_event( 'bp-document', $purge_events );
 
 		/**
@@ -86,11 +80,7 @@ class BB_Documents extends Integration_Abstract {
 			'bp_core_delete_existing_avatar'         => 1, // User avatar photo deleted.
 		);
 
-		/**
-		 * Add Custom events to purge single media endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_document_single', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-document_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_media', 'buddyboss-app' );
@@ -101,15 +91,12 @@ class BB_Documents extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/document',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => array( 'type', 'id' ),
 					'include_param'     => array(
 						'type' => 'type',
 						'id'   => 'include',
 					),
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -117,14 +104,11 @@ class BB_Documents extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/document/folder',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => array( 'type', 'id' ),
 					'include_param'     => array(
 						'id' => 'include',
 					),
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -132,8 +116,6 @@ class BB_Documents extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/document/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(
 					'unique_id' => array( 'type', 'id' ),
 				),
@@ -143,8 +125,6 @@ class BB_Documents extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/document/folder/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(
 					'unique_id' => array( 'type', 'id' ),
 				),

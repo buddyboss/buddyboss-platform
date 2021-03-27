@@ -134,7 +134,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [exclude] Ensure result set excludes specific member IDs.
 	 * @apiParam {Boolean} [exclude_admins=true] Whether results should exclude group admins and mods.
 	 * @apiParam {Boolean} [exclude_banned=true] Whether results should exclude banned group members.
-	 * @apiParam {String=invite,invite-friends,invited} [scope] Limit result set to items with a specific scope.
+	 * @apiParam {String=invite,invite-friends,invited,message} [scope] Limit result set to items with a specific scope.
 	 */
 	public function get_items( $request ) {
 		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
@@ -171,7 +171,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 
-		if ( ! empty( $request['scope'] ) ) {
+		if ( ! empty( $request['scope'] ) && 'message' !== $request['scope'] ) {
 
 			$group_potential_invites = $this->bp_rest_get_group_potential_invites( $group, $request );
 
@@ -201,6 +201,13 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$response = bp_rest_response_add_total_headers( $response, $member_query->total_users, $args['per_page'] );
 
 		} else {
+
+			if ( ! empty( $request['scope'] ) && 'message' === $request['scope'] ) {
+				/**
+				 * Action to apply hook for the member list based on group access.
+				 */
+				do_action( 'bb_rest_before_get_group_members', $args, $request );
+			}
 
 			// Get our members.
 			$members = groups_get_group_members( $args );
@@ -806,6 +813,11 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$context     = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$member_data = $this->members_endpoint->user_data( $user, $context );
 
+		$is_friends_connection = true;
+		if ( bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message() && ! friends_check_friendship( bp_loggedin_user_id(), $group_member->user_id ) ) {
+			$is_friends_connection = false;
+		}
+
 		// Merge both info.
 		$data = array_merge(
 			$member_data,
@@ -817,7 +829,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				'date_modified'      => bp_rest_prepare_date_response( $group_member->date_modified ),
 				'role'               => '',
 				'plural_role'        => '',
-				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bp_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) ),
+				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bb_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) && $is_friends_connection ),
 			)
 		);
 
@@ -1117,7 +1129,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss' ),
 			'type'              => 'string',
 			'context'           => array( 'view' ),
-			'enum'              => array( 'invite', 'invite-friends', 'invited' ),
+			'enum'              => array( 'invite', 'invite-friends', 'invited', 'message' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
