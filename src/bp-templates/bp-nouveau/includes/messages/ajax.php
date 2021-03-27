@@ -2051,8 +2051,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 	}
-	$thread->thread['recipients']['count']       = $recipents_count;
-	$thread->thread['recipients']['per_page']    = bp_messages_recepients_per_page();
+	$thread->thread['recipients']['count']         = $recipents_count;
+	$thread->thread['recipients']['current_count'] = count( $thread->thread['recipients']['members'] );
+	$thread->thread['recipients']['per_page']      = bp_messages_recepients_per_page();
 	$thread->thread['recipients']['total_pages'] = ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() );
 
 	$thread->messages = array();

@@ -3,7 +3,6 @@
 	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
-
 	if (other_recipients.length == 0) {    include_you = true;    }    #>
 
 	<header class="single-message-thread-header">
@@ -29,6 +28,15 @@
 
 				<# } #>
 			</dt>
+			<# if (data.recipients.count > data.recipients.current_count ) { #>
+			<a href="javascript:void(0);" id="view_more_members"
+				data-thread-id="{{data.id}}"
+				data-tp="{{data.recipients.total_pages}}"
+				data-tc="{{data.recipients.count}}"
+				data-pp="<?php echo esc_attr( bp_messages_recepients_per_page() ); ?>"
+				data-cp="2"
+				data-action="bp_view_more"><?php esc_html_e( 'View More', 'buddyboss' ); ?></a>
+			<# } #>
 			<dd>
 				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
 			</dd>
@@ -164,10 +172,11 @@
 									<p class="page-data" data-thread-id="{{data.id}}">
 										<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
 										   class="load_more_rl button small"
+											data-thread-id="{{data.id}}"
 										   data-tp="{{data.recipients.total_pages}}"
 										   data-tc="{{data.recipients.count}}"
 										   data-pp="<?php echo esc_attr( bp_messages_recepients_per_page() ); ?>"
-										   data-cp="2"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+										   data-cp="2" data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 									</p>
 								</div>
 							<# } #>
