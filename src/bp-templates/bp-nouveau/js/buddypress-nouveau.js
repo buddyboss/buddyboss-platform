@@ -701,11 +701,12 @@ window.bp = window.bp || {};
 		messageBlockListPagination: function ( e ) {
 			e.preventDefault();
 			var threadId = '';
-			if ( $(this).parent('.page-data').length ) {
-				threadId = parseInt( $(this).parent().attr('data-thread-id') );
+			var $this = $(this);
+			if ( $this.parent('.page-data').length ) {
+				threadId = parseInt( $this.parent().attr('data-thread-id') );
 			}
-			var current_page = parseInt( $(this).attr('data-cp') );
-			var total_pages  = parseInt( $(this).attr('data-tp') );
+			var current_page = parseInt( $this.attr('data-cp') );
+			var total_pages  = parseInt( $this.attr('data-tp') );
 			var postData = {
 				'page_no'  : current_page,
 				'thread_id': threadId,
@@ -721,6 +722,7 @@ window.bp = window.bp || {};
 					$( '.load_more_rl' ).addClass('loading');
 				},
 				success: function( response ) {
+					console.log( response );
 					if ( response.success && response.data && '' !== response.data.content ) {
 						var moderation_type = response.data.recipients.moderation_type;
 						$.each(response.data.recipients.members, function(index, item) {
@@ -768,7 +770,7 @@ window.bp = window.bp || {};
 							$( '.load_more_rl' ).hide();
 						} else {
 							current_page++;
-							$(this).attr('data-cp', current_page);
+							$this.attr('data-cp', current_page);
 						}
 					}
 				},

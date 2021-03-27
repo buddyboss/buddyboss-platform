@@ -525,7 +525,7 @@ function bb_moderation_suspend_after_delete( $recode ) {
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
 
 /**
- * Get Next recepients list for block member.
+ * Function which get next recepients list for block member in message section.
  */
 function bp_nouveau_next_recepient_list_for_blocks() {
 	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
@@ -550,7 +550,6 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 			'include_current_user' => (int) $user_id,
 		)
 	);
-
 	if ( is_array( $results['recipients'] ) ) {
 		$count          = 1;
 		$admins         = array_map(
@@ -564,33 +563,34 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 		);
 		$recipients_arr = array();
 		foreach ( $results['recipients'] as $recipient ) {
-			if ( empty( $recipient->is_deleted ) ) {
-				$recipients_arr['members'][ $count ] = array(
-					'avatar'     => esc_url(
-						bp_core_fetch_avatar(
-							array(
-								'item_id' => $recipient->user_id,
-								'object'  => 'user',
-								'type'    => 'thumb',
-								'width'   => BP_AVATAR_THUMB_WIDTH,
-								'height'  => BP_AVATAR_THUMB_HEIGHT,
-								'html'    => false,
+			if ( ! in_array( (int) $recipient->user_id, $admins ,true ) ) {
+				test_migration_write_log1( 'if' );
+				if ( empty( $recipient->is_deleted ) ) {
+					$recipients_arr['members'][ $count ] = array(
+						'avatar'     => esc_url(
+							bp_core_fetch_avatar(
+								array(
+									'item_id' => $recipient->user_id,
+									'object'  => 'user',
+									'type'    => 'thumb',
+									'width'   => BP_AVATAR_THUMB_WIDTH,
+									'height'  => BP_AVATAR_THUMB_HEIGHT,
+									'html'    => false,
+								)
 							)
-						)
-					),
-					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-					'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
-					'id'         => $recipient->user_id,
-				);
-
-				if ( bp_is_active( 'moderation' ) ) {
-					$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-					$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						),
+						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
+						'id'         => $recipient->user_id,
+					);
+					if ( bp_is_active( 'moderation' ) ) {
+						$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+						$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					}
+					$count ++;
 				}
-
-				$count ++;
 			}
 		}
 	}
