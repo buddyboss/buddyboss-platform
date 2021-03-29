@@ -709,7 +709,6 @@ window.bp = window.bp || {};
 		 */
 		messageBlockListPagination: function (e) {
 			e.preventDefault();
-			var threadId = '';
 			var $this = $(this);
 			var bpAction = $this.attr('data-action');
 			var threadId = parseInt($this.attr('data-thread-id'));
@@ -776,9 +775,6 @@ window.bp = window.bp || {};
 							$this.attr('data-cp', currentPage);
 						}
 					}
-				},
-				error: function (xhr) {
-				
 				},
 				complete: function () {
 					$('.load_more_rl').removeClass('loading');
