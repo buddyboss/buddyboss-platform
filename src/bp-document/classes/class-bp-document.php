@@ -2069,6 +2069,7 @@ class BP_Document {
 							$num_fails++;
 						}
 					}
+
 					if ( $meta ) {
 						$upload_dir     = wp_upload_dir();
 						$preview_folder = '';
@@ -2100,13 +2101,12 @@ class BP_Document {
 
 							}
 
-							$files = scandir( $preview_folder );
+							$files     = scandir( $preview_folder );
 							$firstFile = $preview_folder . '/' . $files[2];
 							bp_document_chmod_r( $preview_folder );
 
 							$image_data = file_get_contents( $firstFile );
-
-							$filename = basename( $output_file );
+							$filename   = basename( $output_file );
 							$upload_dir = wp_upload_dir();
 
 							if ( wp_mkdir_p( $upload_dir['path'] ) ) {

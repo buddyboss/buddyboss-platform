@@ -3652,12 +3652,12 @@ function bp_media_delete_symlinks( $media ) {
 	 *
 	 * @param int    $media_id      Media ID.
 	 * @param int    $attachment_id Attachment ID.
-	 * @param object $media         BP_Media Object.
+	 * @param object $old_media     BP_Media Object.
 	 * @param string $symlinks_path Path to symlinks directory.
 	 *
 	 * @since BuddyBoss X.X.X
 	 */
-	do_action( 'bp_media_delete_symlinks', $media->id, $attachment_id, $media, $symlinks_path );
+	do_action( 'bp_media_delete_symlinks', $old_media->id, $attachment_id, $media, $symlinks_path );
 }
 
 /**
