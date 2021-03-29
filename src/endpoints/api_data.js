@@ -1690,6 +1690,19 @@ define({ "api": [
           },
           {
             "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "both",
+              "document",
+              "folder"
+            ],
+            "optional": true,
+            "field": "type",
+            "defaultValue": "both",
+            "description": "<p>Ensure result set includes specific document type.</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Boolean",
             "optional": true,
             "field": "count_total",
@@ -1944,6 +1957,13 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Document Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
             "allowedValues": [
               "public",
               "loggedin",
@@ -2031,7 +2051,7 @@ define({ "api": [
     "title": "Upload Document",
     "name": "UploadBBDocument",
     "group": "Document",
-    "description": "<p>Upload Document.</p>",
+    "description": "<p>Upload Document. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -3606,7 +3626,7 @@ define({ "api": [
     "title": "Create Group Avatar",
     "name": "CreateBBGroupAvatar",
     "group": "Groups",
-    "description": "<p>Create group avatar</p>",
+    "description": "<p>Create group avatar. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -3645,7 +3665,7 @@ define({ "api": [
     "title": "Create Group Cover",
     "name": "CreateBBGroupCover",
     "group": "Groups",
-    "description": "<p>Create group cover</p>",
+    "description": "<p>Create group cover. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -4642,7 +4662,8 @@ define({ "api": [
             "allowedValues": [
               "invite",
               "invite-friends",
-              "invited"
+              "invited",
+              "message"
             ],
             "optional": true,
             "field": "scope",
@@ -5499,7 +5520,7 @@ define({ "api": [
     "title": "Create Photos",
     "name": "CreateBBPhotos",
     "group": "Media",
-    "description": "<p>Create Media Photos.</p>",
+    "description": "<p>Create Media Photos. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -6124,7 +6145,7 @@ define({ "api": [
     "title": "Upload Media",
     "name": "UploadBBMedia",
     "group": "Media",
-    "description": "<p>Upload Media.</p>",
+    "description": "<p>Upload Media. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -6153,7 +6174,7 @@ define({ "api": [
     "title": "Create Member Avatar",
     "name": "CreateBBMemberAvatar",
     "group": "Members",
-    "description": "<p>Create member avatar</p>",
+    "description": "<p>Create member avatar. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -6192,7 +6213,7 @@ define({ "api": [
     "title": "Create Member Cover",
     "name": "CreateBBMemberCover",
     "group": "Members",
-    "description": "<p>Create member cover</p>",
+    "description": "<p>Create member cover. This endpoint requires request to be sent in &quot;multipart/form-data&quot; format.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -6391,6 +6412,22 @@ define({ "api": [
       }
     },
     "filename": "src/bp-members/classes/class-bp-rest-attachments-member-cover-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/members/me/permissions",
+    "title": "Member Permissions",
+    "name": "GetBBMemberPermissions",
+    "group": "Members",
+    "description": "<p>Retrieve Member Permissions</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-members/classes/class-bp-rest-members-permissions-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -7071,6 +7108,276 @@ define({ "api": [
     },
     "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
     "groupTitle": "Messages"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/moderation",
+    "title": "Block a Member",
+    "name": "CreateBBReportMember",
+    "group": "Moderation",
+    "description": "<p>Block a Member.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "item_id",
+            "description": "<p>User ID which needs to be blocked.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/moderation:id",
+    "title": "Unblock Member",
+    "name": "DeleteBBReportMember",
+    "group": "Moderation",
+    "description": "<p>Unblock Member.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the moderation.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/moderation/report",
+    "title": "Get Report Form",
+    "name": "GetBBReportForm",
+    "group": "Moderation",
+    "description": "<p>Retrieve Report Form</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/moderation/report",
+    "title": "Report a item",
+    "name": "GetBBReportItem",
+    "group": "Moderation",
+    "description": "<p>Report a Item from components.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "item_id",
+            "description": "<p>Unique identifier for the content to report.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "activity",
+              "activity_comment",
+              "groups",
+              "forum",
+              "forum_topic",
+              "forum_reply",
+              "document",
+              "media"
+            ],
+            "optional": false,
+            "field": "item_type",
+            "description": "<p>Component type to report.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "report_category",
+            "description": "<p>Reasoned category for report.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "note",
+            "description": "<p>User Notes for the other type of report.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/moderation/:id",
+    "title": "Get Reported Member",
+    "name": "GetBBReportedMember",
+    "group": "Moderation",
+    "description": "<p>Retrieve Reported Member</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Moderation.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/moderation",
+    "title": "Get Reported Members",
+    "name": "GetBBReportedMembers",
+    "group": "Moderation",
+    "description": "<p>Retrieve Reported Members</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Get the result by reported item.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "item_type",
+              "item_id",
+              "last_updated",
+              "hide_sitewide"
+            ],
+            "optional": true,
+            "field": "order_by",
+            "defaultValue": "last_updated",
+            "description": "<p>Column name to order the results by.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "include",
+            "description": "<p>Ensure result set includes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "reporters",
+            "defaultValue": "false",
+            "description": "<p>Whether to show the reporter or not.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "status",
+            "description": "<p>Whether to show the blocked or suspended. 0-Blocked, 1-Suspended</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "blog_id",
+            "description": "<p>Limit result set to items created by a specific site.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "groupTitle": "Moderation"
   },
   {
     "type": "POST",

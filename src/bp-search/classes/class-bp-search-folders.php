@@ -1,9 +1,8 @@
 <?php
 /**
- * @todo add description
- *
  * @package BuddyBoss\Search
- * @since BuddyBoss 1.4.0
+ * @since   BuddyBoss 1.4.0
+ * @todo    add description
  */
 
 // Exit if accessed directly.
@@ -50,7 +49,6 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
 			global $wpdb, $bp;
-			$query_placeholder = array();
 
 			$user_groups = array();
 			if ( bp_is_active( 'groups' ) ) {
@@ -93,32 +91,58 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 				array_push( $friends, bp_loggedin_user_id() );
 			}
 
-			$sql = ' SELECT ';
+			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT f.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT f.id ) ';
 			} else {
-				$sql                .= $wpdb->prepare(" DISTINCT f.id, 'folders' as type, f.title LIKE %s AS relevance, f.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT f.id, 'folders' as type, f.title LIKE %s AS relevance, f.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
 			$privacy = array( 'public' );
-			if( is_user_logged_in() ) {
+			if ( is_user_logged_in() ) {
 				$privacy[] = 'loggedin';
 			}
 
-			$sql .=  $wpdb->prepare(
-				" FROM {$bp->document->table_name_folder} f WHERE
-				(
-                    f.title LIKE %s AND 
-                    ( 
+			$sql['from'] = "FROM {$bp->document->table_name_folder} f";
+
+			/**
+			 * Filter the MySQL JOIN clause for the folder Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$sql['from'] = apply_filters( 'bp_document_search_join_sql_folder', $sql['from'] );
+
+			$where_conditions   = array( '1=1' );
+			$where_conditions[] = $wpdb->prepare(
+				"(
+                    f.title LIKE %s AND
+                    (
                         f.privacy IN ( '" . implode( "','", $privacy ) . "' ) " .
-				        ( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( f.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND f.privacy = 'grouponly' )" : '' ) .
-				        ( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( f.user_id IN ( '" . implode( "','", $friends ) . "' ) AND f.privacy = 'friends' )" : '' ) .
-				        ( is_user_logged_in() ? " OR ( f.user_id = '" . bp_loggedin_user_id() . "' AND f.privacy = 'onlyme' )" : '' ) .
-					")
-				)",
+				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( f.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND f.privacy = 'grouponly' )" : '' ) .
+				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( f.user_id IN ( '" . implode( "','", $friends ) . "' ) AND f.privacy = 'friends' )" : '' ) .
+				( is_user_logged_in() ? " OR ( f.user_id = '" . bp_loggedin_user_id() . "' AND f.privacy = 'onlyme' )" : '' ) .
+				')
+				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
+
+			/**
+			 * Filters the MySQL WHERE conditions for the folder Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $search_term      Search Term.
+			 */
+			$where_conditions = apply_filters( 'bp_document_search_where_conditions_folder', $where_conditions, $search_term );
+
+			// Join the where conditions together.
+			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
 			return apply_filters(
 				'bp_search_folders_sql',
@@ -139,7 +163,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			// now we have all the posts
 			// lets do a documents loop
 			$args = array(
-				'include'      => implode(',',$folder_ids),
+				'include'      => implode( ',', $folder_ids ),
 				'per_page'     => count( $folder_ids ),
 				'search_terms' => false,
 			);

@@ -415,7 +415,7 @@ class SyncGenerator {
 			}
 		}
 
-		if ( ! empty( $post_price ) && ! learndash_is_user_in_group( bp_loggedin_user_id(), $this->ldGroupId )  ) {
+		if ( ! empty( $post_price ) && ! learndash_is_user_in_group( bp_loggedin_user_id(), $this->ldGroupId ) ) {
 			$group_object->group_id = null;
 		}
 
@@ -752,5 +752,62 @@ class SyncGenerator {
 		}
 
 		return $lastSync;
+	}
+
+	/**
+	 * Update a ld group based on current bp group
+	 *
+	 * @param string $ld_group_id Group id for learndash
+	 *
+	 * @param int    $groupId Group id for buddyboss
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
+	public function updateLearndashGroup( $ld_group_id, $groupId ) {
+		$bpGroup = groups_get_group( $groupId );
+
+		if ( ! empty( $ld_group_id ) ) {
+			wp_update_post(
+				array(
+					'ID'           => $ld_group_id,
+					'post_title'   => $bpGroup->name,
+					'post_author'  => $bpGroup->creator_id,
+					'post_content' => $bpGroup->description,
+					'post_status'  => 'publish',
+					'post_type'    => learndash_get_post_type_slug( 'group' ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Update a bp group based on current ld group
+	 *
+	 * @param string $ld_group_id Group id for learndash
+	 *
+	 * @param int    $groupId Group id for buddyboss
+	 *
+	 * @since BuddyBoss 1.5.7
+	 */
+	public function updateBuddypressGroup( $ld_group_id, $groupId ) {
+		$ldGroup  = get_post( $ld_group_id );
+		$settings = bp_ld_sync( 'settings' );
+
+		if ( ! empty( $groupId ) ) {
+			groups_create_group(
+				array(
+					'group_id'    => $groupId,
+					'creator_id'  => $ldGroup->post_author,
+					'name'        => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+					'status'      => $settings->get( 'learndash.default_bp_privacy' ),
+					'description' => $ldGroup->post_content,
+					'slug'        => $ldGroup->post_name,
+				)
+			);
+
+			groups_update_groupmeta( $groupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
+		}
+
+		$this->setSyncGropuIds();
 	}
 }
