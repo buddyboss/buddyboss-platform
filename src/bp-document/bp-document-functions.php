@@ -3880,12 +3880,13 @@ function bp_document_create_symlinks( $document ) {
 
 			$attached_file_info = pathinfo( $attached_file );
 			$file_path          = '';
-			if ( ! empty( $attached_file_info['dirname'] ) ) {
+
+			if ( ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
 				$file_path = $attached_file_info['dirname'];
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
-			if ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) {
+			if ( ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
 				// Regenerate attachment thumbnails.
 				bp_core_regenerate_attachment_thumbnails( $attachment_id );
 				$file      = image_get_intermediate_size( $attachment_id, 'medium' );
