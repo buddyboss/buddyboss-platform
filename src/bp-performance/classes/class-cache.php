@@ -268,7 +268,7 @@ class Cache {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_group like " );
+		$sql  = "DELETE FROM {$this->cache_table} WHERE cache_group like ";
 		$sql .= "'%" . $component . "%'";
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -283,7 +283,7 @@ class Cache {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$status = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table}" ) );
+		$status = $wpdb->query( "DELETE FROM {$this->cache_table}" );
 
 		if ( $status ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 			// Operation succeeded.
