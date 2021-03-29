@@ -561,7 +561,7 @@ function bp_nouveau_get_loop_classes() {
 	);
 
 	// Only the available components supports custom layouts.
-	if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() ) ) {
+	if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() || bp_is_groups_directory() ) ) {
 
 		// check for layout options in browsers storage
 		if ( bp_is_members_directory() || bp_is_user() ) {
@@ -977,7 +977,7 @@ function bp_nouveau_get_nav_classes() {
 			$classes = (array) $nav_item->li_class;
 		}
 
-		if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
+		if ( bp_get_current_member_type() ) {
 			$classes[] = 'no-ajax';
 		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) {

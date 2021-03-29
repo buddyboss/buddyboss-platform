@@ -167,6 +167,9 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $tabs_items ) ) {
 			foreach ( $tabs_items as $key => $item ) {
+				if ( 'group' === $key ) {
+					$key = 'groups';
+				}
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['count']    = $item['count'];
 				$tabs[ $key ]['position'] = $item['position'];
