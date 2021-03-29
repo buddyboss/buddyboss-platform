@@ -1753,9 +1753,8 @@ class BP_Messages_Thread {
 		 * @param array  $r     Array of parsed arguments for the get method.
 		 */
 		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
-		test_migration_write_log1($paged_recipients_sql);
-		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-		$paged_recipients    = array();
+		$paged_recipient_ids  = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$paged_recipients     = array();
 
 		if ( 'ids' === $r['fields'] ) {
 			// We only want the IDs.
