@@ -28,14 +28,14 @@
 
 				<# } #>
 			</dt>
-			<# if (data.recipients.count > data.recipients.current_count ) { #>
+			<# if ( data.recipients.count > data.recipients.current_count ) { #>
 			<a href="javascript:void(0);" id="view_more_members"
 				data-thread-id="{{data.id}}"
 				data-tp="{{data.recipients.total_pages}}"
 				data-tc="{{data.recipients.count}}"
 				data-pp="<?php echo esc_attr( bp_messages_recepients_per_page() ); ?>"
 				data-cp="2"
-				data-action="bp_view_more"><?php esc_html_e( 'View More', 'buddyboss' ); ?></a>
+				data-action="bp_view_more"><?php esc_html_e( 'View More Members', 'buddyboss' ); ?></a>
 			<# } #>
 			<dd>
 				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>

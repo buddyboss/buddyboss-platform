@@ -697,6 +697,9 @@ window.bp = window.bp || {};
 			$(document).on('click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper);
 			
 			$(document).on('click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert);
+			/**
+			 * Pagination for message block list
+			 */
 			$(document).on('click', '.page-data a.load_more_rl', this.messageBlockListPagination);
 			$(document).on('click', '#view_more_members', this.messageBlockListPagination);
 		},
@@ -738,61 +741,36 @@ window.bp = window.bp || {};
 						$.each(response.data.recipients.members, function (index, item) {
 							if ('' !== item) {
 								if ('bp_load_more' === bpAction) {
-									var userItemWrap = document.createElement('div');
-									userItemWrap.setAttribute('class', 'user-item-wrp');
-									userItemWrap.setAttribute('id', 'user-' + item.id);
-									var userAvtar = document.createElement('div');
-									userAvtar.setAttribute('class', 'user-avatar');
-									var userAvtarImg = document.createElement('img');
-									userAvtarImg.setAttribute('src', item.avatar);
-									userAvtarImg.setAttribute('alt', item.user_name);
-									userAvtar.appendChild(userAvtarImg);
-									var userName = document.createElement('div');
-									userName.setAttribute('class', 'user-name');
-									var userNameText = document.createTextNode(item.user_name);
-									userName.appendChild(userNameText);
-									var userAction = document.createElement('div');
-									userAction.setAttribute('class', 'user-actions');
+									var cloneUserItemWrap = $('.user-item-wrp:last').clone();
+									cloneUserItemWrap.attr('id', 'user-' + item.id);
+									cloneUserItemWrap.find('.user-avatar img').attr('src', item.avatar);
+									cloneUserItemWrap.find('.user-avatar img').attr('alt', item.user_name);
+									cloneUserItemWrap.find('.user-name').html(item.user_name);
 									if (true === item.is_blocked) {
-										var userActionATag = document.createElement('a');
-										userActionATag.setAttribute('class', 'blocked-member button small disabled');
-										userActionATag.setAttribute('id', 'reported-user');
-										var userActionATagText = document.createTextNode('Blocked');
-										userActionATag.appendChild(userActionATagText);
-										userAction.appendChild(userActionATag);
+										cloneUserItemWrap.find('.user-actions .blocked-member').html('Blocked');
 									} else {
-										var userActionATag2 = document.createElement('a');
-										userActionATag2.setAttribute('class', 'block-member button small');
-										userActionATag2.setAttribute('id', 'report-content-' + moderation_type);
-										userActionATag2.setAttribute('data-bp-content-id', item.id);
-										userActionATag2.setAttribute('data-bp-content-type', moderation_type);
-										userActionATag2.setAttribute('data-bp-nonce', 'wp_create_noncebp-moderation-content');
-										var userActionATagText2 = document.createTextNode('Block');
-										userActionATag2.appendChild(userActionATagText2);
-										userAction.appendChild(userActionATag2);
+										cloneUserItemWrap.find('.user-actions .block-member').attr('id', 'report-content-' + moderation_type);
+										cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-content-id', item.id);
+										cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-content-type', moderation_type);
+										cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-nonce', 'wp_create_noncebp-moderation-content');
+										cloneUserItemWrap.find('.user-actions .block-member').html('Block');
 									}
-									userItemWrap.appendChild(userAvtar);
-									userItemWrap.appendChild(userName);
-									userItemWrap.appendChild(userAction);
-									$('.user-item-wrp:last').after(userItemWrap);
+									$('.user-item-wrp:last').after(cloneUserItemWrap);
 								}
 								if ('bp_view_more' === bpAction) {
-									var spanTag = document.createElement('span');
-									spanTag.setAttribute('class', 'participants-name');
-									var aTag = document.createElement('a');
-									aTag.setAttribute('href', item.user_link);
-									var aTagTextNode = document.createTextNode(item.user_name);
-									aTag.appendChild(aTagTextNode);
-									spanTag.appendChild(aTag);
-									var spanTagTextNode = document.createTextNode(', ');
-									spanTag.appendChild(spanTagTextNode);
-									$('.participants-name:last').after(spanTag);
+									var cloneParticipantsName = $('.participants-name:last').clone();
+									cloneParticipantsName.find('a').attr('href', item.user_link);
+									cloneParticipantsName.find('a').html(item.user_name);
+									$('.participants-name:last').after(cloneParticipantsName);
 								}
 							}
 						});
 						if (totalPages === currentPage) {
 							$('.load_more_rl').hide();
 							$('#view_more_members').hide();
+							if ('bp_view_more' === bpAction) {
+								$('.participants-name:last a').next().remove();
+							}
 						} else {
 							currentPage++;
 							$this.attr('data-cp', currentPage);

@@ -264,19 +264,18 @@ class BP_Messages_Thread {
 		if ( empty( $thread_id ) ) {
 			$thread_id = $this->thread_id;
 		}
-
-		$thread_id = (int) $thread_id;
-		$user_id =	bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+		$thread_id  = (int) $thread_id;
+		$user_id    = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
 		$recipients = wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
 		if ( false === $recipients ) {
 
 			$recipients = array();
 
-			$results = self::get(
+			$results    = self::get(
 				array(
-					'per_page'        => bp_messages_recepients_per_page(), //- 1,
-					'include_threads' => array( $thread_id ),
+					'per_page'             => bp_messages_recepients_per_page(), //- 1,
+					'include_threads'      => array( $thread_id ),
 					'include_current_user' => (int) $user_id,
 				)
 			);
@@ -1721,8 +1720,9 @@ class BP_Messages_Thread {
 		 * @param string $sql From SQL statement.
 		 */
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
-
+		
 		if ( ! empty( $r['include_current_user'] ) ) {
+			// Need to include current user in query. Because if will not add then thread will not display in message.
 			$sv_products_request = array(
 				'select'     => 'SELECT DISTINCT ru.id',
 				'from'       => "{$bp->messages->table_name_recipients} as ru",
@@ -1733,11 +1733,13 @@ class BP_Messages_Thread {
 				$sql['where'] = implode( ' AND ', $where_conditions );
 				$sv_where        = "WHERE {$sv_products_request['where']}";
 			}
-
+			// Union query
+			// One query - get recipients based on limited number
+			// Second query - get current user recipients
 			$paged_recipients_sql = "( {$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']}
 			{$sql['pagination']} )
-   UNION ( {$sv_products_request['select']} FROM {$sv_products_request['from']}
-   {$sv_where} )";
+		    UNION ( {$sv_products_request['select']} FROM {$sv_products_request['from']}
+		    {$sv_where} )";
 		} else {
 			$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 		}
@@ -1751,7 +1753,7 @@ class BP_Messages_Thread {
 		 * @param array  $r     Array of parsed arguments for the get method.
 		 */
 		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
-
+		test_migration_write_log1($paged_recipients_sql);
 		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$paged_recipients    = array();
 
