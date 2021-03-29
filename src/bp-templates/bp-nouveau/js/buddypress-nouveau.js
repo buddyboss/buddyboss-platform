@@ -765,9 +765,11 @@ window.bp = window.bp || {};
 							}
 						});
 						if (totalPages === currentPage) {
-							$('.load_more_rl').hide();
-							$('#view_more_members').hide();
+							if ('bp_load_more' === bpAction) {
+								$('.load_more_rl').hide();
+							}
 							if ('bp_view_more' === bpAction) {
+								$('#view_more_members').hide();
 								$('.participants-name:last a').get(0).nextSibling.remove();
 							}
 						} else {

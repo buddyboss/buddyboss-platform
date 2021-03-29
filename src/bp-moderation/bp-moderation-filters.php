@@ -529,7 +529,7 @@ add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
  */
 function bp_nouveau_next_recepient_list_for_blocks() {
 	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
-	$user_id   = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 
 	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recepient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
@@ -547,7 +547,7 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 			'per_page'             => bp_messages_recepients_per_page(),
 			'page'                 => (int) $post_data['page_no'],
 			'include_threads'      => array( $post_data['thread_id'] ),
-			'include_current_user' => (int) $user_id,
+			'include_current_user' => $user_id,
 		)
 	);
 	if ( is_array( $results['recipients'] ) ) {
@@ -563,8 +563,7 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 		);
 		$recipients_arr = array();
 		foreach ( $results['recipients'] as $recipient ) {
-			if ( ! in_array( (int) $recipient->user_id, $admins ,true ) ) {
-				test_migration_write_log1( 'if' );
+			if ( (int) $recipient->user_id !== $user_id ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$recipients_arr['members'][ $count ] = array(
 						'avatar'     => esc_url(
