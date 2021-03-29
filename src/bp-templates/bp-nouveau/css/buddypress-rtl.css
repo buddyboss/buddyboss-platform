@@ -2504,6 +2504,12 @@ input.search-query-input {
   content: "\e8ea";
 }
 
+.activity-list .comment-item .activity_more_options {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 @media screen and (min-width: 46.8em) {
   .activity-list.bp-list {
     padding: 30px;
