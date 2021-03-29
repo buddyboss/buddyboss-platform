@@ -3873,7 +3873,7 @@ function bp_document_create_symlinks( $document ) {
 			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
 			$file            = image_get_intermediate_size( $attachment_id, 'medium' );
 
-			if ( ! $file ) {
+			if ( false === $file ) {
 				bp_document_generate_document_previews( $attachment_id );
 				$file = image_get_intermediate_size( $attachment_id, 'medium' );
 			}
@@ -4065,8 +4065,9 @@ function bp_document_generate_document_previews( $attachment_id ) {
 	}
 
 	$extension = bp_document_extension( $attachment_id );
-	$file      = image_get_intermediate_size( $attachment_id, 'full' );
-	if ( 'pdf' === $extension && ! $file ) {
+	$file      = image_get_intermediate_size( $attachment_id );
+
+	if ( 'pdf' === $extension && false === $file ) {
 		add_filter( 'wp_image_editors', 'bp_document_wp_image_editors' );
 		bp_document_pdf_previews( array( $attachment_id ), true );
 		remove_filter( 'wp_image_editors', 'bp_document_wp_image_editors' );
@@ -4100,6 +4101,7 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 				continue;
 			}
 			$file = get_attached_file( $id );
+
 			if ( false === $file || '' === $file ) {
 				$num_fails++;
 			} else {
@@ -4125,6 +4127,7 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 				}
 				// Generate new intermediate thumbnails.
 				$meta = wp_generate_attachment_metadata( $id, $file );
+
 				if ( ! $meta ) {
 					$num_fails++;
 				} else {
