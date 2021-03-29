@@ -768,7 +768,7 @@ window.bp = window.bp || {};
 							$('.load_more_rl').hide();
 							$('#view_more_members').hide();
 							if ('bp_view_more' === bpAction) {
-								$('.participants-name:last a').next().remove();
+								$('.participants-name:last a').get(0).nextSibling.remove();
 							}
 						} else {
 							currentPage++;

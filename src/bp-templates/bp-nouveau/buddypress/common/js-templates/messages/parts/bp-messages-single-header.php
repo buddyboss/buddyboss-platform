@@ -28,7 +28,7 @@
 
 				<# } #>
 			</dt>
-			<# if ( data.recipients.count > data.recipients.current_count ) { #>
+			<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
 			<a href="javascript:void(0);" id="view_more_members"
 				data-thread-id="{{data.id}}"
 				data-tp="{{data.recipients.total_pages}}"
