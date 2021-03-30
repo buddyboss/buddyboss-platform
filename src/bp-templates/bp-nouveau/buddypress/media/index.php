@@ -32,11 +32,11 @@
 
 		<div class="media-options">
 			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
-			<?php if ( is_user_logged_in() ) : ?>
-            <a class="bb-add-photos button small" id="bp-add-media" href="#" ><i class="bb-icon-upload"></i><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
-			<a href="#" id="bb-create-album" class="bb-create-album button small"><i class="bb-icon-media"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
-			<?php bp_get_template_part( 'media/uploader' ); ?>
-			<?php bp_get_template_part( 'media/create-album' ); ?>
+			<?php if ( is_user_logged_in() && bp_is_profile_media_support_enabled() && bb_user_can_create_media() ) : ?>
+				<a class="bb-add-photos button small" id="bp-add-media" href="#" ><i class="bb-icon-upload"></i><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-album" class="bb-create-album button small"><i class="bb-icon-media"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<?php bp_get_template_part( 'media/uploader' ); ?>
+				<?php bp_get_template_part( 'media/create-album' ); ?>
 			<?php endif; ?>
 		</div>
 

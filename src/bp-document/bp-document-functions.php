@@ -2585,14 +2585,17 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		}
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $new_filename, bp_core_current_time(), $document_id, $attachment_document_id );
-	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
-
-	bp_document_update_meta( $document_id, 'file_name', $new_filename );
-
-	if ( false === $query ) {
+	$document = new BP_Document( $document_id );
+	if ( empty( $document->id ) ) {
 		return false;
 	}
+
+	$document->title         = $new_filename;
+	$document->date_modified = bp_core_current_time();
+	$document->attachment_id = $attachment_document_id;
+	$document->save();
+
+	bp_document_update_meta( $document_id, 'file_name', $new_filename );
 
 	$response = apply_filters(
 		'bp_document_rename_file',
@@ -2639,13 +2642,16 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 
 	$title = wp_strip_all_tags( $title );
 
-	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
-
-	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
-
-	if ( false === $q ) {
+	$folder = new BP_Document_Folder( $folder_id );
+	if ( empty( $folder->id ) ) {
 		return false;
 	}
+
+	$folder->title         = $title;
+	$folder->date_modified = bp_core_current_time();
+	$folder->save();
+
+	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
 
 	return $folder_id;
 }
@@ -2728,19 +2734,20 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 	}
 
 	// Update main parent folder.
-	$folder                = new BP_Document_Folder( $folder_id );
-	$folder->privacy       = $destination_privacy;
-	$folder->parent        = $destination_folder_id;
-	$folder->date_modified = bp_core_current_time();
-	$folder->save();
+	$update_folder                = new BP_Document_Folder( $folder_id );
+	$update_folder->privacy       = $destination_privacy;
+	$update_folder->parent        = $destination_folder_id;
+	$update_folder->date_modified = bp_core_current_time();
+	$update_folder->save();
 
 	// Get all the documents of main folder.
 	$document_ids = bp_document_get_folder_document_ids( $folder_id );
 	if ( ! empty( $document_ids ) ) {
 		foreach ( $document_ids as $id ) {
 			// Update privacy of the document.
-			$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-			$query                 = $wpdb->query( $query_update_document );
+			$up_document          = new BP_Document( $id );
+			$up_document->privacy = $destination_privacy;
+			$up_document->save();
 
 			// Update document activity privacy.
 			$document = new BP_Document( $id );
@@ -2762,8 +2769,9 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 	$get_children = bp_document_get_folder_children( $folder_id );
 
 	foreach ( $get_children as $child ) {
-		$query_update_child = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s WHERE id = %d", $destination_privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		$query              = $wpdb->query( $query_update_child );
+		$update_folder          = new BP_Document_Folder( $child );
+		$update_folder->privacy = $destination_privacy;
+		$update_folder->save();
 
 		// Get all the documents of particular folder.
 		$document_ids = bp_document_get_folder_document_ids( $child );
@@ -2772,8 +2780,9 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 			foreach ( $document_ids as $id ) {
 
 				// Update privacy of the document.
-				$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-				$query                 = $wpdb->query( $query_update_document );
+				$up_document          = new BP_Document( $id );
+				$up_document->privacy = $destination_privacy;
+				$up_document->save();
 
 				// Update document activity privacy.
 				$document = new BP_Document( $id );
@@ -2826,22 +2835,28 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			}
 		}
 
-		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );  // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		$wpdb->query( $q );
+		$update_folder                = new BP_Document_Folder( $document_id );
+		$update_folder->privacy       = $privacy;
+		$update_folder->date_modified = bp_core_current_time();
+		$update_folder->save();
 
 		// Get main folder's child folders.
 		$get_children = bp_document_get_folder_children( $document_id );
 		if ( ! empty( $get_children ) ) {
 			foreach ( $get_children as $child ) {
-				$query_child_privacy = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s WHERE id = %d", $privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-				$wpdb->query( $query_child_privacy );
+
+				$update_folder = new BP_Document_Folder( $child );
+				$update_folder->privacy = $privacy;
+				$update_folder->save();
 
 				// Get current folder's documents.
 				$child_document_ids = bp_document_get_folder_document_ids( $child );
 				if ( ! empty( $child_document_ids ) ) {
 					foreach ( $child_document_ids as $child_document_id ) {
-						$child_document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $child_document_id );
-						$wpdb->query( $child_document_query );
+
+						$update_child_document          = new BP_Document( $child_document_id );
+						$update_child_document->privacy = $privacy;
+						$update_child_document->save();
 
 						$document = new BP_Document( $child_document_id );
 						if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
@@ -2864,8 +2879,9 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 		$get_document_ids = bp_document_get_folder_document_ids( $document_id );
 		if ( ! empty( $get_document_ids ) ) {
 			foreach ( $get_document_ids as $document_id ) {
-				$document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $document_id );
-				$wpdb->query( $document_query );
+				$update_document          = new BP_Document( $document_id );
+				$update_document->privacy = $privacy;
+				$update_document->save();
 
 				$document = new BP_Document( $document_id );
 				if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
@@ -2890,8 +2906,10 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			}
 		}
 
-		$document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );
-		$wpdb->query( $document_query );
+		$update_document                = new BP_Document( $document_id );
+		$update_document->privacy       = $privacy;
+		$update_document->date_modified = bp_core_current_time();
+		$update_document->save();
 
 		$document = new BP_Document( $document_id );
 		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
@@ -3402,7 +3420,7 @@ function bp_document_get_root_parent_id( $child_id ) {
 FROM (
     SELECT @id AS _id, (SELECT @id := parent FROM {$table} WHERE id = _id)
     FROM (SELECT @id := %d) tmp1
-    JOIN {$table} ON @id <> 0
+    JOIN {$table} ON id <> 0
     ) tmp2
 JOIN {$table} f ON tmp2._id = f.id
 WHERE f.parent = 0",
@@ -3436,8 +3454,10 @@ function bp_document_update_activity_privacy( $activity_id = 0, $privacy = '' ) 
 			foreach ( $document_ids as $id ) {
 				$document = new BP_Document( $id );
 				if ( empty( $document->folder_id ) ) {
-					$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $id );
-					$wpdb->query( $q );
+					// Update privacy of the document.
+					$up_document          = new BP_Document( $id );
+					$up_document->privacy = $privacy;
+					$up_document->save();
 				}
 			}
 		}
@@ -3713,4 +3733,31 @@ function bp_document_get_report_link( $args = array() ) {
 		true );
 
 	return apply_filters( 'bp_document_get_report_link', $report_btn, $args );
+}
+
+/**
+ * Whether user can show the document upload button.
+ *
+ * @param int $user_id  given user id.
+ * @param int $group_id given group id.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool
+ */
+function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
+
+	if ( ( empty( $user_id ) && empty( $group_id ) ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_group_document_support_enabled() ) {
+		return groups_can_user_manage_document( $user_id, $group_id );
+	}
+
+	if ( bp_is_profile_document_support_enabled() && bb_user_can_create_document() ) {
+		return true;
+	}
+
+	return false;
 }

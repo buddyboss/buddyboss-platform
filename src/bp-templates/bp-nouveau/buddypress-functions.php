@@ -294,7 +294,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
 			$slug    = get_page_uri( $forum_page_id );
 			if ( '' !== $slug ) {
-				bp_update_option( '_bbp_root_slug', $slug );
+				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 				bp_update_option( 'rewrite_rules', '' );
 			}
 		}
