@@ -1199,7 +1199,8 @@ window.bp = window.bp || {};
 		 */
 		typeMemberFilterQuery: function ( event ) {
 			var self = event.data, object = $( event.target ).data( 'bp-member-type-filter' ), scope = 'all',
-				filter = null, objectData = {}, extras = null, search_terms = '', template = null;
+				filter = null, objectData = {}, extras = null, search_terms = '', template = null,
+				object_type = $( event.target ).data( 'bp-member-type-object' );
 
 			if ( !object ) {
 				return event;
