@@ -420,7 +420,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'<select name="%s" id="%s" autocomplete="off" %s>',
 				$args['input_name'],
 				$args['input_id'],
-				$args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
+				isset( $args['input_run_js'] ) && $args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
 			);
 
 			foreach ( $args['input_options'] ?: array() as $key => $value ) {
