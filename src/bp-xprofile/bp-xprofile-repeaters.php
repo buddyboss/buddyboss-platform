@@ -30,17 +30,14 @@ function bp_profile_field_set_max_cap() {
 function bp_get_repeater_template_field_ids( $field_group_id ) {
 	global $wpdb;
 	$bp = buddypress();
-	
 	$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
 	if ( empty( $group_field_ids ) || is_wp_error( $group_field_ids ) ) {
 		return array();
 	}
-	
 	$clone_field_ids = $wpdb->get_col(
 		"SELECT object_id FROM {$bp->profile->table_name_meta} "
 		. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
 	);
-	
 	if ( empty( $clone_field_ids ) || is_wp_error( $clone_field_ids ) ) {
 		$template_field_ids = $group_field_ids;
 	} else {
