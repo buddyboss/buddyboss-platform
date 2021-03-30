@@ -537,6 +537,16 @@
 			}
 		}
 
+		@media screen and (max-width: 460px) {
+
+			.activity_more_options_action[data-balloon][data-balloon-pos="up"]:after {
+				-webkit-transform: translate(-90%, 0);
+				-ms-transform: translate(-90%, 0);
+				transform: translate(-90%, 0);
+			}
+
+		}
+
 	}
 
 	.comment-item {
