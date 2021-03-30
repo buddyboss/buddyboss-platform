@@ -3428,7 +3428,7 @@ function bp_media_upload_dir( $pathdata ) {
 }
 
 /**
- * Set bb_documents folder for the document upload directory.
+ * Set bb_medias folder for the document upload directory.
  *
  * @param string $pathdata Path.
  *

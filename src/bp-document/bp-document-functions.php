@@ -1402,7 +1402,6 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 	/**
 	 * Include required files.
 	 */
-
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -1413,7 +1412,11 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 9999999, 1 );
+	// Add upload filters.
+	bb_document_add_upload_filters();
+
+	// Register image sizes.
+	bb_document_register_image_sizes();
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -1433,6 +1436,12 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 			),
 		)
 	);
+
+	// Deregister image sizes.
+	bb_document_deregister_image_sizes();
+
+	// Remove upload filters.
+	bb_document_remove_upload_filters();
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
@@ -1461,7 +1470,6 @@ function bp_document_upload_handler( $file_id = 'file' ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_allowed_mimes( $existing_mimes = array() ) {
-
 	if ( bp_is_active( 'media' ) ) {
 		$existing_mimes = array();
 		$all_extensions = bp_document_extensions_list();
@@ -3874,7 +3882,7 @@ function bp_document_create_symlinks( $document ) {
 			$file            = image_get_intermediate_size( $attachment_id, 'medium' );
 
 			if ( false === $file ) {
-				bp_document_generate_document_previews( $attachment_id );
+				bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				$file = image_get_intermediate_size( $attachment_id, 'medium' );
 			}
 
@@ -3888,7 +3896,7 @@ function bp_document_create_symlinks( $document ) {
 
 			if ( ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
 				// Regenerate attachment thumbnails.
-				bp_core_regenerate_attachment_thumbnails( $attachment_id );
+				bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				$file      = image_get_intermediate_size( $attachment_id, 'medium' );
 				$file_path = $file_path . '/' . $file['file'];
 			}
@@ -3902,7 +3910,7 @@ function bp_document_create_symlinks( $document ) {
 				if ( ! empty( $output_file_src ) ) {
 					// Regenerate attachment thumbnails.
 					if ( ! file_exists( $output_file_src ) ) {
-						bp_media_regenerate_attachment_thumbnails( $attachment_id );
+						bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					}
 
 					// Check if file exists.
@@ -3920,7 +3928,7 @@ function bp_document_create_symlinks( $document ) {
 			if ( ! $file ) {
 				$file = image_get_intermediate_size( $attachment_id, 'full' );
 				if ( ! $file ) {
-					bp_document_generate_document_previews( $attachment_id );
+					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					$file = image_get_intermediate_size( $attachment_id, 'full' );
 				}
 			}
@@ -3928,7 +3936,7 @@ function bp_document_create_symlinks( $document ) {
 			if ( ! $file ) {
 				$file = image_get_intermediate_size( $attachment_id, 'original' );
 				if ( ! $file ) {
-					bp_document_generate_document_previews( $attachment_id );
+					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					$file = image_get_intermediate_size( $attachment_id, 'original' );
 				}
 			}
@@ -3951,7 +3959,7 @@ function bp_document_create_symlinks( $document ) {
 
 				// Regenerate attachment thumbnails.
 				if ( ! file_exists( $output_file_src ) ) {
-					bp_media_regenerate_attachment_thumbnails( $attachment_id );
+					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				}
 
 				// Check if file exists.
@@ -4069,7 +4077,21 @@ function bp_document_generate_document_previews( $attachment_id ) {
 
 	if ( 'pdf' === $extension && false === $file ) {
 		add_filter( 'wp_image_editors', 'bp_document_wp_image_editors' );
+
+		// Register fallback intermediate image sizes.
+		bb_document_add_fallback_intermediate_image_sizes();
+
+		// Register image sizes.
+		bb_document_register_image_sizes();
+
 		bp_document_pdf_previews( array( $attachment_id ), true );
+
+		// Deregister image sizes.
+		bb_document_deregister_image_sizes();
+
+		// Register fallback intermediate image sizes.
+		bb_document_remove_fallback_intermediate_image_sizes();
+
 		remove_filter( 'wp_image_editors', 'bp_document_wp_image_editors' );
 	}
 }
@@ -4392,4 +4414,162 @@ function bp_document_load_gopp_image_editor_gs() {
 		}
 		require trailingslashit( dirname( __FILE__ ) ) . 'classes/class-bp-gopp-image-editor-gs.php';
 	}
+}
+
+/**
+ * Get document image sizes to register.
+ *
+ * @return array Image sizes.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_get_image_sizes() {
+	$image_sizes = array(
+		'bp-document-popup-thumbnail'    => array(
+			'height' => 600,
+			'width'  => 1000,
+		),
+		'bp-activity-document-thumbnail' => array(
+			'height' => 600,
+			'width'  => 608,
+		),
+	);
+
+	return (array) apply_filters( 'bb_document_get_image_sizes', $image_sizes );
+}
+
+/**
+ * Register media image sizes.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_register_image_sizes() {
+	$image_sizes = bb_document_get_image_sizes();
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
+			}
+		}
+	}
+}
+
+/**
+ * Regenerate media attachment thumbnails
+ *
+ * @param int $attachment_id Attachment ID.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_regenerate_attachment_thumbnails( $attachment_id ) {
+	// Add upload filters.
+	bb_document_add_upload_filters();
+
+	// Register image sizes.
+	bb_document_register_image_sizes();
+
+	// Regenerate attachment thumbnails.
+	bp_core_regenerate_attachment_thumbnails( $attachment_id );
+
+	// Remove upload filters.
+	bb_document_remove_upload_filters();
+
+	// Deregister image sizes.
+	bb_document_deregister_image_sizes();
+}
+
+/**
+ * Add document upload filters.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_add_upload_filters() {
+	add_filter( 'upload_dir', 'bp_document_upload_dir' );
+	add_filter( 'intermediate_image_sizes_advanced', 'bb_document_remove_default_image_sizes' );
+	add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 9, 1 );
+	add_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * Remove document upload filters.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_remove_upload_filters() {
+	remove_filter( 'upload_dir', 'bp_document_upload_dir' );
+	remove_filter( 'intermediate_image_sizes_advanced', 'bb_document_remove_default_image_sizes' );
+	remove_filter( 'upload_mimes', 'bp_document_allowed_mimes' );
+	remove_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * This will remove the default image sizes registered.
+ *
+ * @param array $sizes Image sizes registered.
+ *
+ * @return array Empty array.
+ * @since BuddyBoss 1.5.7
+ */
+function bb_document_remove_default_image_sizes( $sizes ) {
+	if ( isset( $sizes['bp-document-thumbnail'] ) && isset( $sizes['bp-activity-document-thumbnail'] ) ) {
+		return array(
+			'bp-document-thumbnail'          => $sizes['bp-document-thumbnail'],
+			'bp-activity-document-thumbnail' => $sizes['bp-activity-document-thumbnail'],
+		);
+	}
+
+	return array();
+}
+
+/**
+ * Deregister document image sizes.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_deregister_image_sizes() {
+	$image_sizes = bb_document_get_image_sizes();
+
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			remove_image_size( sanitize_key( $name ) );
+		}
+	}
+}
+
+/**
+ * Add the fallback image sizes for PDF.
+ *
+ * @param $fallback_sizes
+ * @param $metadata
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_fallback_intermediate_image_sizes( $fallback_sizes, $metadata ) {
+	$image_sizes = bb_document_get_image_sizes();
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			$fallback_sizes[] = sanitize_key( $name );
+		}
+	}
+	return apply_filters( 'bb_document_fallback_intermediate_image_sizes', $fallback_sizes, $metadata );
+}
+
+/*
+ * Add the PDF fallback filter.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_add_fallback_intermediate_image_sizes() {
+	add_filter( 'fallback_intermediate_image_sizes', 'bb_document_fallback_intermediate_image_sizes', 9999, 2 );
+}
+
+/*
+ * Remove the PDF fallback filter.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_remove_fallback_intermediate_image_sizes() {
+	remove_filter( 'fallback_intermediate_image_sizes', 'bb_document_fallback_intermediate_image_sizes' );
 }
