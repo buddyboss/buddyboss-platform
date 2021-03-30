@@ -90,7 +90,10 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	// Activity feed scope only on activity directory.
-	if ( 'all' !== $post_query['scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() ) {
+	if (
+		( 'all' !== $post_query['scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() )
+		|| ( 'members' === $object && ! empty( $post_query['scope'] ) ) // added scope for following/followers.
+	) {
 		$qs[] = 'scope=' . $post_query['scope'];
 	}
 
@@ -479,6 +482,14 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 
 			if ( 'friends' === $component ) {
 				$context   = 'friends';
+				$component = 'members';
+			}
+			if ( 'following' === $component ) {
+				$context   = 'following';
+				$component = 'members';
+			}
+			if ( 'followers' === $component ) {
+				$context   = 'followers';
 				$component = 'members';
 			}
 		} elseif ( 'group' === $context && bp_is_group_activity() ) {
@@ -1020,7 +1031,15 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'moderation-requests-none' => array(
 			'type'    => 'info',
 			'message' => __( 'No blocked members found.', 'buddyboss' ),
-		)
+		),
+		'member-following-loading'            => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading member\'s following. Please wait.', 'buddyboss' ),
+		),
+		'member-followers-loading'            => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading member\'s followers. Please wait.', 'buddyboss' ),
+		),
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {

@@ -677,6 +677,13 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 		}
 	}
 
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'followers' === $querystring['scope'] ) {
+		$counts = bp_total_follow_counts();
+		if ( ! empty( $counts['followers'] ) ) {
+			unset( $querystring['include'] );
+		}
+	}
+
 	$querystring['scope']    = 'all';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
