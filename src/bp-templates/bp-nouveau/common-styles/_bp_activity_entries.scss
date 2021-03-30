@@ -417,6 +417,10 @@
 		}
 
 		.bb-media-model-container & {
+			float: right;
+			position: relative;
+			right: initial;
+			top: initial;
 
 			.activity_more_options_action {
 

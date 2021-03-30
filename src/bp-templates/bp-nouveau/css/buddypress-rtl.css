@@ -2421,6 +2421,13 @@ input.search-query-input {
   color: #939597;
 }
 
+.bb-media-model-container .activity-list .activity_more_options {
+  float: left;
+  position: relative;
+  left: initial;
+  top: initial;
+}
+
 .bb-media-model-container .activity-list .activity_more_options .activity_more_options_action[data-balloon][data-balloon-pos="up"]:after {
   margin-left: 11px;
   left: 100%;
