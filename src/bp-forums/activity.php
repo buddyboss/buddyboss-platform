@@ -143,6 +143,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Hook between activity title and content
 			add_action( 'bp_before_activity_activity_content', array( $this, 'before_activity_content' ) );
+
+			// Meta button for activity discussion.
+			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
 		}
 
 		/**
@@ -446,6 +449,108 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Print discussion title.
 			echo empty( $buttons['activity_topic_title'] ) ? '' : '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">' . $buttons['activity_topic_title'] . '</div>';
+		}
+
+		/**
+		 * Meta button for activity discussion.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param array $buttons
+		 * @param int   $activity_id
+		 *
+		 * @uses bp_activity_get_specific() Get activity post data.
+		 * @uses bbp_get_topic_forum_id()   Get forum id from topic id.
+		 * @uses get_post_field()           Get specific WP post field.
+		 *
+		 * @return array
+		 */
+		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id ) {
+			// Get activity post data.
+			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+			
+			if ( empty( $activities['activities'] ) ) {
+				return $buttons;
+			}
+
+			$activity = array_shift( $activities['activities'] );
+
+			// Set deafult meta buttion when the activity type is not topic.
+			if ( $this->topic_create != $activity->type ) {
+				return $buttons;
+			}
+
+			// Set topic id when the activity component is not groups.
+			if ( $this->component == $activity->component ) {
+				$topic_id = $activity->item_id;
+			}
+
+			// Set topic id when the activity component is groups.
+			if ( 'groups' == $activity->component ) {
+				$topic_id = $activity->secondary_item_id;
+			}
+
+			// Remove the delete meta button to set it as the last array key.
+			if ( ! empty( $buttons['activity_delete'] ) ) {
+				$delete = $buttons['activity_delete'];
+				unset( $buttons['activity_delete'] );
+			}
+
+			// Topic title
+			$forum_id    = bbp_get_topic_forum_id( $topic_id );
+			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
+
+			// New meta button as 'Join discussion'
+			$buttons['activity_discussionsss'] = array(
+				'id'                => 'activity_discussionsss',
+				'position'          => 5,
+				'component'         => 'activity',
+				'must_be_logged_in' => true,
+				'button_element'    => 'a',
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+					__( 'Join Discussion', 'buddyboss' ),
+					__( 'Join Discussion', 'buddyboss' )
+				),
+				'button_attr'       => array(
+					'class'         => 'button bb-icon-discussion bp-secondary-action',
+					'aria-expanded' => 'false',
+					'href'          => bbp_get_topic_permalink( $topic_id ),
+				),
+			);
+
+			// Current users has access for quick reply
+			if ( bbp_current_user_can_access_create_reply_form() ) {
+				
+				// New meta button as 'Quick Reply'
+				$buttons['quick_reply'] = array(
+					'id'                => 'quick_reply',
+					'position'          => 5,
+					'component'         => 'activity',
+					'must_be_logged_in' => true,
+					'button_element'    => 'a',
+					'link_text'         => sprintf(
+						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+						__( 'Quick Reply', 'buddyboss' ),
+						__( 'Quick Reply', 'buddyboss' )
+					),
+					'button_attr'       => array(
+						'class'            => 'button bb-icon-chat bp-secondary-action',
+						'data-modal-id'    => 'bbp-reply-form',
+						'data-topic-title' => esc_attr( $topic_title ),
+						'data-topic-id'    => $topic_id,
+						'aria-expanded'    => 'false',
+						'href'             => "#new-post",
+					),
+				);
+			}
+			
+			// Delete button make as the last meta buttion.
+			if ( ! empty( $delete ) ) {
+				 $buttons['activity_delete'] = $delete;
+			}
+
+			return $buttons;
 		}
 
 		/** Topics ****************************************************************/
