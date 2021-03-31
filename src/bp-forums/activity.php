@@ -193,8 +193,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			if ( bp_is_active( 'groups' ) ) {
 				// Group activity stream items
-				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'group_forum_topic_activity_action_callback' ) );
-				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'group_forum_reply_activity_action_callback' ) );
+				bp_activity_set_action( 'groups', $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
+				bp_activity_set_action( 'groups', $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 			}
 		}
 
@@ -682,32 +682,68 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 		}
 
+		/**
+		 * Modify the topic title from user timeline.
+		 *
+		 * @since 1.5.9
+		 *
+		 * @param obj $action
+		 * @param obj $activity
+		 *
+		 * @uses bbp_get_topic_forum_id()    Get forum id from topic id.
+		 * @uses bbp_get_user_profile_link() Get user profile link.
+		 * @uses bbp_get_forum_permalink()   Get forum permalink.
+		 *
+		 * @return string
+		 */
 		public function topic_activity_action_callback( $action, $activity ) {
-			$user_id  = $activity->user_id;
-			$topic_id = $activity->item_id;
-			$forum_id = $activity->secondary_item_id;
+			// Return default action when activity type is not topic.
+			if ( $this->topic_create != $activity->type ) {
+				return $action;
+			}
+
+			// Set forum id when activity component is not groups.
+			if ( $this->component == $activity->component ) {
+				$forum_id = $activity->secondary_item_id;
+			}
+
+			// Set forum id when activity component is groups.
+			if ( 'groups' == $activity->component ) {
+				$topic_id = $activity->secondary_item_id;
+				$forum_id = bbp_get_topic_forum_id( $topic_id );
+			}
 
 			// User
+			$user_id   = $activity->user_id;
 			$user_link = bbp_get_user_profile_link( $user_id );
-
-			// Topic
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
-			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
 
 			// Forum
 			$forum_permalink = bbp_get_forum_permalink( $forum_id );
 			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
 			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
-
+			
 			return sprintf(
-				esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
+				esc_html__( '%1$s started a new discussion in the forum %2$s', 'buddyboss' ),
 				$user_link,
-				$topic_link,
 				$forum_link
 			);
 		}
 
+		/**
+		 * Modify the reply title from user timeline.
+		 *
+		 * @since 1.5.9
+		 *
+		 * @param obj $action
+		 * @param obj $activity
+		 *
+		 * @uses bbp_get_reply_forum_id()    Get forum id from reply id.
+		 * @uses bbp_get_topic_forum_id()    Get forum id from topic id.
+		 * @uses bbp_get_user_profile_link() Get user profile link.
+		 * @uses bbp_get_forum_permalink()   Get forum permalink.
+		 *
+		 * @return string
+		 */
 		public function reply_activity_action_callback( $action, $activity ) {
 			$user_id  = $activity->user_id;
 			$reply_id = $activity->item_id;
@@ -717,10 +753,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// User
 			$user_link = bbp_get_user_profile_link( $user_id );
 
-			// Topic
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
-			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
+			// Update forum id when activity component is groups.
+			if ( 'groups' == $activity->component ) {
+				$topic_id = $activity->secondary_item_id;
+				$forum_id = bbp_get_topic_forum_id( $topic_id );
+			}
 
 			// Forum
 			$forum_permalink = bbp_get_forum_permalink( $forum_id );
@@ -728,9 +765,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
 
 			return sprintf(
-				esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ),
+				esc_html__( '%1$s replied to a discussion in the forum %2$s', 'buddyboss' ),
 				$user_link,
-				$topic_link,
 				$forum_link
 			);
 		}
