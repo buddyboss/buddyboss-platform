@@ -374,11 +374,11 @@
 
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
-				$('.bp-feed-post-type-checkbox').each(function(index, el) {
-					var postType = $(this).data('post_type');
+				$( '.bp-feed-post-type-checkbox' ).each( function() {
+					var post_type = $(this).data('post_type');
 					
 					if ( true === this.checked ) {
-						$('.bp-feed-post-type-comment-'+postType)
+						$('.bp-feed-post-type-comment-'+post_type)
 							.closest('tr')
 							.show();
 					}
@@ -388,8 +388,8 @@
 					'click',
 					'.bp-feed-post-type-checkbox',
 					function () {
-						var postType = $(this).data('post_type'),
-							commentField = $('.bp-feed-post-type-comment-'+postType);
+						var post_type = $(this).data('post_type'),
+							commentField = $('.bp-feed-post-type-comment-'+post_type);
 						
 						if ( true === this.checked ) {
 							commentField
