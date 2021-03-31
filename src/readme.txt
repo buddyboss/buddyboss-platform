@@ -78,7 +78,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Elementor - Fixed maintenance mode settings compatibility issue
 * Compatibility - Fixed document privacy option for MySQL 8.0.22
 * Compatibility - Fixed 'Yoast SEO' plugin title and description meta tag not working with components pages
-* Compatibility - Fixed critical issue with 'WPMY DEV' plugin on deleting members from the dashboard
+* Compatibility - Fixed critical issue with 'WPMU DEV' plugin on deleting members from the dashboard
 
 = 1.5.7.3 =
 * Groups - Fixed redirection issue when member leave the hidden social group
