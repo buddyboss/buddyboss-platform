@@ -174,6 +174,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Forum Activity scope to fetch the subscribed forums and topics feed.
 			add_filter( 'bp_activity_set_forums_scope_args', array( $this, 'activity_forums_scope' ), 10, 2 );
+
+			// Filter group icon for activity title.
+			add_filter( 'bp_get_activity_secondary_avatar', array( $this, 'activity_secondary_avatar' ) );
 		}
 
 		/**
@@ -1155,6 +1158,31 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			);
 
 			return $retval;
+		}
+
+		/**
+		 * Remove the group icon from the discussion and reply title.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param string $avatar
+		 *
+		 * @return string
+		 */
+		public function activity_secondary_avatar( $avatar ) {
+			global $activities_template;
+		
+			// Set empty group icon when activity type is topic.
+			if ( $this->topic_create == $activities_template->activity->type ) {
+				return '';
+			}
+
+			// Set empty group icon when activity type is reply.
+			if ( $this->reply_create == $activities_template->activity->type ) {
+				return '';
+			}
+			
+			return $avatar;
 		}
 	}
 endif;
