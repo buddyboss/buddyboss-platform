@@ -177,6 +177,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter group icon for activity title.
 			add_filter( 'bp_get_activity_secondary_avatar', array( $this, 'activity_secondary_avatar' ) );
+
+			// Filter for single topic.
+			add_filter( 'bbp_is_single_topic', array( $this, 'set_single_topic' ) );
 		}
 
 		/**
@@ -1183,6 +1186,32 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 			
 			return $avatar;
+		}
+
+		/**
+		 * Generate "bb-modal bb-modal-box" class for quick reply form.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param boolean $single_topic
+		 *
+		 * @uses bp_is_active()             Checking is it acitvity page.
+		 * @uses bp_is_activity_component() Checking is it activity component.
+		 *
+		 * @return Boolean
+		 */
+		function set_single_topic( $single_topic ) {
+			// Default value when activity is disable.
+			if ( ! bp_is_active( 'activity' ) ) {
+				return $single_topic;
+			}
+
+			// Set true when current component is activity.
+			if ( bp_is_activity_component() ) {
+				return true;
+			}
+
+			return $single_topic;
 		}
 	}
 endif;
