@@ -60,6 +60,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		// Check if activity has content.
+		add_filter( 'bp_moderation_activity_content_hidden', array( $this, 'activity_is_content_hidden' ), 10, 2 );
 	}
 
 	/**
@@ -227,5 +230,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	public function activity_is_content_hidden( $hidden, $activity_data ) {
+
+		if ( true === $hidden ) {
+			return true;
+		}
+
+		if ( ! empty( $activity_data->content ) ) {
+			return true;
+		}
 	}
 }

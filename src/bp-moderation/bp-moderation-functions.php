@@ -1069,3 +1069,74 @@ function bp_moderation_item_count( $args = array() ) {
 
 	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
 }
+
+/**
+ * Function to check if media parent activity has content.
+ *
+ * @param int $media_id media id to check.
+ *
+ * @return boolean
+ */
+function bp_moderation_check_media_activity_has_content( $media_id ) {
+	return apply_filters( 'bp_moderation_check_media_activity_has_content', false, $media_id );
+}
+
+add_action( 'wp_footer', 'jk_bp_init' );
+function jk_bp_init() {
+
+	$media              = new BP_Media( 4654654654654654654 );
+
+	$attachment_id      = $media->attachment_id;
+	$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+	$activity           = new BP_Activity_Activity( 45564546546564654654 );
+	echo "<pre>";
+	print_r($activity);
+	echo "</pre>";
+	exit;
+	/*
+	 * if ( ! empty( $activity->content ) ) {
+		echo "<pre>";
+		var_dump();
+		echo "</pre>";
+		exit;
+		return true;
+	}
+	*/
+	$activity_meta    = bp_activity_get_meta( $parent_activity_id, '', true );
+	$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : '';
+	$media_ids        = ( ! empty( $activity_meta['bp_media_ids'] ) ) ? $activity_meta['bp_media_ids'] : '';
+	$document_ids     = ( ! empty( $activity_meta['bp_document_ids'] ) ) ? $activity_meta['bp_document_ids'] : '';
+	echo "<pre>";
+	print_r($activity_meta);
+	echo "</pre>";
+}
+
+
+function bp_moderation_activity_content_hidden( $media_id ) {
+
+	$media = new BP_Media( $media_id );
+
+	if ( empty( $media ) ) {
+		return false;
+	}
+
+	$attachment_id = $media->attachment_id;
+
+	if ( empty( $attachment_id ) ) {
+		return false;
+	}
+
+	$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+
+	if ( empty( $parent_activity_id ) ) {
+		return false;
+	}
+
+	$activity_data = new BP_Activity_Activity( $parent_activity_id );
+
+	if ( empty( $activity_data->id ) ) {
+		return false;
+	}
+
+	return apply_filters( 'bp_moderation_activity_content_hidden', false, $activity_data );
+}
