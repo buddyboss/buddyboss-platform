@@ -146,6 +146,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity discussion.
 			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
+
+			// Meta button for activity reply.
+			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
 		}
 
 		/**
@@ -475,7 +478,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			$activity = array_shift( $activities['activities'] );
 
-			// Set deafult meta buttion when the activity type is not topic.
+			// Set deafult meta buttons when the activity type is not topic.
 			if ( $this->topic_create != $activity->type ) {
 				return $buttons;
 			}
@@ -545,7 +548,84 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				);
 			}
 			
-			// Delete button make as the last meta buttion.
+			// Delete button set as the last meta buttion.
+			if ( ! empty( $delete ) ) {
+				 $buttons['activity_delete'] = $delete;
+			}
+
+			return $buttons;
+		}
+
+		/**
+		 * Meta button for activity reply.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param array $buttons
+		 * @param int   $activity_id
+		 *
+		 * @uses bp_activity_get_specific() Get activity post data.
+		 * @uses bbp_get_reply()            Get reply post data.
+		 * @uses bbp_get_topic_permalink()  Get topic permalink.
+		 *
+		 * @return array
+		 */
+		public function nouveau_get_activity_reply_buttons( $buttons, $activity_id ) {
+			// Activity post data.
+			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+			
+			if ( empty( $activities['activities'] ) ) {
+				return $buttons;
+			}
+
+			$activity = array_shift( $activities['activities'] );
+
+			// Set deafult meta buttons when the activity type is not reply.
+			if ( $this->reply_create != $activity->type ) {
+				return $buttons;
+			}
+
+			// Set topic id when the activity component is not groups.
+			if ( $this->component == $activity->component ) {
+				$topic_id = $activity->item_id;
+				$topic    = bbp_get_reply( $topic_id );
+				$topic_id = $topic->post_parent;
+			}
+
+			// Set topic id when the activity component is groups.
+			if ( 'groups' == $activity->component ) {
+				$topic_id = $activity->secondary_item_id;
+				$topic    = bbp_get_reply( $topic_id );
+				$topic_id = $topic->post_parent;
+			}
+
+			// Remove the delete meta button to set it as the last array key.
+			if ( ! empty( $buttons['activity_delete'] ) ) {
+				$delete = $buttons['activity_delete'];
+				unset( $buttons['activity_delete'] );
+			}
+
+			// New meta button as 'Join discussion'
+			$buttons['activity_reply_discussionsss'] = array(
+				'id'                => 'activity_reply_discussionsss',
+				'position'          => 5,
+				'component'         => 'activity',
+				'must_be_logged_in' => true,
+				'button_element'    => 'a',
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+					__( 'Join Discussion', 'buddyboss' ),
+					__( 'Join Discussion', 'buddyboss' )
+				),
+				'button_attr'       => array(
+					'class'         => 'button bb-icon-discussion bp-secondary-action',
+					'aria-expanded' => 'false',
+					'href'          => bbp_get_topic_permalink( $topic_id )
+				),
+				
+			);
+			
+			// Delete button set as the last meta buttion.
 			if ( ! empty( $delete ) ) {
 				 $buttons['activity_delete'] = $delete;
 			}
