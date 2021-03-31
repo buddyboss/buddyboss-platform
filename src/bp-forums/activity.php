@@ -140,6 +140,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Hook into topic and reply deletion
 			add_action( 'bbp_delete_topic', array( $this, 'topic_delete' ), 10, 1 );
 			add_action( 'bbp_delete_reply', array( $this, 'reply_delete' ), 10, 1 );
+
+			// Hook between activity title and content
+			add_action( 'bp_before_activity_activity_content', array( $this, 'before_activity_content' ) );
 		}
 
 		/**
@@ -193,8 +196,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			if ( bp_is_active( 'groups' ) ) {
 				// Group activity stream items
-				bp_activity_set_action( 'groups', $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
-				bp_activity_set_action( 'groups', $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
+				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
+				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 			}
 		}
 
@@ -375,6 +378,74 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
 
 			return $link;
+		}
+
+		/**
+		 * Take the "discussion" name out of the activity title.
+		 * Put it underneath for both Discussion and Replies.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @uses bbp_get_reply()           Get reply post data.
+		 * @uses bbp_get_topic_permalink() Get discussion permalink.
+		 *
+		 * @return void
+		 */
+		public function before_activity_content() {
+			global $activities_template;
+
+			// When the activity type does not match with the topic or reply.
+			if ( ! in_array( $activities_template->activity->type, array( $this->topic_create, $this->reply_create ) ) ) {
+				return '';
+			}
+
+			// Set topic id when activity component is not groups.
+			if ( $this->component == $activities_template->activity->component ) {
+				// Set topic id when activity type topic.
+				$topic_id = $activities_template->activity->item_id;
+
+				// Set topic id when activity type reply.
+				if ( $this->reply_create == $activities_template->activity->type ) {
+					$topic = bbp_get_reply( $topic_id );
+					$topic_id = $topic->post_parent;
+				}
+			}
+
+			// Set topic id when activity component is groups.
+			if ( 'groups' == $activities_template->activity->component ) {
+				// Set topic id when activity type topic.
+				$topic_id = $activities_template->activity->secondary_item_id;
+
+				// Set topic id when activity type reply.
+				if ( $this->reply_create == $activities_template->activity->type ) {
+					$topic = bbp_get_reply( $topic_id );
+					$topic_id = $topic->post_parent;
+				}
+			}
+
+			// Topic
+			$topic_permalink = bbp_get_topic_permalink( $topic_id );
+			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
+
+			// Anchor for discussion title.
+			$buttons['activity_topic_title'] = array(
+				'id'             => 'activity_topic_title',
+				'component'      => 'activity',
+				'button_element' => 'a',
+				'link_text'      => $topic_title,
+				'button_attr'    => array(
+					'class'         => 'button bp-secondary-action',
+					'aria-expanded' => 'false',
+					'href'          => $topic_permalink,
+				),
+			);
+
+			// Set discussion title achor style for theme setting.
+			bp_nouveau()->activity->entry_buttons = new BP_Buttons_Group( $buttons );
+			$buttons                              = bp_nouveau()->activity->entry_buttons->get( false );
+
+			// Print discussion title.
+			echo empty( $buttons['activity_topic_title'] ) ? '' : '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">' . $buttons['activity_topic_title'] . '</div>';
 		}
 
 		/** Topics ****************************************************************/
@@ -685,7 +756,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the topic title from user timeline.
 		 *
-		 * @since 1.5.9
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param obj $action
 		 * @param obj $activity
@@ -732,7 +803,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the reply title from user timeline.
 		 *
-		 * @since 1.5.9
+		 * @since BuddyBoss 1.5.9
 		 *
 		 * @param obj $action
 		 * @param obj $activity
