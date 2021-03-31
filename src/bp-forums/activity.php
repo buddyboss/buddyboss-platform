@@ -298,35 +298,35 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * Maybe disable activity stream comments on select actions
 		 *
 		 * @since bbPress (r3399)
-		 * @global BP_Activity_Template $activities_template
+		 *
 		 * @param boolean $can_comment
-		 * @uses bp_get_activity_action_name()
+		 * @uses  bp_disable_blogforum_comments() check post type activity status.
+		 *
 		 * @return boolean
 		 */
 		public function activity_can_comment( $can_comment = true ) {
-			global $activities_template;
-
 			// Already forced off, so comply
 			if ( false === $can_comment ) {
 				return $can_comment;
 			}
 
-			// Check if blog & forum activity stream commenting is off
-			if ( !empty( $activities_template->disable_blogforum_replies ) ) {
+			// Checking post type comment status.
+			if ( bp_disable_blogforum_comments() ) {
+				$can_comment = false;
+			}
 
-				// Get the current action name
-				$action_name = bp_get_activity_action_name();
+			// Get the current action name
+			$action_name = bp_get_activity_action_name();
 
-				// Setup the array of possibly disabled actions
-				$disabled_actions = array(
-					$this->topic_create,
-					$this->reply_create,
-				);
+			// Setup the array of possibly disabled actions
+			$disabled_actions = array(
+				$this->topic_create,
+				$this->reply_create,
+			);
 
-				// Check if this activity stream action is disabled
-				if ( in_array( $action_name, $disabled_actions ) ) {
-					$can_comment = false;
-				}
+			// Comment is disabled for discussion and reply discussion.
+			if ( in_array( $action_name, $disabled_actions ) ) {
+				$can_comment = false;
 			}
 
 			return $can_comment;

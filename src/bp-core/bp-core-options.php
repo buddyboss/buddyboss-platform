@@ -832,12 +832,14 @@ function bp_disable_blogforum_comments( $default = false ) {
 	
 	$bb = buddypress();
 	
+	// When here is not activity.
 	if ( empty( $activities_template->activity ) ) {
 		return $default;
 	}
 	
 	$activity_type  = bp_get_activity_type();
 	
+	// When here is not post activity.
 	if( empty( $bb->activity->track[ $activity_type ] ) ) {
 		return $default;
 	}
