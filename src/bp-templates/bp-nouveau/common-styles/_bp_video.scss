@@ -799,6 +799,7 @@
 
 					&:after {
 						top: -1px;
+						left: -0.5px;
 					}
 
 				}
@@ -1236,6 +1237,27 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			margin: 0 5px 10px;
 		}
 
+	}
+
+}
+
+//Show play button in middle for edit activity popup and edit forum reply
+body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments,
+.bp-activity-edit #activity-post-video-uploader {
+
+	.dz-video-icon {
+		transform: translate(-50%, -50%);
+	}
+
+}
+
+.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
+	width: 150px;
+	height: 150px;
+
+	&.dz-complete .dz-remove:after {
+		top: -1px;
+		left: 0;
 	}
 
 }
