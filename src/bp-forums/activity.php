@@ -653,7 +653,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		public function bp_activity_quick_reply() {
 			?>
-			<div id="bbpress-forums">
+			<div id="bbpress-forums" class="bbpress-forums-activity" data-component="activity">
 				<?php 
 					// Timeline quick reply form template.
 					bbp_get_template_part( 'form', 'reply' ); 
