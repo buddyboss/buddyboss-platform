@@ -692,6 +692,9 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
+
+			//More Option Dropdown
+			$( document ).on( 'click', this.toggleMoreOption.bind( this ) );
 		},
 
 		/**
@@ -2079,7 +2082,25 @@ window.bp = window.bp || {};
 		coverPhotoCropperAlert: function ( e ) {
 			e.preventDefault();
 			$( '#cover-photo-alert' ).remove();
-		}
+		},
+		/**
+		 *  Toggle More Option
+		 */
+		toggleMoreOption: function( event ) {
+
+			if( $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
+				
+				if( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
+					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+				} else {
+					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+					$( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible' );
+				}
+
+			} else {
+				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+			}
+		},
 
 	};
 
