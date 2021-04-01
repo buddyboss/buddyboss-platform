@@ -149,6 +149,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity reply.
 			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
+
+			// Hook after member activity content in timeline.
+			add_action( 'bp_after_member_activity_content', array( $this, 'bp_activity_quick_reply' ) );
 		}
 
 		/**
@@ -637,6 +640,29 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			return $buttons;
+		}
+
+		/**
+		 * Reply form for member timeline.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @uses bbp_get_template_part() Load required template.
+		 *
+		 * @return void
+		 */
+		public function bp_activity_quick_reply() {
+			?>
+			<div id="bbpress-forums">
+				<?php 
+					// Timeline quick reply form template.
+					bbp_get_template_part( 'form', 'reply' ); 
+				?>
+			</div>
+			
+			<?php 
+			// Success message template.
+			bbp_get_template_part( 'form-reply', 'success' ); 
 		}
 
 		/** Topics ****************************************************************/
@@ -1200,7 +1226,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @return Boolean
 		 */
-		function set_single_topic( $single_topic ) {
+		public function set_single_topic( $single_topic ) {
 			// Default value when activity is disable.
 			if ( ! bp_is_active( 'activity' ) ) {
 				return $single_topic;
