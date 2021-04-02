@@ -5864,6 +5864,9 @@ window.bp = window.bp || {};
 					$( this ).attr( 'data-mouseup', 'false' ).addClass( 'hide' ).siblings( 'span' ).show().text( $( this ).find( 'option:selected' ).text() );
 				} );
 
+				//Close upload thumbnail popup
+				$( '.bp-video-thumbnail-uploader .bp-video-thumbnail-uploader-close:visible').trigger( 'click' );
+
 			}
 		},
 
