@@ -378,6 +378,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$this->reply_create,
 			);
 
+			// Comment is disabled for discussion and reply discussion.
 			if ( in_array( $action_name, $disabled_actions ) ) {
 				$can_comment = false;
 			}
