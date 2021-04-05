@@ -1049,6 +1049,73 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 }
 
 /**
+ * Get the action buttons for the activity blog post comments
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param object comment
+ * @param array  $args 
+ *
+ * @return array
+ */
+function bp_nouveau_activity_comment_meta_buttons( $comment, $args ) {
+	$buttons = array();
+	/*
+	 * If we have an arg value for $button_element passed through
+	 * use it to default all the $buttons['button_element'] values
+	 * otherwise default to 'a' (anchor).
+	 */
+	if ( ! empty( $args['button_element'] ) ) {
+		$button_element = $args['button_element'];
+	} else {
+		$button_element = 'a';
+	}
+
+	// Button attributes.
+	$buttons['activity_comment_reply'] = array(
+			'id'                => 'activity_comment_reply',
+			'position'          => 5,
+			'component'         => 'activity',
+			'must_be_logged_in' => true,
+			'parent_element'    => false,
+			'parent_attr'       => array(),
+			'button_element'    => $button_element,
+			'link_text'         => __( 'Reply', 'buddyboss' ),
+			'button_attr'       => array(
+				'data-comment_id'      => $comment->comment_ID,
+				'data-comment_post_id' => $comment->comment_post_ID,
+				'data-action-type'     => 'submit',
+				'class'                => "acomment-reply bp-primary-action",
+				'id'                   => sprintf( 'acomment-reply-from-%1$s', $comment->comment_ID ),
+			),
+	);
+
+	$nonce = wp_nonce_url( trailingslashit( bp_get_activity_directory_permalink() . 'delete/' . $comment->comment_ID ) . '?cid=' . $comment->comment_ID, 'bp_activity_delete_link' );
+
+	// If button element set add nonce link to data-attr attr
+	if ( 'button' === $button_element ) {
+		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $comment->comment_ID );
+		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = $nonce;
+	} else {
+		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $comment->comment_ID );
+		$buttons['activity_comment_delete']['button_attr']['href'] = $nonce;
+	}
+
+	// It's the first entry of the loop, so build the Group and sort it
+	bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons );
+	$returns                                = bp_nouveau()->activity->comment_buttons->get( true );
+
+	$content = '';
+
+	// All button in single content.
+	foreach ( $returns as $return ) {
+		$content .= $return;
+	}
+
+	echo empty( $content ) ? '' : '<div class="bp-generic-meta activity-meta action">' . $content . '</div>';
+}
+
+/**
  * Output the privacy option inside an Activity Loop.
  *
  * @since BuddyBoss 1.2.3
