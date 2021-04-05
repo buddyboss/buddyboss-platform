@@ -186,6 +186,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter for set attribute in activity post comment button.
 			add_filter( 'bp_get_form_field_attributes', array( $this, 'set_form_field_attributes' ), 10, 2 );
+
+			// Filter comment form meta button.
+			add_filter( 'bp_is_active', array( $this, 'is_active' ), 10, 2 );
 		}
 
 		/**
@@ -217,6 +220,31 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
 				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 			}
+		}
+
+		/**
+		 * Remove the meta button for activity blog post comment form.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param boolean $retval
+		 * @param string  $component
+		 *
+		 * @return boolean
+		 */
+		public function is_active( $retval, $component ) {
+			global $activities_template;
+			
+			if ( empty( $activities_template->activity ) ) {
+				return $retval;
+			}
+
+			// Remove the media meta button.
+			if ( 'media' == $component && 'blogs' == $activities_template->activity->component ) {
+				return false;
+			}
+
+			return $retval;
 		}
 
 		/**
