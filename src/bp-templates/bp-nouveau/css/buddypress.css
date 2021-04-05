@@ -3814,7 +3814,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments ul {
   clear: both;
   list-style: none;
-  margin: 15px 0 0;
+  /*margin: 15px 0 0;*/
   padding: 0;
 }
 
