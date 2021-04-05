@@ -250,38 +250,36 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the messages.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$user = bp_rest_get_user( $request['user_id'] );
 
-		$user = bp_rest_get_user( $request['user_id'] );
-
-		if ( true === $retval && ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && (int) bp_loggedin_user_id() !== $user->ID && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the messages.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! $user instanceof WP_User ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid member ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( (int) bp_loggedin_user_id() === $user->ID || bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = true;
+			} else {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you cannot view the messages.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -343,46 +341,31 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$error  = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		$thread = $this->get_thread_object( $request['id'] );
+		if ( is_user_logged_in() ) {
+			$thread = $this->get_thread_object( $request['id'] );
 
-		if ( true === $retval && empty( $thread->thread_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Sorry, this thread does not exist.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = true;
-		} else {
-			$id = messages_check_thread_access( $thread->thread_id );
-			if ( true === $retval && is_null( $id ) ) {
+			if ( empty( $thread->thread_id ) ) {
 				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
+					'bp_rest_invalid_id',
+					__( 'Sorry, this thread does not exist.', 'buddyboss' ),
 					array(
-						'status' => rest_authorization_required_code(),
+						'status' => 404,
 					)
 				);
-			}
-
-			if ( true === $retval ) {
+			} elseif ( bp_current_user_can( 'bp_moderate' ) || messages_check_thread_access( $thread->thread_id ) ) {
 				$retval = true;
+			} else {
+				$retval = $error;
 			}
 		}
 
@@ -556,7 +539,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
@@ -566,6 +555,18 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		} else {
+			$thread_id = (int) $request->get_param( 'id' );
+
+			// It's an existing thread.
+			if ( $thread_id ) {
+				if ( bp_current_user_can( 'bp_moderate' ) || ( messages_is_valid_thread( $thread_id ) && messages_check_thread_access( $thread_id ) ) ) {
+					$retval = true;
+				}
+			} else {
+				// It's a new thread.
+				$retval = true;
+			}
 		}
 
 		/**
@@ -621,8 +622,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		$args = array(
-			'term' => sanitize_text_field( $term ),
-			'type' => 'members',
+			'term'         => sanitize_text_field( $term ),
+			'type'         => 'members',
+			'only_friends' => bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message(),
 		);
 
 		if ( ! empty( $group_id ) ) {
@@ -985,17 +987,20 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_starred_permissions_check( $request ) {
-		$retval    = true;
-		$thread_id = messages_get_message_thread_id( $request['id'] );
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to star/unstar messages.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() || ! messages_check_thread_access( $thread_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to star/unstar messages.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$thread_id = messages_get_message_thread_id( $request['id'] );
+
+			if ( messages_check_thread_access( $thread_id ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
