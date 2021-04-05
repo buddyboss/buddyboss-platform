@@ -1132,7 +1132,7 @@ window.bp = window.bp || {};
 
 				// Change the action for blog post comment
 				if ( is_blog_component ) {
-					comment_data.action = 'new_activity_post_comment';
+					comment_data.action = 'new_activity_blog_post_comment';
 				}
 
 				parent.ajax( comment_data, 'activity' ).done(

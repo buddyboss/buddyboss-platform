@@ -56,6 +56,12 @@ add_action(
 				),
 			),
 			array(
+				'new_activity_blog_post_comment' => array(
+					'function' => 'bp_nouveau_ajax_new_activity_blog_post_comment',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'bp_nouveau_get_activity_objects' => array(
 					'function' => 'bp_nouveau_ajax_get_activity_objects',
 					'nopriv'   => false,
@@ -447,6 +453,123 @@ function bp_nouveau_ajax_new_activity_comment() {
 	ob_end_clean();
 
 	unset( $activities_template );
+
+	wp_send_json_success( $response );
+}
+
+/**
+ * Posts new Activity comments received via a POST request.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @global BP_Activity_Template $activities_template
+ *
+ * @return string JSON reply.
+ */
+function bp_nouveau_ajax_new_activity_blog_post_comment() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was an error posting your reply. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( $_POST['_wpnonce_new_activity_comment'], 'new_activity_comment' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['content'] ) ) {
+		wp_send_json_error(
+			array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html__( 'Please do not leave the comment area blank.', 'buddyboss' )
+				),
+			)
+		);
+	}
+
+	if ( empty( $_POST['comment_id'] ) || ! is_numeric( $_POST['comment_id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+
+	// Get userdata.
+	if ( get_current_user_id() == bp_loggedin_user_id() ) {
+		$user = buddypress()->loggedin_user->userdata;
+	} else {
+		$user = bp_core_get_core_userdata( $params['user_id'] );
+	}
+
+	$activities = bp_activity_get_specific( array( 'activity_ids' => $_POST['form_id'] ) );
+	$activity = array_shift( $activities['activities'] );
+
+	// Comment args.
+	$args = array(
+		'comment_post_ID' => $activity->secondary_item_id, //(int) $_POST['comment_post_id'],
+		'author'          => bp_core_get_user_displayname( get_current_user_id() ),
+		'email'           => $user->user_email,
+		'url'             => bp_core_get_user_domain( get_current_user_id(), $user->user_nicename, $user->user_login ),
+		'comment'         => sanitize_text_field(  wp_unslash( $_POST['content'] ) ),
+		'comment_parent'  => (int) $_POST['comment_id'],
+	);
+
+	// Prevent separate activity entry being made.
+	remove_action( 'comment_post', 'bp_activity_post_type_comment', 10 );
+
+	// Handle timestamps for the WP comment after we've switched to the blog.
+	$args['comment_date']     = current_time( 'mysql' );
+	$args['comment_date_gmt'] = current_time( 'mysql', 1 );
+
+	// Post the comment.
+	$comment = wp_handle_comment_submission( $args );
+
+	if ( is_wp_error( $comment ) ) {
+		$error_message = $comment->get_error_message();
+		wp_send_json_error( array(
+			'feedback' => '<div class="bp-feedback bp-messages error">' . $error_message . '</div>'
+		) );
+	}
+
+	$thread_comments = get_option( 'thread_comments', false );
+
+	if ( $thread_comments ) {
+		$comment_deep = get_option( 'thread_comments_depth', '-1' );
+	} else {
+		$comment_deep = -1;
+	}
+
+	$depth = bp_get_comment_depth( $comment->comment_ID );
+
+	ob_start();
+		// Get activity comment template part.
+		buddyboss_activity_blog_post_comment( $comment, array(
+			'avatar_size' => 80,
+			'short_ping'  => true,
+			'max_depth'   => $comment_deep,
+			'style'       => 'li'
+		), $depth );
+		$response = array( 'contents' => ob_get_contents() );
+	ob_end_clean();
+	
+	$response['depth'] = $depth;
+	$depth_enabel = bp_get_option( 'thread_comments', false );
+
+	if ( ! empty( $depth_enabel ) ) {
+		$response['depth_settings'] = bp_get_option( 'thread_comments_depth', 0 );
+	} else {
+		$response['depth_settings'] = 0;
+	}
 
 	wp_send_json_success( $response );
 }
