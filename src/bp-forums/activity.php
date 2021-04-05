@@ -183,6 +183,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter for single topic.
 			add_filter( 'bbp_is_single_topic', array( $this, 'set_single_topic' ) );
+
+			// Filter for set attribute in activity post comment button.
+			add_filter( 'bp_get_form_field_attributes', array( $this, 'set_form_field_attributes' ), 10, 2 );
 		}
 
 		/**
@@ -214,6 +217,29 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
 				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 			}
+		}
+
+		/**
+		 * Set attribute in activity comment form submit button.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param array  $attributes
+		 * @param string $name
+		 *
+		 * @return array
+		 */
+		public function set_form_field_attributes( $attributes, $name ) {
+			global $activities_template;
+			
+			if ( empty( $activities_template->activity ) ) {
+				return $attributes;
+			}
+
+			// Set comment component attribute in form submit button.
+			$attributes['data-comment_component'] = $activities_template->activity->component;
+
+			return $attributes;
 		}
 
 		/**

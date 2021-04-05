@@ -1056,7 +1056,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
  * @param object comment
  * @param array  $args 
  *
- * @return array
+ * @return void
  */
 function bp_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 	$buttons = array();
