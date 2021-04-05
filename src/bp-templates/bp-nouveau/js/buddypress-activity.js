@@ -1052,6 +1052,9 @@ window.bp = window.bp || {};
 				form    = target.closest( 'form' );
 				item_id = activity_id;
 
+				// Is the current reply from blog post 
+				var is_blog_component = form.find('input[type="submit"][data-comment_component="blogs"]').length;
+
 				// Stop event propagation.
 				event.preventDefault();
 
@@ -1127,6 +1130,11 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Change the action for blog post comment
+				if ( is_blog_component ) {
+					comment_data.action = 'new_activity_post_comment';
+				}
+
 				parent.ajax( comment_data, 'activity' ).done(
 					function( response ) {
 						target.removeClass( 'loading' );
@@ -1138,6 +1146,20 @@ window.bp = window.bp || {};
 						} else {
 							var activity_comments = form.parent();
 							var the_comment       = $.trim( response.data.contents );
+							var has_depth 		  = false;
+
+							// Enable comment reply depth when its from blog post.
+							if ( 
+								is_blog_component
+									&&
+								typeof response.data.depth_settings !== 'undefined'  
+									&&
+								parseInt( response.data.depth_settings ) > 0
+									&&
+								parseInt( response.data.depth_settings ) > parseInt( response.data.depth )
+							) {
+								has_depth = true;
+							}
 
 							form.fadeOut(
 								200,
@@ -1150,7 +1172,13 @@ window.bp = window.bp || {};
 										}
 									}
 
-									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+									if ( is_blog_component && ! has_depth ) {
+										activity_comments.closest('.comment-item').closest('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
+										activity_comments.children( 'ul' ).remove();
+									} else {
+										activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+									}
+
 									$( form ).find( '.ac-input' ).first().html( '' );
 
 									activity_comments.parent().addClass( 'has-comments' );
