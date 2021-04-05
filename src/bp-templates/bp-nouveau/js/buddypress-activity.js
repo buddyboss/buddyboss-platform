@@ -1149,15 +1149,7 @@ window.bp = window.bp || {};
 							var has_depth 		  = false;
 
 							// Enable comment reply depth when its from blog post.
-							if ( 
-								is_blog_component
-									&&
-								typeof response.data.depth_settings !== 'undefined'  
-									&&
-								parseInt( response.data.depth_settings ) > 0
-									&&
-								parseInt( response.data.depth_settings ) > parseInt( response.data.depth )
-							) {
+							if ( is_blog_component && typeof response.data.depth_settings !== 'undefined' && parseInt( response.data.depth_settings ) > 0 && parseInt( response.data.depth_settings ) > parseInt( response.data.depth ) ) { 
 								has_depth = true;
 							}
 
