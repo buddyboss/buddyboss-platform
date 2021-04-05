@@ -1905,7 +1905,7 @@ function bp_activity_get_blog_post_comments() {
  *
  * @since BuddyBoss 1.5.9
  *
- * @uses buddyboss_activity_comment() Render single comment.
+ * @uses buddyboss_activity_blog_post_comment() Render single comment.
  *
  * @param array $comments Post comments.
  *
@@ -1929,7 +1929,7 @@ function bp_activity_recurse_blog_post_comments( $comments ) {
 	// Render comments.
 	wp_list_comments(
 		array(
-			'callback'    => 'buddyboss_activity_comment',
+			'callback'    => 'buddyboss_activity_blog_post_comment',
 			'short_ping'  => true,
 			'avatar_size' => 80
 		),
