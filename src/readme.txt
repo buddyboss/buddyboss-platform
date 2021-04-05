@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6.20
-Stable tag: 1.5.6
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform-pro.zip'
+3. Upload the file 'buddyboss-platform-plugin.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
@@ -56,6 +56,63 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.8 =
+* Profiles - Fixed issue with the hidden groups showing in other members profile
+* Profiles - Fixed issue with the delete account button
+* Profiles - Small improvements in profile photo and cover photo dropzone style
+* Profiles - Small improvements in privacy visibility settings to sync with repeater fields
+* Groups - Fixed send messages screen, members not loading on scroll for big resolution screen
+* Groups - Fixed issues with the group type pages
+* Activity - Fixed activity comments read more issue
+* Activity - Fixed a bunch of issues with @mention
+* Activity - Fixed Youtube video embed issue in activity comments on edit activity 
+* Media - Small improvements in documents query
+* RTL - Fixed select2 library rtl issue
+* REST API - Cache improvements to fix BuddyBoss App deep linking and Web fallback bugs
+* REST API - Fixed many API issues related to member connection, message media upload, search recipients in a message, etc
+* REST API - Fixed API Vulnerability
+* REST API - Fixed mu-plugin download issue to provide caching support
+* LearnDash - Fixed compatibility issues with LearnDash 3.4
+* WooCommerce - Fixed 'WooCommerce Memberships' plugin restrictions rules not working with components pages
+* Elementor - Fixed maintenance mode settings compatibility issue
+* Compatibility - Fixed document privacy option for MySQL 8.0.22
+* Compatibility - Fixed 'Yoast SEO' plugin title and description meta tag not working with components pages
+* Compatibility - Fixed critical issue with 'WPMU DEV' plugin on deleting members from the dashboard
+
+= 1.5.7.3 =
+* Groups - Fixed redirection issue when member leave the hidden social group
+* REST API - Performance Improvements
+
+= 1.5.7.2 =
+* Messages - Provided 'select all' option in Group Send Private Message screen
+* Messages - Improved and Fixed UI issues related to Group Message and Private Message screen
+* REST API - Code refactoring
+* Translations - Updates to refactor Hungarian, French, German, and German (formal) language files
+
+= 1.5.7.1 =
+* Messages - Fixed critical issue with sending a message when Social Groups component is not active
+* REST API - Code refactoring
+
+= 1.5.7 =
+* Member Access Controls - Added support to restrict list of social interaction based on Access Control settings provided in BuddyBoss Platform Pro
+* Activity - Fixed blog post activity showing Gutenberg block code issue
+* Activity - Fixed issue with comments disappearing when blog post updated
+* Messages - Fixed message threads listing scroll issue in the private message screen
+* Media - Fixed 'select album' option shows even when it is disabled in the settings
+* Media - Fixed media dropdown and popup layout issues
+* Groups - Fixed send invite members listing scroll issue at the time of creating and managing group
+* Groups - Fixed cover image layout issue at the time of creating a group
+* Groups - Fixed group status not translatable issue in the email
+* Forums - Fixed issue with Forum and Discussion non-English slug
+* Profiles - Fixed issue with radio and checkbox fields in Profile Search
+* LearnDash - Fixed issue with group name not synced on update
+* Moderation - Fixed Reporting Category taxonomy showing in nav menu issue
+* Compatibility - Fixed group roles label not working with 'Instructor Role for LearnDash' plugin
+* Compatibility - Fixed issue registration issue with 'Google Captcha Pro' plugin
+* Compatibility - Fixes for WordPress 5.6 and PHP 8.0
+* REST API - Provided support and new endpoints added for the 'Access Control' feature
+* REST API - Added caching support for all REST APIs
 
 = 1.5.6 =
 * Moderation - New Moderation Component added

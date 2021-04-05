@@ -32,6 +32,5 @@
 		"node": ">=12.16.3"
 	},
 	"license": "GPL-2.0-or-later",
-	"version": "3.1.0",
-	"dependencies": {}
+	"version": "3.1.0"
 }

@@ -306,7 +306,8 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 							'class'           => 'button accept',
 							'rel'             => '',
 						),
-					), 'reject_friendship' => array(
+					),
+					'reject_friendship' => array(
 						'id'                => 'reject_friendship',
 						'position'          => 15,
 						'component'         => 'friends',
@@ -353,19 +354,21 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					$button_args = bp_nouveau()->members->button_args;
 
 					$buttons['member_friendship'] = array(
-						'id'                => 'member_friendship',
-						'position'          => 5,
-						'component'         => $button_args['component'],
-						'must_be_logged_in' => $button_args['must_be_logged_in'],
-						'block_self'        => $button_args['block_self'],
-						'parent_element'    => $parent_element,
-						'link_text'         => $button_args['link_text'],
-						'parent_attr'       => array(
+						'id'                  => 'member_friendship',
+						'position'            => 5,
+						'component'           => $button_args['component'],
+						'key'                 => $button_args['id'],
+						'must_be_logged_in'   => $button_args['must_be_logged_in'],
+						'block_self'          => $button_args['block_self'],
+						'potential_friend_id' => $button_args['potential_friend_id'],
+						'parent_element'      => $parent_element,
+						'link_text'           => $button_args['link_text'],
+						'parent_attr'         => array(
 							'id'    => $button_args['wrapper_id'],
 							'class' => $parent_class . ' ' . $button_args['wrapper_class'],
 						),
-						'button_element'    => $button_element,
-						'button_attr'       => array(
+						'button_element'      => $button_element,
+						'button_attr'         => array(
 							'id'    => $button_args['link_id'],
 							'class' => $button_args['link_class'],
 							'rel'   => $button_args['link_rel'],
@@ -514,25 +517,26 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					 * Hardcode the use of anchor elements if button arg passed in for other elements.
 					 */
 					$buttons['private_message'] = array(
-						'id'                => $button_args['id'],
-						'position'          => 25,
-						'component'         => $button_args['component'],
-						'must_be_logged_in' => $button_args['must_be_logged_in'],
-						'block_self'        => $button_args['block_self'],
-						'parent_element'    => $parent_element,
-						'button_element'    => 'a',
-						'link_text'         => $button_args['link_text'],
-						'parent_attr'       => array(
+						'id'                       => $button_args['id'],
+						'position'                 => 25,
+						'component'                => $button_args['component'],
+						'must_be_logged_in'        => $button_args['must_be_logged_in'],
+						'message_receiver_user_id' => $button_args['message_receiver_user_id'],
+						'block_self'               => $button_args['block_self'],
+						'parent_element'           => $parent_element,
+						'button_element'           => 'a',
+						'link_text'                => $button_args['link_text'],
+						'parent_attr'              => array(
 							'id'    => $button_args['wrapper_id'],
 							'class' => $parent_class,
 						),
-						'button_attr'       => array(
+						'button_attr'              => array(
 							'href'  => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ) ),
 							'id'    => false,
 							'class' => $button_args['link_class'],
 							'rel'   => '',
 							'title' => '',
-							),
+						),
 					);
 
 					unset( bp_nouveau()->members->button_args );
@@ -595,7 +599,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 			unset( bp_nouveau()->members->button_args );
 		}
 
-		if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+		if ( is_user_logged_in() && bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
 			$buttons['member_report'] = bp_member_get_report_link(
 				array(
 					'parent_element' => $parent_element,
