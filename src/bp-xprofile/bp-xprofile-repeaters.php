@@ -378,13 +378,9 @@ function bp_clone_field_for_repeater_sets( $field_id ) {
 			// get all clones of the template field
 			$all_clones = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = {$template_field_id}" );
 			if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
-				/**
-				* MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
-				* It will issuing in query.
-				*/
 				$last_max_clone_number = $wpdb->get_var(
-					"SELECT  MAX( CAST(meta_value AS DECIMAL) ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
-				); // Changed MAX(met_value) to MAX(CAST(meta_value AS DECIMAL)) - Max(meta_value) return only max 9 value.
+					"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
+				);
 
 				$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
 				$current_clone_number  = $last_max_clone_number + 1;
