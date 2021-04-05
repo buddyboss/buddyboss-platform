@@ -189,6 +189,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter comment form meta button.
 			add_filter( 'bp_is_active', array( $this, 'is_active' ), 10, 2 );
+
+			// Filter for enable comment status.
+			add_filter( 'bp_force_comment_status', array( $this, 'comment_status' ), 10, 3 );
 		}
 
 		/**
@@ -220,6 +223,27 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
 				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 			}
+		}
+
+		/**
+		 * Enable comment status.
+		 * More deatial check this method bp_comments_open()
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param boolean $retval
+		 * @param boolean $component
+		 * @param int     $post_id
+		 *
+		 * @return boolean
+		 */
+		public function comment_status( $retval, $open, $post_id ) {
+			// Set true when current component is activity.
+			if ( bp_is_activity_component() ) {
+				return $open;
+			}
+
+			return $retval;
 		}
 
 		/**

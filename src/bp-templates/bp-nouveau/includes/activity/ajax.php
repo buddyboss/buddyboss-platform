@@ -457,6 +457,16 @@ function bp_nouveau_ajax_new_activity_comment() {
 	wp_send_json_success( $response );
 }
 
+function bp_get_comment_depth( $my_comment_id ) {
+	$depth_level = 0;
+	while( $my_comment_id > 0  ) { // if you have ideas how we can do it without a loop, please, share it with us in comments
+		$my_comment = get_comment( $my_comment_id );
+		$my_comment_id = $my_comment->comment_parent;
+		$depth_level++;
+	}
+	return $depth_level;
+}
+
 /**
  * Posts new Activity comments received via a POST request.
  *
