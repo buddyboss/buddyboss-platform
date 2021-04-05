@@ -1865,6 +1865,88 @@ function bp_get_activity_is_favorite() {
 }
 
 /**
+ * Output the comment markup for an activity blog post item.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @return void
+ */
+function bp_activity_blog_post_comments() {
+	echo bp_activity_get_blog_post_comments();
+}
+
+/**
+ * Get the comment markup for an activity blog post item.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @uses bp_activity_recurse_post_comments() Render WP list comments.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return void
+ */
+function bp_activity_get_blog_post_comments() {
+	global $activities_template;
+
+	// Get individual post comments.
+	$comments = get_comments( array( 
+		'post_id' => $activities_template->activity->secondary_item_id,
+		'order'   => 'asc',
+		'orderby' => 'comment_date' 
+	) );
+
+	// Render WP list comments.
+	bp_activity_recurse_blog_post_comments( $comments );
+}
+
+/**
+ * Render all comments for singe blog post.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @uses buddyboss_activity_comment() Render single comment.
+ *
+ * @param array $comments Post comments.
+ *
+ * @return void
+ */
+function bp_activity_recurse_blog_post_comments( $comments ) {
+	// When there is not comments.
+	if ( empty( $comments ) ) {
+		return '';
+	}
+
+	/**
+	 * Filters the opening tag for the template that lists activity comments.
+	 *
+	 * @since BuddyBoss 1.5.9
+	 *
+	 * @param string $value Opening tag for the HTML markup to use.
+	 */
+	echo apply_filters( 'bp_activity_recurse_blog_post_comments_start_ul', '<ul>' );
+	
+	// Render comments.
+	wp_list_comments(
+		array(
+			'callback'    => 'buddyboss_activity_comment',
+			'short_ping'  => true,
+			'avatar_size' => 80
+		),
+		$comments
+	);
+
+	/**
+	 * Filters the closing tag for the template that list activity comments.
+	 *
+	 * @since BuddyBoss  15690
+	 *
+	 * @param string $value Closing tag for the HTML markup to use.
+	 */
+	echo apply_filters( 'bp_activity_recurse_blog_post_comments_end_ul', '</ul>' );
+}
+
+/**
  * Output the comment markup for an activity item.
  *
  * @since BuddyPress 1.2.0
