@@ -1024,7 +1024,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	.dz-progress-count {
 		position: absolute;
 		z-index: 1;
-		bottom: 15%;
+		bottom: 5%;
 		left: 50%;
 		width: 50%;
 		transform: translateX(-50%);
@@ -1032,7 +1032,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		color: #fff;
 		border-radius: 30px;
 		padding: 0 20px 0 10px;
-		font-size: 13px;
+		font-size: 12px;
 		line-height: 2;
 		min-width: 130px;
 	}
@@ -1051,7 +1051,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		transform: translate(-50%, -65px);
+		transform: translate(-50%, -50%);
 		z-index: 11;
 		opacity: 1;
 		border: 0;
@@ -1062,7 +1062,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	.dz-preview .dz-progress {
 		position: absolute;
 		top: inherit;
-		bottom: 45%;
+		bottom: 27%;
 		opacity: 1;
 		height: 6px;
 		border-radius: 3px;
@@ -1072,7 +1072,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
-		bottom: 16%;
+		bottom: 6%;
 		top: inherit;
 		left: 50%;
 		margin-left: 52px;
@@ -1083,7 +1083,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		width: auto;
 
 		&:after {
-			font-size: 25px;
+			font-size: 23px;
 			line-height: 1;
 			position: static;
 		}
@@ -1147,7 +1147,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			&:after {
 				position: absolute;
 				top: -1px;
-				left: 2px;
+				left: 1px;
 				font-size: 14px;
 				line-height: 1;
 			}
@@ -1187,7 +1187,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	}
 
 	.dz-preview.dz-file-preview {
-		width: 165px;
+		width: 260px;
 		min-height: 165px;
 
 		.dz-details {
@@ -1214,6 +1214,10 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			object-fit: cover;
 		}
 
+	}
+
+	.dz-success-mark {
+		display: none;
 	}
 
 	@media screen and (max-width: 768px ) {
