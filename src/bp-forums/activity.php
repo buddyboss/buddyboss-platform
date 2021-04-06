@@ -151,7 +151,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
 
 			// Filter meta button for blog post comment.
-			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
+			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_blog_post_comment_buttons' ), 10 ,2 );
 
 			// Hook after member activity content in timeline.
 			add_action( 'bp_after_member_activity_content', array( $this, 'bp_activity_quick_reply' ) );
@@ -597,7 +597,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id ) {
 			// Get activity post data.
 			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-			
+
 			if ( empty( $activities['activities'] ) ) {
 				return $buttons;
 			}
@@ -771,10 +771,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @return array
 		 */
-		public function nouveau_get_activity_post_type_buttons( $buttons, $activity_id ) {
+		public function nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 			// Activity post data.
 			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-			
+
 			if ( empty( $activities['activities'] ) ) {
 				return $buttons;
 			}
