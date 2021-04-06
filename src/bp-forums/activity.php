@@ -195,6 +195,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter for enable comment status.
 			add_filter( 'bp_force_comment_status', array( $this, 'comment_status' ), 10, 3 );
+
+			// Hook for access control in activity state.
+			add_filter( 'bp_nouveau_has_activity_state', array( $this, 'has_activity_state' ), 10, 2 );
 		}
 
 		/**
@@ -295,6 +298,31 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$attributes['data-comment_component'] = $activities_template->activity->component;
 
 			return $attributes;
+		}
+
+		/**
+		 * Access control for showing activity state.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param boolean $status
+		 * @param int     $activity_id
+		 *
+		 * @return boolean
+		 */
+		public function has_activity_state( $status, $activity_id ) {
+			global $activities_template;
+			
+			if ( empty( $activities_template->activity ) ) {
+				return $status;
+			}
+
+			// Remove the access when activity component is blogs.
+			if ( 'blogs' == $activities_template->activity->component ) {
+				return false;
+			}
+
+			return $status;
 		}
 
 		/**
