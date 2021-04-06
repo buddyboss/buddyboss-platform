@@ -845,7 +845,19 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 	if ( empty( trim( $error ) ) ) {
 
 		try {
-			$ff_probe = FFMpeg\FFProbe::create();
+			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+				$ff_probe = FFMpeg\FFProbe::create(
+					array(
+						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+						'timeout'          => 3600, // The timeout for the underlying process.
+						'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+					)
+				);
+			} else {
+				$ff_probe = FFMpeg\FFProbe::create();
+			}
+			
 			$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 
 			if ( ! empty( $duration ) ) {
