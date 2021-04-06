@@ -20210,6 +20210,23 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   right: 0;
 }
 
+@media screen and (max-width: 768px) {
+  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
+    width: calc(50% - 11.5px);
+    margin: 0 5px 10px;
+  }
+  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview:last-child {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
+    width: calc(100% - 10px);
+    margin: 0 5px 10px;
+  }
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone

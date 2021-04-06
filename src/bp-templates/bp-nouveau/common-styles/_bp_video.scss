@@ -1258,4 +1258,19 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		left: 0;
 	}
 
+	@media screen and (max-width: 768px ) {
+		width: calc(50% - 11.5px);
+		margin: 0 5px 10px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+	}
+
+	@media screen and (max-width: 480px ) {
+		width: calc(100% - 10px);
+		margin: 0 5px 10px;
+	}
+
 }
