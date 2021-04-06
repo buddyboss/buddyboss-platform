@@ -968,59 +968,63 @@ window.bp = window.bp || {};
 					'video_id': videoId,
 				};
 
-				$.ajax(
-					{
-						type: 'POST',
-						url: BP_Nouveau.ajaxurl,
-						data: data,
-						success: function ( response ) {
-							if ( response.success ) {
-
-								var ulSelector = $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
-								if ( response.data.default_images ) {
-									ulSelector.html( '' );
-									ulSelector.html( response.data.default_images );
-								}
-								ulSelector.removeClass( 'loading' );
-
-								if ( response.data.dropzone_edit ) {
-									var mock_file = false;
-
-									mock_file = false;
-									mock_file = {
-										name: response.data.dropzone_edit.name,
-										accepted: true,
-										kind: 'image',
-										upload: {
-											filename: response.data.dropzone_edit.name,
-											uuid: response.data.dropzone_edit.attachment_id
-										},
-										dataURL: response.data.dropzone_edit.url,
-										id: response.data.dropzone_edit.attachment_id,
-										video_thumbnail_edit_data: {
-											'id': response.data.dropzone_edit.attachment_id,
-											'media_id': response.data.dropzone_edit.id,
-											'name': response.data.dropzone_edit.name,
-											'thumb': response.data.dropzone_edit.thumb,
-											'url': response.data.dropzone_edit.url,
-											'uuid': response.data.dropzone_edit.attachment_id,
-											'menu_order': 0,
-											'saved': true
+				if( BP_Nouveau.video.is_ffpmeg_installed ) {
+					$.ajax(
+						{
+							type: 'POST',
+							url: BP_Nouveau.ajaxurl,
+							data: data,
+							success: function ( response ) {
+								if ( response.success ) {
+	
+									var ulSelector = $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
+									if ( response.data.default_images ) {
+										ulSelector.html( '' );
+										ulSelector.html( response.data.default_images );
+									}
+									ulSelector.removeClass( 'loading' );
+	
+									if ( response.data.dropzone_edit ) {
+										var mock_file = false;
+	
+										mock_file = false;
+										mock_file = {
+											name: response.data.dropzone_edit.name,
+											accepted: true,
+											kind: 'image',
+											upload: {
+												filename: response.data.dropzone_edit.name,
+												uuid: response.data.dropzone_edit.attachment_id
+											},
+											dataURL: response.data.dropzone_edit.url,
+											id: response.data.dropzone_edit.attachment_id,
+											video_thumbnail_edit_data: {
+												'id': response.data.dropzone_edit.attachment_id,
+												'media_id': response.data.dropzone_edit.id,
+												'name': response.data.dropzone_edit.name,
+												'thumb': response.data.dropzone_edit.thumb,
+												'url': response.data.dropzone_edit.url,
+												'uuid': response.data.dropzone_edit.attachment_id,
+												'menu_order': 0,
+												'saved': true
+											}
+										};
+	
+										if ( self.video_thumb_dropzone_obj && dropzone_data_set != response.data.dropzone_edit.attachment_id ) {
+											self.video_thumb_dropzone_obj.files.push( mock_file );
+											self.video_thumb_dropzone_obj.emit( 'addedfile', mock_file );
+											self.createThumbnailFromUrl( mock_file );
+											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
+	
 										}
-									};
-
-									if ( self.video_thumb_dropzone_obj && dropzone_data_set != response.data.dropzone_edit.attachment_id ) {
-										self.video_thumb_dropzone_obj.files.push( mock_file );
-										self.video_thumb_dropzone_obj.emit( 'addedfile', mock_file );
-										self.createThumbnailFromUrl( mock_file );
-										$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
-
 									}
 								}
 							}
 						}
-					}
-				);
+					);
+				} else {
+					$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
+				}
 			}
 		},
 

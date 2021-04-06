@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-06 06:15:32+00:00\n"
+"POT-Creation-Date: 2021-04-06 08:08:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1019,11 +1019,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:338
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:12
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:85
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:118
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:221
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:83
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:186
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:14
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:114
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:117
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:79
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:82
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:560
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:561
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:944
@@ -1622,7 +1622,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 #: bp-templates/bp-nouveau/includes/groups/functions.php:592
 #: bp-templates/bp-nouveau/includes/media/functions.php:233
-#: bp-templates/bp-nouveau/includes/video/functions.php:208
+#: bp-templates/bp-nouveau/includes/video/functions.php:209
 msgid "My Groups"
 msgstr ""
 
@@ -2638,7 +2638,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:15
 #: bp-templates/bp-nouveau/includes/media/functions.php:181
-#: bp-templates/bp-nouveau/includes/video/functions.php:145
+#: bp-templates/bp-nouveau/includes/video/functions.php:146
 msgid "Select All"
 msgstr ""
 
@@ -4182,7 +4182,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
 #: bp-document/bp-document-functions.php:1969
-#: bp-video/bp-video-functions.php:2703
+#: bp-video/bp-video-functions.php:2715
 msgid "Video"
 msgstr ""
 
@@ -4755,7 +4755,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:18
 #: bp-templates/bp-nouveau/includes/media/functions.php:184
-#: bp-templates/bp-nouveau/includes/video/functions.php:148
+#: bp-templates/bp-nouveau/includes/video/functions.php:149
 msgid "Upload"
 msgstr ""
 
@@ -5318,15 +5318,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
+"content will be unhidden</li>\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -5391,7 +5391,7 @@ msgid "My Photos"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2946
-#: bp-templates/bp-nouveau/includes/video/functions.php:196
+#: bp-templates/bp-nouveau/includes/video/functions.php:197
 #: bp-video/classes/class-bp-video-component.php:296
 #: bp-video/classes/class-bp-video-component.php:316
 msgid "My Videos"
@@ -8106,13 +8106,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9069,48 +9069,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1924
-#: bp-video/bp-video-functions.php:2658
+#: bp-video/bp-video-functions.php:2670
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1929
-#: bp-video/bp-video-functions.php:2663
+#: bp-video/bp-video-functions.php:2675
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1934
-#: bp-video/bp-video-functions.php:2668
+#: bp-video/bp-video-functions.php:2680
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1939
-#: bp-video/bp-video-functions.php:2673
+#: bp-video/bp-video-functions.php:2685
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1944
-#: bp-video/bp-video-functions.php:2678
+#: bp-video/bp-video-functions.php:2690
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1949
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2683
+#: bp-video/bp-video-functions.php:2695
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1954
-#: bp-video/bp-video-functions.php:2688
+#: bp-video/bp-video-functions.php:2700
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1959
-#: bp-video/bp-video-functions.php:2693
+#: bp-video/bp-video-functions.php:2705
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1964
-#: bp-video/bp-video-functions.php:2698
+#: bp-video/bp-video-functions.php:2710
 msgid "Text"
 msgstr ""
 
@@ -14063,15 +14063,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:313
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:62
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:69
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:105
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:111
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:194
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:201
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:70
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:76
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:159
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:166
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:100
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:106
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:90
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:97
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:65
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:71
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:55
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:62
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:25
 msgid "Move"
 msgstr ""
@@ -19258,7 +19258,7 @@ msgstr ""
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1382 bp-video/bp-video-settings.php:298
+#: bp-media/bp-media-settings.php:1382 bp-video/bp-video-settings.php:294
 msgid "<a href=\"%s\">Manage</a> which file extensions are allowed to be uploaded."
 msgstr ""
 
@@ -19277,7 +19277,7 @@ msgid ""
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1515 bp-media/bp-media-settings.php:1560
-#: bp-video/bp-video-settings.php:263
+#: bp-video/bp-video-settings.php:259
 msgid "MB"
 msgstr ""
 
@@ -21175,12 +21175,12 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/document/entry.php:18
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:149
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:246
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:138
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:114
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:211
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:103
 #: bp-templates/bp-nouveau/includes/media/functions.php:179
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1417
-#: bp-templates/bp-nouveau/includes/video/functions.php:143
+#: bp-templates/bp-nouveau/includes/video/functions.php:144
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -23579,10 +23579,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:124
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:52
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:89
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:184
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:86
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:77
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:54
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:149
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:51
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:42
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:700
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2487
 msgid "More actions"
@@ -24073,7 +24073,7 @@ msgid "Manage Membership Requests"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:61
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:193
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:158
 msgid "Photo inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
 
@@ -24106,17 +24106,17 @@ msgstr ""
 msgid "Enter Album Title"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:98
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:92
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:63
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:57
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:83
-#: bp-templates/bp-nouveau/includes/video/functions.php:149
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:48
+#: bp-templates/bp-nouveau/includes/video/functions.php:150
 msgid "Add Thumbnail"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:104
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:99
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:89
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:69
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:64
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:54
 msgid "Video inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
 
@@ -24560,8 +24560,8 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:137
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:152
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:102
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:117
 msgid "More Videos"
 msgstr ""
 
@@ -26129,12 +26129,12 @@ msgid "You are allowed to upload only %s photos at a time."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:180
-#: bp-templates/bp-nouveau/includes/video/functions.php:144
+#: bp-templates/bp-nouveau/includes/video/functions.php:145
 msgid "Unselect"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:182
-#: bp-templates/bp-nouveau/includes/video/functions.php:146
+#: bp-templates/bp-nouveau/includes/video/functions.php:147
 msgid "Unselect All"
 msgstr ""
 
@@ -26147,12 +26147,12 @@ msgid "Sorry, no photos were found"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:185
-#: bp-templates/bp-nouveau/includes/video/functions.php:150
+#: bp-templates/bp-nouveau/includes/video/functions.php:151
 msgid "Uploading"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:186
-#: bp-templates/bp-nouveau/includes/video/functions.php:151
+#: bp-templates/bp-nouveau/includes/video/functions.php:152
 msgid "%1$d out of %2$d uploaded"
 msgstr ""
 
@@ -26163,7 +26163,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:188
-#: bp-templates/bp-nouveau/includes/video/functions.php:153
+#: bp-templates/bp-nouveau/includes/video/functions.php:154
 msgid "There was a problem deleting the album."
 msgstr ""
 
@@ -26493,73 +26493,73 @@ msgstr ""
 msgid "You are allowed to upload only 1 thumb at a time."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:147
+#: bp-templates/bp-nouveau/includes/video/functions.php:148
 msgid "Sorry, no videos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:152
+#: bp-templates/bp-nouveau/includes/video/functions.php:153
 msgid ""
 "Are you sure you want to delete this album? Videos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:154
+#: bp-templates/bp-nouveau/includes/video/functions.php:155
 msgid "Are you sure you want to delete this video?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:155
+#: bp-templates/bp-nouveau/includes/video/functions.php:156
 msgid "Enlarge"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:156
+#: bp-templates/bp-nouveau/includes/video/functions.php:157
 msgid "Enter fullscreen"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:157
+#: bp-templates/bp-nouveau/includes/video/functions.php:158
 msgid "Play"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:158
+#: bp-templates/bp-nouveau/includes/video/functions.php:159
 msgid "Pause"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:159
+#: bp-templates/bp-nouveau/includes/video/functions.php:160
 msgid "Uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:160
+#: bp-templates/bp-nouveau/includes/video/functions.php:161
 msgid "Volume"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:161
+#: bp-templates/bp-nouveau/includes/video/functions.php:162
 msgid "Miniplayer"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:162
+#: bp-templates/bp-nouveau/includes/video/functions.php:163
 msgid "Speed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:163
+#: bp-templates/bp-nouveau/includes/video/functions.php:164
 msgid "Step Back (5)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:164
+#: bp-templates/bp-nouveau/includes/video/functions.php:165
 msgid "Step Forward (5)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:185
+#: bp-templates/bp-nouveau/includes/video/functions.php:186
 msgid "All Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:296
+#: bp-templates/bp-nouveau/includes/video/functions.php:297
 msgid "MP4"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:304
+#: bp-templates/bp-nouveau/includes/video/functions.php:305
 msgid "WebM"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:312
+#: bp-templates/bp-nouveau/includes/video/functions.php:313
 msgid "Ogg"
 msgstr ""
 
@@ -26637,7 +26637,7 @@ msgstr ""
 msgid "Allow members to upload videos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-video/bp-video-settings.php:268
+#: bp-video/bp-video-settings.php:264
 msgid ""
 "Set a maximum file size for video uploads, in megabytes. Your server's "
 "maximum upload size is "
@@ -28048,18 +28048,27 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-video/bp-video-settings.php:203 bp-video/bp-video-settings.php:238
+#: bp-video/bp-video-settings.php:203
+#. translators: 1: FFMpeg status
+msgctxt "extension notification"
+msgid ""
+"Your server needs %1$s installed to create video thumbnail (optional). Ask "
+"your web host."
+msgstr ""
+
+#: bp-video/bp-video-settings.php:233
 #. translators: %1$s FFMpeg status, %2$s FFMPEG Binary Path, %3$s FFPROBE
 #. Binary Path, %34$s wp-config.php file.
 msgctxt "extension notification"
 msgid ""
-"Your server needs %1$s installed to create video thumbnail (optional). Ask "
-"your web host. \r\n"
-"\t\t\t\t\tIf FFMPEG already installed on your server and still showing you "
-"this message then platform is not able to \r\n"
-"\t\t\t\t\tdetect the binary path of the FFMPEG. You need to add binary path "
-"of the FFMPEG in this %2$s & %3$s constant in your %4$s file. Ask your web "
-"host to give both files binary path."
+"Your server needs %1$s installed to create a video thumbnail (optional). "
+"Ask your web host. \n"
+"\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and still "
+"shows this message then the platform unable to auto-detect the binary path "
+"of the FFmpeg. \n"
+"\t\t\t\t\t<br/>You need to add FFmpeg binary files absolute path constants "
+"%2$s & %3$s in %4$s file. \n"
+"\t\t\t\t\t<br/>Ask your web host to provide binary files absolute path."
 msgstr ""
 
 #: bp-members/bp-members-template.php:123
