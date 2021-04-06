@@ -933,6 +933,7 @@
 				background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #fafafa 50%, #ccc 58%, #ccc 100%);
 				display: inline-block;
 				min-width: 530px;
+				min-height: 120px;
 			}
 		}
 
@@ -950,6 +951,15 @@
 
 		.bb-model-header {
 			margin: -20px -15px 30px;
+			flex-wrap: wrap;
+
+			.bp-video-thumbnail-uploader-modal-title {
+				margin-right: 10px;
+			}
+
+			.thumbnail_notice {
+				margin: 0;
+			}
 		}
 
 	}

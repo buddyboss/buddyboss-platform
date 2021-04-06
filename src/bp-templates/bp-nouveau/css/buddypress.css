@@ -19696,6 +19696,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #fafafa 50%, #ccc 58%, #ccc 100%);
   display: inline-block;
   min-width: 530px;
+  min-height: 120px;
 }
 
 @media screen and (max-width: 540px) {
@@ -19704,6 +19705,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
   .bp-video-thumbnail-uploader .bb-model-header {
     margin: -20px -15px 30px;
+    flex-wrap: wrap;
+  }
+  .bp-video-thumbnail-uploader .bb-model-header .bp-video-thumbnail-uploader-modal-title {
+    margin-right: 10px;
+  }
+  .bp-video-thumbnail-uploader .bb-model-header .thumbnail_notice {
+    margin: 0;
   }
   .video-thumbnail-content {
     flex-flow: column;
