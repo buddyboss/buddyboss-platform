@@ -76,8 +76,11 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	add_image_size( 'bp-video-thumbnail', 400, 400 );
-	add_image_size( 'bp-activity-video-thumbnail', 1600, 1600 );
+	// Add upload filters.
+	bp_video_add_thumbnail_upload_filters();
+
+	// Register image sizes.
+	bp_video_register_thumbnail_image_sizes();
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -98,8 +101,11 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 		)
 	);
 
-	remove_image_size( 'bp-video-thumbnail' );
-	remove_image_size( 'bp-activity-video-thumbnail' );
+	// Deregister image sizes.
+	bp_video_deregister_thumbnail_image_sizes();
+
+	// Remove upload filters.
+	bp_video_remove_thumbnail_upload_filters();
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
@@ -120,6 +126,98 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 
 	return new WP_Error( 'error_uploading', __( 'Error while uploading thumbnail.', 'buddyboss' ), array( 'status' => 500 ) );
 
+}
+
+
+/**
+ * Add video thumb upload filters.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_video_add_thumbnail_upload_filters() {
+	add_filter( 'intermediate_image_sizes_advanced', 'bp_video_remove_default_image_sizes' );
+}
+
+/**
+ * Remove media upload filters.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_video_remove_thumbnail_upload_filters() {
+	remove_filter( 'intermediate_image_sizes_advanced', 'bp_video_remove_default_image_sizes' );
+}
+
+/**
+ * Register media image sizes.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_video_register_thumbnail_image_sizes() {
+	$image_sizes = bp_video_get_thumbnail_image_sizes();
+
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
+			}
+		}
+	}
+}
+
+/**
+ * Deregister media image sizes.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_video_deregister_thumbnail_image_sizes() {
+	$image_sizes = bp_video_get_thumbnail_image_sizes();
+
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			remove_image_size( sanitize_key( $name ) );
+		}
+	}
+}
+
+/**
+ * Get media image sizes to register.
+ *
+ * @return array Image sizes.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_video_get_thumbnail_image_sizes() {
+	$image_sizes = array(
+		'bp-video-thumbnail'          => array(
+			'height' => 400,
+			'width'  => 400,
+		),
+		'bp-activity-video-thumbnail' => array(
+			'height' => 1600,
+			'width'  => 1600,
+		),
+	);
+
+	return (array) apply_filters( 'bp_video_add_thumbnail_image_sizes', $image_sizes );
+}
+
+/**
+ * This will remove the default image sizes registered.
+ *
+ * @param array $sizes Image sizes registered.
+ *
+ * @return array Empty array.
+ * @since BuddyBoss 1.5.7
+ */
+function bp_video_remove_default_image_sizes( $sizes ) {
+	if ( isset( $sizes['bp-video-thumbnail'] ) && isset( $sizes['bp-activity-video-thumbnail'] ) ) {
+		return array(
+			'bp-video-thumbnail'          => $sizes['bp-video-thumbnail'],
+			'bp-activity-video-thumbnail' => $sizes['bp-activity-video-thumbnail'],
+		);
+	}
+
+	return array();
 }
 
 /**
