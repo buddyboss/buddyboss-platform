@@ -857,7 +857,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 			} else {
 				$ff_probe = FFMpeg\FFProbe::create();
 			}
-			
+
 			$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 
 			if ( ! empty( $duration ) ) {
@@ -3326,4 +3326,39 @@ function bp_video_get_report_link( $args = array() ) {
 	 * @param array $args button arguments.
 	 */
 	return apply_filters( 'bp_video_get_report_link', $report_btn, $args );
+}
+
+/**
+ * Check if FFMPEG installed.
+ */
+function bb_video_is_ffmpeg_installed() {
+
+	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
+		return false;
+	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+		$error = '';
+		try {
+			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+				$ffmpeg = FFMpeg\FFMpeg::create(
+					array(
+						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+						'timeout'          => 3600, // The timeout for the underlying process.
+						'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+					)
+				);
+			} else {
+				$ffmpeg = FFMpeg\FFMpeg::create();
+			}
+		} catch ( Exception $ffmpeg ) {
+			$error = $ffmpeg->getMessage();
+		}
+		if ( ! empty( trim( $error ) ) ) {
+			return false;
+		} else {
+		    return true;
+        }
+	}
+
+	return false;
 }

@@ -326,3 +326,5 @@ function bp_video_allowed_upload_video_per_batch() {
 	$default = apply_filters( 'bp_video_upload_chunk_limit', 10 );
 	return (int) apply_filters( 'bp_video_allowed_upload_video_per_batch', (int) get_option( 'bp_video_allowed_per_batch', $default ) );
 }
+
+
