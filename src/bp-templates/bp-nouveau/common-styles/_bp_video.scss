@@ -286,19 +286,7 @@
 				transform: rotateY(180deg);
 			}
 
-			.vjs-seek-button,
-			.vjs-time-control,
-			.vjs-duration,
-			.vjs-playback-rate,
-			.vjs-picture-in-picture-control {
-
-				.bb-media-model-wrapper & {
-					display: none;
-				}
-
-			}
-
-			@media screen and (max-width: 540px ) {
+			@media screen and (max-width: 768px ) {
 				bottom: 10px;
 
 				.vjs-seek-button,
