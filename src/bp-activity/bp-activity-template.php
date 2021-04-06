@@ -1869,10 +1869,25 @@ function bp_get_activity_is_favorite() {
  *
  * @since BuddyBoss 1.5.9
  *
+ * @param array $args Commet args.
+ *
+ * @uses bp_activity_get_blog_post_comments() Get comments.
+ * @uses bp_activity_recurse_blog_post_comments() Render comments.
+ *
  * @return void
  */
-function bp_activity_blog_post_comments() {
-	echo bp_activity_get_blog_post_comments();
+function bp_activity_blog_post_comments( $args = array() ) {
+	global $activities_template;
+
+	if ( empty( $activities_template->activity ) ) {
+		return;
+	}
+
+	$activity_id = empty( $activities_template->activity ) ? false : $activities_template->activity->secondary_item_id;
+	$comments    = bp_activity_get_blog_post_comments( $activities_template->activity->secondary_item_id, $args );
+
+	// Render WP list comments.
+	bp_activity_recurse_blog_post_comments( $comments );
 }
 
 /**
@@ -1886,18 +1901,41 @@ function bp_activity_blog_post_comments() {
  *
  * @return void
  */
-function bp_activity_get_blog_post_comments() {
-	global $activities_template;
+function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
+	// Invalid post id.
+	if ( empty( (int) $post_id ) ) {
+		return;
+	}
+
+	// WP settings page_comments option.
+	$has_options = bp_get_option( 'page_comments', false );
+
+	// Is enable WP comment settings option.
+	if ( ! empty( $has_options ) ) {
+		$default = array( 
+			'order'   => 'newest' == bp_get_option( 'default_comments_page', 'newest' ) ? 'desc' : 'asc',
+			'orderby' => 'comment_date',
+			'number'  => bp_get_option( 'comments_per_page', '' ),
+			'paged'   => 1
+		);
+	} else {
+		$default = array( 
+			'order'   => 'desc',
+			'orderby' => 'comment_date',
+			'number'  => 5,
+			'paged'   => 1
+		);
+	}
+
+	$r = bp_parse_args( $args, $default );
+
+	// Set required post id.
+	$r['post_id'] = $post_id;
 
 	// Get individual post comments.
-	$comments = get_comments( array( 
-		'post_id' => $activities_template->activity->secondary_item_id,
-		'order'   => 'asc',
-		'orderby' => 'comment_date' 
-	) );
+	$comments = get_comments( $r );
 
-	// Render WP list comments.
-	bp_activity_recurse_blog_post_comments( $comments );
+	return $comments;
 }
 
 /**
