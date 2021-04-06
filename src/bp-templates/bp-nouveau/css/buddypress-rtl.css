@@ -20196,8 +20196,12 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   }
 }
 
+#video-uploader.dropzone .dz-preview.dz-file-preview {
+  width: 250px;
+}
+
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
-  width: 150px;
+  width: 235px;
   height: 150px;
 }
 
