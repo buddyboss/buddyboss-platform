@@ -921,6 +921,7 @@ window.bp = window.bp || {};
 						if( default_images_html != '' ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).html( default_images_html );
+							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 						}
 					}
 
@@ -981,6 +982,7 @@ window.bp = window.bp || {};
 									if ( response.data.default_images ) {
 										ulSelector.html( '' );
 										ulSelector.html( response.data.default_images );
+										ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 									}
 									ulSelector.removeClass( 'loading' );
 	
@@ -1024,6 +1026,7 @@ window.bp = window.bp || {};
 					);
 				} else {
 					$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
+					$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 				}
 			}
 		},
@@ -1054,7 +1057,6 @@ window.bp = window.bp || {};
 			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).hide();
 			$( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).hide();
 			$( '.bp-video-thumbnail-uploader' ).removeClass( 'opened-edit-thumbnail' );
-			$( '.bp-video-thumbnail-uploader' ).find( '.video-thumb-list' ).addClass( 'loading' ).html( '' );
 			$( window ).scroll();
 		},
 
