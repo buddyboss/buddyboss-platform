@@ -19597,15 +19597,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   justify-content: center;
 }
 
-.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list.loading:before {
-  content: "\e838";
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  display: inline-block;
-  font-size: 24px;
-  animation: spin 2s infinite linear;
-}
-
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li {
   width: 50%;
   flex: 0 0 50%;
@@ -19652,6 +19643,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-radius: 4px;
 }
 
+.bp-video-thumbnail-uploader .thumbnail_notice {
+  display: none;
+}
+
 .bp-video-thumbnail-uploader .modal-container > p {
   margin-top: 25px;
   margin-bottom: 0;
@@ -19677,6 +19672,30 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: inline-block;
   -webkit-animation: spin 3s infinite linear;
   animation: spin 3s infinite linear;
+}
+
+.bp-video-thumbnail-uploader.generating_thumb .thumbnail_notice {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.bp-video-thumbnail-uploader.generating_thumb .bp-video-thumbnail-auto-generated .video-thumb-list li {
+  border-radius: 4px;
+  opacity: 0.8;
+  margin: 0 0 0 10px !important;
+  width: calc(50% - 10px);
+  padding: 0;
+  flex-basis: calc(50% - 10px) !important;
+  overflow: hidden;
+}
+
+.bp-video-thumbnail-uploader.generating_thumb .bp-video-thumbnail-auto-generated .video-thumb-list li:after {
+  content: "";
+  animation: faded 1.5s linear infinite forwards;
+  background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #fafafa 50%, #ccc 58%, #ccc 100%);
+  display: inline-block;
+  min-width: 530px;
 }
 
 @media screen and (max-width: 540px) {
@@ -20206,6 +20225,15 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
     width: calc(100% - 10px);
     margin: 0 5px 10px;
+  }
+}
+
+@keyframes faded {
+  0% {
+    transform: translateX(-300px);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
 

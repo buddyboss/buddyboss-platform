@@ -818,15 +818,6 @@
 				text-align: center;
 				align-items: center;
 				justify-content: center;
-
-				&:before {
-					content: "\e838";
-					font-family: "bb-icons";/* stylelint-disable-line */
-					display: inline-block;
-					font-size: 24px;
-					animation: spin 2s infinite linear;
-				}
-
 			}
 
 			li {
@@ -884,7 +875,12 @@
 
 }
 
+
 .bp-video-thumbnail-uploader {
+
+	.thumbnail_notice {
+		display: none;
+	}
 
 	.modal-container > p {
 		margin-top: 25px;
@@ -910,6 +906,34 @@
 			display: inline-block;
 			-webkit-animation: spin 3s infinite linear;
 			animation: spin 3s infinite linear;
+		}
+
+	}
+
+	&.generating_thumb {
+
+		.thumbnail_notice {
+			display: inline-block;
+			margin-left: 10px;
+			font-size: 14px;
+		}
+
+		.bp-video-thumbnail-auto-generated .video-thumb-list li {
+			border-radius: 4px;
+			opacity: 0.8;
+			margin: 0 0 0 10px !important;
+			width: calc(50% - 10px);
+			padding: 0;
+			flex-basis: calc(50% - 10px) !important;
+			overflow: hidden;
+
+			&:after {
+				content: "";
+				animation: faded 1.5s linear infinite forwards;
+				background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #fafafa 50%, #ccc 58%, #ccc 100%);
+				display: inline-block;
+				min-width: 530px;
+			}
 		}
 
 	}
@@ -1259,6 +1283,20 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	@media screen and (max-width: 480px ) {
 		width: calc(100% - 10px);
 		margin: 0 5px 10px;
+	}
+
+}
+
+
+//Animation
+@keyframes faded {
+
+	0% {
+		transform: translateX(-300px);
+	}
+
+	100% {
+		transform: translateX(0);
 	}
 
 }
