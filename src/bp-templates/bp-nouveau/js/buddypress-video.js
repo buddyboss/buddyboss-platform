@@ -926,8 +926,10 @@ window.bp = window.bp || {};
 						if ( ! self.video_thumb_dropzone_obj.getAcceptedFiles().length ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( '' );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-submit' ).hide();
-							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).hide();
-							// $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).removeClass( 'disabled' );
+							if( $( '.bp-video-thumbnail-dropzone-content .bb-action-check-wrap input:checked' ) ) {
+								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap input' ).prop( 'checked', false);
+								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).hide();
+							}
 						} else {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) ).show();
 						}
