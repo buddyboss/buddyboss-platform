@@ -6454,6 +6454,7 @@ window.bp = window.bp || {};
 
 			if ( document_privacy_wrap.length ) {
 				document_privacy_wrap.show();
+				document_privacy_wrap.parent().show();
 				document_privacy_wrap.find('ul.document-privacy li').removeClass('selected');
 				document_privacy_wrap.find('.bp-tooltip').attr('data-bp-tooltip', '');
 				var selected_document_privacy_elem = document_privacy_wrap.find('ul.document-privacy').find('li[data-value=' + self.current_document.privacy + ']');
@@ -6473,7 +6474,7 @@ window.bp = window.bp || {};
 					! self.current_document.can_edit ||
 					self.current_document.is_message
 				) {
-					document_privacy_wrap.hide();
+					document_privacy_wrap.parent().hide();
 				}
 			}
 
