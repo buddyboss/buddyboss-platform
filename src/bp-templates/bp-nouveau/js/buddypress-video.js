@@ -796,16 +796,19 @@ window.bp = window.bp || {};
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content',
 				function( e ) {
-					if( jQuery( e.target ).hasClass( 'bb-custom-check') || jQuery( e.target ).hasClass( 'bb-icon') || jQuery( e.target ).hasClass( 'dz-remove') || jQuery( e.target ).hasClass( 'dz-clickable') ) {
+					if( $( e.target ).hasClass( 'bb-custom-check') || $( e.target ).hasClass( 'bb-icon') || $( e.target ).hasClass( 'dz-remove') || $( e.target ).hasClass( 'dz-clickable') ) {
 						return;
 					}
-					if( $( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
-						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', false );
-						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).hide();
-					} else {
+
+					if( !$( this ).find( '.dz-clickable').hasClass( 'dz-started' ) ) {
+						return;
+					}
+
+					if( !$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
 						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', true );
 						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
 					}
+
 				}
 			);
 
