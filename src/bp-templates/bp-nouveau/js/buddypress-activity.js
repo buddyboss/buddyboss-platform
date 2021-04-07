@@ -1149,7 +1149,7 @@ window.bp = window.bp || {};
 							var has_depth 		  = false;
 
 							// Enable comment reply depth when its from blog post.
-							if ( is_blog_component && typeof response.data.depth_settings !== 'undefined' && parseInt( response.data.depth_settings ) > 0 && parseInt( response.data.depth_settings ) > parseInt( response.data.depth ) ) { 
+							if ( is_blog_component && typeof response.data.depth_settings !== 'undefined' && parseInt( response.data.depth_settings ) > 0 && parseInt( response.data.depth_settings ) > parseInt( response.data.comment_depth ) ) { 
 								has_depth = true;
 							}
 
@@ -1171,10 +1171,28 @@ window.bp = window.bp || {};
 										.html( response.data.comment_count );
 
 									if ( is_blog_component && ! has_depth ) {
-										activity_comments.closest('.comment-item').closest('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
+										if ( 'desc' === response.data.comment_order ) {
+											if ( activity_comments.closest('.comment-item').closest('ul').find( '.show-all' ).length ) {
+												activity_comments.closest('.comment-item').closest('ul').find( '.show-all' ).after( $( the_comment ).hide().fadeIn( 200 ) );
+											} else {
+												activity_comments.closest('.comment-item').closest('ul').prepend( $( the_comment ).hide().fadeIn( 200 ) );
+											}
+											
+										} else {
+											activity_comments.closest('.comment-item').closest('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
+										}
+
 										activity_comments.children( 'ul' ).remove();
 									} else {
-										activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+										if ( 'desc' === response.data.comment_order ) {
+											if ( activity_comments.children( 'ul' ).find( '.show-all' ).length ) {
+												activity_comments.children( 'ul' ).find( '.show-all' ).after( $( the_comment ).hide().fadeIn( 200 ) );
+											} else {
+												activity_comments.children( 'ul' ).prepend( $( the_comment ).hide().fadeIn( 200 ) );
+											}
+										} else {
+											activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+										}
 									}
 
 									$( form ).find( '.ac-input' ).first().html( '' );
