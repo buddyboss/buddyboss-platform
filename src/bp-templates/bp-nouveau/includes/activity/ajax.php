@@ -574,7 +574,8 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 
 	$post                      = get_post( $comment->comment_post_ID );
 	$response['comment_count'] = $post->comment_count;
-	$response['depth']         = $depth;
+	$response['comment_depth'] = $depth;
+	$response['comment_order'] = bp_get_option( 'comment_order', 'asc' );
 	$depth_enabel              = bp_get_option( 'thread_comments', false );
 
 	if ( ! empty( $depth_enabel ) ) {
