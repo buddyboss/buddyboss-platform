@@ -1907,27 +1907,12 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 		return;
 	}
 
-	// WP settings page_comments option.
-	$has_options = bp_get_option( 'page_comments', false );
-
-	// Is enable WP comment settings option.
-	if ( ! empty( $has_options ) ) {
-		$default = array( 
-			'order'   => 'newest' == bp_get_option( 'default_comments_page', 'newest' ) ? 'desc' : 'asc',
-			'orderby' => 'comment_date',
-			'number'  => bp_get_option( 'comments_per_page', '' ),
-			'paged'   => 1
-		);
-	} else {
-		$default = array( 
-			'order'   => 'desc',
-			'orderby' => 'comment_date',
-			'number'  => 5,
-			'paged'   => 1
-		);
-	}
-
-	$r = bp_parse_args( $args, $default );
+	$r = bp_parse_args( $args, array( 
+		'order'   => 'asc',
+		'orderby' => 'comment_date',
+		'number'  => bp_get_option( 'comments_per_page', 5 ),
+		'paged'   => 1
+	) );
 
 	// Set required post id.
 	$r['post_id'] = $post_id;
