@@ -20193,6 +20193,21 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   display: none;
 }
 
+#activity-post-video-uploader .dz-error-message,
+#bp-video-dropzone-content .dz-error-message,
+#forums-post-video-uploader .dz-error-message,
+#messages-post-video-uploader .dz-error-message,
+#bp-group-messages-post-video-uploader .dz-error-message,
+#boss-video-create-album-popup .dz-error-message,
+.ac-reply-content .ac-reply-attachments .dropzone.video .dz-error-message,
+#video-uploader.dropzone .dz-error-message,
+body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-error-message {
+  top: 150px;
+  right: 50%;
+  transform: translateX(50%);
+  margin-right: 5px;
+}
+
 @media screen and (max-width: 768px) {
   #activity-post-video-uploader .dz-preview.dz-file-preview,
   #bp-video-dropzone-content .dz-preview.dz-file-preview,

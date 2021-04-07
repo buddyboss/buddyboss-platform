@@ -1273,6 +1273,13 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		display: none;
 	}
 
+	.dz-error-message {
+		top: 150px;
+		left: 50%;
+		transform: translateX(-50%);
+		margin-left: 5px;
+	}
+
 	@media screen and (max-width: 768px ) {
 
 		.dz-preview.dz-file-preview {
