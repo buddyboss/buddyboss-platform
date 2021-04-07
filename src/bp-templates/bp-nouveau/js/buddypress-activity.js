@@ -1164,6 +1164,12 @@ window.bp = window.bp || {};
 										}
 									}
 
+									// Update comment count
+									activity_comments.closest( '.activity-item' )
+										.find( '.acomment-reply' )
+										.find( '.comment-count' )
+										.html( response.data.comment_count );
+
 									if ( is_blog_component && ! has_depth ) {
 										activity_comments.closest('.comment-item').closest('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
 										activity_comments.children( 'ul' ).remove();

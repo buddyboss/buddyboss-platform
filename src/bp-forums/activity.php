@@ -824,7 +824,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$post = get_post( $activity->secondary_item_id );
 
 			$buttons['activity_conversation']['link_text'] =  sprintf(
-				'<span class="bp-screen-reader-text">%1$s</span><span class="comment-count">%2$s </span><span class="bb-comment-text">%3$s</span>',
+				'<span class="bp-screen-reader-text">%1$s</span><span class="comment-count">%2$s</span><span class="bb-comment-text"> %3$s</span>',
 				__( 'Comments', 'buddyboss' ),
 				esc_attr( $post->comment_count ),
 				__( 'Comments', 'buddyboss' )
