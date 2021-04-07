@@ -785,10 +785,7 @@ window.bp = window.bp || {};
 					if( jQuery( e.target ).hasClass( 'bb-custom-check') || jQuery( e.target ).hasClass( 'bb-icon') ) {
 						return;
 					}
-					if( $( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
-						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', false );
-						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).hide();
-					} else {
+					if( !$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
 						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', true );
 						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
 					}
