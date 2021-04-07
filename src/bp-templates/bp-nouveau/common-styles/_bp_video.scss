@@ -728,6 +728,35 @@
 		flex-basis: 33.333334%;
 		width: 33.333334%;
 		padding: 0;
+		position: relative;
+
+		.bb-action-check-wrap {
+			visibility: visible;
+			opacity: 1;
+			top: inherit;
+			bottom: 7px;
+			right: 7px;
+			left: inherit;
+			z-index: 1111;
+			display: none;
+
+			.bb-icon {
+
+				border: 2px solid #fff;
+				background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
+
+				&:before {
+					display: none;
+				}
+
+			}
+
+			.bb-custom-check:checked + label .bb-icon:before {
+				content: "\e876";
+				display: inline;
+			}
+
+		}
 
 		.bb-field-wrap {
 			margin-bottom: 0;
@@ -768,6 +797,7 @@
 						max-width: inherit;
 						object-fit: cover;
 						width: 100%;
+						cursor: pointer;
 					}
 
 				}
@@ -833,7 +863,8 @@
 				.bb-action-check-wrap {
 					visibility: visible;
 					opacity: 1;
-					top: 7px;
+					top: inherit;
+					bottom: 7px;
 					right: 7px;
 					left: inherit;
 

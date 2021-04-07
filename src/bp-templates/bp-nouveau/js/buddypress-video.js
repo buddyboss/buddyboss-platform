@@ -778,6 +778,40 @@ window.bp = window.bp || {};
 				}
 			);
 
+			$( document ).on(
+				'click',
+				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumb-list li',
+				function( e ) {
+					if( jQuery( e.target ).hasClass( 'bb-custom-check') || jQuery( e.target ).hasClass( 'bb-icon') ) {
+						return;
+					}
+					if( $( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
+						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', false );
+						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).hide();
+					} else {
+						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', true );
+						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
+					}
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content',
+				function( e ) {
+					if( jQuery( e.target ).hasClass( 'bb-custom-check') || jQuery( e.target ).hasClass( 'bb-icon') || jQuery( e.target ).hasClass( 'dz-remove') || jQuery( e.target ).hasClass( 'dz-clickable') ) {
+						return;
+					}
+					if( $( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
+						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', false );
+						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).hide();
+					} else {
+						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', true );
+						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
+					}
+				}
+			);
+
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div.bp-video-thumbnail-uploader.opened-edit-thumbnail div.video-thumbnail-uploader-wrapper .video-thumbnail-uploader-dropzone-select' ).length ) {
 
 				$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-edit-thumbnail-hidden-video-id' ).val( videoId );
@@ -800,6 +834,8 @@ window.bp = window.bp || {};
 						if ( file.video_thumbnail_edit_data ) {
 							self.dropzone_video_thumb.push( file.video_thumbnail_edit_data );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-uploader-wrapper .dropzone.dz-clickable' ).addClass( 'dz-max-files-reached' );
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).show();
+
 						} else {
 							setTimeout(
 								function () {
@@ -825,6 +861,7 @@ window.bp = window.bp || {};
 								$( 'body' ).append( '<div id="bp-video-move-popup" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).hide();
 						}
 					}
 				);
@@ -836,13 +873,13 @@ window.bp = window.bp || {};
 					}
 				);
 
-				self.video_thumb_dropzone_obj.on(
-					'processing',
-					function () {
-						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
-						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
-					}
-				);
+				// self.video_thumb_dropzone_obj.on(
+				// 	'processing',
+				// 	function () {
+				// 		$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
+				// 		$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
+				// 	}
+				// );
 
 				self.video_thumb_dropzone_obj.on(
 					'success',
@@ -865,7 +902,8 @@ window.bp = window.bp || {};
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-submit' ).show();
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) );
-						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
+						// $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
+						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).show();
 					}
 				);
 
@@ -888,7 +926,8 @@ window.bp = window.bp || {};
 						if ( ! self.video_thumb_dropzone_obj.getAcceptedFiles().length ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( '' );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-submit' ).hide();
-							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).removeClass( 'disabled' );
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).hide();
+							// $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).removeClass( 'disabled' );
 						} else {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) ).show();
 						}
@@ -955,7 +994,7 @@ window.bp = window.bp || {};
 								self.video_thumb_dropzone_obj.files.push( mock_file );
 								self.video_thumb_dropzone_obj.emit( 'addedfile', mock_file );
 								self.createThumbnailFromUrl( mock_file );
-								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
+								// $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
 
 							}
 						}
@@ -1016,7 +1055,7 @@ window.bp = window.bp || {};
 											self.video_thumb_dropzone_obj.files.push( mock_file );
 											self.video_thumb_dropzone_obj.emit( 'addedfile', mock_file );
 											self.createThumbnailFromUrl( mock_file );
-											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
+											// $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
 	
 										}
 									}

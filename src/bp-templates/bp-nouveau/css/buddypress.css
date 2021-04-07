@@ -19510,6 +19510,33 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   flex-basis: 33.333334%;
   width: 33.333334%;
   padding: 0;
+  position: relative;
+}
+
+.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap {
+  visibility: visible;
+  opacity: 1;
+  top: inherit;
+  bottom: 7px;
+  right: 7px;
+  left: inherit;
+  z-index: 1111;
+  display: none;
+}
+
+.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap .bb-icon {
+  border: 2px solid #fff;
+  background-color: rgba(255, 255, 255, 0.4);
+  /* stylelint-disable-line */
+}
+
+.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap .bb-icon:before {
+  display: none;
+}
+
+.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap .bb-custom-check:checked + label .bb-icon:before {
+  content: "\e876";
+  display: inline;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap {
@@ -19553,6 +19580,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   max-width: inherit;
   object-fit: cover;
   width: 100%;
+  cursor: pointer;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove {
@@ -19611,7 +19639,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap {
   visibility: visible;
   opacity: 1;
-  top: 7px;
+  top: inherit;
+  bottom: 7px;
   right: 7px;
   left: inherit;
 }
