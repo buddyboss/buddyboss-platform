@@ -571,9 +571,11 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 		), $depth );
 		$response = array( 'contents' => ob_get_contents() );
 	ob_end_clean();
-	
-	$response['depth'] = $depth;
-	$depth_enabel = bp_get_option( 'thread_comments', false );
+
+	$post                      = get_post( $comment->comment_post_ID );
+	$response['comment_count'] = $post->comment_count;
+	$response['depth']         = $depth;
+	$depth_enabel              = bp_get_option( 'thread_comments', false );
 
 	if ( ! empty( $depth_enabel ) ) {
 		$response['depth_settings'] = bp_get_option( 'thread_comments_depth', 0 );
