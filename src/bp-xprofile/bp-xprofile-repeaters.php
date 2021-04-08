@@ -92,7 +92,10 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 
 			// if not create one!
 			if ( ! $clone_id ) {
-				$clone_id = bp_clone_field_for_repeater_sets( $template_field_id );
+				$clone_id_arr        = bp_clone_field_for_repeater_sets( $template_field_id );
+				// Delete duplicate field order if exists
+				bp_delete_duplicate_field_order( $field_group_id, $clone_id_arr['field_order'] );
+				$clone_id            = $clone_id_arr['field_id'];
 			}
 
 			if ( $clone_id ) {
@@ -323,7 +326,7 @@ function bp_clone_field_for_repeater_sets( $field_id ) {
 	global $wpdb;
 	$bp = buddypress();
 
-	$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d AND field_order = %d", $field_id, 1 ), ARRAY_A );
+	$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
 	
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
 		$template_field_id = $db_row['id'];
@@ -357,13 +360,12 @@ function bp_clone_field_for_repeater_sets( $field_id ) {
 			'order_by'          => $db_row['order_by'],
 			'can_delete'        => $db_row['can_delete'],
 		);
-
+		
 		$inserted = $wpdb->insert(
 			$bp->profile->table_name_fields,
 			$new_field_column_data,
 			$new_field_column_data_types
 		);
-
 		if ( $inserted ) {
 			$new_field_id = $wpdb->insert_id;
 			$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
@@ -372,28 +374,23 @@ function bp_clone_field_for_repeater_sets( $field_id ) {
 					bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 				}
 			}
-
 			$current_clone_number = 1;
-
 			// get all clones of the template field
 			$all_clones = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = {$template_field_id}" );
 			if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
 				/**
-				* MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
-				* It will issuing in query.
-				*/
+				 * MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
+				 * It will issuing in query.
+				 */
 				$last_max_clone_number = $wpdb->get_var(
 					"SELECT  MAX( CAST(meta_value AS DECIMAL) ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
 				); // Changed MAX(met_value) to MAX(CAST(meta_value AS DECIMAL)) - Max(meta_value) return only max 9 value.
-
 				$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
 				$current_clone_number  = $last_max_clone_number + 1;
 			}
-
 			bp_xprofile_update_meta( $new_field_id, 'field', '_is_repeater_clone', true );
 			bp_xprofile_update_meta( $new_field_id, 'field', '_cloned_from', $template_field_id );
 			bp_xprofile_update_meta( $new_field_id, 'field', '_clone_number', $current_clone_number );
-
 			// fix field order
 			$field_order = ( $current_clone_number * bp_profile_field_set_max_cap() ) + $db_row['field_order'];
 			$wpdb->update(
@@ -403,9 +400,9 @@ function bp_clone_field_for_repeater_sets( $field_id ) {
 				array( '%d' ),
 				array( '%d' )
 			);
-
-			return $new_field_id;
+			return array( 'field_id' => $new_field_id, 'field_order' => $field_order );
 		}
+		
 	}
 
 	return false;
@@ -705,11 +702,13 @@ function bp_print_add_repeater_set_button() {
 	if ( 'edit' !== bp_current_action() ) {
 		return false;
 	}
-
+	
+	$xprofile_field_status = get_option( 'xprofile_field_status' );
+	
 	$group_id            = bp_get_current_profile_group_id();
 	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
-		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}'>";
+		echo "<button id='btn_add_repeater_set' class='button outline ". esc_attr($xprofile_field_status)."' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}'>";
 		echo '<span class="dashicons dashicons-plus-alt"></span>';
 		printf(
 			/* translators: %s = profile field group name */
@@ -729,6 +728,8 @@ add_action( 'wp_ajax_bp_xprofile_add_repeater_set', 'bp_xprofile_ajax_add_repeat
  */
 function bp_xprofile_ajax_add_repeater_set() {
 	check_ajax_referer( 'bp_xprofile_add_repeater_set', '_wpnonce' );
+	
+	update_option( 'xprofile_field_status', 'add' );
 
 	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
 	if ( ! $user_id ) {
@@ -922,4 +923,35 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 	$f->format = 'text';
 	$f->filter = 'contains';
 	return $f;
+}
+
+/**
+ * Function will delete duplicate field order which inserted last from DB.
+ *
+ * @param int $field_group_id    Current group id.
+ * @param int $clone_field_order Field order id
+ */
+function bp_delete_duplicate_field_order( $field_group_id, $clone_field_order ) {
+	global $wpdb;
+	$bp = buddypress();
+	
+	$check_field_order = $wpdb->get_var(
+		"SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . ""
+	);
+	if ( $check_field_order > 1 ) {
+		$limit           = $check_field_order - 1;
+		$field_id_result = $wpdb->get_results(
+			"SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " LIMIT $limit"
+		);
+		$field_id_arr    = array();
+		if ( ! empty( $field_id_result ) ) {
+			foreach ( $field_id_result as $field_id_obj ) {
+				$field_id_arr[] = $field_id_obj->id;
+			}
+		}
+		$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
+		if ( 1 === $delete_field_id ) {
+			$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
+		}
+	}
 }
