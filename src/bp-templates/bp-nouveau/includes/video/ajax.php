@@ -1403,7 +1403,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 	$default_images            = '';
 	$dropzone_arr              = '';
 	if ( $auto_generated_thumbnails ) {
-		$auto_generated_thumbnails_arr = explode( ',', $auto_generated_thumbnails );
+		$auto_generated_thumbnails_arr = isset( $auto_generated_thumbnails['default_images'] ) && !empty( $auto_generated_thumbnails['default_images'] ) ? $auto_generated_thumbnails['default_images'] : array();
 		ob_start();
 		if ( $auto_generated_thumbnails_arr ) {
 			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
@@ -1425,17 +1425,13 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 		}
 		$default_images = ob_get_contents();
 		ob_end_clean();
-	}
-
-	if ( $preview_thumbnail_id ) {
-		$auto_generated_thumbnails_arr = explode( ',', $auto_generated_thumbnails );
-		if ( ! in_array( $preview_thumbnail_id, $auto_generated_thumbnails_arr, true ) ) {
+		if ( isset( $auto_generated_thumbnails['custom_image'] ) && !empty( $auto_generated_thumbnails['custom_image'] ) ) {
 			$video        = new BP_Video( $video_id );
 			$dropzone_arr = array(
 				'id'            => $video_id,
 				'attachment_id' => $video->attachment_id,
-				'thumb'         => wp_get_attachment_image_url( $preview_thumbnail_id, 'bp-media-thumbnail' ),
-				'url'           => wp_get_attachment_image_url( $preview_thumbnail_id, 'full' ),
+				'thumb'         => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
+				'url'           => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'full' ),
 				'name'          => $video->title,
 				'saved'         => true,
 			);
@@ -1483,20 +1479,20 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$pre_selected_id     = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
 
 	$auto_generated_thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
-	$old_thumbnail_id          = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
-	if ( ! empty( $auto_generated_thumbnails ) ) {
-		$auto_generated_thumbnails = explode( ',', $auto_generated_thumbnails );
-	} else {
-		$auto_generated_thumbnails = array();
-	}
-	if ( $pre_selected_id !== $old_thumbnail_id && ! in_array( $old_thumbnail_id, $auto_generated_thumbnails, true ) ) {
-		wp_delete_post( $old_thumbnail_id, true );
-	}
+	$default_images            = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
 
 	if ( $video_attachment_id && $thumbnail ) {
 		$pre_selected_id = current( $thumbnail );
 		$pre_selected_id = $pre_selected_id['id'];
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
+		$thumbnail_images = array(
+			'default_images' => $default_images,
+			'custom_image'  => $pre_selected_id
+		);
+		update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
+		if ( isset($auto_generated_thumbnails['custom_image']) && !empty($auto_generated_thumbnails['custom_image']) && $auto_generated_thumbnails['custom_image'] != $pre_selected_id ) {
+			wp_delete_post( $auto_generated_thumbnails['custom_image'], true );
+		}
 	} elseif ( $video_attachment_id && $pre_selected_id ) {
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 	}

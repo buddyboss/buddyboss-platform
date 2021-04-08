@@ -675,15 +675,12 @@ class BP_Media {
 					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
 					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
 
-				} elseif ( $get_video_thumb_ids ) {
-					$get_video_thumb_ids_arr = explode( ',', $get_video_thumb_ids );
-					if ( $get_video_thumb_ids_arr ) {
-						$get_video_thumb_id              = current( $get_video_thumb_ids_arr );
-						$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
-						$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
-						$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
-						$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
-					}
+				} elseif ( isset( $get_video_thumb_ids['default_images'] ) && !empty( $get_video_thumb_ids['default_images'] ) ) {
+					$get_video_thumb_id              = current( $get_video_thumb_ids['default_images'] );
+					$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
+					$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
+					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
+					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
 				} else {
 					$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
 					$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';

@@ -37,7 +37,7 @@
 									<div class="dropzone video-thumbnail-uploader-dropzone-select" id=""></div>
 								</div>
 							</div>
-							<div class="video-thumbnail-custom">
+							<div class="video-thumbnail-custom" style="display:none;">
 								<img src="" alt="" />
 							</div>
 							<div class="bb-action-check-wrap">
