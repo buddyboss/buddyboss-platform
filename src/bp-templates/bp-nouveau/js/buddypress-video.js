@@ -904,7 +904,8 @@ window.bp = window.bp || {};
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) );
 						// $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).show();
-					}
+						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .video-thumbnail-custom img' ).attr( 'src', self.video_thumb_dropzone_obj.files[0].dataURL ).parent().show();
+				}
 				);
 
 				self.video_thumb_dropzone_obj.on(
@@ -929,6 +930,7 @@ window.bp = window.bp || {};
 							if( $( '.bp-video-thumbnail-dropzone-content .bb-action-check-wrap input:checked' ) ) {
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap input' ).prop( 'checked', false);
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).hide();
+								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .video-thumbnail-custom img' ).attr( 'src', '' ).parent().hide();
 							}
 						} else {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) ).show();
@@ -1002,6 +1004,8 @@ window.bp = window.bp || {};
 						}
 					}
 				}
+
+				$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom img' ).attr( 'src', self.video_thumb_dropzone_obj.files[0].dataURL );
 
 				var data = {
 					'action': 'video_get_edit_thumbnail_data',
