@@ -93,7 +93,7 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 			// if not create one!
 			if ( ! $clone_id ) {
 				$clone_id_arr        = bp_clone_field_for_repeater_sets( $template_field_id );
-				// Delete duplicate field order if exists
+				// Delete duplicate field order if exists.
 				bp_delete_duplicate_field_order( $field_group_id, $clone_id_arr['field_order'] );
 				$clone_id            = $clone_id_arr['field_id'];
 			}
@@ -704,12 +704,10 @@ function bp_print_add_repeater_set_button() {
 		return false;
 	}
 	
-	$xprofile_field_status = get_option( 'xprofile_field_status' );
-	
 	$group_id            = bp_get_current_profile_group_id();
 	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
-		echo "<button id='btn_add_repeater_set' class='button outline ". esc_attr($xprofile_field_status)."' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}'>";
+		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}'>";
 		echo '<span class="dashicons dashicons-plus-alt"></span>';
 		printf(
 			/* translators: %s = profile field group name */
@@ -730,8 +728,6 @@ add_action( 'wp_ajax_bp_xprofile_add_repeater_set', 'bp_xprofile_ajax_add_repeat
 function bp_xprofile_ajax_add_repeater_set() {
 	check_ajax_referer( 'bp_xprofile_add_repeater_set', '_wpnonce' );
 	
-	update_option( 'xprofile_field_status', 'add' );
-
 	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
 	if ( ! $user_id ) {
 		die();
