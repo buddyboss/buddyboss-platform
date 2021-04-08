@@ -19506,6 +19506,22 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 25px 0 0 0;
 }
 
+.video-thumbnail-content .video-thumbnail-custom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+}
+
+.video-thumbnail-content .video-thumbnail-custom img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
 .video-thumbnail-content .bb-dropzone-wrap {
   flex-basis: 33.333334%;
   width: 33.333334%;
@@ -19570,6 +19586,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview {
   margin: 0;
   width: 100%;
+  z-index: initial;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image {

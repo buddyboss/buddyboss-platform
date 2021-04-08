@@ -37,6 +37,9 @@
 									<div class="dropzone video-thumbnail-uploader-dropzone-select" id=""></div>
 								</div>
 							</div>
+							<div class="video-thumbnail-custom">
+								<img src="" alt="" />
+							</div>
 							<div class="bb-action-check-wrap">
 								<input id="bb-video-5711" class="bb-custom-check" type="radio" value="5766" name="bb-video-thumbnail-select">
 								<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-5711">
