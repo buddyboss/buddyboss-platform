@@ -1907,18 +1907,45 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 		return;
 	}
 
-	$r = bp_parse_args( $args, array( 
-		'order'   => 'asc',
-		'orderby' => 'comment_date',
+	$default = array( 
+		'order'   => 'ASC',
+		'orderby' => 'comment_date_gmt',
 		'number'  => bp_get_option( 'comments_per_page', 5 ),
-		'paged'   => 1
-	) );
+		'status'  => 'approve',
+		'paged'   => 1,
+		'post_id' => $post_id
+	);
+
+	if ( is_user_logged_in() ) {
+        $default['include_unapproved'] = array( get_current_user_id() );
+    } else {
+        $unapproved_email = wp_get_unapproved_comment_author_email();
+
+        if ( $unapproved_email ) {
+            $default['include_unapproved'] = array( $unapproved_email );
+        }
+    }
+
+	$r = bp_parse_args( $args, $default );
 
 	// Set required post id.
 	$r['post_id'] = $post_id;
 
 	// Get individual post comments.
-	$comments = get_comments( $r );
+	$comments    = get_comments( $r );
+	$comment_ids = empty( $comments ) ? array( '-1' ) : wp_list_pluck( $comments, 'comment_ID' );
+
+	// Get child comments
+	$comment_childs = get_comments( array(
+		'order'      => 'ASC',
+		'orderby'    => 'comment_date_gmt',
+		'post_id'    => $post_id,
+		'parent__in' => $comment_ids,
+		'status'     => 'approve',
+	) );
+	
+	// Merge parent and child comments.
+	$comments = empty( $comment_childs ) ? $comments : array_merge( $comments, $comment_childs );
 
 	return $comments;
 }
