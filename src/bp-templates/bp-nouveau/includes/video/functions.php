@@ -315,6 +315,14 @@ function bp_video_allowed_video_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
+		'bb_vid_4'  => array(
+			'extension'   => '.mov',
+			'mime_type'   => 'video/quicktime',
+			'description' => __( 'Movi, Quicktime', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		)
 	);
 
 	/**
