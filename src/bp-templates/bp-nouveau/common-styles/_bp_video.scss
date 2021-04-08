@@ -951,7 +951,7 @@
 
 		.bp-video-thumbnail-auto-generated .video-thumb-list li {
 			border-radius: 4px;
-			opacity: 0.8;
+			opacity: 0.6;
 			margin: 0 0 0 10px !important;
 			width: calc(50% - 10px);
 			padding: 0;
@@ -961,7 +961,7 @@
 			&:after {
 				content: "";
 				animation: faded 1.5s linear infinite forwards;
-				background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #fafafa 50%, #ccc 58%, #ccc 100%);
+				background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #e5e5e5 50%, #ccc 58%, #ccc 100%);
 				display: inline-block;
 				min-width: 530px;
 				min-height: 120px;

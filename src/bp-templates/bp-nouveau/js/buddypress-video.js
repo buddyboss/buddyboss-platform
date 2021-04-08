@@ -780,7 +780,7 @@ window.bp = window.bp || {};
 
 			$( document ).on(
 				'click',
-				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumb-list li',
+				'.bp-video-thumbnail-uploader.opened-edit-thumbnail:not(.generating_thumb) .video-thumb-list li',
 				function( e ) {
 					if( jQuery( e.target ).hasClass( 'bb-custom-check') || jQuery( e.target ).hasClass( 'bb-icon') ) {
 						return;
