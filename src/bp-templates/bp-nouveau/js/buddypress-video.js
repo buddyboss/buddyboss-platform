@@ -996,6 +996,9 @@ window.bp = window.bp || {};
 							$( '#custom_image_ele' ).find('input').attr('id', 'bb-video-' + videoAttachments.preview.attachment_id);
 							$( '#custom_image_ele' ).find('label').attr('for', 'bb-video-' + videoAttachments.preview.attachment_id);
 							$( '#custom_image_ele' ).find('input').val(videoAttachments.preview.attachment_id);
+							if( typeof videoAttachments.selected_id !== 'undefined' && videoAttachments.preview.attachment_id == videoAttachments.selected_id.id) {
+								$( '#custom_image_ele' ).find('input').attr('checked', 'checked');
+							}
 						}
 					}
 				}
