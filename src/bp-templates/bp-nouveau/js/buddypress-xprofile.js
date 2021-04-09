@@ -143,6 +143,10 @@ window.bp = window.bp || {};
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
 
+    document.addEventListener("DOMContentLoaded", function(event) {
+        $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
+    });
+
     // Add repeater set button, on edit profile screens
     $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
         e.preventDefault();
@@ -153,6 +157,8 @@ window.bp = window.bp || {};
         }
 
         $button.addClass('disabled');
+        $button.attr('disabled', 'disabled');
+        $button.css('pointer-events', 'none');
 
         $.ajax({
             'url' : ajaxurl,
