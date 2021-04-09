@@ -143,7 +143,7 @@ window.bp = window.bp || {};
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
 
-    document.addEventListener("DOMContentLoaded", function(event) {
+    document.addEventListener('DOMContentLoaded', function() {
         $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
     });
 
