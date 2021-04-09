@@ -830,7 +830,7 @@ function bp_video_preview_image_by_js( $video ) {
 					'default_images' => $default_images,
 					'custom_image'  => $preview_attachment_id
 				);
-				update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
+				update_post_meta( $video['id'], 'video_preview_thumbnails', $thumbnail_images );
 			}
 		}
 	}
@@ -3487,7 +3487,6 @@ function bp_video_get_attachments( $video_id ) {
 	$auto_generated_thumbnails = get_post_meta( $video_id, 'video_preview_thumbnails', true );
 	$preview_thumbnail_id      = get_post_meta( $video_id, 'bp_video_preview_thumbnail_id', true );
 	if ( $auto_generated_thumbnails ) {
-		$auto_generated_thumbnails_arr = explode( ',', $auto_generated_thumbnails );
 		$auto_generated_thumbnails_arr = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
 		if ( $auto_generated_thumbnails_arr ) {
 			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
