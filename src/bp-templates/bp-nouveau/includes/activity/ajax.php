@@ -569,6 +569,7 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 			'max_depth'   => $comment_deep,
 			'style'       => 'li'
 		), $depth );
+		
 		$response = array( 'contents' => ob_get_contents() );
 	ob_end_clean();
 
@@ -576,6 +577,7 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 	$response['comment_count'] = $post->comment_count;
 	$response['comment_depth'] = $depth;
 	$response['comment_order'] = bp_get_option( 'comment_order', 'asc' );
+	$response['comment_reply'] = empty( $comment->comment_parent ) ? 0 : 1;
 	$depth_enabel              = bp_get_option( 'thread_comments', false );
 
 	if ( ! empty( $depth_enabel ) ) {
