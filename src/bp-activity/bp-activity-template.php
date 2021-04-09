@@ -1908,12 +1908,14 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 	}
 
 	$default = array( 
-		'order'   => 'ASC',
-		'orderby' => 'comment_date_gmt',
-		'number'  => bp_get_option( 'comments_per_page', 5 ),
-		'status'  => 'approve',
-		'paged'   => 1,
-		'post_id' => $post_id
+		'order'        => 'ASC',
+		'orderby'      => 'comment_date_gmt',
+		'number'       => bp_get_option( 'comments_per_page', 5 ),
+		'status'       => 'approve',
+		'paged'        => 1,
+		'parent'       => 0,
+		'post_id'      => $post_id,
+		'hierarchical' => true,
 	);
 
 	if ( is_user_logged_in() ) {
@@ -1932,20 +1934,7 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 	$r['post_id'] = $post_id;
 
 	// Get individual post comments.
-	$comments    = get_comments( $r );
-	$comment_ids = empty( $comments ) ? array( '-1' ) : wp_list_pluck( $comments, 'comment_ID' );
-
-	// Get child comments
-	$comment_childs = get_comments( array(
-		'order'      => 'ASC',
-		'orderby'    => 'comment_date_gmt',
-		'post_id'    => $post_id,
-		'parent__in' => $comment_ids,
-		'status'     => 'approve',
-	) );
-	
-	// Merge parent and child comments.
-	$comments = empty( $comment_childs ) ? $comments : array_merge( $comments, $comment_childs );
+	$comments = get_comments( $r );
 
 	return $comments;
 }
