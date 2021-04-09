@@ -3501,7 +3501,7 @@ function bp_video_get_attachments( $video_id ) {
 			$video                      = new BP_Video( bp_get_video_id() );
 			$attachment_urls['preview'] = array(
 				'id'            => bp_get_video_id(),
-				'attachment_id' => $video->attachment_id,
+				'attachment_id' => $auto_generated_thumbnails['custom_image'],
 				'thumb'         => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
 				'url'           => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'full' ),
 				'name'          => $video->title,

@@ -1506,6 +1506,8 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	wp_send_json_success(
 		array(
 			'thumbnail' => $thumbnail_url,
+			'video_attachment_id' => $video_attachment_id,
+			'video_attachments' => json_encode( bp_video_get_attachments( $video_attachment_id ) )
 		)
 	);
 }
