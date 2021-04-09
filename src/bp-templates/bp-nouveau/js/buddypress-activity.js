@@ -1146,12 +1146,6 @@ window.bp = window.bp || {};
 						} else {
 							var activity_comments = form.parent();
 							var the_comment       = $.trim( response.data.contents );
-							var has_depth 		  = false;
-
-							// Enable comment reply depth when its from blog post.
-							if ( is_blog_component && typeof response.data.depth_settings !== 'undefined' && parseInt( response.data.depth_settings ) > 0 && parseInt( response.data.depth_settings ) > parseInt( response.data.comment_depth ) ) { 
-								has_depth = true;
-							}
 
 							form.fadeOut(
 								200,
@@ -1164,35 +1158,29 @@ window.bp = window.bp || {};
 										}
 									}
 
-									// Update comment count
-									activity_comments.closest( '.activity-item' )
-										.find( '.acomment-reply' )
-										.find( '.comment-count' )
-										.html( response.data.comment_count );
+									if ( is_blog_component ) {
+										// Update comment count
+										activity_comments.closest( '.activity-item' )
+											.find( '.acomment-reply' )
+											.find( '.comment-count' )
+											.html( response.data.comment_count );
 
-									if ( is_blog_component && ! has_depth ) {
-										if ( 'desc' === response.data.comment_order ) {
-											if ( activity_comments.closest('.comment-item').closest('ul').find( '.show-all' ).length ) {
-												activity_comments.closest('.comment-item').closest('ul').find( '.show-all' ).after( $( the_comment ).hide().fadeIn( 200 ) );
+										// Placement for new comment.
+										if ( 'desc' === response.data.comment_order && 0 === response.data.comment_reply ) {
+											if ( activity_comments.children('ul').find( '.show-all' ).length ) {
+												activity_comments.children('ul').find( '.show-all' ).after( $( the_comment ).hide().fadeIn( 200 ) );
 											} else {
-												activity_comments.closest('.comment-item').closest('ul').prepend( $( the_comment ).hide().fadeIn( 200 ) );
+												activity_comments.children('ul').prepend( $( the_comment ).hide().fadeIn( 200 ) );
 											}
 											
+										} else if ( 1 === response.data.comment_reply ) {
+											activity_comments.closest('li').children('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
 										} else {
-											activity_comments.closest('.comment-item').closest('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
+											activity_comments.children('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
 										}
 
-										activity_comments.children( 'ul' ).remove();
 									} else {
-										if ( 'desc' === response.data.comment_order ) {
-											if ( activity_comments.children( 'ul' ).find( '.show-all' ).length ) {
-												activity_comments.children( 'ul' ).find( '.show-all' ).after( $( the_comment ).hide().fadeIn( 200 ) );
-											} else {
-												activity_comments.children( 'ul' ).prepend( $( the_comment ).hide().fadeIn( 200 ) );
-											}
-										} else {
-											activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
-										}
+										activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 									}
 
 									$( form ).find( '.ac-input' ).first().html( '' );
