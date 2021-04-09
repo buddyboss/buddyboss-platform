@@ -69,7 +69,7 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		$sql = "select m1.object_id, m2.meta_value AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
+		$sql = "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
         JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
         WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
         AND m2.meta_key = '_clone_number' ORDER BY m2.meta_value ASC ";
