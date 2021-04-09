@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-09 10:20:59+00:00\n"
+"POT-Creation-Date: 2021-04-09 13:56:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4182,7 +4182,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
 #: bp-document/bp-document-functions.php:1969
-#: bp-video/bp-video-functions.php:2818
+#: bp-video/bp-video-functions.php:2825
 msgid "Video"
 msgstr ""
 
@@ -5318,15 +5318,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\n"
+"content will be unhidden</li>\r\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
-"\t\t\t</ul>\n"
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -8106,13 +8106,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9069,48 +9069,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1924
-#: bp-video/bp-video-functions.php:2773
+#: bp-video/bp-video-functions.php:2780
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1929
-#: bp-video/bp-video-functions.php:2778
+#: bp-video/bp-video-functions.php:2785
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1934
-#: bp-video/bp-video-functions.php:2783
+#: bp-video/bp-video-functions.php:2790
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1939
-#: bp-video/bp-video-functions.php:2788
+#: bp-video/bp-video-functions.php:2795
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1944
-#: bp-video/bp-video-functions.php:2793
+#: bp-video/bp-video-functions.php:2800
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1949
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2798
+#: bp-video/bp-video-functions.php:2805
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1954
-#: bp-video/bp-video-functions.php:2803
+#: bp-video/bp-video-functions.php:2810
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1959
-#: bp-video/bp-video-functions.php:2808
+#: bp-video/bp-video-functions.php:2815
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1964
-#: bp-video/bp-video-functions.php:2813
+#: bp-video/bp-video-functions.php:2820
 msgid "Text"
 msgstr ""
 
@@ -23714,7 +23714,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:96
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:118
-#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:65
+#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:66
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:99
 msgid "Done"
 msgstr ""
@@ -28070,12 +28070,12 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to create a video thumbnail (optional). "
-"Ask your web host. \n"
+"Ask your web host. \r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and still "
 "shows this message then the platform unable to auto-detect the binary path "
-"of the FFmpeg. \n"
+"of the FFmpeg. \r\n"
 "\t\t\t\t\t<br/>You need to add FFmpeg binary files absolute path constants "
-"%2$s & %3$s in %4$s file. \n"
+"%2$s & %3$s in %4$s file. \r\n"
 "\t\t\t\t\t<br/>Ask your web host to provide binary files absolute path."
 msgstr ""
 

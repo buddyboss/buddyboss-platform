@@ -38,6 +38,7 @@
 								</div>
 							</div>
 							<div class="video-thumbnail-custom" style="display:none;">
+								<span class="close-thumbnail-custom"></span>
 								<img src="" alt="" />
 							</div>
 							<div class="bb-action-check-wrap" id="custom_image_ele">

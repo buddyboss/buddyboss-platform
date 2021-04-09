@@ -785,6 +785,7 @@ window.bp = window.bp || {};
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail:not(.generating_thumb) .video-thumb-list li',
 				function( e ) {
+					e.preventDefault();
 					if( jQuery( e.target ).hasClass( 'bb-custom-check') || jQuery( e.target ).hasClass( 'bb-icon') ) {
 						return;
 					}
@@ -799,11 +800,11 @@ window.bp = window.bp || {};
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content',
 				function( e ) {
-					if( $( e.target ).hasClass( 'bb-custom-check') || $( e.target ).hasClass( 'bb-icon') || $( e.target ).hasClass( 'dz-remove') || $( e.target ).hasClass( 'dz-clickable') ) {
+					if( $( e.target ).hasClass( 'bb-custom-check') || $( e.target ).hasClass( 'bb-icon') || $( e.target ).hasClass( 'dz-remove') || $( e.target ).hasClass( 'dz-clickable') || $(e.target).hasClass( 'close-thumbnail-custom') ) {
 						return;
 					}
 
-					if( !$( this ).find( '.dz-clickable').hasClass( 'dz-started' ) ) {
+					if( $( this ).find( '.video-thumbnail-custom' ).hasClass('is_hidden') ) {
 						return;
 					}
 
@@ -812,6 +813,20 @@ window.bp = window.bp || {};
 						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
 					}
 
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom .close-thumbnail-custom',
+				function() {
+					$( this ).siblings( 'img' ).attr( 'src', '' ).parent().hide();
+					$( this ).closest( '.video-thumbnail-content' ).find( '.video-thumbnail-uploader-wrapper' ).show();
+					if( $( this ).closest( '.video-thumbnail-custom' ).siblings('.bb-action-check-wrap').find( 'input' ).prop('checked') ) {
+						$( this ).closest( '.video-thumbnail-custom' ).siblings('.bb-action-check-wrap').find( 'input' ).prop('checked', false);
+						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-submit' ).hide();
+					}
+					$( this ).closest( '.video-thumbnail-custom' ).addClass('is_hidden');
 				}
 			);
 
@@ -906,8 +921,9 @@ window.bp = window.bp || {};
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video_thumb.length, self.video_thumb_dropzone_obj.getAcceptedFiles().length ) );
 						// $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
-						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).show();
+						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).show().find( 'input').prop( 'checked', true );
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .video-thumbnail-custom img' ).attr( 'src', self.video_thumb_dropzone_obj.files[0].dataURL ).parent().show();
+						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .video-thumbnail-custom.is_hidden' ).removeClass( 'is_hidden' );
 				}
 				);
 
@@ -975,6 +991,8 @@ window.bp = window.bp || {};
 						if ( typeof videoAttachments.preview.dropzone !== 'undefined' && videoAttachments.preview.dropzone == true ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom').show();
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom img' ).attr( 'src', videoAttachments.preview.url );
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).show().find( 'input' ).prop( 'checked', true );
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-uploader-wrapper' ).hide();
 							$( '#custom_image_ele' ).find('input').attr('id', 'bb-video-' + videoAttachments.preview.attachment_id);
 							$( '#custom_image_ele' ).find('label').attr('for', 'bb-video-' + videoAttachments.preview.attachment_id);
 							$( '#custom_image_ele' ).find('input').val(videoAttachments.preview.attachment_id);

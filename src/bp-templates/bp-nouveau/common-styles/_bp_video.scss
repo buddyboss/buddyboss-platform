@@ -732,9 +732,35 @@
 		bottom: 0;
 		cursor: pointer;
 
+		.close-thumbnail-custom {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			height: 14px;
+			width: 14px;
+			border-radius: 50%;
+			background: #fd4343;
+			color: #fff;
+			cursor: pointer;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			&:after {
+				content: "\00d7";
+				font-size: 14px;
+				line-height: 1;
+				position: relative;
+				top: -1px;
+				left: 0;
+			}
+		}
+
 		img {
 			height: 100%;
 			width: 100%;
+			min-height: 120px;
 			object-fit: cover;
 			border-radius: 4px;
 		}
@@ -914,6 +940,7 @@
 				img {
 					object-fit: cover;
 					border-radius: 4px;
+					min-height: 120px;
 				}
 
 			}

@@ -19515,9 +19515,35 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   cursor: pointer;
 }
 
+.video-thumbnail-content .video-thumbnail-custom .close-thumbnail-custom {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #fd4343;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-thumbnail-content .video-thumbnail-custom .close-thumbnail-custom:after {
+  content: "\00d7";
+  font-size: 14px;
+  line-height: 1;
+  position: relative;
+  top: -1px;
+  right: 0;
+}
+
 .video-thumbnail-content .video-thumbnail-custom img {
   height: 100%;
   width: 100%;
+  min-height: 120px;
   object-fit: cover;
   border-radius: 4px;
 }
@@ -19687,6 +19713,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li img {
   object-fit: cover;
   border-radius: 4px;
+  min-height: 120px;
 }
 
 .bp-video-thumbnail-uploader .thumbnail_notice {
