@@ -143,6 +143,9 @@ add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
+// Filter meta button for blog post comment.
+add_action( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_blog_post_comment_buttons', 10 ,2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -2386,4 +2389,55 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 	}
 
 	return $content;
+}
+
+/**
+ * Meta button for activity blog post comment.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param array $buttons
+ * @param int   $activity_id
+ *
+ * @uses bp_activity_get_specific() Get activity post data.
+ *
+ * @return array
+ */
+function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
+	// Activity post data.
+	$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+
+	if ( empty( $activities['activities'] ) ) {
+		return $buttons;
+	}
+
+	$activity = array_shift( $activities['activities'] );
+
+	// When activity component is not blog.
+	if ( 'blogs' != $activity->component ) {
+		return $buttons;
+	}
+
+	// Remove the delete meta button to set it as the last array key.
+	if ( ! empty( $buttons['activity_delete'] ) ) {
+		$delete = $buttons['activity_delete'];
+		unset( $buttons['activity_delete'] );
+	}
+
+	// Get comment post.
+	$post = get_post( $activity->secondary_item_id );
+
+	$buttons['activity_conversation']['link_text'] =  sprintf(
+		'<span class="bp-screen-reader-text">%1$s</span><span class="comment-count">%2$s</span><span class="bb-comment-text"> %3$s</span>',
+		__( 'Comments', 'buddyboss' ),
+		esc_attr( $post->comment_count ),
+		__( 'Comments', 'buddyboss' )
+	);
+	
+	// Delete button set as the last meta buttion.
+	if ( ! empty( $delete ) ) {
+		 $buttons['activity_delete'] = $delete;
+	}
+
+	return $buttons;
 }
