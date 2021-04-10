@@ -164,9 +164,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		private function setup_filters() {
 
-			// Obey BuddyBoss commenting rules
-			add_filter( 'bp_activity_can_comment', array( $this, 'activity_can_comment' ) );
-
 			// Link directly to the topic or reply
 			add_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
 
@@ -416,80 +413,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Return the activity ID since we've verified the connection
 			return $activity_id;
-		}
-
-		/**
-		 * Maybe disable activity stream comments on select actions
-		 *
-		 * @since bbPress (r3399)
-		 *
-		 * @param boolean $can_comment
-		 * @uses  bp_disable_blogforum_comments() check post type activity status.
-		 *
-		 * @return boolean
-		 */
-		public function activity_can_comment( $can_comment = true ) {
-			global $activities_template;
-
-			// Already forced off, so comply
-			if ( false === $can_comment ) {
-				return $can_comment;
-			}
-
-			$bb            = buddypress();
-			$activity_type = bp_get_activity_type();
-			
-			// Get current activity post type.
-			if ( ! empty( $bb->activity->track[ $activity_type ] ) ) {
-				$track_activity = $bb->activity->track[ $activity_type ];
-				$post_type      = $track_activity->post_type;
-			}
-
-			// Custom post type comment status.
-			if ( bp_disable_blogforum_comments() ) {
-				$can_comment = false;
-			} else {
-				/**
-				 * Checking individual post comment status.
-				 **/
-				$post = get_post( $activities_template->activity->secondary_item_id );
-
-				// Has post.
-				if ( ! empty( $post ) ) {
-					$open = ( 'open' === $post->comment_status );
-				
-					// Disable comment when the comment not open for individual post.
-					if ( ! $open ) {
-						$can_comment = false;
-					}
-
-					// Enable comment when the post comment is not opne but has comment count.
-					if ( $post->comment_count ) {
-						$can_comment = true;
-					}
-				}
-			}
-
-			// Disable comment when the post type is product.
-			if ( ! empty( $post_type ) && 'product' == $post_type ) {
-				$can_comment = false;
-			}
-
-			// Get the current action name
-			$action_name = bp_get_activity_action_name();
-
-			// Setup the array of possibly disabled actions
-			$disabled_actions = array(
-				$this->topic_create,
-				$this->reply_create,
-			);
-
-			// Comment is disabled for discussion and reply discussion.
-			if ( in_array( $action_name, $disabled_actions ) ) {
-				$can_comment = false;
-			}
-
-			return $can_comment;
 		}
 
 		/**
