@@ -149,6 +149,18 @@ add_action( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_blog_post_c
 // Obey BuddyBoss commenting rules
 add_filter( 'bp_activity_can_comment', 'bp_activity_has_comment_access' );
 
+// Filter for set attribute in activity post comment button.
+add_filter( 'bp_get_form_field_attributes', 'bp_set_form_field_attributes', 10, 2 );
+
+// Filter comment form meta button.
+add_filter( 'bp_is_active', 'bp_is_active_comment_form_media_button', 10, 2 );
+
+// Filter for enable comment status.
+add_filter( 'bp_force_comment_status', 'bp_activity_blog_post_comment_status', 10, 3 );
+
+// Hook for access control in activity state.
+add_filter( 'bp_nouveau_has_activity_state', 'bp_has_activity_state', 10, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -2517,4 +2529,98 @@ function bp_activity_has_comment_access( $can_comment = true ) {
 	}
 
 	return $can_comment;
+}
+
+/**
+ * Enable comment status.
+ * More deatial check this method bp_comments_open()
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param boolean $retval
+ * @param boolean $component
+ * @param int     $post_id
+ *
+ * @return boolean
+ */
+function bp_activity_blog_post_comment_status( $retval, $open, $post_id ) {
+	// Set true when current component is activity.
+	if ( bp_is_activity_component() ) {
+		return $open;
+	}
+
+	return $retval;
+}
+
+/**
+ * Remove the meta button for activity blog post comment form.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param boolean $retval
+ * @param string  $component
+ *
+ * @return boolean
+ */
+function bp_is_active_comment_form_media_button( $retval, $component ) {
+	global $activities_template;
+	
+	if ( empty( $activities_template->activity ) ) {
+		return $retval;
+	}
+
+	// Remove the media meta button.
+	if ( 'media' == $component && 'blogs' == $activities_template->activity->component ) {
+		return false;
+	}
+
+	return $retval;
+}
+
+/**
+ * Set attribute in activity comment form submit button.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param array  $attributes
+ * @param string $name
+ *
+ * @return array
+ */
+function bp_set_form_field_attributes( $attributes, $name ) {
+	global $activities_template;
+	
+	if ( empty( $activities_template->activity ) ) {
+		return $attributes;
+	}
+
+	// Set comment component attribute in form submit button.
+	$attributes['data-comment_component'] = $activities_template->activity->component;
+
+	return $attributes;
+}
+
+/**
+ * Access control for showing activity state.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param boolean $status
+ * @param int     $activity_id
+ *
+ * @return boolean
+ */
+function bp_has_activity_state( $status, $activity_id ) {
+	global $activities_template;
+	
+	if ( empty( $activities_template->activity ) ) {
+		return $status;
+	}
+
+	// Remove the access when activity component is blogs.
+	if ( 'blogs' == $activities_template->activity->component ) {
+		return false;
+	}
+
+	return $status;
 }
