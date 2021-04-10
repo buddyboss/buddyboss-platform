@@ -180,18 +180,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter for single topic.
 			add_filter( 'bbp_is_single_topic', array( $this, 'set_single_topic' ) );
-
-			// Filter for set attribute in activity post comment button.
-			add_filter( 'bp_get_form_field_attributes', array( $this, 'set_form_field_attributes' ), 10, 2 );
-
-			// Filter comment form meta button.
-			add_filter( 'bp_is_active', array( $this, 'is_active' ), 10, 2 );
-
-			// Filter for enable comment status.
-			add_filter( 'bp_force_comment_status', array( $this, 'comment_status' ), 10, 3 );
-
-			// Hook for access control in activity state.
-			add_filter( 'bp_nouveau_has_activity_state', array( $this, 'has_activity_state' ), 10, 2 );
 		}
 
 		/**
@@ -223,100 +211,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
 				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 			}
-		}
-
-		/**
-		 * Enable comment status.
-		 * More deatial check this method bp_comments_open()
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param boolean $retval
-		 * @param boolean $component
-		 * @param int     $post_id
-		 *
-		 * @return boolean
-		 */
-		public function comment_status( $retval, $open, $post_id ) {
-			// Set true when current component is activity.
-			if ( bp_is_activity_component() ) {
-				return $open;
-			}
-
-			return $retval;
-		}
-
-		/**
-		 * Remove the meta button for activity blog post comment form.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param boolean $retval
-		 * @param string  $component
-		 *
-		 * @return boolean
-		 */
-		public function is_active( $retval, $component ) {
-			global $activities_template;
-			
-			if ( empty( $activities_template->activity ) ) {
-				return $retval;
-			}
-
-			// Remove the media meta button.
-			if ( 'media' == $component && 'blogs' == $activities_template->activity->component ) {
-				return false;
-			}
-
-			return $retval;
-		}
-
-		/**
-		 * Set attribute in activity comment form submit button.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param array  $attributes
-		 * @param string $name
-		 *
-		 * @return array
-		 */
-		public function set_form_field_attributes( $attributes, $name ) {
-			global $activities_template;
-			
-			if ( empty( $activities_template->activity ) ) {
-				return $attributes;
-			}
-
-			// Set comment component attribute in form submit button.
-			$attributes['data-comment_component'] = $activities_template->activity->component;
-
-			return $attributes;
-		}
-
-		/**
-		 * Access control for showing activity state.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param boolean $status
-		 * @param int     $activity_id
-		 *
-		 * @return boolean
-		 */
-		public function has_activity_state( $status, $activity_id ) {
-			global $activities_template;
-			
-			if ( empty( $activities_template->activity ) ) {
-				return $status;
-			}
-
-			// Remove the access when activity component is blogs.
-			if ( 'blogs' == $activities_template->activity->component ) {
-				return false;
-			}
-
-			return $status;
 		}
 
 		/**
