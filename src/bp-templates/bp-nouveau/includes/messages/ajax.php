@@ -1750,7 +1750,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$thread = new stdClass();
 
-	$recipients = (array) $thread_template->thread->recipients;
+	$recipients      = (array) $thread_template->thread->recipients;
+	//message_imp
+	$recipents_count = bp_get_thread_recipients_count();
 	// Strip the sender from the recipient list, and unset them if they are
 	// not alone. If they are alone, let them talk to themselves.
 	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
@@ -2020,7 +2022,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		);
 		foreach ( $thread_template->thread->recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
-				$thread->thread['recipients'][ $count ] = array(
+				$thread->thread['recipients']['members'][ $count ] = array(
 					'avatar'     => esc_url(
 						bp_core_fetch_avatar(
 							array(
@@ -2041,14 +2043,18 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				);
 
 				if ( bp_is_active( 'moderation' ) ) {
-					$thread->thread['recipients'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-					$thread->thread['recipients'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					$thread->thread['recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 				}
 
 				$count ++;
 			}
 		}
 	}
+	$thread->thread['recipients']['count']         = $recipents_count;
+	$thread->thread['recipients']['current_count'] = count( $thread->thread['recipients']['members'] );
+	$thread->thread['recipients']['per_page']      = bp_messages_recepients_per_page();
+	$thread->thread['recipients']['total_pages']   = ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() );
 
 	$thread->messages = array();
 	$i                = 0;

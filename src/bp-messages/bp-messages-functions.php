@@ -1147,3 +1147,15 @@ function bb_messages_is_group_thread( $thread_id ) {
 
 	return $is_group_message_thread;
 }
+
+/**
+ * Recepients per page list.
+ *
+ * @return int $per_page
+ * @since BuddyBoss upcomming
+ *
+ */
+function bp_messages_recepients_per_page() {
+	$per_page = 5;
+	return (int) $per_page;
+}
