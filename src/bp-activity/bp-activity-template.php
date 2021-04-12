@@ -1910,7 +1910,7 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 	$default = array( 
 		'order'        => 'ASC',
 		'orderby'      => 'comment_date_gmt',
-		'number'       => bp_get_option( 'comments_per_page', 5 ),
+		'number'       => 1 == bp_get_option( 'page_comments', false ) ? bp_get_option( 'comments_per_page', '' ) : '',
 		'status'       => 'approve',
 		'paged'        => 1,
 		'parent'       => 0,
