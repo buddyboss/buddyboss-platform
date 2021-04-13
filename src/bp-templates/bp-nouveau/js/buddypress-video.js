@@ -2541,12 +2541,18 @@ window.bp = window.bp || {};
 							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
 						} );
 
-						video_block_main.on( 'click', function(){
-							if( video_block_main.hasClass( 'vjs-paused' ) ){
-								player[ele_id].play();
-							} else {
-								player[ele_id].pause();
+						video_block_main.on( 'click', function(e) {
+
+							if( $( e.target ).hasClass( 'video-js' ) ) {
+
+								if( video_block_main.hasClass( 'vjs-paused' ) ){
+									player[ele_id].play();
+								} else {
+									player[ele_id].pause();
+								}
+
 							}
+							
 						});
 
 					}
