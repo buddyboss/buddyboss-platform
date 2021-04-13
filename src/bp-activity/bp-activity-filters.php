@@ -161,6 +161,9 @@ add_filter( 'bp_force_comment_status', 'bp_activity_blog_post_comment_status', 1
 // Hook for access control in activity state.
 add_filter( 'bp_nouveau_has_activity_state', 'bp_has_activity_state', 10, 2 );
 
+// Filter for comment meta button
+add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bp_remove_discussion_comment_reply_button', 10, 3 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -2581,4 +2584,33 @@ function bp_has_activity_state( $status, $activity_id ) {
 	}
 
 	return $status;
+}
+
+/**
+ * Access control for showing activity state.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param array $buttons             The list of buttons.
+ * @param int   $activity_comment_id The current activity comment ID.
+ * @param int   $activity_id         The current activity ID.
+ *
+ * @return boolean
+ */
+function bp_remove_discussion_comment_reply_button( $buttons, $activity_comment_id, $activity_id ) {
+	// Get the current action name
+	$action_name = bp_get_activity_action_name();
+
+	// Setup the array of possibly disabled actions
+	$disabled_actions = array(
+		'bbp_topic_create',
+		'bbp_reply_create',
+	);
+
+	// Comment is disabled for discussion and reply discussion.
+	if ( !empty( $buttons['activity_comment_reply'] ) && in_array( $action_name, $disabled_actions ) ) {
+		unset( $buttons['activity_comment_reply'] );
+	}
+
+	return $buttons;
 }
