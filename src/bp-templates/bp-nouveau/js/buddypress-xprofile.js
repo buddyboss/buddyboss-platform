@@ -142,20 +142,43 @@ window.bp = window.bp || {};
     if ( repeater_set_count === 1 ) {
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
-    });
+	
+	 // Check last field update or not in DB.
+    if ( window.location.href.indexOf('#bpxpro') > 0 ) {
+        document.addEventListener('DOMContentLoaded', function () {
+            $.ajax({
+                'url': ajaxurl,
+                'method': 'POST',
+                'data': {
+                    'action': 'bp_xprofile_check_repeater_set',
+                    'field_ids': $('#field_ids').val(),
+                },
+                'success': function (response) {
+                    if ('true' === response) {
+                        if ( $( '#profile-edit-form #btn_add_repeater_set' ).length ) {
+                            $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
+                            $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
+                        }
+                    }
+                }
+            });
+        });
+    } else {
+        if ( $( '#profile-edit-form #btn_add_repeater_set' ).length ) {
+            $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
+            $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
+        }
+    }
 
     // Add repeater set button, on edit profile screens
-    $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
+    $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e) {
         e.preventDefault();
         var $button = $(this);
 
         if ( $button.hasClass( 'disabled' ) ) {
             return;
         }
-
+				
         $button.addClass('disabled');
         $button.attr('disabled', 'disabled');
         $button.css('pointer-events', 'none');
