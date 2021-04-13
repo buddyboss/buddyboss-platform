@@ -19810,6 +19810,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   min-height: 120px;
 }
 
+.bp-video-thumbnail-uploader .modal-mask {
+  z-index: 999991;
+}
+
 @media screen and (max-width: 540px) {
   .bp-video-thumbnail-uploader .modal-container {
     padding: 20px 15px 30px;

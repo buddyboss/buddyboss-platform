@@ -177,6 +177,12 @@ window.bp = window.bp || {};
 								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find('video').attr( 'poster', response.data.thumbnail );
 								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
 							}
+							if( $( '#theatre-video-' + videoId ).length ) {
+								$( '#theatre-video-' + videoId ).attr( 'poster', response.data.thumbnail );
+								$( '#theatre-video-' + videoId ).find('video').attr( 'poster', response.data.thumbnail );
+								$( '#theatre-video-' + videoId ).find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
+								$( '.bb-video-thumb a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).attr( 'src', response.data.thumbnail );
+							}
 							for ( var i = 0; i < self.dropzone_video_thumb.length; i++ ) {
 								self.dropzone_video_thumb[ i ].saved = true;
 							}
@@ -756,11 +762,14 @@ window.bp = window.bp || {};
 			var target            = $( event.currentTarget );
 			var videoAttachmentId = target.attr( 'data-video-attachment-id' );
 			var videoAttachments  = target.attr( 'data-video-attachments' );
+			var parentActivityId  = target.attr( 'data-parent-activity-id' );
 			var videoId           = target.attr( 'data-video-id' );
 			var popupSelector     = '';
 
 			if ( $( event.currentTarget ).closest( '.activity-inner' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '.activity-inner' );
+			} else if ( $( event.currentTarget ).closest( '#bb-media-model-container' ).length > 0 ) {
+				popupSelector = $( 'ul.activity-list li#activity-' + parentActivityId  ).find( '.activity-inner' );
 			} else if ( $( event.currentTarget ).closest( '#video-stream.video' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '#video-stream.video' );
 			} else if ( $( event.currentTarget ).closest( '#media-stream.media' ).length > 0 ) {
@@ -890,14 +899,6 @@ window.bp = window.bp || {};
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload_thumb );
 					}
 				);
-
-				// self.video_thumb_dropzone_obj.on(
-				// 	'processing',
-				// 	function () {
-				// 		$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
-				// 		$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail' ).find( '.bp-video-thumbnail-auto-generated' ).addClass( 'disabled' ).find( 'input[type="radio"]' ).prop( 'checked', false );
-				// 	}
-				// );
 
 				self.video_thumb_dropzone_obj.on(
 					'success',
