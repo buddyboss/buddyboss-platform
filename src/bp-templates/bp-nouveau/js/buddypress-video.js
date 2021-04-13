@@ -2525,7 +2525,7 @@ window.bp = window.bp || {};
 						var fullscreen_btn = $( this ).find('.vjs-icon-square').addClass( 'enlarge_button' );
 						fullscreen_btn.attr( 'data-balloon-pos', 'up' );
 						fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_enlarge_text );
-						cus_button.on( 'click', function() {
+						fullscreen_btn.on( 'click', function() {
 							//Set current time of video and id
 							if( player[ele_id].currentTime() > 0 ) {
 								bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
