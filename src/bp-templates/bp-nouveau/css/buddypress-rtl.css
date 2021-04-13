@@ -19000,6 +19000,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   line-height: 1.3;
   box-shadow: none;
   text-shadow: none;
+  font-family: inherit;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar button > .vjs-icon-placeholder:before,
