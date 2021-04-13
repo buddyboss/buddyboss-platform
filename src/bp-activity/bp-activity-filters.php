@@ -147,7 +147,7 @@ add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_act
 add_action( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_blog_post_comment_buttons', 10 ,2 );
 
 // Obey BuddyBoss commenting rules
-//add_filter( 'bp_activity_can_comment', 'bp_activity_has_comment_access' );
+add_filter( 'bp_activity_can_comment', 'bp_activity_has_comment_access' );
 
 // Filter for set attribute in activity post comment button.
 add_filter( 'bp_get_form_field_attributes', 'bp_set_form_field_attributes', 10, 2 );
@@ -2468,50 +2468,9 @@ function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
  * @return boolean
  */
 function bp_activity_has_comment_access( $can_comment = true ) {
-	global $activities_template;
-
 	// Already forced off, so comply
 	if ( false === $can_comment ) {
 		return $can_comment;
-	}
-
-	$bb            = buddypress();
-	$activity_type = bp_get_activity_type();
-	
-	// Get current activity post type.
-	if ( ! empty( $bb->activity->track[ $activity_type ] ) ) {
-		$track_activity = $bb->activity->track[ $activity_type ];
-		$post_type      = $track_activity->post_type;
-	}
-
-	// Custom post type comment status.
-	if ( bp_disable_blogforum_comments() ) {
-		$can_comment = false;
-	} else {
-		/**
-		 * Checking individual post comment status.
-		 **/
-		$post = get_post( $activities_template->activity->secondary_item_id );
-
-		// Has post.
-		if ( ! empty( $post ) ) {
-			$open = ( 'open' === $post->comment_status );
-		
-			// Disable comment when the comment not open for individual post.
-			if ( ! $open ) {
-				$can_comment = false;
-			}
-
-			// Enable comment when the post comment is not opne but has comment count.
-			if ( $post->comment_count ) {
-				$can_comment = true;
-			}
-		}
-	}
-
-	// Disable comment when the post type is product.
-	if ( ! empty( $post_type ) && 'product' == $post_type ) {
-		$can_comment = false;
 	}
 
 	// Get the current action name
