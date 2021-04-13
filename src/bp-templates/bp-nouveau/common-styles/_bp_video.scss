@@ -1052,6 +1052,10 @@
 
 	}
 
+	.modal-mask {
+		z-index: 999991;
+	}
+
 }
 
 @media screen and (max-width: 540px) {

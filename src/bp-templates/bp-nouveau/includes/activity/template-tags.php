@@ -1376,6 +1376,9 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 
 	$content = get_post_field( 'post_content', $attachment_id );
 
+	$attachment_urls    = bp_video_get_attachments( $attachment_id );
+	$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
+
 	echo '<div class="activity-media-description">' .
 		 '<div class="bp-media-activity-description">' . $content . '</div>'; // phpcs:ignore
 
@@ -1387,6 +1390,16 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
+		<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+			<i class="bb-icon-menu-dots-v"></i>
+		</a>
+		<div class="video-action_list item-action_list">
+			<ul>
+				<li class="edit_thumbnail_video video-action-class">
+					<a href="#" data-action="video" data-parent-activity-id="<?php echo $parent_activity_id; ?>" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php echo $attachment_id; ?>" data-video-id="<?php echo $video_id; ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+				</li>
+			</ul>
+		</div>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
 				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo wp_kses_post( $content ); ?></textarea>
