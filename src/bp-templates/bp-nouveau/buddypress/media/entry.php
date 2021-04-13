@@ -98,6 +98,7 @@ if ( 'video' === $media_template->media->type ) {
 				}
 				?>
 			</div>
+			<p class="bb-video-loader"></p>
 			<?php if ( ! empty( esc_html( $length_formatted['length_formatted'] ) ) ) { ?>
 			<p class="bb-video-duration"><?php echo esc_html( $length_formatted['length_formatted'] ); ?></p>
 			<?php } ?>

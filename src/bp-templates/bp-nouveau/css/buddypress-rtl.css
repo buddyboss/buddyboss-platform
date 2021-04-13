@@ -19213,6 +19213,37 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 3px;
 }
 
+.forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader,
+.bb-activity-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ddd;
+  color: #fff;
+  margin: 0;
+  border-radius: 4px;
+}
+
+.forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader:after,
+.bb-activity-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 35px;
+  animation: spin 2s infinite linear;
+}
+
+.forums-video-wrap .bb-activity-video-elem div.video-js + .bb-video-loader,
+.bb-activity-video-wrap .bb-activity-video-elem div.video-js + .bb-video-loader {
+  display: none;
+}
+
 .forums-video-wrap .bb-activity-video-elem .bb-item-cover-wrap,
 .bb-activity-video-wrap .bb-activity-video-elem .bb-item-cover-wrap {
   padding-top: 38.56%;
