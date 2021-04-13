@@ -951,7 +951,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Set forum id when activity component is not groups.
 			if ( $this->component == $activity->component ) {
-				$forum_id = $activity->secondary_item_id;
+				$topic_id = $activity->item_id;
+				$forum_id = bbp_get_topic_forum_id( $topic_id );
 			}
 
 			// Set forum id when activity component is groups.
@@ -994,7 +995,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		public function reply_activity_action_callback( $action, $activity ) {
 			$user_id  = $activity->user_id;
 			$reply_id = $activity->item_id;
-			$topic_id = $activity->secondary_item_id;
 			$forum_id = bbp_get_reply_forum_id( $reply_id );
 
 			// User
