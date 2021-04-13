@@ -147,7 +147,7 @@ add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_act
 add_action( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_blog_post_comment_buttons', 10 ,2 );
 
 // Obey BuddyBoss commenting rules
-add_filter( 'bp_activity_can_comment', 'bp_activity_has_comment_access' );
+//add_filter( 'bp_activity_can_comment', 'bp_activity_has_comment_access' );
 
 // Filter for set attribute in activity post comment button.
 add_filter( 'bp_get_form_field_attributes', 'bp_set_form_field_attributes', 10, 2 );

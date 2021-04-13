@@ -830,24 +830,24 @@ function bp_enable_private_network( $default = false ) {
 function bp_disable_blogforum_comments( $default = false ) {
 	global $activities_template;
 	
-	$bb = buddypress();
-	
 	// When here is not activity.
 	if ( empty( $activities_template->activity ) ) {
 		return $default;
 	}
-	
-	$activity_type  = bp_get_activity_type();
-	
-	// When here is not post activity.
-	if( empty( $bb->activity->track[ $activity_type ] ) ) {
+
+	if ( 'blogs' != $activities_template->activity->component ) {
 		return $default;
 	}
+	
+	$post = get_post( $activities_template->activity->secondary_item_id );
 
-	$track_activity =  $bb->activity->track[ $activity_type ];
+	// Does not allow comment for WooCommerce prodct.
+	if ( 'product' == $post->post_type ) {
+		return true;
+	}
 	
 	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
-	$disable = (bool) bp_is_post_type_feed_comment_enable( $track_activity->post_type, $default ) ? false : true;
+	$disable = (bool) bp_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
 	/**
 	 * Filters whether or not blog and forum activity feed comments are disabled.
