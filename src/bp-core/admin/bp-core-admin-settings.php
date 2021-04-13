@@ -1391,3 +1391,40 @@ function bp_admin_moderation_report_setting_tutorial() {
 
 	<?php
 }
+
+/**
+ * After update activity setting
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param string $tab_name
+ * @param object $class_obj
+ *
+ * @uses bp_feed_post_types()                    Get all post type name.
+ * @uses bp_post_type_feed_option_name()         Settings option name for post type.
+ * @uses bp_post_type_feed_comment_option_name() Settings option name for post type comment.
+ *
+ * @return void
+ */
+function bp_after_update_activity_settings( $tab_name, $class_obj ) {
+	if ( 'bp-activity' != $tab_name ) {
+		return;
+	}
+	
+	foreach ( bp_feed_post_types() as $key => $post_type ) {
+		// Post type option name.
+		$pt_opt_name = bp_post_type_feed_option_name( $post_type );
+		
+		// Post type comment option name.
+		$ptc_opt_name = bp_post_type_feed_comment_option_name( $post_type );
+
+		// Get the post type activity status
+		$opt_value = bp_get_option( $pt_opt_name, '' );
+
+		// If the post type activity disable then its comment also make disable.
+		if ( empty( $opt_value ) ) {
+			bp_update_option( $ptc_opt_name, 0 );
+		}
+	}
+}
+add_action( 'bp_admin_tab_setting_save', 'bp_after_update_activity_settings', 10, 2 );
