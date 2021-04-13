@@ -93,6 +93,7 @@
 
 		.vjs-error-display.vjs-modal-dialog {
 			background: rgba(0, 0, 0, 0.8);
+			cursor: pointer;
 
 			&:before {
 				color: #fff;
@@ -157,6 +158,8 @@
 		border-radius: 4px;
 		overflow: hidden;
 		max-width: 100%;
+		cursor: pointer;
+
 
 		.vjs-control-bar {
 			bottom: 15px;
@@ -661,6 +664,10 @@
 
 		}
 
+		.vjs-error-display.vjs-modal-dialog {
+			cursor: auto;
+		}
+
 		@media screen and (max-width: 767px) {
 
 			figure {
@@ -772,6 +779,7 @@
 		width: 33.333334%;
 		padding: 0;
 		position: relative;
+		min-height: 120px;
 
 		.bb-action-check-wrap {
 			visibility: visible;

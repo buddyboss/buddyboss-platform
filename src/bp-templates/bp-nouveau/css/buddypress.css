@@ -1117,7 +1117,7 @@ a.layout-grid-view {
   padding: 10px 0;
   background-color: rgba(250, 251, 253, 0.9);
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
-  z-index: 999901;
+  z-index: 9999901;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18865,6 +18865,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog,
 .bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog {
   background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
 }
 
 .bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before,
@@ -18940,6 +18941,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-radius: 4px;
   overflow: hidden;
   max-width: 100%;
+  cursor: pointer;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar,
@@ -19460,6 +19462,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 0;
 }
 
+.bb-media-model-wrapper.video .bb-media-section .vjs-error-display.vjs-modal-dialog {
+  cursor: auto;
+}
+
 @media screen and (max-width: 767px) {
   .bb-media-model-wrapper.video .bb-media-section figure {
     max-height: 50vh;
@@ -19553,6 +19559,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: 33.333334%;
   padding: 0;
   position: relative;
+  min-height: 120px;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap {
