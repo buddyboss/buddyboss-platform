@@ -2458,12 +2458,11 @@ function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 }
 
 /**
- * Maybe disable activity stream comments on select actions
+ * Disable activity stream comments for discussion and reply.
  *
- * @since bbPress (r3399)
+ * @since BuddyBoss 1.5.9
  *
  * @param boolean $can_comment
- * @uses  bp_disable_blogforum_comments() check post type activity status.
  *
  * @return boolean
  */
