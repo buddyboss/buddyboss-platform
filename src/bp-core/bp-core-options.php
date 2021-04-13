@@ -841,7 +841,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 	
 	$post = get_post( $activities_template->activity->secondary_item_id );
 
-	// Does not allow comment for WooCommerce prodct.
+	// Does not allow comment for WooCommerce product.
 	if ( 'product' == $post->post_type ) {
 		return true;
 	}
