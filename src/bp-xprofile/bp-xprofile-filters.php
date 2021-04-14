@@ -111,10 +111,10 @@ add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
 
-
-
 //Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
+// Repair repeater field repeated in admin side.
+add_filter( 'bp_repair_list', 'bp_xprofile_repeater_field_repair' );
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1060,4 +1060,67 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 	}
 
 	return $args;
+}
+
+/**
+ * Add xprofile notification repair list item.
+ *
+ * @param $repair_list
+ *
+ * @since BuddyBoss 1.5.0
+ * @return array Repair list items.
+ */
+function bp_xprofile_repeater_field_repair( $repair_list ) {
+	$repair_list[] = array(
+		'bp-xprofile-repeater-field-repair',
+		__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
+		'bp_xprofile_repeater_field_repair_callback',
+	);
+	return $repair_list;
+}
+
+/**
+ * Repair xprofile repeater field.
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_xprofile_repeater_field_repair_callback() {
+	global $wpdb;
+	
+	$offset           = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp               = buddypress();
+	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} LIMIT 50 OFFSET $offset ";
+	$recipients       = $wpdb->get_results( $recipients_query );
+	
+	if ( ! empty( $recipients ) ) {
+		foreach ( $recipients as $recipient ) {
+			test_migration_write_log1( $recipient );
+			$group_id = $recipient->id;
+			$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$group_id} AND parent_id = 0" );
+			if ( ! empty( $group_field_ids ) ) {
+				foreach ( $group_field_ids as $group_field_id ) {
+					$checked_cloned_from = bp_xprofile_get_meta( $group_field_id, 'field', '_cloned_from', true );
+					test_migration_write_log1( ' $checked_cloned_from == '. $checked_cloned_from );
+					if ( empty( $checked_cloned_from ) ) {
+						bp_xprofile_update_meta( $group_field_id, 'field', 'parent_field', 'true' );
+					} else {
+						bp_xprofile_update_meta( $group_field_id, 'field', 'parent_field', 'false' );
+					}
+				}
+				$offset ++;
+			}
+		}
+		$records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'repeater field update complete!', 'buddyboss' ),
+		);
+	}
 }
