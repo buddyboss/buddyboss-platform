@@ -418,8 +418,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			bp_nouveau()->activity->entry_buttons = new BP_Buttons_Group( $buttons );
 			$buttons                              = bp_nouveau()->activity->entry_buttons->get( false );
 
-			// Print discussion title.
-			echo empty( $buttons['activity_topic_title'] ) ? '' : '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">' . $buttons['activity_topic_title'] . '</div>';
+			if ( is_user_logged_in() ) {
+				// Print discussion title.
+				echo empty( $buttons['activity_topic_title'] ) ? '' : '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">' . $buttons['activity_topic_title'] . '</div>';
+			} else {
+				echo '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="' . $topic_permalink . '">' . $topic_title . '</a></p>';
+			}
+			
 		}
 
 		/**
