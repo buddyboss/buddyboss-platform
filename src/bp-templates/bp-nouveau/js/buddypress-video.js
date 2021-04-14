@@ -113,7 +113,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 			$( document ).on( 'click', '.bp-video-uploader .modal-container .bb-field-uploader-actions', this.uploadVideoNavigate.bind( this ) );
-			$( document ).on( 'click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, #media-stream.media .bb-video-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
+			$( document ).on( 'click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, #media-stream.media .bb-video-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a, .bb-media-model-container .activity-list .video-action-wrap.item-action-wrap > a, .bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
 			$( document ).on( 'click', '.activity .bp-video-move-activity, #media-stream .bp-video-move-activity, #video-stream .bp-video-move-activity', this.moveVideoIntoAlbum.bind( this ) );
 			$( document ).on( 'click', '.bp-video-open-create-popup-album', this.createAlbumInPopup.bind( this ) );
 			$( document ).on( 'click', '.ac-video-close-button', this.closeVideoMove.bind( this ) );
@@ -243,6 +243,10 @@ window.bp = window.bp || {};
 
 			if ( $( event.currentTarget ).closest( '.bb-activity-video-elem' ).length < 1 ) {
 				$( event.currentTarget ).closest( '.bb-video-thumb' ).toggleClass( 'is-visible' ).parent().siblings().find( '.bb-video-thumb' ).removeClass( 'is-visible' );
+			}
+
+			if ( $( event.currentTarget ).closest( '.bb-media-model-container' ).length ) {
+				$( event.currentTarget ).closest( '.video-action-wrap' ).toggleClass( 'is-visible' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( ! $( event.currentTarget ).hasClass( 'video-action_more' ) ) ) {
