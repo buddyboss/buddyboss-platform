@@ -158,6 +158,7 @@ window.bp = window.bp || {};
                         if ( $( '#profile-edit-form #btn_add_repeater_set' ).length ) {
                             $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
                             $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
+	                          $( '.repeater_sets_sortable' ).sortable();
                         }
                     }
                 }
