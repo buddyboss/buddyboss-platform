@@ -968,7 +968,7 @@ function bp_delete_duplicate_field_order( $field_group_id, $clone_field_order, $
 			}
 		}
 		$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
-		if ( 1 === $delete_field_id ) {
+		if ( $delete_field_id ) {
 			$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
 			$update_count = (int) $count - (int) count( $field_id_arr );
 			bp_set_profile_field_set_count( $field_group_id, $user_id, $update_count );

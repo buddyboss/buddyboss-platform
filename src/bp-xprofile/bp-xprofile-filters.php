@@ -1087,20 +1087,23 @@ function bp_xprofile_repeater_field_repair( $repair_list ) {
 function bp_xprofile_repeater_field_repair_callback() {
 	global $wpdb;
 	
-	$offset           = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset              = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
+	if ( 1 === $offset ) {
+		$offset = 0;
+	} else {
+		$offset = $offset;
+	}
 	$bp               = buddypress();
-	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} LIMIT 50 OFFSET $offset ";
+	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 50 OFFSET $offset ";
 	$recipients       = $wpdb->get_results( $recipients_query );
 	
 	if ( ! empty( $recipients ) ) {
 		foreach ( $recipients as $recipient ) {
-			test_migration_write_log1( $recipient );
 			$group_id = $recipient->id;
 			$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$group_id} AND parent_id = 0" );
 			if ( ! empty( $group_field_ids ) ) {
 				foreach ( $group_field_ids as $group_field_id ) {
 					$checked_cloned_from = bp_xprofile_get_meta( $group_field_id, 'field', '_cloned_from', true );
-					test_migration_write_log1( ' $checked_cloned_from == '. $checked_cloned_from );
 					if ( empty( $checked_cloned_from ) ) {
 						bp_xprofile_update_meta( $group_field_id, 'field', 'parent_field', 'true' );
 					} else {
