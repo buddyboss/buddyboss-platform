@@ -1496,3 +1496,42 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 
 	return $link;
 }
+
+/**
+ * Function will remove default wordpress and woocommerce api endpoint.
+ * Also, remove feeds url.
+ */
+add_action('init', 'bb_removes_api_endpoints_for_not_logged_in_user');
+function bb_removes_api_endpoints_for_not_logged_in_user() {
+	if ( ! is_user_logged_in() ) {
+		// This will disable wordpress endpoints.
+		remove_action( 'rest_api_init', 'create_initial_rest_routes', 99 );
+		// This will disable default feeds.
+		remove_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
+		remove_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
+		remove_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
+		remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
+		remove_action( 'wp_head', 'feed_links', 2 );
+		// This will disable sitewide feeds.
+		remove_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
+		// This will disable users perosnal activity feeds.
+		remove_action( 'bp_actions', 'bp_activity_action_personal_feed' );
+		// This will disable users friends activity feeds.
+		remove_action( 'bp_actions', 'bp_activity_action_friends_feed' );
+		// This will disable users group activity feeds.
+		remove_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
+		// This will disable users mentions activity feeds.
+		remove_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
+		// This will disable users favorites activity feeds.
+		remove_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
+		// This will disable groups feeds.
+		remove_action( 'bp_actions', 'groups_action_group_feed' );
+		// This will disable forums feed.
+		remove_filter( 'bbp_request', 'bbp_request_feed_trap' );
+		// This will disable woocommerce endpoints.
+		if ( class_exists( 'woocommerce' ) ) {
+			remove_action( 'rest_api_init', array( WC()->api, 'register_rest_routes' ), 10 );
+		}
+	}
+}
