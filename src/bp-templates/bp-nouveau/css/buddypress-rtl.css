@@ -20098,6 +20098,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   line-height: 1;
   height: auto;
   width: auto;
+  box-shadow: none;
 }
 
 #activity-post-video-uploader div.dz-preview.dz-file-preview .dz-remove:after,
