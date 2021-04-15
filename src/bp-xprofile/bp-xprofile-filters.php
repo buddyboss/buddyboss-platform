@@ -1108,6 +1108,7 @@ function bp_xprofile_repeater_field_repair_callback() {
 						bp_xprofile_update_meta( $group_field_id, 'field', 'parent_field', 'true' );
 					} else {
 						bp_xprofile_update_meta( $group_field_id, 'field', 'parent_field', 'false' );
+						bp_xprofile_update_meta( $group_field_id, 'field', 'field_status', 'update' );
 					}
 				}
 				$offset ++;

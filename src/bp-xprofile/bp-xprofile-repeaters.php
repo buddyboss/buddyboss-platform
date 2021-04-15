@@ -364,58 +364,52 @@ function bp_clone_field_for_repeater_sets( $field_id ) {
 			'can_delete'        => $db_row['can_delete'],
 		);
 		
-		$check_field_order_exists = $wpdb->get_results( "SELECT field_order FROM {$bp->profile->table_name_meta} WHERE field_order = {$db_row['field_order']} AND group_id = {$db_row['group_id']}", ARRAY_A );
-		
-		if ( empty( $check_field_order_exists ) ) {
-			$inserted = $wpdb->insert(
-				$bp->profile->table_name_fields,
-				$new_field_column_data,
-				$new_field_column_data_types
-			);
-			
-			if ( $inserted ) {
-				$new_field_id = $wpdb->insert_id;
-				$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
-				if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
-					foreach ( $metas as $meta ) {
-						if ( 'parent_field' !== $meta['meta_key'] ) {
-							bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
-						}
+		$inserted = $wpdb->insert(
+			$bp->profile->table_name_fields,
+			$new_field_column_data,
+			$new_field_column_data_types
+		);
+		if ( $inserted ) {
+			$new_field_id = $wpdb->insert_id;
+			$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
+				foreach ( $metas as $meta ) {
+					if ( 'parent_field' !== $meta['meta_key'] ) {
+						bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					}
 				}
-				$current_clone_number = 1;
-				// get all clones of the template field
-				$all_clones = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = {$template_field_id}" );
-				if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
-					/**
-					 * MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
-					 * It will issuing in query.
-					 */
-					$last_max_clone_number = $wpdb->get_var(
-						"SELECT MAX( CAST(meta_value AS DECIMAL) ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
-					); // Changed MAX(met_value) to MAX(CAST(meta_value AS DECIMAL)) - Max(meta_value) return only max 9 value.
-					$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
-					$current_clone_number  = $last_max_clone_number + 1;
-				}
-				bp_xprofile_update_meta( $new_field_id, 'field', '_is_repeater_clone', true );
-				bp_xprofile_update_meta( $new_field_id, 'field', '_cloned_from', $template_field_id );
-				bp_xprofile_update_meta( $new_field_id, 'field', '_clone_number', $current_clone_number );
-				bp_xprofile_update_meta( $new_field_id, 'field', 'parent_field', 'false' );
-				// fix field order
-				$field_order = ( $current_clone_number * bp_profile_field_set_max_cap() ) + $db_row['field_order'];
-				if ( $wpdb->update(
-					$bp->profile->table_name_fields,
-					array( 'field_order' => $field_order ),
-					array( 'id' => $new_field_id ),
-					array( '%d' ),
-					array( '%d' )
-				) ) {
-					bp_xprofile_update_meta( $new_field_id, 'field', 'field_status', 'update' );
-				}
-				return array( 'field_id' => $new_field_id, 'field_order' => $field_order );
 			}
+			$current_clone_number = 1;
+			// get all clones of the template field
+			$all_clones = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = {$template_field_id}" );
+			if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
+				/**
+				 * MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
+				 * It will issuing in query.
+				 */
+				$last_max_clone_number = $wpdb->get_var(
+					"SELECT MAX( CAST(meta_value AS DECIMAL) ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
+				); // Changed MAX(met_value) to MAX(CAST(meta_value AS DECIMAL)) - Max(meta_value) return only max 9 value.
+				$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
+				$current_clone_number  = $last_max_clone_number + 1;
+			}
+			bp_xprofile_update_meta( $new_field_id, 'field', '_is_repeater_clone', true );
+			bp_xprofile_update_meta( $new_field_id, 'field', '_cloned_from', $template_field_id );
+			bp_xprofile_update_meta( $new_field_id, 'field', '_clone_number', $current_clone_number );
+			bp_xprofile_update_meta( $new_field_id, 'field', 'parent_field', 'false' );
+			// fix field order
+			$field_order = ( $current_clone_number * bp_profile_field_set_max_cap() ) + $db_row['field_order'];
+			if ( $wpdb->update(
+				$bp->profile->table_name_fields,
+				array( 'field_order' => $field_order ),
+				array( 'id' => $new_field_id ),
+				array( '%d' ),
+				array( '%d' )
+			) ) {
+				bp_xprofile_update_meta( $new_field_id, 'field', 'field_status', 'update' );
+			}
+			return array( 'field_id' => $new_field_id, 'field_order' => $field_order );
 		}
-		
 	}
 
 	return false;
@@ -988,6 +982,8 @@ function bp_xprofile_check_repeater_set_callback() {
 	$get_last_field_status = bp_xprofile_get_meta( $last_field_id, 'field', 'field_status', true );
 	if ( 'update' === $get_last_field_status ) {
 		echo 'true';
-		wp_die();
+	} else {
+		echo 'false';
 	}
+	wp_die();
 }
