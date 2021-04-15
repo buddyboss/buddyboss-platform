@@ -945,27 +945,27 @@ function bp_delete_duplicate_field_order( $field_group_id, $clone_field_order, $
 	if ( ! $user_id ) {
 		die();
 	}
-	
-	$check_field_order = $wpdb->get_var(
-		"SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . ""
-	);
-	if ( $check_field_order > 1 ) {
-		$limit           = $check_field_order - 1;
-		$field_id_result = $wpdb->get_results(
-			"SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " ORDER BY id DESC LIMIT $limit "
+	if ( ! empty( $clone_field_order ) ) {
+		$check_field_order = $wpdb->get_var(
+			"SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . ""
 		);
-		
-		$field_id_arr    = array();
-		if ( ! empty( $field_id_result ) ) {
-			foreach ( $field_id_result as $field_id_obj ) {
-				$field_id_arr[] = $field_id_obj->id;
+		if ( $check_field_order > 1 ) {
+			$limit           = $check_field_order - 1;
+			$field_id_result = $wpdb->get_results(
+				"SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " ORDER BY id DESC LIMIT $limit "
+			);
+			$field_id_arr = array();
+			if ( ! empty( $field_id_result ) ) {
+				foreach ( $field_id_result as $field_id_obj ) {
+					$field_id_arr[] = $field_id_obj->id;
+				}
 			}
-		}
-		$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
-		if ( $delete_field_id ) {
-			$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
-			$update_count = (int) $count - (int) count( $field_id_arr );
-			bp_set_profile_field_set_count( $field_group_id, $user_id, $update_count );
+			$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
+			if ( $delete_field_id ) {
+				$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
+				$update_count = (int) $count - (int) count( $field_id_arr );
+				bp_set_profile_field_set_count( $field_group_id, $user_id, $update_count );
+			}
 		}
 	}
 }
