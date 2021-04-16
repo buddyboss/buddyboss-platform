@@ -1135,6 +1135,7 @@ function bp_xprofile_repeater_field_repair_callback() {
 			'records' => $records_updated,
 		);
 	} else {
+		bp_update_option( 'bb_migrate_xprofile_field_repeater_field', 'true' );
 		return array(
 			'status'  => 1,
 			'message' => __( 'repeater field update complete!', 'buddyboss' ),
