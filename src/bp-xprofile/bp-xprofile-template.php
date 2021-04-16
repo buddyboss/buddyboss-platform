@@ -457,6 +457,9 @@ function bp_get_the_profile_field_ids() {
 		if ( ! empty( $group->fields ) ) {
 			$bb_check_rnrf_status = bp_get_option( 'bb_remove_unnecessary_repeater_field_' . $group->id );
 			$field_ids            = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
+			
+			// Get existing count from  the user meta and Also check count fields from fields table.
+			// Based on that remove unnecessary data that may have remained after the migration process.
 			$user_field_set_count = bp_get_profile_field_set_count( $group->id, $user_id );
 			$fields_count         = count( $field_ids );
 			if ( (int) $fields_count !== (int) $user_field_set_count && 'true' !== $bb_check_rnrf_status ) {
