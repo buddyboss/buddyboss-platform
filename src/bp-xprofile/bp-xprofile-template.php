@@ -455,11 +455,11 @@ function bp_get_the_profile_field_ids() {
 	$field_ids = array();
 	foreach ( $profile_template->groups as $group ) {
 		if ( ! empty( $group->fields ) ) {
-			$check_migration_xprofile_repeater = bp_get_option( 'migrate_xprofile_repeater_field_' . $group->id );
-			$field_ids = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
+			$bb_check_rnrf_status = bp_get_option( 'bb_remove_unnecessary_repeater_field_' . $group->id );
+			$field_ids            = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
 			$user_field_set_count = bp_get_profile_field_set_count( $group->id, $user_id );
-			$fields_count = count( $field_ids );
-			if ( (int) $fields_count !== (int) $user_field_set_count && 'true' !== $check_migration_xprofile_repeater ) {
+			$fields_count         = count( $field_ids );
+			if ( (int) $fields_count !== (int) $user_field_set_count && 'true' !== $bb_check_rnrf_status ) {
 				bb_delete_unnecessory_groups_field( $group->id, $field_ids, $user_id, $user_field_set_count, $fields_count );
 			}
 		}
@@ -1698,7 +1698,7 @@ function bb_delete_unnecessory_groups_field( $group_id, $field_ids, $user_id, $u
 			$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $delete_fields_arr ) . " )" );
 			$update_count = (int) $fields_count - (int) count( $delete_fields_arr );
 			bp_set_profile_field_set_count( $group_id, $user_id, $update_count );
-			bp_update_option( 'migrate_xprofile_repeater_field_' . $group_id, 'true' );
+			bp_update_option( 'bb_remove_unnecessary_repeater_field_' . $group_id, 'true' );
 		}
 	}
 }
