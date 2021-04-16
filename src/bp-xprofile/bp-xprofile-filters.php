@@ -1095,20 +1095,54 @@ function bp_xprofile_repeater_field_repair_callback() {
 	}
 	$bp               = buddypress();
 	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 50 OFFSET $offset ";
+	test_migration_write_log1( $recipients_query );
 	$recipients       = $wpdb->get_results( $recipients_query );
+	
+	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+	if ( ! $user_id ) {
+		die();
+	}
 	
 	if ( ! empty( $recipients ) ) {
 		foreach ( $recipients as $recipient ) {
 			$group_id = $recipient->id;
-			$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$group_id} AND parent_id = 0" );
+			test_migration_write_log1( 'group_id == ' . $group_id );
+			$group_field_ids = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_fields} WHERE group_id = {$group_id} AND parent_id = 0" );
 			if ( ! empty( $group_field_ids ) ) {
 				foreach ( $group_field_ids as $group_field_id ) {
-					$checked_cloned_from = bp_xprofile_get_meta( $group_field_id, 'field', '_cloned_from', true );
-					if ( empty( $checked_cloned_from ) ) {
-						bp_xprofile_update_meta( $group_field_id, 'field', 'parent_field', 'true' );
-					} else {
-						bp_xprofile_update_meta( $group_field_id, 'field', 'parent_field', 'false' );
-						bp_xprofile_update_meta( $group_field_id, 'field', 'field_status', 'update' );
+					test_migration_write_log1( '$group_field_id->field_order == ' . $group_field_id->field_order );
+					$get_field_order = $wpdb->get_var( "SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order = {$group_field_id->field_order} AND group_id = {$group_id}" );
+					test_migration_write_log1( "SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order = {$group_field_id->field_order} AND group_id = {$group_id}" );
+					if ( $get_field_order > 1 ) {
+						test_migration_write_log1( 'if ' );
+						$limit           = $get_field_order - 1;
+						test_migration_write_log1( '$limit ' . $limit );
+						$field_id_result = $wpdb->get_results(
+							"SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order = " . $group_field_id->field_order . " AND group_id = " . $group_id . " ORDER BY id DESC LIMIT $limit "
+						);
+						
+						$field_id_arr    = array();
+						if ( ! empty( $field_id_result ) ) {
+							foreach ( $field_id_result as $field_id_obj ) {
+								$field_id_arr[] = $field_id_obj->id;
+							}
+						}
+						
+						test_migration_write_log1( '$field_id_arr' );
+						test_migration_write_log1( $field_id_arr );
+						
+						$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $group_field_id->field_order . " AND group_id = " . $group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
+						test_migration_write_log1( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $group_field_id->field_order . " AND group_id = " . $group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
+						test_migration_write_log1( ' delete_field_id ' . $delete_field_id );
+						if ( $delete_field_id ) {
+							$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
+							test_migration_write_log1( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
+							$check_field_ids = $wpdb->get_var( "SELECT count(id) FROM {$bp->profile->table_name_fields} WHERE group_id = {$group_id} AND parent_id = 0" );
+							test_migration_write_log1( '$check_field_ids' );
+							test_migration_write_log1( $check_field_ids );
+							
+							bp_set_profile_field_set_count( $group_id, $user_id, $check_field_ids );
+						}
 					}
 				}
 				$offset ++;

@@ -593,9 +593,6 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				}
 				$type = 'error';
 			} else {
-				// Update meta for the main parent id.
-				bp_xprofile_update_meta( $field_id, 'field', 'parent_field', 'true' );
-				
 				$message = __( 'The field was saved successfully.', 'buddyboss' );
 				$type    = 'updated';
 
