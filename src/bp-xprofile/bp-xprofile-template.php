@@ -446,11 +446,22 @@ function bp_the_profile_field_ids() {
 	 */
 function bp_get_the_profile_field_ids() {
 	global $profile_template;
-
+	
+	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+	if ( ! $user_id ) {
+		die();
+	}
+	
 	$field_ids = array();
 	foreach ( $profile_template->groups as $group ) {
 		if ( ! empty( $group->fields ) ) {
+			$check_migration_xprofile_repeater = bp_get_option( 'migrate_xprofile_repeater_field_' . $group->id );
 			$field_ids = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
+			$user_field_set_count = bp_get_profile_field_set_count( $group->id, $user_id );
+			$fields_count = count( $field_ids );
+			if ( (int) $fields_count !== (int) $user_field_set_count && 'true' !== $check_migration_xprofile_repeater ) {
+				bb_delete_unnecessory_groups_field( $group->id, $field_ids, $user_id, $user_field_set_count, $fields_count );
+			}
 		}
 	}
 
@@ -465,9 +476,8 @@ function bp_get_the_profile_field_ids() {
 	if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
 		$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
 	}
-
+	
 	$field_ids = implode( ',', wp_parse_id_list( $field_ids ) );
-
 	/**
 	 * Filters the comma-separated list of field IDs.
 	 *
@@ -1661,4 +1671,34 @@ function bp_get_field_data_attribute( $attribute = false ) {
 	 * @param string $value data HTML attribute with imploded data attributes.
 	 */
 	return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
+}
+
+/**
+ * This function will remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ *
+ * @param int   $group_id             This will pass group id for the profile field.
+ * @param array $field_ids            This will pass fields id based on group.
+ * @param int   $user_id              Current user id
+ * @param int   $user_field_set_count Get total fields count based on user.
+ * @param int   $fields_count         Get total fields count based on group
+ */
+function bb_delete_unnecessory_groups_field( $group_id, $field_ids, $user_id, $user_field_set_count, $fields_count ) {
+	global $wpdb;
+	$bp = buddypress();
+	
+	$delete_fields_arr = array();
+	foreach ( $field_ids as $key => $field_id ) {
+		if ( $key < $user_field_set_count ) continue;
+		$delete_fields_arr[] = $field_id;
+	}
+	if ( ! empty( $delete_fields_arr ) ) {
+		$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = " . $group_id . " AND id IN ( " . implode( ',', $delete_fields_arr ) . " )" );
+		if ( $delete_field_id ) {
+			$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $delete_fields_arr ) . " )" );
+			$update_count = (int) $fields_count - (int) count( $delete_fields_arr );
+			bp_set_profile_field_set_count( $group_id, $user_id, $update_count );
+			bp_update_option( 'migrate_xprofile_repeater_field_' . $group_id, 'true' );
+		}
+	}
 }

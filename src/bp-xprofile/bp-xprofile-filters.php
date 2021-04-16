@@ -1097,11 +1097,6 @@ function bp_xprofile_repeater_field_repair_callback() {
 	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 50 OFFSET $offset ";
 	$recipients       = $wpdb->get_results( $recipients_query );
 	
-	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
-	if ( ! $user_id ) {
-		die();
-	}
-	
 	if ( ! empty( $recipients ) ) {
 		foreach ( $recipients as $recipient ) {
 			$group_id = $recipient->id;
@@ -1127,6 +1122,7 @@ function bp_xprofile_repeater_field_repair_callback() {
 							$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
 						}
 					}
+					bp_xprofile_update_meta( $group_field_id->id, 'field', 'field_status', 'update' );
 				}
 				$offset ++;
 			}
