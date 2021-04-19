@@ -1118,7 +1118,7 @@ function bp_xprofile_repeater_field_repair_callback() {
 						}
 						
 						$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $group_field_id->field_order . " AND group_id = " . $group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
-						if ( $delete_field_id ) {
+						if ( false !== $delete_field_id ) {
 							$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " ) AND object_type='field'" );
 						}
 					}
