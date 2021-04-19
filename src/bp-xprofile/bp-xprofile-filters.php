@@ -1178,17 +1178,15 @@ function bb_delete_unnecessory_groups_field( $group_id, $user_field_set_count ) 
 	
 	// This will Find those fields id which is cloned from main field id.
 	$group_field_ids   = $wpdb->get_results(
-		$wpdb->prepare( 'SELECT gfi.id FROM ' . $bp->profile->table_name_fields . ' as gfi
+		$wpdb->prepare( 'SELECT gfi.id, gfi.field_order FROM ' . $bp->profile->table_name_fields . ' as gfi
 		LEFT JOIN ' . $bp->profile->table_name_meta . ' as gfm ON gfm.object_id = gfi.id
-		WHERE gfi.group_id = %d AND gfi.parent_id = 0 AND gfm.meta_key = "_is_repeater_clone" AND gfm.meta_value = 1', $group_id )
+		WHERE gfi.group_id = %d AND gfi.parent_id = 0 AND gfm.meta_key = "_is_repeater_clone" AND gfm.meta_value = 1 ORDER BY gfi.field_order ASC', $group_id )
 	);
-	
+
 	// Calculate the main field ID. The field from which the second field is cloned.
 	$main_fields_count = (int) $count_total_group_field_ids - (int) count( $group_field_ids );
-	
 	// Here we need to modify fields count based on main field id.
-	$new_user_fields_count = $user_field_set_count * $main_fields_count;
-	
+	$new_user_fields_count = 10 * $main_fields_count;
 	if ( ! empty( $group_field_ids ) ) {
 		foreach ( $group_field_ids as $key => $field_id ) {
 			if ( $key < $new_user_fields_count ) {
