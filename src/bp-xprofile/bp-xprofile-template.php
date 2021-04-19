@@ -447,32 +447,10 @@ function bp_the_profile_field_ids() {
 function bp_get_the_profile_field_ids() {
 	global $profile_template;
 	
-	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
-	if ( ! $user_id ) {
-		die();
-	}
-	
 	$field_ids = array();
 	foreach ( $profile_template->groups as $group ) {
 		if ( ! empty( $group->fields ) ) {
 			$field_ids            = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
-			
-			// Migrate repeater fields data when not run option from Repair community section.
-			$bb_check_migrate_status = bp_get_option( 'bb_migrate_xprofile_field_repeater_field');
-			if ( 'true' !== $bb_check_migrate_status ) {
-				bb_migrate_xprofile_repeater_field();
-			}
-			// Get existing count from  the user meta and Also check count fields from fields table.
-			// Based on that remove unnecessary data that may have remained after the migration process.
-			// It will run after migration process complete.
-			if ( 'true' === $bb_check_migrate_status ) {
-				$bb_check_rnrf_status = bp_get_option( 'bb_remove_unnecessary_repeater_field_' . $group->id );
-				$user_field_set_count = bp_get_profile_field_set_count( $group->id, $user_id );
-				$fields_count         = count( $field_ids );
-				if ( (int) $fields_count !== (int) $user_field_set_count && 'true' !== $bb_check_rnrf_status ) {
-					bb_delete_unnecessory_groups_field( $group->id, $field_ids, $user_id, $user_field_set_count, $fields_count );
-				}
-			}
 		}
 	}
 
@@ -1682,76 +1660,4 @@ function bp_get_field_data_attribute( $attribute = false ) {
 	 * @param string $value data HTML attribute with imploded data attributes.
 	 */
 	return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
-}
-
-/**
- * This function will remove unnecessary data that may have remained after the migration process.
- * This function will be called only once.
- *
- * @param int   $group_id             This will pass group id for the profile field.
- * @param array $field_ids            This will pass fields id based on group.
- * @param int   $user_id              Current user id
- * @param int   $user_field_set_count Get total fields count based on user.
- * @param int   $fields_count         Get total fields count based on group
- */
-function bb_delete_unnecessory_groups_field( $group_id, $field_ids, $user_id, $user_field_set_count, $fields_count ) {
-	global $wpdb;
-	$bp = buddypress();
-	
-	$delete_fields_arr = array();
-	foreach ( $field_ids as $key => $field_id ) {
-		if ( $key < $user_field_set_count ) continue;
-		$delete_fields_arr[] = $field_id;
-	}
-	if ( ! empty( $delete_fields_arr ) ) {
-		$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = " . $group_id . " AND id IN ( " . implode( ',', $delete_fields_arr ) . " )" );
-		if ( $delete_field_id ) {
-			$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $delete_fields_arr ) . " ) AND object_type='field'" );
-			$update_count = (int) $fields_count - (int) count( $delete_fields_arr );
-			bp_set_profile_field_set_count( $group_id, $user_id, $update_count );
-			bp_update_option( 'bb_remove_unnecessary_repeater_field_' . $group_id, 'true' );
-		}
-	}
-}
-
-/**
- * This function will work as migration process which will remove duplicate repeater field from database.
- * This function will be called only once.
- */
-function bb_migrate_xprofile_repeater_field() {
-	global $wpdb;
-	$bp = buddypress();
-	
-	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 50";
-	$recipients       = $wpdb->get_results( $recipients_query );
-	
-	if ( ! empty( $recipients ) ) {
-		foreach ( $recipients as $recipient ) {
-			$group_id        = $recipient->id;
-			$group_field_ids = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_fields} WHERE group_id = {$group_id} AND parent_id = 0" );
-			if ( ! empty( $group_field_ids ) ) {
-				foreach ( $group_field_ids as $group_field_id ) {
-					$get_field_order = $wpdb->get_var( "SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order = {$group_field_id->field_order} AND group_id = {$group_id}" );
-					if ( $get_field_order > 1 ) {
-						$limit           = $get_field_order - 1;
-						$field_id_result = $wpdb->get_results(
-							"SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order = " . $group_field_id->field_order . " AND group_id = " . $group_id . " ORDER BY id DESC LIMIT $limit "
-						);
-						$field_id_arr = array();
-						if ( ! empty( $field_id_result ) ) {
-							foreach ( $field_id_result as $field_id_obj ) {
-								$field_id_arr[] = $field_id_obj->id;
-							}
-						}
-						$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $group_field_id->field_order . " AND group_id = " . $group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
-						if ( false !== $delete_field_id ) {
-							$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " ) AND object_type='field'" );
-						}
-					}
-					bp_xprofile_update_meta( $group_field_id->id, 'field', 'field_status', 'update' );
-				}
-			}
-		}
-		bp_update_option( 'bb_migrate_xprofile_field_repeater_field', 'true' );
-	}
 }
