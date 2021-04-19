@@ -97,8 +97,10 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 				if ( ! $checked_cloned_from ) {
 					$clone_id_arr = bp_clone_field_for_repeater_sets( $template_field_id, $field_group_id, $count );
 					// Delete duplicate field order if exists.
-					bp_delete_duplicate_field_order( $field_group_id, $clone_id_arr['field_order'], $count );
-					$clone_id = $clone_id_arr['field_id'];
+					if ( ! empty( $clone_id_arr ) ) {
+						bp_delete_duplicate_field_order( $field_group_id, $clone_id_arr['field_order'], $count );
+						$clone_id = $clone_id_arr['field_id'];
+					}
 				}
 			}
 
