@@ -941,35 +941,41 @@ function bp_profile_repeaters_search_change_filter( $f ) {
  * Function will delete duplicate field order which inserted last from DB.
  *
  * @param int $field_group_id    Current group id.
- * @param int $clone_field_order Field order id
- * @param int $count             Get total count of fields id
+ * @param int $clone_field_order Field order id.
+ * @param int $count             Get total count of fields id.
  */
 function bp_delete_duplicate_field_order( $field_group_id, $clone_field_order, $count ) {
 	global $wpdb;
-	$bp = buddypress();
-	
+	$bp      = buddypress();
 	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
 	if ( ! $user_id ) {
 		die();
 	}
 	if ( ! empty( $clone_field_order ) ) {
 		$check_field_order = $wpdb->get_var(
-			"SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . ""
+			$wpdb->prepare( 'SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order =%d AND group_id =%d', $clone_field_order, $field_group_id )
 		);
 		if ( $check_field_order > 1 ) {
 			$limit           = $check_field_order - 1;
 			$field_id_result = $wpdb->get_results(
-				"SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " ORDER BY id DESC LIMIT $limit "
+				$wpdb->prepare( 'SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order =%d AND group_id =%d ORDER BY id DESC LIMIT %d', $clone_field_order, $field_group_id, $limit )
 			);
-			$field_id_arr = array();
+			$field_id_arr    = array();
 			if ( ! empty( $field_id_result ) ) {
 				foreach ( $field_id_result as $field_id_obj ) {
 					$field_id_arr[] = $field_id_obj->id;
 				}
 			}
-			$delete_field_id = $wpdb->query( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = " . $clone_field_order . " AND group_id = " . $field_group_id . " AND id IN ( " . implode( ',', $field_id_arr ) . " )" );
+			$count_field_id         = count( $field_id_arr );
+			$field_ids_placeholders = array_fill( 0, $count_field_id, '%d' );
+			$field_ids_format       = implode( ', ', $field_ids_placeholders );
+			$delete_field_id        = $wpdb->query(
+				$wpdb->prepare( 'DELETE FROM {$bp->profile->table_name_fields} WHERE field_order =%d AND group_id =%d AND id IN ( $field_ids_format )', $clone_field_order, $field_group_id, $field_id_arr )
+			);
 			if ( $delete_field_id ) {
-				$wpdb->query( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( " . implode( ',', $field_id_arr ) . " )" );
+				$wpdb->query(
+					$wpdb->prepare( 'DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( $field_ids_format ) AND object_type="field"', $field_id_arr )
+				);
 				$update_count = (int) $count - (int) count( $field_id_arr );
 				bp_set_profile_field_set_count( $field_group_id, $user_id, $update_count );
 			}
@@ -977,11 +983,11 @@ function bp_delete_duplicate_field_order( $field_group_id, $clone_field_order, $
 	}
 }
 
+add_action( 'wp_ajax_bp_xprofile_check_repeater_set', 'bp_xprofile_check_repeater_set_callback' );
+add_action( 'wp_ajax_nopriv_bp_xprofile_check_repeater_set', 'bp_xprofile_check_repeater_set_callback' );
 /**
  * Ajax action will check last field status.
  */
-add_action( 'wp_ajax_bp_xprofile_check_repeater_set', 'bp_xprofile_check_repeater_set_callback' );
-add_action( 'wp_ajax_nopriv_bp_xprofile_check_repeater_set', 'bp_xprofile_check_repeater_set_callback' );
 function bp_xprofile_check_repeater_set_callback() {
 	$get_field_id          = filter_input( INPUT_POST, 'field_ids', FILTER_SANITIZE_STRING );
 	$get_field_id_ex       = explode( ',', $get_field_id );
