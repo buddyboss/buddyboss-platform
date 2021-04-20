@@ -1136,7 +1136,7 @@ function bp_xprofile_repeater_field_repair_callback() {
 				if ( ! empty( $user_meta_for_group ) ) {
 					$max_field_set_count = $user_meta_for_group->max_value;
 					if ( $max_field_set_count >= 10 ) {
-						$bdugf = bb_delete_unnecessory_groups_field( $group_id, $max_field_set_count );
+						$bdugf = bb_delete_unnecessory_groups_field( $group_id );
 						if ( true === $bdugf ) {
 							$offset ++;
 						}
@@ -1164,10 +1164,11 @@ function bp_xprofile_repeater_field_repair_callback() {
 /**
  * This function will remove unnecessary data that may have remained after the above migration process.
  *
- * @param $group_id             Group id.
- * @param $user_field_set_count Max count of fields which stores in DB based on user.
+ * @param int $group_id Group id.
+ *
+ * @return boolean
  */
-function bb_delete_unnecessory_groups_field( $group_id, $user_field_set_count ) {
+function bb_delete_unnecessory_groups_field( $group_id ) {
 	global $wpdb;
 	$bp                = buddypress();
 	$delete_fields_arr = array();
