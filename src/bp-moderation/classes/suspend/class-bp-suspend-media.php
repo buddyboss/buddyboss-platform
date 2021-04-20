@@ -126,19 +126,19 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @return array Media IDs
 	 */
-	public static function get_media_ids_meta( $item_id, $function = 'get_post_meta' ) {
+	public static function get_media_ids_meta( $item_id, $function = 'get_post_meta', $key = 'bp_media_ids' ) {
 		$media_ids = array();
 
 		if ( function_exists( $function ) ) {
 			if ( ! empty( $item_id ) ) {
-				$post_media = $function( $item_id, 'bp_media_ids', true );
+				$post_media = $function( $item_id, $key, true );
 
-				if ( empty( $post_media ) ){
+				if ( empty( $post_media ) ) {
 					$post_media = BP_Media::get_activity_media_id( $item_id );
 				}
 
-				if ( ! empty( $post_media )  ){
-					$media_ids  = wp_parse_id_list( $post_media );
+				if ( ! empty( $post_media ) ) {
+					$media_ids = wp_parse_id_list( $post_media );
 				}
 			}
 		}
@@ -318,7 +318,15 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $media_id, $args = array() ) {
-		return array();
+		$related_contents = array();
+		$media            = new BP_Media( $media_id );
+
+		if ( bp_is_active( 'activity' ) && ! empty( $media ) && ! empty( $media->id ) && ! empty( $media->activity_id ) ) {
+			$related_contents[ BP_Suspend_Activity::$type ]         = $media->activity_id;
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $media->activity_id );
+		}
+
+		return $related_contents;
 	}
 
 	/**

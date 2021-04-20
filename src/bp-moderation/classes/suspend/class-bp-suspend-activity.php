@@ -380,6 +380,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'media' ) ) {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta' );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta', 'bp_media_id' );
 		}
 
 		return $related_contents;

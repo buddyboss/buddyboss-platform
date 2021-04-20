@@ -188,18 +188,22 @@ abstract class BP_Suspend_Abstract {
 	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
 		$related_contents = $this->get_related_contents( $item_id, $args );
 		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
-		foreach ( $related_contents as $content_type => $content_ids ) {
-			if ( ! empty( $content_ids ) ) {
-				foreach ( $content_ids as $content_id ) {
-					/**
-					 * Remove related content of reported item from hidden list.
-					 *
-					 * @since BuddyBoss 1.5.6
-					 *
-					 * @param int $content_id    item id
-					 * @param int $hide_sitewide item hidden sitewide or user specific
-					 */
-					do_action( 'bp_suspend_unhide_' . $content_type, $content_id, null, $force_all, $args );
+
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $content_type => $content_ids ) {
+				error_log( print_r( $content_ids, 1 ) );
+				if ( ! empty( $content_ids ) ) {
+					foreach ( $content_ids as $content_id ) {
+						/**
+						 * Remove related content of reported item from hidden list.
+						 *
+						 * @since BuddyBoss 1.5.6
+						 *
+						 * @param int $content_id    item id
+						 * @param int $hide_sitewide item hidden sitewide or user specific
+						 */
+						do_action( 'bp_suspend_unhide_' . $content_type, $content_id, null, $force_all, $args );
+					}
 				}
 			}
 		}

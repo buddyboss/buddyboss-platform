@@ -361,7 +361,12 @@ class BP_Core_Suspend {
 		global $wpdb;
 		$bp = buddypress();
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
+		if ( is_array( $item_id ) ) {
+			$item_ids = implode( ',', $item_id );
+			$result   = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id IN (%s) AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_ids, $item_type ) ); // phpcs:ignore
+		} else {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
+		}
 
 		return ! empty( $result );
 	}

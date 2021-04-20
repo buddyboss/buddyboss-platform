@@ -313,7 +313,15 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $document_id, $args = array() ) {
-		return array();
+		$related_contents = array();
+		$document         = new BP_Document( $document_id );
+
+		if ( bp_is_active( 'activity' ) && ! empty( $document ) && ! empty( $document->id ) && ! empty( $document->activity_id ) ) {
+			$related_contents[ BP_Suspend_Activity::$type ]         = $document->activity_id;
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $document->activity_id );
+		}
+
+		return $related_contents;
 	}
 
 	/**
