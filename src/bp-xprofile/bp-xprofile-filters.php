@@ -1185,7 +1185,11 @@ function bb_delete_unnecessory_groups_field( $group_id, $user_field_set_count ) 
 
 	// Calculate the main field ID. The field from which the second field is cloned.
 	$main_fields_count = (int) $count_total_group_field_ids - (int) count( $group_field_ids );
+	
 	// Here we need to modify fields count based on main field id.
+	// Issue was generating after 10 number of fields.
+	// So, We passed here 10 to multiply with main fields count.
+	// If Any user has more then 10 number of fields, then automatically added fields based on count based on page load (Default functionality).
 	$new_user_fields_count = 10 * $main_fields_count;
 	if ( ! empty( $group_field_ids ) ) {
 		foreach ( $group_field_ids as $key => $field_id ) {
