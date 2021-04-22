@@ -241,7 +241,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['show_hidden'] = true;
 		}
 
-		$args['scope'] = $this->bp_rest_activity_default_scope( $args['scope'], ( $request['user_id'] ? $request['user_id'] : 0 ), $args['group_id'] );
+		$args['scope'] = $this->bp_rest_activity_default_scope(
+			$args['scope'],
+			( $request['user_id'] ? $request['user_id'] : 0 ),
+			$args['group_id'],
+			isset( $request['component'] ) ? $request['component'] : '',
+			$request['primary_id']
+		);
 
 		if ( empty( $args['scope'] ) ) {
 			$args['privacy'] = 'public';
@@ -1134,10 +1140,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function render_item( $activity ) {
 		$rendered = '';
 
-		if ( empty( $activity->content ) ) {
-			return $rendered;
-		}
-
 		// Do not truncate activities.
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
 
@@ -1477,10 +1479,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$group = groups_get_group( $activity->item_id );
 
 			$links['group'] = array(
-				'href'       => bp_get_group_permalink( $group ),
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, buddypress()->groups->id, $activity->item_id ) ),
 				'embeddable' => true,
 			);
 		}
@@ -2030,13 +2031,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * Get default scope for the activity
 	 * - from: bp_activity_default_scope();
 	 *
-	 * @param string $scope    Default scope.
-	 * @param int    $user_id  User ID.
-	 * @param int    $group_id Group ID.
+	 * @param string $scope      Default scope.
+	 * @param int    $user_id    User ID.
+	 * @param int    $group_id   Group ID.
+	 * @param string $component  Component name.
+	 * @param int    $primary_id Primary ID.
 	 *
 	 * @return string
 	 */
-	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0 ) {
+	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0, $component = '', $primary_id = 0 ) {
 		$new_scope = array();
 
 		if (
@@ -2047,7 +2050,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				|| 'just-me' === $scope
 			)
 		) {
-			if ( bp_is_active( 'groups' ) && ! empty( $group_id ) ) {
+			if ( bp_is_active( 'groups' ) && ( ! empty( $group_id ) || ( ! empty( $component ) && 'groups' === $component && ! empty( $primary_id ) ) ) ) {
 				$new_scope[] = 'activity';
 			} else {
 				$new_scope[] = 'just-me';
