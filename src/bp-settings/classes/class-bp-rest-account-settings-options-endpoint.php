@@ -262,7 +262,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		$retval = array(
 			'error'   => ( isset( $updated['error'] ) ? $updated['error'] : false ),
-			'success' => ( empty( $updated['error'] ) ? __( 'Your settings has been successfully updated.','buddypress' ) : false ),
+			'success' => ( empty( $updated['error'] ) ? __( 'Your settings has been successfully updated.','buddyboss' ) : false ),
 			'notices' => ( isset( $updated['notice'] ) ? $updated['notice'] : false ),
 			'data'    => $data,
 		);
