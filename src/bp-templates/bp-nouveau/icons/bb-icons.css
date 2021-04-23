@@ -501,3 +501,10 @@
 .bb-icon-rounded-flickr:before { content: '\ede1'; }
 .bb-icon-rounded-dribbble:before { content: '\ede2'; }
 .bb-icon-rounded-pinterest:before { content: '\ede3'; }
+.bb-icon-speaker:before { content: '\e9d3'; }
+.bb-icon-bulb:before { content: '\e9d4'; }
+.bb-icon-save:before { content: '\e9d5'; }
+.bb-icon-certificate:before { content: '\e9d6'; }
+.bb-icon-book-open:before { content: '\e9d7'; }
+.bb-icon-speech:before { content: '\e9d8'; }
+.bb-icon-checkmark-full:before { content: '\e9d9'; }
