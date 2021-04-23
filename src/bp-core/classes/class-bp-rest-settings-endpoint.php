@@ -263,7 +263,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-member-type-enable-disable'            => bp_member_type_enable_disable(),
 			'bp-member-type-display-on-profile'        => ! empty( bp_member_type_enable_disable() ) && bp_member_type_display_on_profile(),
 			'bp-member-type-default-on-registration'   => bp_member_type_default_on_registration(),
-			'bp-enable-profile-search'                 => bp_disable_advanced_profile_search(),
+			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
 
