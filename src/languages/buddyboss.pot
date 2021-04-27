@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.5.8.1\n"
+"Project-Id-Version: BuddyBoss Platform 1.5.8.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-22 09:55:39+00:00\n"
+"POT-Creation-Date: 2021-04-27 12:24:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16702,7 +16702,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-endpoint.php:502
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:267
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:181
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:344
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:353
 msgid "Invalid member ID."
 msgstr ""
 
@@ -26242,7 +26242,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-filters.php:782
 #: bp-xprofile/bp-xprofile-filters.php:877
 #: bp-xprofile/bp-xprofile-filters.php:990
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:484
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:503
 #: bp-xprofile/screens/edit.php:140
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
@@ -26377,8 +26377,8 @@ msgid "(optional)"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:52
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:617
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:309
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:626
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:328
 msgid "The ID of the field the data is from."
 msgstr ""
 
@@ -26392,8 +26392,8 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:166
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:239
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:355
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:413
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:364
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:422
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:268
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:334
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:780
@@ -26405,51 +26405,51 @@ msgstr ""
 msgid "Sorry, the profile field value is not viewable for this user."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:279
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:288
 msgid "Cannot save XProfile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:332
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:341
 msgid "Sorry, you need to be logged in to save XProfile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:369
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:378
 msgid "Sorry, you cannot save XProfile field data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:432
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:441
 msgid "Could not delete XProfile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:611
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:620
 msgid "A unique numeric ID for the profile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:623
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:632
 msgid "The ID of the user the field data is from."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:629
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:323
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:638
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:342
 msgid "The value of the field data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:637
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:646
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1328
 msgid "Value for the field, as it exists in the database."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:642
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:651
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1333
 msgid "Unserialized value for the field, regular string will be casted as array."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:651
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:660
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1339
 msgid "HTML value for the field, transformed for display."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:660
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:669
 msgid "The date the field data was last updated, in the site's timezone."
 msgstr ""
 
@@ -26521,15 +26521,15 @@ msgid "The fields associated with this group of profile fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:911
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:335
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:354
 msgid "ID of the field group that have fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:919
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:944
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1376
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:343
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:360
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:362
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:379
 msgid ""
 "Whether to hide profile groups of fields that do not have any profile "
 "fields or not."
@@ -26543,7 +26543,7 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:935
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1392
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:351
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:370
 msgid ""
 "Limit fields by those restricted to a given member type, or array of member "
 "types. If `$user_id` is provided, the value of `$member_type` will be "
@@ -26554,39 +26554,39 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:952
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:813
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:368
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:387
 msgid "Whether to fetch the fields for each group."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:960
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1409
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:821
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:376
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:395
 msgid "Whether to fetch data for each field. Requires a $user_id."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:968
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1417
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:829
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:384
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:403
 msgid "Whether to fetch the visibility level for each field."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:976
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1425
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:392
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:411
 msgid "Ensure result set excludes specific profile field groups."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:985
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1434
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:401
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:420
 msgid "Ensure result set excludes specific profile fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:994
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1443
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:410
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:429
 msgid ""
 "Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and "
 "data."
@@ -26707,7 +26707,7 @@ msgid "Whether the option is the default one for the profile field."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1310
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:326
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:345
 msgid "Who may see the saved value for this profile field."
 msgstr ""
 
@@ -26720,7 +26720,7 @@ msgid "The saved value for this profile field."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1368
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:316
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:335
 msgid "ID of the profile group of fields that have profile fields"
 msgstr ""
 
@@ -26756,7 +26756,7 @@ msgid "Sorry, you are not allowed to delete your profile repeater fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:737
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:268
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:287
 msgid "Object of groups."
 msgstr ""
 
@@ -26822,32 +26822,32 @@ msgid ""
 "roles."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:217
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:236
 msgid "Sorry, you are not allowed to update your profile fields."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:229
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:248
 msgid "Sorry, you are not logged in to update fields."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:262
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:281
 msgid "Whether fields updated or giving an error."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:295
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:314
 msgid ""
 "Fields array with field_id, group_id, type, value and visibility_level to "
 "update the data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:450
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:469
 #: bp-xprofile/screens/edit.php:93
 msgid ""
 "Changing this profile type would remove your Administrator role and lock "
 "you out of the WordPress admin."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:460
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:479
 #: bp-xprofile/screens/edit.php:102
 msgid ""
 "Changing this profile type would remove your Editor role and lock you out "
