@@ -1372,11 +1372,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'sender_id'                 => (int) $message->sender_id,
 			'subject'                   => array(
 				'raw'      => $message->subject,
-				'rendered' => apply_filters( 'bp_get_message_thread_subject', wp_staticize_emoji( $message->subject ) ),
+				'rendered' => apply_filters( 'bp_get_message_thread_subject', $message->subject ),
 			),
 			'message'                   => array(
 				'raw'      => wp_strip_all_tags( $message->message ),
-				'rendered' => apply_filters( 'bp_get_the_thread_message_content', wp_staticize_emoji( $message->message ) ),
+				'rendered' => apply_filters( 'bp_get_the_thread_message_content', $message->message ),
 			),
 			'date_sent'                 => bp_rest_prepare_date_response( $message->date_sent ),
 			'display_date'              => bp_core_time_since( $message->date_sent ),
