@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.8.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-28 14:56:31+00:00\n"
+"POT-Creation-Date: 2021-04-28 16:34:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1025,8 +1025,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2882
 #: bp-core/admin/bp-core-admin-functions.php:1562
-#: bp-core/admin/bp-core-admin-pages.php:335
-#: bp-core/admin/bp-core-admin-pages.php:369
+#: bp-core/admin/bp-core-admin-pages.php:347
+#: bp-core/admin/bp-core-admin-pages.php:381
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:243 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
@@ -3013,30 +3013,39 @@ msgstr ""
 msgid "This directory shows all documents uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:186
-msgid "Registration Pages"
+#: bp-core/admin/bp-core-admin-pages.php:182
+msgid "Registration and Login Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:197
+#: bp-core/admin/bp-core-admin-pages.php:184
+msgid "Login Pages"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:201
 msgid "New users fill out this form to register their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:199
-#: bp-core/admin/bp-core-admin-pages.php:201
+#: bp-core/admin/bp-core-admin-pages.php:204
+#: bp-core/admin/bp-core-admin-pages.php:210
 msgid ""
 "If a page is added, its contents will display in a popup on the register "
-"form."
+"and login forms."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:203
+#: bp-core/admin/bp-core-admin-pages.php:206
+#: bp-core/admin/bp-core-admin-pages.php:212
+msgid "If a page is added, its contents will display in a popup on the login form."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:215
 msgid "After registering, users are sent to this page to activate their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:223
+#: bp-core/admin/bp-core-admin-pages.php:235
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:243
+#: bp-core/admin/bp-core-admin-pages.php:255
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -3065,31 +3074,33 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:256
-msgid "Associate a WordPress page with the following Registration sections."
+#: bp-core/admin/bp-core-admin-pages.php:268
+msgid ""
+"Associated a WordPress page with the following Registration and Login "
+"sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:262
+#: bp-core/admin/bp-core-admin-pages.php:274
 #: bp-core/admin/bp-core-admin-settings.php:893
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:278
+#: bp-core/admin/bp-core-admin-pages.php:290
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:326
-#: bp-core/admin/bp-core-admin-pages.php:360
+#: bp-core/admin/bp-core-admin-pages.php:338
+#: bp-core/admin/bp-core-admin-pages.php:372
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:342
-#: bp-core/admin/bp-core-admin-pages.php:376
+#: bp-core/admin/bp-core-admin-pages.php:354
+#: bp-core/admin/bp-core-admin-pages.php:388
 msgid "Create Page"
 msgstr ""
 
