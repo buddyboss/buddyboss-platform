@@ -2563,6 +2563,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 function bp_nouveau_signup_terms_privacy() {
 
 	$page_ids = bp_core_get_directory_page_ids();
+	$show_legal_agreement = bp_register_legal_agreement();
 
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
 	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
@@ -2584,9 +2585,19 @@ function bp_nouveau_signup_terms_privacy() {
 	if ( $terms && ! $privacy ) {
 		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
 		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
-		</p>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $terms_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
+			</p>
+		<?php } ?>
+
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
@@ -2601,9 +2612,18 @@ function bp_nouveau_signup_terms_privacy() {
 	if ( ! $terms && $privacy ) {
 		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
-		</p>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $privacy_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
+			</p>
+		<?php } ?>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
@@ -2619,9 +2639,18 @@ function bp_nouveau_signup_terms_privacy() {
 		$terms_link   = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
 		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
-		</p>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
+			</p>
+		<?php } ?>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
@@ -2668,8 +2697,9 @@ function bp_nouveau_submit_button( $action ) {
 	}
 
 	$submit_input = sprintf(
-		'<input type="submit" %s/>',
-		bp_get_form_field_attributes( 'submit', $submit_data['attributes'] )  // Safe.
+		'<input type="submit" %s %s/>',
+		bp_get_form_field_attributes( 'submit', $submit_data['attributes'] ),  // Safe.
+		bp_register_legal_agreement() ? "disabled" : ""
 	);
 
 	// Output the submit button.
