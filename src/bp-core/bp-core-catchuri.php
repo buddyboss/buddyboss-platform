@@ -1493,23 +1493,21 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 		(false !== $terms && 'publish' === get_post_status($terms)) ||
 		(false !== $privacy && 'publish' === get_post_status($privacy))
 	) {
-		if ($terms && !$privacy) {
-			$page_title  = ($terms) ? get_the_title($terms) : '';
+		if ( ! empty ( $terms )  && ! empty ( $privacy ) ) {
+			$page_title  = ! empty( $terms ) ? get_the_title($terms) : '';
 			$get_terms   = get_post($terms);
-			$link        = sprintf('<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', get_the_title($terms), get_the_title($terms), wp_kses_post(apply_filters('the_content', $get_terms->post_content)), esc_html('Close (Esc)'), esc_html('×'));
-		}
-		if (!$terms && $privacy) {
+			$link        = sprintf('<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', $page_title, $page_title, wp_kses_post(apply_filters('the_content', $get_terms->post_content)), esc_html('Close (Esc)'), esc_html('×'));
 			$page_title  = ($privacy) ? get_the_title($privacy) : '';
 			$get_privacy = get_post($privacy);
-			$link        = sprintf('<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', get_the_title($privacy), get_the_title($privacy), wp_kses_post(apply_filters('the_content', $get_privacy->post_content)), esc_html('Close (Esc)'), esc_html('×'));
-		}
-		if ($terms && $privacy) {
-			$page_title  = ($terms) ? get_the_title($terms) : '';
-			$get_terms   = get_post($terms);
-			$link        = sprintf('<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', get_the_title($terms), get_the_title($terms), wp_kses_post(apply_filters('the_content', $get_terms->post_content)), esc_html('Close (Esc)'), esc_html('×'));
-			$page_title  = ($privacy) ? get_the_title($privacy) : '';
+			$link        .= " and " . sprintf('<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', $page_title, $page_title, wp_kses_post(apply_filters('the_content', $get_privacy->post_content)), esc_html('Close (Esc)'), esc_html('×'));
+		} else if ( empty( $terms ) && ! empty ( $privacy ) ) {
+			$page_title  = ! empty( $privacy ) ? get_the_title($privacy) : '';
 			$get_privacy = get_post($privacy);
-			$link        .= " and " . sprintf('<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', get_the_title($privacy), get_the_title($privacy), wp_kses_post(apply_filters('the_content', $get_privacy->post_content)), esc_html('Close (Esc)'), esc_html('×'));
+			$link        = sprintf('<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', $page_title, $page_title, wp_kses_post(apply_filters('the_content', $get_privacy->post_content)), esc_html('Close (Esc)'), esc_html('×'));
+		} else if ( ! empty ( $terms ) && empty ( $privacy ) ) {
+			$page_title  = ! empty( $terms ) ? get_the_title($terms) : '';
+			$get_terms   = get_post($terms);
+			$link        = sprintf('<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', $page_title, $page_title, wp_kses_post(apply_filters('the_content', $get_terms->post_content)), esc_html('Close (Esc)'), esc_html('×'));
 		}
 		$privacy_policy_url = "";
 	}
