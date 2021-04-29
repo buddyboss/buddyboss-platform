@@ -64,7 +64,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'child-no-padding register-legal-agreement-checkbox';
-			$this->add_field( 'register-legal-agreement', '', 'bp_admin_setting_callback_register_show_legal_agreement', 'intval', $args );
+			$this->add_field( 'register-legal-agreement', '', 'bb_admin_setting_callback_register_show_legal_agreement', 'intval', $args );
 
 			$args          = array();
 			$args['class'] = 'child-no-padding register-email-checkbox';
