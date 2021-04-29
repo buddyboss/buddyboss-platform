@@ -1725,12 +1725,13 @@ window.bp = window.bp || {};
 			self.objectRequest( queryData );
 		},
 		enableSubmitOnLegalAgreement: function () {
-			if ($('body #buddypress #register-page #signup-form #legal_agreement').length) {
-				$(document).on('change', 'body #buddypress #register-page #signup-form #legal_agreement', function () {
-					if ($(this).prop('checked')) {
-						$('body #buddypress #register-page #signup-form .submit #signup_submit').prop('disabled', false);
+			if ( $( 'body #buddypress #register-page #signup-form #legal_agreement' ).length ) {
+				$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true);
+				$( document ).on( 'change', 'body #buddypress #register-page #signup-form #legal_agreement', function () {
+					if ( $( this ).prop( 'checked' ) ) {
+						$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', false);
 					} else {
-						$('body #buddypress #register-page #signup-form .submit #signup_submit').prop('disabled', true);
+						$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true);
 					}
 				});
 			}

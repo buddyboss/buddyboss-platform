@@ -2697,9 +2697,8 @@ function bp_nouveau_submit_button( $action ) {
 	}
 
 	$submit_input = sprintf(
-		'<input type="submit" %s %s/>',
-		bp_get_form_field_attributes( 'submit', $submit_data['attributes'] ),  // Safe.
-		bp_register_legal_agreement() ? "disabled" : ""
+		'<input type="submit" %s/>',
+		bp_get_form_field_attributes( 'submit', $submit_data['attributes'] )  // Safe.
 	);
 
 	// Output the submit button.
