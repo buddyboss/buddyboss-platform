@@ -63,6 +63,9 @@ window.bp = window.bp || {};
 			// Toggle password text
 			this.togglePassword();
 
+			// Legal agreement enable/disabled submit button
+			this.enableSubmitOnLegalAgreement();
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -1199,7 +1202,8 @@ window.bp = window.bp || {};
 		 */
 		typeMemberFilterQuery: function ( event ) {
 			var self = event.data, object = $( event.target ).data( 'bp-member-type-filter' ), scope = 'all',
-				filter = null, objectData = {}, extras = null, search_terms = '', template = null;
+				filter = null, objectData = {}, extras = null, search_terms = '', template = null,
+				object_type = $( event.target ).data( 'bp-member-type-object' );
 
 			if ( !object ) {
 				return event;
@@ -1735,6 +1739,18 @@ window.bp = window.bp || {};
 
 			// Request the page
 			self.objectRequest( queryData );
+		},
+		enableSubmitOnLegalAgreement: function () {
+			if ( $( 'body #buddypress #register-page #signup-form #legal_agreement' ).length ) {
+				$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true);
+				$( document ).on( 'change', 'body #buddypress #register-page #signup-form #legal_agreement', function () {
+					if ( $( this ).prop( 'checked' ) ) {
+						$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', false);
+					} else {
+						$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true);
+					}
+				});
+			}
 		},
 		registerPopUp: function () {
 			if ( $( '.popup-modal-register' ).length ) {

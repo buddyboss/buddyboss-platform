@@ -1140,6 +1140,24 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 	<?php
 }
 
+/*
+  Admin settings for showing the legal agreement confirmation field.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ */
+function bb_admin_setting_callback_register_show_legal_agreement() {
+	?>
+
+	<input id="register-legal-agreement" name="register-legal-agreement" type="checkbox" value="1" <?php checked( bb_register_legal_agreement( false ) ); ?> />
+	<label for="register-legal-agreement"><?php _e( 'Add Legal Agreement checkbox to register form', 'buddyboss' ); ?></label>
+	<?php
+		printf(
+			'<p class="description">%s</p>',
+			__( 'Require non-members to explicity agree to your Terms of Service And Privacy Policy before registering.', 'buddyboss' )
+		);
+}
+
 /**
  * Admin settings for showing the password confirmation field.
  *
