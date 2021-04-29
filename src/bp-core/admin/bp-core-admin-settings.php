@@ -1149,7 +1149,7 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
 
-	<input id="register-legal-agreement" name="register-legal-agreement" type="checkbox" value="1" <?php checked( bp_register_legal_agreement( false ) ); ?> />
+	<input id="register-legal-agreement" name="register-legal-agreement" type="checkbox" value="1" <?php checked( bb_register_legal_agreement( false ) ); ?> />
 	<label for="register-legal-agreement"><?php _e( 'Add Legal Agreement checkbox to register form', 'buddyboss' ); ?></label>
 	<?php
 		printf(
