@@ -205,7 +205,7 @@ function bp_core_screen_signup() {
 		do_action( 'bp_signup_validate' );
 
 		// Adding error message for the legal agreement checkbox.
-		if ( true === bp_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+		if ( true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
 			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
 		}
 
