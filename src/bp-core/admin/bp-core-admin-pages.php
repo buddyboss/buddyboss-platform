@@ -265,7 +265,7 @@ function bb_registration_page_tutorial() {
  */
 function bp_core_admin_registration_pages_description() {
 	if ( bp_get_signup_allowed() ) :
-		echo wpautop( __( 'Associated a WordPress page with the following Registration and Login sections.', 'buddyboss' ) );
+		echo wpautop( __( 'Associate a WordPress page with the following Registration and Login sections.', 'buddyboss' ) );
 	else :
 
 		$invite_text = '';
