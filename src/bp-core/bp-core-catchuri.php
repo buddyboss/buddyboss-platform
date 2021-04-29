@@ -1476,25 +1476,19 @@ add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_pr
 function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
 
 	if ( ! is_user_logged_in() ) {
+		$privacy_policy_url = get_privacy_policy_url();
+		$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
+		$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
 
-		$enable_private_network = bp_enable_private_network();
-
-		if ( ! $enable_private_network ) {
-
-			$privacy_policy_url = get_privacy_policy_url();
-			$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
-			$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
-
-			if ( $privacy_policy_url && $page_title ) {
-				$get_privacy_policy = get_post( $policy_page_id );
-				$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), wp_kses_post( apply_filters( 'the_content', $get_privacy_policy->post_content ) ), esc_html( 'Close (Esc)' ), esc_html( '×' ) );
-			}
+		if ( $privacy_policy_url && $page_title ) {
+			$get_privacy_policy = get_post( $policy_page_id );
+			$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), wp_kses_post( apply_filters( 'the_content', $get_privacy_policy->post_content ) ), esc_html( 'Close (Esc)' ), esc_html( '×' ) );
 		}
 	}
 
 	$page_ids = bp_core_get_directory_page_ids();
 	$terms    = isset($page_ids['terms']) ? $page_ids['terms'] : false;
-	$privacy  = isset($page_ids['privacy']) ? $page_ids['privacy'] : false;
+	$privacy  = isset($page_ids['privacy']) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
 	if (
 		(false !== $terms && 'publish' === get_post_status($terms)) ||
 		(false !== $privacy && 'publish' === get_post_status($privacy))

@@ -2566,7 +2566,7 @@ function bp_nouveau_signup_terms_privacy() {
 	$show_legal_agreement = bb_register_legal_agreement();
 
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
-	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
 
 	// Do not show the page if page is not published.
 	if ( false !== $terms && 'publish' !== get_post_status( $terms ) ) {
