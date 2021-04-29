@@ -179,7 +179,7 @@ function bp_core_admin_register_registration_page_fields() {
 		return;
 	}
 
-	$section_title = __( 'Registration and Login Pages', 'buddyboss' );
+	$section_title = __( 'Registration Pages', 'buddyboss' );
 	if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) ) {
 		$section_title = __( 'Login Pages', 'buddyboss' );
 	}
