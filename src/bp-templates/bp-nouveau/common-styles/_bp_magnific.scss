@@ -367,16 +367,16 @@ img.mfp-img {
 	cursor: pointer;
 }
 
-.login .mfp-bg,
+body.login .mfp-bg,
 .registration .mfp-bg {
 	background: rgba(250, 251, 253, 0.9);
 	opacity: 1;
 }
 
 .registration .mfp-content #terms-modal,
-.login .mfp-content #terms-modal,
+body.login .mfp-content #terms-modal,
 .registration .mfp-content #privacy-modal,
-.login .mfp-content #privacy-modal {
+body.login .mfp-content #privacy-modal {
 	border-radius: 4px;
 	border: 1px solid #d2d4d6;
 	box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
