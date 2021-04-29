@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.8.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-29 09:32:15+00:00\n"
+"POT-Creation-Date: 2021-04-29 15:04:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3014,7 +3014,7 @@ msgid "This directory shows all documents uploaded by members."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:182
-msgid "Registration and Login Pages"
+msgid "Registration Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:184
@@ -3076,7 +3076,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:268
 msgid ""
-"Associated a WordPress page with the following Registration and Login "
+"Associate a WordPress page with the following Registration and Login "
 "sections."
 msgstr ""
 
@@ -4880,7 +4880,7 @@ msgstr ""
 
 #: bp-core/bp-core-cssjs.php:918
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:755
-#: bp-members/screens/register.php:161
+#: bp-members/screens/register.php:161 bp-members/screens/register.php:209
 msgid "This is a required field."
 msgstr ""
 
@@ -5240,15 +5240,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2655
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
-"\t\t\t<h4>On Deactivation:</h4>\n"
-"\t\t\t<ul>\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
+"\t\t\t<h4>On Deactivation:</h4>\r\n"
+"\t\t\t<ul>\r\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\n"
+"content will be unhidden</li>\r\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
-"\t\t\t</ul>\n"
+"members. Any members they have blocked will be unblocked.</li>\r\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
+"\t\t\t</ul>\r\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -7765,38 +7765,38 @@ msgstr ""
 msgid "Description of the setting."
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:275
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:276
 #: bp-moderation/screens/block-member-form.php:31
 msgid "See blocked member's posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:278
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:279
 #: bp-moderation/screens/block-member-form.php:37
 msgid "Mention this member in posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:281
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:282
 #: bp-moderation/screens/block-member-form.php:43
 msgid "Invite this member to groups"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:285
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:286
 #: bp-moderation/screens/block-member-form.php:50
 msgid "Message this member"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:289
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:290
 #: bp-moderation/screens/block-member-form.php:57
 msgid "Add this member as a connection"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:294
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:295
 msgid ""
 "This action will also remove this member from your connections and send a "
 "report to the site admin. "
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:297
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:298
 #: bp-moderation/screens/block-member-form.php:69
 msgid "Please allow a few minutes for this process to complete."
 msgstr ""
@@ -8016,13 +8016,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -20608,12 +20608,12 @@ msgid "Please make sure to enter your password."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:659
-#: bp-members/screens/register.php:106 bp-members/screens/register.php:353
+#: bp-members/screens/register.php:106 bp-members/screens/register.php:361
 msgid "Please make sure to enter your email twice."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:667
-#: bp-members/screens/register.php:111 bp-members/screens/register.php:358
+#: bp-members/screens/register.php:111 bp-members/screens/register.php:366
 msgid "The emails entered do not match."
 msgstr ""
 
