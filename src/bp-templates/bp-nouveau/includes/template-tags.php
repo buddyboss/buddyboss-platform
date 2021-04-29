@@ -2563,7 +2563,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 function bp_nouveau_signup_terms_privacy() {
 
 	$page_ids = bp_core_get_directory_page_ids();
-	$show_legal_agreement = bp_register_legal_agreement();
+	$show_legal_agreement = bb_register_legal_agreement();
 
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
 	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
