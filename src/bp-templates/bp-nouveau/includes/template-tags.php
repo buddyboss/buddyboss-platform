@@ -2669,6 +2669,10 @@ function bp_nouveau_signup_terms_privacy() {
 		</div>
 		<?php
 	}
+
+	if ( $show_legal_agreement ) {
+	    do_action('bp_legal_agreement_errors' );
+	}
 }
 
 /**
