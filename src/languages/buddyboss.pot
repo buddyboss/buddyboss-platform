@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.8.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-27 12:24:39+00:00\n"
+"POT-Creation-Date: 2021-04-29 16:23:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1025,8 +1025,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2882
 #: bp-core/admin/bp-core-admin-functions.php:1562
-#: bp-core/admin/bp-core-admin-pages.php:335
-#: bp-core/admin/bp-core-admin-pages.php:369
+#: bp-core/admin/bp-core-admin-pages.php:347
+#: bp-core/admin/bp-core-admin-pages.php:381
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:243 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
@@ -3013,30 +3013,39 @@ msgstr ""
 msgid "This directory shows all documents uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:186
+#: bp-core/admin/bp-core-admin-pages.php:182
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:197
+#: bp-core/admin/bp-core-admin-pages.php:184
+msgid "Login Pages"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:201
 msgid "New users fill out this form to register their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:199
-#: bp-core/admin/bp-core-admin-pages.php:201
+#: bp-core/admin/bp-core-admin-pages.php:204
+#: bp-core/admin/bp-core-admin-pages.php:210
 msgid ""
 "If a page is added, its contents will display in a popup on the register "
-"form."
+"and login forms."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:203
+#: bp-core/admin/bp-core-admin-pages.php:206
+#: bp-core/admin/bp-core-admin-pages.php:212
+msgid "If a page is added, its contents will display in a popup on the login form."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:215
 msgid "After registering, users are sent to this page to activate their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:223
+#: bp-core/admin/bp-core-admin-pages.php:235
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:243
+#: bp-core/admin/bp-core-admin-pages.php:255
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -3047,10 +3056,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:639
 #: bp-core/admin/bp-core-admin-settings.php:962
 #: bp-core/admin/bp-core-admin-settings.php:1078
-#: bp-core/admin/bp-core-admin-settings.php:1230
-#: bp-core/admin/bp-core-admin-settings.php:1295
-#: bp-core/admin/bp-core-admin-settings.php:1332
-#: bp-core/admin/bp-core-admin-settings.php:1356
+#: bp-core/admin/bp-core-admin-settings.php:1248
+#: bp-core/admin/bp-core-admin-settings.php:1313
+#: bp-core/admin/bp-core-admin-settings.php:1350
+#: bp-core/admin/bp-core-admin-settings.php:1374
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
@@ -3065,31 +3074,33 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:256
-msgid "Associate a WordPress page with the following Registration sections."
+#: bp-core/admin/bp-core-admin-pages.php:268
+msgid ""
+"Associate a WordPress page with the following Registration and Login "
+"sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:262
+#: bp-core/admin/bp-core-admin-pages.php:274
 #: bp-core/admin/bp-core-admin-settings.php:893
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:278
+#: bp-core/admin/bp-core-admin-pages.php:290
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:326
-#: bp-core/admin/bp-core-admin-pages.php:360
+#: bp-core/admin/bp-core-admin-pages.php:338
+#: bp-core/admin/bp-core-admin-pages.php:372
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:342
-#: bp-core/admin/bp-core-admin-pages.php:376
+#: bp-core/admin/bp-core-admin-pages.php:354
+#: bp-core/admin/bp-core-admin-pages.php:388
 msgid "Create Page"
 msgstr ""
 
@@ -3371,56 +3382,66 @@ msgstr ""
 msgid "Add Email confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1152
+#: bp-core/admin/bp-core-admin-settings.php:1153
+msgid "Add Legal Agreement checkbox to register form"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1157
+msgid ""
+"Require non-members to explicity agree to your Terms of Service And Privacy "
+"Policy before registering."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1170
 msgid "Add Password confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1164
+#: bp-core/admin/bp-core-admin-settings.php:1182
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:461
 msgid "Grid and List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1165
-#: bp-core/admin/bp-core-admin-settings.php:1196
+#: bp-core/admin/bp-core-admin-settings.php:1183
+#: bp-core/admin/bp-core-admin-settings.php:1214
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:462
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:493
 msgid "Grid"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1166
-#: bp-core/admin/bp-core-admin-settings.php:1197
+#: bp-core/admin/bp-core-admin-settings.php:1184
+#: bp-core/admin/bp-core-admin-settings.php:1215
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:494
 msgid "List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1183
+#: bp-core/admin/bp-core-admin-settings.php:1201
 msgid ""
 "Display group directories in Grid View, List View, or allow toggling "
 "between both views."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1248
+#: bp-core/admin/bp-core-admin-settings.php:1266
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1249
+#: bp-core/admin/bp-core-admin-settings.php:1267
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1254
+#: bp-core/admin/bp-core-admin-settings.php:1272
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1274
+#: bp-core/admin/bp-core-admin-settings.php:1292
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1309
+#: bp-core/admin/bp-core-admin-settings.php:1327
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
@@ -3869,7 +3890,7 @@ msgid "Migrated invitations!"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
-#: bp-core/admin/settings/bp-admin-setting-general.php:116
+#: bp-core/admin/settings/bp-admin-setting-general.php:102
 msgid "Activity Settings"
 msgstr ""
 
@@ -3962,11 +3983,10 @@ msgid "Enable Registration"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:59
-#: bp-core/admin/settings/bp-admin-setting-general.php:77
 msgid "Registration Form"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:94
+#: bp-core/admin/settings/bp-admin-setting-general.php:80
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:854
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:19
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:19
@@ -3975,20 +3995,20 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:97
+#: bp-core/admin/settings/bp-admin-setting-general.php:83
 msgid "Private Website"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:100
+#: bp-core/admin/settings/bp-admin-setting-general.php:86
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:107
+#: bp-core/admin/settings/bp-admin-setting-general.php:93
 #: bp-forums/admin/settings.php:1526
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:113
+#: bp-core/admin/settings/bp-admin-setting-general.php:99
 msgid "Groups Settings"
 msgstr ""
 
@@ -4859,7 +4879,7 @@ msgstr ""
 
 #: bp-core/bp-core-cssjs.php:918
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:755
-#: bp-members/screens/register.php:161
+#: bp-members/screens/register.php:161 bp-members/screens/register.php:209
 msgid "This is a required field."
 msgstr ""
 
@@ -7744,38 +7764,38 @@ msgstr ""
 msgid "Description of the setting."
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:275
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:276
 #: bp-moderation/screens/block-member-form.php:31
 msgid "See blocked member's posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:278
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:279
 #: bp-moderation/screens/block-member-form.php:37
 msgid "Mention this member in posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:281
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:282
 #: bp-moderation/screens/block-member-form.php:43
 msgid "Invite this member to groups"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:285
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:286
 #: bp-moderation/screens/block-member-form.php:50
 msgid "Message this member"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:289
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:290
 #: bp-moderation/screens/block-member-form.php:57
 msgid "Add this member as a connection"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:294
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:295
 msgid ""
 "This action will also remove this member from your connections and send a "
 "report to the site admin. "
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:297
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:298
 #: bp-moderation/screens/block-member-form.php:69
 msgid "Please allow a few minutes for this process to complete."
 msgstr ""
@@ -20587,12 +20607,12 @@ msgid "Please make sure to enter your password."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:659
-#: bp-members/screens/register.php:106 bp-members/screens/register.php:353
+#: bp-members/screens/register.php:106 bp-members/screens/register.php:361
 msgid "Please make sure to enter your email twice."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:667
-#: bp-members/screens/register.php:111 bp-members/screens/register.php:358
+#: bp-members/screens/register.php:111 bp-members/screens/register.php:366
 msgid "The emails entered do not match."
 msgstr ""
 
@@ -22336,10 +22356,10 @@ msgstr ""
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:135
-#: bp-templates/bp-nouveau/includes/template-tags.php:2596
-#: bp-templates/bp-nouveau/includes/template-tags.php:2613
-#: bp-templates/bp-nouveau/includes/template-tags.php:2631
+#: bp-templates/bp-nouveau/includes/template-tags.php:2607
+#: bp-templates/bp-nouveau/includes/template-tags.php:2615
 #: bp-templates/bp-nouveau/includes/template-tags.php:2639
+#: bp-templates/bp-nouveau/includes/template-tags.php:2664
 msgid "Close (Esc)"
 msgstr ""
 
@@ -26084,20 +26104,29 @@ msgstr ""
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2588
-#: bp-templates/bp-nouveau/includes/template-tags.php:2605
-msgid "By creating an account you are agreeing to the %s."
+#: bp-templates/bp-nouveau/includes/template-tags.php:2593
+msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2596
-#: bp-templates/bp-nouveau/includes/template-tags.php:2613
-#: bp-templates/bp-nouveau/includes/template-tags.php:2631
+#: bp-templates/bp-nouveau/includes/template-tags.php:2598
+msgid "By creating an account you are agreeing to the %1$s and %2$s."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/template-tags.php:2607
+#: bp-templates/bp-nouveau/includes/template-tags.php:2615
 #: bp-templates/bp-nouveau/includes/template-tags.php:2639
+#: bp-templates/bp-nouveau/includes/template-tags.php:2664
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2623
-msgid "By creating an account you are agreeing to the %1$s and %2$s."
+#: bp-templates/bp-nouveau/includes/template-tags.php:2625
+#: bp-templates/bp-nouveau/includes/template-tags.php:2649
+msgid "I agree to the %s."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/template-tags.php:2630
+#: bp-templates/bp-nouveau/includes/template-tags.php:2654
+msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-activity.php:27
@@ -27356,7 +27385,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:110
+#: bp-core/admin/settings/bp-admin-setting-general.php:96
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""

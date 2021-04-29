@@ -295,6 +295,47 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		/* Legal agreement field */
+		$legal_agreement_field = function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false;
+
+		if ( $legal_agreement_field ) {
+			$page_ids = bp_core_get_directory_page_ids();
+			$terms    = ! empty( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+			$privacy  = ! empty( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+
+			$headline = '';
+			if ( ! empty( $terms ) && ! empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: 1. Term agreement page. 2. Privacy page. */
+					__( 'I agree to the %1$s and %2$s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>',
+					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
+				);
+			} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: Term agreement page. */
+					__( 'I agree to the %s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>'
+				);
+			} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: Privacy page. */
+					__( 'I agree to the %s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
+				);
+			}
+
+			$fields[] = array(
+				'id'          => 'legal_agreement',
+				'label'       => $headline,
+				'description' => '',
+				'type'        => 'checkbox',
+				'required'    => true,
+				'options'     => array(),
+				'member_type' => '',
+			);
+		}
+
 		$response = rest_ensure_response( $fields );
 
 		/**
@@ -685,6 +726,11 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Adding error message for the legal agreement checkbox.
+		if ( function_exists( 'bb_register_legal_agreement' ) && true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
+		}
+
 		$bp->signup->username = $user_name;
 		$bp->signup->email    = $user_email;
 
@@ -899,6 +945,10 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		if ( ! empty( $wp_user_id ) && ! is_wp_error( $wp_user_id ) && ! empty( $_POST['legal_agreement'] ) ) {
+			update_user_meta( $wp_user_id, 'bb_legal_agreement', true );
 		}
 
 		$retval            = array();
