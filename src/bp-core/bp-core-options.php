@@ -1582,16 +1582,16 @@ function bp_register_confirm_email( $default = false ) {
  *                      Default: false.
  * @return bool True if Whether or not display legal agreement field in registrations.
  */
-function bp_register_legal_agreement( $default = false ) {
+function bb_register_legal_agreement( $default = false ) {
 
 	/**
-	 * Filters whether or not display legal agreemnet field in registrations.
+	 * Filters whether or not display legal agreement field in registrations.
 	 *
 	 * @since BuddyBoss 1.5.8.4
 	 *
-	 * @param bool $value whether or not display legal agreemnet field in registrations.
+	 * @param bool $value whether or not display legal agreement field in registrations.
 	 */
-	return (bool) apply_filters( 'bp_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
+	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
 }
 
 /**
