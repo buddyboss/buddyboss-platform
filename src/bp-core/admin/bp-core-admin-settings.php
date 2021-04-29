@@ -1143,7 +1143,7 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 /*
   Admin settings for showing the legal agreement confirmation field.
  *
- * @since BuddyBoss 1.5.8.4
+ * @since BuddyBoss 1.5.8.3
  *
  */
 function bb_admin_setting_callback_register_show_legal_agreement() {

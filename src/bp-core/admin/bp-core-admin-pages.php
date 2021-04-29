@@ -189,12 +189,11 @@ function bp_core_admin_register_registration_page_fields() {
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages   = bp_core_admin_get_static_pages();
-
-	$description            = '';
+	$description    = '';
 
 	foreach ( $static_pages as $name => $label ) {
 		$title = $label;
-		if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) && in_array($name, array( 'register', 'activate' ) ) ) {
+		if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) && in_array( $name, array( 'register', 'activate' ), true ) ) {
 			continue;
 		}
 		if ( 'register' === $name ) {

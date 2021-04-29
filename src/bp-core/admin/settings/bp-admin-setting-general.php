@@ -55,7 +55,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		if ( bp_enable_site_registration() || bp_is_active( 'invites' ) ) {
 
 			$args          = array();
-			$args['class'] = bp_is_active( 'invites' ) ? 'registration-form-main-select' : 'child-no-padding-first registration-form-main-select';
+			$args['class'] = bp_enable_site_registration() ? 'child-no-padding-first registration-form-main-select' : 'registration-form-main-select';
 			$this->add_field( 'allow-custom-registration', __( 'Registration Form', 'buddyboss' ), 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
 
 			$args          = array();
