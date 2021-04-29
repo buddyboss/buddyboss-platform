@@ -1146,7 +1146,7 @@ function bp_admin_setting_callback_register_show_confirm_email() {
  * @since BuddyBoss 1.5.8.4
  *
  */
-function bp_admin_setting_callback_register_show_legal_agreement() {
+function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
 
 	<input id="register-legal-agreement" name="register-legal-agreement" type="checkbox" value="1" <?php checked( bp_register_legal_agreement( false ) ); ?> />
