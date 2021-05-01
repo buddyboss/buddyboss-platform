@@ -813,6 +813,11 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$context     = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$member_data = $this->members_endpoint->user_data( $user, $context );
 
+		$is_friends_connection = true;
+		if ( bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message() && ! friends_check_friendship( bp_loggedin_user_id(), $group_member->user_id ) ) {
+			$is_friends_connection = false;
+		}
+
 		// Merge both info.
 		$data = array_merge(
 			$member_data,
@@ -824,7 +829,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				'date_modified'      => bp_rest_prepare_date_response( $group_member->date_modified ),
 				'role'               => '',
 				'plural_role'        => '',
-				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bb_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) ),
+				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bb_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) && $is_friends_connection ),
 			)
 		);
 
