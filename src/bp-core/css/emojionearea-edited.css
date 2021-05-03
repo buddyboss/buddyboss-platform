@@ -539,7 +539,6 @@
 
 .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojibtn img.lazy-emoji {
 	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-	/*opacity: 0;*/
 	color : transparent;
 }
 
