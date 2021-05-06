@@ -730,9 +730,9 @@ class BP_Email {
 		$this->post_object = apply_filters( 'bp_email_set_post_object', $post, $this );
 
 		if ( is_a( $this->post_object, 'WP_Post' ) ) {
-			$this->set_subject( $this->post_object->post_title )
-				->set_content_html( $this->post_object->post_content )
-				->set_content_plaintext( $this->post_object->post_excerpt );
+			$this->set_subject( __( $this->post_object->post_title, 'buddyboss' ) )
+				->set_content_html( __( $this->post_object->post_content, 'buddyboss' ) )
+				->set_content_plaintext( __( $this->post_object->post_excerpt, 'buddyboss' ) );
 
 			ob_start();
 
