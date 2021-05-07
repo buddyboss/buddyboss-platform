@@ -2563,9 +2563,10 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 function bp_nouveau_signup_terms_privacy() {
 
 	$page_ids = bp_core_get_directory_page_ids();
+	$show_legal_agreement = bb_register_legal_agreement();
 
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
-	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
 
 	// Do not show the page if page is not published.
 	if ( false !== $terms && 'publish' !== get_post_status( $terms ) ) {
@@ -2581,47 +2582,22 @@ function bp_nouveau_signup_terms_privacy() {
 		return false;
 	}
 
-	if ( $terms && ! $privacy ) {
-		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
-		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
-		</p>
-		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
-			<?php
-			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content', $get_terms->post_content );
-			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
-		</div>
-		<?php
-	}
-
-	if ( ! $terms && $privacy ) {
-		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
-		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
-		</p>
-		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
-			<?php
-			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content', $get_privacy->post_content );
-			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
-		</div>
-		<?php
-	}
-
-	if ( $terms && $privacy ) {
+	if ( ! empty( $terms )  && ! empty( $privacy ) ) {
 		$terms_link   = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
 		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
-		</p>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
+			</p>
+		<?php } ?>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
@@ -2639,6 +2615,59 @@ function bp_nouveau_signup_terms_privacy() {
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<?php
+	} else if ( empty( $terms ) && ! empty ( $privacy ) ) {
+		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
+		?>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $privacy_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
+			</p>
+		<?php } ?>
+		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
+			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
+			<?php
+			$get_privacy = get_post( $privacy );
+			echo apply_filters( 'the_content', $get_privacy->post_content );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+		</div>
+		<?php
+	} else if ( ! empty ( $terms ) && empty ( $privacy ) ) {
+		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
+		?>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $terms_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
+			</p>
+		<?php } ?>
+
+		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
+			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
+			<?php
+			$get_terms = get_post( $terms );
+			echo apply_filters( 'the_content', $get_terms->post_content );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+		</div>
+		<?php
+	}
+
+	if ( $show_legal_agreement ) {
+	    do_action('bp_legal_agreement_errors' );
 	}
 }
 

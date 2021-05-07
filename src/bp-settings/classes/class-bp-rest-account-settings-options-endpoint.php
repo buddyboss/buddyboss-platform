@@ -262,6 +262,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		$retval = array(
 			'error'   => ( isset( $updated['error'] ) ? $updated['error'] : false ),
+			'success' => ( empty( $updated['error'] ) ? __( 'Your settings has been successfully updated.', 'buddyboss' ) : false ),
 			'notices' => ( isset( $updated['notice'] ) ? $updated['notice'] : false ),
 			'data'    => $data,
 		);
@@ -378,12 +379,13 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $field, $request ) {
 		$data = array(
-			'name'     => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
-			'label'    => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
-			'type'     => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
-			'value'    => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
-			'options'  => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
-			'headline' => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
+			'name'        => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
+			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
+			'type'        => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
+			'value'       => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
+			'placeholder' => ( isset( $field['placeholder'] ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : '' ),
+			'options'     => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
+			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -520,6 +522,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				'label'       => __( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ),
 				'field'       => 'password',
 				'value'       => '',
+				'placeholder' => __( 'Enter password', 'buddyboss' ),
 				'options'     => array(),
 				'group_label' => '',
 			);
@@ -530,6 +533,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'label'       => __( 'Account Email', 'buddyboss' ),
 			'field'       => 'email',
 			'value'       => esc_attr( bp_core_get_user_email( bp_loggedin_user_id() ) ),
+			'placeholder' => __( 'Enter email', 'buddyboss' ),
 			'options'     => array(),
 			'group_label' => '',
 		);
@@ -538,6 +542,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'name'        => 'pass1',
 			'label'       => __( 'Add Your New Password', 'buddyboss' ),
 			'field'       => 'password',
+			'placeholder' => __( 'Enter password', 'buddyboss' ),
 			'value'       => '',
 			'options'     => array(),
 			'group_label' => '',
@@ -547,6 +552,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'name'        => 'pass2',
 			'label'       => __( 'Repeat Your New Password', 'buddyboss' ),
 			'field'       => 'password',
+			'placeholder' => __( 'Enter password', 'buddyboss' ),
 			'value'       => '',
 			'options'     => array(),
 			'group_label' => '',

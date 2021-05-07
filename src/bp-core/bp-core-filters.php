@@ -902,7 +902,9 @@ function bp_filter_metaid_column_name( $q ) {
 	preg_match_all( $quoted_regex, $q, $quoted_matches );
 	$q = preg_replace( $quoted_regex, '__QUOTE__', $q );
 
-	$q = str_replace( 'meta_id', 'id', $q );
+	if ( strpos( $q, 'umeta_id' ) === false ) {
+		$q = str_replace( 'meta_id', 'id', $q );
+	}
 
 	// Put quoted content back into the string.
 	if ( ! empty( $quoted_matches[0] ) ) {
