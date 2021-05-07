@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.5.8.2\n"
+"Project-Id-Version: BuddyBoss Platform 1.5.8.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-29 17:05:53+00:00\n"
+"POT-Creation-Date: 2021-05-07 15:18:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3394,7 +3394,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1157
 msgid ""
-"Require non-members to explicity agree to your Terms of Service And Privacy "
+"Require non-members to explicity agree to your Terms of Service and Privacy "
 "Policy before registering."
 msgstr ""
 
