@@ -4652,7 +4652,7 @@ add_action( 'bp_before_register_page', 'bp_register_page_content' );
  *
  * @since BuddyBoss 1.5.6
  *
- * @param array $args Arguments
+ * @param array $args Arguments.
  *
  * @return string|false Link for a report a Member.
  */
@@ -4695,21 +4695,21 @@ function bp_member_get_report_link( $args = array() ) {
  */
 function bb_get_member_roles( $user_id = 0 ) {
 
-	// Default return value
+	// Default return value.
 	$roles = array();
 
-	// Bail if cannot query the user
+	// Bail if cannot query the user.
 	if ( ! class_exists( 'WP_User' ) || empty( $user_id ) ) {
-		return false;
+		return $roles;
 	}
 
-	// User ID
+	// User ID.
 	$user = new WP_User( $user_id );
 	if ( isset( $user->roles ) ) {
 		$roles = (array) $user->roles;
 	}
 
-	// Super admin
+	// Super admin.
 	if ( is_multisite() && is_super_admin( $user_id ) ) {
 		$roles[] = 'super_admin';
 	}
