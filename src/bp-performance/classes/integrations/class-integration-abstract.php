@@ -610,15 +610,23 @@ abstract class Integration_Abstract {
 		);
 		// To add filter for this you need to execute code form mu level.
 		$disallow_headers = apply_filters( 'rest_post_disprepare_header_cache', $disallow_headers );
-		foreach ( headers_list() as $header ) {
-			$header = explode( ':', $header );
-			if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-				$headers[ $header[0] ] = $header[1];
+
+		$header_list = headers_list();
+		if ( ! empty( $header_list ) ) {
+			foreach ( $header_list as $header ) {
+				$header = explode( ':', $header );
+				if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
+					$headers[ $header[0] ] = $header[1];
+				}
 			}
 		}
-		foreach ( $results->get_headers() as $header ) {
-			if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-				$headers[ $header[0] ] = $header[1];
+
+		$results_header = $results->get_headers();
+		if ( ! empty( $results_header ) ) {
+			foreach ( $results_header as $header_key => $header_val ) {
+				if ( ! in_array( $header_key, $disallow_headers, true ) ) {
+					$headers[ $header_key ] = $header_val;
+				}
 			}
 		}
 

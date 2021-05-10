@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.5.8.1\n"
+"Project-Id-Version: BuddyBoss Platform 1.5.8.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-22 09:55:39+00:00\n"
+"POT-Creation-Date: 2021-04-29 18:21:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1025,8 +1025,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2882
 #: bp-core/admin/bp-core-admin-functions.php:1562
-#: bp-core/admin/bp-core-admin-pages.php:335
-#: bp-core/admin/bp-core-admin-pages.php:369
+#: bp-core/admin/bp-core-admin-pages.php:346
+#: bp-core/admin/bp-core-admin-pages.php:380
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:243 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
@@ -1816,7 +1816,7 @@ msgstr ""
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1150
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1709
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1257
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1447
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1497
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:838
 msgid "Ensure result set includes specific IDs."
 msgstr ""
@@ -1829,7 +1829,7 @@ msgstr ""
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:622
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1101
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1633
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1456
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1506
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:802
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:811
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1025
@@ -3013,30 +3013,39 @@ msgstr ""
 msgid "This directory shows all documents uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:186
+#: bp-core/admin/bp-core-admin-pages.php:182
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:197
+#: bp-core/admin/bp-core-admin-pages.php:184
+msgid "Login Pages"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:200
 msgid "New users fill out this form to register their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:199
-#: bp-core/admin/bp-core-admin-pages.php:201
+#: bp-core/admin/bp-core-admin-pages.php:203
+#: bp-core/admin/bp-core-admin-pages.php:209
 msgid ""
 "If a page is added, its contents will display in a popup on the register "
-"form."
+"and login forms."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:203
+#: bp-core/admin/bp-core-admin-pages.php:205
+#: bp-core/admin/bp-core-admin-pages.php:211
+msgid "If a page is added, its contents will display in a popup on the login form."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-pages.php:214
 msgid "After registering, users are sent to this page to activate their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:223
+#: bp-core/admin/bp-core-admin-pages.php:234
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:243
+#: bp-core/admin/bp-core-admin-pages.php:254
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -3047,10 +3056,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:639
 #: bp-core/admin/bp-core-admin-settings.php:962
 #: bp-core/admin/bp-core-admin-settings.php:1078
-#: bp-core/admin/bp-core-admin-settings.php:1230
-#: bp-core/admin/bp-core-admin-settings.php:1295
-#: bp-core/admin/bp-core-admin-settings.php:1332
-#: bp-core/admin/bp-core-admin-settings.php:1356
+#: bp-core/admin/bp-core-admin-settings.php:1248
+#: bp-core/admin/bp-core-admin-settings.php:1313
+#: bp-core/admin/bp-core-admin-settings.php:1350
+#: bp-core/admin/bp-core-admin-settings.php:1374
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
@@ -3065,31 +3074,33 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:256
-msgid "Associate a WordPress page with the following Registration sections."
+#: bp-core/admin/bp-core-admin-pages.php:267
+msgid ""
+"Associate a WordPress page with the following Registration and Login "
+"sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:262
+#: bp-core/admin/bp-core-admin-pages.php:273
 #: bp-core/admin/bp-core-admin-settings.php:893
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:278
+#: bp-core/admin/bp-core-admin-pages.php:289
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:326
-#: bp-core/admin/bp-core-admin-pages.php:360
+#: bp-core/admin/bp-core-admin-pages.php:337
+#: bp-core/admin/bp-core-admin-pages.php:371
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:342
-#: bp-core/admin/bp-core-admin-pages.php:376
+#: bp-core/admin/bp-core-admin-pages.php:353
+#: bp-core/admin/bp-core-admin-pages.php:387
 msgid "Create Page"
 msgstr ""
 
@@ -3371,56 +3382,66 @@ msgstr ""
 msgid "Add Email confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1152
+#: bp-core/admin/bp-core-admin-settings.php:1153
+msgid "Add Legal Agreement checkbox to register form"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1157
+msgid ""
+"Require non-members to explicity agree to your Terms of Service And Privacy "
+"Policy before registering."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1170
 msgid "Add Password confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1164
+#: bp-core/admin/bp-core-admin-settings.php:1182
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:461
 msgid "Grid and List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1165
-#: bp-core/admin/bp-core-admin-settings.php:1196
+#: bp-core/admin/bp-core-admin-settings.php:1183
+#: bp-core/admin/bp-core-admin-settings.php:1214
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:462
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:493
 msgid "Grid"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1166
-#: bp-core/admin/bp-core-admin-settings.php:1197
+#: bp-core/admin/bp-core-admin-settings.php:1184
+#: bp-core/admin/bp-core-admin-settings.php:1215
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:494
 msgid "List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1183
+#: bp-core/admin/bp-core-admin-settings.php:1201
 msgid ""
 "Display group directories in Grid View, List View, or allow toggling "
 "between both views."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1248
+#: bp-core/admin/bp-core-admin-settings.php:1266
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1249
+#: bp-core/admin/bp-core-admin-settings.php:1267
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1254
+#: bp-core/admin/bp-core-admin-settings.php:1272
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1274
+#: bp-core/admin/bp-core-admin-settings.php:1292
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1309
+#: bp-core/admin/bp-core-admin-settings.php:1327
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
@@ -3869,7 +3890,7 @@ msgid "Migrated invitations!"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
-#: bp-core/admin/settings/bp-admin-setting-general.php:116
+#: bp-core/admin/settings/bp-admin-setting-general.php:102
 msgid "Activity Settings"
 msgstr ""
 
@@ -3962,11 +3983,10 @@ msgid "Enable Registration"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:59
-#: bp-core/admin/settings/bp-admin-setting-general.php:77
 msgid "Registration Form"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:94
+#: bp-core/admin/settings/bp-admin-setting-general.php:80
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:854
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:19
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:19
@@ -3975,20 +3995,20 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:97
+#: bp-core/admin/settings/bp-admin-setting-general.php:83
 msgid "Private Website"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:100
+#: bp-core/admin/settings/bp-admin-setting-general.php:86
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:107
+#: bp-core/admin/settings/bp-admin-setting-general.php:93
 #: bp-forums/admin/settings.php:1526
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:113
+#: bp-core/admin/settings/bp-admin-setting-general.php:99
 msgid "Groups Settings"
 msgstr ""
 
@@ -4858,8 +4878,9 @@ msgid "Enter valid email"
 msgstr ""
 
 #: bp-core/bp-core-cssjs.php:918
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:755
-#: bp-members/screens/register.php:161
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:731
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:801
+#: bp-members/screens/register.php:161 bp-members/screens/register.php:209
 msgid "This is a required field."
 msgstr ""
 
@@ -7622,7 +7643,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-rest-learndash-courses-endpoint.php:615
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:615
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1439
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1489
 msgid "Offset the result set by a specific number of items."
 msgstr ""
 
@@ -7744,38 +7765,38 @@ msgstr ""
 msgid "Description of the setting."
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:275
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:276
 #: bp-moderation/screens/block-member-form.php:31
 msgid "See blocked member's posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:278
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:279
 #: bp-moderation/screens/block-member-form.php:37
 msgid "Mention this member in posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:281
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:282
 #: bp-moderation/screens/block-member-form.php:43
 msgid "Invite this member to groups"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:285
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:286
 #: bp-moderation/screens/block-member-form.php:50
 msgid "Message this member"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:289
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:290
 #: bp-moderation/screens/block-member-form.php:57
 msgid "Add this member as a connection"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:294
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:295
 msgid ""
 "This action will also remove this member from your connections and send a "
 "report to the site admin. "
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:297
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:298
 #: bp-moderation/screens/block-member-form.php:69
 msgid "Please allow a few minutes for this process to complete."
 msgstr ""
@@ -12271,8 +12292,8 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-attachments-member-avatar-endpoint.php:303
 #: bp-members/classes/class-bp-rest-attachments-member-cover-endpoint.php:384
 #: bp-members/classes/class-bp-rest-members-endpoint.php:551
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:432
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:515
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:473
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:556
 msgid "Sorry, you need to be logged in to perform this action."
 msgstr ""
 
@@ -16635,11 +16656,11 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-attachments-group-cover-endpoint.php:390
 #: bp-members/classes/class-bp-rest-attachments-member-avatar-endpoint.php:323
 #: bp-members/classes/class-bp-rest-attachments-member-cover-endpoint.php:394
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:442
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:535
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:808
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:897
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:483
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:576
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:854
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:943
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:993
 msgid "Sorry, you are not authorized to perform this action."
 msgstr ""
 
@@ -16702,7 +16723,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-endpoint.php:502
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:267
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:181
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:344
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:353
 msgid "Invalid member ID."
 msgstr ""
 
@@ -20568,130 +20589,145 @@ msgid ""
 "around this network."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:328
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:310
+#: bp-templates/bp-nouveau/includes/template-tags.php:2593
+#. translators: 1. Term agreement page. 2. Privacy page.
+msgid "I agree to the %1$s and %2$s."
+msgstr ""
+
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:317
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:323
+#: bp-templates/bp-nouveau/includes/template-tags.php:2625
+#: bp-templates/bp-nouveau/includes/template-tags.php:2649
+#. translators: Term agreement page.
+#. translators: Privacy page.
+msgid "I agree to the %s."
+msgstr ""
+
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:369
 msgid "Sorry, you are not able to view the register form fields."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:525
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1107
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:566
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1157
 msgid "Invalid signup id."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:602
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:643
 msgid "Cannot create new signup."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:651
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:692
 #: bp-members/screens/register.php:98
 msgid "Please make sure to enter your password."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:659
-#: bp-members/screens/register.php:106 bp-members/screens/register.php:353
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:700
+#: bp-members/screens/register.php:106 bp-members/screens/register.php:361
 msgid "Please make sure to enter your email twice."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:667
-#: bp-members/screens/register.php:111 bp-members/screens/register.php:358
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:708
+#: bp-members/screens/register.php:111 bp-members/screens/register.php:366
 msgid "The emails entered do not match."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:676
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:717
 #: bp-members/screens/register.php:120
 msgid "Please make sure to enter your password twice."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:684
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:725
 #: bp-members/screens/register.php:125
 msgid "The passwords entered do not match."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:906
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:956
 #: bp-templates/bp-nouveau/includes/functions.php:1034
 msgid ""
 "Before you can login, you need to confirm your email address via the email "
 "we just sent to you."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:988
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1038
 msgid "Could not delete signup."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1065
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1115
 msgid "Fail to activate the signup."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1214
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1264
 msgid "New user Username ."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1224
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1274
 msgid "New user email address."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1234
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1284
 msgid "New user confirm email address."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1244
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1294
 msgid "New user account password."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1257
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1307
 msgid "New user confirm account password."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1268
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1318
 msgid "If user likes to create a new site."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1276
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1326
 msgid "New Site URL."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1284
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1334
 msgid "New Site Title."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1292
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1342
 msgid ""
 "If user would like to site appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1368
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1418
 msgid "A unique numeric ID for the signup."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1374
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1424
 msgid "The username of the user the signup is for."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1381
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1431
 msgid "The full name of the user the signup is for."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1390
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1440
 msgid "The email for the user the signup is for."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1396
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1446
 msgid "Activation key of the signup."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1402
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1452
 msgid "The registered date for the user, in the site's timezone."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1431
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1481
 msgid "Total number of signups to return."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1465
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1515
 msgid "Order by a specific parameter (default: signup_id)."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-signup-endpoint.php:1473
+#: bp-members/classes/class-bp-rest-signup-endpoint.php:1523
 msgid "Specific user login to return."
 msgstr ""
 
@@ -22336,10 +22372,10 @@ msgstr ""
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:135
-#: bp-templates/bp-nouveau/includes/template-tags.php:2596
-#: bp-templates/bp-nouveau/includes/template-tags.php:2613
-#: bp-templates/bp-nouveau/includes/template-tags.php:2631
+#: bp-templates/bp-nouveau/includes/template-tags.php:2607
+#: bp-templates/bp-nouveau/includes/template-tags.php:2615
 #: bp-templates/bp-nouveau/includes/template-tags.php:2639
+#: bp-templates/bp-nouveau/includes/template-tags.php:2664
 msgid "Close (Esc)"
 msgstr ""
 
@@ -26084,20 +26120,20 @@ msgstr ""
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2588
-#: bp-templates/bp-nouveau/includes/template-tags.php:2605
-msgid "By creating an account you are agreeing to the %s."
+#: bp-templates/bp-nouveau/includes/template-tags.php:2598
+msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2596
-#: bp-templates/bp-nouveau/includes/template-tags.php:2613
-#: bp-templates/bp-nouveau/includes/template-tags.php:2631
+#: bp-templates/bp-nouveau/includes/template-tags.php:2607
+#: bp-templates/bp-nouveau/includes/template-tags.php:2615
 #: bp-templates/bp-nouveau/includes/template-tags.php:2639
+#: bp-templates/bp-nouveau/includes/template-tags.php:2664
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2623
-msgid "By creating an account you are agreeing to the %1$s and %2$s."
+#: bp-templates/bp-nouveau/includes/template-tags.php:2630
+#: bp-templates/bp-nouveau/includes/template-tags.php:2654
+msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-activity.php:27
@@ -26242,7 +26278,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-filters.php:782
 #: bp-xprofile/bp-xprofile-filters.php:877
 #: bp-xprofile/bp-xprofile-filters.php:990
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:484
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:503
 #: bp-xprofile/screens/edit.php:140
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
@@ -26377,8 +26413,8 @@ msgid "(optional)"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:52
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:617
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:309
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:626
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:328
 msgid "The ID of the field the data is from."
 msgstr ""
 
@@ -26392,8 +26428,8 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:166
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:239
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:355
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:413
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:364
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:422
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:268
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:334
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:780
@@ -26405,51 +26441,51 @@ msgstr ""
 msgid "Sorry, the profile field value is not viewable for this user."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:279
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:288
 msgid "Cannot save XProfile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:332
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:341
 msgid "Sorry, you need to be logged in to save XProfile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:369
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:378
 msgid "Sorry, you cannot save XProfile field data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:432
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:441
 msgid "Could not delete XProfile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:611
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:620
 msgid "A unique numeric ID for the profile data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:623
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:632
 msgid "The ID of the user the field data is from."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:629
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:323
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:638
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:342
 msgid "The value of the field data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:637
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:646
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1328
 msgid "Value for the field, as it exists in the database."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:642
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:651
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1333
 msgid "Unserialized value for the field, regular string will be casted as array."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:651
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:660
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1339
 msgid "HTML value for the field, transformed for display."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:660
+#: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:669
 msgid "The date the field data was last updated, in the site's timezone."
 msgstr ""
 
@@ -26521,15 +26557,15 @@ msgid "The fields associated with this group of profile fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:911
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:335
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:354
 msgid "ID of the field group that have fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:919
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:944
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1376
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:343
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:360
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:362
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:379
 msgid ""
 "Whether to hide profile groups of fields that do not have any profile "
 "fields or not."
@@ -26543,7 +26579,7 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:935
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1392
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:351
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:370
 msgid ""
 "Limit fields by those restricted to a given member type, or array of member "
 "types. If `$user_id` is provided, the value of `$member_type` will be "
@@ -26554,39 +26590,39 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:952
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:813
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:368
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:387
 msgid "Whether to fetch the fields for each group."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:960
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1409
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:821
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:376
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:395
 msgid "Whether to fetch data for each field. Requires a $user_id."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:968
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1417
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:829
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:384
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:403
 msgid "Whether to fetch the visibility level for each field."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:976
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1425
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:392
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:411
 msgid "Ensure result set excludes specific profile field groups."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:985
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1434
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:401
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:420
 msgid "Ensure result set excludes specific profile fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php:994
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1443
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:410
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:429
 msgid ""
 "Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and "
 "data."
@@ -26707,7 +26743,7 @@ msgid "Whether the option is the default one for the profile field."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1310
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:326
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:345
 msgid "Who may see the saved value for this profile field."
 msgstr ""
 
@@ -26720,7 +26756,7 @@ msgid "The saved value for this profile field."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1368
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:316
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:335
 msgid "ID of the profile group of fields that have profile fields"
 msgstr ""
 
@@ -26756,7 +26792,7 @@ msgid "Sorry, you are not allowed to delete your profile repeater fields."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php:737
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:268
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:287
 msgid "Object of groups."
 msgstr ""
 
@@ -26822,32 +26858,32 @@ msgid ""
 "roles."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:217
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:236
 msgid "Sorry, you are not allowed to update your profile fields."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:229
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:248
 msgid "Sorry, you are not logged in to update fields."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:262
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:281
 msgid "Whether fields updated or giving an error."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:295
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:314
 msgid ""
 "Fields array with field_id, group_id, type, value and visibility_level to "
 "update the data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:450
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:469
 #: bp-xprofile/screens/edit.php:93
 msgid ""
 "Changing this profile type would remove your Administrator role and lock "
 "you out of the WordPress admin."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:460
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:479
 #: bp-xprofile/screens/edit.php:102
 msgid ""
 "Changing this profile type would remove your Editor role and lock you out "
@@ -27356,7 +27392,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:110
+#: bp-core/admin/settings/bp-admin-setting-general.php:96
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""

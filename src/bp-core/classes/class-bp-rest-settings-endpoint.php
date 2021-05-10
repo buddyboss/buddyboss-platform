@@ -248,6 +248,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-site-registration'              => bp_enable_site_registration(),
 			'allow-custom-registration'                => bp_allow_custom_registration(),
 			'register-confirm-email'                   => bp_register_confirm_email(),
+			'register-legal-agreement'                 => ( function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false ),
 			'register-confirm-password'                => bp_register_confirm_password(),
 			'bp-disable-account-deletion'              => bp_disable_account_deletion(),
 			'bp-enable-private-network'                => ! bp_enable_private_network(),
@@ -479,6 +480,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		$results['enable_messages']               = bp_is_active( 'messages' );
 		$results['bp_page_privacy']               = $privacy;
 		$results['bp_page_terms']                 = $terms;
+		$results['wp_page_privacy']               = (int) get_option( 'wp_page_for_privacy_policy' );
 
 		return $results;
 	}
