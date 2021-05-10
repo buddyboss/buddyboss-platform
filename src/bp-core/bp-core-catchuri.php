@@ -1557,7 +1557,7 @@ function bb_removes_api_endpoints_for_not_logged_in_user() {
 		if ( defined( 'BP_PLATFORM_VERSION' ) && ! is_plugin_active( $buddyboss_app_plugin_file ) ) {
 			// IF Platform 'Private Website' settings enabled.
 			// THEN Restrict all RSS and REST APIs. (reason to restrict because the site is private).
-			if ( $enable_private_network ) {
+			if ( ! $enable_private_network ) {
 				bb_restricate_rss_feed();
 				bb_restricate_rest_api();
 			}
@@ -1568,13 +1568,13 @@ function bb_removes_api_endpoints_for_not_logged_in_user() {
 			// THEN Restrict all RSS but do not restrict REST APIs.
 			// (reason to restrict RSS because the site is private)
 			// (reason to not restrict rest API because a customer might want to restrict site on the web but not on App)
-			if ( $enable_private_network && ! bbapp_is_private_app_enabled() ) {
+			if ( ! $enable_private_network && ! bbapp_is_private_app_enabled() ) {
 				bb_restricate_rss_feed();
 			}
 			// IF Platform 'Private Website' settings enabled and App plugin 'Private App' settings also enabled.
 			// THEN Restrict all RSS and REST APIs.
 			// (reason to restrict because the site is private on both web and app)
-			if ( $enable_private_network && bbapp_is_private_app_enabled() ) {
+			if ( ! $enable_private_network && bbapp_is_private_app_enabled() ) {
 				bb_restricate_rss_feed();
 				bb_restricate_rest_api();
 			}
@@ -1615,10 +1615,21 @@ function bb_restricate_rss_feed() {
  * Function will restricate rest API.
  */
 function bb_restricate_rest_api() {
-	// This will disable wordpress endpoints.
-	remove_action( 'rest_api_init', 'create_initial_rest_routes', 99 );
 	// This will disable woocommerce endpoints.
 	if ( class_exists( 'woocommerce' ) ) {
 		remove_action( 'rest_api_init', array( WC()->api, 'register_rest_routes' ), 10 );
+	}
+	// This will disable all rest api endpoints.
+	add_filter( 'rest_endpoints', 'bb_remove_all_endpoints' );
+}
+
+/**
+ * Function will unset all endpoints.
+ *
+ * @param $endpoints
+ */
+function bb_remove_all_endpoints( $endpoints ) {
+	foreach ( $endpoints as $endpoint => $details ) {
+		unset( $endpoints[$endpoint] );
 	}
 }
