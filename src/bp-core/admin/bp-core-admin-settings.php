@@ -1154,7 +1154,7 @@ function bb_admin_setting_callback_register_show_legal_agreement() {
 	<?php
 		printf(
 			'<p class="description">%s</p>',
-			__( 'Require non-members to explicity agree to your Terms of Service And Privacy Policy before registering.', 'buddyboss' )
+			__( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' )
 		);
 }
 
