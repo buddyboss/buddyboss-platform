@@ -239,7 +239,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -278,7 +278,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $forum, $request )
@@ -311,7 +311,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -321,7 +321,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		if ( true === $retval && empty( $forum->ID ) ) {
 			$retval = new WP_Error(
@@ -343,7 +343,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && isset( $forum->post_type ) ) {
+		if ( true === $retval && is_user_logged_in() && isset( $forum->post_type ) ) {
 			$post_type = get_post_type_object( $forum->post_type );
 
 			if ( ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {
@@ -385,7 +385,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the forum.
 	 */
 	public function update_item( $request ) {
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		$user_id = bbp_get_user_id( 0, true, true );
 
@@ -457,7 +457,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		if ( empty( $forum->ID ) ) {
 			$retval = new WP_Error(
@@ -1072,6 +1072,18 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			),
 		);
 
+		if (
+			function_exists( 'bbp_is_forum_group_forum' )
+			&& bbp_is_forum_group_forum( $post->ID )
+			&& function_exists( 'groups_get_group' )
+		) {
+			$group          = $this->bp_rest_get_group( $post->ID );
+			$links['group'] = array(
+				'href'       => rest_url( sprintf( '/%s/%s/', $this->namespace, 'groups' ) . $group->id ),
+				'embeddable' => true,
+			);
+		}
+
 		/**
 		 * Filter links prepared for the REST response.
 		 *
@@ -1098,7 +1110,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$last_id = get_post_meta( $forum_id, '_bbp_last_active_id', true );
 		if ( ! empty( $last_id ) ) {
-			$post = get_post( $last_id );
+			$post = bbp_get_forum( $last_id );
 
 			return ( ! empty( $post ) && ! empty( $post->post_author ) ) ? $post->post_author : 0;
 		}

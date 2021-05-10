@@ -220,7 +220,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -317,7 +317,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -863,7 +863,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'option_order'      => (int) $field->option_order,
 			'order_by'          => $field->order_by,
 			'is_default_option' => (bool) $field->is_default_option,
-			'options'           => '',
+			'options'           => array(),
 		);
 
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
@@ -1044,7 +1044,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Reset the global before returning the value.
 		$field = $reset_global;
 
-		return $value;
+		return wp_specialchars_decode( $value );
 	}
 
 	/**
@@ -1074,7 +1074,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		return $value;
+		return wp_specialchars_decode( $value );
 	}
 
 	/**
@@ -1105,7 +1105,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$unserialized_value = maybe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
-			$unserialized_value = (array) $unserialized_value;
+			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value );
 		}
 
 		return $unserialized_value;

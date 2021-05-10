@@ -622,7 +622,7 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 		'name' => $post->post_type,
 	);
 
-	$output = 'objects'; // names or objects
+	$output = 'objects'; // names or objects.
 
 	$cu_post_types = get_post_types( $cu_post_types_args, $output );
 
@@ -824,8 +824,23 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 
 		// Record in activity feeds
 		if ( ! empty( $activity_args ) ) {
+
+			// Added the filter pass the empty content on blog or custom post types comments.
+			add_filter( 'bp_activity_comment_content', 'bp_activity_empty_post_comment_content', 9999 );
+			/**
+			 * When enabled sync comment option from activity section then comment was going empty when
+			 * reply from blog or custom post types.
+			 */
+			remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 			$activity_id = bp_activity_new_comment( $activity_args );
 
+			// Removed the filter get back activity content.
+			remove_filter( 'bp_activity_comment_content', 'bp_activity_empty_post_comment_content', 9999 );
+			/**
+			 * When enabled sync comment option from activity section then comment was going empty when
+			 * reply from blog or custom post types.
+			 */
+			add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 			if ( empty( $activity_args['id'] ) ) {
 				// The activity metadata to inform about the corresponding comment ID
 				bp_activity_update_meta( $activity_id, "bp_blogs_{$comment->post->post_type}_comment_id", $comment->comment_ID );
@@ -1499,3 +1514,16 @@ function bp_core_admin_get_active_custom_post_type_feed() {
 	bp_update_option( 'bp_core_admin_get_active_custom_post_type_feed', $post_types );
 }
 add_action( 'init', 'bp_core_admin_get_active_custom_post_type_feed' );
+
+/**
+ * Pass the empty content on blog or custom post types comments.
+ *
+ * @param $content
+ *
+ * @return string
+ * @since BuddyBoss 1.5.5
+ */
+function bp_activity_empty_post_comment_content( $content ) {
+
+	return '';
+}

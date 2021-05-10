@@ -50,9 +50,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$this->nav_item_name = __( 'Discussions', 'buddyboss' );
 
 			// Component slugs (hardcoded to match Forums 1.x functionality)
-			$this->slug       = get_option( '_bbp_forum_slug', 'forum' );
-			$this->topic_slug = get_option( '_bbp_topic_slug', 'discussions' );
-			$this->reply_slug = get_option( '_bbp_reply_slug', 'reply' );
+			$this->slug       = urlencode( get_option( '_bbp_forum_slug', 'forum' ) );
+			$this->topic_slug = urlencode( get_option( '_bbp_topic_slug', 'discussions' ) );
+			$this->reply_slug = urlencode( get_option( '_bbp_reply_slug', 'reply' ) );
 
 			// Forum component is visible
 			$this->visibility = 'public';
