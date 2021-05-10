@@ -1548,8 +1548,8 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
  * Function will remove default wordpress and woocommerce api endpoint.
  * Also, remove feeds url.
  */
-add_action('init', 'bb_removes_api_endpoints_for_not_logged_in_user');
-function bb_removes_api_endpoints_for_not_logged_in_user() {
+add_action('init', 'bb_removes_endpoints_and_feeds');
+function bb_removes_endpoints_and_feeds() {
 	if ( ! is_user_logged_in() ) {
 		$enable_private_network    = bp_enable_private_network();
 		$buddyboss_app_plugin_file = 'buddyboss-app/buddyboss-app.php';
