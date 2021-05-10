@@ -173,7 +173,7 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			// Screens - Directory.
-			if ( bp_is_groups_directory() && ! empty( bp_get_current_group_directory_type() ) ) {
+			if ( bp_is_groups_directory() && ! bp_is_current_action( 'type' ) ) {
 				require $this->path . 'bp-groups/screens/directory.php';
 			}
 
