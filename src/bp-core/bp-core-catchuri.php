@@ -1504,34 +1504,74 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 add_action('init', 'bb_removes_api_endpoints_for_not_logged_in_user');
 function bb_removes_api_endpoints_for_not_logged_in_user() {
 	if ( ! is_user_logged_in() ) {
-		// This will disable wordpress endpoints.
-		remove_action( 'rest_api_init', 'create_initial_rest_routes', 99 );
-		// This will disable default feeds.
-		remove_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
-		remove_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
-		remove_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
-		remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
-		remove_action( 'wp_head', 'feed_links_extra', 3 );
-		remove_action( 'wp_head', 'feed_links', 2 );
-		// This will disable sitewide feeds.
-		remove_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
-		// This will disable users perosnal activity feeds.
-		remove_action( 'bp_actions', 'bp_activity_action_personal_feed' );
-		// This will disable users friends activity feeds.
-		remove_action( 'bp_actions', 'bp_activity_action_friends_feed' );
-		// This will disable users group activity feeds.
-		remove_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
-		// This will disable users mentions activity feeds.
-		remove_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
-		// This will disable users favorites activity feeds.
-		remove_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
-		// This will disable groups feeds.
-		remove_action( 'bp_actions', 'groups_action_group_feed' );
-		// This will disable forums feed.
-		remove_filter( 'bbp_request', 'bbp_request_feed_trap' );
-		// This will disable woocommerce endpoints.
-		if ( class_exists( 'woocommerce' ) ) {
-			remove_action( 'rest_api_init', array( WC()->api, 'register_rest_routes' ), 10 );
+		$enable_private_network    = bp_enable_private_network();
+		$buddyboss_app_plugin_file = 'buddyboss-app/buddyboss-app.php';
+		// IF Platform active and App plugin not active.
+		if ( defined( 'BP_PLATFORM_VERSION' ) && ! is_plugin_active( $buddyboss_app_plugin_file ) ) {
+			// IF Platform 'Private Website' settings enabled.
+			// THEN Restrict all RSS and REST APIs. (reason to restrict because the site is private).
+			if ( $enable_private_network ) {
+				bb_restricate_rss_feed();
+				bb_restricate_rest_api();
+			}
 		}
+		// IF Platform active and App plugin also active.
+		if ( defined( 'BP_PLATFORM_VERSION' ) && is_plugin_active( $buddyboss_app_plugin_file ) ) {
+			// IF Platform 'Private Website' settings enabled and App plugin 'Private App' settings disabled.
+			// THEN Restrict all RSS but do not restrict REST APIs.
+			// (reason to restrict RSS because the site is private)
+			// (reason to not restrict rest API because a customer might want to restrict site on the web but not on App)
+			if ( $enable_private_network && ! bbapp_is_private_app_enabled() ) {
+				bb_restricate_rss_feed();
+			}
+			// IF Platform 'Private Website' settings enabled and App plugin 'Private App' settings also enabled.
+			// THEN Restrict all RSS and REST APIs.
+			// (reason to restrict because the site is private on both web and app)
+			if ( $enable_private_network && bbapp_is_private_app_enabled() ) {
+				bb_restricate_rss_feed();
+				bb_restricate_rest_api();
+			}
+		}
+	}
+}
+
+/**
+ * Function will restricate RSS feed.
+ */
+function bb_restricate_rss_feed() {
+	// This will disable default feeds.
+	remove_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
+	remove_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
+	remove_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
+	remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
+	remove_action( 'wp_head', 'feed_links_extra', 3 );
+	remove_action( 'wp_head', 'feed_links', 2 );
+	// This will disable sitewide feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
+	// This will disable users perosnal activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_personal_feed' );
+	// This will disable users friends activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_friends_feed' );
+	// This will disable users group activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
+	// This will disable users mentions activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
+	// This will disable users favorites activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
+	// This will disable groups feeds.
+	remove_action( 'bp_actions', 'groups_action_group_feed' );
+	// This will disable forums feed.
+	remove_filter( 'bbp_request', 'bbp_request_feed_trap' );
+}
+
+/**
+ * Function will restricate rest API.
+ */
+function bb_restricate_rest_api() {
+	// This will disable wordpress endpoints.
+	remove_action( 'rest_api_init', 'create_initial_rest_routes', 99 );
+	// This will disable woocommerce endpoints.
+	if ( class_exists( 'woocommerce' ) ) {
+		remove_action( 'rest_api_init', array( WC()->api, 'register_rest_routes' ), 10 );
 	}
 }
