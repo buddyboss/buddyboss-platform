@@ -580,7 +580,20 @@ function bp_nouveau_get_groups_directory_nav_items() {
 
 	if ( is_user_logged_in() ) {
 
-		$my_groups_count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+		$group_type = bp_get_current_group_directory_type();
+
+		if ( ! empty( $group_type ) ) {
+			$result_groups   = groups_get_groups(
+				array(
+					'user_id'    => bp_loggedin_user_id(),
+					'group_type' => $group_type,
+					'fields'     => 'ids',
+				)
+			);
+			$my_groups_count = isset( $result_groups['total'] ) ? (int) $result_groups['total'] : 0;
+		} else {
+			$my_groups_count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+		}
 
 		// If the user has groups create a nav item
 		if ( $my_groups_count ) {
@@ -1296,19 +1309,19 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 		'group_no_member'       => __( 'There are no other members in this group. Please add some members before sending a message.', 'buddyboss' ),
 		'group_no_member_pro'   => __( 'You are not allowed to send private messages to any member of this group.', 'buddyboss' ),
 		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
-		'remove_recipient'      => __( 'Remove Recipient', 'buddyboss' ),
-		'add_recipient'         => __( 'Add Recipient', 'buddyboss' ),
+		'remove_recipient'      => __( 'Remove Member', 'buddyboss' ),
+		'add_recipient'         => __( 'Add Member', 'buddyboss' ),
 		'no_content'            => __( 'Please add some content to your message.', 'buddyboss' ),
 		'no_recipient'          => __( 'Please add at least one recipient.', 'buddyboss' ),
 		'select_default_text'   => __( 'All Group Members', 'buddyboss' ),
 		'select_default_value'  => __( 'all', 'buddyboss' ),
 		'no_member'             => __( 'No members were found. Try another filter.', 'buddyboss' ),
-		'invites_form_all'      => __( 'This message will be delivered to all members of this group.', 'buddyboss' ),
+		'invites_form_all'      => __( 'This message will be delivered to all members of this group you can message.', 'buddyboss' ),
 		'invites_form_separate' => __( 'Select group members to message by clicking the + button next to each member. Once you\'ve made a selection, click "Send Message" to create a new group message.', 'buddyboss' ),
 		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
 		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
 		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss' ),
-		'feedback_select_all'   => __( 'This message will be delivered to all members of this group.', 'buddyboss' ),
+		'feedback_select_all'   => __( 'This message will be delivered to all members of this group you can message.', 'buddyboss' ),
 		'feedback_individual'   => __( 'Select individual recipients by clicking the + button next to each member.', 'buddyboss' ),
 		'group_id'              => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
 		'is_group_create'       => bp_is_group_create(),

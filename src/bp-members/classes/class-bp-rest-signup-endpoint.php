@@ -295,6 +295,47 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		/* Legal agreement field */
+		$legal_agreement_field = function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false;
+
+		if ( $legal_agreement_field ) {
+			$page_ids = bp_core_get_directory_page_ids();
+			$terms    = ! empty( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+			$privacy  = ! empty( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+
+			$headline = '';
+			if ( ! empty( $terms ) && ! empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: 1. Term agreement page. 2. Privacy page. */
+					__( 'I agree to the %1$s and %2$s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>',
+					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
+				);
+			} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: Term agreement page. */
+					__( 'I agree to the %s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>'
+				);
+			} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: Privacy page. */
+					__( 'I agree to the %s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
+				);
+			}
+
+			$fields[] = array(
+				'id'          => 'legal_agreement',
+				'label'       => $headline,
+				'description' => '',
+				'type'        => 'checkbox',
+				'required'    => true,
+				'options'     => array(),
+				'member_type' => '',
+			);
+		}
+
 		$response = rest_ensure_response( $fields );
 
 		/**
@@ -574,13 +615,24 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 		$request->set_param( 'context', 'edit' );
 
-		$form_fields = $this->signup_form_items( $request );
-		$form_fields = $form_fields->get_data();
-		$param       = $request->get_params();
+		$form_fields     = $this->signup_form_items( $request );
+		$form_fields_all = $form_fields->get_data();
+		$param           = $request->get_params();
 
 		$posted_data = array();
-		if ( ! empty( $form_fields ) ) {
-			$form_fields = array_column( $form_fields, 'id' );
+		$date_fields = array();
+		if ( ! empty( $form_fields_all ) ) {
+			$form_fields_with_type = array_column( $form_fields_all, 'type', 'id' );
+			$form_fields           = array_column( $form_fields_all, 'id' );
+			if ( in_array( 'datebox', $form_fields_with_type, true ) ) {
+				$key           = array_search( 'datebox', $form_fields_with_type, true );
+				$form_fields[] = $key;
+				$date_fields[] = $key;
+				$param[ $key ] = '';
+				$form_fields[] = $key . '_day';
+				$form_fields[] = $key . '_month';
+				$form_fields[] = $key . '_year';
+			}
 			$form_fields = array_flip( $form_fields );
 			$posted_data = array_intersect_key( $param, $form_fields );
 		}
@@ -674,6 +726,11 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Adding error message for the legal agreement checkbox.
+		if ( function_exists( 'bb_register_legal_agreement' ) && true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
+		}
+
 		$bp->signup->username = $user_name;
 		$bp->signup->email    = $user_email;
 
@@ -683,10 +740,20 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			$xprofile_fields = array_filter(
 				$posted_data,
 				function ( $v, $k ) {
-					return strpos( $k, 'field_' ) === 0;
+					return strpos( $k, 'field_' ) === 0 && empty( strpos( $k, '_day' ) ) && empty( strpos( $k, '_month' ) ) && empty( strpos( $k, '_year' ) );
 				},
 				ARRAY_FILTER_USE_BOTH
 			);
+
+			$all_fields          = array_column( $form_fields_all, null, 'id' );
+			$profile_fields      = array_intersect_key( $all_fields, $xprofile_fields );
+			$fields_with_type    = array_column( $form_fields_all, 'type', 'id' );
+			$fields_member_types = array_filter( array_column( $profile_fields, 'member_type', 'id' ) );
+
+			$member_type_field_id = array_search( 'membertypes', $fields_with_type, true );
+			$all_member_types     = ! empty( $member_type_field_id ) && isset( $profile_fields[ $member_type_field_id ] ) ? array_column( $profile_fields[ $member_type_field_id ]['options'], 'key', 'id' ) : array();
+			$selected_member_type = ( ! empty( $member_type_field_id ) && isset( $posted_data[ $member_type_field_id ] ) ? $posted_data[ $member_type_field_id ] : '' );
+			$selected_member_type = ( ! empty( $selected_member_type ) && isset( $all_member_types[ $selected_member_type ] ) ) ? $all_member_types[ $selected_member_type ] : $selected_member_type;
 
 			$profile_field_ids = array();
 
@@ -695,8 +762,25 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 				// Loop through the posted fields formatting any datebox values then validate the field.
 				foreach ( (array) $xprofile_fields as $field => $value ) {
+
+					$field_type = ( ! empty( $fields_member_types ) && isset( $fields_member_types[ $field ] ) ? array_filter(
+						$fields_member_types[ $field ],
+						function ( $v ) {
+							return 'null' !== $v;
+						}
+					) : array() );
+
+					if ( ! empty( $field_type ) && ! empty( $selected_member_type ) && ! in_array( $selected_member_type, $field_type, true ) ) {
+						unset( $_POST[ $field ] );
+						continue;
+					}
+
 					$field_id            = str_replace( 'field_', '', $field );
 					$profile_field_ids[] = $field_id;
+					if ( ! empty( $date_fields ) && in_array( $field, $date_fields, true ) ) {
+						unset( $_POST[ $field ] );
+					}
+
 					bp_xprofile_maybe_format_datebox_post_data( $field_id );
 
 					// Trim post fields.
@@ -706,6 +790,10 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						} else {
 							$_POST[ 'field_' . $field_id ] = trim( $_POST[ 'field_' . $field_id ] ); // phpcs:ignore
 						}
+					}
+
+					if ( ! empty( $date_fields ) && in_array( $field, $date_fields, true ) && ! isset( $_POST[ 'field_' . $field_id ] ) ) {
+						$_POST[ 'field_' . $field_id ] = '';
 					}
 
 					// Create errors for required fields without values.
@@ -857,6 +945,10 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		if ( ! empty( $wp_user_id ) && ! is_wp_error( $wp_user_id ) && ! empty( $_POST['legal_agreement'] ) ) {
+			update_user_meta( $wp_user_id, 'bb_legal_agreement', true );
 		}
 
 		$retval            = array();

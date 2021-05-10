@@ -426,7 +426,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/media Create Photos
 	 * @apiName        CreateBBPhotos
 	 * @apiGroup       Media
-	 * @apiDescription Create Media Photos.
+	 * @apiDescription Create Media Photos. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Array} upload_ids Media specific IDs.
@@ -634,7 +634,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) ) {
+				} elseif ( function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) && empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_media_upload_id',
 						sprintf(
@@ -1160,7 +1160,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/media/upload Upload Media
 	 * @apiName        UploadBBMedia
 	 * @apiGroup       Media
-	 * @apiDescription Upload Media.
+	 * @apiDescription Upload Media. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {String} file File object which is going to upload.
@@ -3123,7 +3123,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$thread_id       = ( isset( $data['thread_id'] ) ? $data['thread_id'] : 0 );
+		$thread_id       = ( isset( $message['thread_id'] ) ? $message['thread_id'] : 0 );
 		$is_group_thread = false;
 
 		if ( empty( $thread_id ) ) {

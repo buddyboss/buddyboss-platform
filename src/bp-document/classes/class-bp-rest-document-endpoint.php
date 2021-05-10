@@ -108,7 +108,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/document/upload Upload Document
 	 * @apiName        UploadBBDocument
 	 * @apiGroup       Document
-	 * @apiDescription Upload Document.
+	 * @apiDescription Upload Document. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {String} file File object which is going to upload.

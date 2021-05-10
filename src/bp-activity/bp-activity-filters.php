@@ -230,7 +230,7 @@ function bp_activity_save_link_data( $activity ) {
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
-	// check if link url is set or not
+	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
 		if ( false === $link_embed ) {
 			bp_activity_update_meta( $activity->id, '_link_embed', '0' );
@@ -242,11 +242,16 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
+	// Return if link embed was used activity is in edit.
+	if ( true === $link_embed && 'activity_comment' === $activity->type ) {
+		return;
+	}
+
 	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
 	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
 	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
 
-	// check if link embed was used
+	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
 		return;
@@ -2276,6 +2281,8 @@ function bp_blogs_activity_content_set_temp_content() {
 		if ( is_a( $content, 'WP_Post' ) ) {
 			$activities_template->activity->content = '&#8203;';
 		}
+	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+		$activities_template->activity->content = '&#8203;';
 	}
 
 }
@@ -2329,6 +2336,15 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 					}
 				}
 			}
+		}
+
+	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+		$comment = get_comment( $activity->secondary_item_id );
+		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+		if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
 		}
 
 	}
