@@ -273,6 +273,15 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Format social network value.
+		if ( 'socialnetworks' === $field->type ) {
+			if ( is_serialized( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
+			$value = $this->bb_rest_format_social_network_value( $value );
+		}
+
 		if ( ! xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
 			return new WP_Error(
 				'rest_user_cannot_save_xprofile_data',
@@ -670,5 +679,51 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param array $schema The endpoint schema.
 		 */
 		return apply_filters( 'bp_rest_xprofile_data_schema', $this->add_additional_fields_schema( $schema ) );
+	}
+
+	/**
+	 * Check is valid json or not.
+	 *
+	 * @param string $string JSON string.
+	 *
+	 * @return bool
+	 */
+	public function is_json( $string ) {
+		json_decode( $string );
+
+		return ( json_last_error() === JSON_ERROR_NONE );
+	}
+
+	/**
+	 * Format social network value.
+	 * - Make value JSON to array.
+	 *
+	 * @param string $value Social network value.
+	 *
+	 * @uses  bp_xprofile_social_network_provider() Default social networks.
+	 *
+	 * @return array
+	 */
+	public function bb_rest_format_social_network_value( $value ) {
+		// Is not a valid JSON string.
+		if ( ! $this->is_json( $value ) ) {
+			return array();
+		}
+
+		$value    = json_decode( $value, true );
+		$networks = bp_xprofile_social_network_provider();
+		$networks = wp_list_pluck( $networks, 'value' );
+
+		// Compare submited social network value with default social network value.
+		foreach ( $value as $network_name => $network_link ) {
+			if ( in_array( $network_name, $networks, true ) ) {
+				continue;
+			}
+
+			// Submited social network value does not match with default social network value.
+			unset( $value[ $network_name ] );
+		}
+
+		return empty( $value ) ? array() : $value;
 	}
 }
