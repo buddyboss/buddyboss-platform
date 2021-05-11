@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.7
+Tested up to: 5.7.1
 Requires PHP: 5.6.20
-Stable tag: 1.5.8
+Stable tag: 1.5.8.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,32 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.8.3 =
+* Registration - Provided Legal Agreement checkbox option
+* Login - Showing 'Terms of Service' and 'Privacy Policy' on WordPress Login page
+* REST API - Provided Legal Agreement option in settings endpoint
+
+= 1.5.8.2 =
+* REST API - Fixed course access and course count caching issue
+* REST API - Fixed emoji size issue in private message
+* REST API - Fixed Profile Social Network field update issue
+* REST API - Small Performance Improvements
+
+= 1.5.8.1 =
+* REST API - Provided 'placeholder' parameter in settings endpoint
+* REST API - Provided 'success' parameter on account settings update
+* REST API - Fixed favorite activity endpoint critical issue
+* REST API - Fixed add/edit discussion endpoint invalid response
+* REST API - Fixed deep linking issue by purging cache on component activate/deactivate
+* REST API - Fixed photo count issue in the media endpoint
+* REST API - Fixed group activity feed not showing anything
+* REST API - Fixed API issue in group activity screen
+* REST API - Fixed date field not getting saved on registration
+* REST API - Fixed messages issue to delete a conversation
+* REST API - Fixed settings parameter for Advance Search
+* REST API - Fixed Activity comment content issue
+* REST API - Fixed empty subgroups issue in the endpoint
 
 = 1.5.8 =
 * Profiles - Fixed issue with the hidden groups showing in other members profile
