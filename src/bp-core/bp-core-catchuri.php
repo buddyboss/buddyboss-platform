@@ -394,6 +394,13 @@ function bp_core_set_uri_globals() {
 
 	$bp->current_action = $current_action;
 
+	/**
+	 * Extend support for the $bp setup based on uri.
+	 *
+	 * @since BuddyBoss 1.5.9
+	 */
+	do_action( 'bp_core_set_uri_globals', $bp, $bp_uri );
+
 	// Slice the rest of the $bp_uri array and reset offset.
 	$bp_uri     = array_slice( $bp_uri, $uri_offset + 2 );
 	$uri_offset = 0;
