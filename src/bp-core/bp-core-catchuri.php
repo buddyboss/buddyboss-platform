@@ -1550,35 +1550,19 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
  */
 add_action('init', 'bb_removes_endpoints_and_feeds');
 function bb_removes_endpoints_and_feeds() {
-	if ( ! is_user_logged_in() ) {
-		$enable_private_network    = bp_enable_private_network();
-		$buddyboss_app_plugin_file = 'buddyboss-app/buddyboss-app.php';
-		// IF Platform active and App plugin not active.
-		if ( defined( 'BP_PLATFORM_VERSION' ) && ! is_plugin_active( $buddyboss_app_plugin_file ) ) {
-			// IF Platform 'Private Website' settings enabled.
-			// THEN Restrict all RSS and REST APIs. (reason to restrict because the site is private).
-			if ( ! $enable_private_network ) {
-				bb_restricate_rss_feed();
-				bb_restricate_rest_api();
-			}
-		}
-		// IF Platform active and App plugin also active.
-		if ( defined( 'BP_PLATFORM_VERSION' ) && is_plugin_active( $buddyboss_app_plugin_file ) ) {
-			// IF Platform 'Private Website' settings enabled and App plugin 'Private App' settings disabled.
-			// THEN Restrict all RSS but do not restrict REST APIs.
-			// (reason to restrict RSS because the site is private)
-			// (reason to not restrict rest API because a customer might want to restrict site on the web but not on App)
-			if ( ! $enable_private_network && ! bbapp_is_private_app_enabled() ) {
-				bb_restricate_rss_feed();
-			}
-			// IF Platform 'Private Website' settings enabled and App plugin 'Private App' settings also enabled.
-			// THEN Restrict all RSS and REST APIs.
-			// (reason to restrict because the site is private on both web and app)
-			if ( ! $enable_private_network && bbapp_is_private_app_enabled() ) {
-				bb_restricate_rss_feed();
-				bb_restricate_rest_api();
-			}
-		}
+	if ( is_user_logged_in() ) {
+		return;
+	}
+	
+	// IF Platform 'Private Website' settings enabled.
+	// THEN Restrict all RSS and REST APIs. (reason to restrict because the site is private).
+	if ( ! bp_enable_private_network() ) {
+		bb_restricate_rss_feed();
+	}
+	
+	// check settings with BuddyBoss APP and Platform both.
+	if ( bp_rest_enable_private_network() ) {
+		bb_restricate_rest_api();
 	}
 }
 
