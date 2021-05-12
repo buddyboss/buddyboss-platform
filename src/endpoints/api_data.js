@@ -6782,7 +6782,7 @@ define({ "api": [
     "groupTitle": "Messages"
   },
   {
-    "type": "PATCH",
+    "type": "DELETE",
     "url": "/wp-json/buddyboss/v1/messages/:id",
     "title": "Delete Thread",
     "name": "DeleteBBThread",

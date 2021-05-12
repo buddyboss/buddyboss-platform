@@ -1574,6 +1574,27 @@ function bp_register_confirm_email( $default = false ) {
 }
 
 /**
+ * Display legal agreement field in registrations.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Whether or not display legal agreement field in registrations.
+ */
+function bb_register_legal_agreement( $default = false ) {
+
+	/**
+	 * Filters whether or not display legal agreement field in registrations.
+	 *
+	 * @since BuddyBoss 1.5.8.3
+	 *
+	 * @param bool $value whether or not display legal agreement field in registrations.
+	 */
+	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
+}
+
+/**
  * Display password confirmation field in registrations.
  *
  * @since BuddyBoss 1.1.6

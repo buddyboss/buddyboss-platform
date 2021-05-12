@@ -211,6 +211,8 @@ class Settings {
 					'bp-activity',
 					'bp-messages',
 					'bp-friends',
+					'bp-media',
+					'bp-document',
 				);
 				break;
 		}
