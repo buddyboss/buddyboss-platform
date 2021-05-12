@@ -5,9 +5,12 @@
  * @package BuddyBoss\Activity
  * @since   BuddyPress 1.0.0
  */
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
 /* Filters *******************************************************************/
+
 // Apply WordPress defined filters.
 add_filter( 'bp_get_activity_action', 'bp_activity_filter_kses', 1 );
 add_filter( 'bp_get_activity_content_body', 'bp_activity_filter_kses', 1 );
@@ -95,7 +98,8 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
-/* Actions *******************************************************************/
+/*
+ Actions *******************************************************************/
 // At-name filter.
 add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 // Activity feed moderation.
@@ -121,20 +125,19 @@ add_filter( 'bp_repair_list', 'bb_activity_media_document_migration' );
  *
  * @return array $types List of the activity types to moderate.
  * @since BuddyPress 1.6.0
- *
  */
 function bp_activity_get_moderated_activity_types() {
 	$types = array(
 		'activity_comment',
 		'activity_update',
 	);
+
 	/**
 	 * Filters the default activity types that BuddyPress should moderate.
 	 *
 	 * @param array $types Default activity types to moderate.
 	 *
 	 * @since BuddyPress 1.6.0
-	 *
 	 */
 	return apply_filters( 'bp_activity_check_activity_types', $types );
 }
@@ -145,7 +148,6 @@ function bp_activity_get_moderated_activity_types() {
  * @param BP_Activity_Activity $activity The activity object to check.
  *
  * @since BuddyPress 1.6.0
- *
  */
 function bp_activity_check_moderation_keys( $activity ) {
 	// Only check specific types of activity updates.
@@ -168,7 +170,6 @@ function bp_activity_check_moderation_keys( $activity ) {
  * @param BP_Activity_Activity $activity The activity object to check.
  *
  * @since BuddyPress 1.6.0
- *
  */
 function bp_activity_check_blacklist_keys( $activity ) {
 	// Only check specific types of activity updates.
@@ -191,7 +192,6 @@ function bp_activity_check_blacklist_keys( $activity ) {
  * @param $activity
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_activity_save_link_data( $activity ) {
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
@@ -203,6 +203,7 @@ function bp_activity_save_link_data( $activity ) {
 			// This will remove the preview data if the activity don't have anymore link in content.
 			bp_activity_update_meta( $activity->id, '_link_preview_data', '' );
 		}
+
 		return;
 	}
 	// Return if link embed was used activity is in edit.
@@ -215,6 +216,7 @@ function bp_activity_save_link_data( $activity ) {
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
+
 		return;
 	}
 	$preview_data['url'] = $link_url;
@@ -242,7 +244,6 @@ function bp_activity_save_link_data( $activity ) {
  * @param BP_Activity_Activity $activity Activity object
  *
  * @since BuddyBoss 1.4.0
- *
  */
 function bp_activity_update_comment_privacy( $activity ) {
 	$activity_comments = bp_activity_get_specific(
@@ -268,7 +269,6 @@ function bp_activity_update_comment_privacy( $activity ) {
  * @param string               $privacy Parent Activity privacy
  *
  * @since BuddyBoss 1.4.0
- *
  */
 function bp_activity_comment_privacy_update( $comment, $privacy ) {
 	$comment_activity          = new BP_Activity_Activity( $comment->id );
@@ -288,7 +288,6 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
  *
  * @return string $content Filtered activity content.
  * @since BuddyPress 1.1.0
- *
  */
 function bp_activity_filter_kses( $content ) {
 	/**
@@ -297,9 +296,9 @@ function bp_activity_filter_kses( $content ) {
 	 * @param array $value Array of allowed HTML tags and attributes.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
 	 */
 	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', bp_get_allowedtags() );
+
 	return wp_kses( $content, $activity_allowedtags );
 }
 
@@ -311,7 +310,6 @@ function bp_activity_filter_kses( $content ) {
  *
  * @return string $content Content filtered for mentions.
  * @since BuddyPress 1.2.0
- *
  */
 function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 	// Are mentions disabled?
@@ -349,6 +347,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 			$content = str_replace( $placeholder, $original, $content );
 		}
 	}
+
 	// Return the content.
 	return $content;
 }
@@ -362,7 +361,6 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
  * @param BP_Activity_Activity $activity Activity Object.
  *
  * @since BuddyPress 1.5.0
- *
  */
 function bp_activity_at_name_filter_updates( $activity ) {
 	// Are mentions disabled?
@@ -394,7 +392,6 @@ function bp_activity_at_name_filter_updates( $activity ) {
  * @param BP_Activity_Activity $activity The BP_Activity_Activity object.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_activity_at_name_send_emails( $activity ) {
 	// Are mentions disabled?
@@ -421,7 +418,6 @@ function bp_activity_at_name_send_emails( $activity ) {
 		 *
 		 * @since BuddyPress 1.6.0
 		 * @since BuddyPress 2.5.0 Introduced `$user_id` and `$activity` parameters.
-		 *
 		 */
 		if ( apply_filters( 'bp_activity_at_name_do_notifications', true, $usernames, $user_id, $activity ) ) {
 			bp_activity_at_message_notification( $activity->id, $user_id );
@@ -438,7 +434,6 @@ function bp_activity_at_name_send_emails( $activity ) {
  *
  * @return string $text Text with rel=nofollow added to any links.
  * @since BuddyPress 1.2.0
- *
  */
 function bp_activity_make_nofollow_filter( $text ) {
 	return preg_replace_callback( '|<a (.+?)>|i', 'bp_activity_make_nofollow_filter_callback', $text );
@@ -451,7 +446,6 @@ function bp_activity_make_nofollow_filter( $text ) {
  *
  * @return string $text Link with rel=nofollow added.
  * @since BuddyPress 1.2.0
- *
  */
 function bp_activity_make_nofollow_filter_callback( $matches ) {
 	$text = $matches[1];
@@ -493,7 +487,6 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * @param bool $value If true, text should be checked to see if it needs truncating.
 	 *
 	 * @since BuddyPress 2.3.0
-	 *
 	 */
 	$maybe_truncate_text = apply_filters(
 		'bp_activity_maybe_truncate_entry',
@@ -509,7 +502,6 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * @param string $value Internationalized "Read more" text.
 	 *
 	 * @since BuddyPress 1.5.0
-	 *
 	 */
 	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 	$excerpt_length = bp_activity_get_excerpt_length();
@@ -525,6 +517,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 		$id      = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>', $excerpt, $id, bp_get_activity_thread_permalink(), $append_text );
 	}
+
 	/**
 	 * Filters the composite activity excerpt entry.
 	 *
@@ -533,7 +526,6 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * @param string $append_text The final append text applied.
 	 *
 	 * @since BuddyPress 1.5.0
-	 *
 	 */
 	return apply_filters( 'bp_activity_truncate_entry', $excerpt, $text, $append_text );
 }
@@ -546,7 +538,6 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
  *
  * @return string
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_activity_link_preview( $content, $activity ) {
 	$activity_id  = $activity->id;
@@ -565,13 +556,13 @@ function bp_activity_link_preview( $content, $activity ) {
 	$read_more    = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
 	$description  = wp_trim_words( $description, 40, $read_more );
 	$content      = make_clickable( $content );
-	$content      .= '<div class="activity-link-preview-container">';
-	$content      .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content     .= '<div class="activity-link-preview-container">';
+	$content     .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
-		$content   .= '<div class="activity-link-preview-image">';
-		$content   .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
-		$content   .= '</div>';
+		$content  .= '<div class="activity-link-preview-image">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
 	} elseif ( ! empty( $preview_data['image_url'] ) ) {
 		$content .= '<div class="activity-link-preview-image">';
 		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
@@ -579,6 +570,7 @@ function bp_activity_link_preview( $content, $activity ) {
 	}
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
 	$content .= '</div>';
+
 	return $content;
 }
 
@@ -589,12 +581,12 @@ function bp_activity_link_preview( $content, $activity ) {
  *
  * @return array $js_handles The new dependencies.
  * @since BuddyPress 2.0.0
- *
  */
 function bp_activity_get_js_dependencies( $js_handles = array() ) {
 	if ( bp_activity_do_heartbeat() ) {
 		$js_handles[] = 'heartbeat';
 	}
+
 	return $js_handles;
 }
 
@@ -622,7 +614,6 @@ add_action( 'bp_nouveau_enqueue_scripts', 'bp_activity_enqueue_heartbeat_js' );
  *
  * @return string $classes
  * @since BuddyPress 2.0.0
- *
  */
 function bp_activity_newest_class( $classes = '' ) {
 	$bp = buddypress();
@@ -630,6 +621,7 @@ function bp_activity_newest_class( $classes = '' ) {
 		$classes .= ' new-update';
 	}
 	$classes .= ' just-posted';
+
 	return $classes;
 }
 
@@ -640,7 +632,6 @@ function bp_activity_newest_class( $classes = '' ) {
  *
  * @return array $args
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_activity_display_all_types_on_just_me( $args ) {
 	if ( empty( $args['scope'] ) || 'all' !== $args['scope'] || ! bp_loggedin_user_id() ) {
@@ -649,6 +640,7 @@ function bp_activity_display_all_types_on_just_me( $args ) {
 	if ( bp_is_user() && 'all' === $args['scope'] && empty( bp_current_action() ) ) {
 		$scope         = array( 'just-me' );
 		$args['scope'] = implode( ',', $scope );
+
 		return $args;
 	}
 	$scope = array( 'just-me' );
@@ -665,6 +657,7 @@ function bp_activity_display_all_types_on_just_me( $args ) {
 		$scope[] = 'following';
 	}
 	$args['scope'] = implode( ',', $scope );
+
 	return $args;
 }
 
@@ -675,7 +668,6 @@ function bp_activity_display_all_types_on_just_me( $args ) {
  *
  * @return string $classes
  * @since BuddyPress 2.0.0
- *
  */
 function bp_activity_timestamp_class( $classes = '' ) {
 	if ( ! bp_activity_do_heartbeat() ) {
@@ -686,6 +678,7 @@ function bp_activity_timestamp_class( $classes = '' ) {
 		return $classes;
 	}
 	$classes .= ' date-recorded-' . strtotime( $activity_date );
+
 	return $classes;
 }
 
@@ -698,7 +691,6 @@ add_filter( 'bp_get_activity_css_class', 'bp_activity_timestamp_class', 9, 1 );
  *
  * @return array $response
  * @since BuddyPress 2.0.0
- *
  */
 function bp_activity_heartbeat_last_recorded( $response = array(), $data = array() ) {
 	if ( empty( $data['bp_activity_last_recorded'] ) ) {
@@ -737,6 +729,7 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 	if ( ! empty( $newest_activities['last_recorded'] ) ) {
 		$response['bp_activity_newest_activities'] = $newest_activities;
 	}
+
 	return $response;
 }
 
@@ -749,7 +742,6 @@ add_filter( 'heartbeat_nopriv_received', 'bp_activity_heartbeat_last_recorded', 
  *
  * @return array $strings
  * @since BuddyPress 2.0.0
- *
  */
 function bp_activity_heartbeat_strings( $strings = array() ) {
 	if ( ! bp_activity_do_heartbeat() ) {
@@ -762,7 +754,6 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	 * @param array $value Heartbeat settings array.
 	 *
 	 * @since BuddyPress 2.0.0
-	 *
 	 */
 	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
 	if ( ! empty( $heartbeat_settings['interval'] ) ) {
@@ -775,7 +766,6 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	 * @param int $value The frequency in seconds between pulses.
 	 *
 	 * @since BuddyPress 2.0.0
-	 *
 	 */
 	$bp_activity_pulse = apply_filters( 'bp_activity_heartbeat_pulse', 15 );
 	/**
@@ -796,6 +786,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 			'pulse'  => absint( $pulse ),
 		)
 	);
+
 	return $strings;
 }
 
@@ -809,7 +800,6 @@ add_filter( 'bp_core_get_js_strings', 'bp_activity_heartbeat_strings', 10, 1 );
  *
  * @return array $retval
  * @since BuddyPress 2.2.0
- *
  */
 function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() ) {
 	// Determine the user_id.
@@ -864,6 +854,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			'show_hidden' => true,
 		),
 	);
+
 	return $retval;
 }
 
@@ -876,7 +867,6 @@ add_filter( 'bp_activity_set_just-me_scope_args', 'bp_activity_filter_just_me_sc
  *
  * @return array $retval
  * @since BuddyBoss 1.4.3
- *
  */
 function bp_activity_filter_public_scope( $retval = array(), $filter = array() ) {
 	$privacy = array( 'public' );
@@ -895,6 +885,7 @@ function bp_activity_filter_public_scope( $retval = array(), $filter = array() )
 			'value'  => 0,
 		),
 	);
+
 	return $retval;
 }
 
@@ -907,7 +898,6 @@ add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scop
  *
  * @return array $retval
  * @since BuddyPress 2.2.0
- *
  */
 function bp_activity_filter_favorites_scope( $retval = array(), $filter = array() ) {
 	// Determine the user_id.
@@ -1024,6 +1014,7 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			),
 		);
 	}
+
 	return $retval;
 }
 
@@ -1036,7 +1027,6 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  *
  * @return array $retval
  * @since BuddyPress 2.2.0
- *
  */
 function bp_activity_filter_mentions_scope( $retval = array(), $filter = array() ) {
 	// Are mentions disabled?
@@ -1160,6 +1150,7 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 		),
 		$privacy_scope,
 	);
+
 	return $retval;
 }
 
@@ -1176,7 +1167,6 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
  *
  * @return array|string Modified querystring
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_add_member_follow_scope_filter( $qs, $object ) {
 	// not on the members object? stop now!
@@ -1189,12 +1179,13 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 		// check if members scope is following before manipulating.
 		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
 			$qs .= '&include=' . bp_get_following_ids(
-					array(
-						'user_id' => bp_loggedin_user_id(),
-					)
-				);
+				array(
+					'user_id' => bp_loggedin_user_id(),
+				)
+			);
 		}
 	}
+
 	return $qs;
 }
 
@@ -1209,7 +1200,6 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  *
  * @return array
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_users_filter_activity_following_scope( $retval = array(), $filter = array() ) {
 	// Is follow active?
@@ -1293,6 +1283,7 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 			'show_hidden' => true,
 		),
 	);
+
 	return $retval;
 }
 
@@ -1379,6 +1370,7 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 	if ( $activities->activity_count === 0 ) {
 		return false;
 	}
+
 	return $has_activities;
 }
 
@@ -1446,6 +1438,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 	if ( $activities->activity_count === 0 ) {
 		return false;
 	}
+
 	return $has_activities;
 }
 
@@ -1470,7 +1463,7 @@ function bp_activity_media_add( $media ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
 						$media->group_id = $comment_activity->item_id;
-						$media->privacy  = 'comment'; //Set privacy for group activity - grouponly to comment - 2121
+						$media->privacy  = 'comment'; // Set privacy for group activity - grouponly to comment - 2121
 					}
 				}
 			}
@@ -1538,7 +1531,6 @@ function bp_activity_media_add( $media ) {
  *
  * @return mixed
  * @since BuddyBoss 1.2.0
- *
  */
 function bp_activity_create_parent_media_activity( $media_ids ) {
 	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
@@ -1607,6 +1599,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			}
 		}
 	}
+
 	return $media_ids;
 }
 
@@ -1696,6 +1689,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 			}
 		}
 	}
+
 	return $media_ids;
 }
 
@@ -1708,7 +1702,6 @@ function bp_activity_edit_update_media( $media_ids ) {
  *
  * @return string
  * @since BuddyBoss 1.2.5
- *
  */
 function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_id ) {
 	$activity_obj = new BP_Activity_Activity( $item_id );
@@ -1727,6 +1720,7 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 			$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_obj->id ) );
 		}
 	}
+
 	return $link;
 }
 
@@ -1886,6 +1880,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			}
 		}
 	}
+
 	return $document_ids;
 }
 
@@ -1975,6 +1970,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 			}
 		}
 	}
+
 	return $document_ids;
 }
 
@@ -1995,6 +1991,7 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 			unset( $buttons['activity_edit'] );
 		}
 	}
+
 	return $buttons;
 }
 
@@ -2042,8 +2039,8 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
 				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
-					$iframe  = $matches[0];
-					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
+					$iframe   = $matches[0];
+					$content  = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
 					$content .= $iframe;
 				} else {
 					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
@@ -2074,6 +2071,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
 		}
 	}
+
 	return $content;
 }
 
@@ -2106,6 +2104,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			}
 		}
 	}
+
 	return $content;
 }
 
@@ -2122,6 +2121,7 @@ function bb_activity_media_document_migration( $repair_list ) {
 		__( 'Repair Media Comments on the Activity/News Feed.', 'buddyboss' ),
 		'bb_activity_media_document_migration_process',
 	);
+
 	return $repair_list;
 }
 
@@ -2160,7 +2160,7 @@ function bb_activity_media_document_migration_process() {
 	$count_recepient_qry = 'SELECT COUNT(id) as ids FROM ' . $activity_table_name . ' WHERE ( item_id=0 AND secondary_item_id=0 )';
 	if ( ! empty( $post_type_arr ) ) {
 		foreach ( $post_type_arr as $get_post_type ) {
-			$db_type_name        = 'new_blog_' . $get_post_type;
+			$db_type_name         = 'new_blog_' . $get_post_type;
 			$count_recepient_qry .= " OR ( component='blogs' AND type='" . $db_type_name . "' )";
 		}
 	}
@@ -2169,7 +2169,7 @@ function bb_activity_media_document_migration_process() {
 	$recipients_query = 'SELECT id FROM ' . $activity_table_name . ' WHERE ( item_id=0 AND secondary_item_id=0 )';
 	if ( ! empty( $post_type_arr ) ) {
 		foreach ( $post_type_arr as $get_post_type ) {
-			$db_type_name     = 'new_blog_' . $get_post_type;
+			$db_type_name      = 'new_blog_' . $get_post_type;
 			$recipients_query .= ' OR ( component="blogs" AND type="' . $db_type_name . '" )';
 		}
 	}
@@ -2272,7 +2272,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 			return;
 		}
 		$activity_id_store[] = $children_data->id;
-		//Get children data based on its parent id.
+		// Get children data based on its parent id.
 		$args            = array(
 			'display_comments' => true,
 			'show_hidden'      => true,
@@ -2444,6 +2444,7 @@ function bb_migration_get_children_data( $activity_id_store, $sub_data, $childre
 		'child_array'       => $child_array,
 		'activity_id_store' => $activity_id_store,
 	);
+
 	return $return_array;
 }
 
@@ -2547,7 +2548,7 @@ function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_roo
  * @param int   $main_root_id Main root activity id.
  */
 function bb_migration_remove_activity_id_activity_update_type( $activity_ids, $main_root_id ) {
-	//Deletes activity id whose type would activity_update and privacy would media from the activity table.
+	// Deletes activity id whose type would activity_update and privacy would media from the activity table.
 	global $wpdb;
 	$bp                  = buddypress();
 	$activity_table_name = $bp->activity->table_name;
