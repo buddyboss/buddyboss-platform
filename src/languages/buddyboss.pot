@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.7.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-14 09:31:39+00:00\n"
+"POT-Creation-Date: 2021-05-12 13:23:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -625,8 +625,8 @@ msgstr ""
 #: bp-activity/bp-activity-filters.php:1866
 #: bp-activity/bp-activity-filters.php:2016
 #: bp-activity/bp-activity-filters.php:2202
-#: bp-activity/bp-activity-filters.php:2469
-#: bp-activity/bp-activity-filters.php:2662
+#: bp-activity/bp-activity-filters.php:2475
+#: bp-activity/bp-activity-filters.php:2679
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1690
 #: cli/components/activity.php:763
 #. translators: 1. User Link. 2. Group link.
@@ -4182,7 +4182,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
 #: bp-document/bp-document-functions.php:1969
-#: bp-video/bp-video-functions.php:2825
+#: bp-video/bp-video-functions.php:2826
 msgid "Video"
 msgstr ""
 
@@ -5318,15 +5318,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
+"content will be unhidden</li>\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -8106,13 +8106,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9069,48 +9069,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1924
-#: bp-video/bp-video-functions.php:2780
+#: bp-video/bp-video-functions.php:2781
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1929
-#: bp-video/bp-video-functions.php:2785
+#: bp-video/bp-video-functions.php:2786
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1934
-#: bp-video/bp-video-functions.php:2790
+#: bp-video/bp-video-functions.php:2791
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1939
-#: bp-video/bp-video-functions.php:2795
+#: bp-video/bp-video-functions.php:2796
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1944
-#: bp-video/bp-video-functions.php:2800
+#: bp-video/bp-video-functions.php:2801
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1949
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2805
+#: bp-video/bp-video-functions.php:2806
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1954
-#: bp-video/bp-video-functions.php:2810
+#: bp-video/bp-video-functions.php:2811
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1959
-#: bp-video/bp-video-functions.php:2815
+#: bp-video/bp-video-functions.php:2816
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1964
-#: bp-video/bp-video-functions.php:2820
+#: bp-video/bp-video-functions.php:2821
 msgid "Text"
 msgstr ""
 
@@ -28072,12 +28072,12 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to create a video thumbnail (optional). "
-"Ask your web host. \r\n"
+"Ask your web host. \n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and still "
 "shows this message then the platform unable to auto-detect the binary path "
-"of the FFmpeg. \r\n"
+"of the FFmpeg. \n"
 "\t\t\t\t\t<br/>You need to add FFmpeg binary files absolute path constants "
-"%2$s & %3$s in %4$s file. \r\n"
+"%2$s & %3$s in %4$s file. \n"
 "\t\t\t\t\t<br/>Ask your web host to provide binary files absolute path."
 msgstr ""
 

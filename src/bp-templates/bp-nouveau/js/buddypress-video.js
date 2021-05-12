@@ -1023,7 +1023,7 @@ window.bp = window.bp || {};
 							data: data,
 							success: function ( response ) {
 								if ( response.success ) {
-	
+
 									var ulSelector = $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
 									if ( response.data.default_images ) {
 										ulSelector.html( '' );
@@ -1031,7 +1031,7 @@ window.bp = window.bp || {};
 										ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 									}
 									ulSelector.removeClass( 'loading' );
-	
+
 								}
 							}
 						}
@@ -2041,7 +2041,7 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum ) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();
@@ -2200,7 +2200,7 @@ window.bp = window.bp || {};
 				activity_id        = self.current_video.activity_id;
 				self.current_video = self.videos[ self.current_index ];
 				self.showVideo();
-				if ( activity_id != self.current_video.activity_id ) {
+				if ( activity_id != self.current_video.activity_id && self.current_video.privacy !== 'comment' ) {
 					self.getActivity();
 				} else {
 					self.getVideosDescription();
@@ -2219,7 +2219,7 @@ window.bp = window.bp || {};
 				activity_id        = self.current_video.activity_id;
 				self.current_video = self.videos[ self.current_index ];
 				self.showVideo();
-				if ( activity_id != self.current_video.activity_id ) {
+				if ( activity_id != self.current_video.activity_id && self.current_video.privacy !== 'comment' ) {
 					self.getActivity();
 				} else {
 					self.getVideosDescription();
@@ -2557,7 +2557,7 @@ window.bp = window.bp || {};
 								}
 
 							}
-							
+
 						});
 
 					}

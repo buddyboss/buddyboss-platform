@@ -962,7 +962,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 			} else {
 				$ff_probe = FFMpeg\FFProbe::create();
 			}
-			
+
 			$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 
 			if ( ! empty( $duration ) ) {
@@ -2128,6 +2128,7 @@ function bp_video_user_can_manage_video( $video_id = 0, $user_id = 0 ) {
 	switch ( $video->privacy ) {
 
 		case 'public':
+		case 'comment':
 			if ( $video->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;

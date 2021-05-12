@@ -2449,30 +2449,37 @@ function bp_activity_video_add( $video ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
 						$video->group_id = $comment_activity->item_id;
-						$video->privacy  = 'grouponly';
+						$video->privacy  = 'comment';
 					}
 				}
 			}
 
-			$args = array(
-				'hide_sitewide' => true,
-				'privacy'       => 'video',
-			);
-
-			// Create activity only if not created previously.
-			if ( ! empty( $video->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['item_id'] = $video->group_id;
-				$args['type']    = 'activity_update';
-				$current_group   = groups_get_group( $video->group_id );
-				$args['action']  = sprintf(
-					/* translators: 1. User Link. 2. Group link. */
-					__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
-					bp_core_get_userlink( $video->user_id ),
-					'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
-				);
-				$activity_id = groups_record_activity( $args );
+			// Check when new activity coment is empty then set privacy comment - - 2121
+			if ( ! empty( $bp_new_activity_comment ) ) {
+				$activity_id    = $bp_new_activity_comment;
+				$video->privacy = 'comment';
 			} else {
-				$activity_id = bp_activity_post_update( $args );
+
+				$args = array(
+					'hide_sitewide' => true,
+					'privacy'       => 'video',
+				);
+
+				// Create activity only if not created previously.
+				if ( ! empty( $video->group_id ) && bp_is_active( 'groups' ) ) {
+					$args['item_id'] = $video->group_id;
+					$args['type']    = 'activity_update';
+					$current_group   = groups_get_group( $video->group_id );
+					$args['action']  = sprintf(
+					/* translators: 1. User Link. 2. Group link. */
+						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
+						bp_core_get_userlink( $video->user_id ),
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+					);
+					$activity_id = groups_record_activity( $args );
+				} else {
+					$activity_id = bp_activity_post_update( $args );
+				}
 			}
 
 			if ( $activity_id ) {
@@ -2490,16 +2497,26 @@ function bp_activity_video_add( $video ) {
 
 				if ( $parent_activity_id ) {
 
-					$video_activity                    = new BP_Activity_Activity( $activity_id );
-					$video_activity->secondary_item_id = $parent_activity_id;
-					$video_activity->save();
+					// If new activity comment is empty - 2121
+					if ( empty( $bp_new_activity_comment ) ) {
+						$video_activity                    = new BP_Activity_Activity( $activity_id );
+						$video_activity->secondary_item_id = $parent_activity_id;
+						$video_activity->save();
+					}
 
 					// save parent activity id in attachment meta.
 					update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
 				}
 			}
 		} else {
+
 			if ( $parent_activity_id ) {
+
+				// If the video posted in activity comment then set the activity id to comment id.- 2121
+				if ( ! empty( $bp_new_activity_comment ) ) {
+					$parent_activity_id = $bp_new_activity_comment;
+					$video->privacy     = 'comment';
+				}
 
 				// save video activity id in video.
 				$video->activity_id = $parent_activity_id;

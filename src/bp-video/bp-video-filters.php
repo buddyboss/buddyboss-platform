@@ -261,7 +261,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_video_support_enabled() ) {
-			$args['privacy'] = array( 'grouponly' );
+			$args['privacy'] = array( 'comment' );
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-video';
 			}
@@ -278,6 +278,8 @@ function bp_video_activity_comment_entry( $comment_id ) {
 			$args['album_id'] = 'existing-video';
 		}
 	}
+
+	$args['privacy'] = array( 'comment' );
 
 	$is_forum_activity = false;
 	if (
@@ -805,7 +807,7 @@ function bp_video_activity_update_video_privacy( $activity ) {
 		foreach ( $video_ids as $video_id ) {
 			$video = new BP_Video( $video_id );
 			// Do not update the privacy if the video is added to forum.
-			if ( ! in_array( $video->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
+			if ( ! in_array( $video->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) && ( 'comment' !== $video->privacy && ! empty( $video ->blog_id ) ) ) {
 				$video->privacy = $activity->privacy;
 				$video->save();
 			}
