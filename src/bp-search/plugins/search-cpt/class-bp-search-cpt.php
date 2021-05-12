@@ -29,6 +29,15 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			$this->search_type = $search_type;
 
 			add_action( "bp_search_settings_item_{$this->cpt_name}", array( $this, 'print_search_options' ) );
+			add_filter( "parse_query", array( $this, 'parse_query' ) );
+		}
+
+		// To bypass "The Event Calendar" plugin's parse_query filter
+		public function parse_query( $query ){
+			if( is_search() || ( defined('DOING_AJAX') && DOING_AJAX && $_REQUEST['action'] == 'bp_search_ajax' ) )  {
+				$query->set( 'tribe_suppress_query_filters', true );
+			}
+			return $query;
 		}
 
 		public function sql( $search_term, $only_totalrow_count = false ) {
