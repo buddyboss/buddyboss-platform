@@ -1494,7 +1494,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Add Forum/Topic Subscribe email settings to the Settings > Notifications page.
 		 *
-		 * @since BuddyBoss 1.5.5
+		 * @since BuddyBoss 1.5.9
 		 */
 		public function forums_notification_settings() {
 			if ( bp_action_variables() ) {
