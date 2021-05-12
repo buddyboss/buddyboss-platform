@@ -3350,12 +3350,13 @@ function bp_get_active_member_types( $args = array() ) {
 	$args = bp_parse_args( $args, array(
 		'posts_per_page' => - 1,
 		'post_type'      => bp_get_member_type_post_type(),
+		'post_status'    => 'publish',
 		'orderby'        => 'menu_order',
 		'order'          => 'ASC',
 		'fields'         => 'ids'
 	), 'member_types' );
 
-	$bp_active_member_types_query = new \WP_Query( $args );
+    $bp_active_member_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_member_types_query->have_posts() ) {
 		$bp_active_member_types = $bp_active_member_types_query->posts;
