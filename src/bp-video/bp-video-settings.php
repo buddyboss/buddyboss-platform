@@ -200,7 +200,7 @@ function bp_video_admin_setting_callback_video_section() {
 			<?php
 			echo sprintf(
 				/* translators: 1: FFMpeg status */
-				_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
+				_x( 'Your server needs %1$s installed to create video thumbnails (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
 				'<code><a href="https://ffmpeg.org/" target="_blank">ffmpeg</a></code>'
 			);
 			?>
