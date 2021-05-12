@@ -2905,7 +2905,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
 	}
 
-    $media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+	$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 
 	// db call ok; no-cache ok;
 	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
@@ -3287,7 +3287,7 @@ function bp_media_get_activity_media( $activity_id ) {
 function bp_media_is_activity_comment_photo( $photo ) {
 
 	$is_comment_photo = false;
-	if( is_object( $photo ) ) {
+	if ( is_object( $photo ) ) {
 		$photo_activity_id = $photo->activity_id;
 	} else {
 		$photo             = new BP_Media( $photo );
@@ -3297,17 +3297,17 @@ function bp_media_is_activity_comment_photo( $photo ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$activity = new BP_Activity_Activity( $photo_activity_id );
 
-		if( $activity ) {
-			if( $activity->secondary_item_id ) {
-				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id  );
-				if( $load_parent_activity ) {
-					if( 'activity_comment' === $load_parent_activity->type ) {
+		if ( $activity ) {
+			if ( $activity->secondary_item_id ) {
+				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+				if ( $load_parent_activity ) {
+					if ( 'activity_comment' === $load_parent_activity->type ) {
 						$is_comment_photo = true;
 					}
 				}
 			}
 		}
-	} elseif( $photo_activity_id ) {
+	} elseif ( $photo_activity_id ) {
 		$is_comment_photo = true;
 	}
 	return $is_comment_photo;
@@ -3329,16 +3329,45 @@ function bp_media_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$report_btn = bp_moderation_get_report_button( array(
-		'id'                => 'media_report',
-		'component'         => 'moderation',
-		'must_be_logged_in' => true,
-		'button_attr'       => array(
-			'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
-			'data-bp-content-type' => BP_Moderation_Media::$moderation_type,
+	$report_btn = bp_moderation_get_report_button(
+		array(
+			'id'                => 'media_report',
+			'component'         => 'moderation',
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => ! empty( $args['id'] ) ? $args['id'] : 0,
+				'data-bp-content-type' => BP_Moderation_Media::$moderation_type,
+			),
 		),
-	),
-		true );
+		true
+	);
 
 	return apply_filters( 'bp_media_get_report_link', $report_btn, $args );
+}
+
+/**
+ * Whether user can show the media upload button.
+ *
+ * @param int $user_id  given user id.
+ * @param int $group_id given group id.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool
+ */
+function bb_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
+
+	if ( ( empty( $user_id ) && empty( $group_id ) ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_group_media_support_enabled() ) {
+		return groups_can_user_manage_media( $user_id, $group_id );
+	}
+
+	if ( bp_is_profile_media_support_enabled() && bb_user_can_create_media() ) {
+		return true;
+	}
+
+	return false;
 }
