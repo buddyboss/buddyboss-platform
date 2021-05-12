@@ -1489,23 +1489,29 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		wp_send_json_error( $response );
 	}
 
-	$thumbnail           = filter_input( INPUT_POST, 'video_thumbnail', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
-	$video_id            = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
-	$pre_selected_id     = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
-
+	$thumbnail                 = filter_input( INPUT_POST, 'video_thumbnail', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$video_attachment_id       = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
+	$video_id                  = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
+	$pre_selected_id           = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
 	$auto_generated_thumbnails = bb_video_get_auto_generated_preview_ids( $video_attachment_id );
 	$old_thumbnail_id          = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 
 	if ( $pre_selected_id !== $old_thumbnail_id && ! in_array( $old_thumbnail_id, $auto_generated_thumbnails, true ) ) {
 		bb_video_delete_thumb_symlink( $video_id, $old_thumbnail_id );
-		wp_delete_post( $old_thumbnail_id, true );
 	}
 
 	if ( $video_attachment_id && $thumbnail ) {
 		$pre_selected_id = current( $thumbnail );
 		$pre_selected_id = $pre_selected_id['id'];
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
+
+		$thumbnail_images = array(
+			'default_images' => $auto_generated_thumbnails,
+			'custom_image'   => $pre_selected_id
+		);
+
+		update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
+
 	} elseif ( $video_attachment_id && $pre_selected_id ) {
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 	}
@@ -1518,7 +1524,9 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 
 	wp_send_json_success(
 		array(
-			'thumbnail' => $thumbnail_url,
+			'thumbnail'           => $thumbnail_url,
+			'video_attachment_id' => $video_attachment_id,
+			'video_attachments'   => json_encode( bp_video_get_attachments( $video_attachment_id ) )
 		)
 	);
 }

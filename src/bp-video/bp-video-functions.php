@@ -3713,9 +3713,9 @@ function bb_video_get_auto_generated_preview_ids( $video_attachment_id ) {
 		return array();
 	}
 
-	$get_video_thumb_ids_arr = explode( ',', $get_video_thumb_ids );
+	$default_images = isset( $get_video_thumb_ids['default_images'] ) && ! empty( $get_video_thumb_ids['default_images'] ) ? $get_video_thumb_ids['default_images'] : array();
 
-	return $get_video_thumb_ids_arr;
+	return $default_images;
 }
 
 /**
@@ -4110,7 +4110,7 @@ function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size 
 		$file_path           = '';
 		$upload_directory    = wp_get_upload_dir();
 
-		if ( ! empty( $attached_file_info['dirname'] ) ) {
+		if ( ! empty( $attached_file_info['dirname'] ) && $file ) {
 			$file_path = $attached_file_info['dirname'];
 			$file_path = $file_path . '/' . $file['file'];
 		}
