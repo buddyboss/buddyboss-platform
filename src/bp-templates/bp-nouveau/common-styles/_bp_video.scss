@@ -93,6 +93,7 @@
 
 		.vjs-error-display.vjs-modal-dialog {
 			background: rgba(0, 0, 0, 0.8);
+			cursor: pointer;
 
 			&:before {
 				color: #fff;
@@ -157,6 +158,8 @@
 		border-radius: 4px;
 		overflow: hidden;
 		max-width: 100%;
+		cursor: pointer;
+
 
 		.vjs-control-bar {
 			bottom: 15px;
@@ -197,6 +200,7 @@
 				line-height: 1.3;
 				box-shadow: none;
 				text-shadow: none;
+				font-family: inherit;
 
 				> .vjs-icon-placeholder:before {
 					line-height: 1.6;
@@ -286,19 +290,7 @@
 				transform: rotateY(180deg);
 			}
 
-			.vjs-seek-button,
-			.vjs-time-control,
-			.vjs-duration,
-			.vjs-playback-rate,
-			.vjs-picture-in-picture-control {
-
-				.bb-media-model-wrapper & {
-					display: none;
-				}
-
-			}
-
-			@media screen and (max-width: 540px ) {
+			@media screen and (max-width: 768px ) {
 				bottom: 10px;
 
 				.vjs-seek-button,
@@ -331,6 +323,111 @@
 
 			.vjs-icon-placeholder:before {
 				content: "\e8af";
+			}
+
+		}
+
+	}
+}
+
+//Video more option dropdown in theater
+.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap {
+	position: absolute;
+	right: 15px;
+	top: 21px;
+	z-index: 111;
+	-webkit-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+
+	&.is-visible {
+
+		.video-action_list {
+			opacity: 1;
+			visibility: visible;
+
+			&:after {
+				content: " ";
+				position: absolute;
+				width: 0;
+				height: 0;
+				top: 0;
+				margin: 0 auto;
+				right: 10px;
+				box-sizing: border-box;
+				border: 6px solid #000;
+				border-color: #fff #fff transparent transparent;
+				-webkit-transform-origin: 0 0;
+				-ms-transform-origin: 0 0;
+				transform-origin: 0 0;
+				-webkit-transform: rotate(-45deg);
+				-ms-transform: rotate(-45deg);
+				transform: rotate(-45deg);
+				box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+				z-index: 101;
+				opacity: 1;
+				visibility: visible;
+			}
+
+		}
+
+	}
+
+	> a i {
+		font-size: 21px;
+		color: #939597;
+		padding: 0 4px;
+		background-color: transparent;
+	}
+
+	.video-action_list {
+		position: absolute;
+		top: 28px;
+		right: 1px;
+		opacity: 0;
+		visibility: hidden;
+		background: #fff;
+		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+		border-radius: 4px;
+		width: 198px;
+		z-index: 1;
+
+		ul {
+			list-style: none;
+			margin: 5px 0 !important;
+			padding: 0 !important;
+
+			li {
+				margin: 0;
+				padding: 0;
+				list-style-type: none !important;
+
+				a {
+					padding: 10px 14px !important;
+					display: block !important;
+					font-size: 14px;
+					line-height: 1;
+					color: #7f868f;
+
+					&:hover {
+						background-color: #f5f5f5 !important;
+						color: #5087e5;
+					}
+
+					&:before {
+						content: "\e9cb";
+						font-family: 'bb-icons';/* stylelint-disable-line */
+						font-size: 20px;
+						display: inline-block;
+						text-align: center;
+						vertical-align: middle;
+						width: 20px;
+						max-height: 15px;
+						margin-top: -8px;
+						margin-right: 10px;
+					}
+				}
+
 			}
 
 		}
@@ -399,6 +496,34 @@
 
 	.bb-activity-video-elem {
 		padding: 3px;
+
+		video.video-js + .bb-video-loader {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			z-index: 11;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: #ddd;
+			color: #fff;
+			margin: 0;
+			border-radius: 4px;
+
+			&:after {
+				content: "\e838";
+				font-family: "bb-icons";/* stylelint-disable-line */
+				font-size: 35px;
+				animation: spin 2s infinite linear;
+			}
+
+		}
+
+		div.video-js + .bb-video-loader {
+			display: none;
+		}
 
 		.bb-item-cover-wrap {
 			padding-top: 38.56%;
@@ -510,6 +635,8 @@
 	}
 
 	.video-uploader-footer {
+		display: table;
+		width: 100%;
 
 		.bb-dropdown-wrap {
 			float: left;
@@ -671,6 +798,10 @@
 
 		}
 
+		.vjs-error-display.vjs-modal-dialog {
+			cursor: auto;
+		}
+
 		@media screen and (max-width: 767px) {
 
 			figure {
@@ -734,10 +865,83 @@
 	display: flex;
 	padding: 25px 0 0 0;
 
+	.video-thumbnail-custom {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		cursor: pointer;
+
+		.close-thumbnail-custom {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			height: 14px;
+			width: 14px;
+			border-radius: 50%;
+			background: #fd4343;
+			color: #fff;
+			cursor: pointer;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			&:after {
+				content: "\00d7";
+				font-size: 14px;
+				line-height: 1;
+				position: relative;
+				top: -1px;
+				left: 0;
+			}
+		}
+
+		img {
+			height: 100%;
+			width: 100%;
+			min-height: 120px;
+			object-fit: cover;
+			border-radius: 4px;
+		}
+
+	}
+
 	.bb-dropzone-wrap {
 		flex-basis: 33.333334%;
 		width: 33.333334%;
 		padding: 0;
+		position: relative;
+		min-height: 120px;
+
+		.bb-action-check-wrap {
+			visibility: visible;
+			opacity: 1;
+			top: inherit;
+			bottom: 7px;
+			right: 7px;
+			left: inherit;
+			z-index: 1111;
+			display: none;
+
+			.bb-icon {
+
+				border: 2px solid #fff;
+				background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
+
+				&:before {
+					display: none;
+				}
+
+			}
+
+			.bb-custom-check:checked + label .bb-icon:before {
+				content: "\e876";
+				display: inline;
+			}
+
+		}
 
 		.bb-field-wrap {
 			margin-bottom: 0;
@@ -770,6 +974,7 @@
 			.dz-preview {
 				margin: 0;
 				width: 100%;
+				z-index: initial;
 
 				.dz-image {
 					height: 120px;
@@ -778,6 +983,7 @@
 						max-width: inherit;
 						object-fit: cover;
 						width: 100%;
+						cursor: pointer;
 					}
 
 				}
@@ -797,6 +1003,7 @@
 
 					&:after {
 						top: -1px;
+						left: -0.5px;
 					}
 
 				}
@@ -827,15 +1034,6 @@
 				text-align: center;
 				align-items: center;
 				justify-content: center;
-
-				&:before {
-					content: "\e838";
-					font-family: "bb-icons";/* stylelint-disable-line */
-					display: inline-block;
-					font-size: 24px;
-					animation: spin 2s infinite linear;
-				}
-
 			}
 
 			li {
@@ -851,7 +1049,8 @@
 				.bb-action-check-wrap {
 					visibility: visible;
 					opacity: 1;
-					top: 7px;
+					top: inherit;
+					bottom: 7px;
 					right: 7px;
 					left: inherit;
 
@@ -883,6 +1082,7 @@
 				img {
 					object-fit: cover;
 					border-radius: 4px;
+					min-height: 120px;
 				}
 
 			}
@@ -893,7 +1093,12 @@
 
 }
 
+
 .bp-video-thumbnail-uploader {
+
+	.thumbnail_notice {
+		display: none;
+	}
 
 	.modal-container > p {
 		margin-top: 25px;
@@ -923,6 +1128,39 @@
 
 	}
 
+	&.generating_thumb {
+
+		.thumbnail_notice {
+			display: inline-block;
+			margin-left: 10px;
+			font-size: 14px;
+		}
+
+		.bp-video-thumbnail-auto-generated .video-thumb-list li {
+			border-radius: 4px;
+			opacity: 0.6;
+			margin: 0 0 0 10px !important;
+			width: calc(50% - 10px);
+			padding: 0;
+			flex-basis: calc(50% - 10px) !important;
+			overflow: hidden;
+
+			&:after {
+				content: "";
+				animation: faded 1.5s linear infinite forwards;
+				background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #e5e5e5 50%, #ccc 58%, #ccc 100%);
+				display: inline-block;
+				min-width: 530px;
+				min-height: 120px;
+			}
+		}
+
+	}
+
+	.modal-mask {
+		z-index: 999991;
+	}
+
 }
 
 @media screen and (max-width: 540px) {
@@ -935,6 +1173,15 @@
 
 		.bb-model-header {
 			margin: -20px -15px 30px;
+			flex-wrap: wrap;
+
+			.bp-video-thumbnail-uploader-modal-title {
+				margin-right: 10px;
+			}
+
+			.thumbnail_notice {
+				margin: 0;
+			}
 		}
 
 	}
@@ -1021,7 +1268,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	.dz-progress-count {
 		position: absolute;
 		z-index: 1;
-		bottom: 15%;
+		bottom: 5%;
 		left: 50%;
 		width: 50%;
 		transform: translateX(-50%);
@@ -1029,7 +1276,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		color: #fff;
 		border-radius: 30px;
 		padding: 0 20px 0 10px;
-		font-size: 13px;
+		font-size: 12px;
 		line-height: 2;
 		min-width: 130px;
 	}
@@ -1048,7 +1295,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		transform: translate(-50%, -65px);
+		transform: translate(-50%, -50%);
 		z-index: 11;
 		opacity: 1;
 		border: 0;
@@ -1059,7 +1306,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	.dz-preview .dz-progress {
 		position: absolute;
 		top: inherit;
-		bottom: 45%;
+		bottom: 27%;
 		opacity: 1;
 		height: 6px;
 		border-radius: 3px;
@@ -1069,7 +1316,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
-		bottom: 16%;
+		bottom: 6%;
 		top: inherit;
 		left: 50%;
 		margin-left: 52px;
@@ -1078,9 +1325,10 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		line-height: 1;
 		height: auto;
 		width: auto;
+		box-shadow: none;
 
 		&:after {
-			font-size: 25px;
+			font-size: 23px;
 			line-height: 1;
 			position: static;
 		}
@@ -1144,7 +1392,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			&:after {
 				position: absolute;
 				top: -1px;
-				left: 2px;
+				left: 1px;
 				font-size: 14px;
 				line-height: 1;
 			}
@@ -1184,7 +1432,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	}
 
 	.dz-preview.dz-file-preview {
-		width: 165px;
+		width: 260px;
 		min-height: 165px;
 
 		.dz-details {
@@ -1213,6 +1461,17 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 	}
 
+	.dz-success-mark {
+		display: none;
+	}
+
+	.dz-error-message {
+		top: 150px;
+		left: 50%;
+		transform: translateX(-50%);
+		margin-left: 5px;
+	}
+
 	@media screen and (max-width: 768px ) {
 
 		.dz-preview.dz-file-preview {
@@ -1234,6 +1493,50 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			margin: 0 5px 10px;
 		}
 
+	}
+
+}
+
+#video-uploader.dropzone .dz-preview.dz-file-preview {
+	width: 250px;
+}
+
+.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
+	width: 235px;
+	height: 150px;
+
+	&.dz-complete .dz-remove:after {
+		top: -1px;
+		left: 0;
+	}
+
+	@media screen and (max-width: 768px ) {
+		width: calc(50% - 11.5px);
+		margin: 0 5px 10px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+	}
+
+	@media screen and (max-width: 480px ) {
+		width: calc(100% - 10px);
+		margin: 0 5px 10px;
+	}
+
+}
+
+
+//Animation
+@keyframes faded {
+
+	0% {
+		transform: translateX(-300px);
+	}
+
+	100% {
+		transform: translateX(0);
 	}
 
 }

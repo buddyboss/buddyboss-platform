@@ -850,6 +850,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	remove_action( 'bp_activity_entry_content', 'bp_video_activity_entry' );
 	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_video_activity_description' );
 	add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
+	add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_video_activity_entry_buttons' );
 
 	if ( ! empty( $video_activity ) ) {
 		$args = array(
@@ -887,6 +888,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
+	remove_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_video_activity_entry_buttons' );
 	remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
 	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_video_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_video_activity_entry' );

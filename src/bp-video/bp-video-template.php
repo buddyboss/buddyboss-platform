@@ -1752,6 +1752,7 @@ function bp_get_video_auto_generated_thumbnail_ids() {
 	global $video_template;
 
 	$thumbnail_ids = get_post_meta( $video_template->video->attachment_id, 'video_preview_thumbnails', true );
+	$thumbnail_ids = isset($thumbnail_ids['default_images']) && !empty($thumbnail_ids['default_images']) ? $thumbnail_ids['default_images'] : '';
 
 	/**
 	 * Filters the auto generated video thumbnail IDs comma separated.

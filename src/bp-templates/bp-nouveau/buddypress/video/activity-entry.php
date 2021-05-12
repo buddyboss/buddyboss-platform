@@ -22,47 +22,12 @@ if ( $group_id > 0 ) {
 }
 $more_video = $video_template->video_count > 3 ? true : false;
 
-$media_privacy  = bp_video_user_can_manage_video( bp_get_video_id(), bp_loggedin_user_id() );
-$can_manage     = true === (bool) $media_privacy['can_manage'];
-$can_move       = true === (bool) $media_privacy['can_move'];
-$db_privacy     = bp_get_video_privacy();
-$is_comment_vid = bp_video_is_activity_comment_video( bp_get_video_id() );
-$attachment_urls = [];
-$auto_generated_thumbnails = get_post_meta( bp_get_video_attachment_id(), 'video_preview_thumbnails', true );
-$preview_thumbnail_id      = get_post_meta( bp_get_video_attachment_id(), 'bp_video_preview_thumbnail_id', true );
-if ( $auto_generated_thumbnails ) {
-	$auto_generated_thumbnails_arr = explode( ',', $auto_generated_thumbnails );
-	if ( $auto_generated_thumbnails_arr ) {
-		foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
-			$attachment_urls['default_images'][] = array(
-				'id'	=> $auto_generated_thumbnail,
-				'url'	=> wp_get_attachment_image_url( $auto_generated_thumbnail, 'full' )
-			);
-		}
-	}
-	if ( $preview_thumbnail_id ) {
-		$auto_generated_thumbnails_arr = explode( ',', $auto_generated_thumbnails );
-		if ( ! in_array( $preview_thumbnail_id, $auto_generated_thumbnails_arr, true ) ) {
-			$video                      = new BP_Video( bp_get_video_id() );
-			$attachment_urls['preview'] = array(
-				'id'            => bp_get_video_id(),
-				'attachment_id' => $video->attachment_id,
-				'thumb'         => wp_get_attachment_image_url( $preview_thumbnail_id, 'bp-media-thumbnail' ),
-				'url'           => wp_get_attachment_image_url( $preview_thumbnail_id, 'full' ),
-				'name'          => $video->title,
-				'saved'         => true,
-				'dropzone'      => true
-			);
-		} else {
-			if ( $preview_thumbnail_id ) {
-				$attachment_urls['preview'] = [
-					'id'	=> $preview_thumbnail_id,
-					'url'	=> wp_get_attachment_image_url( $preview_thumbnail_id, 'full' )
-				];
-			}
-		}
-	}
-}
+$media_privacy   = bp_video_user_can_manage_video( bp_get_video_id(), bp_loggedin_user_id() );
+$can_manage      = true === (bool) $media_privacy['can_manage'];
+$can_move        = true === (bool) $media_privacy['can_move'];
+$db_privacy      = bp_get_video_privacy();
+$is_comment_vid  = bp_video_is_activity_comment_video( bp_get_video_id() );
+$attachment_urls = bp_video_get_attachments( bp_get_video_attachment_id() ); 
 ?>
 
 <div class="bb-activity-video-elem
@@ -125,6 +90,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 		<video id="video-<?php bp_video_id(); ?>" class="video-js single-activity-video" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_attachment_image(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" controls poster="<?php bp_video_attachment_image(); ?>" data-setup='{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
 			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
 		</video>
+		<p class="bb-video-loader"></p>
 		<?php if ( ! empty( bp_get_video_length() ) ) { ?>
 		<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 		<?php } ?>

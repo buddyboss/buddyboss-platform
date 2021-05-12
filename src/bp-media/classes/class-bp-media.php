@@ -661,6 +661,35 @@ class BP_Media {
 			$attachment_data->meta           = self::attachment_meta( $media->attachment_id );
 			$media->attachment_data          = $attachment_data;
 
+			if( $media->type == 'video' ) {
+				$get_video_thumb_ids = get_post_meta( $media->attachment_id, 'video_preview_thumbnails', true );
+				$get_video_thumb_id  = get_post_meta( $media->attachment_id, 'bp_video_preview_thumbnail_id', true );
+
+				$attachment_data->mime_type        = get_post_mime_type( $media->attachment_id );
+				$length_formatted                  = wp_get_attachment_metadata( $media->attachment_id );
+				$attachment_data->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+
+				if ( $get_video_thumb_id ) {
+					$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
+					$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
+					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
+					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
+
+				} elseif ( isset( $get_video_thumb_ids['default_images'] ) && !empty( $get_video_thumb_ids['default_images'] ) ) {
+					$get_video_thumb_id              = current( $get_video_thumb_ids['default_images'] );
+					$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
+					$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
+					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
+					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
+				} else {
+					$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+					$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+					$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+					$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+				}
+
+				$media->attachment_data = $attachment_data;
+			}
 			$group_name = '';
 			if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
 				$group      = groups_get_group( $media->group_id );
