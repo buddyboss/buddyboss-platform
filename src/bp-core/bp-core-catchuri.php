@@ -69,6 +69,8 @@ function bp_core_set_uri_globals() {
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
+	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+		$path = esc_url( $_REQUEST['_wp_http_referer'] );
 	} else {
 		$path = esc_url( $_SERVER['REQUEST_URI'] );
 	}
