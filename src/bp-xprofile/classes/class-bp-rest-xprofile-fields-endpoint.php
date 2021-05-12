@@ -1044,7 +1044,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Reset the global before returning the value.
 		$field = $reset_global;
 
-		return $value;
+		return wp_specialchars_decode( $value );
 	}
 
 	/**
@@ -1074,7 +1074,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		return $value;
+		return wp_specialchars_decode( $value );
 	}
 
 	/**
@@ -1105,7 +1105,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$unserialized_value = maybe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
-			$unserialized_value = (array) $unserialized_value;
+			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value );
 		}
 
 		return $unserialized_value;

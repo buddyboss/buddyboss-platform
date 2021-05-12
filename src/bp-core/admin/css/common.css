@@ -2177,3 +2177,28 @@ body .section-repair_community .settings fieldset .checkbox label code {
 .users tr.suspended-user {
   background-color: #f5dada;
 }
+
+h2.has_tutorial_btn {
+  position: relative;
+}
+
+h2.has_tutorial_btn .bbapp-tutorial-btn {
+  position: absolute;
+  right: 0;
+  top: 5px;
+  font-weight: 400;
+}
+
+h2.has_tutorial_btn .bbapp-tutorial-btn p {
+  margin: 0;
+}
+
+@media screen and (max-width: 580px) {
+  h2.has_tutorial_btn {
+    margin-bottom: 65px;
+  }
+  h2.has_tutorial_btn .bbapp-tutorial-btn {
+    top: inherit;
+    bottom: -55px;
+  }
+}
