@@ -475,7 +475,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		$album_privacy = $album->privacy;
 	}
 
-	// save media
+	// Save media.
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
 
@@ -495,6 +495,9 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 		$media_ids[] = $media_id;
 	}
+
+	// Flush the cache.
+	wp_cache_flush();
 
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
