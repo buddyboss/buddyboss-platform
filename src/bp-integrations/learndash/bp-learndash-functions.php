@@ -473,6 +473,8 @@ function bb_profiles_tutorial_my_courses() {
 /**
  * LeanDash permalink slug for profile courses.
  *
+ * @since BuddyBoss 1.5.9
+ *
  * @return string
  */
 function bb_learndash_profile_courses_slug() {
