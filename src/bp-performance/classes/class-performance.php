@@ -85,6 +85,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				// Make Cache API Available.
 				require_once dirname( __FILE__ ) . '/class-cache.php';
 				require_once dirname( __FILE__ ) . '/integrations/class-integration-abstract.php';
+				require_once dirname( __FILE__ ) . '/class-option-clear-cache.php';
 				require_once dirname( __FILE__ ) . '/class-helper.php';
 				require_once dirname( __FILE__ ) . '/class-route-helper.php';
 				require_once dirname( __FILE__ ) . '/class-pre-user-provider.php';
@@ -92,6 +93,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 				Route_Helper::instance();
 				Helper::instance();
+				OptionClearCache::instance();
 				Pre_User_Provider::instance();
 				Settings::instance();
 
