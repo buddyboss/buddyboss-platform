@@ -1275,9 +1275,10 @@ function bp_nouveau_ajax_delete_thread_messages() {
 
 	wp_send_json_success(
 		array(
-			'id'       => $thread_id,
-			'type'     => 'success',
-			'messages' => 'Messages successfully deleted.',
+			'id'             => $thread_id,
+			'type'           => 'success',
+			'messages'       => 'Messages successfully deleted.',
+			'messages_count' => bp_get_message_thread_total_count( $thread_id ),
 		)
 	);
 
