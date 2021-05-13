@@ -1573,7 +1573,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					/**
 					 * Fires inside the closing </tbody> tag for forums screen notification settings.
 					 *
-					 * @since BuddyBoss 1.5.5
+					 * @since BuddyBoss 1.5.9
 					 */
 					do_action( 'forums_screen_notification_settings' );
 					?>
