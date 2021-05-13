@@ -194,6 +194,12 @@ function bp_video_uploading_tutorial() {
  */
 function bp_video_admin_setting_callback_video_section() {
 
+	?>
+    <p class="alert">
+		<?php esc_html_e( 'Video uploading is not yet supported in BuddyBoss App.', 'buddyboss' ); ?>
+    </p>
+	<?php
+
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
 		?>
 		<p class="alert">
