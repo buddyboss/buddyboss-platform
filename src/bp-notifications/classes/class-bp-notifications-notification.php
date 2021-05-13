@@ -151,7 +151,7 @@ class BP_Notifications_Notification {
 			if ( empty( $this->id ) ) {
 				$this->id = $wpdb->insert_id;
 			}
-			$retval   = $this->id;
+			$retval = $this->id;
 		}
 
 		/**
