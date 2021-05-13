@@ -469,3 +469,14 @@ function bb_profiles_tutorial_my_courses() {
 
 	<?php
 }
+
+/**
+ * LeanDash permalink slug for profile courses.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @return string
+ */
+function bb_learndash_profile_courses_slug() {
+	return ltrim( apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ) ), '/' );
+}
