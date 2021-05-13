@@ -223,6 +223,18 @@ abstract class Integration_Abstract {
 									return $wp_use_themes;
 								}
 							);
+							add_filter(
+								'option_stylesheet',
+								function ( $stylesheet ) {
+									return '';
+								}
+							);
+							add_filter(
+								'option_template',
+								function ( $template ) {
+									return '';
+								}
+							);
 
 							// Disable all plugins for this request as we will fire cache on init hook.
 							add_filter(
@@ -313,7 +325,7 @@ abstract class Integration_Abstract {
 		if ( ! empty( $cache_val ) && isset( $cache_val['data'] ) && ! empty( $cache_val['data'] ) ) {
 			$cache_val['data'] = apply_filters( 'bbapp_performance_deep_filter_cached_data', $cache_val['data'], $args, $this->integration_name );
 			$results           = array();
-			$results['header'] = (isset( $cache_val['header'] ) ) ? $cache_val['header'] : array();
+			$results['header'] = ( isset( $cache_val['header'] ) ) ? $cache_val['header'] : array();
 			foreach ( $cache_val['data'] as $item_id ) {
 				$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name . '_' . $item_id );
 				if ( false !== $get_cache ) {
@@ -338,7 +350,8 @@ abstract class Integration_Abstract {
 						/**
 						 * Fetch Single item data if any single item cache is cleared
 						 */
-						$request = new WP_REST_Request( $args['request_method'], '/' . $rest_endpoint );
+						$embed   = isset( $_GET['_embed'] ) ? rest_parse_embed_param( $_GET['_embed'] ) : false;
+						$request = new WP_REST_Request( $args['request_method'], '/' . $rest_endpoint . '?_embed=' . $embed );
 						if ( is_array( $unique_id ) ) {
 							$args = explode( '_', $item_id );
 							$args = array_combine( $unique_id, $args );
@@ -364,7 +377,6 @@ abstract class Integration_Abstract {
 							$results = false;
 							break;
 						}
-
 
 						if ( ! empty( $retval->data[0] ) ) {
 							$is_cache_enabled = apply_filters( 'bbapp_performance_deep_cache_filter_item', true, $retval->data[0], $args, $this->integration_name );
@@ -565,10 +577,12 @@ abstract class Integration_Abstract {
 						continue;
 					}
 
-					$item_id = $item[ $unique_key ];
 					if ( is_array( $unique_key ) ) {
-						$item_id = $this->prepare_key( $item, $unique_key );;
+						$item_id = $this->prepare_key( $item, $unique_key );
+					} else {
+						$item_id = $item[ $unique_key ];
 					}
+
 					if ( ! empty( $item ) && in_array( $item_id, $item_ids ) ) {
 						Cache::instance()->set( $this->get_current_endpoint_cache_key(), $item, $args['expire'], $this->integration_name . '_' . $item_id, $user_id );
 					}
@@ -589,19 +603,32 @@ abstract class Integration_Abstract {
 		$disallow_headers = array(
 			'bbapp-logged-in',
 			'bbapp-unread-notifications',
+			'bbp-unread-messages',
 			'bbp-unread-notifications',
 			'Expires',
 			'Cache-Control',
 		);
 		// To add filter for this you need to execute code form mu level.
 		$disallow_headers = apply_filters( 'rest_post_disprepare_header_cache', $disallow_headers );
-		foreach ( headers_list() as $header ) {
-			$header = explode( ':', $header );
-			if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-				$headers[ $header[0] ] = $header[1];
+
+		$header_list = headers_list();
+		if ( ! empty( $header_list ) ) {
+			foreach ( $header_list as $header ) {
+				$header = explode( ':', $header );
+				if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
+					$headers[ $header[0] ] = $header[1];
+				}
 			}
 		}
-		$headers = array_merge( $headers, $results->get_headers() );
+
+		$results_header = $results->get_headers();
+		if ( ! empty( $results_header ) ) {
+			foreach ( $results_header as $header_key => $header_val ) {
+				if ( ! in_array( $header_key, $disallow_headers, true ) ) {
+					$headers[ $header_key ] = $header_val;
+				}
+			}
+		}
 
 		return $headers;
 	}
@@ -724,7 +751,7 @@ abstract class Integration_Abstract {
 	 * @param array $purge_single_events component event hooks.
 	 */
 	protected function purge_single_events( $purge_single_events ) {
-		if ( ! empty( $purge_single_events ) ) {
+		if ( ! empty( $purge_single_events ) && is_array( $purge_single_events ) ) {
 			foreach ( $purge_single_events as $event => $args ) {
 				if ( method_exists( $this, 'event_' . str_replace( '-', '_', $event ) ) ) {
 					add_action( $event, array( $this, 'event_' . str_replace( '-', '_', $event ) ), 99, $args );

@@ -211,6 +211,8 @@ class Settings {
 					'bp-activity',
 					'bp-messages',
 					'bp-friends',
+					'bp-media',
+					'bp-document',
 				);
 				break;
 		}
@@ -257,7 +259,7 @@ class Settings {
 				foreach ( $components as $component ) {
 					Cache::instance()->purge_by_component( $component );
 				}
-
+				Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
 				$purge_url = self::get_performance_purge_url();
 				wp_safe_redirect( $purge_url . '&cache_purge=1' );
 				exit();
