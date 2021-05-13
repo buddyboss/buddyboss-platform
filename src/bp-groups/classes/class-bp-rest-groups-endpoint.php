@@ -162,6 +162,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			)
 			&& function_exists( 'bp_groups_get_excluded_group_ids_by_type' )
 			&& ! empty( bp_groups_get_excluded_group_ids_by_type() )
+			&& empty( $request['parent_id'] )
 		) {
 			$args['exclude'] = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 		}
@@ -219,7 +220,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -290,7 +291,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -716,6 +717,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'slug'               => bp_get_group_slug( $item ),
 			'status'             => bp_get_group_status( $item ),
 			'types'              => bp_groups_get_group_type( $item->id, false ),
+			'group_type_label'   => $this->get_group_type_label( $item ),
 			'subgroups_id'       => $this->bp_rest_get_sub_groups( $item->id ),
 			'admins'             => array(),
 			'mods'               => array(),
@@ -731,6 +733,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'plural_role'        => '',
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
 			'can_post'           => $this->bp_rest_user_can_post( $item ),
+			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
+			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
 		);
 
 		// BuddyBoss Platform support.
@@ -1029,7 +1033,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @param  BP_Groups_Group $group Group object.
 	 * @return bool
 	 */
-	protected function can_see( $group ) {
+	public function can_see( $group ) {
 
 		// If it is not a hidden group, user can see it.
 		if ( 'hidden' !== $group->status ) {
@@ -1055,7 +1059,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				return true;
 			}
 
-			if ( is_user_logged_in() && isset( $request['user_id'] ) && absint( $request['user_id'] ) === bp_loggedin_user_id() ) {
+			if ( ( is_user_logged_in() && empty( $request['user_id'] ) ) || ( isset( $request['user_id'] ) && absint( $request['user_id'] ) === bp_loggedin_user_id() ) ) {
 				return true;
 			}
 
@@ -1290,6 +1294,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'type' => 'string',
 					),
 				),
+				'group_type_label'   => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Name of the group type.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
 				'subgroups_id'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Sub Groups id if having a sub groups.', 'buddyboss' ),
@@ -1395,6 +1405,18 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Forum id of the group.', 'buddyboss' ),
 					'type'        => 'integer',
+					'readonly'    => true,
+				),
+				'create_media'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to upload media to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'create_document'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to upload document to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			),
@@ -1799,5 +1821,24 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		return $user_group_role_title;
 
+	}
+
+	/**
+	 * Fetch group type label.
+	 *
+	 * @param BP_Groups_Group $group Group object.
+	 *
+	 * @return mixed|string|void
+	 */
+	public function get_group_type_label( $group ) {
+
+		if ( function_exists( 'bp_disable_group_type_creation' ) && true !== bp_disable_group_type_creation() ) {
+			return '';
+		}
+
+		$group_type = bp_groups_get_group_type( $group->id );
+		$group_type = bp_groups_get_group_type_object( $group_type );
+
+		return isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : __( 'Group', 'buddyboss' );
 	}
 }
