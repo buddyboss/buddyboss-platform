@@ -1274,13 +1274,7 @@ function bp_nouveau_nav_has_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
-		$members = groups_get_group_members( array( 'group_id' => bp_get_current_group_id(), 'exclude_admins_mods' => false ) );
 		$count   = 0 !== (int) groups_get_current_group()->total_member_count;
-		if ( ! empty( $members ) && ! empty( $members['count'] ) ) {
-			$count = 0 !== (int) $members['count'];
-		}
-		// } elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
-		// $count = 0 !== (int) bp_document_get_total_group_document_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
@@ -1327,11 +1321,7 @@ function bp_nouveau_get_nav_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
-		$members = groups_get_group_members( array( 'group_id' => bp_get_current_group_id(), 'exclude_admins_mods' => false ) );
 		$count   = (int) groups_get_current_group()->total_member_count;
-		if ( ! empty( $members ) && ! empty( $members['count'] ) ) {
-			$count = $members['count'];
-		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 		// } elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
