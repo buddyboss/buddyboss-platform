@@ -1617,12 +1617,19 @@ function bb_restricate_rest_api() {
 }
 
 /**
- * Function will unset all endpoints.
- *
- * @param $endpoints
+ * Function will remove all endpoints.
+ * 
+ * @param array $endpoints
+ * 
+ * @return array $endpoints
  */
 function bb_remove_all_endpoints( $endpoints ) {
+	// You can add exclude endpoint with an array via below filter.
+	$exclude_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array() );
 	foreach ( $endpoints as $endpoint => $details ) {
-		unset( $endpoints[$endpoint] );
+		if ( ! in_array( $endpoint, $exclude_endpoints, true ) ) {
+			unset( $endpoints[$endpoint] );
+		}
 	}
+	return $endpoints;
 }
