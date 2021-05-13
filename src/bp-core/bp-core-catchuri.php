@@ -1619,7 +1619,7 @@ function bb_restricate_rest_api() {
 /**
  * Function will remove all endpoints.
  * 
- * @param array $endpoints
+ * @param array  $endpoints
  * 
  * @return array $endpoints
  */
