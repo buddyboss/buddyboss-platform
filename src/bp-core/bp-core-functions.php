@@ -5378,14 +5378,24 @@ function bb_restricate_rest_api() {
  * @return array $endpoints
  */
 function bb_remove_all_endpoints( $endpoints ) {
+	if ( empty( $endpoints ) ) {
+		return;
+	}
+
+	$namespaces = rest_get_server()->get_namespaces();
+
 	// You can add exclude endpoint with an array via below filter.
 	$exclude_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(
+		'/',
+		'/buddyboss/v1',
 		'/buddyboss/v1/settings',
 		'/buddyboss/v1/signup/form',
 		'/buddyboss/v1/signup/(?P<id>[\w-]+)',
 		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
+		'/wp/v2',
 		'/wp/v2/pages/(?P<id>[\d]+)',
 	) );
+
 	foreach ( $endpoints as $endpoint => $details ) {
 		if ( ! in_array( $endpoint, $exclude_endpoints, true ) ) {
 			unset( $endpoints[ $endpoint ] );
