@@ -3574,6 +3574,8 @@ function bp_document_default_scope( $scope = 'all' ) {
 		}
 	} elseif ( bp_is_user_document() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
 	}
 
 	if ( empty( $new_scope ) ) {
