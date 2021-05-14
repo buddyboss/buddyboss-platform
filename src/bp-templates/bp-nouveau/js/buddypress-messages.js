@@ -2824,6 +2824,9 @@ window.bp = window.bp || {};
 					jQuery( tinyMCE.activeEditor.formElement ).addClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
 					if ( bp.Nouveau.Messages.mediumEditor.getContent() ) {
+						//Before send make sure that medium editor is focus.
+						$( bp.Nouveau.Messages.mediumEditor.elements[0] ).focus();
+
 						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
 							function ( index, Obj ) {
 								$( Obj ).addClass( 'emojioneemoji' );
