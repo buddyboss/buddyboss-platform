@@ -1568,6 +1568,10 @@ window.bp = window.bp || {};
 						return false;
 					}
 
+					if ( url.includes( window.location.hostname ) ) {
+						return false;
+					}
+
 					var urlResponse = false;
 					if ( self.loadedURLs.length ) {
 						$.each(
