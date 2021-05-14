@@ -151,6 +151,33 @@ function bp_helper_plugins_loaded_callback() {
 
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
+
+	if ( in_array( 'the-events-calendar/the-events-calendar.php', $bp_plugins, true ) ) {
+
+		/**
+		 * Function to suppress "The Event Calendar" plugin's parse_query filter.
+		 *
+		 * @param array $query default query variable.
+		 *
+		 * @return array|mixed
+		 */
+		function bp_core_tribe_events_parse_query( $query ) {
+			
+			if ( is_search() === true
+				|| ( 
+					(bool) defined('DOING_AJAX') === true
+					&& (bool) DOING_AJAX === true
+					&& $_REQUEST['action'] === 'bp_search_ajax'
+					) 
+				) {
+				$query->set( 'tribe_suppress_query_filters', true );
+			}
+			
+			return $query;
+		}
+		
+		add_filter( "parse_query", 'bp_core_tribe_events_parse_query' );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
