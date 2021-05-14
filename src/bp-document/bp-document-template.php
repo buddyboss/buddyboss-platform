@@ -1114,9 +1114,10 @@ function bp_get_document_attachment_url() {
 	global $document_template;
 
 	$full = '';
-	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['full'] ) ) {
+
+	if ( ! empty( $document_template->document->attachment_data ) && is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['full'] ) ) {
 		$full = $document_template->document->attachment_data['full'];
-	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->full ) ) {
+	} elseif ( ! empty( $document_template->document->attachment_data ) && is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->full ) ) {
 		$full = $document_template->document->attachment_data->full;
 	}
 
