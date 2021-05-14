@@ -18,7 +18,7 @@
 						<a href="#" class="bp-video-thumbnail-upload-tab bp-thumbnail-upload-tab selected bp-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content" id="">
 							<?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?>
 						</a>
-						<span class="thumbnail_notice"><?php esc_html_e( 'Generating thumbnails..', 'buddyboss' ); ?></span>
+						<span class="thumbnail_notice"><?php esc_html_e( '(Generating thumbnails)', 'buddyboss' ); ?></span>
 
 						<span id="bp-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
 
