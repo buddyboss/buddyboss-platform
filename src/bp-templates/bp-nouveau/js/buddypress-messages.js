@@ -2524,8 +2524,20 @@ window.bp = window.bp || {};
 							}
 						} else if ( response.id ) {
 							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
-							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
-							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
+							if ( undefined !== response.messages_count && 0 === response.messages_count ) {
+								if ( bp.Nouveau.Messages.threads.length > 1 ) {
+									bp.Nouveau.Messages.threads.remove( response.id );
+									bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+								} else {
+									BP_Nouveau.messages.hasThreads = false;
+									bp.Nouveau.Messages.threads.remove( response.id );
+									bp.Nouveau.Messages.router.navigate( 'view/?refresh=1', { trigger: true } );
+									bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
+								}
+							} else {
+								bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
+								bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
+							}
 						} else if ( response.messages ) {
 
 							// bp.Nouveau.Messages.messages.collection.reset();
@@ -2812,6 +2824,9 @@ window.bp = window.bp || {};
 					jQuery( tinyMCE.activeEditor.formElement ).addClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
 					if ( bp.Nouveau.Messages.mediumEditor.getContent() ) {
+						//Before send make sure that medium editor is focus.
+						$( bp.Nouveau.Messages.mediumEditor.elements[0] ).focus();
+
 						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
 							function ( index, Obj ) {
 								$( Obj ).addClass( 'emojioneemoji' );
