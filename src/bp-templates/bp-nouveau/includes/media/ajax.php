@@ -1224,6 +1224,10 @@ function bp_nouveau_ajax_media_move() {
 	}
 
 	$media    = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+
+	// Flush the cache.
+	wp_cache_flush();
+
 	$response = bp_media_get_activity_media( $activity_id );
 
 	if ( $media > 0 ) {
