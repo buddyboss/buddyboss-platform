@@ -5321,3 +5321,76 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 	);
 
 }
+
+
+/**
+ * Function will restrict RSS feed.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bb_restricate_rss_feed() {
+	// This will disable default feeds.
+	remove_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
+	remove_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
+	remove_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
+	remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
+	remove_action( 'wp_head', 'feed_links_extra', 3 );
+	remove_action( 'wp_head', 'feed_links', 2 );
+	// This will disable sitewide feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
+	// This will disable users personal activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_personal_feed' );
+	// This will disable users friends activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_friends_feed' );
+	// This will disable users group activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
+	// This will disable users mentions activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
+	// This will disable users favorites activity feeds.
+	remove_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
+	// This will disable groups feeds.
+	remove_action( 'bp_actions', 'groups_action_group_feed' );
+	// This will disable forums feed.
+	remove_filter( 'bbp_request', 'bbp_request_feed_trap' );
+}
+
+/**
+ * Function will restrict REST API.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bb_restricate_rest_api() {
+	// This will disable woocommerce endpoints.
+	if ( class_exists( 'woocommerce' ) ) {
+		remove_action( 'rest_api_init', array( WC()->api, 'register_rest_routes' ), 10 );
+	}
+	// This will disable all rest api endpoints.
+	add_filter( 'rest_endpoints', 'bb_remove_all_endpoints' );
+}
+
+/**
+ * Function will remove all endpoints.
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @param array $endpoints Array of endpoints.
+ *
+ * @return array $endpoints
+ */
+function bb_remove_all_endpoints( $endpoints ) {
+	// You can add exclude endpoint with an array via below filter.
+	$exclude_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(
+		'/buddyboss/v1/settings',
+		'/buddyboss/v1/signup/form',
+		'/buddyboss/v1/signup/(?P<id>[\w-]+)',
+		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
+		'/wp/v2/pages/(?P<id>[\d]+)',
+	) );
+	foreach ( $endpoints as $endpoint => $details ) {
+		if ( ! in_array( $endpoint, $exclude_endpoints, true ) ) {
+			unset( $endpoints[ $endpoint ] );
+		}
+	}
+
+	return $endpoints;
+}

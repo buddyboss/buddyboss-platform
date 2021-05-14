@@ -149,6 +149,8 @@ add_action( 'bp_init', function() {
 	}
 }, 10, 2 );
 
+add_action( 'init', 'bb_removes_endpoints_and_feeds', 99 );
+
 /**
  * Restrict user when visit attachment url from media/document.
  * - Privacy security.
@@ -171,3 +173,27 @@ function bp_restrict_single_attachment() {
 		}
 	}
 }
+
+/**
+ * Function will remove default WordPress and WooCommerce api endpoint.
+ * Also, remove feeds url.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bb_removes_endpoints_and_feeds() {
+	if ( is_user_logged_in() ) {
+		return;
+	}
+
+	// IF Platform 'Private Website' settings enabled.
+	// THEN Restrict all RSS and REST APIs. (reason to restrict because the site is private).
+	if ( ! bp_enable_private_network() ) {
+		bb_restricate_rss_feed();
+	}
+
+	// check settings with BuddyBoss APP and Platform both.
+	if ( bp_rest_enable_private_network() ) {
+		bb_restricate_rest_api();
+	}
+}
+
