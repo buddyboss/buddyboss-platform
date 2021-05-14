@@ -6,6 +6,8 @@
  */
 
 $args = array(
+	'page'                => 1,
+	'per_page'            => 12,
 	'exclude'             => array( bp_loggedin_user_id() ),
 	'exclude_admins_mods' => false,
 );
