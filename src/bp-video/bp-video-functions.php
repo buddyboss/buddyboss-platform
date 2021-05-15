@@ -3847,7 +3847,7 @@ function bb_video_create_thumb_symlinks( $video ) {
 /**
  * Delete the symlink for given thumb id.
  *
- * @param int|object $video video id or video object.
+ * @param int|object $video           video id or video object.
  * @param int        $delete_thumb_id thumb id to delete.
  *
  * @since BuddyBoss X.X.X
@@ -3859,7 +3859,9 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 		$video_id = $video->id;
 	} elseif ( is_int( $video ) ) {
 		$video_id = $video;
-	}
+	} elseif ( is_string( $video ) ) {
+		$video_id = $video;
+    }
 
 	if ( empty( $video_id ) ) {
 		return;
@@ -3873,22 +3875,22 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 	$privacy         = $video->privacy;
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy );
 
-	if ( file_exists( $attachment_path ) ) {
+	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'medium' );
-	if ( file_exists( $attachment_path ) ) {
+	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'large' );
-	if ( file_exists( $attachment_path ) ) {
+	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'full' );
-	if ( file_exists( $attachment_path ) ) {
+	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 

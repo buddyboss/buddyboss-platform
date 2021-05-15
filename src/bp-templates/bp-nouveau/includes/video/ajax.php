@@ -1513,6 +1513,11 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
 		update_post_meta( $pre_selected_id, 'bp_video_upload', 1 );
 
+		if ( (int) $old_thumbnail_id !== (int) $pre_selected_id ) {
+		    wp_delete_post( $old_thumbnail_id, true );
+			bb_video_delete_thumb_symlink( $video_id, $old_thumbnail_id );
+        }
+
 	} elseif ( $video_attachment_id && $pre_selected_id ) {
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 	}
