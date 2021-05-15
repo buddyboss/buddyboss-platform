@@ -399,6 +399,10 @@ function bp_nouveau_ajax_media_delete() {
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 	}
 	if( bp_is_group_media() ) {
+
+	    // Update the count of photos in groups in navigation menu.
+	    wp_cache_flush();
+
 		$media_group_count = bp_media_get_total_group_media_count();
 	}
 
