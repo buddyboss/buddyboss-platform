@@ -3568,7 +3568,7 @@ function bb_video_symlink_original_video_path() {
 		chmod( $platform_previews_path, 0755 );
 	}
 
-	$video_symlinks_path = $platform_previews_path . '/' . md5( 'bb-videos-symlink' );
+	$video_symlinks_path = $platform_previews_path . '/' . md5( 'bb-videos' );
 	if ( ! is_dir( $video_symlinks_path ) ) {
 		wp_mkdir_p( $video_symlinks_path );
 		chmod( $video_symlinks_path, 0755 );
