@@ -71,6 +71,26 @@ add_action( 'bp_document_before_save', 'bp_document_delete_symlinks' );
 // Create symlinks for documents when saved.
 add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
 
+// Clear document symlinks on delete.
+add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on_delete', 10 );
+
+/**
+ * Clear a user's symlinks document when attachment document delete.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param array $documents DB results of document items.
+ */
+function bp_document_clear_document_symlinks_on_delete( $documents ) {
+	if ( ! empty( $documents[0] ) ) {
+		foreach ( (array) $documents as $deleted_document ) {
+			if ( isset( $deleted_document->id ) ) {
+				bp_document_delete_symlinks( (int) $deleted_document->id );
+			}
+		}
+	}
+}
+
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
