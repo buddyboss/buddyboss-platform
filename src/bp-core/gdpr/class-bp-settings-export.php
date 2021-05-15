@@ -171,8 +171,8 @@ final class BP_Settings_Export extends BP_Export {
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			$notification_settings['notification_forums_following_reply'] = __( 'A member replies to a discussion you are following', 'buddyboss' );
-			$notification_settings['notification_forums_following_topic'] = __( 'A member has creates a new forum discussion you are following', 'buddyboss' );
+			$notification_settings['notification_forums_following_reply'] = __( 'A member replies to a discussion you are subscribed', 'buddyboss' );
+			$notification_settings['notification_forums_following_topic'] = __( 'A member has creates a new forum discussion you are subscribed', 'buddyboss' );
 		}
 
 		return $notification_settings;

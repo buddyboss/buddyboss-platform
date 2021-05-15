@@ -1526,7 +1526,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				<tbody>
 					<tr id="forums-notification-settings-new-message">
 						<td></td>
-						<td><?php esc_html_e( 'A member replies to a discussion you are following', 'buddyboss' ); ?></td>
+						<td><?php esc_html_e( 'A member replies to a discussion you are subscribed', 'buddyboss' ); ?></td>
 						<td class="yes">
 							<div class="bp-radio-wrap">
 								<input type="radio" name="notifications[notification_forums_following_reply]"
@@ -1548,7 +1548,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					</tr>
 					<tr id="forums-notification-settings-new-message">
 						<td></td>
-						<td><?php esc_html_e( 'A member has creates a new forum discussion you are following', 'buddyboss' ); ?></td>
+						<td><?php esc_html_e( 'A member has creates a new forum discussion you are subscribed', 'buddyboss' ); ?></td>
 						<td class="yes">
 							<div class="bp-radio-wrap">
 								<input type="radio" name="notifications[notification_forums_following_topic]"
@@ -1573,7 +1573,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					/**
 					 * Fires inside the closing </tbody> tag for forums screen notification settings.
 					 *
-					 * @since BuddyBoss 1.5.5
+					 * @since BuddyBoss 1.5.9
 					 */
 					do_action( 'forums_screen_notification_settings' );
 					?>
