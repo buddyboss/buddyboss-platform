@@ -406,6 +406,12 @@ function bp_nouveau_ajax_media_delete() {
 		$media_group_count = bp_media_get_total_group_media_count();
 	}
 
+	if ( bp_is_group_albums() ) {
+
+		// Update the count of photos in groups in navigation menu when you are in single albums page.
+		wp_cache_flush();
+	}
+
 	wp_send_json_success(
 		array(
 			'media'                => $media,
