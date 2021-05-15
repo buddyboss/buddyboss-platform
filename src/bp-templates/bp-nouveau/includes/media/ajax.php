@@ -704,6 +704,9 @@ function bp_nouveau_ajax_media_album_delete() {
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
 		$redirect_url = trailingslashit( $group_link . '/albums/' );
+
+		// Flush the cache so update the count.
+		wp_cache_flush();
 	} else {
 		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' );
 	}
