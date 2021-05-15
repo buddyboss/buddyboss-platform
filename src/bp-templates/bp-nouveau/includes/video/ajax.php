@@ -1511,6 +1511,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		);
 
 		update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
+		update_post_meta( $pre_selected_id, 'bp_video_upload', 1 );
 
 	} elseif ( $video_attachment_id && $pre_selected_id ) {
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
@@ -1526,7 +1527,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		array(
 			'thumbnail'           => $thumbnail_url,
 			'video_attachment_id' => $video_attachment_id,
-			'video_attachments'   => json_encode( bp_video_get_attachments( $video_attachment_id ) )
+			'video_attachments'   => json_encode( bp_video_get_attachments( $video_attachment_id, $video_id ) )
 		)
 	);
 }

@@ -3507,15 +3507,16 @@ function bb_video_is_ffmpeg_installed() {
  *
  * @since BuddyBoss 1.5.7
  *
- * @param integer $video_id video id.
+ * @param int $video_attachment_id video attachment id.
+ * @param int $video_id            video id.
  *
  * @return mixed
  */
-function bp_video_get_attachments( $video_id ) {
+function bp_video_get_attachments( $video_attachment_id, $video_id = 0 ) {
 
 	$attachment_urls = [];
-	$auto_generated_thumbnails = get_post_meta( $video_id, 'video_preview_thumbnails', true );
-	$preview_thumbnail_id      = get_post_meta( $video_id, 'bp_video_preview_thumbnail_id', true );
+	$auto_generated_thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+	$preview_thumbnail_id      = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 	if ( $auto_generated_thumbnails ) {
 		$auto_generated_thumbnails_arr = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
 		if ( $auto_generated_thumbnails_arr ) {
@@ -3534,16 +3535,18 @@ function bp_video_get_attachments( $video_id ) {
 		);
 	}
 	if ( isset($auto_generated_thumbnails['custom_image']) && !empty($auto_generated_thumbnails['custom_image']) ) {
-			$video                      = new BP_Video( bp_get_video_id() );
-			$attachment_urls['preview'] = array(
-				'id'            => bp_get_video_id(),
-				'attachment_id' => $auto_generated_thumbnails['custom_image'],
-				'thumb'         => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
-				'url'           => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'full' ),
-				'name'          => $video->title,
-				'saved'         => true,
-				'dropzone'      => true
-			);
+
+	    $id = ( $video_id ) ? $video_id : bp_get_video_id();
+        $video                      = new BP_Video( $id );
+        $attachment_urls['preview'] = array(
+            'id'            => $id,
+            'attachment_id' => $auto_generated_thumbnails['custom_image'],
+            'thumb'         => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
+            'url'           => wp_get_attachment_image_url( $auto_generated_thumbnails['custom_image'], 'full' ),
+            'name'          => $video->title,
+            'saved'         => true,
+            'dropzone'      => true
+        );
 	}
 
 	return $attachment_urls;
