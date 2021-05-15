@@ -999,14 +999,14 @@ window.bp = window.bp || {};
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
-                peak_offset = ( $( window ).height()/2 - 75 );
+				var peak_offset = ( $( window ).height() / 2 - 75 );
 
-                $.scrollTo(
+				$.scrollTo(
 					form,
 					500,
 					{
-						offset:-peak_offset,
-						easing:'swing'
+						offset: -peak_offset,
+						easing: 'swing'
 					}
 				);
 
