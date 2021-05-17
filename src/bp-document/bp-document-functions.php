@@ -4395,3 +4395,76 @@ function bp_document_load_gopp_image_editor_gs() {
 		require trailingslashit( dirname( __FILE__ ) ) . 'classes/class-bp-gopp-image-editor-gs.php';
 	}
 }
+
+/**
+ * Create symlink for a document video.
+ *
+ * @param object $document BP_Document Object.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_document_video_get_symlink( $document ) {
+
+	// Check if document is id of document, create document object.
+	if ( ! $document instanceof BP_Document && is_int( $document ) ) {
+		$document = new BP_Document( $document );
+	}
+
+	// Return if no document found.
+	if ( empty( $document ) ) {
+		return;
+	}
+
+	$do_symlink     = apply_filters( 'bb_document_do_symlink', true, $document->id, $document->attachment_id, '' );
+	$attachment_url = '';
+	$document_id    = $document->id;
+	$attachment_id  = $document->attachment_id;
+
+	if ( $do_symlink ) {
+
+		$existing_mimes = array();
+		$all_extensions = bp_document_extensions_list();
+		foreach ( $all_extensions as $extension ) {
+			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+				$extension_name                      = ltrim( $extension['extension'], '.' );
+				$existing_mimes[ "$extension_name" ] = $extension['mime_type'];
+			}
+		}
+
+		$document_mime_type = bp_document_mime_type( $attachment_id );
+
+		if ( ! in_array( $document_mime_type, $existing_mimes ) ) {
+			return;
+		}
+
+		// Get videos previews symlink directory path.
+		$video_symlinks_path = bb_video_symlink_original_video_path();
+		$attached_file       = get_attached_file( $attachment_id );
+		$privacy             = $document->privacy;
+		$upload_directory    = wp_get_upload_dir();
+		$attachment_path     = $video_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . time() );
+
+		$mime = mime_content_type( $attached_file );
+
+		if ( strstr( $mime, 'video/' ) ) {
+			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+				if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
+					$get_existing = get_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', true );
+					if ( ! $get_existing ) {
+						update_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', array( $attachment_path ) );
+					} else {
+						$get_existing[] = array_push( $get_existing, $attachment_path );
+						update_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', $get_existing );
+					}
+					symlink( $attached_file, $attachment_path );
+				}
+			}
+
+			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
+		}
+
+	}
+
+	return apply_filters( 'bb_document_video_get_symlink', $attachment_url, $document_id, $attachment_id );
+
+}

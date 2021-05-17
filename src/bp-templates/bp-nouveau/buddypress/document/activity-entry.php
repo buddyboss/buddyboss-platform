@@ -24,6 +24,7 @@ if ( $attachment_id ) {
 $class_theatre = apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
 $class_popup   = apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
 $click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
+$video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
@@ -41,6 +42,7 @@ $click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( '
 				data-author="<?php bp_document_user_id(); ?>"
 				data-preview="<?php bp_document_attachment_url(); ?>"
 				data-text-preview="<?php bp_document_attachment_url(); ?>"
+                data-video-preview="<?php echo $video_url ? esc_url( $video_url ) : ''; ?>"
 				data-mp3-preview="<?php bp_document_attachment_url(); ?>"
 				data-album-id="<?php bp_document_folder_id(); ?>"
 				data-group-id="<?php bp_document_group_id(); ?>"
@@ -64,6 +66,7 @@ $click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( '
 				data-preview="<?php bp_document_attachment_url(); ?>"
 				data-text-preview="<?php bp_document_attachment_url(); ?>"
 				data-mp3-preview="<?php bp_document_attachment_url(); ?>"
+                data-video-preview="<?php echo $video_url ? esc_url( $video_url ) : ''; ?>"
 				data-album-id="<?php bp_document_folder_id(); ?>"
 				data-group-id="<?php bp_document_group_id(); ?>"
 				data-document-title="<?php echo esc_html( $filename ); ?>"

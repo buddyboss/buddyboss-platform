@@ -53,7 +53,10 @@ if ( $attachment_id ) {
 		$move_id   = bp_get_document_user_id();
 		$move_type = 'profile';
 	}
+
 	$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
+	$video_url      = bb_document_video_get_symlink( bp_get_document_id() );
+
 } else {
 	$svg_icon       = bp_document_svg_icon( 'folder' );
 	$download_link  = bp_document_folder_download_link( bp_get_document_folder_id() );
