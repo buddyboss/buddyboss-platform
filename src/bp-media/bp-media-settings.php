@@ -1400,7 +1400,13 @@ function bp_media_settings_callback_extension_link() {
  * @since BuddyBoss 1.0.0
  */
 function bp_document_extensions_list() {
-	return apply_filters( 'bp_document_extensions_list', bp_get_option( 'bp_document_extensions_support', bp_media_allowed_document_type() ) );
+
+	$default = bp_media_allowed_document_type();
+	$saved   = bp_get_option( 'bp_document_extensions_support', $default );
+	$merge   = array_merge( $default, $saved );
+	$final   = array_unique( $merge, SORT_REGULAR );
+
+	return apply_filters( 'bp_document_extensions_list', $final );
 }
 
 /**
