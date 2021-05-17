@@ -715,7 +715,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 				$fields_groups[] = array(
 					'name'        => 'notification_group_messages_new_message',
-					'label'       => __( 'Group Message', 'buddyboss' ),
+					'label'       => __( 'A group sends you a new message', 'buddyboss' ),
 					'field'       => 'radio',
 					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
 					'options'     => array(
@@ -728,6 +728,44 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			$fields_groups = apply_filters( 'bp_rest_account_settings_notifications_groups', $fields_groups );
 			$fields        = array_merge( $fields, $fields_groups );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$fields_forums[] = array(
+				'name'        => '',
+				'label'       => '',
+				'field'       => '',
+				'value'       => '',
+				'options'     => array(),
+				'group_label' => __( 'Forums', 'buddyboss' ),
+			);
+
+			$fields_forums[] = array(
+				'name'        => 'notification_forums_following_reply',
+				'label'       => __( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
+				'options'     => array(
+					'yes' => 'Yes',
+					'no'  => 'No',
+				),
+				'group_label' => '',
+			);
+
+			$fields_forums[] = array(
+				'name'        => 'notification_forums_following_topic',
+				'label'       => __( 'A member has creates a new forum discussion you are subscribed', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
+				'options'     => array(
+					'yes' => 'Yes',
+					'no'  => 'No',
+				),
+				'group_label' => '',
+			);
+
+			$fields_forums = apply_filters( 'bp_rest_account_settings_notifications_forums', $fields_forums );
+			$fields        = array_merge( $fields, $fields_forums );
 		}
 
 		if ( bp_is_active( 'friends' ) ) {
