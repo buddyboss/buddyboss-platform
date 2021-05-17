@@ -1177,7 +1177,7 @@ add_filter( 'bp_media_allowed_document_type', function ( $extensions ) {
 		),
 		'bb_doc_79' => array(
 			'extension'   => '.ogg',
-			'mime_type'   => 'Ogg',
+			'mime_type'   => 'video/ogg',
 			'description' => __( 'Ogg', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
