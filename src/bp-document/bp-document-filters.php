@@ -172,15 +172,19 @@ function bp_document_activity_append_document( $content, $activity ) {
 function bp_document_activity_comment_entry( $comment_id ) {
 
 	$document_ids = bp_activity_get_meta( $comment_id, 'bp_document_ids', true );
+	$args = 	array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ||
+	     bp_is_active( 'activity' ) && ( buddypress()->activity->id === $activity->component || buddypress()->blogs->id === $activity->component ) ) {
+		$args['privacy'] = array( 'comment' );
+	}
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
-
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
@@ -833,7 +837,8 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		foreach ( $document_ids as $document_id ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') )
+			&& ('comment' !== $document->privacy && ! empty( $document->blog_id ) ) ) {
 				$document->privacy = $activity->privacy;
 				$document->save();
 			}
