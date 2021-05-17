@@ -107,7 +107,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bp_is_forums_video_support_enabled() ) :
+	if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
         <div class="post-elements-buttons-item post-video video-support">
             <a href="#" id="forums-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">

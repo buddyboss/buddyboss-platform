@@ -15,7 +15,7 @@
 		</div>
 	<?php endif; ?>
 	<?php
-	$video_extensions = ( function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : '';
+	$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
 	if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && ( ( bp_is_activity_directory() && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_video_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_video_support_enabled() ) ) ) :
 		?>
 		<div class="post-elements-buttons-item post-video video-support">

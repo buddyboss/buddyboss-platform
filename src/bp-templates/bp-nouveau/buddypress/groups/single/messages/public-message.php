@@ -124,7 +124,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 							<?php endif; ?>
 							<?php
 							$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
-							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bp_is_messages_video_support_enabled() ) :
+							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, 0 ) ) :
 								?>
                                 <div class="post-elements-buttons-item post-video video-support">
                                     <a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">
