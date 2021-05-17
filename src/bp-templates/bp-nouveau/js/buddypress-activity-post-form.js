@@ -3552,8 +3552,8 @@ window.bp = window.bp || {};
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
-							var videoCloseEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( videoCloseEvent );
+							var videosCloseEvent = new Event( 'activity_video_close' );
+							document.dispatchEvent( videosCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}

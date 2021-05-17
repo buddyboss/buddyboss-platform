@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.8.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-05-14 03:03:12+00:00\n"
+"POT-Creation-Date: 2021-05-17 04:54:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1621,7 +1621,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1063
 #: bp-templates/bp-nouveau/includes/document/functions.php:182
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
-#: bp-templates/bp-nouveau/includes/groups/functions.php:605
+#: bp-templates/bp-nouveau/includes/groups/functions.php:606
 #: bp-templates/bp-nouveau/includes/media/functions.php:233
 #: bp-templates/bp-nouveau/includes/video/functions.php:209
 msgid "My Groups"
@@ -2916,7 +2916,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2741
 #: bp-groups/bp-groups-admin.php:610
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:524
-#: bp-templates/bp-nouveau/includes/groups/functions.php:576
+#: bp-templates/bp-nouveau/includes/groups/functions.php:577
 msgid "All Groups"
 msgstr ""
 
@@ -2931,7 +2931,7 @@ msgid "Group Types"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2765
-#: bp-templates/bp-nouveau/includes/groups/functions.php:774
+#: bp-templates/bp-nouveau/includes/groups/functions.php:775
 msgid "Group Navigation"
 msgstr ""
 
@@ -3505,7 +3505,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/customizer.php:208
 #: bp-templates/bp-nouveau/includes/document/functions.php:92
 #: bp-templates/bp-nouveau/includes/groups/classes.php:377
-#: bp-templates/bp-nouveau/includes/groups/functions.php:878
+#: bp-templates/bp-nouveau/includes/groups/functions.php:879
 msgid "Documents"
 msgstr ""
 
@@ -3563,8 +3563,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1041
 #: bp-templates/bp-nouveau/includes/groups/classes.php:260
-#: bp-templates/bp-nouveau/includes/groups/functions.php:859
-#: bp-templates/bp-nouveau/includes/groups/functions.php:865
+#: bp-templates/bp-nouveau/includes/groups/functions.php:860
+#: bp-templates/bp-nouveau/includes/groups/functions.php:866
 #. translators: accessibility text
 msgid "Members"
 msgstr ""
@@ -5119,7 +5119,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/customizer.php:205
 #: bp-templates/bp-nouveau/includes/groups/classes.php:281
 #: bp-templates/bp-nouveau/includes/groups/classes.php:361
-#: bp-templates/bp-nouveau/includes/groups/functions.php:870
+#: bp-templates/bp-nouveau/includes/groups/functions.php:871
 msgid "Photos"
 msgstr ""
 
@@ -6444,7 +6444,7 @@ msgstr ""
 
 #: bp-core/bp-core-template.php:3586 bp-groups/bp-groups-template.php:4398
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:547
-#: bp-templates/bp-nouveau/includes/groups/functions.php:618
+#: bp-templates/bp-nouveau/includes/groups/functions.php:619
 msgid "Create a Group"
 msgstr ""
 
@@ -8141,7 +8141,7 @@ msgstr ""
 #: bp-core/deprecated/buddypress/1.6.php:184
 #: bp-groups/bp-groups-template.php:6291 bp-groups/bp-groups-template.php:6335
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:108
-#: bp-templates/bp-nouveau/includes/groups/functions.php:673
+#: bp-templates/bp-nouveau/includes/groups/functions.php:674
 #: bp-templates/bp-nouveau/includes/members/functions.php:92
 msgid "Recently Active"
 msgstr ""
@@ -15532,7 +15532,7 @@ msgid "Those users are already friends or have sent friendship request(s) recent
 msgstr ""
 
 #: bp-friends/classes/class-bp-rest-friends-endpoint.php:373
-#: bp-templates/bp-nouveau/includes/groups/functions.php:547
+#: bp-templates/bp-nouveau/includes/groups/functions.php:548
 msgid "You are not allowed to perform this action."
 msgstr ""
 
@@ -16520,7 +16520,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:642
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:733
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:110
-#: bp-templates/bp-nouveau/includes/groups/functions.php:676
+#: bp-templates/bp-nouveau/includes/groups/functions.php:677
 #: bp-templates/bp-nouveau/includes/members/functions.php:97
 #: bp-templates/bp-nouveau/includes/members/functions.php:115
 msgid "Alphabetical"
@@ -16624,7 +16624,7 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:670
 #: bp-templates/bp-nouveau/includes/groups/classes.php:343
-#: bp-templates/bp-nouveau/includes/groups/functions.php:860
+#: bp-templates/bp-nouveau/includes/groups/functions.php:861
 msgid "Feed"
 msgstr ""
 
@@ -16654,8 +16654,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:12
 #: bp-templates/bp-nouveau/includes/groups/functions.php:138
 #: bp-templates/bp-nouveau/includes/groups/functions.php:404
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1259
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1276
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1260
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1277
 msgid "Pending Invites"
 msgstr ""
 
@@ -16669,7 +16669,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:13
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
 #: bp-templates/bp-nouveau/includes/groups/classes.php:368
-#: bp-templates/bp-nouveau/includes/groups/functions.php:874
+#: bp-templates/bp-nouveau/includes/groups/functions.php:875
 msgid "Albums"
 msgstr ""
 
@@ -17481,12 +17481,12 @@ msgid ""
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:640
-#: bp-templates/bp-nouveau/includes/groups/functions.php:674
+#: bp-templates/bp-nouveau/includes/groups/functions.php:675
 msgid "Most Members"
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:641
-#: bp-templates/bp-nouveau/includes/groups/functions.php:675
+#: bp-templates/bp-nouveau/includes/groups/functions.php:676
 msgid "Newly Created"
 msgstr ""
 
@@ -20569,8 +20569,8 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:862
 #: bp-templates/bp-nouveau/buddypress/members/single/groups/invites.php:10
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/group-invites.php:11
-#: bp-templates/bp-nouveau/includes/groups/functions.php:487
-#: bp-templates/bp-nouveau/includes/groups/functions.php:515
+#: bp-templates/bp-nouveau/includes/groups/functions.php:488
+#: bp-templates/bp-nouveau/includes/groups/functions.php:516
 msgid "Group Invites"
 msgstr ""
 
@@ -23369,7 +23369,7 @@ msgid "Optional: Customize the message of your invite."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:4
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1308
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1309
 #: bp-templates/bp-nouveau/includes/messages/functions.php:119
 msgid "Type message"
 msgstr ""
@@ -24040,7 +24040,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:16
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:42
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1316
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1317
 msgid "All Group Members"
 msgstr ""
 
@@ -24627,7 +24627,7 @@ msgid "More Videos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:21
-msgid "Generating thumbnails.."
+msgid "(Generating thumbnails)"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:30
@@ -25839,7 +25839,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:968
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:970
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1313
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1314
 msgid "Add Member"
 msgstr ""
 
@@ -25883,7 +25883,7 @@ msgid "Your message was sent to %%count%% members of this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:165
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1311
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1312
 msgid "Loading members. Please wait."
 msgstr ""
 
@@ -25896,19 +25896,19 @@ msgid "Cancel Invite"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:170
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1321
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1322
 msgid ""
 "Group invitations cleared. Please use one of the available tabs to select "
 "members to invite."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:171
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1322
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1323
 msgid "Sending group invitations. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:172
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1323
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1324
 msgid "Cancel invitation %s"
 msgstr ""
 
@@ -25916,105 +25916,105 @@ msgstr ""
 msgid "All members of this group are invited."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:545
+#: bp-templates/bp-nouveau/includes/groups/functions.php:546
 msgid "Group invites preferences saved."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:777
+#: bp-templates/bp-nouveau/includes/groups/functions.php:778
 msgid ""
 "Customize the navigation menu for groups. See your changes by navigating to "
 "a group in the live-preview window."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:884
+#: bp-templates/bp-nouveau/includes/groups/functions.php:885
 msgid "Display the group navigation vertically."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:890
+#: bp-templates/bp-nouveau/includes/groups/functions.php:891
 msgid "Group navigation order"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:891
+#: bp-templates/bp-nouveau/includes/groups/functions.php:892
 msgid ""
 "Set the default navigation tab when viewing a group. The dropdown only "
 "shows tabs that are available to all groups."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:899
+#: bp-templates/bp-nouveau/includes/groups/functions.php:900
 msgid "Reorder the primary navigation for a group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1218
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1219
 msgid "Pending Group membership requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1223
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1224
 msgid "Accepted Group membership requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1228
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1229
 msgid "Rejected Group membership requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1233
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1234
 msgid "Group Organizer promotions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1238
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1239
 msgid "Group Moderator promotions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1243
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1244
 msgid "Group invitations"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1309
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1310
 msgid ""
 "There are no other members in this group. Please add some members before "
 "sending a message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1310
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1311
 msgid "You are not allowed to send private messages to any member of this group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1312
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1313
 msgid "Remove Member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1314
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1315
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:400
 #: bp-templates/bp-nouveau/includes/messages/functions.php:103
 msgid "Please add some content to your message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1315
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1316
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:155
 #: bp-templates/bp-nouveau/includes/messages/functions.php:102
 msgid "Please add at least one recipient."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1317
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1318
 msgid "all"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1318
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1319
 msgid "No members were found. Try another filter."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1319
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1324
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1320
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1325
 msgid "This message will be delivered to all members of this group you can message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1320
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1321
 msgid ""
 "Select group members to message by clicking the + button next to each "
 "member. Once you've made a selection, click \"Send Message\" to create a "
 "new group message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1325
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1326
 msgid "Select individual recipients by clicking the + button next to each member."
 msgstr ""
 
