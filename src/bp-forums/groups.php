@@ -1548,7 +1548,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					</tr>
 					<tr id="forums-notification-settings-new-message">
 						<td></td>
-						<td><?php esc_html_e( 'A member has creates a new forum discussion you are subscribed', 'buddyboss' ); ?></td>
+						<td><?php esc_html_e( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ); ?></td>
 						<td class="yes">
 							<div class="bp-radio-wrap">
 								<input type="radio" name="notifications[notification_forums_following_topic]"
