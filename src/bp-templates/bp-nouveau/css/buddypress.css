@@ -19915,7 +19915,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bp-video-thumbnail-uploader.generating_thumb .thumbnail_notice {
   display: inline-block;
   margin-left: 10px;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .bp-video-thumbnail-uploader.generating_thumb .bp-video-thumbnail-auto-generated .video-thumb-list li {
