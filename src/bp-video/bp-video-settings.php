@@ -223,7 +223,7 @@ function bp_video_admin_setting_callback_video_section() {
 						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
 						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
 						'timeout'          => 3600, // The timeout for the underlying process.
-						'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+						'ffmpeg.threads'   => 12,   // The number of threads that FFmpeg should use.
 					)
 				);
 			} else {
@@ -237,11 +237,11 @@ function bp_video_admin_setting_callback_video_section() {
 			<p class="alert">
 				<?php
 				echo sprintf(
-				/* translators: %1$s FFMpeg status, %2$s FFMPEG Binary Path, %3$s FFPROBE Binary Path, %34$s wp-config.php file. */
-					_x( 'Your server needs %1$s installed to create a video thumbnail (optional). Ask your web host. 
-					<br/><br/>If FFmpeg is already installed on your server and still shows this message then the platform unable to auto-detect the binary path of the FFmpeg. 
-					<br/>You need to add FFmpeg binary files absolute path constants %2$s & %3$s in %4$s file. 
-					<br/>Ask your web host to provide binary files absolute path.', 'extension notification', 'buddyboss' ), //phpcs:ignore
+				/* translators: %1$s FFmpeg status, %2$s FFMPEG Binary Path, %3$s FFPROBE Binary Path, %34$s wp-config.php file. */
+					_x( 'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host. 
+					<br/><br/>If FFmpeg is already installed on your server and you still see the above warning, then BuddyBoss Platform is unable to auto-detect the binary path for FFmpeg. 
+					<br/>You need to add these FFmpeg binary files absolute path constants %2$s & %3$s in %4$s file. 
+					<br/>Ask your web host to provide the binary files absolute path.', 'extension notification', 'buddyboss' ), //phpcs:ignore
 					'<code><a href="https://ffmpeg.org/" target="_blank">FFmpeg</a></code>',
 					'<code>define( "BB_FFMPEG_BINARY_PATH", "PATH_OF_BINARY_FILE" )</code>',
 					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" )</code>',
