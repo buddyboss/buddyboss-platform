@@ -53,9 +53,11 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 				</a>
 				<div class="video-action_list item-action_list">
 					<ul>
+						<?php if ( ! in_array( $db_privacy, array( 'forums', 'comment', 'message' ), true ) ) { ?>
 						<li class="edit_thumbnail_video video-action-class">
 							<a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
 						</li>
+						<?php } ?>
 						<?php
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							if ( $can_move ) {
