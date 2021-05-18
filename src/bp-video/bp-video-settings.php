@@ -23,7 +23,7 @@ function bp_video_settings_callback_profile_video_support() {
 	<label for="bp_video_profile_video_support">
 		<?php
 		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload videos in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );  // phpcs:ignore
+			_e( 'Allow members to upload videos in <strong>profiles</strong> and <strong>activity posts</strong>', 'buddyboss' );  // phpcs:ignore
 		} else {
 			_e( 'Allow members to upload videos in <strong>profiles</strong>', 'buddyboss' );  // phpcs:ignore
 		}
@@ -68,11 +68,43 @@ function bp_video_settings_callback_group_video_support() {
 	/>
 	<label for="bp_video_group_video_support">
 		<?php
-		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload videos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );  // phpcs:ignore
-		} else {
-			_e( 'Allow members to upload videos in <strong>groups</strong>', 'buddyboss' ); // phpcs:ignore
+
+		$string_array = array();
+
+		if ( bp_is_active( 'groups' ) ) {
+			$string_array[] = __( 'groups', 'buddyboss' );
 		}
+
+		if ( bp_is_active( 'activity' ) ) {
+			$string_array[] = __( 'activity posts', 'buddyboss' );
+		}
+
+		if ( true === bp_disable_group_messages() ) {
+			$string_array[] = __( 'messages', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$string_array[] = __( 'forums', 'buddyboss' );
+		}
+
+		$last_string    = array_pop( $string_array );
+		$display_string = '';
+		if ( count( $string_array ) ) {
+			$second_to_last_string_name = array_pop( $string_array );
+			$display_string            .= implode( ', ', $string_array );
+			if ( ! empty( $second_to_last_string_name ) ) {
+				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+			} else {
+				$display_string .= ' and ';
+			}
+		}
+		$display_string .= $last_string;
+
+		printf(
+			'%1$s <strong>%2$s</strong>',
+			__( 'Allow members to upload videos in', 'buddyboss' ),
+			$display_string
+		);
 		?>
 	</label>
 	<?php
@@ -114,11 +146,7 @@ function bp_video_settings_callback_messages_video_support() {
 	/>
 	<label for="bp_video_messages_video_support">
 		<?php
-		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to upload videos in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' ); // phpcs:ignore
-		} else {
-			_e( 'Allow members to upload videos in <strong>private messages</strong>', 'buddyboss' ); // phpcs:ignore
-		}
+		_e( 'Allow members to upload videos in <strong>private messages</strong>', 'buddyboss' );
 		?>
 	</label>
 	<?php
@@ -147,7 +175,7 @@ function bp_video_settings_callback_forums_video_support() {
 		<?php checked( bp_is_forums_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_forums_video_support">
-		<?php _e( 'Allow members to upload videos in <strong>forum discussions</strong>', 'buddyboss' ); // phpcs:ignore ?>
+		<?php _e( 'Allow members to upload videos in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }

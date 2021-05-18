@@ -4319,6 +4319,10 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 		return false;
 	}
 
+	if ( ! bp_is_active( 'video' ) || ! bp_is_group_video_support_enabled() ) {
+		return false;
+	}
+
 	// Site admins always have access.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		return true;
