@@ -2040,7 +2040,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in groups or not.
-					if (BP_Nouveau.video.profile_video === false) {
+					if ( BP_Nouveau.video.profile_video === false ) {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );

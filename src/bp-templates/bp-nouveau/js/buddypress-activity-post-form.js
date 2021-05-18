@@ -2463,7 +2463,7 @@ window.bp = window.bp || {};
 
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.group_video === false ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).hide();
+							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
 							var videoCloseEvent = new Event( 'activity_video_close' );
 							document.dispatchEvent( videoCloseEvent );
 						} else {
@@ -2508,7 +2508,7 @@ window.bp = window.bp || {};
 
 						// check video is enable in profile or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).hide();
+							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
 							var videoEvent = new Event( 'activity_video_close' );
 							document.dispatchEvent( videoEvent );
 						} else {
@@ -3550,7 +3550,7 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in groups or not.
-						if ( BP_Nouveau.video.group_video === false ) {
+						if ( BP_Nouveau.video.profile_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
 							var videosCloseEvent = new Event( 'activity_video_close' );
 							document.dispatchEvent( videosCloseEvent );
