@@ -3552,6 +3552,32 @@ function bp_video_get_attachments( $video_attachment_id, $video_id = 0 ) {
 	return $attachment_urls;
 }
 
+/**
+ * Whether user can show the document upload button.
+ *
+ * @param int $user_id  given user id.
+ * @param int $group_id given group id.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool
+ */
+function bb_video_user_can_upload( $user_id = 0, $group_id = 0 ) {
+
+	if ( ( empty( $user_id ) && empty( $group_id ) ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_group_video_support_enabled() ) {
+		return groups_can_user_manage_video( $user_id, $group_id );
+	}
+
+	if ( bp_is_profile_video_support_enabled() && bb_user_can_create_video() ) {
+		return true;
+	}
+
+	return false;
+}
 
 /**
  * Return the video symlink path.

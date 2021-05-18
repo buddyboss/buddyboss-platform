@@ -169,6 +169,7 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
  *
  * @since BuddyBoss 1.5.7
  */
+/* Commented out during Beta period
 function bp_video_uploading_tutorial() {
 	?>
 	<p>
@@ -187,7 +188,7 @@ function bp_video_uploading_tutorial() {
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 	<?php
-}
+}*/
 
 /**
  * Print the FFMPEG notice.
@@ -206,7 +207,7 @@ function bp_video_admin_setting_callback_video_section() {
 			<?php
 			echo sprintf(
 				/* translators: 1: FFMpeg status */
-				_x( 'Your server needs %1$s installed to create video thumbnails (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
+				_x( 'Your server needs %1$s installed to automatically generate thumbnails from video files (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
 				'<code><a href="https://ffmpeg.org/" target="_blank">ffmpeg</a></code>'
 			);
 			?>

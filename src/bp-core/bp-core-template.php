@@ -4533,3 +4533,63 @@ function bp_is_group_video() {
 
 	return $retval;
 }
+
+/**
+ * Checks if user can create a video or not.
+ *
+ * @return bool Is user can create video or not.
+ * @since BuddyBoss X.X.X
+ */
+function bb_user_can_create_video() {
+	return (bool) apply_filters( 'bb_user_can_create_video', true );
+}
+
+/**
+ * Whether user has access to upload video or not.
+ *
+ * @param int    $group_id  group id to be check if passed.
+ * @param int    $user_id   user id to be check if passed.
+ * @param int    $forum_id  forum id to be check if passed.
+ * @param int    $thread_id thread id.
+ * @param string $type      from where permission to follow.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @return mixed|void
+ */
+function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+
+	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		return groups_can_user_manage_video( $user_id, $group_id );
+	} elseif ( ! empty( $forum_id ) && function_exists( 'bbp_get_forum_group_ids' ) ) {
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
+			return groups_can_user_manage_video( $user_id, current( $group_ids ) );
+		} else {
+			return ( function_exists( 'bp_is_forums_video_support_enabled' ) && bp_is_forums_video_support_enabled() ) && bb_user_can_create_video();
+		}
+	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
+		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+			return groups_can_user_manage_video( $user_id, $group_id );
+		} else {
+			return ( function_exists( 'bp_is_messages_video_support_enabled' ) && bp_is_messages_video_support_enabled() ) && bb_user_can_create_video();
+		}
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
+		return ( function_exists( 'bp_is_messages_video_support_enabled' ) && bp_is_messages_video_support_enabled() ) && bb_user_can_create_video();
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
+		return ( function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled() && bb_user_can_create_video() );
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
+		return ( function_exists( 'bp_is_forums_video_support_enabled' ) && bp_is_forums_video_support_enabled() ) && bb_user_can_create_video();
+	}
+
+	return false;
+
+}
+

@@ -365,17 +365,25 @@ window.bp = window.bp || {};
 					if ( ! _.isUndefined( activity_data ) ) {
 						if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
 
+							// check media is enable in groups or not.
 							if ( ! _.isUndefined( activity_data.group_media ) && activity_data.group_media === false ) {
 								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
 							} else {
 								$( '#whats-new-toolbar .post-media.media-support' ).show();
 							}
 
-							// check media is enable in groups or not.
+							// check document is enable in groups or not.
 							if ( ! _.isUndefined( activity_data.group_document ) && activity_data.group_document === false ) {
 								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 							} else {
 								$( '#whats-new-toolbar .post-media.document-support' ).show();
+							}
+
+							// check video is enable in groups or not.
+							if ( ! _.isUndefined( activity_data.group_video ) && activity_data.group_video === false ) {
+								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+							} else {
+								$( '#whats-new-toolbar .post-video.video-support' ).show();
 							}
 
 						} else {
@@ -389,7 +397,7 @@ window.bp = window.bp || {};
 								$( '#whats-new-toolbar .post-media.media-support' ).show();
 							}
 
-							// check media is enable in profile or not.
+							// check document is enable in profile or not.
 							if ( ! _.isUndefined( activity_data.profile_document ) && activity_data.profile_document === false ) {
 								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 								$( '.activity-document-container #activity-post-document-uploader .dz-default.dz-message' ).hide();
@@ -397,6 +405,16 @@ window.bp = window.bp || {};
 							} else {
 								$( '.activity-document-container' ).css( 'pointer-events', 'auto' );
 								$( '#whats-new-toolbar .post-media.document-support' ).show();
+							}
+
+							// check video is enable in profile or not.
+							if ( ! _.isUndefined( activity_data.profile_video ) && activity_data.profile_video === false ) {
+								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+								$( '.activity-video-container #activity-post-video-uploader .dz-default.dz-message' ).hide();
+								$( '.activity-video-container' ).css( 'pointer-events', 'none' );
+							} else {
+								$( '.activity-video-container' ).css( 'pointer-events', 'auto' );
+								$( '#whats-new-toolbar .post-video.video-support' ).show();
 							}
 						}
 					}
@@ -2155,13 +2173,22 @@ window.bp = window.bp || {};
 						$( '#whats-new-toolbar .post-media.media-support' ).show();
 					}
 
-					// check media is enable in groups or not.
+					// check document is enable in groups or not.
 					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
 						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 						var documentCloseEvent = new Event( 'activity_document_close' );
 						document.dispatchEvent( documentCloseEvent );
 					} else {
 						$( '#whats-new-toolbar .post-media.document-support' ).show();
+					}
+
+					// check video is enable in groups or not.
+					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
+						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+						var videoCloseEvent = new Event( 'activity_video_close' );
+						document.dispatchEvent( videoCloseEvent );
+					} else {
+						$( '#whats-new-toolbar .post-video.video-support' ).show();
 					}
 				}
 			}
@@ -2435,10 +2462,10 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in groups or not.
-						if ( BP_Nouveau.media.group_video === false ) {
+						if ( BP_Nouveau.video.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).hide();
-							var vdieoCloseEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( vdieoCloseEvent );
+							var videoCloseEvent = new Event( 'activity_video_close' );
+							document.dispatchEvent( videoCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
@@ -3468,13 +3495,22 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
-						// check media is enable in groups or not.
+						// check document is enable in groups or not.
 						if ( BP_Nouveau.media.group_document === false ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 							var documentCloseEvent = new Event( 'activity_document_close' );
 							document.dispatchEvent( documentCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+
+						// check video is enable in groups or not.
+						if ( BP_Nouveau.video.group_video === false ) {
+							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+							var videoCloseEvent = new Event( 'activity_video_close' );
+							document.dispatchEvent( videoCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
 
 						// check gif is enable in groups or not.
@@ -3511,6 +3547,15 @@ window.bp = window.bp || {};
 							document.dispatchEvent( documentEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+
+						// check video is enable in groups or not.
+						if ( BP_Nouveau.video.group_video === false ) {
+							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+							var videosCloseEvent = new Event( 'activity_video_close' );
+							document.dispatchEvent( videosCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
 
 						// check gif is enable in profile or not.
