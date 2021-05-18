@@ -605,43 +605,42 @@ class BP_Video {
 				$video->menu_order    = (int) $video->menu_order;
 			}
 
+			$file_url = wp_get_attachment_url( $video->attachment_id );
+			$filetype = wp_check_filetype( $file_url );
+			$ext      = $filetype['ext'];
+			if ( empty( $ext ) ) {
+				$path = parse_url( $file_url, PHP_URL_PATH );
+				$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+			}
+			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234
+			// https://stackoverflow.com/a/44858204
+			if ( in_array( $filetype['ext'], array( 'mov' ) ) ) {
+				$ext = 'mp4';
+			}
+
 			// fetch video thumbnail attachment data.
-			$attachment_data       = new stdClass();
-			$attachment_data->meta = new stdClass();
-
-			$attachment_data->full           = '';
-			$attachment_data->thumb          = '';
-			$attachment_data->activity_thumb = '';
-
-			$get_video_thumb_ids = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
-			$get_video_thumb_id  = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
-
-			$attachment_data->meta->mime_type        = get_post_mime_type( $video->attachment_id );
+			$attachment_data                         = new stdClass();
+			$attachment_data->meta                   = new stdClass();
+			$attachment_data->meta->mime_type        = apply_filters( 'bb_video_extension', 'video/' . $ext, $video );
 			$length_formatted                        = wp_get_attachment_metadata( $video->attachment_id );
 			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+			$attachment_thumb_id                     = bb_get_video_thumb_id( $video->attachment_id );
+			$default_thumb                           = bb_get_video_default_placeholder_image();
+			$attachment_data->full                   = $default_thumb;
+			$attachment_data->thumb                  = $default_thumb;
+			$attachment_data->activity_thumb         = $default_thumb;
+			$attachment_data->thumb_meta             = array();
 
-			if ( $get_video_thumb_id ) {
-				$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
-				$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
-				$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
-				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
-
-			} elseif ( isset($get_video_thumb_ids['default_images']) && !empty($get_video_thumb_ids['default_images']) ) {
-				$get_video_thumb_id              = current( $get_video_thumb_ids['default_images'] );
-				$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
-				$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
-				$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
-				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
-			} else {
-				$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-				$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-				$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-				$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+			if ( $attachment_thumb_id ) {
+				$attachment_data->full           = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'full' );
+				$attachment_data->thumb          = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'medium' );
+				$attachment_data->activity_thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'medium' );
+				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $attachment_thumb_id );
 			}
 
 			$video->attachment_data = $attachment_data;
+			$group_name             = '';
 
-			$group_name = '';
 			if ( bp_is_active( 'groups' ) && $video->group_id > 0 ) {
 				$group      = groups_get_group( $video->group_id );
 				$group_name = bp_get_group_name( $group );
@@ -663,12 +662,12 @@ class BP_Video {
 					$visibility = ( isset( $video_privacy[ $video->privacy ] ) ) ? ucfirst( $video_privacy[ $video->privacy ] ) : '';
 				}
 			}
+
 			$video->group_name = $group_name;
 			$video->visibility = $visibility;
+			$video->video_link = bb_video_get_symlink( $video );
+			$videos[]          = $video;
 
-			$video->video_link = wp_get_attachment_url( $video->attachment_id );
-
-			$videos[] = $video;
 		}
 
 		// Then fetch user data.

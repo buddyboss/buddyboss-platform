@@ -12,8 +12,7 @@
 	<div class="bb-album-cover-wrap">
 		<a class="bs-cover-wrap" href="<?php bp_album_link(); ?>">
 			<?php if ( ! empty( $media_album_template->album->media['medias'] ) ) : ?>
-				<img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->thumb ); ?>" />
-
+	            <img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->thumb ); ?>" />
 			<?php endif; ?>
 
 			<div class="bb-album-content-wrap">

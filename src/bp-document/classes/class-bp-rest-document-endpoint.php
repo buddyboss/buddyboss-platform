@@ -1386,7 +1386,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			ob_start();
 
 			if ( in_array( $data['extension'], bp_get_document_preview_music_extensions(), true ) ) {
-				$audio_url = bp_document_get_preview_audio_url( $document->id, $data['extension'], $document->attachment_id );
+				$audio_url = bp_document_get_preview_url( $document->id, $document->attachment_id );
 
 				echo '<div class="document-audio-wrap">' .
 					'<audio controls controlsList="nodownload">' .
@@ -1396,7 +1396,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'</div>';
 
 			}
-			$attachment_url = bp_document_get_preview_image_url( $document->id, $data['extension'], $document->attachment_id );
+			$attachment_url = bp_document_get_preview_url( $document->id, $document->attachment_id );
 			if ( $attachment_url ) {
 				echo '<div class="document-preview-wrap">' .
 					'<img src="' . esc_url_raw( $attachment_url ) . '" alt="" />' .
