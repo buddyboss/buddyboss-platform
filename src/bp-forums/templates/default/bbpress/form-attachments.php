@@ -53,7 +53,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 	<?php endif; ?>
 
-	<?php if ( bp_is_active( 'media' ) && bp_is_forums_video_support_enabled() ) : ?>
+	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
 		<div class="dropzone closed" id="forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
 		<input name="bbp_video" id="bbp_video" type="hidden" value=""/>
 		<div class="forum-post-video-template" style="display:none;">
