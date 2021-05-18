@@ -999,12 +999,14 @@ window.bp = window.bp || {};
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
+				var peak_offset = ( $( window ).height() / 2 - 75 );
+
 				$.scrollTo(
 					form,
 					500,
 					{
-						offset:-100,
-						easing:'swing'
+						offset: -peak_offset,
+						easing: 'swing'
 					}
 				);
 
@@ -2048,7 +2050,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in groups or not.
-					if (BP_Nouveau.video.profile_video === false) {
+					if ( BP_Nouveau.video.profile_video === false ) {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
