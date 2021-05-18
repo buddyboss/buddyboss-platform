@@ -41,7 +41,7 @@ if ( 'video' === $media_template->media->type ) {
 		$poster_thumb = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'medium' );
 	}
 
-	$attachment_urls = bp_video_get_attachments( $attachment_id );
+	$attachment_urls = bb_video_get_attachments_symlinks( $attachment_id, bp_get_media_id() );
 
 	?>
 	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-video-li" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">

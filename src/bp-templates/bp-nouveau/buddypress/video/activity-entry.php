@@ -27,7 +27,7 @@ $can_manage      = true === (bool) $media_privacy['can_manage'];
 $can_move        = true === (bool) $media_privacy['can_move'];
 $db_privacy      = bp_get_video_privacy();
 $is_comment_vid  = bp_video_is_activity_comment_video( bp_get_video_id() );
-$attachment_urls = bp_video_get_attachments( bp_get_video_attachment_id() ); 
+$attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
 ?>
 
 <div class="bb-activity-video-elem

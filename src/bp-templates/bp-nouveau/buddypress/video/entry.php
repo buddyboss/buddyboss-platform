@@ -28,7 +28,7 @@ if ( $group_id > 0 ) {
 
 $is_comment_vid = bp_video_is_activity_comment_video( $video_template->video );
 
-$attachment_urls = bp_video_get_attachments( bp_get_video_attachment_id() );
+$attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
 
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_video_id(); ?>" data-date-created="<?php bp_video_date_created(); ?>">

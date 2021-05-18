@@ -1376,7 +1376,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 
 	$content = get_post_field( 'post_content', $attachment_id );
 
-	$attachment_urls    = bp_video_get_attachments( $attachment_id );
+	$attachment_urls    = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 	$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
 	echo '<div class="activity-media-description">' .

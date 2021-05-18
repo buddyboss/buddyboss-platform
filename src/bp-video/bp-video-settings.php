@@ -245,18 +245,7 @@ function bp_video_admin_setting_callback_video_section() {
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$error = '';
 		try {
-			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-			    $ffmpeg = FFMpeg\FFMpeg::create(
-					array(
-						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
-						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
-						'timeout'          => 3600, // The timeout for the underlying process.
-						'ffmpeg.threads'   => 12,   // The number of threads that FFmpeg should use.
-					)
-				);
-			} else {
-				$ffmpeg = FFMpeg\FFMpeg::create();
-			}
+			$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		} catch ( Exception $ffmpeg ) {
 			$error = $ffmpeg->getMessage();
 		}

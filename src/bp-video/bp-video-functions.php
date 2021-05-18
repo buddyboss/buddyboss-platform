@@ -859,7 +859,7 @@ function bp_video_add_generate_thumb_background_process( $attachment_id, $video 
 		global $bp_background_updater;
 		$error = '';
 		try {
-			$ffmpeg = FFMpeg\FFMpeg::create();
+			$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		} catch ( Exception $ffmpeg ) {
 			$error = $ffmpeg->getMessage();
 			$bp_background_updater->cancel_process();
@@ -955,7 +955,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$error = '';
 		try {
-			$ffmpeg = FFMpeg\FFMpeg::create();
+			$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		} catch ( Exception $ffmpeg ) {
 			$error = $ffmpeg->getMessage();
 			$bp_background_updater->cancel_process();
@@ -967,18 +967,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 	}
 
 	try {
-		if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-			$ffmpeg = FFMpeg\FFMpeg::create(
-				array(
-					'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
-					'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
-					'timeout'          => 3600, // The timeout for the underlying process.
-					'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
-				)
-			);
-		} else {
-			$ffmpeg = FFMpeg\FFMpeg::create();
-		}
+		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 	} catch ( Exception $ffmpeg ) {
 		$error = $ffmpeg->getMessage();
 		$bp_background_updater->cancel_process();
@@ -990,18 +979,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 
 			do_action( 'bb_try_before_video_background_create_thumbnail', $video_id, $video );
 
-			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-				$ff_probe = FFMpeg\FFProbe::create(
-					array(
-						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
-						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
-						'timeout'          => 3600, // The timeout for the underlying process.
-						'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
-					)
-				);
-			} else {
-				$ff_probe = FFMpeg\FFProbe::create();
-			}
+			$ff_probe = bb_video_check_is_ffprobe_binary();
 
 			$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 
@@ -1051,18 +1029,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 					$thumbnail   = $upload_dir . '/' . $image_name . '.jpg';
 					$file_name   = $image_name . '.jpg';
 
-					if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-						$thumb_ffmpeg = FFMpeg\FFMpeg::create(
-							array(
-								'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
-								'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
-								'timeout'          => 3600, // The timeout for the underlying process.
-								'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
-							)
-						);
-					} else {
-						$thumb_ffmpeg = FFMpeg\FFMpeg::create();
-					}
+					$thumb_ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 					$video_thumb = $thumb_ffmpeg->open( get_attached_file( $video['id'] ) );
 					$thumb_frame = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
@@ -3482,18 +3449,7 @@ function bb_video_is_ffmpeg_installed() {
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$error = '';
 		try {
-			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-				$ffmpeg = FFMpeg\FFMpeg::create(
-					array(
-						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
-						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
-						'timeout'          => 3600, // The timeout for the underlying process.
-						'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
-					)
-				);
-			} else {
-				$ffmpeg = FFMpeg\FFMpeg::create();
-			}
+			$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		} catch ( Exception $ffmpeg ) {
 			$error = $ffmpeg->getMessage();
 		}
@@ -4257,3 +4213,105 @@ function bb_video_delete_older_symlinks() {
 
 }
 bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks' );
+
+/**
+ * Function to get video attachments symlinks.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @param int $video_attachment_id video attachment id.
+ * @param int $video_id            video id.
+ *
+ * @return mixed
+ */
+function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 ) {
+
+	$attachment_urls = [];
+	$auto_generated_thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+	$preview_thumbnail_id      = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
+	if ( $auto_generated_thumbnails ) {
+		$auto_generated_thumbnails_arr = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
+		if ( $auto_generated_thumbnails_arr ) {
+			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
+				$attachment_urls['default_images'][] = array(
+					'id'	=> $auto_generated_thumbnail,
+					'url'	=> bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnail, 'full' )
+				);
+			}
+		}
+	}
+	if( $preview_thumbnail_id ) {
+		$attachment_urls['selected_id'] = array(
+			'id'	=> $preview_thumbnail_id,
+			'url'	=> bb_video_get_auto_gen_thumb_symlink( $video_id, $preview_thumbnail_id, 'full' )
+		);
+	}
+	if ( isset($auto_generated_thumbnails['custom_image']) && !empty($auto_generated_thumbnails['custom_image']) ) {
+
+		$id = ( $video_id ) ? $video_id : bp_get_video_id();
+		$video                      = new BP_Video( $id );
+		$attachment_urls['preview'] = array(
+			'id'            => $id,
+			'attachment_id' => $auto_generated_thumbnails['custom_image'],
+			'thumb'         => bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
+			'url'           => bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnails['custom_image'], 'full' ),
+			'name'          => $video->title,
+			'saved'         => true,
+			'dropzone'      => true
+		);
+	}
+
+	return $attachment_urls;
+}
+
+/**
+ * Use the ffmpeg binary if constant is defined.
+ *
+ * @return \FFMpeg\FFMpeg
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_video_check_is_ffmpeg_binary() {
+
+	$ffmpeg = '';
+	if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+		$ffmpeg = FFMpeg\FFMpeg::create(
+			array(
+				'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+				'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+				'timeout'          => 3600, // The timeout for the underlying process.
+				'ffmpeg.threads'   => 12,   // The number of threads that FFmpeg should use.
+			)
+		);
+	} else {
+		$ffmpeg = FFMpeg\FFMpeg::create();
+	}
+
+	return $ffmpeg;
+}
+
+/**
+ * Use the ffprobe binary if constant is defined.
+ *
+ * @return \FFMpeg\FFProbe
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_video_check_is_ffprobe_binary() {
+
+	$ff_probe = '';
+	if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+		$ff_probe = FFMpeg\FFProbe::create(
+			array(
+				'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+				'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+				'timeout'          => 3600, // The timeout for the underlying process.
+				'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+			)
+		);
+	} else {
+		$ff_probe = FFMpeg\FFProbe::create();
+	}
+
+	return $ff_probe;
+}
