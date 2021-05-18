@@ -869,6 +869,10 @@ function bp_video_add_generate_thumb_background_process( $attachment_id, $video 
 			return;
 		}
 
+		if ( isset($video['privacy']) && in_array( $video['privacy'], array( 'forums', 'comment', 'message' ), true ) ) {
+			return;
+		}
+
 		/**
 		 * Hook for before background process create.
 		 *
