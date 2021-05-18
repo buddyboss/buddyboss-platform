@@ -801,9 +801,6 @@ window.bp = window.bp || {};
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail:not(.generating_thumb) .video-thumb-list li',
 				function( e ) {
 					e.preventDefault();
-					if( jQuery( e.target ).hasClass( 'bb-custom-check') || jQuery( e.target ).hasClass( 'bb-icon') ) {
-						return;
-					}
 					if( !$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
 						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', true );
 						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
