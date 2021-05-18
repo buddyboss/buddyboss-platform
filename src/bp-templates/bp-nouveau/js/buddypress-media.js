@@ -1909,6 +1909,11 @@ window.bp = window.bp || {};
 			if ( $forums_document_container.length ) {
 				self.resetForumsDocumentComponent( $forums_document_container.data( 'key' ) );
 			}
+
+			var $forums_video_container = target.closest( 'form' ).find( '#forums-post-video-uploader' );
+			if ( $forums_video_container.length ) {
+				self.resetForumsVideoComponent( $forums_video_container.data( 'key' ) );
+			}
 		},
 
 		closePickersOnEsc: function ( event ) {
@@ -3166,7 +3171,7 @@ window.bp = window.bp || {};
 					);
 
 					// container class to open close.
-					forum_dropzone_container.removeClass( 'closed' ).addClass( 'open' );
+					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
 
 
 					// reset gif component.
