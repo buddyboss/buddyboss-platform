@@ -19278,6 +19278,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   background-color: transparent;
 }
 
+.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap > a.video-action_more i {
+  font-size: 14px;
+  padding: 4px;
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
+}
+
 .bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list {
   position: absolute;
   top: 28px;
@@ -19328,6 +19336,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   max-height: 15px;
   margin-top: -8px;
   margin-right: 10px;
+}
+
+.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul li a.video-file-delete:before {
+  content: "\e937";
+  font-size: 15px;
+}
+
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .skip-5,
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-time-control,
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-picture-in-picture-control {
+  display: none;
 }
 
 .bb-activity-video-elem.is-visible .video-js:after {

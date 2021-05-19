@@ -380,6 +380,14 @@
 		background-color: transparent;
 	}
 
+	> a.video-action_more i {
+		font-size: 14px;
+		padding: 4px;
+		border: 1px solid #fff;
+		background-color: transparent;
+		color: #fff;
+	}
+
 	.video-action_list {
 		position: absolute;
 		top: 28px;
@@ -426,6 +434,12 @@
 						margin-top: -8px;
 						margin-right: 10px;
 					}
+
+					&.video-file-delete:before {
+						content: "\e937";
+						font-size: 15px;
+					}
+
 				}
 
 			}
@@ -433,6 +447,16 @@
 		}
 
 	}
+}
+
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar {
+
+	.skip-5,
+	.vjs-time-control,
+	.vjs-picture-in-picture-control {
+		display: none;
+	}
+
 }
 
 .bb-activity-video-elem.is-visible .video-js:after {
