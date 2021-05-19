@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-05-18 14:49:38+00:00\n"
+"POT-Creation-Date: 2021-05-19 11:13:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3914,7 +3914,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/video/ajax.php:745
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1299
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1373
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1474
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1475
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -4204,7 +4204,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
 #: bp-document/bp-document-functions.php:1982
-#: bp-video/bp-video-functions.php:2840
+#: bp-video/bp-video-functions.php:2835
 msgid "Video"
 msgstr ""
 
@@ -6535,7 +6535,8 @@ msgid "MP4"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1173
-msgid "Webm"
+#: bp-templates/bp-nouveau/includes/video/functions.php:305
+msgid "WebM"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1181
@@ -6544,7 +6545,8 @@ msgid "Ogg"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1189
-msgid "Movie, Quicktime"
+#: bp-templates/bp-nouveau/includes/video/functions.php:321
+msgid "Quicktime"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:113
@@ -9135,48 +9137,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1937
-#: bp-video/bp-video-functions.php:2795
+#: bp-video/bp-video-functions.php:2790
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1942
-#: bp-video/bp-video-functions.php:2800
+#: bp-video/bp-video-functions.php:2795
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1947
-#: bp-video/bp-video-functions.php:2805
+#: bp-video/bp-video-functions.php:2800
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1952
-#: bp-video/bp-video-functions.php:2810
+#: bp-video/bp-video-functions.php:2805
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1957
-#: bp-video/bp-video-functions.php:2815
+#: bp-video/bp-video-functions.php:2810
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1962
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2820
+#: bp-video/bp-video-functions.php:2815
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1967
-#: bp-video/bp-video-functions.php:2825
+#: bp-video/bp-video-functions.php:2820
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1972
-#: bp-video/bp-video-functions.php:2830
+#: bp-video/bp-video-functions.php:2825
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1977
-#: bp-video/bp-video-functions.php:2835
+#: bp-video/bp-video-functions.php:2830
 msgid "Text"
 msgstr ""
 
@@ -19329,7 +19331,7 @@ msgstr ""
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1382 bp-video/bp-video-settings.php:319
+#: bp-media/bp-media-settings.php:1382 bp-video/bp-video-settings.php:314
 msgid "<a href=\"%s\">Manage</a> which file extensions are allowed to be uploaded."
 msgstr ""
 
@@ -19348,7 +19350,7 @@ msgid ""
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1521 bp-media/bp-media-settings.php:1566
-#: bp-video/bp-video-settings.php:284
+#: bp-video/bp-video-settings.php:279
 msgid "MB"
 msgstr ""
 
@@ -24195,7 +24197,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:14
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:16
-#: bp-templates/bp-nouveau/buddypress/media/create-album.php:45
+#: bp-templates/bp-nouveau/buddypress/media/create-album.php:52
 #: bp-templates/bp-nouveau/buddypress/media/index.php:37
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:15
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:19
@@ -24280,7 +24282,7 @@ msgstr[1] ""
 msgid "Delete Album"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/single-album.php:63
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:66
 #: bp-templates/bp-nouveau/buddypress/video/add-video.php:15
 #: bp-templates/bp-nouveau/buddypress/video/index.php:43
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:62
@@ -24676,13 +24678,13 @@ msgid "More Videos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:21
-msgid "(Generating thumbnails... Please check again in few minutes.)"
+msgid "(Generating thumbnails... Please check again in a few minutes.)"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:30
 msgid ""
-"Select or upload a picture that shows what’s in your video. A good "
-"thumbnail stands out and draws viewer’s attention."
+"Select or upload a picture that shows what's in your video. A good "
+"thumbnail stands out and draws the viewer's attention."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/location-move.php:12
@@ -26665,14 +26667,6 @@ msgstr ""
 msgid "All Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:305
-msgid "WebM"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/video/functions.php:321
-msgid "Movi, Quicktime"
-msgstr ""
-
 #: bp-video/bp-video-filters.php:866
 msgid "Repair video on the site."
 msgstr ""
@@ -26713,6 +26707,14 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
+#: bp-video/bp-video-functions.php:4300
+msgid "FFMpeg\\FFMpeg class not found"
+msgstr ""
+
+#: bp-video/bp-video-functions.php:4339
+msgid "FFMpeg\\FFProbe class not found"
+msgstr ""
+
 #: bp-video/bp-video-settings.php:26
 msgid ""
 "Allow members to upload videos in <strong>profiles</strong> and "
@@ -26741,7 +26743,7 @@ msgstr ""
 msgid "Video uploading is not yet supported in BuddyBoss App."
 msgstr ""
 
-#: bp-video/bp-video-settings.php:289
+#: bp-video/bp-video-settings.php:284
 msgid ""
 "Set a maximum file size for video uploads, in megabytes. Your server's "
 "maximum upload size is "
@@ -28156,11 +28158,11 @@ msgstr ""
 #. translators: 1: FFMpeg status
 msgctxt "extension notification"
 msgid ""
-"Your server needs %1$s installed to automatically generate thumbnails from "
-"video files (optional). Ask your web host."
+"Your server needs %1$s installed to automatically generate multiple "
+"thumbnails from video files (optional). Ask your web host."
 msgstr ""
 
-#: bp-video/bp-video-settings.php:258
+#: bp-video/bp-video-settings.php:253
 #. translators: %1$s FFmpeg status, %2$s FFMPEG Binary Path, %3$s FFPROBE
 #. Binary Path, %34$s wp-config.php file.
 msgctxt "extension notification"

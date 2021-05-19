@@ -1377,7 +1377,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
 			$( '#bp-media-uploader-modal-status-text' ).text( '' );
 			$( '#bp-media-post-content' ).val( '' );
-			this.dropzone_obj.destroy();
+			this.dropzone_obj.length ? this.dropzone_obj.destroy() : '';
 			this.dropzone_media = [];
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-media-uploader' );
