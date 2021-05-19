@@ -4447,7 +4447,7 @@ function bb_document_video_get_symlink( $document ) {
 		}
 
 		// Get videos previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_original_video_path();
+		$video_symlinks_path = bp_document_symlink_path();
 		$attached_file       = get_attached_file( $attachment_id );
 		$privacy             = $document->privacy;
 		$upload_directory    = wp_get_upload_dir();
