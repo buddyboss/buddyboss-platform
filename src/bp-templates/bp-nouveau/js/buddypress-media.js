@@ -1134,7 +1134,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteMedia: function ( event ) {
-			var target = $( event.currentTarget );
+			var target = $( event.currentTarget ), self = this;
 			event.preventDefault();
 
 			var media = [];
@@ -1200,6 +1200,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: data,
 					success: function ( response ) {
+						self.current_page = 1;
 						var feedback = '';
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
@@ -1377,7 +1378,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
 			$( '#bp-media-uploader-modal-status-text' ).text( '' );
 			$( '#bp-media-post-content' ).val( '' );
-			this.dropzone_obj.destroy();
+			this.dropzone_obj.length ? this.dropzone_obj.destroy() : '';
 			this.dropzone_media = [];
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-media-uploader' );

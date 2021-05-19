@@ -18,7 +18,7 @@
 						<a href="#" class="bp-video-thumbnail-upload-tab bp-thumbnail-upload-tab selected bp-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content" id="">
 							<?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?>
 						</a>
-						<span class="thumbnail_notice"><?php esc_html_e( '(Generating thumbnails... Please check again in few minutes.)', 'buddyboss' ); ?></span>
+						<span class="thumbnail_notice"><?php esc_html_e( '(Generating thumbnails... Please check again in a few minutes.)', 'buddyboss' ); ?></span>
 
 						<span id="bp-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
 
@@ -27,7 +27,7 @@
 						</a>
 					</header>
 
-					<p><?php esc_html_e( 'Select or upload a picture that shows what’s in your video. A good thumbnail stands out and draws viewer’s attention.', 'buddyboss' ); ?></p>
+					<p><?php esc_html_e( 'Select or upload a picture that shows what\'s in your video. A good thumbnail stands out and draws the viewer\'s attention.', 'buddyboss' ); ?></p>
 
 					<div class="video-thumbnail-content">
 
