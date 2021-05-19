@@ -1186,7 +1186,7 @@ add_filter( 'bp_media_allowed_document_type', function ( $extensions ) {
 		'bb_doc_80' => array(
 			'extension'   => '.mov',
 			'mime_type'   => 'video/quicktime',
-			'description' => __( 'Movie, Quicktime', 'buddyboss' ),
+			'description' => __( 'Quicktime', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
