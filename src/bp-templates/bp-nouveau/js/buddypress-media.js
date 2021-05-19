@@ -1134,7 +1134,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteMedia: function ( event ) {
-			var target = $( event.currentTarget );
+			var target = $( event.currentTarget ), self = this;
 			event.preventDefault();
 
 			var media = [];
@@ -1200,6 +1200,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: data,
 					success: function ( response ) {
+						self.current_page = 1;
 						var feedback = '';
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
