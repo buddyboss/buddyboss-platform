@@ -3572,6 +3572,17 @@ span.dashicons.dashicons-admin-file:before {
   z-index: 11;
 }
 
+#video-stream.video .bb-item-thumb .bb-video-loader,
+#media-stream.media .bb-video-thumb .bb-video-loader,
+.bb-activity-video-wrap .bb-activity-video-elem .bb-video-loader,
+.existing-media-list .bb-item-thumb .bb-video-loader {
+  margin: 0;
+}
+
+.bp-existing-media-wrap .existing-media-list.bp-list.grid {
+  width: 100%;
+}
+
 #video-stream.video .bb-item-thumb,
 #media-stream.media .bb-video-thumb,
 .bb-activity-video-wrap .bb-activity-video-elem {
