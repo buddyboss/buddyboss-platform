@@ -135,7 +135,7 @@
 					if (window.history.replaceState) {
 						e.preventDefault();
 						// Change the URL Gracefully.
-						window.history.replaceState({}, null, jQuery(this).attr("href"));
+						window.history.replaceState({}, null, jQuery(this).attr('href'));
 						bp_help_load_page(); // then load the page again.
 						jQuery('html, body').animate({
 							scrollTop: jQuery('.wrap').offset().top
@@ -153,7 +153,7 @@
 						e.preventDefault();
 	
 						var redirect_article_id = jQuery(this).attr('bb_article_id');
-						var redirec_url = BP_HELP.bb_help_url+"&article="+redirect_article_id;
+						var redirec_url = BP_HELP.bb_help_url+'&article='+redirect_article_id;
 	
 						// Change the URL Gracefully.
 						window.history.replaceState({}, null, redirec_url);
