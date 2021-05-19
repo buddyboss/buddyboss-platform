@@ -15011,9 +15011,45 @@ ul.bb-albums-list .load-more {
   text-align: center;
 }
 
-.bb-media-model-inner .gif-media-search-dropdown.open {
+.bb-media-model-inner .post-gif .gif-media-search-dropdown.open {
   width: 300px;
-  right: -50px;
+  right: -40px;
+}
+
+.bb-media-model-inner .post-gif .gif-media-search-dropdown.open:before {
+  right: 60px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open {
+  right: -70px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open:before {
+  right: 90px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open {
+  right: -110px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open:before {
+  right: 130px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(4) .gif-media-search-dropdown.open {
+  right: -140px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(4) .gif-media-search-dropdown.open:before {
+  right: 160px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(5) .gif-media-search-dropdown.open {
+  right: -170px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(5) .gif-media-search-dropdown.open:before {
+  right: 190px;
 }
 
 .comment-item .bb-media-model-inner ul .gif-media-search-dropdown.open {
