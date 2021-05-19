@@ -4228,8 +4228,18 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 					'url'	=> bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnail, 'full' )
 				);
 			}
-		}
-	}
+		} else {
+			$is_ffmpeg_preview_generated = get_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', true );
+			if ( 'no' === $is_ffmpeg_preview_generated ) {
+				$attachment_urls['default_images'][] = array();
+			}
+        }
+	} else {
+	    $is_ffmpeg_preview_generated = get_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', true );
+	    if ( 'no' === $is_ffmpeg_preview_generated ) {
+		    $attachment_urls['default_images'][] = array();
+        }
+    }
 	if( $preview_thumbnail_id ) {
 		$attachment_urls['selected_id'] = array(
 			'id'	=> $preview_thumbnail_id,

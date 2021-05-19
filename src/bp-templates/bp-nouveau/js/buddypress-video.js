@@ -1034,6 +1034,11 @@ window.bp = window.bp || {};
 										ulSelector.html( response.data.default_images );
 										ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 									}
+
+									if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
+										ulSelector.html( '' );
+										ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
+									}
 									ulSelector.removeClass( 'loading' );
 
 								}

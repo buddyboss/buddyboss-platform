@@ -1455,8 +1455,9 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 
 	wp_send_json_success(
 		array(
-			'default_images' => $default_images,
-			'dropzone_edit'  => $dropzone_arr,
+			'default_images'   => $default_images,
+			'dropzone_edit'    => $dropzone_arr,
+			'ffmpeg_generated' => get_post_meta( $attachment_id, 'bb_ffmpeg_preview_generated', true ),
 		)
 	);
 
