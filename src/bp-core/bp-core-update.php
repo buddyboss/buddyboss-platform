@@ -1170,7 +1170,7 @@ add_filter( 'bp_media_allowed_document_type', function ( $extensions ) {
 		'bb_doc_78' => array(
 			'extension'   => '.webm',
 			'mime_type'   => 'video/webm',
-			'description' => __( 'Webm', 'buddyboss' ),
+			'description' => __( 'WebM', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
