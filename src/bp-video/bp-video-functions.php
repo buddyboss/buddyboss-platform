@@ -964,7 +964,13 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 
 			$ff_probe = bb_video_check_is_ffprobe_binary();
 
-			$duration = $ff_probe->ffprob->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
+			$duration = 0;
+			if (
+				! empty( $ff_probe->ffprob->streams( get_attached_file( $video['id'] ) )->videos() ) &&
+				!empty( $ff_probe->ffprob->streams( get_attached_file( $video['id'] ) )->videos()->first() )
+			) {
+				$duration = $ff_probe->ffprob->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
+			}
 
 			if ( ! empty( $duration ) ) {
 
@@ -1070,6 +1076,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 					if ( ! $get_existing ) {
 						update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', current( $thumbnail_list ) );
 					}
+					update_post_meta( $video['id'], 'bb_ffmpeg_preview_generated', 'yes' );
 				}
 
 				do_action( 'bb_video_after_preview_generate' );
@@ -1082,14 +1089,19 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 				 * @param int $video_id video id.
 				 */
 				do_action( 'bp_video_after_background_create_thumbnail', $video_id, $video );
-			}
+			} else {
+			    update_post_meta( $video['id'], 'bb_ffmpeg_preview_generated', 'no' );
+            }
 
 			do_action( 'bb_try_after_video_background_create_thumbnail', $video_id, $video );
 
 		} catch ( Exception $ex ) {
+			update_post_meta( $video['id'], 'bb_ffmpeg_preview_generated', 'no' );
 			$bp_background_updater->cancel_process();
 		}
-	}
+	} else {
+		update_post_meta( $video['id'], 'bb_ffmpeg_preview_generated', 'no' );
+    }
 }
 
 /**
@@ -4274,6 +4286,8 @@ function bb_video_check_is_ffmpeg_binary() {
 		} catch ( Exception $e ) {
 			$retval['error'] = $e->getMessage();
 		}
+	} else {
+		$retval['error'] = __( 'FFMpeg\FFMpeg class not found', 'buddyboss' );
 	}
 
 	return (object) $retval;
@@ -4293,7 +4307,7 @@ function bb_video_check_is_ffprobe_binary() {
 		'error'  => null,
 	);
 
-	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+	if ( class_exists( 'FFMpeg\FFMpeg' ) && class_exists( 'FFMpeg\FFProbe' ) ) {
 		try {
 			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
 				$retval['ffprob'] = FFMpeg\FFProbe::create(
@@ -4311,7 +4325,9 @@ function bb_video_check_is_ffprobe_binary() {
 		} catch ( Exception $e ) {
 			$retval['error'] = $e->getMessage();
 		}
-	}
+	} else {
+		$retval['error'] = __( 'FFMpeg\FFProbe class not found', 'buddyboss' );
+    }
 
 	return (object) $retval;
 }
