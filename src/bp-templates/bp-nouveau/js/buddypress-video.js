@@ -1007,6 +1007,10 @@ window.bp = window.bp || {};
 							}
 						}
 					}
+
+					if( typeof videoAttachments.selected_id !== 'undefined' ) {
+						$( popupSelector ).find( '.bp-video-thumbnail-uploader #bb-video-' +  videoAttachments.selected_id.id).prop( 'checked', true );
+					}
 				}
 
 				var data = {
