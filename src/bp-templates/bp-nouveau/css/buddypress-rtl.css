@@ -3572,6 +3572,17 @@ span.dashicons.dashicons-admin-file:before {
   z-index: 11;
 }
 
+#video-stream.video .bb-item-thumb .bb-video-loader,
+#media-stream.media .bb-video-thumb .bb-video-loader,
+.bb-activity-video-wrap .bb-activity-video-elem .bb-video-loader,
+.existing-media-list .bb-item-thumb .bb-video-loader {
+  margin: 0;
+}
+
+.bp-existing-media-wrap .existing-media-list.bp-list.grid {
+  width: 100%;
+}
+
 #video-stream.video .bb-item-thumb,
 #media-stream.media .bb-video-thumb,
 .bb-activity-video-wrap .bb-activity-video-elem {
@@ -15000,9 +15011,45 @@ ul.bb-albums-list .load-more {
   text-align: center;
 }
 
-.bb-media-model-inner .gif-media-search-dropdown.open {
+.bb-media-model-inner .post-gif .gif-media-search-dropdown.open {
   width: 300px;
-  right: -50px;
+  right: -40px;
+}
+
+.bb-media-model-inner .post-gif .gif-media-search-dropdown.open:before {
+  right: 60px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open {
+  right: -70px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open:before {
+  right: 90px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open {
+  right: -110px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(3) .gif-media-search-dropdown.open:before {
+  right: 130px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(4) .gif-media-search-dropdown.open {
+  right: -140px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(4) .gif-media-search-dropdown.open:before {
+  right: 160px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(5) .gif-media-search-dropdown.open {
+  right: -170px;
+}
+
+.bb-media-model-inner .post-gif:nth-child(5) .gif-media-search-dropdown.open:before {
+  right: 190px;
 }
 
 .comment-item .bb-media-model-inner ul .gif-media-search-dropdown.open {
@@ -19231,6 +19278,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   background-color: transparent;
 }
 
+.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap > a.video-action_more i {
+  font-size: 14px;
+  padding: 4px;
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
+}
+
 .bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list {
   position: absolute;
   top: 28px;
@@ -19281,6 +19336,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   max-height: 15px;
   margin-top: -8px;
   margin-left: 10px;
+}
+
+.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul li a.video-file-delete:before {
+  content: "\e937";
+  font-size: 15px;
+}
+
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .skip-5,
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-time-control,
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-picture-in-picture-control {
+  display: none;
 }
 
 .bb-activity-video-elem.is-visible .video-js:after {
