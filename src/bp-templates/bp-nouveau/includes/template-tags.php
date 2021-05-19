@@ -1352,6 +1352,13 @@ function bp_nouveau_get_nav_count() {
 			$count_end   = strpos( $nav_item->name, '<', $count_start );
 			$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
 		}
+		$videos_count = BP_Video::total_video_count( bp_displayed_user_id() );
+		$photos_count = BP_Media::total_media_count( bp_displayed_user_id() );
+		if( $nav_item->slug == 'videos' ) {
+			$count = $videos_count;
+		} else if( $nav_item->slug == 'photos' ) {
+			$count = $photos_count - $videos_count;
+		}
 	}
 
 	/**

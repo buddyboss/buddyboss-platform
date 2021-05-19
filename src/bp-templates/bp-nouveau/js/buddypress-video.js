@@ -768,14 +768,13 @@ window.bp = window.bp || {};
 			var target            = $( event.currentTarget );
 			var videoAttachmentId = target.attr( 'data-video-attachment-id' );
 			var videoAttachments  = target.attr( 'data-video-attachments' );
-			var parentActivityId  = target.attr( 'data-parent-activity-id' );
 			var videoId           = target.attr( 'data-video-id' );
 			var popupSelector     = '';
 
 			if ( $( event.currentTarget ).closest( '.activity-inner' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '.activity-inner' );
 			} else if ( $( event.currentTarget ).closest( '#bb-media-model-container' ).length > 0 ) {
-				popupSelector = $( 'ul.activity-list li#activity-' + parentActivityId  ).find( '.activity-inner' );
+				popupSelector = $( '#bp-media-single-album'  ).find( '#media-stream' );
 			} else if ( $( event.currentTarget ).closest( '#video-stream.video' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '#video-stream.video' );
 			} else if ( $( event.currentTarget ).closest( '#media-stream.media' ).length > 0 ) {
