@@ -1533,7 +1533,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		array(
 			'thumbnail'           => $thumbnail_url,
 			'video_attachment_id' => $video_attachment_id,
-			'video_attachments'   => json_encode( bp_video_get_attachments( $video_attachment_id, $video_id ) )
+			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) )
 		)
 	);
 }
