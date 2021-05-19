@@ -22,11 +22,18 @@
 						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter Album Title', 'buddyboss' ); ?>" />
 					</div>
 
-					<div class="bb-field-wrap">
-						<div class="media-uploader-wrapper">
-							<div class="dropzone" id="media-uploader"></div>
+					<?php
+					if (
+						( bp_is_group() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_group_id() ) ) ||
+						( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() )
+					) {
+						?>
+						<div class="bb-field-wrap">
+							<div class="media-uploader-wrapper">
+								<div class="dropzone" id="media-uploader"></div>
+							</div>
 						</div>
-					</div>
+					<?php } ?>
 
 					<footer class="bb-model-footer">
 						<?php if ( ! bp_is_group() ) : ?>

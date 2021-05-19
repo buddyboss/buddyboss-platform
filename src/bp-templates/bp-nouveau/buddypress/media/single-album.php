@@ -52,7 +52,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
                                 <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
                                     <?php _e( 'Add Photos', 'buddyboss' ); ?>
                                 </a> <?php
-						    } elseif( bp_is_group() ) { ?>
+						    } elseif( bp_is_group() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_group_id() ) ) { ?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
                                     <?php _e( 'Add Photos', 'buddyboss' ); ?>
                                 </a> <?php
