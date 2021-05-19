@@ -27,7 +27,7 @@
 						</a>
 					</header>
 
-					<p><?php esc_html_e( 'Select or upload a picture that shows what’s in your video. A good thumbnail stands out and draws viewer’s attention.', 'buddyboss' ); ?></p>
+					<p><?php esc_html_e( 'Select or upload a picture that shows what\'s in your video. A good thumbnail stands out and draws the viewer\'s attention.', 'buddyboss' ); ?></p>
 
 					<div class="video-thumbnail-content">
 
