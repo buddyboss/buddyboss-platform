@@ -1081,23 +1081,6 @@ function bp_moderation_check_media_activity_has_content( $media_id ) {
 	return apply_filters( 'bp_moderation_check_media_activity_has_content', false, $media_id );
 }
 
-//add_action( 'wp_footer', 'jk_bp_init' );
-function jk_bp_init() {
-
-	$media              = new BP_Media( 194585 );
-	$attachment_id      = $media->attachment_id;
-	$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
-	$activity           = new BP_Activity_Activity( $parent_activity_id );
-
-	$activity_meta    = bp_activity_get_meta( 194772, '', true );
-	$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : '';
-	$media_ids        = ( ! empty( $activity_meta['bp_media_ids'][0] ) ) ? $activity_meta['bp_media_ids'][0] : '';
-	$document_ids     = ( ! empty( $activity_meta['bp_document_ids'] ) ) ? $activity_meta['bp_document_ids'] : '';
-
-	bp_moderation_is_content_hidden( explode( ',', $media_ids ), 'media' );
-
-}
-
 /**
  * Function to check if the activity content is hidden.
  *
