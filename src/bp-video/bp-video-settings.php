@@ -243,13 +243,8 @@ function bp_video_admin_setting_callback_video_section() {
 		</p>
 		<?php
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-		$error = '';
-		try {
-			$ffmpeg = bb_video_check_is_ffmpeg_binary();
-		} catch ( Exception $ffmpeg ) {
-			$error = $ffmpeg->getMessage();
-		}
-		if ( ! empty( trim( $error ) ) ) {
+		$ffmpeg = bb_video_check_is_ffmpeg_binary();
+		if ( ! empty( trim( $ffmpeg->error ) ) ) {
 			?>
 			<p class="alert">
 				<?php

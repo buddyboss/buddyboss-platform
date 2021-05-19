@@ -857,15 +857,11 @@ function bp_video_preview_image_by_js( $video ) {
 function bp_video_add_generate_thumb_background_process( $attachment_id, $video ) {
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		global $bp_background_updater;
-		$error = '';
-		try {
-			$ffmpeg = bb_video_check_is_ffmpeg_binary();
-		} catch ( Exception $ffmpeg ) {
-			$error = $ffmpeg->getMessage();
-			$bp_background_updater->cancel_process();
-		}
+		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
-		if ( ! empty( trim( $error ) ) ) {
+		if ( ! empty( trim( $ffmpeg->error ) ) ) {
+			$bp_background_updater->cancel_process();
+
 			return;
 		}
 
@@ -953,27 +949,14 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 		$bp_background_updater->cancel_process();
 		return;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-		$error = '';
-		try {
-			$ffmpeg = bb_video_check_is_ffmpeg_binary();
-		} catch ( Exception $ffmpeg ) {
-			$error = $ffmpeg->getMessage();
-			$bp_background_updater->cancel_process();
-		}
-		if ( ! empty( trim( $error ) ) ) {
+		$ffmpeg = bb_video_check_is_ffmpeg_binary();
+		if ( ! empty( trim( $ffmpeg->error ) ) ) {
 			$bp_background_updater->cancel_process();
 			return;
 		}
 	}
 
-	try {
-		$ffmpeg = bb_video_check_is_ffmpeg_binary();
-	} catch ( Exception $ffmpeg ) {
-		$error = $ffmpeg->getMessage();
-		$bp_background_updater->cancel_process();
-	}
-
-	if ( empty( trim( $error ) ) ) {
+	if ( empty( trim( $ffmpeg->error ) ) ) {
 
 		try {
 
@@ -981,7 +964,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 
 			$ff_probe = bb_video_check_is_ffprobe_binary();
 
-			$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
+			$duration = $ff_probe->ffprob->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 
 			if ( ! empty( $duration ) ) {
 
@@ -1031,7 +1014,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 
 					$thumb_ffmpeg = bb_video_check_is_ffmpeg_binary();
 
-					$video_thumb = $thumb_ffmpeg->open( get_attached_file( $video['id'] ) );
+					$video_thumb = $thumb_ffmpeg->ffmpeg->open( get_attached_file( $video['id'] ) );
 					$thumb_frame = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
 
 					$error = '';
@@ -3447,13 +3430,8 @@ function bb_video_is_ffmpeg_installed() {
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
 		return false;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-		$error = '';
-		try {
-			$ffmpeg = bb_video_check_is_ffmpeg_binary();
-		} catch ( Exception $ffmpeg ) {
-			$error = $ffmpeg->getMessage();
-		}
-		if ( ! empty( trim( $error ) ) ) {
+		$ffmpeg = bb_video_check_is_ffmpeg_binary();
+		if ( ! empty( trim( $ffmpeg->error ) ) ) {
 			return false;
 		} else {
 		    return true;
@@ -4273,21 +4251,32 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
  */
 function bb_video_check_is_ffmpeg_binary() {
 
-	$ffmpeg = '';
-	if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-		$ffmpeg = FFMpeg\FFMpeg::create(
-			array(
-				'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
-				'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
-				'timeout'          => 3600, // The timeout for the underlying process.
-				'ffmpeg.threads'   => 12,   // The number of threads that FFmpeg should use.
-			)
-		);
-	} else {
-		$ffmpeg = FFMpeg\FFMpeg::create();
+	$retval = array(
+		'ffmpeg' => null,
+		'error'  => null,
+	);
+
+	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+		try {
+			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+				$retval['ffmpeg'] = FFMpeg\FFMpeg::create(
+					array(
+						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+						'timeout'          => 3600, // The timeout for the underlying process.
+						'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+					)
+				);
+
+			} else {
+				$retval['ffmpeg'] = FFMpeg\FFMpeg::create();
+			}
+		} catch ( Exception $e ) {
+			$retval['error'] = $e->getMessage();
+		}
 	}
 
-	return $ffmpeg;
+	return (object) $retval;
 }
 
 /**
@@ -4299,19 +4288,30 @@ function bb_video_check_is_ffmpeg_binary() {
  */
 function bb_video_check_is_ffprobe_binary() {
 
-	$ff_probe = '';
-	if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-		$ff_probe = FFMpeg\FFProbe::create(
-			array(
-				'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
-				'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
-				'timeout'          => 3600, // The timeout for the underlying process.
-				'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
-			)
-		);
-	} else {
-		$ff_probe = FFMpeg\FFProbe::create();
+	$retval = array(
+		'ffprob' => null,
+		'error'  => null,
+	);
+
+	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+		try {
+			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
+				$retval['ffprob'] = FFMpeg\FFProbe::create(
+					array(
+						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
+						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
+						'timeout'          => 3600, // The timeout for the underlying process.
+						'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use.
+					)
+				);
+
+			} else {
+				$retval['ffprob'] = FFMpeg\FFProbe::create();
+			}
+		} catch ( Exception $e ) {
+			$retval['error'] = $e->getMessage();
+		}
 	}
 
-	return $ff_probe;
+	return (object) $retval;
 }
