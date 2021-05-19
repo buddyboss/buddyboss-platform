@@ -1071,17 +1071,6 @@ function bp_moderation_item_count( $args = array() ) {
 }
 
 /**
- * Function to check if media parent activity has content.
- *
- * @param int $media_id media id to check.
- *
- * @return boolean
- */
-function bp_moderation_check_media_activity_has_content( $media_id ) {
-	return apply_filters( 'bp_moderation_check_media_activity_has_content', false, $media_id );
-}
-
-/**
  * Function to check if the activity content is hidden.
  *
  * @param int $media_id media id.
