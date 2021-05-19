@@ -1570,12 +1570,12 @@ function bp_video_check_download_album_protection() {
 	$upload_dir = wp_get_upload_dir();
 	$files      = array(
 		array(
-			'base'    => $upload_dir['basedir'] . '/bb_medias',
+			'base'    => $upload_dir['basedir'] . '/bb_videos',
 			'file'    => 'index.html',
 			'content' => '',
 		),
 		array(
-			'base'    => $upload_dir['basedir'] . '/bb_medias',
+			'base'    => $upload_dir['basedir'] . '/bb_videos',
 			'file'    => '.htaccess',
 			'content' => 'deny from all
 # BEGIN BuddyBoss code execution protection
