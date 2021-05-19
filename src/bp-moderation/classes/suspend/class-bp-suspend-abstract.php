@@ -191,7 +191,6 @@ abstract class BP_Suspend_Abstract {
 
 		if ( ! empty( $related_contents ) ) {
 			foreach ( $related_contents as $content_type => $content_ids ) {
-				error_log( print_r( $content_ids, 1 ) );
 				if ( ! empty( $content_ids ) ) {
 					foreach ( $content_ids as $content_id ) {
 						/**
