@@ -27,6 +27,9 @@
 if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 	bp_get_template_part( 'media/theatre' );
 }
+if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+	bp_get_template_part( 'video/theatre' );
+}
 if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 	bp_get_template_part( 'document/theatre' );
 }
@@ -53,6 +56,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
         'parts/bp-messages-editor-toolbar',
         'parts/bp-messages-media',
         'parts/bp-messages-document',
+        'parts/bp-messages-video',
         'parts/bp-messages-attached-gif',
         'parts/bp-messages-gif-media-search-dropdown',
         'parts/bp-messages-gif-result-item',

@@ -173,7 +173,17 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			// Screens - Directory.
-			if ( bp_is_groups_directory() ) {
+			if (
+				bp_is_groups_directory() &&
+				(
+					! bp_is_current_action( 'type' ) ||
+					(
+						bp_is_current_action( 'type' ) &&
+						! empty( bp_action_variable( 0 ) ) &&
+						bp_group_get_group_type_id( bp_action_variable( 0 ) )
+					)
+				)
+			) {
 				require $this->path . 'bp-groups/screens/directory.php';
 			}
 
@@ -192,7 +202,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders', 'videos' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -809,6 +819,34 @@ class BP_Groups_Component extends BP_Component {
 					'item_css_id'     => 'documents',
 					'no_access_url'   => $group_link,
 				);
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+				$sub_nav[] = array(
+					'name'            => __( 'Videos', 'buddyboss' ),
+					'slug'            => 'videos',
+					'parent_url'      => $group_link,
+					'parent_slug'     => $this->current_group->slug,
+					'screen_function' => 'groups_screen_group_video',
+					'position'        => 80,
+					'user_has_access' => $this->current_group->user_has_access,
+					'item_css_id'     => 'videos',
+					'no_access_url'   => $group_link,
+				);
+
+				if ( bp_is_group_video_albums_support_enabled() ) {
+					$sub_nav[] = array(
+						'name'            => __( 'Albums', 'buddyboss' ),
+						'slug'            => 'albums',
+						'parent_url'      => $group_link,
+						'parent_slug'     => $this->current_group->slug,
+						'screen_function' => 'groups_screen_group_video_albums',
+						'position'        => 85,
+						'user_has_access' => $this->current_group->user_has_access,
+						'item_css_id'     => 'albums',
+						'no_access_url'   => $group_link,
+					);
+				}
 			}
 
 			$message_status = bp_group_get_message_status( $this->current_group->id );

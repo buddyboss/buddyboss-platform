@@ -323,6 +323,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16401 ) {
 			bb_update_to_1_5_6();
 		}
+
+		if ( $raw_db_version < 16601 ) {
+			bp_update_to_1_7_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -661,6 +665,15 @@ function bp_update_to_1_5_1() {
 		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
+}
+
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_update_to_1_7_0() {
+	bp_core_install_media();
 }
 
 function bp_update_default_doc_extensions() {
@@ -1137,3 +1150,52 @@ function bp_update_to_1_5_5() {
 function bb_update_to_1_5_6() {
 	bp_core_install_moderation_emails();
 }
+
+/**
+ * Add new video support to document extensions.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+add_filter( 'bp_media_allowed_document_type', function ( $extensions ) {
+
+	$changed_array = array(
+		'bb_doc_77' => array(
+			'extension'   => '.mp4',
+			'mime_type'   => 'video/mp4',
+			'description' => __( 'MP4', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_78' => array(
+			'extension'   => '.webm',
+			'mime_type'   => 'video/webm',
+			'description' => __( 'WebM', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_79' => array(
+			'extension'   => '.ogg',
+			'mime_type'   => 'video/ogg',
+			'description' => __( 'Ogg', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_80' => array(
+			'extension'   => '.mov',
+			'mime_type'   => 'video/quicktime',
+			'description' => __( 'Quicktime', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		)
+	);
+
+
+	$extensions = array_merge( $extensions, $changed_array );
+
+	return $extensions;
+
+});

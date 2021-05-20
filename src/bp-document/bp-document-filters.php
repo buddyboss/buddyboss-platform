@@ -65,6 +65,42 @@ add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
 
+// Delete symlinks for documents when before saved.
+add_action( 'bp_document_before_save', 'bp_document_delete_symlinks' );
+
+// Create symlinks for documents when saved.
+add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
+
+// Clear document symlinks on delete.
+add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on_delete', 10 );
+
+/**
+ * Clear a user's symlinks document when attachment document delete.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param array $documents DB results of document items.
+ */
+function bp_document_clear_document_symlinks_on_delete( $documents ) {
+	if ( ! empty( $documents[0] ) ) {
+		foreach ( (array) $documents as $deleted_document ) {
+			if ( isset( $deleted_document->id ) ) {
+				bp_document_delete_symlinks( (int) $deleted_document->id );
+
+				// Remove symlinks that is created randomly.
+				$get_existing = get_post_meta( $deleted_document->attachment_id, 'bb_video_symlinks_arr', true );
+				if ( $get_existing ) {
+					foreach ( $get_existing as $symlink ) {
+						if ( file_exists( $symlink ) ) {
+							unlink( $symlink );
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
@@ -444,7 +480,7 @@ function bp_document_update_document_privacy( $folder ) {
 /**
  * Save document when new topic or reply is saved
  *
- * @param $post_id
+ * @param int $post_id post id of the topic or reply.
  *
  * @since BuddyBoss 1.4.0
  */
@@ -783,10 +819,10 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 function bp_document_download_url_file() {
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['document_type'] ) {
-			$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$document_privacy = bb_media_user_can_access( $_GET['document_file'], 'document' ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		} else {
-			$folder_privacy   = bp_document_user_can_manage_folder( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$folder_privacy   = bb_media_user_can_access( $_GET['document_file'], 'folder' ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {
@@ -833,7 +869,7 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		foreach ( $document_ids as $document_id ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
 				$document->privacy = $activity->privacy;
 				$document->save();
 			}

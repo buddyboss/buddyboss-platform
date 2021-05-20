@@ -18,7 +18,7 @@ $albums_link = bp_get_album_link();
 						<a href="<?php echo esc_url( $albums_link ); ?>">
 							<img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->thumb ); ?>" alt="<?php echo wp_kses_post( bp_get_album_title() ); ?>" />
 						</a>
-					<?php else: ?>
+					<?php else : ?>
 						<a href="<?php echo esc_url( $albums_link ); ?>">
 							<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" alt="<?php echo wp_kses_post( bp_get_album_title() ); ?>" />
 						</a>
@@ -38,6 +38,21 @@ $albums_link = bp_get_album_link();
 						);
 						?>
 					</span>
+					<?php
+					if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
+						?>
+						<span class="media-photo_count">
+							<?php
+							printf(
+							// translators: Photos count.
+								esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
+								esc_attr( number_format_i18n( $media_album_template->album->media['total_video'] ) )
+							);
+							?>
+						</span> <!-- Get the count of photos in that album -->
+						<?php
+					}
+					?>
 				</div>
 
 				<div class="media-album_modified">

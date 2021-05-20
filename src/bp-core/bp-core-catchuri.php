@@ -69,6 +69,8 @@ function bp_core_set_uri_globals() {
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
+	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) {
+		$path = esc_url( $_REQUEST['_wp_http_referer'] );
 	} else {
 		$path = esc_url( $_SERVER['REQUEST_URI'] );
 	}
@@ -393,6 +395,13 @@ function bp_core_set_uri_globals() {
 	}
 
 	$bp->current_action = $current_action;
+
+	/**
+	 * Extend support for the $bp setup based on uri.
+	 *
+	 * @since BuddyBoss 1.5.9
+	 */
+	do_action( 'bp_core_set_uri_globals', $bp, $bp_uri );
 
 	// Slice the rest of the $bp_uri array and reset offset.
 	$bp_uri     = array_slice( $bp_uri, $uri_offset + 2 );

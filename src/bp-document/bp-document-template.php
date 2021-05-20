@@ -132,8 +132,6 @@ function bp_has_document( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	$privacy = false;
-
 	// folder filtering.
 	$folder_id = 0;
 	if ( ! isset( $args['folder_id'] ) && empty( $args['include'] ) ) {
@@ -146,6 +144,14 @@ function bp_has_document( $args = '' ) {
 	}
 
 	$group_id = false;
+	$privacy  = false;
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$group_id = bp_get_current_group_id();
+		$privacy  = array( 'grouponly' );
+		if ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) {
+			$privacy = false;
+		}
+	}
 
 	// The default scope should recognize custom slugs.
 	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
@@ -683,6 +689,28 @@ function bp_get_document_attachment_id() {
 }
 
 /**
+ * Return the document extension.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document extension.
+ */
+function bp_get_document_extension() {
+	global $document_template;
+
+	/**
+	 * Filters the document extension.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $id The document extension.
+	 */
+	return apply_filters( 'bp_get_document_extension', $document_template->document->extension );
+}
+
+/**
  * Output the document title.
  *
  * @since BuddyBoss 1.4.0
@@ -758,6 +786,13 @@ function bp_document_user_can_delete( $document = false ) {
 		if ( isset( $document->user_id ) && ( $document->user_id === bp_loggedin_user_id() ) ) {
 			$can_delete = true;
 		}
+
+		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
+			$manage = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
+			if ( $manage ) {
+				$can_delete = true;
+			}
+		}
 	}
 
 	/**
@@ -810,22 +845,9 @@ function bp_document_user_can_edit( $document = false ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
-
-			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
-			$status   = bp_group_get_media_status( $document->group_id );
-			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $document->group_id );
-			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $document->group_id );
-
+			$manage = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
 			if ( $manage ) {
-				if ( $document->user_id === bp_loggedin_user_id() ) {
-					$can_edit = true;
-				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
-					$can_edit = true;
-				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-					$can_edit = true;
-				} elseif ( 'admins' == $status && $is_admin ) {
-					$can_edit = true;
-				}
+				$can_edit = true;
 			}
 
 		}
@@ -971,6 +993,13 @@ function bp_document_attachment_image_thumbnail() {
 function bp_get_document_attachment_image_thumbnail() {
 	global $document_template;
 
+	$thumbnail = '';
+	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['thumb'] ) ) {
+		$thumbnail = $document_template->document->attachment_data['thumb'];
+	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->thumb ) ) {
+		$thumbnail = $document_template->document->attachment_data->thumb;
+	}
+
 	/**
 	 * Filters the document thumbnail being displayed.
 	 *
@@ -978,11 +1007,7 @@ function bp_get_document_attachment_image_thumbnail() {
 	 *
 	 * @param string The document thumbnail.
 	 */
-	if ( isset( $document_template->document->attachment_data->thumb ) ) {
-		return apply_filters( 'bp_get_document_activity_id', $document_template->document->attachment_data->thumb );
-	} else {
-		return apply_filters( 'bp_get_document_activity_id', '' );
-	}
+	return apply_filters( 'bp_get_document_activity_id', $thumbnail );
 }
 
 /**
@@ -1006,6 +1031,13 @@ function bp_document_attachment_image_activity_thumbnail() {
 function bp_get_document_attachment_image_activity_thumbnail() {
 	global $document_template;
 
+	$activity_thumbnail = '';
+	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['activity_thumb'] ) ) {
+		$activity_thumbnail = $document_template->document->attachment_data['activity_thumb'];
+	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->activity_thumb ) ) {
+		$activity_thumbnail = $document_template->document->attachment_data->activity_thumb;
+	}
+
 	/**
 	 * Filters the document activity thumbnail being displayed.
 	 *
@@ -1013,7 +1045,7 @@ function bp_get_document_attachment_image_activity_thumbnail() {
 	 *
 	 * @param string The document activity thumbnail.
 	 */
-	return apply_filters( 'bp_get_document_attachment_image', $document_template->document->attachment_data->activity_thumb );
+	return apply_filters( 'bp_get_document_attachment_image', $activity_thumbnail );
 }
 
 /**
@@ -1037,6 +1069,13 @@ function bp_document_attachment_image() {
 function bp_get_document_attachment_image() {
 	global $document_template;
 
+	$full = '';
+	if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['full'] ) ) {
+		$full = $document_template->document->attachment_data['full'];
+	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->full ) ) {
+		$full = $document_template->document->attachment_data->full;
+	}
+
 	/**
 	 * Filters the document image being displayed.
 	 *
@@ -1044,12 +1083,46 @@ function bp_get_document_attachment_image() {
 	 *
 	 * @param string The full image.
 	 */
-	if ( isset( $document_template->document->attachment_data->full ) ) {
-		return apply_filters( 'bp_get_document_attachment_image', $document_template->document->attachment_data->full );
-	} else {
-		return apply_filters( 'bp_get_document_attachment_image', '' );
+	return apply_filters( 'bp_get_document_attachment_image', $full );
+}
+
+/**
+ * Output the document preview url.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_document_attachment_url() {
+	echo bp_get_document_attachment_url();
+}
+
+/**
+ * Return the document preview url.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document attachment url.
+ */
+function bp_get_document_attachment_url() {
+	global $document_template;
+
+	$full = '';
+
+	if ( ! empty( $document_template->document->attachment_data ) && is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['full'] ) ) {
+		$full = $document_template->document->attachment_data['full'];
+	} elseif ( ! empty( $document_template->document->attachment_data ) && is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->full ) ) {
+		$full = $document_template->document->attachment_data->full;
 	}
 
+	/**
+	 * Filters the document url being displayed.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param string The full image.
+	 */
+	return apply_filters( 'bp_get_document_attachment_url', $full );
 }
 
 /**
@@ -1717,7 +1790,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
 			$can_delete = true;
 
-			// Users are allowed to delete their own folder.
+		// Users are allowed to delete their own folder.
 		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
 			$can_delete = true;
 		}
@@ -2325,6 +2398,23 @@ function bp_get_document_parent_activity_id() {
 function bp_get_document_preview_music_extensions() {
 
 	return apply_filters( 'bp_get_document_preview_music_extensions', array( 'mp3', 'wav', 'ogg' ) );
+}
+
+/**
+ * Return the document preview functions extensions.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_get_document_preview_video_extensions() {
+
+	/**
+	 * Return the document preview functions extensions.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
+	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4' ) );
 }
 
 /**

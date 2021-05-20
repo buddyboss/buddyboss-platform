@@ -38,6 +38,10 @@ if ( bp_is_active( 'media' ) ) {
 	new BP_Moderation_Media();
 }
 
+if ( bp_is_active( 'video' ) ) {
+	new BP_Moderation_Video();
+}
+
 if ( bp_is_active( 'messages' ) ) {
 	new BP_Moderation_Message();
 }

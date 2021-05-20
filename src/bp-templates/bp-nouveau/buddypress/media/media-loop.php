@@ -7,9 +7,14 @@
 
 bp_nouveau_before_loop();
 
+if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+    bp_get_template_part( 'media/media-move' );
+    bp_get_template_part( 'video/video-move' );
+    bp_get_template_part( 'video/add-video-thumbnail' );
+endif;
+
 if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-		<?php bp_get_template_part( 'media/media-move' ); ?>
 		<ul class="media-list item-list bp-list bb-photo-list grid">
 		<?php
 	endif;
@@ -35,7 +40,11 @@ if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 
 else :
 
-	bp_nouveau_user_feedback( 'media-loop-none' );
+	if ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) {
+		bp_nouveau_user_feedback( 'media-video-loop-none' );
+	} else {
+		bp_nouveau_user_feedback( 'media-loop-none' );
+	}
 
 endif;
 

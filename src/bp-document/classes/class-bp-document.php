@@ -119,6 +119,14 @@ class BP_Document {
 	var $date_modified;
 
 	/**
+	 * Extension of the document item.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 * @var string
+	 */
+	var $extension;
+
+	/**
 	 * Error holder.
 	 *
 	 * @since BuddyBoss 1.4.0
@@ -134,11 +142,6 @@ class BP_Document {
 	 */
 	public $error_type = 'bool';
 
-	static $per_pdf_secs = 20; // Seconds to allow for regenerating the preview of each PDF in the "Regen. PDF Previews" administraion tool.
-	static $min_time_limit = 300; // Minimum seconds to set max execution time to on doing regeneration.
-	static $poll_interval = 1; // How often to poll for progress info in seconds.
-	static $timing_dec_places = 1; // Number of decimal places to show on time (in seconds) taken.
-
 	/**
 	 * Constructor method.
 	 *
@@ -153,30 +156,6 @@ class BP_Document {
 		if ( ! empty( $id ) ) {
 			$this->id = (int) $id;
 			$this->populate();
-		}
-	}
-
-	/**
-	 * Called on 'wp_image_editors' action.
-	 * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
-	 */
-	static function bp_document_wp_image_editors( $image_editors ) {
-		if ( ! in_array( 'BP_GOPP_Image_Editor_GS', $image_editors, true ) ) {
-			self::bp_document_load_gopp_image_editor_gs();
-			array_unshift( $image_editors, 'BP_GOPP_Image_Editor_GS' );
-		}
-		return $image_editors;
-	}
-
-	/**
-	 * Helper to load BP_GOPP_Image_Editor_GS class.
-	 */
-	static function bp_document_load_gopp_image_editor_gs() {
-		if ( ! class_exists( 'BP_GOPP_Image_Editor_GS' ) ) {
-			if ( ! class_exists( 'WP_Image_Editor' ) ) {
-				require ABSPATH . WPINC . '/class-wp-image-editor.php';
-			}
-			require trailingslashit( dirname( __FILE__ ) ) . '/class-bp-gopp-image-editor-gs.php';
 		}
 	}
 
@@ -216,30 +195,7 @@ class BP_Document {
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
 		$this->date_modified = $row->date_modified;
-	}
-
-	/**
-	 * Remove all temp directory.
-	 *
-	 * @param $dir
-	 *
-	 * @since BuddyBoss 1.4.0
-	 */
-	public static function bp_document_remove_temp_directory( $dir ) {
-		if ( is_dir( $dir ) ) {
-			$objects = scandir( $dir );
-			foreach ( $objects as $object ) {
-				if ( $object != '.' && $object != '..' ) {
-					if ( filetype( $dir . '/' . $object ) == 'dir' ) {
-						self::bp_document_remove_temp_directory( $dir . '/' . $object );
-					} else {
-						unlink( $dir . '/' . $object );
-					}
-				}
-			}
-			reset( $objects );
-			rmdir( $dir );
-		}
+		$this->extension     = bp_document_extension( $this->attachment_id );
 	}
 
 	/**
@@ -650,11 +606,12 @@ class BP_Document {
 	 * Convert document IDs to document objects, as expected in template loop.
 	 *
 	 * @param array $document_ids Array of document IDs.
+	 * @param bool  $thumb_gen    Whether to generate symlink or not.
 	 *
 	 * @return array
 	 * @since BuddyBoss 1.4.0
 	 */
-	protected static function get_document_data( $document_ids = array() ) {
+	protected static function get_document_data( $document_ids = array(), $thumb_gen = true ) {
 		global $wpdb;
 
 		// Bail if no document ID's passed.
@@ -697,6 +654,9 @@ class BP_Document {
 				$document->group_id      = (int) $document->group_id;
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
+
+				// Get document extension.
+				$document->extension     = bp_document_extension( $document->attachment_id );
 			}
 
 			$group_name = '';
@@ -723,16 +683,19 @@ class BP_Document {
 				} elseif ( 'forums' === $document->privacy ) {
 					$visibility = esc_html__( 'Forums', 'buddyboss' );
 				} else {
-					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? $document_privacy[ $document->privacy ] : '';
+					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? ucfirst( $document_privacy[ $document->privacy ] ) : '';
 				}
 			}
 
 			// fetch attachment data.
+			$large = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' ) : '' );
+			$thumb = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'thumbnail' ) : '' );
+
 			$attachment_data                 = new stdClass();
-			$attachment_data->full           = '';
-			$attachment_data->thumb          = '';
-			$attachment_data->activity_thumb = '';
-			$attachment_data->meta           = wp_get_attachment_metadata( $document->attachment_id );
+			$attachment_data->full           = $large;
+			$attachment_data->thumb          = $thumb;
+			$attachment_data->activity_thumb = $thumb;
+			$attachment_data->meta           = self::attachment_meta( $document->attachment_id );
 			$document->attachment_data       = $attachment_data;
 			$document->group_name            = $group_name;
 			$document->visibility            = $visibility;
@@ -762,6 +725,43 @@ class BP_Document {
 		}
 
 		return $documents;
+	}
+
+	/**
+	 * Get attachment meta.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 *
+	 * @return array
+	 * @since BuddyBoss 1.7.0
+	 */
+	protected static function attachment_meta( $attachment_id ) {
+		$metadata  = wp_get_attachment_metadata( $attachment_id );
+		$extension = bp_document_extension( $attachment_id );
+
+		$meta = array();
+
+		switch ( $extension ) {
+			case 'pdf':
+				$meta['sizes'] = isset( $metadata['sizes'] ) ? $metadata['sizes'] : array();
+				break;
+			case 'jpg':
+			case 'jpeg':
+			case 'png':
+			case 'gif':
+			case 'svg':
+				$meta['width']  = isset( $metadata['width'] ) ? $metadata['width'] : 0;
+				$meta['height'] = isset( $metadata['height'] ) ? $metadata['height'] : 0;
+				$meta['sizes']  = array(
+					'medium' => isset( $metadata['sizes']['medium'] ) ? $metadata['sizes']['medium'] : false,
+					'large'  => isset( $metadata['sizes']['large'] ) ? $metadata['sizes']['large'] : false,
+				);
+				break;
+			default:
+				break;
+		}
+
+		return $meta;
 	}
 
 	/**
@@ -798,24 +798,27 @@ class BP_Document {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args( $args, array(
-			'scope'               => '',              // Scope - Groups, friends etc.
-			'page'                => 1,               // The current page.
-			'per_page'            => 20,              // Document items per page.
-			'max'                 => false,           // Max number of items to return.
-			'fields'              => 'all',           // Fields to include.
-			'sort'                => 'DESC',          // ASC or DESC.
-			'order_by'            => 'date_created',  // Column to order by.
-			'exclude'             => false,           // Array of ids to exclude.
-			'in'                  => false,           // Array of ids to limit query by (IN).
-			'search_terms'        => false,           // Terms to search by.
-			'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
-			'count_total'         => false,           // Whether or not to use count_total.
-			'user_directory'      => true,
-			'folder_id'           => 0,
-			'meta_query_document' => false,
-			'meta_query_folder'   => false,
-		) );
+		$r  = wp_parse_args(
+			$args,
+			array(
+				'scope'               => '',              // Scope - Groups, friends etc.
+				'page'                => 1,               // The current page.
+				'per_page'            => 20,              // Document items per page.
+				'max'                 => false,           // Max number of items to return.
+				'fields'              => 'all',           // Fields to include.
+				'sort'                => 'DESC',          // ASC or DESC.
+				'order_by'            => 'date_created',  // Column to order by.
+				'exclude'             => false,           // Array of ids to exclude.
+				'in'                  => false,           // Array of ids to limit query by (IN).
+				'search_terms'        => false,           // Terms to search by.
+				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
+				'count_total'         => false,           // Whether or not to use count_total.
+				'user_directory'      => true,
+				'folder_id'           => 0,
+				'meta_query_document' => false,
+				'meta_query_folder'   => false,
+			)
+		);
 
 		// Select conditions.
 		$select_sql_document = 'SELECT DISTINCT d.*';
@@ -853,8 +856,8 @@ class BP_Document {
 			$where_conditions_document['search_sql'] = $wpdb->prepare( '( d.title LIKE %s', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
-			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR dm.meta_key = "extension" AND dm.meta_value LIKE %s ', $search_terms_like );
-			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR dm.meta_key = "file_name" AND dm.meta_value LIKE %s )', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR dm.meta_key = "extension" AND dm.meta_value LIKE %s ', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR dm.meta_key = "file_name" AND dm.meta_value LIKE %s )', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -945,7 +948,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $meta_query_sql_folder['join'] ) ) {
-			$join_sql_folder   .= $meta_query_sql_folder['join'];
+			$join_sql_folder .= $meta_query_sql_folder['join'];
 		}
 
 		if ( ! empty( $meta_query_sql_document['where'] ) ) {
@@ -973,8 +976,8 @@ class BP_Document {
 		// Join the where conditions together for document.
 		if ( ! empty( $scope_query_document['sql'] ) ) {
 			$where_sql_document = 'WHERE ' .
-			                      ( ! empty( $where_conditions_document ) ? '( ' . join( ' AND ', $where_conditions_document ) . ' ) AND ' : '' ) .
-			                      ' ( ' . $scope_query_document['sql'] . ' )';
+								  ( ! empty( $where_conditions_document ) ? '( ' . join( ' AND ', $where_conditions_document ) . ' ) AND ' : '' ) .
+								  ' ( ' . $scope_query_document['sql'] . ' )';
 		} else {
 			$where_sql_document = 'WHERE ' . ( ! empty( $where_conditions_document ) ? join( ' AND ', $where_conditions_document ) : '' );
 		}
@@ -982,7 +985,7 @@ class BP_Document {
 		// Join the where conditions together for folder.
 		if ( ! empty( $scope_query_folder['sql'] ) ) {
 			$where_sql_folder = 'WHERE ' . ( ! empty( $where_conditions_folder ) ? '( ' . join( ' AND ', $where_conditions_folder ) . ' ) AND ' : '' ) .
-			                    ' ( ' . $scope_query_folder['sql'] . ' )';
+								' ( ' . $scope_query_folder['sql'] . ' )';
 		} else {
 			$where_sql_folder = 'WHERE ' . ( ! empty( $where_conditions_folder ) ? join( ' AND ', $where_conditions_folder ) : '' );
 		}
@@ -1047,7 +1050,7 @@ class BP_Document {
 
 			$documents = array_merge( $documents_folder, $documents_document );
 		} else {
-			$documents_document = self::get_document_data( $document_ids_document );
+			$documents_document = self::get_document_data( $document_ids_document, false );
 			$documents_folder   = self::get_folder_data( $document_ids_folder );
 
 			$documents = array_merge( $documents_folder, $documents_document );
@@ -1083,6 +1086,15 @@ class BP_Document {
 			$retval['has_more_items'] = $total > ( $current_page * $item_per_page );
 			$retval['documents']      = $documents;
 		} else {
+			$retval['documents'] = $documents;
+		}
+
+		if ( ! empty( $documents ) && 'ids' !== $r['fields'] ) {
+			foreach ( $documents as $key => $data ) {
+				if ( ! empty( $data->attachment_id ) ) {
+					$documents[ $key ] = current( self::get_document_data( array( $data->id ), true ) );
+				}
+			}
 			$retval['documents'] = $documents;
 		}
 
@@ -1347,8 +1359,8 @@ class BP_Document {
 				if ( (int) $document->group_id > 0 ) {
 					$document->folder = 'group';
 					if ( bp_is_active( 'groups' ) ) {
-						$group              = groups_get_group( array( 'group_id' => $document->group_id ) );
-						$document->link     = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
+						$group          = groups_get_group( array( 'group_id' => $document->group_id ) );
+						$document->link = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
 					}
 					$document->link = '';
 
@@ -1378,7 +1390,7 @@ class BP_Document {
 				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
 					$visibility = esc_html__( 'Connections', 'buddyboss' );
 				} else {
-					$visibility = (isset( $document_privacy[ $document->privacy ] ) ) ? $document_privacy[ $document->privacy ] : $document->privacy ;
+					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? $document_privacy[ $document->privacy ] : $document->privacy;
 				}
 			}
 
@@ -1469,7 +1481,7 @@ class BP_Document {
 	 *
 	 * @param     $array
 	 * @param     $column
-	 * @param int $direction
+	 * @param int    $direction
 	 *
 	 * @since BuddyBoss 1.4.0
 	 */
@@ -1676,15 +1688,15 @@ class BP_Document {
 			}
 		}
 
-//		if ( ! empty( $document_ids ) ) {
-//			// Loop through attachment ids and attempt to delete.
-//			foreach ( $document_ids as $document ) {
-//				$preview_attachment_id = bp_document_get_meta( $document, 'preview_attachment_id', true );
-//				if ( $preview_attachment_id ) {
-//					wp_delete_attachment( $preview_attachment_id, true );
-//				}
-//			}
-//		}
+		// if ( ! empty( $document_ids ) ) {
+		// Loop through attachment ids and attempt to delete.
+		// foreach ( $document_ids as $document ) {
+		// $preview_attachment_id = bp_document_get_meta( $document, 'preview_attachment_id', true );
+		// if ( $preview_attachment_id ) {
+		// wp_delete_attachment( $preview_attachment_id, true );
+		// }
+		// }
+		// }
 
 		// Delete meta.
 		if ( ! empty( $document_ids ) ) {
@@ -1739,12 +1751,14 @@ class BP_Document {
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 
-					// Deleting an activity.
+						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete( array(
+						if ( 'activity' !== $from && bp_activity_delete(
+							array(
 								'id'      => $activity->id,
 								'user_id' => $activity->user_id,
-							) ) ) {
+							)
+						) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
@@ -1938,7 +1952,7 @@ class BP_Document {
 		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
-		$this->date_modified  = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
+		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
 
 		/**
 		 * Fires before the current document item gets saved.
@@ -1969,126 +1983,6 @@ class BP_Document {
 			}
 		}
 
-		// Generate PDF file preview image.
-		$attachment_id         = $this->attachment_id;
-		$pdf_preview           = false;
-		$is_pdf                = false;
-		$is_preview_generated  = get_post_meta( $attachment_id, 'document_preview_generated', true );
-		$preview_attachment_id = (int) get_post_meta( $attachment_id, 'document_preview_attachment_id', true );
-		if ( empty( $is_preview_generated ) ) {
-			$extension             = bp_document_extension( $attachment_id );
-			$preview_attachment_id = 0;
-			$file                   = get_attached_file( $attachment_id );
-			$upload_dir            = wp_upload_dir();
-
-			if ( 'pdf' === $extension ) {
-				$is_pdf         = true;
-				$output_file     = wp_get_attachment_image_url( $attachment_id, 'full' );
-				$output_file_src = bp_document_scaled_image_path( $attachment_id );
-				if ( '' !== $output_file && '' !== basename( $output_file ) && strstr( $output_file, 'bb_documents/' ) ) {
-					add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
-					$upload_dir = $upload_dir['basedir'];
-
-					// Create temp folder.
-					$upload_dir = $upload_dir . '/preview-image-folder-' . time();
-					$preview_folder = $upload_dir;
-					// If folder not exists then create.
-					if ( ! is_dir( $upload_dir ) ) {
-
-						// Create temp folder.
-						wp_mkdir_p( $upload_dir );
-						chmod( $upload_dir, 0777 );
-
-						// Create given main parent folder.
-						$preview_folder = $upload_dir;
-						wp_mkdir_p( $preview_folder );
-
-						$file_name = basename( $output_file );
-						$extension_pos = strrpos($file_name, '.'); // find position of the last dot, so where the extension starts
-						$thumb = substr($file_name, 0, $extension_pos) . '_thumb' . substr($file_name, $extension_pos);
-						copy( $output_file_src, $preview_folder . '/' . $thumb );
-
-					}
-
-					$files = scandir( $preview_folder );
-					$firstFile = $preview_folder . '/' . $files[2];
-					bp_document_chmod_r( $preview_folder );
-
-					$image_data = file_get_contents( $firstFile );
-
-					$filename = basename( $output_file );
-
-					$upload_dir = wp_upload_dir();
-					if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-						$file = $upload_dir['path'] . '/' . $filename;
-					} else {
-						$file = $upload_dir['basedir'] . '/' . $filename;
-					}
-
-					file_put_contents( $file, $image_data );
-
-					$wp_filetype = wp_check_filetype( $filename, null );
-
-					$attachment = array(
-						'post_mime_type' => $wp_filetype['type'],
-						'post_title'     => sanitize_file_name( $filename ),
-						'post_content'   => '',
-						'post_status'    => 'inherit',
-					);
-
-					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
-					}
-					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
-					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
-					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
-					$pdf_preview = true;
-					BP_Document::bp_document_remove_temp_directory( $preview_folder );
-					remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
-				}
-			} else if ( 'css' === $extension || 'txt' === $extension || 'js' === $extension || 'html' === $extension || 'htm' === $extension || 'csv' === $extension ) {
-				$absolute_path  = get_attached_file( $attachment_id );
-				if ( '' !== $absolute_path && '' !== basename( $absolute_path ) && strstr( $absolute_path, 'bb_documents/' ) ) {
-					$upload_dir = $upload_dir['basedir'];
-
-					// Create temp folder.
-					$upload_dir = $upload_dir . '/preview-image-folder-' . time();
-					$preview_folder = $upload_dir;
-					// If folder not exists then create.
-					if ( ! is_dir( $upload_dir ) ) {
-
-						// Create temp folder.
-						wp_mkdir_p( $upload_dir );
-						chmod( $upload_dir, 0777 );
-
-						// Create given main parent folder.
-						$preview_folder = $upload_dir;
-						wp_mkdir_p( $preview_folder );
-
-						$file_name = basename( $absolute_path );
-						$extension_pos = strrpos($file_name, '.'); // find position of the last dot, so where the extension starts
-						$thumb = substr($file_name, 0, $extension_pos) . '_thumb' . substr($file_name, $extension_pos);
-						copy( $absolute_path, $preview_folder . '/' . $thumb );
-
-					}
-
-					$files = scandir( $preview_folder );
-					$firstFile = $preview_folder . '/' . $files[2];
-					bp_document_chmod_r( $preview_folder );
-
-					$image_data = file_get_contents( $firstFile );
-					$words 				 = 10000;
-					$mirror_text = strlen($image_data) > $words ? substr($image_data,0,$words).'...' : $image_data;
-					update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
-					BP_Document::bp_document_remove_temp_directory( $preview_folder );
-				}
-			}
-		}
-
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
 			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->id );
@@ -2105,15 +1999,7 @@ class BP_Document {
 			$this->id = $wpdb->insert_id;
 		}
 
-		if ( $preview_attachment_id ) {
-			bp_document_update_meta( $this->id, 'preview_attachment_id', $preview_attachment_id );
-		}
-
-		if ( ! $pdf_preview && $is_pdf ) {
-			add_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
-			self::bp_document_pdf_previews( array( $this->attachment_id ), true, $this->id );
-			remove_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
-		}
+		bp_document_generate_document_previews( $this->attachment_id );
 
 		// Update folder modified date.
 		$folder = (int) $this->folder_id;
@@ -2196,6 +2082,7 @@ class BP_Document {
 							$num_fails++;
 						}
 					}
+
 					if ( $meta ) {
 						$upload_dir     = wp_upload_dir();
 						$preview_folder = '';
@@ -2227,13 +2114,12 @@ class BP_Document {
 
 							}
 
-							$files = scandir( $preview_folder );
+							$files     = scandir( $preview_folder );
 							$firstFile = $preview_folder . '/' . $files[2];
 							bp_document_chmod_r( $preview_folder );
 
 							$image_data = file_get_contents( $firstFile );
-
-							$filename = basename( $output_file );
+							$filename   = basename( $output_file );
 							$upload_dir = wp_upload_dir();
 
 							if ( wp_mkdir_p( $upload_dir['path'] ) ) {

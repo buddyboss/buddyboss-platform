@@ -137,14 +137,24 @@ if ( is_admin() ) {
 // Email unsubscribe.
 add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
-// Set the "Document" component active/inactive based on the media components.
 add_action( 'bp_init', function() {
 	$component = bp_get_option( 'bp-active-components' );
+
+	// Set the "Document" component active/inactive based on the media components.
 	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
 		$component['document'] = '1';
 		bp_update_option( 'bp-active-components', $component );
 	} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-		unset($component['document']);
+		unset( $component['document'] );
+		bp_update_option( 'bp-active-components', $component );
+	}
+
+	// Set the "Video" component active/inactive based on the media components.
+	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
+		$component['video'] = '1';
+		bp_update_option( 'bp-active-components', $component );
+	} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
+		unset( $component['video'] );
 		bp_update_option( 'bp-active-components', $component );
 	}
 }, 10, 2 );

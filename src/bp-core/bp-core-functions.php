@@ -484,6 +484,7 @@ function bp_core_get_packaged_component_ids() {
 		'friends',
 		'media',
 		'document',
+		'video',
 		'messages',
 		'settings',
 		'notifications',
@@ -782,6 +783,7 @@ function bp_core_get_directory_page_default_titles() {
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
 		'document'        => __( 'Documents', 'buddyboss' ),
+		'video'           => __( 'Videos', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
 		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
@@ -2588,7 +2590,7 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
+			'description' => __( 'Allow members to upload photos, documents, videos, emojis and animated GIFs, and to organize photos and videos into albums and documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'document'      => array(
@@ -2603,6 +2605,20 @@ function bp_core_get_components( $type = 'all' ) {
 				)
 			),
 			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'video'      => array(
+			'title'       => __( 'Video Uploading', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-media',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow members to upload videos, and to organize videos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages'      => array(
@@ -2924,6 +2940,10 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'my-media' === $s_nav['slug'] ) {
 					$sub_name = __( 'My Photos', 'buddyboss' );
+				}
+
+				if ( 'my-video' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Videos', 'buddyboss' );
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
@@ -5320,4 +5340,71 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 		true           // tells the function "yes, please remove them all".
 	);
 
+}
+
+/**
+ * Check given directory is empty or not.
+ *
+ * @param string $dir The directory path.
+ * @return bool True OR False whether directory is empty or not.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_core_is_empty_directory( $dir ) {
+	$handle = opendir( $dir );
+	while( false !== ( $entry = readdir( $handle ) ) ) {
+		if( $entry != "." && $entry != ".." ) {
+			closedir( $handle );
+
+			return false;
+		}
+	}
+	closedir( $handle );
+
+	return true;
+}
+
+/**
+ * Regenerate attachment thumbnails
+ *
+ * @param int $attachment_id Attachment ID.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
+	if ( function_exists( 'wp_get_original_image_path' ) ) {
+		$fullsizepath = wp_get_original_image_path( $attachment_id );
+	} else {
+		$fullsizepath = get_attached_file( $attachment_id );
+	}
+
+	if ( ! function_exists( 'media_handle_upload' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/admin.php';
+	}
+	$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
+	wp_update_attachment_metadata( $attachment_id, $new_metadata );
+}
+
+/**
+ * Function which remove the temporary created directory.
+ *
+ * @param string $directory Directory to remove.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_core_remove_temp_directory( $directory = '' ) {
+	if ( is_dir( $directory ) ) {
+		$objects = scandir( $directory );
+		foreach ( $objects as $object ) {
+			if ( '.' !== $object && '..' !== $object ) {
+				if ( 'dir' === filetype( $directory . '/' . $object ) ) {
+					bp_core_remove_temp_directory( $directory . '/' . $object );
+				} else {
+					unlink( $directory . '/' . $object );
+				}
+			}
+		}
+		reset( $objects );
+		rmdir( $directory );
+	}
 }

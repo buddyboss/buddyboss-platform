@@ -589,8 +589,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				);
 			}
 
-			$album_privacy = bp_media_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
-			if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
+			$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
+			if ( true === $retval && true !== (bool) $album_privacy['can_edit'] ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
 					__( 'You don\'t have a permission to create a media inside this album.', 'buddyboss' ),
@@ -1198,10 +1198,14 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		add_filter( 'upload_dir', 'bp_media_upload_dir' );
+
 		/**
 		 * Create and upload the media file.
 		 */
 		$upload = bp_media_upload();
+
+		remove_filter( 'upload_dir', 'bp_media_upload_dir' );
 
 		if ( is_wp_error( $upload ) ) {
 			return new WP_Error(
@@ -3349,20 +3353,22 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'delete'             => 0,
 		);
 
-		$media_privacy = bp_media_user_can_manage_media( $media->id, bp_loggedin_user_id() );
+		$media_privacy = bb_media_user_can_access( $media->id, 'photo' );
 
 		if ( ! empty( $media_privacy ) ) {
 			if ( isset( $media_privacy['can_download'] ) && true === (bool) $media_privacy['can_download'] ) {
 				$retval['download'] = 1;
 			}
 
-			if ( isset( $media_privacy['can_add'] ) && true === (bool) $media_privacy['can_add'] ) {
+			if ( isset( $media_privacy['can_move'] ) && true === (bool) $media_privacy['can_move'] ) {
 				$retval['move'] = 1;
 			}
 
-			if ( isset( $media_privacy['can_manage'] ) && true === (bool) $media_privacy['can_manage'] ) {
+			if ( isset( $media_privacy['can_delete'] ) && true === (bool) $media_privacy['can_delete'] ) {
 				$retval['delete'] = 1;
+			}
 
+			if ( isset( $media_privacy['can_edit'] ) && true === (bool) $media_privacy['can_edit'] ) {
 				if ( 0 === (int) $media->group_id && 0 === (int) $media->album_id ) {
 					if ( ! empty( $media->attachment_id ) && bp_is_active( 'activity' ) ) {
 						$parent_activity_id = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
