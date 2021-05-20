@@ -661,7 +661,7 @@ class BP_Media {
 			$attachment_data->meta           = self::attachment_meta( $media->attachment_id );
 			$media->attachment_data          = $attachment_data;
 
-			if( $media->type == 'video' ) {
+			if( $media->type == 'video' && function_exists( 'bb_video_get_thumb_url' ) ) {
 				$get_video_thumb_ids = get_post_meta( $media->attachment_id, 'video_preview_thumbnails', true );
 				$get_video_thumb_id  = get_post_meta( $media->attachment_id, 'bp_video_preview_thumbnail_id', true );
 
@@ -670,16 +670,15 @@ class BP_Media {
 				$attachment_data->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
 
 				if ( $get_video_thumb_id ) {
-					$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
-					$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
-					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
+					$attachment_data->full           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'full' );
+					$attachment_data->thumb          = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-video-thumbnail' );
+					$attachment_data->activity_thumb = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-activity-video-thumbnail' );
 					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
-
 				} elseif ( isset( $get_video_thumb_ids['default_images'] ) && !empty( $get_video_thumb_ids['default_images'] ) ) {
 					$get_video_thumb_id              = current( $get_video_thumb_ids['default_images'] );
-					$attachment_data->full           = wp_get_attachment_image_url( $get_video_thumb_id, 'full' );
-					$attachment_data->thumb          = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-video-thumbnail' );
-					$attachment_data->activity_thumb = wp_get_attachment_image_url( $get_video_thumb_id, 'bp-activity-video-thumbnail' );
+					$attachment_data->full           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'full' );
+					$attachment_data->thumb          = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-video-thumbnail' );
+					$attachment_data->activity_thumb = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-activity-video-thumbnail' );
 					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
 				} else {
 					$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
