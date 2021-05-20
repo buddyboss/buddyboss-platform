@@ -19349,6 +19349,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
+.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar .vjs-slider-vertical .vjs-volume-level:before {
+  left: -3px;
+}
+
 .bb-activity-video-elem.is-visible .video-js:after {
   visibility: visible;
   opacity: 1;

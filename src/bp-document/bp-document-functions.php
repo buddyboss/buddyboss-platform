@@ -3651,10 +3651,12 @@ function bp_document_delete_document_previews() {
  * Create symlink for a document.
  *
  * @param object $document BP_Document Object.
+ * @param string $size     Size of images.
  *
  * @since BuddyBoss X.X.X
  */
-function bp_document_create_symlinks( $document ) {
+function bp_document_create_symlinks( $document, $size = '' ) {
+
 	// Check if document is id of document, create document object.
 	if ( ! $document instanceof BP_Document && is_int( $document ) ) {
 		$document = new BP_Document( $document );
@@ -3695,37 +3697,130 @@ function bp_document_create_symlinks( $document ) {
 		}
 
 		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+			if ( '' !== $size ) {
+				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . $size );
+				$file            = image_get_intermediate_size( $attachment_id, $size );
 
-			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
-			$file            = image_get_intermediate_size( $attachment_id, 'medium' );
-
-			if ( false === $file ) {
-				bp_document_generate_document_previews( $attachment_id );
-				$file = image_get_intermediate_size( $attachment_id, 'medium' );
-			}
-
-			$attached_file_info = pathinfo( $attached_file );
-			$file_path          = '';
-
-			if ( ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
-				$file_path = $attached_file_info['dirname'];
-				$file_path = $file_path . '/' . $file['file'];
-			}
-
-			if ( ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
-				// Regenerate attachment thumbnails.
-				bp_core_regenerate_attachment_thumbnails( $attachment_id );
-				$file      = image_get_intermediate_size( $attachment_id, 'medium' );
-				$file_path = $file_path . '/' . $file['file'];
-			}
-
-			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-				if ( ! is_link( $attachment_path ) ) {
-					symlink( $file_path, $attachment_path );
+				if ( false === $file ) {
+					bp_document_generate_document_previews( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, $size );
 				}
-			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
-				$output_file_src = get_attached_file( $attachment_id );
-				if ( ! empty( $output_file_src ) ) {
+
+				$attached_file_info = pathinfo( $attached_file );
+				$file_path          = '';
+
+				if ( ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
+					$file_path = $attached_file_info['dirname'];
+					$file_path = $file_path . '/' . $file['file'];
+				}
+
+				if ( ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
+					// Regenerate attachment thumbnails.
+					bp_core_regenerate_attachment_thumbnails( $attachment_id );
+					$file      = image_get_intermediate_size( $attachment_id, $size );
+					$file_path = $file_path . '/' . $file['file'];
+				}
+
+				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+					if ( ! is_link( $attachment_path ) ) {
+						symlink( $file_path, $attachment_path );
+					}
+				} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+					$output_file_src = get_attached_file( $attachment_id );
+					if ( ! empty( $output_file_src ) ) {
+						// Regenerate attachment thumbnails.
+						if ( ! file_exists( $output_file_src ) ) {
+							bp_media_regenerate_attachment_thumbnails( $attachment_id );
+						}
+
+						// Check if file exists.
+						if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+							if ( ! is_link( $attachment_path ) ) {
+								symlink( $output_file_src, $attachment_path );
+							}
+						}
+					}
+				}
+			} else {
+				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'medium' );
+				$file            = image_get_intermediate_size( $attachment_id, 'medium' );
+
+				if ( false === $file ) {
+					bp_document_generate_document_previews( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, 'medium' );
+				}
+
+				$attached_file_info = pathinfo( $attached_file );
+				$file_path          = '';
+
+				if ( ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
+					$file_path = $attached_file_info['dirname'];
+					$file_path = $file_path . '/' . $file['file'];
+				}
+
+				if ( ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
+					// Regenerate attachment thumbnails.
+					bp_core_regenerate_attachment_thumbnails( $attachment_id );
+					$file      = image_get_intermediate_size( $attachment_id, 'medium' );
+					$file_path = $file_path . '/' . $file['file'];
+				}
+
+				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+					if ( ! is_link( $attachment_path ) ) {
+						symlink( $file_path, $attachment_path );
+					}
+				} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+					$output_file_src = get_attached_file( $attachment_id );
+					if ( ! empty( $output_file_src ) ) {
+						// Regenerate attachment thumbnails.
+						if ( ! file_exists( $output_file_src ) ) {
+							bp_media_regenerate_attachment_thumbnails( $attachment_id );
+						}
+
+						// Check if file exists.
+						if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+							if ( ! is_link( $attachment_path ) ) {
+								symlink( $output_file_src, $attachment_path );
+							}
+						}
+					}
+				}
+
+				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'large' );
+				$file            = image_get_intermediate_size( $attachment_id, 'large' );
+
+				if ( ! $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'full' );
+					if ( ! $file ) {
+						bp_document_generate_document_previews( $attachment_id );
+						$file = image_get_intermediate_size( $attachment_id, 'full' );
+					}
+				}
+
+				if ( ! $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'original' );
+					if ( ! $file ) {
+						bp_document_generate_document_previews( $attachment_id );
+						$file = image_get_intermediate_size( $attachment_id, 'original' );
+					}
+				}
+
+				if ( $file ) {
+					$file_path = '';
+					if ( ! empty( $attached_file_info['dirname'] ) ) {
+						$file_path = $attached_file_info['dirname'];
+						$file_path = $file_path . '/' . $file['file'];
+					}
+
+					if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+						if ( ! is_link( $attachment_path ) ) {
+							symlink( $file_path, $attachment_path );
+						}
+					}
+				} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+
+					$output_file_src = get_attached_file( $attachment_id );
+
 					// Regenerate attachment thumbnails.
 					if ( ! file_exists( $output_file_src ) ) {
 						bp_media_regenerate_attachment_thumbnails( $attachment_id );
@@ -3736,54 +3831,6 @@ function bp_document_create_symlinks( $document ) {
 						if ( ! is_link( $attachment_path ) ) {
 							symlink( $output_file_src, $attachment_path );
 						}
-					}
-				}
-			}
-
-			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . 'large' );
-			$file            = image_get_intermediate_size( $attachment_id, 'large' );
-
-			if ( ! $file ) {
-				$file = image_get_intermediate_size( $attachment_id, 'full' );
-				if ( ! $file ) {
-					bp_document_generate_document_previews( $attachment_id );
-					$file = image_get_intermediate_size( $attachment_id, 'full' );
-				}
-			}
-
-			if ( ! $file ) {
-				$file = image_get_intermediate_size( $attachment_id, 'original' );
-				if ( ! $file ) {
-					bp_document_generate_document_previews( $attachment_id );
-					$file = image_get_intermediate_size( $attachment_id, 'original' );
-				}
-			}
-
-			if ( $file ) {
-				$file_path = '';
-				if ( ! empty( $attached_file_info['dirname'] ) ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $file_path, $attachment_path );
-					}
-				}
-			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
-
-				$output_file_src = get_attached_file( $attachment_id );
-
-				// Regenerate attachment thumbnails.
-				if ( ! file_exists( $output_file_src ) ) {
-					bp_media_regenerate_attachment_thumbnails( $attachment_id );
-				}
-
-				// Check if file exists.
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
 					}
 				}
 			}
@@ -4084,7 +4131,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'med
 
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
 			if ( ! file_exists( $preview_attachment_path ) ) {
-				bp_document_create_symlinks( $document );
+				bp_document_create_symlinks( $document, $size );
 			}
 			if ( ! file_exists( $preview_attachment_path ) ) {
 				$attachment_url = '';
@@ -4101,7 +4148,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'med
 
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
 			if ( ! file_exists( $preview_attachment_path ) ) {
-				bp_document_create_symlinks( $document );
+				bp_document_create_symlinks( $document, $size );
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		}

@@ -688,10 +688,13 @@ class BP_Document {
 			}
 
 			// fetch attachment data.
+			$large = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' ) : '' );
+			$thumb = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'thumbnail' ) : '' );
+
 			$attachment_data                 = new stdClass();
-			$attachment_data->full           = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' ) : '' );
-			$attachment_data->thumb          = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id ) : '' );
-			$attachment_data->activity_thumb = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' ) : '' );
+			$attachment_data->full           = $large;
+			$attachment_data->thumb          = $thumb;
+			$attachment_data->activity_thumb = $thumb;
 			$attachment_data->meta           = self::attachment_meta( $document->attachment_id );
 			$document->attachment_data       = $attachment_data;
 			$document->group_name            = $group_name;
