@@ -19233,7 +19233,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: "\e8af";
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {
   position: absolute;
   right: 15px;
   top: 21px;
@@ -19243,12 +19243,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   transition: all 0.3s ease;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap.is-visible .video-action_list {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap.is-visible .video-action_list {
   opacity: 1;
   visibility: visible;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap.is-visible .video-action_list:after {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap.is-visible .video-action_list:after {
   content: " ";
   position: absolute;
   width: 0;
@@ -19271,22 +19271,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   visibility: visible;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap > a i {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap > a i {
   font-size: 21px;
   color: #939597;
   padding: 0 4px;
   background-color: transparent;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap > a.video-action_more i {
-  font-size: 14px;
-  padding: 4px;
-  border: 1px solid #fff;
-  background-color: transparent;
-  color: #fff;
-}
-
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list {
   position: absolute;
   top: 28px;
   right: 1px;
@@ -19299,19 +19291,19 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   z-index: 1;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul {
   list-style: none;
   margin: 5px 0 !important;
   padding: 0 !important;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul li {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li {
   margin: 0;
   padding: 0;
   list-style-type: none !important;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul li a {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li a {
   padding: 10px 14px !important;
   display: block !important;
   font-size: 14px;
@@ -19319,12 +19311,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   color: #7f868f;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul li a:hover {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li a:hover {
   background-color: #f5f5f5 !important;
   color: #5087e5;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul li a:before {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li a:before {
   content: "\e9cb";
   font-family: 'bb-icons';
   /* stylelint-disable-line */
@@ -19338,7 +19330,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-right: 10px;
 }
 
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list ul li a.video-file-delete:before {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li a.video-file-delete:before {
   content: "\e937";
   font-size: 15px;
 }

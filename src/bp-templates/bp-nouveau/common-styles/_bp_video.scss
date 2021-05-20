@@ -331,7 +331,7 @@
 }
 
 //Video more option dropdown in theater
-.bb-media-model-container .activity-list .video-action-wrap.item-action-wrap {
+.bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {
 	position: absolute;
 	right: 15px;
 	top: 21px;
@@ -378,14 +378,6 @@
 		color: #939597;
 		padding: 0 4px;
 		background-color: transparent;
-	}
-
-	> a.video-action_more i {
-		font-size: 14px;
-		padding: 4px;
-		border: 1px solid #fff;
-		background-color: transparent;
-		color: #fff;
 	}
 
 	.video-action_list {
