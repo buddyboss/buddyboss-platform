@@ -3551,6 +3551,7 @@ function bb_media_user_can_access( $id, $type ) {
 	$media_group_id  = 0;
 	$forum_id        = 0;
 	$thread_id       = 0;
+	$activity_id     = 0;
 
 	if ( 'album' === $type ) {
 		$album          = new BP_Media_Album( $id );
@@ -3569,6 +3570,7 @@ function bb_media_user_can_access( $id, $type ) {
 		$media_group_id = (int) $photo->group_id;
 		$forum_id       = bp_media_get_forum_id( $id );
 		$thread_id      = bp_media_get_thread_id( $id );
+		$activity_id    = $photo->activity_id;
 	} elseif ( 'video' === $type ) {
 		$video          = new BP_Video( $id );
 		$media_user_id  = (int) $video->user_id;
@@ -3576,6 +3578,7 @@ function bb_media_user_can_access( $id, $type ) {
 		$media_group_id = (int) $video->group_id;
 		$forum_id       = bp_video_get_forum_id( $id );
 		$thread_id      = bp_video_get_thread_id( $id );
+		$activity_id    = $video->activity_id;
 	} elseif ( 'document' === $type ) {
 		$document       = new BP_Document( $id );
 		$media_user_id  = (int) $document->user_id;
@@ -3583,6 +3586,14 @@ function bb_media_user_can_access( $id, $type ) {
 		$media_group_id = (int) $document->group_id;
 		$forum_id       = bp_document_get_forum_id( $id );
 		$thread_id      = bp_document_get_thread_id( $id );
+		$activity_id    = $document->activity_id;
+	}
+
+	if ( $media_privacy === 'comment' && bp_is_active( 'activity' ) && ! empty( $activity_id )) {
+		$activity = new BP_Activity_Activity( $activity_id );
+		if( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
+			$media_privacy  = $activity->privacy;
+		}
 	}
 
 	switch ( $media_privacy ) {
