@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-05-20 16:56:01+00:00\n"
+"POT-Creation-Date: 2021-05-20 17:42:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1317,7 +1317,7 @@ msgstr ""
 #: bp-forums/groups.php:1521 bp-media/bp-media-filters.php:1389
 #: bp-media/bp-media-settings.php:238 bp-media/bp-media-settings.php:245
 #: bp-media/bp-media-settings.php:252 bp-media/bp-media-settings.php:259
-#: bp-media/bp-media-settings.php:266 bp-media/classes/class-bp-media.php:710
+#: bp-media/bp-media-settings.php:266 bp-media/classes/class-bp-media.php:709
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1122
 #: bp-search/bp-search-functions.php:369
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:740
@@ -3586,7 +3586,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:175
 #: bp-friends/classes/class-bp-friends-component.php:259
 #: bp-friends/classes/class-bp-friends-component.php:305
-#: bp-media/classes/class-bp-media.php:706
+#: bp-media/classes/class-bp-media.php:705
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:920
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1026
@@ -5357,15 +5357,15 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2671
 msgid ""
-"<p>Please confirm you want to deactivate the Moderation component.</p>\r\n"
-"\t\t\t<h4>On Deactivation:</h4>\r\n"
-"\t\t\t<ul>\r\n"
+"<p>Please confirm you want to deactivate the Moderation component.</p>\n"
+"\t\t\t<h4>On Deactivation:</h4>\n"
+"\t\t\t<ul>\n"
 "\t\t\t\t<li>All suspended members will regain permission to login and their "
-"content will be unhidden</li>\r\n"
+"content will be unhidden</li>\n"
 "\t\t\t\t<li>Members on the network will no longer be able to block other "
-"members. Any members they have blocked will be unblocked.</li>\r\n"
-"\t\t\t\t<li>All hidden content will be unhidden.</li>\r\n"
-"\t\t\t</ul>\r\n"
+"members. Any members they have blocked will be unblocked.</li>\n"
+"\t\t\t\t<li>All hidden content will be unhidden.</li>\n"
+"\t\t\t</ul>\n"
 "\t\t\t<p>Please note: Data will not be deleted when you deactivate the "
 "Moderation component. On reactivation, members who have previously been "
 "suspended or blocked will once again have their access removed or limited. "
@@ -8165,13 +8165,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9221,7 +9221,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:156
 #: bp-media/classes/class-bp-media-album.php:520
 #: bp-media/classes/class-bp-media-privacy.php:59
-#: bp-media/classes/class-bp-media.php:699
+#: bp-media/classes/class-bp-media.php:698
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:56
 #: bp-video/classes/class-bp-video.php:649
 msgid "Group Members"
@@ -9242,7 +9242,7 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document.php:682
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
-#: bp-media/classes/class-bp-media.php:708
+#: bp-media/classes/class-bp-media.php:707
 #: bp-messages/bp-messages-template.php:1465
 #: bp-templates/bp-nouveau/includes/customizer.php:336
 #: bp-video/classes/class-bp-video.php:658
@@ -23821,7 +23821,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:96
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:118
-#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:66
+#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:67
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:99
 msgid "Done"
 msgstr ""
@@ -28166,12 +28166,12 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host. \r\n"
+"uploading videos (optional). Ask your web host. \n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, then BuddyBoss Platform is unable to "
-"auto-detect the binary path for FFmpeg. \r\n"
+"auto-detect the binary path for FFmpeg. \n"
 "\t\t\t\t\t<br/>You need to add these FFmpeg binary files absolute path "
-"constants %2$s & %3$s in %4$s file. \r\n"
+"constants %2$s & %3$s in %4$s file. \n"
 "\t\t\t\t\t<br/>Ask your web host to provide the binary files absolute path."
 msgstr ""
 

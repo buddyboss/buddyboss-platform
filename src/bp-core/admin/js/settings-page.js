@@ -1034,14 +1034,11 @@
 				function() {
 
 					var parent = $( this ).closest( 'table.extension-listing' );
-					console.log( parseInt( $( '.extension-listing tr.extra-extension' ).length ) );
 					$( this ).closest( 'tr' ).remove();
-					console.log( parseInt( $( '.extension-listing tr.extra-extension' ).length ) );
 					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
 					totalCount     = 1;
 					parent.find( 'tbody tr.extra-extension' ).each(
 						function() {
-							console.log( totalCount );
 								$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
 								$( this ).find( 'input.extension-check' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
 								$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
@@ -1101,10 +1098,8 @@
 
 					var mimeToId = $( this ).attr( 'id' );
 
-					console.log( mimeToId );
 					$( document ).find( 'input[name="' + mimeToId + '"]' ).val( '' );
 					var valueCopied = $( document ).find( '#mime-type' ).val();
-					console.log( valueCopied );
 					$( document ).find( 'input[name="' + mimeToId + '"]' ).val( valueCopied );
 					$( document ).find( '.close-modal' ).trigger( 'click' );
 				}
