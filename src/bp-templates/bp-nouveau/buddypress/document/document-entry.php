@@ -54,7 +54,7 @@ if ( $attachment_id ) {
 		$move_type = 'profile';
 	}
 
-	$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
+	$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'thumbnail' );
 	$video_url      = bb_document_video_get_symlink( bp_get_document_id() );
 
 } else {
