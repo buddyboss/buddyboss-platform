@@ -683,7 +683,10 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	}
 
 	// Remove the Edit button if the user can't edit.
-	if ( ! bp_activity_user_can_edit() ) {
+	if (
+		! bp_activity_user_can_edit() ||
+		bp_get_activity_object_name() === 'groups' && groups_is_user_member( bp_loggedin_user_id(), bp_get_activity_item_id() ) && ! groups_is_user_allowed_posting( bp_loggedin_user_id(), bp_get_activity_item_id() )
+	) {
 		unset( $return['activity_edit'] );
 	}
 
