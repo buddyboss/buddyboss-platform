@@ -683,7 +683,10 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	}
 
 	// Remove the Edit button if the user can't edit.
-	if ( ! bp_activity_user_can_edit() ) {
+	if (
+		! bp_activity_user_can_edit() ||
+		bp_get_activity_object_name() === 'groups' && groups_is_user_member( bp_loggedin_user_id(), bp_get_activity_item_id() ) && ! groups_is_user_allowed_posting( bp_loggedin_user_id(), bp_get_activity_item_id() )
+	) {
 		unset( $return['activity_edit'] );
 	}
 
@@ -1422,14 +1425,13 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 
 	echo '</div>';
 	if ( ! empty( $video_id ) ) {
-		$video_privacy    = bp_video_user_can_manage_video( $video_id, bp_loggedin_user_id() );
+		$video_privacy    = bb_media_user_can_access( $video_id, 'video' );
 		$can_download_btn = true === (bool) $video_privacy['can_download'];
 		if ( $can_download_btn ) {
 			$download_url = bp_video_download_link( $attachment_id, $video_id );
 			if ( $download_url ) {
 				?>
-				<a class="download-media" href="<?php echo esc_url( $download_url ); ?>"> <?php esc_html_e( 'Download', 'buddyboss' ); ?>
-				</a>
+				<a class="download-media" href="<?php echo esc_url( $download_url ); ?>"> <?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
 				<?php
 			}
 		}
@@ -1496,7 +1498,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 
 	echo '</div>';
 	if ( ! empty( $media_id ) ) {
-		$media_privacy    = bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
+		$media_privacy    = bb_media_user_can_access( $media_id,'photos' );
 		$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 		if ( $can_download_btn ) {
 			$download_url = bp_media_download_link( $attachment_id, $media_id );
@@ -1572,7 +1574,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 
 	echo '</div>';
 	if ( ! empty( $document_id ) ) {
-		$document_privacy = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+		$document_privacy = bb_media_user_can_access( $document_id, 'document' );
 		$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		if ( $can_download_btn ) {
 			$download_url = bp_document_download_link( $attachment_id, $document_id );

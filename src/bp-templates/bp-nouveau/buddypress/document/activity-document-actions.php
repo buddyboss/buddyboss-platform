@@ -8,11 +8,12 @@
 
 global $document_template;
 $download_url     = bp_document_download_link( bp_get_document_attachment_id(), bp_get_document_id() );
-$document_privacy = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
+$document_privacy = bb_media_user_can_access( bp_get_document_id(), 'document' );
 $can_download_btn = true === (bool) $document_privacy['can_download'];
-$can_manage_btn   = true === (bool) $document_privacy['can_manage'];
 $can_view         = true === (bool) $document_privacy['can_view'];
+$can_move         = true === (bool) $document_privacy['can_move'];
 $can_add          = true === (bool) $document_privacy['can_add'];
+$can_delete       = true === (bool) $document_privacy['can_delete'];
 $db_privacy       = bp_get_db_document_privacy();
 $is_comment_doc   = bp_document_is_activity_comment_document( $document_template->document );
 
@@ -44,7 +45,7 @@ if ( $group_id > 0 ) {
 				</li>
 				<?php
 			}
-			if ( bp_loggedin_user_id() === bp_get_document_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $can_move || bp_loggedin_user_id() === bp_get_document_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 				if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 					if ( $is_comment_doc ) {
 						?>
@@ -53,7 +54,7 @@ if ( $group_id > 0 ) {
 						</li>
 						<?php
 					} else {
-						if ( $can_add ) {
+						if ( $can_move ) {
 							?>
 							<li class="move_file document-action-class">
 								<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
@@ -70,9 +71,13 @@ if ( $group_id > 0 ) {
 						$item_id = bp_get_activity_id();
 					}
 				}
-				?>
-				<li class="delete_file document-action-class"><a class="document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
-				<?php
+				if ( $can_delete ) {
+					?>
+                    <li class="delete_file document-action-class">
+                        <a class="document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+                    </li>
+					<?php
+				}
 			}
 			?>
 		</ul>

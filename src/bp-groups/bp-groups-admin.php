@@ -1238,7 +1238,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
 			<fieldset>
-				<legend><?php esc_html_e( 'Who can manage photos in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can upload photos in this group?', 'buddyboss' ); ?></legend>
 
 				<label for="bp-group-media-status-members"><input type="radio" name="group-media-status" id="bp-group-media-status-members" value="members" <?php checked( $media_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
 				<label for="bp-group-media-status-mods"><input type="radio" name="group-media-status" id="bp-group-media-status-mods" value="mods" <?php checked( $media_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
@@ -1250,7 +1250,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
 			<fieldset>
-				<legend><?php esc_html_e( 'Who can manage albums in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can create albums in this group?', 'buddyboss' ); ?></legend>
 
 				<label for="bp-group-album-status-members"><input type="radio" name="group-album-status" id="bp-group-album-status-members" value="members" <?php checked( $album_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
 				<label for="bp-group-album-status-mods"><input type="radio" name="group-album-status" id="bp-group-album-status-mods" value="mods" <?php checked( $album_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
@@ -1262,7 +1262,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-document-status">
 			<fieldset>
-				<legend><?php esc_html_e( 'Who can manage documents in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can upload documents in this group?', 'buddyboss' ); ?></legend>
 
 				<label for="bp-group-document-status-members"><input type="radio" name="group-document-status" id="bp-group-document-status-members" value="members" <?php checked( $document_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
 				<label for="bp-group-document-status-mods"><input type="radio" name="group-document-status" id="bp-group-document-status-mods" value="mods" <?php checked( $document_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
@@ -1274,7 +1274,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-video-status">
 			<fieldset>
-				<legend><?php esc_html_e( 'Who can manage videos in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php esc_html_e( 'Who can upload videos in this group?', 'buddyboss' ); ?></legend>
 
 				<label for="bp-group-video-status-members"><input type="radio" name="group-video-status" id="bp-group-video-status-members" value="members" <?php checked( $video_status, 'members' ); ?> /><?php esc_html_e( 'All Members', 'buddyboss' ); ?></label>
 				<label for="bp-group-video-status-mods"><input type="radio" name="group-video-status" id="bp-group-video-status-mods" value="mods" <?php checked( $video_status, 'mods' ); ?> /><?php esc_html_e( 'Organizers and Moderators', 'buddyboss' ); ?></label>

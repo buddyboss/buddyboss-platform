@@ -2993,342 +2993,6 @@ function bp_document_folder_download_link( $folder_id ) {
 
 }
 
-/**
- * Check user have a permission to manage the folder.
- *
- * @param int $folder_id
- * @param int $user_id
- *
- * @return mixed|void
- * @since BuddyBoss 1.4.0
- */
-function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
-
-	$can_manage   = false;
-	$can_view     = false;
-	$can_download = false;
-	$can_add      = false;
-	$folder       = new BP_Document_Folder( $folder_id );
-	$data         = array();
-
-	switch ( $folder->privacy ) {
-
-		case 'public':
-			if ( $folder->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} else {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'grouponly':
-			if ( bp_is_active( 'groups' ) ) {
-
-				$manage   = groups_can_user_manage_document( $user_id, $folder->group_id );
-				$status   = bp_group_get_media_status( $folder->group_id );
-				$is_admin = groups_is_user_admin( $user_id, $folder->group_id );
-				$is_mod   = groups_is_user_mod( $user_id, $folder->group_id );
-
-				if ( $manage ) {
-					if ( $folder->user_id === $user_id ) {
-						$can_manage = true;
-						$can_add    = true;
-					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage = true;
-						$can_add    = false;
-					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage = true;
-						$can_add    = false;
-					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage = true;
-						$can_add    = false;
-					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage = true;
-						$can_add    = false;
-					}
-					$can_view     = true;
-					$can_download = true;
-				} else {
-					$the_group = groups_get_group( absint( $folder->group_id ) );
-					if ( $the_group->id > 0 && $the_group->user_has_access ) {
-						$can_view     = true;
-						$can_download = true;
-					}
-				}
-			}
-
-			break;
-
-		case 'loggedin':
-			if ( ! is_user_logged_in() ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-			} elseif ( $folder->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( bp_loggedin_user_id() === $user_id ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'friends':
-			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $folder->user_id, $user_id ) : false;
-			if ( $folder->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $is_friend ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'onlyme':
-			if ( $folder->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			}
-			break;
-
-	}
-
-	$data['can_manage']   = $can_manage;
-	$data['can_view']     = $can_view;
-	$data['can_download'] = $can_download;
-	$data['can_add']      = $can_add;
-
-	return apply_filters( 'bp_document_user_can_manage_folder', $data, $folder_id, $user_id );
-}
-
-/**
- * Check user have a permission to manage the document.
- *
- * @param int $document_id
- * @param int $user_id
- *
- * @return mixed|void
- * @since BuddyBoss 1.4.0
- */
-function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) {
-
-	$can_manage   = false;
-	$can_view     = false;
-	$can_download = false;
-	$can_add      = false;
-	$document     = new BP_Document( $document_id );
-	$data         = array();
-
-	switch ( $document->privacy ) {
-
-		case 'public':
-			if ( $document->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} else {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'grouponly':
-			if ( bp_is_active( 'groups' ) ) {
-
-				$manage   = groups_can_user_manage_document( $user_id, $document->group_id );
-				$status   = bp_group_get_document_status( $document->group_id );
-				$is_admin = groups_is_user_admin( $user_id, $document->group_id );
-				$is_mod   = groups_is_user_mod( $user_id, $document->group_id );
-
-				if ( $manage ) {
-					if ( $document->user_id === $user_id ) {
-						$can_manage = true;
-						$can_add    = true;
-					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage = true;
-						$can_add    = false;
-					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage = true;
-						$can_add    = false;
-					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage = true;
-						$can_add    = false;
-					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage = true;
-						$can_add    = false;
-					}
-					$can_view     = true;
-					$can_download = true;
-				} else {
-					$the_group = groups_get_group( (int) $document->group_id );
-					if ( $the_group->id > 0 && $the_group->user_has_access ) {
-						$can_view     = true;
-						$can_download = true;
-					}
-				}
-			}
-
-			break;
-
-		case 'loggedin':
-			if ( ! is_user_logged_in() ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-			} elseif ( $document->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( bp_loggedin_user_id() === $user_id ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'friends':
-			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $document->user_id, $user_id ) : false;
-			if ( $document->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $is_friend ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'forums':
-			$args       = array(
-				'user_id'         => $user_id,
-				'forum_id'        => bp_document_get_meta( $document_id, 'forum_id', true ),
-				'check_ancestors' => false,
-			);
-			$has_access = bbp_user_can_view_forum( $args );
-			if ( $document->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $has_access ) {
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_manage = true;
-				}
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'message':
-			$thread_id  = bp_document_get_meta( $document_id, 'thread_id', true );
-			$has_access = messages_check_thread_access( $thread_id, $user_id );
-			if ( ! is_user_logged_in() ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-			} elseif ( ! $thread_id ) {
-				$can_manage   = false;
-				$can_view     = false;
-				$can_download = false;
-			} elseif ( $document->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			} elseif ( $has_access > 0 ) {
-				$can_manage   = false;
-				$can_view     = true;
-				$can_download = true;
-			}
-			break;
-
-		case 'onlyme':
-			if ( $document->user_id === $user_id ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_manage   = true;
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = false;
-			}
-			break;
-
-	}
-
-	$data['can_manage']   = $can_manage;
-	$data['can_view']     = $can_view;
-	$data['can_download'] = $can_download;
-	$data['can_add']      = $can_add;
-
-	return apply_filters( 'bp_document_user_can_manage_document', $data, $document_id, $user_id );
-}
 
 /**
  * Return all the allowed document extensions.
@@ -3774,6 +3438,157 @@ function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
 	}
 
 	return false;
+}
+
+/**
+ * Get the frorum id based on document.
+ *
+ * @param int|string $document_id document id.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_document_get_forum_id( $document_id ) {
+
+	$forum_id              = 0;
+	$forums_document_query = new WP_Query(
+		array(
+			'post_type'      => bbp_get_forum_post_type(),
+			'fields'         => 'ids',
+			'posts_per_page' => - 1,
+			'meta_query'     => array(
+				array(
+					'key'     => 'bp_document_ids',
+					'value'   => $document_id,
+					'compare' => 'LIKE',
+				),
+			),
+		)
+	);
+
+	if ( ! empty( $forums_document_query->found_posts ) && ! empty( $forums_document_query->posts ) ) {
+		foreach ( $forums_document_query->posts as $post_id ) {
+			$document_ids = get_post_meta( $post_id, 'bp_document_ids', true );
+			if ( ! empty( $document_ids ) ) {
+				$document_ids = explode( ',', $document_ids );
+				if ( in_array( $document_id, $document_ids ) ) { // phpcs:ignore
+					$forum_id = $post_id;
+					break;
+				}
+			}
+		}
+	}
+	wp_reset_postdata();
+
+	if ( ! $forum_id ) {
+		$topics_document_query = new WP_Query(
+			array(
+				'post_type'      => bbp_get_topic_post_type(),
+				'fields'         => 'ids',
+				'posts_per_page' => - 1,
+				'meta_query'     => array(
+					array(
+						'key'     => 'bp_document_ids',
+						'value'   => $document_id,
+						'compare' => 'LIKE',
+					),
+				),
+			)
+		);
+
+		if ( ! empty( $topics_document_query->found_posts ) && ! empty( $topics_document_query->posts ) ) {
+
+			foreach ( $topics_document_query->posts as $post_id ) {
+				$document_ids = get_post_meta( $post_id, 'bp_document_ids', true );
+
+				if ( ! empty( $document_ids ) ) {
+					$document_ids = explode( ',', $document_ids );
+					if ( in_array( $document_id, $document_ids ) ) { // phpcs:ignore
+						$forum_id = bbp_get_topic_forum_id( $post_id );
+						break;
+					}
+				}
+			}
+		}
+		wp_reset_postdata();
+	}
+
+	if ( ! $forum_id ) {
+		$reply_document_query = new WP_Query(
+			array(
+				'post_type'      => bbp_get_reply_post_type(),
+				'fields'         => 'ids',
+				'posts_per_page' => - 1,
+				'meta_query'     => array(
+					array(
+						'key'     => 'bp_document_ids',
+						'value'   => $document_id,
+						'compare' => 'LIKE',
+					),
+				),
+			)
+		);
+
+		if ( ! empty( $reply_document_query->found_posts ) && ! empty( $reply_document_query->posts ) ) {
+
+			foreach ( $reply_document_query->posts as $post_id ) {
+				$document_ids = get_post_meta( $post_id, 'bp_document_ids', true );
+
+				if ( ! empty( $document_ids ) ) {
+					$document_ids = explode( ',', $document_ids );
+					foreach ( $document_ids as $document_id ) {
+						if ( in_array( $document_id, $document_ids ) ) { // phpcs:ignore
+							$forum_id = bbp_get_reply_forum_id( $post_id );
+							break;
+						}
+					}
+				}
+			}
+		}
+		wp_reset_postdata();
+	}
+
+	return apply_filters( 'bp_document_get_forum_id', $forum_id, $document_id );
+
+}
+
+/**
+ * Return the thread id if document belongs to message.
+ *
+ * @param int|string $document_id document id to fetch the thread id.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_document_get_thread_id( $document_id ) {
+
+	$thread_id = 0;
+
+	if ( bp_is_active( 'messages' ) ) {
+		$meta = array(
+			array(
+				'key'     => 'bp_document_ids',
+				'value'   => $document_id,
+				'compare' => 'LIKE',
+			),
+		);
+
+		// Check if there is already previously individual group thread created.
+		if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+			while ( bp_message_threads() ) {
+				bp_message_thread();
+				$thread_id = bp_get_message_thread_id();
+				if ( $thread_id ) {
+					break;
+				}
+			}
+		}
+	}
+
+	return apply_filters( 'bp_document_get_thread_id', $thread_id, $document_id );
+
 }
 
 /**

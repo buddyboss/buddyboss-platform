@@ -137,6 +137,10 @@ window.bp = window.bp || {};
 						self.activityToolbar.closeGifSelector( bpActivityEvent );
 						// close and destroy existing media instance.
 						self.activityToolbar.closeMediaSelector( bpActivityEvent );
+						// close and destroy existing document instance.
+						self.activityToolbar.closeDocumentSelector( bpActivityEvent );
+						// close and destroy existing video instance.
+						self.activityToolbar.closeVideoSelector( bpActivityEvent );
 					}
 
 					if ( ! _.isUndefined( activity_data.gif ) && Object.keys( activity_data.gif ).length ) {
@@ -148,10 +152,10 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-media-button' ) ) {
 							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
-						if ( tool_box.find( '#activity-media-button' ) ) {
+						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
-						if ( tool_box.find( '#activity-media-button' ) ) {
+						if ( tool_box.find( '#activity-video-button' ) ) {
 							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
@@ -171,10 +175,10 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-media-button' ) ) {
 							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
 						}
-						if ( tool_box.find( '#activity-media-button' ) ) {
+						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
-						if ( tool_box.find( '#activity-media-button' ) ) {
+						if ( tool_box.find( '#activity-video-button' ) ) {
 							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
@@ -233,7 +237,7 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-video-button' ) ) {
 							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
-						if ( tool_box.find( '#activity-media-button' ) ) {
+						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
@@ -293,10 +297,10 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-media-button' ) ) {
 							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
-						if ( tool_box.find( '#activity-media-button' ) ) {
+						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
-						if ( tool_box.find( '#activity-media-button' ) ) {
+						if ( tool_box.find( '#activity-video-button' ) ) {
 							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
@@ -368,6 +372,7 @@ window.bp = window.bp || {};
 							// check media is enable in groups or not.
 							if ( ! _.isUndefined( activity_data.group_media ) && activity_data.group_media === false ) {
 								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+								$( '.edit-activity-content-wrap #whats-new-attachments .activity-media-container #activity-post-media-uploader .dz-default.dz-message' ).hide();
 							} else {
 								$( '#whats-new-toolbar .post-media.media-support' ).show();
 							}
@@ -375,6 +380,7 @@ window.bp = window.bp || {};
 							// check document is enable in groups or not.
 							if ( ! _.isUndefined( activity_data.group_document ) && activity_data.group_document === false ) {
 								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+								$( '.edit-activity-content-wrap #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-default.dz-message' ).hide();
 							} else {
 								$( '#whats-new-toolbar .post-media.document-support' ).show();
 							}
@@ -382,6 +388,7 @@ window.bp = window.bp || {};
 							// check video is enable in groups or not.
 							if ( ! _.isUndefined( activity_data.group_video ) && activity_data.group_video === false ) {
 								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+								$( '.edit-activity-content-wrap #whats-new-attachments .activity-video-container #activity-post-video-uploader .dz-default.dz-message' ).hide();
 							} else {
 								$( '#whats-new-toolbar .post-video.video-support' ).show();
 							}

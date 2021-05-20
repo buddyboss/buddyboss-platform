@@ -14,6 +14,16 @@ $url               = wp_get_attachment_url( $attachment_id );
 $filename          = basename( get_attached_file( $attachment_id ) );
 $size              = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
 $download_url      = bp_document_download_link( $attachment_id, bp_get_document_id() );
+$document_privacy  = bb_media_user_can_access( bp_get_document_id(), 'document' );
+$can_download_btn  = true === (bool) $document_privacy['can_download'];
+$can_edit_btn      = true === (bool) $document_privacy['can_edit'];
+$can_view          = true === (bool) $document_privacy['can_view'];
+$can_add           = true === (bool) $document_privacy['can_add'];
+$can_move          = true === (bool) $document_privacy['can_move'];
+$can_delete        = true === (bool) $document_privacy['can_delete'];
+$db_privacy        = bp_get_db_document_privacy();
+$extension_lists   = bp_document_extensions_list();
+$attachment_url    = '';
 $mirror_text       = '';
 
 if ( $attachment_id ) {

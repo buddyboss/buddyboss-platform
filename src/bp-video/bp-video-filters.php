@@ -1492,6 +1492,9 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 	if ( ! empty( $activity['id'] ) ) {
 
+		$activity['profile_video'] = bp_is_profile_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_video']   = bp_is_group_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
+
 		// Fetch video ids of activity.
 		$video_ids = bp_activity_get_meta( $activity['id'], 'bp_video_ids', true );
 

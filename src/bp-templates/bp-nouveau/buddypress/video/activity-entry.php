@@ -20,13 +20,13 @@ if ( $group_id > 0 ) {
 	$move_id   = bp_get_video_user_id();
 	$move_type = 'profile';
 }
-$more_video = $video_template->video_count > 3 ? true : false;
 
-$media_privacy   = bp_video_user_can_manage_video( bp_get_video_id(), bp_loggedin_user_id() );
-$can_manage      = true === (bool) $media_privacy['can_manage'];
-$can_move        = true === (bool) $media_privacy['can_move'];
-$db_privacy      = bp_get_video_privacy();
-$is_comment_vid  = bp_video_is_activity_comment_video( bp_get_video_id() );
+$more_video     = $video_template->video_count > 3 ? true : false;
+$media_privacy  = bb_media_user_can_access( bp_get_video_id(), 'video' );
+$can_edit       = true === (bool) $media_privacy['can_edit'];
+$can_move       = true === (bool) $media_privacy['can_move'];
+$db_privacy     = bp_get_video_privacy();
+$is_comment_vid = bp_video_is_activity_comment_video( bp_get_video_id() );
 $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
 ?>
 
@@ -43,7 +43,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 " data-id="<?php echo esc_attr( bp_get_video_id() ); ?>">
 	<div class="video-action-wrap item-action-wrap">
 
-		<?php if ( $can_manage ) { ?>
+		<?php if ( $can_edit ) { ?>
 			<?php
 			$item_id = 0;
 			if ( bp_loggedin_user_id() === bp_get_video_user_id() || bp_current_user_can( 'bp_moderate' ) ) {

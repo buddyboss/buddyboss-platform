@@ -6,10 +6,12 @@
  * @package BuddyBoss\Core
  */
 
-if ( in_array( bp_get_document_extension(), bp_get_document_preview_doc_extensions(), true ) && ! empty( bp_get_document_attachment_image_activity_thumbnail() ) && '' !== bp_get_document_attachment_image_activity_thumbnail() ) {
+$bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
+$attachment_url            = bp_get_document_attachment_image_activity_thumbnail();
+if ( $attachment_url && $bp_document_image_preview ) {
 	?>
 	<div class="document-preview-wrap">
-		<img src="<?php bp_document_attachment_image_activity_thumbnail(); ?>" alt="" />
+		<img src="<?php echo esc_url( bp_get_document_attachment_image_activity_thumbnail() ); ?>" alt="" />
 	</div><!-- .document-preview-wrap -->
 	<?php
 }

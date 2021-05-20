@@ -16,9 +16,10 @@ if ( 'video' === $media_template->media->type ) {
 	$download_url  = bp_video_download_link( $attachment_id, bp_get_media_id() );
 	$group_id      = bp_get_media_group_id();
 
-	$media_privacy = bp_video_user_can_manage_video( bp_get_media_id(), bp_loggedin_user_id() );
-	$can_manage    = true === (bool) $media_privacy['can_manage'];
+	$media_privacy = bb_media_user_can_access( bp_get_media_id(), 'video' );
+	$can_edit      = true === (bool) $media_privacy['can_edit'];
 	$can_move      = true === (bool) $media_privacy['can_move'];
+	$can_delete    = true === (bool) $media_privacy['can_delete'];
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -49,7 +50,7 @@ if ( 'video' === $media_template->media->type ) {
 			<div class="video-action-wrap item-action-wrap">
 				<?php
 				$report_btn = bp_video_get_report_link( array( 'id' => bp_get_media_id() ) );
-				if ( $can_manage || $report_btn ) {
+				if ( $can_edit || $report_btn ) {
 					?>
 					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-menu-dots-v"></i>
@@ -57,7 +58,7 @@ if ( 'video' === $media_template->media->type ) {
 					<div class="video-action_list item-action_list">
 						<ul>
 							<?php
-							if ( $can_manage ) {
+							if ( $can_edit ) {
 								?>
 								<li class="edit_thumbnail_video">
 									<a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
@@ -77,7 +78,7 @@ if ( 'video' === $media_template->media->type ) {
 								</li>
 								<?php
 							}
-							if ( $can_manage ) {
+							if ( $can_delete ) {
 								?>
 								<li class="delete_file">
 									<a class="video-file-delete" data-video-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="video" data-item-id="<?php bp_media_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
@@ -106,9 +107,9 @@ if ( 'video' === $media_template->media->type ) {
 				<img src="<?php echo esc_url( $poster_default ); ?>" data-src="<?php echo esc_url( $poster_thumb ); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 			</a>
 			<?php
-			$video_privacy = bp_video_user_can_manage_video( bp_get_media_id(), bp_loggedin_user_id() );
-			$can_manage    = true === (bool) $video_privacy['can_manage'];
-			if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) && ! bp_is_media_directory() ) :
+			$video_privacy = bb_media_user_can_access( bp_get_media_id(), 'video' );
+			$can_edit      = true === (bool) $video_privacy['can_edit'];
+			if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_delete ) || ( bp_is_group_albums() && $can_delete ) ) ) ) && ! bp_is_media_directory() ) :
 				?>
 				<div class="bb-media-check-wrap bb-action-check-wrap">
 					<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
@@ -123,10 +124,10 @@ if ( 'video' === $media_template->media->type ) {
 	$attachment_id = bp_get_media_attachment_id();
 	$download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 	$group_id      = bp_get_media_group_id();
-
-	$media_privacy = bp_media_user_can_manage_media( bp_get_media_id(), bp_loggedin_user_id() );
-	$can_manage    = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
-	$can_move      = ( true === (bool) $media_privacy['can_add'] ) ? true : false;
+	$media_privacy = bb_media_user_can_access( bp_get_media_id(), 'photo' );
+	$can_edit      = true === (bool) $media_privacy['can_edit'];
+	$can_move      = true === (bool) $media_privacy['can_move'];
+	$can_delete    = true === (bool) $media_privacy['can_delete'];
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -145,7 +146,7 @@ if ( 'video' === $media_template->media->type ) {
 		<div class="media-action-wrap">
 			<?php
 			$report_btn = bp_media_get_report_link( array( 'id' => bp_get_media_id() ) );
-			if ( $can_manage || $report_btn ) {
+			if ( $can_move || $report_btn ) {
 				?>
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
@@ -153,26 +154,20 @@ if ( 'video' === $media_template->media->type ) {
 				<div class="media-action_list">
 					<ul>
 						<?php
-						if ( $can_manage ) {
-							if ( $is_comment_pic ) {
-								?>
-								<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-								</li>
-								<?php
-							} else {
-								if ( $can_move ) {
-									?>
-									<li class="move_file">
-										<a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-									</li>
-									<?php
-								}
-							}
-						}
-						?>
+                        if ( $is_comment_pic ) {
+                            ?>
+                            <li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+                                <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                            </li>
+                            <?php
+                        } elseif ( $can_move ) {
+                            ?>
+                            <li class="move_file">
+                                <a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                            </li>
+                            <?php
+                        }
 
-						<?php
 						if ( $report_btn ) {
 							?>
 							<li class="report_file">
@@ -180,13 +175,13 @@ if ( 'video' === $media_template->media->type ) {
 							</li>
 							<?php
 						}
-						?>
 
-						<?php if ( $can_manage ) { ?>
+						if ( $can_delete ) { ?>
 							<li class="delete_file">
 								<a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 							</li>
-						<?php } ?>
+						    <?php
+						} ?>
 					</ul>
 				</div>
 			<?php } ?>
@@ -205,7 +200,7 @@ if ( 'video' === $media_template->media->type ) {
 			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
 		<?php
-		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) && ! bp_is_media_directory() ) :
+		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_edit ) || ( bp_is_group_albums() && $can_edit ) ) ) ) && ! bp_is_media_directory() ) :
 			?>
 			<div class="bb-media-check-wrap bb-action-check-wrap">
 				<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
