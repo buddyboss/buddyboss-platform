@@ -2465,7 +2465,7 @@ function bp_media_activity_entry_css_class( $class ) {
  *
  * @param string $rewrite rewrite rules.
  * @return string
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_protect_download_rewite_rules( $rewrite ) {
 	if ( ! is_multisite() ) {
@@ -2486,7 +2486,7 @@ add_filter( 'mod_rewrite_rules', 'bp_media_protect_download_rewite_rules' );
 /**
  * Function will protect the download album.
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_check_download_album_protection() {
 
@@ -2534,7 +2534,7 @@ add_action( 'bp_init', 'bp_media_check_download_album_protection', 9999 );
  * @param object $wp_query WP_Query object.
  *
  * @return mixed|string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
 	global $wpdb;
@@ -2553,7 +2553,7 @@ function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
  * @param object $wp_query WP_Query object.
  *
  * @return mixed|string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_filter_attachments_query_posts_where( $where, $wp_query ) {
 	global $wpdb;
@@ -2567,7 +2567,7 @@ function bp_media_filter_attachments_query_posts_where( $where, $wp_query ) {
 /**
  * Added activity entry class for Video.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param string $class class.
  *

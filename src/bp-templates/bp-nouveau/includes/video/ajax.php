@@ -3,7 +3,7 @@
  * Video Ajax functions
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  * @version 1.0.0
  */
 
@@ -140,7 +140,7 @@ add_action(
 /**
  * Load the template loop for the albums object.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_albums_loader() {
 	$response = array(
@@ -197,7 +197,7 @@ function bp_nouveau_ajax_video_albums_loader() {
 /**
  * Upload a video via a POST request.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_upload() {
 	$response = array(
@@ -236,7 +236,7 @@ function bp_nouveau_ajax_video_upload() {
 /**
  * Upload a video thumbnail via a POST request.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_thumbnail_upload() {
 	$response = array(
@@ -275,7 +275,7 @@ function bp_nouveau_ajax_video_thumbnail_upload() {
 /**
  * Delete attachment with its files
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	$response = array(
@@ -318,7 +318,7 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 /**
  * Save video
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_save() {
 	$response = array(
@@ -418,7 +418,7 @@ function bp_nouveau_ajax_video_save() {
 /**
  * Delete video
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_delete() {
 	$response = array(
@@ -533,7 +533,7 @@ function bp_nouveau_ajax_video_delete() {
 /**
  * Move video to album
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_move_to_album() {
 	$response = array(
@@ -631,7 +631,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 /**
  * Save album
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_album_save() {
 	$response = array(
@@ -736,7 +736,7 @@ function bp_nouveau_ajax_video_album_save() {
 /**
  * Delete album
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_album_delete() {
 	$response = array(
@@ -805,7 +805,7 @@ function bp_nouveau_ajax_video_album_delete() {
 /**
  * Get activity for the video
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_get_activity() {
 	$response = array(
@@ -904,7 +904,7 @@ function bp_nouveau_ajax_video_get_activity() {
 /**
  * Delete attachment with its files
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_delete_attachment() {
 	$response = array(
@@ -947,7 +947,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 /**
  * Update video privacy
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_update_privacy() {
 	$response = array(
@@ -1007,7 +1007,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 /**
  * Update video activity description.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_description_save() {
 	$response = array(
@@ -1066,7 +1066,7 @@ add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_res
  *
  * @return mixed
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_object_template_results_video_tabs( $results, $object ) {
 	if ( 'video' !== $object ) {
@@ -1102,7 +1102,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  *
  * @return string
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_object_template_results_albums_existing_video_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
@@ -1119,7 +1119,7 @@ function bp_nouveau_object_template_results_albums_existing_video_query( $querys
 /**
  * Get description for the video.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_get_video_description() {
 
@@ -1254,7 +1254,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 /**
  * Get the album vide based on the parent child.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_get_album_view() {
 
@@ -1289,7 +1289,7 @@ function bp_nouveau_ajax_video_get_album_view() {
 /**
  * Ajax video move.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_move() {
 
@@ -1363,7 +1363,7 @@ function bp_nouveau_ajax_video_move() {
 /**
  * Get Video edit thumbnail data.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 
@@ -1464,7 +1464,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 /**
  * Save the video thumbnail.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_ajax_video_thumbnail_save() {
 	$response = array(

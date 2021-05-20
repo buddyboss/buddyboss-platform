@@ -691,7 +691,7 @@ function bp_get_document_attachment_id() {
 /**
  * Return the document extension.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1089,7 +1089,7 @@ function bp_get_document_attachment_image() {
 /**
  * Output the document preview url.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_attachment_url() {
 	echo bp_get_document_attachment_url();
@@ -1098,7 +1098,7 @@ function bp_document_attachment_url() {
 /**
  * Return the document preview url.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1118,7 +1118,7 @@ function bp_get_document_attachment_url() {
 	/**
 	 * Filters the document url being displayed.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string The full image.
 	 */
@@ -2405,14 +2405,14 @@ function bp_get_document_preview_music_extensions() {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_get_document_preview_video_extensions() {
 
 	/**
 	 * Return the document preview functions extensions.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4' ) );
 }

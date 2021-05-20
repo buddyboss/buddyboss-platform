@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  * @version 1.0.0
  */
 
@@ -22,7 +22,7 @@
 		/**
 		 * Fires before the display of the members list tabs.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 */
 		do_action( 'bp_before_directory_video_tabs' );
 		?>

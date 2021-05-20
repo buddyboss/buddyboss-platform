@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Search Settings class.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 
@@ -80,7 +80,7 @@ class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register Video tab settings fields and section.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0id="" class="bp-hello-mime" role="dialog" aria-labelledby="bp-hello-title"
 		 *
 		 * @param Object $this BP_Admin_Setting_Media.
 		 */

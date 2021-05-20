@@ -861,7 +861,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Output the video mime type checker screen.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 */
 		public function video_extension_mime_type_check_screen() {
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' !== $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended

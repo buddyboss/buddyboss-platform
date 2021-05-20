@@ -376,7 +376,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Filters the allowed video status values for the group.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $value Array of allowed media statuses.
 		 */

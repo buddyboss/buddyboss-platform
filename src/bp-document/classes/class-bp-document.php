@@ -121,7 +121,7 @@ class BP_Document {
 	/**
 	 * Extension of the document item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	var $extension;
@@ -733,7 +733,7 @@ class BP_Document {
 	 * @param int $attachment_id Attachment ID.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	protected static function attachment_meta( $attachment_id ) {
 		$metadata  = wp_get_attachment_metadata( $attachment_id );

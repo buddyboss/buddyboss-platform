@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of video albums into a loop for display.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Video_Album_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $current_album = -1;
@@ -28,7 +28,7 @@ class BP_Video_Album_Template {
 	/**
 	 * The album count.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $album_count;
@@ -36,7 +36,7 @@ class BP_Video_Album_Template {
 	/**
 	 * The total album count.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $total_album_count;
@@ -44,7 +44,7 @@ class BP_Video_Album_Template {
 	/**
 	 * Array of album located by the query.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var array
 	 */
 	public $albums;
@@ -52,7 +52,7 @@ class BP_Video_Album_Template {
 	/**
 	 * The album object currently being iterated on.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var object
 	 */
 	public $album;
@@ -60,7 +60,7 @@ class BP_Video_Album_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -68,7 +68,7 @@ class BP_Video_Album_Template {
 	/**
 	 * URL parameter key for album pagination. Default: 'acpage'.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $pag_arg;
@@ -76,7 +76,7 @@ class BP_Video_Album_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -84,7 +84,7 @@ class BP_Video_Album_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -92,7 +92,7 @@ class BP_Video_Album_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $pag_links;
@@ -100,7 +100,7 @@ class BP_Video_Album_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $full_name;
@@ -111,7 +111,7 @@ class BP_Video_Album_Template {
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Video_Album::get()}.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see BP_Video_Album::get() for a description of the argument
 	 *      structure, as well as default values.

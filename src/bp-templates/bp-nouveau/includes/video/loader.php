@@ -3,7 +3,7 @@
  * BP Nouveau Video
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  * @version 1.0.0
  */
 
@@ -13,13 +13,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Video Loader class
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Nouveau_Video {
 	/**
 	 * Constructor
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function __construct() {
 		$this->setup_globals();
@@ -31,7 +31,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Globals
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	protected function setup_globals() {
 		$this->dir = trailingslashit( dirname( __FILE__ ) );
@@ -40,7 +40,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Include needed files
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	protected function includes() {
 		require $this->dir . 'functions.php';
@@ -66,7 +66,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Register do_action() hooks
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	protected function setup_actions() {
 		// Enqueue the scripts for the new UI.
@@ -76,7 +76,7 @@ class BP_Nouveau_Video {
 	/**
 	 * Register add_filter() hooks
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	protected function setup_filters() {
 
@@ -96,7 +96,7 @@ class BP_Nouveau_Video {
  *
  * @param null $bp_nouveau template.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_video( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {

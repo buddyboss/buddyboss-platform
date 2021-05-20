@@ -611,7 +611,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 /**
  * Set up video arguments for use with the 'groups' scope.
  *
- * @since BuddyBoss 1.1.9
+ * @since BuddyBoss 1.7.0
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.

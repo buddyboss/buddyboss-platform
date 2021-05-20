@@ -2427,7 +2427,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 /**
  * Create video activity for each video uploaded
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param object $video Video object.
  */
@@ -2532,7 +2532,7 @@ function bp_activity_video_add( $video ) {
 /**
  * Create main activity for the video uploaded and saved.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param array $video_ids Video ids.
  *
@@ -2644,7 +2644,7 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
  * @param array $video_ids Video ids.
  *
  * @return mixed
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_activity_edit_update_video( $video_ids ) {
 	global $bp_activity_edit, $bp_activity_post_update_id;

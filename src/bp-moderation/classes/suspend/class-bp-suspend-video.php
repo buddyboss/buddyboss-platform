@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Video Classes
  *
- * @since   BuddyBoss 1.5.7
+ * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Video.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Suspend_Video extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Video constructor.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function __construct() {
 
@@ -72,7 +72,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's video ids
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int $member_id member id.
 	 *
@@ -100,7 +100,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked group's video ids
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int $group_id group id.
 	 *
@@ -128,7 +128,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Get Video ids of blocked item [ Forums/topics/replies/activity etc ] from meta
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
@@ -158,7 +158,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Prepare video Join SQL query to filter blocked Video
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $join_sql Video Join sql.
 	 * @param array  $args     Query arguments.
@@ -176,7 +176,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden Video Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -189,7 +189,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Prepare video Where SQL query to filter blocked Video
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $where_conditions Video Where sql.
 	 * @param array $args             Query arguments.
@@ -207,7 +207,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden video Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $where Query to hide suspended user's video.
 		 * @param array $class current class object.
@@ -224,7 +224,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of video
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int      $video_id      video id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -265,7 +265,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of video
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int      $video_id      video id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -319,7 +319,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Get Video's comment ids
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int   $video_id Video id.
 	 * @param array $args     parent args.
@@ -333,7 +333,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param BP_Video $video Current instance of video item being saved. Passed by reference.
 	 */
@@ -363,7 +363,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the group.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $videos Array of video.
 	 */

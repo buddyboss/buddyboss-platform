@@ -3,13 +3,13 @@
  * Video: User's "Video" screen handler
  *
  * @package BuddyBoss\Video\Screens
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 
 /**
  * Load the Video screen.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function video_screen() {
 
@@ -22,14 +22,14 @@ function video_screen() {
 	/**
 	 * Fires right before the loading of the Video screen template file.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'video_screen' );
 
 	/**
 	 * Filters the template to load for the Video screen.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $template Path to the video template to load.
 	 */

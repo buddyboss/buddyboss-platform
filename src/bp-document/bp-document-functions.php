@@ -3915,7 +3915,7 @@ function bp_document_include_wp_image_editors( $image_editors ) {
  *
  * @param string $dir directory to remove.
  *
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_remove_temp_directory( $dir ) {
 	if ( is_dir( $dir ) ) {
@@ -3938,6 +3938,8 @@ function bp_document_remove_temp_directory( $dir ) {
  * Generate the document preview.
  *
  * @param int $attachment_id attachment id.
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_generate_document_previews( $attachment_id ) {
 	$is_preview_generated = get_post_meta( $attachment_id, 'document_preview_generated', true );
@@ -3961,6 +3963,8 @@ function bp_document_generate_document_previews( $attachment_id ) {
 
 /**
  * Helper to set the max_execution_time.
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_set_time_limits( $time_limit ) {
 	$max_execution_time = ini_get( 'max_execution_time' );
@@ -3972,6 +3976,8 @@ function bp_document_set_time_limits( $time_limit ) {
 
 /**
  * Does the actual PDF preview regenerate.
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 
@@ -4036,6 +4042,8 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
  * @param $attachment_id
  *
  * @return false
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_generate_code_previews( $attachment_id ) {
 	$extension = bp_document_extension( $attachment_id );
@@ -4088,6 +4096,8 @@ function bp_document_generate_code_previews( $attachment_id ) {
  * @param $extension
  *
  * @return mixed|string
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_get_extension_description( $extension ) {
 	$extension_lists       = bp_document_extensions_list();
@@ -4113,7 +4123,7 @@ function bp_document_get_extension_description( $extension ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'medium' ) {
 	$attachment_url = '';
@@ -4161,7 +4171,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'med
  * Return absolute path of the document file.
  *
  * @param $path
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_scaled_image_path( $attachment_id ) {
 	$is_image         = wp_attachment_is_image( $attachment_id );
@@ -4181,7 +4191,7 @@ function bp_document_scaled_image_path( $attachment_id ) {
  * Give recursive file permission.
  *
  * @param $path
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_chmod_r( $path ) {
 	$dir = new DirectoryIterator( $path );
@@ -4233,7 +4243,7 @@ function bp_document_mirror_text( $attachment_id ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_get_preview_audio_url( $document_id, $attachment_id, $extension ) {
 	$attachment_url = '';
@@ -4257,6 +4267,8 @@ function bp_document_get_preview_audio_url( $document_id, $attachment_id, $exten
 /**
  * Called on 'wp_image_editors' action.
  * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_wp_image_editors( $image_editors ) {
 	if ( ! in_array( 'BP_GOPP_Image_Editor_GS', $image_editors, true ) ) {
@@ -4268,6 +4280,8 @@ function bp_document_wp_image_editors( $image_editors ) {
 
 /**
  * Helper to load BP_GOPP_Image_Editor_GS class.
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_load_gopp_image_editor_gs() {
 

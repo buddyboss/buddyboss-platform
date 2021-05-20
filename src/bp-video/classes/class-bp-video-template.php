@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of video into a loop for display.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Video_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $current_video = -1;
@@ -28,7 +28,7 @@ class BP_Video_Template {
 	/**
 	 * The video count.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $video_count;
@@ -36,7 +36,7 @@ class BP_Video_Template {
 	/**
 	 * The total video count.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $total_video_count;
@@ -44,7 +44,7 @@ class BP_Video_Template {
 	/**
 	 * Array of video located by the query.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var array
 	 */
 	public $videos;
@@ -52,7 +52,7 @@ class BP_Video_Template {
 	/**
 	 * The video object currently being iterated on.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var object
 	 */
 	public $video;
@@ -60,7 +60,7 @@ class BP_Video_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -68,7 +68,7 @@ class BP_Video_Template {
 	/**
 	 * URL parameter key for video pagination. Default: 'acpage'.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $pag_arg;
@@ -76,7 +76,7 @@ class BP_Video_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -84,7 +84,7 @@ class BP_Video_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -92,7 +92,7 @@ class BP_Video_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $pag_links;

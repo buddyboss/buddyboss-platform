@@ -83,7 +83,7 @@ function bp_media_allowed_mimes( $mime_types ) {
  * @param array $sizes Image sizes registered.
  *
  * @return array Empty array.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_remove_default_image_sizes( $sizes ) {
 	if ( isset( $sizes['bp-media-thumbnail'] ) && isset( $sizes['bp-activity-media-thumbnail'] ) ) {
@@ -3504,7 +3504,7 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  * @param int $album_id album id.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_album_download_link( $album_id ) {
 
@@ -3520,7 +3520,7 @@ function bp_media_album_download_link( $album_id ) {
 	 * @param string $link     Downloadable album link.
 	 * @param int    $album_id Album id.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
 
