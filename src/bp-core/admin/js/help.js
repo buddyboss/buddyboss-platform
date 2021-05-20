@@ -14,10 +14,13 @@
 			bp_help_wpapi.docs = bp_help_wpapi.registerRoute( 'wp/v2', '/docs/(?P<id>)', {
 				params: [ 'before', 'after', 'author', 'parent', 'post', 'order', 'orderby', 'per_page' ]
 			} );
-			var bp_help_page_url = new URL(window.location.href);
 
+			// Inital call render.
 			bp_help_load_page();
 
+			/**
+			 * Render help page.
+			 */
 			function bp_help_load_page() {
 				bbapp_help_empty_everything();
 				var article_id = getArticleParam();
@@ -49,6 +52,7 @@
 						} );
 						$( '#bp-help-main-menu-wrap' ).html(bp_help_cards);
 						bp_help_bind_ajax_links();
+					
 					}).catch(function( err ) {
 						$( '#bp-help-main-menu-wrap' ).removeClass( 'loading' );
 						var status = navigator.onLine;
@@ -97,7 +101,8 @@
 	
 							$( '#bp-help-main-menu-wrap' ).html(bp_help_cards);
 							bp_help_bind_ajax_links();
-						// Default layout is article
+						
+							// Default layout is article
 						}else{
 	
 							$( '#bp-help-content-area' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
@@ -114,8 +119,7 @@
 							bp_help_js_render_hierarchy_dom( doc );
 							bp_help_bind_ajax_links();
 						}
-	
-						
+
 					}).catch(function( err ) {
 						$( '#bp-help-content-area' ).removeClass( 'loading' );
 						$( '.bp-help-sidebar' ).removeClass( 'loading' ).html('');
@@ -129,6 +133,9 @@
 				}
 			}
 
+			/**
+			 * Load help content when navigate to one menu to another menu.
+			 */
 			function bp_help_bind_ajax_links() {
 				jQuery('a[href*="' + BP_HELP.bb_help_url + '"]').click(function (e) {
 					e.stopImmediatePropagation();
@@ -186,11 +193,11 @@
 			}
 
 			function bp_help_js_render_hierarchy_dom( doc ) {
-				var article_id = bp_help_page_url.searchParams.get('article');
-				
-				var ancestors = doc.ancestors ? doc.ancestors.reverse() : [];
-				var children = doc.children ? doc.children : [];
-				var hierarchy = doc.hierarchy ? doc.hierarchy : [];
+				var bp_help_page_url = new URL(window.location.href);
+				var article_id       = bp_help_page_url.searchParams.get('article');
+				var ancestors        = doc.ancestors ? doc.ancestors.reverse(): [];
+				var children         = doc.children ? doc.children            : [];
+				var hierarchy        = doc.hierarchy ? doc.hierarchy          : [];
 
 				var breadcrumps = '<li class="main"><a href="'+BP_HELP.bb_help_url+'" class="dir">'+BP_HELP.bb_help_title+'</a></li>';
 
@@ -257,9 +264,10 @@
 			}
 
 			function bp_help_js_get_doc_hierarchy_dom( doc,level ) {
-				var article_id = bp_help_page_url.searchParams.get('article');
-				var selected = doc.ID == article_id ? 'selected' : '';
-				var sidebar = '<li class="main level-'+level+' '+doc.post_name+' '+selected+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.ID+'">'+doc.post_title;
+				var bp_help_page_url = new URL(window.location.href);
+				var article_id       = bp_help_page_url.searchParams.get('article');
+				var selected         = doc.ID == article_id ? 'selected': '';
+				var sidebar          = '<li class = "main level-'+level+' '+doc.post_name+' '+selected+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.ID+'">'+doc.post_title;
 
 				if ( typeof doc.children !== 'undefined' && doc.children.length ) {
 					sidebar += ' <span class="sub-menu-count">('+doc.children.length+')</span>';
