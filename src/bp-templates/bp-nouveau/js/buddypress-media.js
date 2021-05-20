@@ -1134,7 +1134,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteMedia: function ( event ) {
-			var target = $( event.currentTarget );
+			var target = $( event.currentTarget ), self = this;
 			event.preventDefault();
 
 			var media = [];
@@ -1200,6 +1200,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: data,
 					success: function ( response ) {
+						self.current_page = 1;
 						var feedback = '';
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
@@ -1377,7 +1378,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
 			$( '#bp-media-uploader-modal-status-text' ).text( '' );
 			$( '#bp-media-post-content' ).val( '' );
-			this.dropzone_obj.destroy();
+			this.dropzone_obj.length ? this.dropzone_obj.destroy() : '';
 			this.dropzone_media = [];
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-media-uploader' );
@@ -1908,6 +1909,11 @@ window.bp = window.bp || {};
 			var $forums_document_container = target.closest( 'form' ).find( '#forums-post-document-uploader' );
 			if ( $forums_document_container.length ) {
 				self.resetForumsDocumentComponent( $forums_document_container.data( 'key' ) );
+			}
+
+			var $forums_video_container = target.closest( 'form' ).find( '#forums-post-video-uploader' );
+			if ( $forums_video_container.length ) {
+				self.resetForumsVideoComponent( $forums_video_container.data( 'key' ) );
 			}
 		},
 
@@ -3166,7 +3172,7 @@ window.bp = window.bp || {};
 					);
 
 					// container class to open close.
-					forum_dropzone_container.removeClass( 'closed' ).addClass( 'open' );
+					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
 
 
 					// reset gif component.
@@ -5770,6 +5776,7 @@ window.bp = window.bp || {};
 			$( '.bb-photo-thumb.is-visible' ).removeClass( 'is-visible' );
 			$( '.bb-item-thumb.is-visible' ).removeClass( 'is-visible' );
 			$( '.bb-activity-video-elem.is-visible' ).removeClass( 'is-visible' );
+			$( '.video-action-wrap.item-action-wrap.is-visible' ).removeClass( 'is-visible' );
 
 		},
 
@@ -5863,6 +5870,9 @@ window.bp = window.bp || {};
 				$( '.media-folder_visibility select#bb-folder-privacy:not(.hide)' ).each( function () {
 					$( this ).attr( 'data-mouseup', 'false' ).addClass( 'hide' ).siblings( 'span' ).show().text( $( this ).find( 'option:selected' ).text() );
 				} );
+
+				//Close upload thumbnail popup
+				$( '.bp-video-thumbnail-uploader .bp-video-thumbnail-uploader-close:visible').trigger( 'click' );
 
 			}
 		},
@@ -6409,6 +6419,7 @@ window.bp = window.bp || {};
 			var extension = self.current_document.extension;
 			var mirror_text_display = self.current_document.mirror_text;
 			document_elements.find( '.bb-document-section' ).removeClass( 'bb-video-preview' );
+
 			if ( $.inArray( self.current_document.extension, [ 'css', 'txt', 'js', 'html', 'htm', 'csv' ] ) !== -1 ) {
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
@@ -6430,7 +6441,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.text_preview + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
 				//fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();
 				$( window ).scroll();
 
@@ -6451,6 +6462,7 @@ window.bp = window.bp || {};
 
 			if ( document_privacy_wrap.length ) {
 				document_privacy_wrap.show();
+				document_privacy_wrap.parent().show();
 				document_privacy_wrap.find('ul.document-privacy li').removeClass('selected');
 				document_privacy_wrap.find('.bp-tooltip').attr('data-bp-tooltip', '');
 				var selected_document_privacy_elem = document_privacy_wrap.find('ul.document-privacy').find('li[data-value=' + self.current_document.privacy + ']');
@@ -6470,7 +6482,7 @@ window.bp = window.bp || {};
 					! self.current_document.can_edit ||
 					self.current_document.is_message
 				) {
-					document_privacy_wrap.hide();
+					document_privacy_wrap.parent().hide();
 				}
 			}
 

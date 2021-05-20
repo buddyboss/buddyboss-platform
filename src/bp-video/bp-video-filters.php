@@ -54,8 +54,16 @@ add_action( 'init', 'bp_video_download_url_file' );
 
 add_action( 'bp_activity_after_email_content', 'bp_video_activity_after_email_content' );
 
-add_image_size( 'bp-video-thumbnail', 400, 400 );
-add_image_size( 'bp-activity-video-thumbnail', 1600, 1600 );
+// Delete symlinks for videos when before saved.
+add_action( 'bp_video_before_save', 'bb_video_delete_symlinks' );
+
+// Clear video symlinks on delete.
+add_action( 'bp_video_before_delete', 'bp_video_clear_video_symlinks_on_delete', 10 );
+
+// Create symlinks for videos when saved.
+add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
+
+add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 99, 2 );
 
 /**
  * Add video theatre template for activity pages.
@@ -261,7 +269,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_video_support_enabled() ) {
-			$args['privacy'] = array( 'grouponly' );
+			$args['privacy'] = array( 'comment' );
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-video';
 			}
@@ -278,6 +286,8 @@ function bp_video_activity_comment_entry( $comment_id ) {
 			$args['album_id'] = 'existing-video';
 		}
 	}
+
+	$args['privacy'] = array( 'comment' );
 
 	$is_forum_activity = false;
 	if (
@@ -805,7 +815,7 @@ function bp_video_activity_update_video_privacy( $activity ) {
 		foreach ( $video_ids as $video_id ) {
 			$video = new BP_Video( $video_id );
 			// Do not update the privacy if the video is added to forum.
-			if ( ! in_array( $video->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
+			if ( ! in_array( $video->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) && ( 'comment' !== $video->privacy && ! empty( $video ->blog_id ) ) ) {
 				$video->privacy = $activity->privacy;
 				$video->save();
 			}
@@ -1496,10 +1506,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 				$thumb        = '';
 				if ( $get_existing ) {
-					$file  = get_attached_file( $get_existing );
-					$type  = pathinfo( $file, PATHINFO_EXTENSION );
-					$data  = file_get_contents( $file ); // phpcs:ignore
-					$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+					$file = get_attached_file( $get_existing );
+					if ( file_exists( $file ) ) {
+						$type  = pathinfo( $file, PATHINFO_EXTENSION );
+						$data  = file_get_contents( $file ); // phpcs:ignore
+						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+					}
 				}
 
 				$activity['video'][] = array(
@@ -1512,9 +1524,10 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'activity_id' => $video->activity_id,
 					'type'        => 'video',
 					'url'         => wp_get_attachment_url( $video->attachment_id ),
-					'size'        => filesize( get_attached_file( ( $video->attachment_id ) ) ),
+					'size'        => ( file_exists( get_attached_file( ( $video->attachment_id ) ) ) ) ? filesize( get_attached_file( ( $video->attachment_id ) ) ) : 0,
 					'saved'       => true,
 					'menu_order'  => $video->menu_order,
+					'video_count' => count( $video_ids ),
 				);
 			}
 		}
@@ -1557,12 +1570,12 @@ function bp_video_check_download_album_protection() {
 	$upload_dir = wp_get_upload_dir();
 	$files      = array(
 		array(
-			'base'    => $upload_dir['basedir'] . '/bb_medias',
+			'base'    => $upload_dir['basedir'] . '/bb_videos',
 			'file'    => 'index.html',
 			'content' => '',
 		),
 		array(
-			'base'    => $upload_dir['basedir'] . '/bb_medias',
+			'base'    => $upload_dir['basedir'] . '/bb_videos',
 			'file'    => '.htaccess',
 			'content' => 'deny from all
 # BEGIN BuddyBoss code execution protection
@@ -1589,3 +1602,64 @@ Options -ExecCGI
 	}
 }
 add_action( 'bp_init', 'bp_video_check_download_album_protection', 9999 );
+
+/**
+ * Clear a user's symlinks video when attachment video delete.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param array $videos DB results of video items.
+ */
+function bp_video_clear_video_symlinks_on_delete( $videos ) {
+	if ( ! empty( $videos[0] ) ) {
+		foreach ( (array) $videos as $deleted_video ) {
+			if ( isset( $deleted_video->id ) ) {
+				bb_video_delete_symlinks( (int) $deleted_video->id );
+			}
+		}
+	}
+}
+
+/**
+ * Added the video symlink data to update when privacy update.
+ *
+ * @param array $response  Response array.
+ * @param array $post_data The post data.
+ *
+ * @return array $response data.
+ */
+function bb_video_update_video_symlink( $response, $post_data ) {
+
+	if ( ! empty( $post_data['id'] ) ) {
+
+		// Fetch video ids of activity.
+		$video_ids = bp_activity_get_meta( $post_data['id'], 'bp_video_ids', true );
+
+		if ( ! empty( $video_ids ) ) {
+			$activity['video'] = array();
+
+			$video_ids = explode( ',', $video_ids );
+			$count     = count( $video_ids );
+			if ( 1 === $count ) {
+				$video    = new BP_Video( (int) current( $video_ids ) );
+				$file_url = wp_get_attachment_url( $video->attachment_id );
+				$filetype = wp_check_filetype( $file_url );
+				$ext      = $filetype['ext'];
+				if ( empty( $ext ) ) {
+					$path = wp_parse_url( $file_url, PHP_URL_PATH );
+					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+				}
+
+				$symlink                       = bb_video_get_symlink( (int) current( $video_ids ) );
+				$response['video_symlink']     = $symlink;
+				$response['video_extension']   = 'video/' . $ext;
+				$response['video_id']          = (int) current( $video_ids );
+				$response['video_link_update'] = true;
+				$response['video_js_id']       = 'video-' . (int) current( $video_ids ) . '_html5_api';
+			}
+		}
+	}
+
+	return $response;
+
+}

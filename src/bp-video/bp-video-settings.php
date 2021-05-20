@@ -23,7 +23,7 @@ function bp_video_settings_callback_profile_video_support() {
 	<label for="bp_video_profile_video_support">
 		<?php
 		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload videos in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );  // phpcs:ignore
+			_e( 'Allow members to upload videos in <strong>profiles</strong> and <strong>activity posts</strong>', 'buddyboss' );  // phpcs:ignore
 		} else {
 			_e( 'Allow members to upload videos in <strong>profiles</strong>', 'buddyboss' );  // phpcs:ignore
 		}
@@ -68,11 +68,43 @@ function bp_video_settings_callback_group_video_support() {
 	/>
 	<label for="bp_video_group_video_support">
 		<?php
-		if ( bp_is_active( 'activity' ) ) {
-			_e( 'Allow members to upload videos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );  // phpcs:ignore
-		} else {
-			_e( 'Allow members to upload videos in <strong>groups</strong>', 'buddyboss' ); // phpcs:ignore
+
+		$string_array = array();
+
+		if ( bp_is_active( 'groups' ) ) {
+			$string_array[] = __( 'groups', 'buddyboss' );
 		}
+
+		if ( bp_is_active( 'activity' ) ) {
+			$string_array[] = __( 'activity posts', 'buddyboss' );
+		}
+
+		if ( true === bp_disable_group_messages() ) {
+			$string_array[] = __( 'messages', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$string_array[] = __( 'forums', 'buddyboss' );
+		}
+
+		$last_string    = array_pop( $string_array );
+		$display_string = '';
+		if ( count( $string_array ) ) {
+			$second_to_last_string_name = array_pop( $string_array );
+			$display_string            .= implode( ', ', $string_array );
+			if ( ! empty( $second_to_last_string_name ) ) {
+				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+			} else {
+				$display_string .= ' and ';
+			}
+		}
+		$display_string .= $last_string;
+
+		printf(
+			'%1$s <strong>%2$s</strong>',
+			__( 'Allow members to upload videos in', 'buddyboss' ),
+			$display_string
+		);
 		?>
 	</label>
 	<?php
@@ -114,11 +146,7 @@ function bp_video_settings_callback_messages_video_support() {
 	/>
 	<label for="bp_video_messages_video_support">
 		<?php
-		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to upload videos in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' ); // phpcs:ignore
-		} else {
-			_e( 'Allow members to upload videos in <strong>private messages</strong>', 'buddyboss' ); // phpcs:ignore
-		}
+		_e( 'Allow members to upload videos in <strong>private messages</strong>', 'buddyboss' );
 		?>
 	</label>
 	<?php
@@ -147,7 +175,7 @@ function bp_video_settings_callback_forums_video_support() {
 		<?php checked( bp_is_forums_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_forums_video_support">
-		<?php _e( 'Allow members to upload videos in <strong>forum discussions</strong>', 'buddyboss' ); // phpcs:ignore ?>
+		<?php _e( 'Allow members to upload videos in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -170,6 +198,7 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.5.7
  */
 function bp_video_uploading_tutorial() {
+	/* Commented out during Beta period
 	?>
 	<p>
 		<a class="button" href="
@@ -187,6 +216,7 @@ function bp_video_uploading_tutorial() {
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 	<?php
+	*/
 }
 
 /**
@@ -194,33 +224,40 @@ function bp_video_uploading_tutorial() {
  */
 function bp_video_admin_setting_callback_video_section() {
 
+	?>
+    <p class="alert">
+		<?php esc_html_e( 'Video uploading is not yet supported in BuddyBoss App.', 'buddyboss' ); ?>
+    </p>
+	<?php
+
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
 		?>
 		<p class="alert">
 			<?php
 			echo sprintf(
-			/* translators: 1: FFMpeg status */
-				_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
-				'<code><a href="https://ffmpeg.org/" target="_blank">ffmpeg</a></code>'
+				/* translators: 1: FFMpeg status */
+				_x( 'Your server needs %1$s installed to automatically generate multiple thumbnails from video files (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
+				'<code><a href="https://ffmpeg.org/" target="_blank">FFmpeg</a></code>'
 			);
 			?>
 		</p>
 		<?php
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
-		$error = '';
-		try {
-			$ffmpeg = FFMpeg\FFMpeg::create();
-		} catch ( Exception $ffmpeg ) {
-			$error = $ffmpeg->getMessage();
-		}
-		if ( ! empty( trim( $error ) ) ) {
+		$ffmpeg = bb_video_check_is_ffmpeg_binary();
+		if ( ! empty( trim( $ffmpeg->error ) ) ) {
 			?>
 			<p class="alert">
 				<?php
 				echo sprintf(
-				/* translators: 1: FFMpeg status */
-					_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ), //phpcs:ignore
-					'<code><a href="https://ffmpeg.org/" target="_blank">ffmpeg</a></code>'
+				/* translators: %1$s FFmpeg status, %2$s FFMPEG Binary Path, %3$s FFPROBE Binary Path, %34$s wp-config.php file. */
+					_x( 'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host. 
+					<br/><br/>If FFmpeg is already installed on your server and you still see the above warning, then BuddyBoss Platform is unable to auto-detect the binary path for FFmpeg. 
+					<br/>You need to add these FFmpeg binary files absolute path constants %2$s & %3$s in %4$s file. 
+					<br/>Ask your web host to provide the binary files absolute path.', 'extension notification', 'buddyboss' ), //phpcs:ignore
+					'<code><a href="https://ffmpeg.org/" target="_blank">FFmpeg</a></code>',
+					'<code>define( "BB_FFMPEG_BINARY_PATH", "PATH_OF_BINARY_FILE" )</code>',
+					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" )</code>',
+					'<code>wp-config.php</code>'
 				);
 				?>
 			</p>

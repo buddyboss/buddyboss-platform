@@ -1830,9 +1830,50 @@ ul.bb-albums-list {
 
 .bb-media-model-inner {
 
-	.gif-media-search-dropdown.open {
-		width: 300px;
-		left: -50px;
+	.post-gif {
+
+		.gif-media-search-dropdown.open {
+			width: 300px;
+			left: -40px;
+
+			&:before {
+				left: 60px;
+			}
+
+		}
+
+		&:nth-child(3) .gif-media-search-dropdown.open {
+			left: -70px;
+
+			&:before {
+				left: 90px;
+			}
+		}
+
+		&:nth-child(3) .gif-media-search-dropdown.open {
+			left: -110px;
+
+			&:before {
+				left: 130px;
+			}
+		}
+
+		&:nth-child(4) .gif-media-search-dropdown.open {
+			left: -140px;
+
+			&:before {
+				left: 160px;
+			}
+		}
+
+		&:nth-child(5) .gif-media-search-dropdown.open {
+			left: -170px;
+
+			&:before {
+				left: 190px;
+			}
+		}
+
 	}
 
 	.comment-item & ul .gif-media-search-dropdown.open {
@@ -2128,6 +2169,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	}
 
 	.document-uploader-footer {
+		display: table;
+		width: 100%;
 
 		.bb-dropdown-wrap {
 			float: left;
@@ -2244,6 +2287,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	}
 
 	.media-uploader-footer {
+		display: table;
+		width: 100%;
 
 		.bb-dropdown-wrap {
 			float: left;

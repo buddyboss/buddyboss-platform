@@ -29,6 +29,7 @@ if ( $group_id > 0 ) {
 
 $is_comment_vid = bp_video_is_activity_comment_video( $video_template->video );
 
+$attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
 
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_video_id(); ?>" data-date-created="<?php bp_video_date_created(); ?>">
@@ -45,7 +46,7 @@ $is_comment_vid = bp_video_is_activity_comment_video( $video_template->video );
 				<div class="video-action_list item-action_list">
 					<ul>
 						<li class="edit_thumbnail_video">
-							<a href="#" data-action="video" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+							<a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
 						</li>
 						<?php
                         if ( $is_comment_vid ) {

@@ -32,15 +32,17 @@ if ( 'video' === $media_template->media->type ) {
 	$is_comment_vid = bp_video_is_activity_comment_video( $media_template->media );
 
 	$length_formatted = wp_get_attachment_metadata( $attachment_id );
-	$poster_id        = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
-	$poster_full      = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-	$poster_default   = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
-	$poster_thumb     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/placeholder.png';
+	$poster_id        = bb_get_video_thumb_id( $attachment_id );
+	$poster_full      = bb_get_video_default_placeholder_image();
+	$poster_default   = $poster_full;
+	$poster_thumb     = $poster_full;
 
 	if ( $poster_id ) {
-		$poster_full  = wp_get_attachment_image_url( $poster_id, 'full' );
-		$poster_thumb = wp_get_attachment_image_url( $poster_id, 'bp-video-thumbnail' );
+		$poster_full  = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'full' );
+		$poster_thumb = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'medium' );
 	}
+
+	$attachment_urls = bb_video_get_attachments_symlinks( $attachment_id, bp_get_media_id() );
 
 	?>
 	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-video-li" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
@@ -59,7 +61,7 @@ if ( 'video' === $media_template->media->type ) {
 							if ( $can_edit ) {
 								?>
 								<li class="edit_thumbnail_video">
-									<a href="#" data-action="video" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+									<a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
 								</li>
 								<?php
 							}
@@ -97,6 +99,7 @@ if ( 'video' === $media_template->media->type ) {
 				}
 				?>
 			</div>
+			<p class="bb-video-loader"></p>
 			<?php if ( ! empty( esc_html( $length_formatted['length_formatted'] ) ) ) { ?>
 			<p class="bb-video-duration"><?php echo esc_html( $length_formatted['length_formatted'] ); ?></p>
 			<?php } ?>

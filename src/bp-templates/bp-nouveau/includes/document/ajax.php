@@ -650,6 +650,9 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Flush the cache.
+	wp_cache_flush();
+
 	$folder = new BP_Document_Folder( $folder_id );
 
 	if ( $group_id > 0 ) {
@@ -831,6 +834,9 @@ function bp_nouveau_ajax_document_move() {
 	}
 
 	$document = bp_document_move_document_to_folder( $document_id, $folder_id, $group_id );
+
+	// Flush the cache.
+	wp_cache_flush();
 
 	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
 
@@ -1150,6 +1156,9 @@ function bp_nouveau_ajax_document_delete() {
 			bp_document_delete( $args );
 		}
 	}
+
+	// Flush the cache.
+	wp_cache_flush();
 
 	$content = '';
 	ob_start();

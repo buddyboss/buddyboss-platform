@@ -83,9 +83,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							}
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() && $can_edit ) {
-
-							?>
+						if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() && $can_edit ) { ?>
 							<select id="bb-album-privacy">
 								<?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
 									<?php

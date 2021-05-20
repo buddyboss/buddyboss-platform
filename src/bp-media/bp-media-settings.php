@@ -23,11 +23,13 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_photos'    => array(
 			'page'  => 'media',
 			'title' => __( 'Photos', 'buddyboss' ),
+			'tutorial_callback' => 'bp_photo_uploading_tutorial',
 		),
 		'bp_media_settings_documents' => array(
 			'page'     => 'doc',
 			'title'    => __( 'Documents', 'buddyboss' ),
 			'callback' => 'bp_media_admin_setting_callback_document_section',
+			'tutorial_callback' => 'bp_document_uploading_tutorial',
 		),
 		'bp_media_settings_videos'    => array(
 			'page'     => 'video',
@@ -37,10 +39,12 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_emoji'     => array(
 			'page'  => 'media',
 			'title' => __( 'Emoji', 'buddyboss' ),
+			'tutorial_callback' => 'bp_emoji_tutorial',
 		),
 		'bp_media_settings_gifs'      => array(
 			'page'  => 'media',
 			'title' => __( 'Animated GIFs', 'buddyboss' ),
+			'tutorial_callback' => 'bp_animated_gifs_tutorial',
 		),
 	);
 
@@ -1396,7 +1400,13 @@ function bp_media_settings_callback_extension_link() {
  * @since BuddyBoss 1.0.0
  */
 function bp_document_extensions_list() {
-	return apply_filters( 'bp_document_extensions_list', bp_get_option( 'bp_document_extensions_support', bp_media_allowed_document_type() ) );
+
+	$default = bp_media_allowed_document_type();
+	$saved   = bp_get_option( 'bp_document_extensions_support', $default );
+	$merge   = array_merge( $default, $saved );
+	$final   = array_unique( $merge, SORT_REGULAR );
+
+	return apply_filters( 'bp_document_extensions_list', $final );
 }
 
 /**

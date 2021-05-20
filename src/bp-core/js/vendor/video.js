@@ -5680,7 +5680,7 @@
     1: 'You aborted the media playback',
     2: 'A network error caused the media download to fail part-way.',
     3: 'The media playback was aborted due to a corruption problem or because the media used features your browser did not support.',
-    4: 'The media could not be loaded, either because the server or network failed or because the format is not supported.',
+    4: 'Video format is not supported. Please download to play.',
     5: 'The media is encrypted and we do not have the keys to decrypt it.'
   }; // Add types as properties on MediaError
   // e.g. MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
@@ -28433,7 +28433,7 @@
     // locales and their language translations
     languages: {},
     // Default message to show when a video cannot be played.
-    notSupportedMessage: 'No compatible source was found for this media.',
+    notSupportedMessage: 'Video format is not supported. Please download to play.',
     fullscreen: {
       options: {
         navigationUI: 'hide'

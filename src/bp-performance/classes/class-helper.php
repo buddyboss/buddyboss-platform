@@ -7,8 +7,6 @@
 
 namespace BuddyBoss\Performance;
 
-use BuddyBossApp\Admin\Settings;
-
 /**
  * Cache Helper class.
  */

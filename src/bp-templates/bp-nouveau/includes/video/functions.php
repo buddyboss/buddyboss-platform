@@ -105,9 +105,9 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 	$params['video'] = array(
 		'max_upload_size'                    => bp_video_file_upload_max_size(),
 		'video_type'                         => implode( ',', array_unique( $allowed ) ),
-		'profile_video'                      => bp_is_profile_video_support_enabled(),
+		'profile_video'                      => bp_is_profile_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), 0 ),
 		'profile_album'                      => bp_is_profile_albums_support_enabled(),
-		'group_video'                        => bp_is_group_video_support_enabled(),
+		'group_video'                        => bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_video'                     => bp_is_messages_video_support_enabled(),
 		'dropzone_video_message'             => __( 'Drop videos here to upload', 'buddyboss' ),
@@ -129,6 +129,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
+		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed()
 	);
 
 	if ( bp_is_single_video_album() ) {
@@ -291,141 +292,37 @@ function bp_video_allowed_video_type() {
 
 	$extension_lists = array(
 		'bb_vid_1'  => array(
-			'extension'   => '.flv',
-			'mime_type'   => 'video/x-flv',
-			'description' => __( 'Flash', 'buddyboss' ),
+			'extension'   => '.mp4',
+			'mime_type'   => 'video/mp4',
+			'description' => __( 'MP4', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
 		),
 		'bb_vid_2'  => array(
-			'extension'   => '.mp4',
-			'mime_type'   => 'video/mp4',
-			'description' => __( 'MPEG-4', 'buddyboss' ),
+			'extension'   => '.webm',
+			'mime_type'   => 'video/webm',
+			'description' => __( 'WebM', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
 		),
 		'bb_vid_3'  => array(
-			'extension'   => '.m3u8',
-			'mime_type'   => 'application/x-mpegURL',
-			'description' => __( 'iPhone Index', 'buddyboss' ),
+			'extension'   => '.ogg',
+			'mime_type'   => 'video/ogg',
+			'description' => __( 'Ogg', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
 		),
 		'bb_vid_4'  => array(
-			'extension'   => '.ts',
-			'mime_type'   => 'video/MP2T',
-			'description' => __( 'iPhone Segment', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_5'  => array(
-			'extension'   => '.3gp',
-			'mime_type'   => 'video/3gpp',
-			'description' => __( '3GP Mobile', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_6'  => array(
 			'extension'   => '.mov',
-			'mime_type'   => 'video/quicktime',
-			'description' => __( 'QuickTime', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_7'  => array(
-			'extension'   => '.avi',
-			'mime_type'   => 'video/x-msvideo',
-			'description' => __( 'A/V Interleave', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_8'  => array(
-			'extension'   => '.wmv',
-			'mime_type'   => 'video/x-ms-wmv',
-			'description' => __( 'Windows Media', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_9'  => array(
-			'extension'   => '.webm',
-			'mime_type'   => 'video/webm',
-			'description' => __( 'Open Web Media Project', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_10' => array(
-			'extension'   => '.m4v',
-			'mime_type'   => 'video/x-m4v',
-			'description' => __( 'M4v', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_11' => array(
-			'extension'   => '.qt',
 			'mime_type'   => 'video/quicktime',
 			'description' => __( 'Quicktime', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
-		),
-		'bb_vid_12' => array(
-			'extension'   => '.mpg',
-			'mime_type'   => 'video/mpeg',
-			'description' => __( 'MPEG', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_13' => array(
-			'extension'   => '.asf',
-			'mime_type'   => 'video/x-ms-asf',
-			'description' => __( 'Microsoft Advanced Systems Format (ASF)', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_14' => array(
-			'extension'   => '.vob',
-			'mime_type'   => 'video/dvd',
-			'description' => __( 'VOB', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_15' => array(
-			'extension'   => '.vob',
-			'mime_type'   => 'video/mpeg',
-			'description' => __( 'VOB', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_16' => array(
-			'extension'   => '.vob',
-			'mime_type'   => 'video/x-ms-vob',
-			'description' => __( 'VOB', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_vid_17' => array(
-			'extension'   => '.mkv',
-			'mime_type'   => 'video/x-matroska',
-			'description' => __( 'Matroska', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
+		)
 	);
 
 	/**
@@ -436,4 +333,15 @@ function bp_video_allowed_video_type() {
 	$extension_lists = apply_filters( 'bp_video_allowed_video_type', $extension_lists );
 
 	return $extension_lists;
+}
+
+/**
+ * Function get video popup buttons.
+ *
+ * @return array|mixed|string|void
+ * @since BuddyBoss 1.5.7
+ */
+function bp_video_activity_entry_buttons( $buttons ) {
+	unset($buttons['activity_report']);
+	return $buttons;
 }

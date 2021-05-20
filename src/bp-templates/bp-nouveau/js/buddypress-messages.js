@@ -664,6 +664,16 @@ window.bp = window.bp || {};
 
 				}
 
+				// Access Control Video Support.
+				if ( ! _.isUndefined( resp.user_can_upload_video ) && $( '#whats-new-messages-toolbar .post-media-video-support' ).length ) {
+					if ( resp.user_can_upload_video ) {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).show();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).hide();
+					}
+
+				}
+
 				// Access Control GiF Support.
 				if ( ! _.isUndefined( resp.user_can_upload_gif ) && $( '#whats-new-messages-toolbar .post-media-gif-support' ).length ) {
 					if ( resp.user_can_upload_gif ) {
@@ -1828,7 +1838,7 @@ window.bp = window.bp || {};
 					this.views.add( this.messagesDocument );
 				}
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && BP_Nouveau.video.messages_video ) {
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video || BP_Nouveau.video.group_video ) ) {
 					this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
 					this.views.add( this.messagesVideo );
 				}
@@ -2797,8 +2807,20 @@ window.bp = window.bp || {};
 							}
 						} else if ( response.id ) {
 							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
-							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
-							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
+							if ( undefined !== response.messages_count && 0 === response.messages_count ) {
+								if ( bp.Nouveau.Messages.threads.length > 1 ) {
+									bp.Nouveau.Messages.threads.remove( response.id );
+									bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+								} else {
+									BP_Nouveau.messages.hasThreads = false;
+									bp.Nouveau.Messages.threads.remove( response.id );
+									bp.Nouveau.Messages.router.navigate( 'view/?refresh=1', { trigger: true } );
+									bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
+								}
+							} else {
+								bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
+								bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
+							}
 						} else if ( response.messages ) {
 
 							self.model.set( _.first( response.messages ) );
@@ -3084,6 +3106,9 @@ window.bp = window.bp || {};
 					jQuery( tinyMCE.activeEditor.formElement ).addClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
 					if ( bp.Nouveau.Messages.mediumEditor.getContent() ) {
+						//Before send make sure that medium editor is focus.
+						$( bp.Nouveau.Messages.mediumEditor.elements[0] ).focus();
+
 						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
 							function ( index, Obj ) {
 							$( Obj ).addClass( 'emojioneemoji' );
@@ -3234,6 +3259,12 @@ window.bp = window.bp || {};
 						$( '#whats-new-messages-toolbar .post-media-photo-support' ).hide();
 					} else {
 						$( '#whats-new-messages-toolbar .post-media-photo-support' ).show();
+					}
+
+					if ( BP_Nouveau.video.messages_video === false ) {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).hide();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).show();
 					}
 
 					// Membership GiF Support.

@@ -202,7 +202,7 @@ if ( 0 === $total_count ) {
 							<?php endif; ?>
 							<?php
 							$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
-							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bp_is_messages_video_support_enabled() ) :
+							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) :
 								?>
                                 <div class="post-elements-buttons-item post-video video-support">
                                     <a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">

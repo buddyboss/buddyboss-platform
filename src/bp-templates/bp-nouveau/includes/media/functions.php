@@ -44,11 +44,14 @@ function bp_nouveau_media_enqueue_scripts() {
 	if ( bp_is_user_media() ||
 		 bp_is_single_album() ||
 		 bp_is_media_directory() ||
+		 bp_is_document_directory() ||
+		 bp_is_video_directory() ||
 		 bp_is_activity_component() ||
 		 bp_is_group_activity() ||
 		 bp_is_group_media() ||
 		 bp_is_group_albums() ||
 		 bp_is_group_document() ||
+		 bp_is_group_video() ||
 		 bp_is_group_folders() ||
 		 bp_is_group_messages() ||
 		 bp_is_messages_component()
@@ -244,30 +247,6 @@ function bp_nouveau_get_media_directory_nav_items() {
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
-}
-
-function bp_media_download_file( $attachment_id, $type = 'media' ) {
-
-	// Add action to prevent issues in IE.
-	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
-
-	if ( 'media' === $type ) {
-
-		$the_file = wp_get_attachment_url( $attachment_id );
-
-		if ( ! $the_file ) {
-			return;
-		}
-
-		// clean the file url.
-		$file_url = stripslashes( trim( $the_file ) );
-
-		// get filename.
-		$file_name = basename( $the_file );
-
-		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
-	}
-
 }
 
 /**
