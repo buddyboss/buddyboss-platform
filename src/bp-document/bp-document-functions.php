@@ -4014,6 +4014,18 @@ function bp_document_delete_symlinks( $document ) {
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
+
+	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'full' );
+
+	if ( file_exists( $attachment_path ) ) {
+		unlink( $attachment_path );
+	}
+
+	$preview_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $old_document->privacy );
+
+	if ( file_exists( $preview_attachment_path ) ) {
+		unlink( $preview_attachment_path );
+	}
 }
 
 /**

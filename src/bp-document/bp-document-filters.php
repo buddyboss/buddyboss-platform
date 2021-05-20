@@ -69,7 +69,7 @@ add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_c
 add_action( 'bp_document_before_save', 'bp_document_delete_symlinks' );
 
 // Create symlinks for documents when saved.
-add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
+//add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
 
 // Clear document symlinks on delete.
 add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on_delete', 10 );
@@ -86,6 +86,16 @@ function bp_document_clear_document_symlinks_on_delete( $documents ) {
 		foreach ( (array) $documents as $deleted_document ) {
 			if ( isset( $deleted_document->id ) ) {
 				bp_document_delete_symlinks( (int) $deleted_document->id );
+
+				// Remove symlinks that is created randomly.
+				$get_existing = get_post_meta( $deleted_document->attachment_id, 'bb_video_symlinks_arr', true );
+				if ( $get_existing ) {
+					foreach ( $get_existing as $symlink ) {
+						if ( file_exists( $symlink ) ) {
+							unlink( $symlink );
+						}
+					}
+				}
 			}
 		}
 	}
