@@ -1092,9 +1092,8 @@ class BP_Document {
 					$documents[ $key ] = current( self::get_document_data( array( $data->id ), true ) );
 				}
 			}
+			$retval['documents'] = $documents;
 		}
-
-		$retval['documents'] = $documents;
 
 		return $retval;
 	}
