@@ -3430,7 +3430,7 @@ function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_get_forum_id( $document_id ) {
 
@@ -3543,7 +3543,7 @@ function bp_document_get_forum_id( $document_id ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_get_thread_id( $document_id ) {
 

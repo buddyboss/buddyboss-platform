@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated BuddyBoss 1.5.8
+ * @deprecated BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
@@ -19,14 +19,14 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.5.8', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
 	$data = bb_media_user_can_access( $folder_id, 'folder' );
 
 	/**
 	 * Filter to get the folder access.
 	 *
-	 * @deprecated 1.5.8 Use {@see 'bb_media_user_can_access'} instead.
+	 * @deprecated 1.7.0 Use {@see 'bb_media_user_can_access'} instead.
 	 *
 	 * @param array $data      Access data.
 	 * @param int   $folder_id Folder id.
@@ -47,14 +47,14 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
  */
 function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.5.8', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
 	$data = bb_media_user_can_access( $document_id, 'document' );
 
 	/**
 	 * Filter to get the document access.
 	 *
-	 * @deprecated 1.5.8 Use {@see 'bb_media_user_can_access'} instead.
+	 * @deprecated 1.7.0 Use {@see 'bb_media_user_can_access'} instead.
 	 *
 	 * @param array $data        Access data.
 	 * @param int   $document_id Document id.
@@ -75,14 +75,14 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
  */
 function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.5.8', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
 	$data = bb_media_user_can_access( $album_id, 'album' );
 
 	/**
 	 * Filter to get the album access.
 	 *
-	 * @deprecated 1.5.8 Use {@see 'bb_media_user_can_access'} instead.
+	 * @deprecated 1.7.0 Use {@see 'bb_media_user_can_access'} instead.
 	 *
 	 * @param array $data     Access data.
 	 * @param int   $album_id Album id.
@@ -104,14 +104,14 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  */
 function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.5.8', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
 	$data = bb_media_user_can_access( $media_id, 'photo' );
 
 	/**
 	 * Filter to get the media access.
 	 *
-	 * @deprecated 1.5.8 Use {@see 'bb_media_user_can_access'} instead.
+	 * @deprecated 1.7.0 Use {@see 'bb_media_user_can_access'} instead.
 	 *
 	 * @param array $data     Access data.
 	 * @param int   $media_id Media id.

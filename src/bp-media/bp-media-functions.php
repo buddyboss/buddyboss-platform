@@ -3067,7 +3067,7 @@ function bp_media_album_download_link( $album_id ) {
  * @param int    $id       Media|Document|Video|Folder|Album id.
  * @param string $type     Media|Document|Video|Folder|Album type.
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.7.0
  */
 function bb_media_user_can_access( $id, $type ) {
 
