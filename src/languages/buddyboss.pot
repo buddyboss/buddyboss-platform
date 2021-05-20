@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.5.9\n"
+"Project-Id-Version: BuddyBoss Platform (Beta) 1.7.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-05-20 17:42:06+00:00\n"
+"POT-Creation-Date: 2021-05-20 19:50:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2443,7 +2443,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
 #: bp-media/bp-media-settings.php:1255 bp-media/bp-media-settings.php:1288
-#: bp-media/bp-media-settings.php:1789 bp-media/bp-media-settings.php:1814
+#: bp-media/bp-media-settings.php:1787 bp-media/bp-media-settings.php:1812
 msgid "Description"
 msgstr ""
 
@@ -3994,7 +3994,10 @@ msgstr ""
 msgid "Posts in Activity Feeds"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
+#: bp-core/admin/settings/bp-admin-setting-activity.php:120
+#: bp-core/admin/templates/about-buddyboss.php:26
+#: bp-performance/classes/class-settings.php:87
+#: bp-templates/bp-nouveau/includes/customizer.php:29
 msgid "BuddyBoss Platform"
 msgstr ""
 
@@ -4204,7 +4207,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
 #: bp-document/bp-document-functions.php:1982
-#: bp-video/bp-video-functions.php:2471
+#: bp-video/bp-video-functions.php:2473
 msgid "Video"
 msgstr ""
 
@@ -4529,7 +4532,7 @@ msgstr ""
 #: bp-core/admin/templates/check-document-mime-type.php:44
 #: bp-core/admin/templates/check-video-mime-type.php:44
 #: bp-media/bp-media-settings.php:1257 bp-media/bp-media-settings.php:1318
-#: bp-media/bp-media-settings.php:1790 bp-media/bp-media-settings.php:1817
+#: bp-media/bp-media-settings.php:1788 bp-media/bp-media-settings.php:1815
 msgid "MIME Type"
 msgstr ""
 
@@ -9137,48 +9140,48 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1937
-#: bp-video/bp-video-functions.php:2426
+#: bp-video/bp-video-functions.php:2428
 msgid "Default"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1942
-#: bp-video/bp-video-functions.php:2431
+#: bp-video/bp-video-functions.php:2433
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1947
-#: bp-video/bp-video-functions.php:2436
+#: bp-video/bp-video-functions.php:2438
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1952
-#: bp-video/bp-video-functions.php:2441
+#: bp-video/bp-video-functions.php:2443
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1957
-#: bp-video/bp-video-functions.php:2446
+#: bp-video/bp-video-functions.php:2448
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1962
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
-#: bp-video/bp-video-functions.php:2451
+#: bp-video/bp-video-functions.php:2453
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1967
-#: bp-video/bp-video-functions.php:2456
+#: bp-video/bp-video-functions.php:2458
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1972
-#: bp-video/bp-video-functions.php:2461
+#: bp-video/bp-video-functions.php:2463
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1977
-#: bp-video/bp-video-functions.php:2466
+#: bp-video/bp-video-functions.php:2468
 msgid "Text"
 msgstr ""
 
@@ -19299,7 +19302,7 @@ msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1254 bp-media/bp-media-settings.php:1284
-#: bp-media/bp-media-settings.php:1788 bp-media/bp-media-settings.php:1810
+#: bp-media/bp-media-settings.php:1786 bp-media/bp-media-settings.php:1808
 msgid "Extension"
 msgstr ""
 
@@ -19308,26 +19311,26 @@ msgid "Icon"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1285 bp-media/bp-media-settings.php:1341
-#: bp-media/bp-media-settings.php:1811 bp-media/bp-media-settings.php:1840
+#: bp-media/bp-media-settings.php:1809 bp-media/bp-media-settings.php:1838
 msgid ".extension"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1289 bp-media/bp-media-settings.php:1345
-#: bp-media/bp-media-settings.php:1815 bp-media/bp-media-settings.php:1844
+#: bp-media/bp-media-settings.php:1813 bp-media/bp-media-settings.php:1842
 msgid "description"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1319 bp-media/bp-media-settings.php:1360
-#: bp-media/bp-media-settings.php:1818 bp-media/bp-media-settings.php:1847
+#: bp-media/bp-media-settings.php:1816 bp-media/bp-media-settings.php:1845
 msgid "MIME type"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1323 bp-media/bp-media-settings.php:1361
-#: bp-media/bp-media-settings.php:1822 bp-media/bp-media-settings.php:1848
+#: bp-media/bp-media-settings.php:1820 bp-media/bp-media-settings.php:1846
 msgid "MIME Checker"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1369 bp-media/bp-media-settings.php:1856
+#: bp-media/bp-media-settings.php:1369 bp-media/bp-media-settings.php:1854
 msgid "Add Extension"
 msgstr ""
 
@@ -19339,7 +19342,7 @@ msgstr ""
 msgid "&#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1480 bp-media/bp-media-settings.php:1747
+#: bp-media/bp-media-settings.php:1480 bp-media/bp-media-settings.php:1745
 msgid "Extensions"
 msgstr ""
 
@@ -26705,11 +26708,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:3958
+#: bp-video/bp-video-functions.php:3960
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:3997
+#: bp-video/bp-video-functions.php:3999
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
@@ -27940,6 +27943,10 @@ msgstr ""
 
 #: cli/components/activity.php:977
 msgid "%1$s changed %2$s profile photo"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "BuddyBoss Platform (Beta)"
 msgstr ""
 
 #. Author URI of the plugin/theme
