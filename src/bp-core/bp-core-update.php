@@ -324,8 +324,8 @@ function bp_version_updater() {
 			bb_update_to_1_5_6();
 		}
 
-		if ( $raw_db_version < 16501 ) {
-			bp_update_to_1_5_7();
+		if ( $raw_db_version < 16601 ) {
+			bp_update_to_1_7_0();
 		}
 	}
 
@@ -670,9 +670,9 @@ function bp_update_to_1_5_1() {
 /**
  * Update media table for the video components.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
-function bp_update_to_1_5_7() {
+function bp_update_to_1_7_0() {
 	bp_core_install_media();
 }
 
