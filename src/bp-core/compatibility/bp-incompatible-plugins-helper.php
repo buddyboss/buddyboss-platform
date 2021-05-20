@@ -171,7 +171,7 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
  * @since BuddyBoss 1.7.0
  */
 function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			$can = false;
@@ -233,7 +233,7 @@ function bb_document_wp_offload_regenerate_pdf_metadata( $attachment_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
@@ -292,7 +292,7 @@ add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url'
  * @since BuddyBoss 1.7.0
  */
 function bb_offload_media_set_private() {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
@@ -313,7 +313,7 @@ add_action( 'bb_before_bp_video_thumbnail_upload_handler', 'bb_offload_media_set
  * @since BuddyBoss 1.7.0
  */
 function bb_offload_media_unset_private() {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
@@ -341,7 +341,7 @@ add_action( 'bb_after_bp_video_thumbnail_upload_handler', 'bb_offload_media_unse
  * @since BuddyBoss 1.7.0
  */
 function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			$media          = new BP_Media( $media_id );
@@ -904,7 +904,7 @@ function bb_media_private_upload_acl( $acl ) {
  * @since BuddyBoss 1.7.0
  */
 function bb_video_set_wp_offload_download_video_local( $video_id, $video ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
@@ -924,7 +924,7 @@ add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_
  * @since BuddyBoss 1.7.0
  */
 function bb_video_unset_wp_offload_download_video_local( $video_id, $video ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
@@ -949,7 +949,7 @@ add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp
  * @since BuddyBoss 1.7.0
  */
 function bp_video_offload_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
             $get_metadata = wp_get_attachment_metadata( $attachment_id );
@@ -965,7 +965,7 @@ function bp_video_offload_get_thumb_preview_url( $attachment_url, $video_id, $si
 add_filter( 'bb_video_get_thumb_url', 'bp_video_offload_get_thumb_preview_url', PHP_INT_MAX, 4 );
 
 function bp_video_offload_get_video_url( $attachment_url, $video_id, $attachment_id ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 			$attachment_url = wp_get_attachment_url( $attachment_id );
