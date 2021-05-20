@@ -457,6 +457,10 @@
 		display: none;
 	}
 
+	.vjs-slider-vertical .vjs-volume-level:before {
+		left: -3px;
+	}
+
 }
 
 .bb-activity-video-elem.is-visible .video-js:after {
