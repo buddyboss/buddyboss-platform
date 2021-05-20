@@ -5378,7 +5378,9 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 		$fullsizepath = get_attached_file( $attachment_id );
 	}
 
-	require_once ABSPATH . 'wp-admin/includes/admin.php';
+	if ( ! function_exists( 'media_handle_upload' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/admin.php';
+	}
 	$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
 	wp_update_attachment_metadata( $attachment_id, $new_metadata );
 }
