@@ -61,7 +61,7 @@ add_action( 'bp_video_before_save', 'bb_video_delete_symlinks' );
 add_action( 'bp_video_before_delete', 'bp_video_clear_video_symlinks_on_delete', 10 );
 
 // Create symlinks for videos when saved.
-add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
+//add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
 
 add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 99, 2 );
 
