@@ -1021,7 +1021,7 @@ window.bp = window.bp || {};
 				};
 
 
-				if( BP_Nouveau.video.is_ffpmeg_installed && ( typeof videoAttachments.default_images === 'undefined' || typeof videoAttachments.preview === 'undefined' ) ) {
+				if( BP_Nouveau.video.is_ffpmeg_installed && ( typeof videoAttachments.default_images === 'undefined' ) ) {
 					if ( this.thumbnail_xhr ) {
 						this.thumbnail_xhr.abort();
 					}
