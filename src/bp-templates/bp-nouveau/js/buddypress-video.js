@@ -1621,8 +1621,8 @@ window.bp = window.bp || {};
 			video_move_popup.find( '.bb-model-footer .bp-video-move' ).addClass( 'is-disabled' );
 
 			// For Activity Feed.
-			if ( $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
-				currentTarget = '#' + $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bp-video-move-file';
+			if ( $( event.currentTarget ).closest( '.video-action_list' ).closest( 'li.comment-item' ).length ) {
+				currentTarget = '#' + $( event.currentTarget ).closest( '.video-action_list' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bp-video-move-file';
 			} else {
 				currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' > .activity-content .bp-video-move-file';
 			}
