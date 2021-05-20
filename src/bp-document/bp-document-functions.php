@@ -3842,8 +3842,6 @@ function bp_document_delete_document_previews() {
  */
 function bp_document_create_symlinks( $document, $size = '' ) {
 
-	error_log( $size );
-
 	// Check if document is id of document, create document object.
 	if ( ! $document instanceof BP_Document && is_int( $document ) ) {
 		$document = new BP_Document( $document );

@@ -633,8 +633,8 @@ class BP_Video {
 
 			if ( $attachment_thumb_id ) {
 				$attachment_data->full           = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'full' );
-				$attachment_data->thumb          = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'medium' );
-				$attachment_data->activity_thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'medium' );
+				$attachment_data->thumb          = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bp-video-thumbnail' );
+				$attachment_data->activity_thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bp-activity-video-thumbnail' );
 				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $attachment_thumb_id );
 			}
 
