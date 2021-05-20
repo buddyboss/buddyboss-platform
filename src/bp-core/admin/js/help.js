@@ -5,7 +5,7 @@
  * @since BuddyBoss 1.2.1
  */
 
- (function( $ ) {
+(function( $ ) {
 	$( window ).on(
 		'load',
 		function() {
