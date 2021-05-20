@@ -1609,7 +1609,7 @@ add_action( 'bp_init', 'bp_video_check_download_album_protection', 9999 );
 /**
  * Clear a user's symlinks video when attachment video delete.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  *
  * @param array $videos DB results of video items.
  */

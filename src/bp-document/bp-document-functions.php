@@ -3596,7 +3596,7 @@ function bp_document_get_thread_id( $document_id ) {
  *
  * @return string The symlink path.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_symlink_path() {
 	add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
@@ -3622,7 +3622,7 @@ function bp_document_symlink_path() {
 /**
  * Delete document previews/symlinks.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_delete_document_previews() {
 	$upload_dir = wp_upload_dir();
@@ -3653,7 +3653,7 @@ function bp_document_delete_document_previews() {
  * @param object $document BP_Document Object.
  * @param string $size     Size of images.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_create_symlinks( $document, $size = '' ) {
 
@@ -3843,7 +3843,7 @@ function bp_document_create_symlinks( $document, $size = '' ) {
  *
  * @param object $document BP_Document Object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_delete_symlinks( $document ) {
 	// Check if document is id of document, create document object.
@@ -4284,7 +4284,7 @@ function bp_document_load_gopp_image_editor_gs() {
  *
  * @param object $document BP_Document Object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_document_video_get_symlink( $document ) {
 

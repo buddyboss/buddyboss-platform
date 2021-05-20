@@ -77,7 +77,7 @@ add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on
 /**
  * Clear a user's symlinks document when attachment document delete.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  *
  * @param array $documents DB results of document items.
  */

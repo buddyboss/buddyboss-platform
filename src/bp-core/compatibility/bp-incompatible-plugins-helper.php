@@ -168,7 +168,7 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
  *
  * @return bool true if the offload media used.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -194,7 +194,7 @@ add_filter( 'bb_video_create_thumb_symlinks', 'bb_offload_do_symlink', PHP_INT_M
  *
  * @return bool
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file, $attachment_id, $as3cf_item ) {
 	$default = true;
@@ -206,7 +206,7 @@ function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file
  *
  * @param int $attachment_id attachment id to recreate the media attachment.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_document_wp_offload_regenerate_pdf_metadata( $attachment_id ) {
 	add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
@@ -230,7 +230,7 @@ function bb_document_wp_offload_regenerate_pdf_metadata( $attachment_id ) {
  *
  * @return false|mixed|string return the original document URL.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -289,7 +289,7 @@ add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url'
 /**
  * Set the uploaded document to make private on offload media plugin.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_offload_media_set_private() {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -310,7 +310,7 @@ add_action( 'bb_before_bp_video_thumbnail_upload_handler', 'bb_offload_media_set
 /**
  * Remove the private URL generate document preview.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_offload_media_unset_private() {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -338,7 +338,7 @@ add_action( 'bb_after_bp_video_thumbnail_upload_handler', 'bb_offload_media_unse
  *
  * @return false|mixed|string return the original media URL.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -888,7 +888,7 @@ add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
  *
  * @return string $acl make the media to private with signed url.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_media_private_upload_acl( $acl ) {
 	$acl = 'private';
@@ -901,7 +901,7 @@ function bb_media_private_upload_acl( $acl ) {
  * @param int    $video_id video id to recreate the preview image attachment.
  * @param object $video    video object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_set_wp_offload_download_video_local( $video_id, $video ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -921,7 +921,7 @@ add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_
  * @param int    $video_id video id to recreate the preview image attachment.
  * @param object $video    video object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_unset_wp_offload_download_video_local( $video_id, $video ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {
@@ -946,7 +946,7 @@ add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp
  *
  * @return false|mixed|string return the original document URL.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_offload_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) ) {

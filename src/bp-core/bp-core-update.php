@@ -1154,7 +1154,7 @@ function bb_update_to_1_5_6() {
 /**
  * Add new video support to document extensions.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 add_filter( 'bp_media_allowed_document_type', function ( $extensions ) {
 

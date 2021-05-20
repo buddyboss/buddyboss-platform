@@ -4538,7 +4538,7 @@ function bp_is_group_video() {
  * Checks if user can create a video or not.
  *
  * @return bool Is user can create video or not.
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_user_can_create_video() {
 	return (bool) apply_filters( 'bb_user_can_create_video', true );
@@ -4553,7 +4553,7 @@ function bb_user_can_create_video() {
  * @param int    $thread_id thread id.
  * @param string $type      from where permission to follow.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  *
  * @return mixed|void
  */

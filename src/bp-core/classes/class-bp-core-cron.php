@@ -3,7 +3,7 @@
  * BuddyBoss Core Cron.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates the Core Cron class.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 class BP_Core_Cron {
 
@@ -26,7 +26,7 @@ class BP_Core_Cron {
 	/**
 	 * Main Core Cron Instance.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @static object $instance
 	 * @see bp_core_cron()
@@ -54,7 +54,7 @@ class BP_Core_Cron {
 	/**
 	 * Hooks.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function setup_actions() {
 		add_action( 'bp_init', array( $this, 'schedule' ) );
@@ -68,7 +68,7 @@ class BP_Core_Cron {
 	 * @param string $recurrence How often the event should subsequently recur. See bp_core_cron_schedules() for accepted values.
 	 *
 	 * @return bool True if cron is scheduled, otherwise false.
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function add( $hook, $callback, $recurrence ) {
 		// Check if recurrence is good to go for bb or not.
@@ -89,7 +89,7 @@ class BP_Core_Cron {
 	/**
 	 * Schedule a cron.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function schedule() {
 		foreach ( $this->crons as $cron ) {

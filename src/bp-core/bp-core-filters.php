@@ -1600,7 +1600,7 @@ function bp_core_cron_schedules( $schedules = array() ) {
 	 * Filters the cron schedules.
 	 *
 	 * @param array $bb_schedules Schedules.
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.0
 	 */
 	$bb_schedules = apply_filters( 'bp_core_cron_schedules', $bb_schedules );
 

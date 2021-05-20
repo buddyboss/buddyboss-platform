@@ -136,7 +136,7 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 /**
  * Add video thumb upload filters.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_add_thumbnail_upload_filters() {
 	add_filter( 'intermediate_image_sizes_advanced', 'bp_video_remove_default_image_sizes' );
@@ -145,7 +145,7 @@ function bp_video_add_thumbnail_upload_filters() {
 /**
  * Remove media upload filters.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_remove_thumbnail_upload_filters() {
 	remove_filter( 'intermediate_image_sizes_advanced', 'bp_video_remove_default_image_sizes' );
@@ -154,7 +154,7 @@ function bp_video_remove_thumbnail_upload_filters() {
 /**
  * Register media image sizes.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_register_thumbnail_image_sizes() {
 	$image_sizes = bp_video_get_thumbnail_image_sizes();
@@ -171,7 +171,7 @@ function bp_video_register_thumbnail_image_sizes() {
 /**
  * Deregister media image sizes.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_deregister_thumbnail_image_sizes() {
 	$image_sizes = bp_video_get_thumbnail_image_sizes();
@@ -188,7 +188,7 @@ function bp_video_deregister_thumbnail_image_sizes() {
  *
  * @return array Image sizes.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_thumbnail_image_sizes() {
 	$image_sizes = array(
@@ -3170,7 +3170,7 @@ function bb_video_user_can_upload( $user_id = 0, $group_id = 0 ) {
  *
  * @return string The symlink path.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_symlink_original_video_path() {
 	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
@@ -3198,7 +3198,7 @@ function bb_video_symlink_original_video_path() {
  *
  * @return string The symlink path.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_symlink_path() {
 	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
@@ -3224,7 +3224,7 @@ function bb_video_symlink_path() {
 /**
  * Delete video previews/symlinks.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_delete_video_previews() {
 	$upload_dir = wp_upload_dir();
@@ -3258,7 +3258,7 @@ function bp_video_delete_video_previews() {
  *
  * @return mixed|void
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'medium' ) {
 	$attachment_url = '';
@@ -3292,7 +3292,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'medium' ) {
  *
  * @return int|mixed|string return the video attachment id.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_get_video_thumb_id( $video_attachment_id ) {
 
@@ -3319,7 +3319,7 @@ function bb_get_video_thumb_id( $video_attachment_id ) {
  *
  * @return array attachment ids array.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_get_auto_generated_preview_ids( $video_attachment_id ) {
 
@@ -3348,7 +3348,7 @@ function bb_get_video_default_placeholder_image() {
  * @param object $video BP_Video Object.
  * @param string $size  Size of thumb symlink.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_create_thumb_symlinks( $video, $size = '' ) {
 	// Check if video is id of video, create video object.
@@ -3493,7 +3493,7 @@ function bb_video_create_thumb_symlinks( $video, $size = '' ) {
  * @param int|object $video           video id or video object.
  * @param int        $delete_thumb_id thumb id to delete.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 
@@ -3544,7 +3544,7 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
  *
  * @param object $video BP_Video Object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_delete_symlinks( $video ) {
 	// Check if video is id of video, create video object.
@@ -3629,7 +3629,7 @@ function bb_video_delete_symlinks( $video ) {
  *
  * @param object $video BP_Video Object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_create_symlinks( $video ) {
 	// Check if video is id of video, create video object.
@@ -3673,7 +3673,7 @@ function bb_video_create_symlinks( $video ) {
  *
  * @param object $video BP_Video Object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_get_symlink( $video ) {
 	// Check if video is id of video, create video object.
@@ -3726,7 +3726,7 @@ function bb_video_get_symlink( $video ) {
  *
  * @param object $video BP_Video Object.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size ) {
 
@@ -3927,7 +3927,7 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
  *
  * @return \FFMpeg\FFMpeg
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_check_is_ffmpeg_binary() {
 
@@ -3966,7 +3966,7 @@ function bb_video_check_is_ffmpeg_binary() {
  *
  * @return \FFMpeg\FFProbe
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_check_is_ffprobe_binary() {
 
