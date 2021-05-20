@@ -1662,7 +1662,7 @@ function bp_media_allowed_upload_document_per_batch() {
  * Get the Video settings sections.
  *
  * @return array
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_settings_sections() {
 
@@ -1694,7 +1694,7 @@ function bp_video_get_settings_sections() {
 /**
  * Component video helper text.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_settings_callback_extension_section() {
 	?>
@@ -1708,7 +1708,7 @@ function bp_video_settings_callback_extension_section() {
  * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -1723,18 +1723,16 @@ function bp_video_get_settings_fields_for_section( $section_id = '' ) {
 	/**
 	 * Filter for settings field sections.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return (array) apply_filters( 'bp_video_get_settings_fields_for_section', $retval, $section_id );
 }
-
-
 
 /**
  * Get all of the settings fields.
  *
  * @return array
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_settings_fields() {
 
@@ -1756,7 +1754,7 @@ function bp_video_get_settings_fields() {
 	/**
 	 * Filter for settings fields.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return (array) apply_filters( 'bp_video_get_settings_fields', $fields );
 }
@@ -1765,7 +1763,7 @@ function bp_video_get_settings_fields() {
  * Checks if extension support is enabled.
  *
  * @return array Is video extension support enabled or not
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_extensions_list() {
 	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', bp_video_allowed_video_type() ) );
@@ -1774,7 +1772,7 @@ function bp_video_extensions_list() {
 /**
  * Settings for the video support extensions lists.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_media_settings_callback_extension_video_support() {
 

@@ -2307,7 +2307,7 @@ function bp_is_moderation_component() {
 /**
  * Check whether the current page is part of the Video component.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True if the current page is part of the Video component.
  */
@@ -2801,7 +2801,7 @@ function bp_is_user_media() {
  *
  * Eg http://example.com/members/joe/videos/ (or a subpage thereof).
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True if the current page is a user's video page.
  */
@@ -2854,7 +2854,7 @@ function bp_is_media_directory() {
 /**
  * Is the current page the video directory?
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True if the current page is the video directory.
  */
@@ -2900,7 +2900,7 @@ function bp_is_single_album() {
 /**
  * Is the current page a single video album item permalink?
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True if the current page is a single album item permalink.
  */
@@ -3250,7 +3250,7 @@ function bp_is_group_albums() {
 /**
  * Is the current page a group's video albums page?
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True if the current page is a group's video album page.
  */
@@ -4520,7 +4520,7 @@ function bb_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 /**
  * Is the current page a group's video page?
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True if the current page is a group's video page.
  */

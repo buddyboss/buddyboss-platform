@@ -5390,7 +5390,7 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
  *
  * @param string $directory Directory to remove.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_core_remove_temp_directory( $directory = '' ) {
 	if ( is_dir( $directory ) ) {

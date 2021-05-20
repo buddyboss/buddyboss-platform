@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Video Classes
  *
- * @since   BuddyBoss 1.5.7
+ * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Video.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Moderation_Video extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Video constructor.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function __construct() {
 
@@ -64,7 +64,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int $video_id Video id.
 	 *
@@ -78,7 +78,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param integer $video_id Video id.
 	 *
@@ -93,7 +93,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -108,7 +108,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * Remove hidden/blocked user's videos
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $where   videos Where sql.
 	 * @param object $suspend suspend object.
@@ -129,7 +129,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify button sub item
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int $item_id Item id.
 	 *
@@ -154,7 +154,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the video is valid or not.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.

@@ -3,7 +3,7 @@
  * BuddyBoss Video Component Class.
  *
  * @package BuddyBoss\Video\Loader
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates Video component.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Video_Component extends BP_Component {
 
 	/**
 	 * The album being currently accessed.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var BP_Video_Album
 	 */
 	/* public $current_album; */
@@ -27,7 +27,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Default video extension.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
@@ -36,7 +36,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Default video extension.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $default_extension;
@@ -44,7 +44,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Illegal video names/slugs.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var array
 	 */
 	public $forbidden_names;
@@ -62,7 +62,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Start the video component creation process.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -80,7 +80,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Include Video component files.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -103,7 +103,7 @@ class BP_Video_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -131,7 +131,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Set up component global data.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -184,7 +184,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Set up the actions.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function setup_actions() {
 
@@ -201,7 +201,7 @@ class BP_Video_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *

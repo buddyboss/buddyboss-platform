@@ -3,7 +3,7 @@
  * BuddyBoss Video Classes
  *
  * @package BuddyBoss\Video
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an video,
  * static methods for querying video.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Video {
 
@@ -25,7 +25,7 @@ class BP_Video {
 	/**
 	 * ID of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $id;
@@ -33,7 +33,7 @@ class BP_Video {
 	/**
 	 * Blog ID of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $blog_id;
@@ -41,7 +41,7 @@ class BP_Video {
 	/**
 	 * Attachment ID of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $attachment_id;
@@ -49,7 +49,7 @@ class BP_Video {
 	/**
 	 * User ID of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $user_id;
@@ -57,7 +57,7 @@ class BP_Video {
 	/**
 	 * Title of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $title;
@@ -65,7 +65,7 @@ class BP_Video {
 	/**
 	 * Album ID of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $album_id;
@@ -73,7 +73,7 @@ class BP_Video {
 	/**
 	 * Activity ID of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $activity_id;
@@ -81,7 +81,7 @@ class BP_Video {
 	/**
 	 * Group ID of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $group_id;
@@ -89,7 +89,7 @@ class BP_Video {
 	/**
 	 * Privacy of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $privacy;
@@ -97,7 +97,7 @@ class BP_Video {
 	/**
 	 * Menu order of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $menu_order;
@@ -105,7 +105,7 @@ class BP_Video {
 	/**
 	 * Upload date of the video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $date_created;
@@ -526,7 +526,7 @@ class BP_Video {
 			/**
 			 * Filters the total video MySQL statement.
 			 *
-			 * @since BuddyBoss 1.5.7
+			 * @since BuddyBoss 1.7.0
 			 *
 			 * @param string $value     MySQL statement used to query for total videos.
 			 * @param string $where_sql MySQL WHERE statement portion.

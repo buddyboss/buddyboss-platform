@@ -8,7 +8,7 @@
  * true or false on success or failure.
  *
  * @package BuddyBoss\Video\Functions
- * @since   BuddyBoss 1.5.7
+ * @since   BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Create and upload the video file
  *
  * @return array|null|WP_Error|WP_Post
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_upload() {
 	/**
@@ -58,7 +58,7 @@ function bp_video_upload() {
  * @param string $file_id file.
  *
  * @return array|int|null|WP_Error|WP_Post
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 
@@ -211,7 +211,7 @@ function bp_video_get_thumbnail_image_sizes() {
  * @param array $sizes Image sizes registered.
  *
  * @return array Empty array.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_remove_default_image_sizes( $sizes ) {
 	if ( isset( $sizes['bp-video-thumbnail'] ) && isset( $sizes['bp-activity-video-thumbnail'] ) ) {
@@ -228,7 +228,7 @@ function bp_video_remove_default_image_sizes( $sizes ) {
  * Create and upload the video thumbnail file
  *
  * @return array|null|WP_Error|WP_Post
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_thumbnail_upload() {
 	/**
@@ -268,7 +268,7 @@ function bp_video_thumbnail_upload() {
  * @param Array $existing_mimes carry mime information.
  *
  * @return Array $existing_mimes allowed mime types.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_allowed_mimes( $existing_mimes = array() ) {
 
@@ -292,7 +292,7 @@ function bp_video_allowed_mimes( $existing_mimes = array() ) {
  * @param string $file_id file.
  *
  * @return array|int|null|WP_Error|WP_Post
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_upload_handler( $file_id = 'file' ) {
 
@@ -360,7 +360,7 @@ function bp_video_upload_handler( $file_id = 'file' ) {
  * @param int    $quality quality.
  *
  * @return mixed
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_compress_image( $source, $destination, $quality = 90 ) {
 
@@ -383,7 +383,7 @@ function bp_video_compress_image( $source, $destination, $quality = 90 ) {
  * Get file video upload max size
  *
  * @return string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_file_upload_max_size() {
 
@@ -2071,7 +2071,7 @@ function bp_video_default_scope( $scope ) {
 		$allowed_scopes[] = 'groups';
 	}
 
-	if ( ( is_user_logged_in() || bp_is_user() ) && bp_is_profile_video_support_enabled() ) {
+	if ( ( is_user_logged_in() || bp_is_user_video() ) && bp_is_profile_video_support_enabled() ) {
 		$allowed_scopes[] = 'personal';
 	}
 
@@ -2079,7 +2079,7 @@ function bp_video_default_scope( $scope ) {
 
 		$new_scope[] = 'public';
 
-		if ( bp_is_active( 'friends' ) && bp_is_profile_video_support_enabled() ) {
+		if (  is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_video_support_enabled() ) {
 			$new_scope[] = 'friends';
 		}
 
@@ -2092,6 +2092,8 @@ function bp_video_default_scope( $scope ) {
 		}
 	} elseif ( bp_is_user_video() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_video_support_enabled() ) {
 		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
 	}
 
 	if ( empty( $new_scope ) ) {

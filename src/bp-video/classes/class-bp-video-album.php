@@ -3,7 +3,7 @@
  * BuddyBoss Video Classes
  *
  * @package BuddyBoss\Video
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an video albums,
  * static methods for querying video album.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 class BP_Video_Album {
 
@@ -25,7 +25,7 @@ class BP_Video_Album {
 	/**
 	 * ID of the album.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $id;
@@ -33,7 +33,7 @@ class BP_Video_Album {
 	/**
 	 * User ID of the album.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $user_id;
@@ -41,7 +41,7 @@ class BP_Video_Album {
 	/**
 	 * Group ID of the album.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var int
 	 */
 	public $group_id;
@@ -49,7 +49,7 @@ class BP_Video_Album {
 	/**
 	 * Title of the album.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $title;
@@ -57,7 +57,7 @@ class BP_Video_Album {
 	/**
 	 * Privacy of the album.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $privacy;
@@ -65,7 +65,7 @@ class BP_Video_Album {
 	/**
 	 * Upload date of the album.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $date_created;
@@ -73,7 +73,7 @@ class BP_Video_Album {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @var WP_Error
 	 */
@@ -82,7 +82,7 @@ class BP_Video_Album {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @var string
 	 */
@@ -91,7 +91,7 @@ class BP_Video_Album {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int|bool $id Optional. The ID of a specific video album.
 	 */
@@ -429,7 +429,7 @@ class BP_Video_Album {
 			/**
 			 * Filters the total video MySQL statement.
 			 *
-			 * @since BuddyBoss 1.5.7
+			 * @since BuddyBoss 1.7.0
 			 *
 			 * @param string $value     MySQL statement used to query for total videos.
 			 * @param string $where_sql MySQL WHERE statement portion.

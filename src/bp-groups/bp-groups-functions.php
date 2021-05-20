@@ -4306,7 +4306,7 @@ add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position'
 /**
  * Check whether a user is allowed to manage video in a given group.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -4350,7 +4350,7 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 /**
  * Check whether a user is allowed to manage video albums in a given group.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.

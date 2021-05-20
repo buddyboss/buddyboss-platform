@@ -1574,7 +1574,7 @@ function bp_rest_restrict_oembed_request_post_id( $post_id ) {
  * @param array $schedules Array of schedules for cron.
  *
  * @return array $schedules Array of schedules from cron.
- * @since X.X.X
+ * @since Buddyboss 1.7.0
  */
 function bp_core_cron_schedules( $schedules = array() ) {
 	$bb_schedules = array(

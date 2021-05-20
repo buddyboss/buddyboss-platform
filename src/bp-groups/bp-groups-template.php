@@ -2671,7 +2671,7 @@ function bp_group_show_document_status_setting( $setting, $group = false ) {
 /**
  * Output the 'checked' value, if needed, for a given video_status on the group create/admin screens
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param string      $setting The setting you want to check against ('members',
  *                             'mods', or 'admins').
@@ -7710,7 +7710,7 @@ function bb_get_group_current_messages_tab() {
  *
  * This function can be used either in or out of the loop.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int|bool $group_id Optional. The ID of the group whose status you want to
  *                           check. Default: the displayed group, or the current group
@@ -7748,7 +7748,7 @@ function bp_group_get_video_status( $group_id = false ) {
 	 *
 	 * Video status in this case means who can manage the videos.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $video_status Membership level needed to manage video.
 	 * @param int    $group_id      ID of the group whose status is being checked.
@@ -7761,7 +7761,7 @@ function bp_group_get_video_status( $group_id = false ) {
  *
  * This function can be used either in or out of the loop.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int|bool $group_id Optional. The ID of the group whose status you want to
  *                           check. Default: the displayed group, or the current group
@@ -7799,7 +7799,7 @@ function bp_group_get_video_album_status( $group_id = false ) {
 	 *
 	 * Invite status in this case means who from the group can send invites.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $album_status Membership level needed to manage albums.
 	 * @param int    $group_id      ID of the group whose status is being checked.

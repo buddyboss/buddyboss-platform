@@ -2,14 +2,14 @@
 /**
  * BuddyBoss - Activity Document Audio Preview
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  * @package BuddyBoss\Core
  */
 
 $audio_url = '';
 $bp_document_music_preview = apply_filters( 'bp_document_music_preview', true );
 if ( in_array( bp_get_document_extension(), bp_get_document_preview_music_extensions(), true ) && $bp_document_music_preview ) {
-	$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), bp_get_document_extension(), bp_get_document_attachment_id() );
+	$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), bp_get_document_attachment_id(), bp_get_document_extension() );
 }
 
 if ( in_array( bp_get_document_extension(), bp_get_document_preview_music_extensions(), true ) ) {
