@@ -606,11 +606,12 @@ class BP_Document {
 	 * Convert document IDs to document objects, as expected in template loop.
 	 *
 	 * @param array $document_ids Array of document IDs.
+	 * @param bool  $thumb_gen    Whether to generate symlink or not.
 	 *
 	 * @return array
 	 * @since BuddyBoss 1.4.0
 	 */
-	protected static function get_document_data( $document_ids = array() ) {
+	protected static function get_document_data( $document_ids = array(), $thumb_gen = true ) {
 		global $wpdb;
 
 		// Bail if no document ID's passed.
@@ -688,9 +689,9 @@ class BP_Document {
 
 			// fetch attachment data.
 			$attachment_data                 = new stdClass();
-			$attachment_data->full           = bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' );
-			$attachment_data->thumb          = bp_document_get_preview_url( $document->id, $document->attachment_id );
-			$attachment_data->activity_thumb = bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' );
+			$attachment_data->full           = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' ) : '' );
+			$attachment_data->thumb          = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id ) : '' );
+			$attachment_data->activity_thumb = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' ) : '' );
 			$attachment_data->meta           = self::attachment_meta( $document->attachment_id );
 			$document->attachment_data       = $attachment_data;
 			$document->group_name            = $group_name;
@@ -1046,7 +1047,7 @@ class BP_Document {
 
 			$documents = array_merge( $documents_folder, $documents_document );
 		} else {
-			$documents_document = self::get_document_data( $document_ids_document );
+			$documents_document = self::get_document_data( $document_ids_document, false );
 			$documents_folder   = self::get_folder_data( $document_ids_folder );
 
 			$documents = array_merge( $documents_folder, $documents_document );
@@ -1084,6 +1085,16 @@ class BP_Document {
 		} else {
 			$retval['documents'] = $documents;
 		}
+
+		if ( ! empty( $documents ) && 'ids' !== $r['fields'] ) {
+			foreach ( $documents as $key => $data ) {
+				if ( ! empty( $data->attachment_id ) ) {
+					$documents[ $key ] = current( self::get_document_data( array( $data->id ), true ) );
+				}
+			}
+		}
+
+		$retval['documents'] = $documents;
 
 		return $retval;
 	}

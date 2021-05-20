@@ -4465,7 +4465,18 @@ function bb_document_video_get_symlink( $document ) {
 		$upload_directory    = wp_get_upload_dir();
 		$attachment_path     = $video_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . time() );
 
-		$mime = mime_content_type( $attached_file );
+		if ( function_exists( 'mime_content_type' ) ) {
+			$mime = mime_content_type( $attached_file );
+		} elseif ( class_exists( 'finfo' ) ) {
+			$finfo = new finfo();
+
+			if ( is_resource( $finfo ) === true ) {
+				$mime = $finfo->file( $attached_file, FILEINFO_MIME_TYPE );
+			}
+		} else {
+			$filetype = wp_check_filetype( $attached_file );
+			$mime     = $filetype['type'];
+		}
 
 		if ( strstr( $mime, 'video/' ) ) {
 			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
