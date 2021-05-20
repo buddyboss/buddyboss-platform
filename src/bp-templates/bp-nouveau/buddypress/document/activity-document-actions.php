@@ -10,7 +10,6 @@ global $document_template;
 $download_url     = bp_document_download_link( bp_get_document_attachment_id(), bp_get_document_id() );
 $document_privacy = bb_media_user_can_access( bp_get_document_id(), 'document' );
 $can_download_btn = true === (bool) $document_privacy['can_download'];
-$can_manage_btn   = true === (bool) $document_privacy['can_manage'];
 $can_view         = true === (bool) $document_privacy['can_view'];
 $can_move         = true === (bool) $document_privacy['can_move'];
 $can_add          = true === (bool) $document_privacy['can_add'];
