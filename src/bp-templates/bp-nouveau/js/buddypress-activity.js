@@ -1183,6 +1183,7 @@ window.bp = window.bp || {};
 									}
 									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ) ) {
 										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
 									jQuery( window ).scroll();
 								}
