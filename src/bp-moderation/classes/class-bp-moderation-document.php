@@ -199,6 +199,6 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 
 		$document_ids = explode( ',', $activity_document_ids );
 
-		return bp_moderation_is_content_hidden( explode( ',', $document_ids ), self::$moderation_type );
+		return bp_moderation_is_content_hidden( $document_ids, self::$moderation_type );
 	}
 }

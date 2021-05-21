@@ -54,7 +54,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		}
 
 		// Update report button.
-		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
+		//add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
@@ -199,6 +199,6 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 
 		$media_ids = explode( ',', $activity_media_ids );
 
-		return bp_moderation_is_content_hidden( explode( ',', $media_ids ), self::$moderation_type );
+		return bp_moderation_is_content_hidden( $media_ids, self::$moderation_type );
 	}
 }

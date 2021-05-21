@@ -322,7 +322,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		$media            = new BP_Media( $media_id );
 
 		if ( bp_is_active( 'activity' ) && ! empty( $media ) && ! empty( $media->id ) && ! empty( $media->activity_id ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ]         = $media->activity_id;
+			$related_contents[ BP_Suspend_Activity::$type ][]       = $media->activity_id;
 			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $media->activity_id );
 		}
 
