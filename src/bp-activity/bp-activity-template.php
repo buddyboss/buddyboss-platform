@@ -1363,7 +1363,7 @@ function bp_get_activity_action( $args = array() ) {
 	return apply_filters_ref_array(
 		'bp_get_activity_action',
 		array(
-			$action,
+			html_entity_decode($action, ENT_QUOTES), // Decode HTML code.
 			&$activities_template->activity,
 			$r,
 		)
