@@ -790,6 +790,8 @@ window.bp = window.bp || {};
 
 			$( popupSelector ).find( '.bp-video-thumbnail-uploader' ).addClass( 'opened-edit-thumbnail' ).show();
 
+			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).html('');
+
 			$( document ).on(
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated .bb-action-check-wrap',
