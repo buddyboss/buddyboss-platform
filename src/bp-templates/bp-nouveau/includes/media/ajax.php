@@ -243,6 +243,15 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+
+	if (
+		( ( bp_is_my_profile() || bp_is_user_media() ) && empty( bb_user_can_create_media() ) ) ||
+		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ! groups_can_user_manage_media( bp_loggedin_user_id(), $group_id ) )
+	) {
+		wp_send_json_error( $response );
+	}
+
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $medias ) ) {

@@ -60,7 +60,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							</a> 
 							<?php
 						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit ) {
-							$manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
+							$manage = groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() );
 							if ( $manage ) {
 								?>
 								<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
