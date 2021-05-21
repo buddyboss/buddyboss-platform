@@ -253,7 +253,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			$args = array(
-				'search_term'   => $_REQUEST['search_term'],
+
+				// Needed to replace '&' with '&amp;' so it matches the data in db. '&' symbol usually be replaced with '&amp;' when saving in database.
+				'search_term'   => str_replace('&', '&amp;', $_REQUEST['search_term']),
 				// How many results should be displyed in autosuggest?
 				// @todo: give a settings field for this value
 				'ajax_per_page' => $_REQUEST['per_page'],
@@ -760,7 +762,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) {
-				$args['search_term'] = $_GET['s'];
+				// Needed to replace '&' with '&amp;' so it matches the data in db. '&' symbol usually be replaced with '&amp;' when saving in database.
+				$args['search_term'] = str_replace('&', '&amp;', $_GET['s']);
 			}
 
 			if ( isset( $_GET['list'] ) && ! empty( $_GET['list'] ) ) {
