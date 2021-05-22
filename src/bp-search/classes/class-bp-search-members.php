@@ -221,10 +221,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							}
 						}
 
+						// Remove hidden profile type users.
+						$remove_hidden_profile_type_users = array();
+						if ( bp_has_members( array( 'include' => $user_ids ) ) ) {
+							while ( bp_members() ) {
+								bp_the_member();
+								$remove_hidden_profile_type_users[] = bp_get_member_user_id();
+							}
+						}
+
 						// Added user when visbility matched.
-						if ( ! empty( $user_ids ) ) {
-							$user_ids       = array_unique( $user_ids );
-							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )";
+						if ( ! empty( $remove_hidden_profile_type_users ) ) {
+							$remove_hidden_profile_type_users = array_unique( $remove_hidden_profile_type_users );
+							$where_fields[]                   = "u.id IN ( " . implode( ',', $remove_hidden_profile_type_users ) . " )";
 						} else {
 							$where_fields[] = "u.id = 0";
 						}
