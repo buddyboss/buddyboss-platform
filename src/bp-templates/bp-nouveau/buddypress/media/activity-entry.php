@@ -93,7 +93,7 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 	   class="bb-open-media-theatre entry-img"
 	   data-id="<?php bp_media_id(); ?>"
 	   data-attachment-id="<?php bp_media_attachment_id(); ?>"
-	   data-attachment-full="<?php bp_media_attachment_image(); ?>"
+	   data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
 	   data-activity-id="<?php bp_media_activity_id(); ?>"
 	   data-privacy="<?php bp_media_privacy(); ?>"
 	   data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
@@ -102,7 +102,7 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
         data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>"
 	>
 		<?php $size = 1 === $media_template->media_count ? 'bp-activity-media-thumbnail' : 'bp-media-thumbnail'; ?>
-		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_template->media_count ? esc_url( bp_get_media_attachment_image() ) : esc_url( bp_get_media_attachment_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
+		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_template->media_count ? esc_url( bp_media_attachment_image_activity_thumbnail() ) : esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 
 		<?php
 		if ( $media_template->media_count > 5 && 4 === $media_template->current_media ) {

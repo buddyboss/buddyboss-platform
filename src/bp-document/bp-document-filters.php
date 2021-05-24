@@ -74,6 +74,8 @@ add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
 // Clear document symlinks on delete.
 add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on_delete', 10 );
 
+add_filter( 'bb_ajax_activity_update_privacy', 'bb_document_update_video_symlink', 99, 2 );
+
 /**
  * Clear a user's symlinks document when attachment document delete.
  *
@@ -1789,5 +1791,52 @@ function bp_document_activity_entry_css_class( $class ) {
 	}
 
 	return $class;
+
+}
+
+/**
+ * Added the video symlink data to update when privacy update.
+ *
+ * @param array $response  Response array.
+ * @param array $post_data The post data.
+ *
+ * @return array $response data.
+ */
+function bb_document_update_video_symlink( $response, $post_data ) {
+
+	if ( ! empty( $post_data['id'] ) ) {
+
+		// Fetch document ids of activity.
+		$document_ids = bp_activity_get_meta( $post_data['id'], 'bp_document_ids', true );
+
+		if ( ! empty( $document_ids ) ) {
+
+			$document_ids = explode( ',', $document_ids );
+			$count     = count( $document_ids );
+			if ( 1 === $count ) {
+				$document    = new BP_Document( (int) current( $document_ids ) );
+				$file_url = wp_get_attachment_url( $document->attachment_id );
+				$filetype = wp_check_filetype( $file_url );
+				$ext      = $filetype['ext'];
+				if ( empty( $ext ) ) {
+					$path = wp_parse_url( $file_url, PHP_URL_PATH );
+					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+				}
+
+				if ( ! empty( $filetype ) && strstr( $filetype['type'], 'video/' ) ) {
+					$response['video_symlink']     = bb_document_video_get_symlink( (int) current( $document_ids ) );
+					$response['video_extension']   = 'video/' . $ext;
+					$response['extension']         = $ext;
+					$response['video_id']          = (int) current( $document_ids );
+					$response['video_link_update'] = true;
+					$response['video_js_id']       = 'video-' . (int) current( $document_ids ) . '_html5_api';
+				}
+
+
+			}
+		}
+	}
+
+	return $response;
 
 }

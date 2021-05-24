@@ -154,12 +154,8 @@ function bp_nouveau_ajax_document_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_document_upload_dir' );
-
 	// Upload file.
 	$result = bp_document_upload();
-
-	remove_filter( 'upload_dir', 'bp_document_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 
@@ -1491,10 +1487,13 @@ function bp_nouveau_ajax_document_save_privacy() {
 	// Update document privacy with nested level.
 	bp_document_update_privacy( $id, $privacy, $type );
 
+	$document = ( 'document' === $type ? bb_get_document_attachments( $id ) : '' );
+
 	wp_send_json_success(
 		array(
-			'message' => 'success',
-			'html'    => $type,
+			'message'  => 'success',
+			'html'     => $type,
+			'document' => $document,
 		)
 	);
 

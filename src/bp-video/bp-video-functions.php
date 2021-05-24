@@ -4001,3 +4001,37 @@ function bb_video_check_is_ffprobe_binary() {
 
 	return (object) $retval;
 }
+
+/**
+ * Get video thumbnail image sizes to register.
+ *
+ * @return array Image sizes.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_get_image_sizes() {
+	$image_sizes = array(
+		'bb-video-activity-image'                 => array(
+			'height' => 400,
+			'width'  => 640,
+		),
+		'bb-video-album-poster-image'             => array(
+			'height' => 230,
+			'width'  => 400,
+		),
+		'bb-video-profile-directory-poster-image' => array(
+			'height' => 267,
+			'width'  => 400,
+		),
+		'bb-video-poster-popup-image'             => array(
+			'height' => 800,
+			'width'  => 1300,
+		),
+		'bb-video-add-thumbnail-popup-image'      => array(
+			'height' => 230,
+			'width'  => 400,
+		)
+	);
+
+	return (array) apply_filters( 'bb_video_get_image_sizes', $image_sizes );
+}
