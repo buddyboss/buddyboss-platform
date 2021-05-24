@@ -93,9 +93,9 @@ function bp_video_settings_callback_group_video_support() {
 			$second_to_last_string_name = array_pop( $string_array );
 			$display_string            .= implode( ', ', $string_array );
 			if ( ! empty( $second_to_last_string_name ) ) {
-				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . '</strong> and <strong>';
 			} else {
-				$display_string .= ' and ';
+				$display_string .= '</strong> and <strong>';
 			}
 		}
 		$display_string .= $last_string;
