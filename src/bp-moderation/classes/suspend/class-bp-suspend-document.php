@@ -219,6 +219,10 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_hidden_document( $document_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $document_id, self::$type ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -260,6 +264,10 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_document( $document_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $document_id, self::$type ) ) {
+			return;
+		}
 
 		$suspend_args = wp_parse_args(
 			$args,
@@ -317,10 +325,18 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		$document         = new BP_Document( $document_id );
 
 		if ( bp_is_active( 'activity' ) && ! empty( $document ) && ! empty( $document->id ) && ! empty( $document->activity_id ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ]         = $document->activity_id;
+			$related_contents[ BP_Suspend_Activity::$type ][]       = $document->activity_id;
 			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $document->activity_id );
-		}
 
+			if ( ( 'hide' === $args['action'] && true === bp_moderation_is_activity_related_content_hidden( $document ) ) || ( 'unhide' === $args['action'] && false === bp_moderation_is_activity_related_content_hidden( $document ) ) ) {
+				$attachment_id = $document->attachment_id;
+
+				if ( ! empty( $attachment_id ) ) {
+					$parent_activity_id                               = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+					$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity_id;
+				}
+			}
+		}
 		return $related_contents;
 	}
 

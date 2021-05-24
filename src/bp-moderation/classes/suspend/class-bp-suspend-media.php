@@ -126,12 +126,12 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @return array Media IDs
 	 */
-	public static function get_media_ids_meta( $item_id, $function = 'get_post_meta', $key = 'bp_media_ids' ) {
+	public static function get_media_ids_meta( $item_id, $function = 'get_post_meta' ) {
 		$media_ids = array();
 
 		if ( function_exists( $function ) ) {
 			if ( ! empty( $item_id ) ) {
-				$post_media = $function( $item_id, $key, true );
+				$post_media = $function( $item_id, 'bp_media_ids', true );
 
 				if ( empty( $post_media ) ) {
 					$post_media = BP_Media::get_activity_media_id( $item_id );
@@ -224,6 +224,10 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	public function manage_hidden_media( $media_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $media_id, self::$type ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -265,6 +269,10 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_media( $media_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $media_id, self::$type ) ) {
+			return;
+		}
 
 		$suspend_args = wp_parse_args(
 			$args,
@@ -324,6 +332,15 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'activity' ) && ! empty( $media ) && ! empty( $media->id ) && ! empty( $media->activity_id ) ) {
 			$related_contents[ BP_Suspend_Activity::$type ][]       = $media->activity_id;
 			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $media->activity_id );
+
+			if ( ( 'hide' === $args['action'] && true === bp_moderation_is_activity_related_content_hidden( $media ) ) || ( 'unhide' === $args['action'] && false === bp_moderation_is_activity_related_content_hidden( $media ) ) ) {
+				$attachment_id = $media->attachment_id;
+
+				if ( ! empty( $attachment_id ) ) {
+					$parent_activity_id                               = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+					$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity_id;
+				}
+			}
 		}
 
 		return $related_contents;

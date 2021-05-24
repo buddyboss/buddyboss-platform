@@ -546,8 +546,8 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 /**
  * Check the current content is hidden or not.
  *
- * @param int    $item_id   Item ID.
- * @param string $item_type Item Type.
+ * @param int|array $item_id   Item ID.
+ * @param string    $item_type Item Type.
  *
  * @since BuddyBoss 1.5.6
  *
@@ -1071,27 +1071,29 @@ function bp_moderation_item_count( $args = array() ) {
 }
 
 /**
- * Function to check if the activity content is hidden.
+ * Function to check if the media activity content is hidden.
  *
- * @param int $media_id media id.
+ * @param object $media_object media id.
  *
  * @return boolean
  */
-function bp_moderation_is_activity_related_content_hidden( $media_id ) {
+function bp_moderation_is_activity_related_content_hidden( $media_object ) {
 
-	$media = new BP_Media( $media_id );
-
-	if ( empty( $media ) ) {
+	if ( empty( $media_object ) ) {
 		return false;
 	}
 
-	$attachment_id = $media->attachment_id;
+	$attachment_id = $media_object->attachment_id;
 
 	if ( empty( $attachment_id ) ) {
 		return false;
 	}
 
 	$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+
+	if ( empty( $parent_activity_id ) ) {
+		$parent_activity_id = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+	}
 
 	if ( empty( $parent_activity_id ) ) {
 		return false;
@@ -1103,5 +1105,6 @@ function bp_moderation_is_activity_related_content_hidden( $media_id ) {
 		return false;
 	}
 
-	return apply_filters( 'bp_moderation_is_activity_related_content_hidden', false, $activity_data );
+	// false = all the related data is unhidden.
+	return apply_filters( 'bp_moderation_is_activity_related_content_hidden', true, $activity_data );
 }

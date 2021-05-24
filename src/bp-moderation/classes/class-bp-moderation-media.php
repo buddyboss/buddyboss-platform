@@ -187,18 +187,28 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public function is_activity_media_hidden( $hidden, $activity_data ) {
 
-		if ( true === $hidden ) {
-			return true;
+		if ( false === $hidden ) {
+			return $hidden;
 		}
 
 		$activity_media_ids = bp_activity_get_meta( $activity_data->id, 'bp_media_ids', true );
 
 		if ( empty( $activity_media_ids ) ) {
-			return false;
+			return $hidden;
 		}
 
-		$media_ids = explode( ',', $activity_media_ids );
+		$media_ids          = explode( ',', $activity_media_ids );
+		$unhidden_media_ids = array();
+		foreach ( $media_ids as $media_id ) {
+			if ( ! bp_moderation_is_content_hidden( $media_id, self::$moderation_type ) ) {
+				$unhidden_media_ids[] = $media_id;
+			}
+		}
 
-		return bp_moderation_is_content_hidden( $media_ids, self::$moderation_type );
+		if ( ! empty( $unhidden_media_ids ) ) {
+			return bp_moderation_is_content_hidden( $unhidden_media_ids, self::$moderation_type );
+		} else {
+			return $hidden;
+		}
 	}
 }

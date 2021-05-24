@@ -275,6 +275,10 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public function manage_hidden_activity( $activity_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $activity_id, self::$type ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -316,6 +320,10 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_activity( $activity_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $activity_id, self::$type ) ) {
+			return;
+		}
 
 		$suspend_args = wp_parse_args(
 			$args,
@@ -380,7 +388,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'media' ) ) {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta' );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta', 'bp_media_id' );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta' );
 		}
 
 		return $related_contents;

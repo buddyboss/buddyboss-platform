@@ -54,7 +54,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		// Update report button.
-		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
+		//add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
@@ -187,18 +187,29 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 */
 	public function is_activity_document_hidden( $hidden, $activity_data ) {
 
-		if ( true === $hidden ) {
-			return true;
+		if ( false === $hidden ) {
+			return $hidden;
 		}
 
 		$activity_document_ids = bp_activity_get_meta( $activity_data->id, 'bp_document_ids', true );
 
 		if ( empty( $activity_document_ids ) ) {
-			return false;
+			return $hidden;
 		}
 
-		$document_ids = explode( ',', $activity_document_ids );
+		$document_ids          = explode( ',', $activity_document_ids );
+		$unhidden_document_ids = array();
 
-		return bp_moderation_is_content_hidden( $document_ids, self::$moderation_type );
+		foreach ( $document_ids as $document_id ) {
+			if ( ! bp_moderation_is_content_hidden( $document_id, self::$moderation_type ) ) {
+				$unhidden_document_ids[] = $document_id;
+			}
+		}
+
+		if ( ! empty( $unhidden_document_ids ) ) {
+			return bp_moderation_is_content_hidden( $unhidden_document_ids, self::$moderation_type );
+		} else {
+			return $hidden;
+		}
 	}
 }

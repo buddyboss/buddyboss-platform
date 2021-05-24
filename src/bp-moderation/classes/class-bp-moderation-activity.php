@@ -62,7 +62,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
 		// Check if activity has content.
-		add_filter( 'bp_moderation_is_activity_related_content_hidden', array( $this, 'is_activity_content_hidden' ), 10, 2 );
+		add_filter( 'bp_moderation_is_activity_related_content_hidden', array( $this, 'is_activity_content_hidden' ), 20, 2 );
 	}
 
 	/**
@@ -242,14 +242,14 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function is_activity_content_hidden( $hidden, $activity_data ) {
 
-		if ( true === $hidden ) {
-			return true;
+		if ( false === $hidden ) {
+			return $hidden;
 		}
 
-		if ( ! empty( $activity_data->content ) ) {
-			return true;
+		if ( ! empty( wp_strip_all_tags( $activity_data->content ) ) ) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 }

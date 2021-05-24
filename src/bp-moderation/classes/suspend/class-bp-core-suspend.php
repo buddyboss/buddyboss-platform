@@ -352,8 +352,8 @@ class BP_Core_Suspend {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int    $item_id   item id.
-	 * @param string $item_type item type.
+	 * @param int|array $item_id   item id.
+	 * @param string    $item_type item type.
 	 *
 	 * @return bool
 	 */
