@@ -2109,6 +2109,7 @@ window.bp = window.bp || {};
 					success: function ( response ) {
 						if ( response.success ) {
 							$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).html( response.data.video_data );
+							$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).find( 'video' ).attr( 'autoplay', true );
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
 							$( window ).scroll();
@@ -2341,6 +2342,7 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 
 								$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).html( response.data.video_data );
+								$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).find( 'video' ).attr( 'autoplay', true );
 								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
 								$( '.bb-media-info-section:visible' ).show();
 
