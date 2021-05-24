@@ -2016,7 +2016,13 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in groups or not.
-					if (BP_Nouveau.video.group_video === false) {
+					if ( !_.isUndefined( activity_data.group_video ) ) {
+						if ( activity_data.group_video === true ) {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
+						}
+					} else if ( BP_Nouveau.media.group_video === false ) {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
@@ -2063,8 +2069,14 @@ window.bp = window.bp || {};
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
-					// check video is enable in groups or not.
-					if ( BP_Nouveau.video.profile_video === false ) {
+					// check video is enable in profile or not.
+					if ( !_.isUndefined( activity_data.profile_video ) ) {
+						if ( activity_data.profile_video === true ) {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
+						}
+					} else if ( BP_Nouveau.media.profile_video === false ) {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
