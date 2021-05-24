@@ -613,6 +613,19 @@ window.bp = window.bp || {};
 						activity_item.find( '.privacy' ).addClass( target.data( 'value' ) );
 
 						if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.video_symlink !== 'undefined' ) {
+
+							// Update the document video file src on privacy update in activity feed.
+							if ( $( '.document-description-wrap' ).length && $( '.document-description-wrap .bb-open-document-theatre' ).length ) {
+								$( '.document-description-wrap .bb-open-document-theatre' ).attr( 'data-video-preview', response.data.video_symlink );
+								$( '.document-description-wrap .bb-open-document-theatre' ).attr( 'data-extension', response.data.extension );
+							}
+
+							// Update the document video file src on privacy update in activity feed.
+							if ( $( '.document-description-wrap' ).length && $( '.document-detail-wrap.document-detail-wrap-description-popup' ).length ) {
+								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-video-preview', response.data.video_symlink );
+								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-extension', response.data.extension );
+							}
+
 							var myPlayer = videojs( response.data.video_js_id );
 							myPlayer.src(
 								{

@@ -607,7 +607,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$extension_description = '';
 				$extension_lists       = bp_document_extensions_list();
 				$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-				$attachment_url        = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
 				$mirror_text           = bp_document_mirror_text( $attachment_id );
 				$audio_url             = '';
 
@@ -637,7 +636,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					</div>
 					<?php
 				}
-				$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
+				$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
 				if ( $attachment_url ) {
 					?>
 					<div class="document-preview-wrap">
@@ -2179,7 +2178,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 			}
 
-			$content = '';
 			if ( $message_left && 'yes' === $message_left ) {
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
@@ -2237,7 +2235,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$message_unbanned = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
 			$message_deleted  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
 
-			$content = '';
 			if ( $message_left && 'yes' === $message_left ) {
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
@@ -2392,12 +2389,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$url                   = wp_get_attachment_url( $attachment_id );
 					$extension_lists       = bp_document_extensions_list();
 					$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-					$attachment_url        = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
 					$mirror_text           = bp_document_mirror_text( $attachment_id );
 					$audio_url             = '';
-					if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-						$attachment_url = wp_get_attachment_url( bp_get_document_attachment_id() );
-					}
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
@@ -2425,8 +2418,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						</div>
 						<?php
 					}
-					$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
-					if ( $attachment_url ) {
+
+					$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+					if ( '' !== $attachment_url ) {
 						?>
 						<div class="document-preview-wrap">
 							<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>

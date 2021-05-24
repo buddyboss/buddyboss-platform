@@ -1037,6 +1037,14 @@ function bp_get_document_attachment_image_activity_thumbnail() {
 	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->activity_thumb ) ) {
 		$activity_thumbnail = $document_template->document->attachment_data->activity_thumb;
 	}
+	if ( 'pdf' === bp_get_document_extension() ) {
+		if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['activity_thumb_pdf'] ) ) {
+			$activity_thumbnail = $document_template->document->attachment_data['activity_thumb_pdf'];
+		} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->activity_thumb_pdf ) ) {
+			$activity_thumbnail = $document_template->document->attachment_data->activity_thumb_pdf;
+		}
+	}
+
 
 	/**
 	 * Filters the document activity thumbnail being displayed.

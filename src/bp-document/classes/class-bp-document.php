@@ -196,6 +196,7 @@ class BP_Document {
 		$this->date_created  = $row->date_created;
 		$this->date_modified = $row->date_modified;
 		$this->extension     = bp_document_extension( $this->attachment_id );
+
 	}
 
 	/**
@@ -688,17 +689,21 @@ class BP_Document {
 			}
 
 			// fetch attachment data.
-			$large = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'large' ) : '' );
-			$thumb = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'thumbnail' ) : '' );
+			$large_pdf_image_popup = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'bb-document-pdf-image-popup-image' ) : '' );
+			$activity_thumb_pdf    = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'bb-document-pdf-preview-activity-image' ) : '' );
+			$activity_thumb_image  = ( $thumb_gen ? bp_document_get_preview_url( $document->id, $document->attachment_id, 'bb-document-image-preview-activity-image' ) : '' );
+			$video_symlink         = ( $thumb_gen ? bb_document_video_get_symlink( $document ) : '' );
 
-			$attachment_data                 = new stdClass();
-			$attachment_data->full           = $large;
-			$attachment_data->thumb          = $thumb;
-			$attachment_data->activity_thumb = $thumb;
-			$attachment_data->meta           = self::attachment_meta( $document->attachment_id );
-			$document->attachment_data       = $attachment_data;
-			$document->group_name            = $group_name;
-			$document->visibility            = $visibility;
+			$attachment_data                     = new stdClass();
+			$attachment_data->full               = $large_pdf_image_popup;
+			$attachment_data->thumb              = $activity_thumb_image;
+			$attachment_data->activity_thumb     = $activity_thumb_image;
+			$attachment_data->activity_thumb_pdf = $activity_thumb_pdf;
+			$attachment_data->video_symlink      = $video_symlink;
+			$attachment_data->meta               = self::attachment_meta( $document->attachment_id );
+			$document->attachment_data           = $attachment_data;
+			$document->group_name                = $group_name;
+			$document->visibility                = $visibility;
 
 			$documents[] = $document;
 		}
@@ -917,6 +922,12 @@ class BP_Document {
 			$in                              = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions_document['in'] = "d.id IN ({$in})";
 			$where_conditions_folder['in']   = "f.id IN ({$in})";
+		}
+
+		if ( ! empty( $r['folder_id'] ) ) {
+			$folder_id                              = implode( ',', wp_parse_id_list( $r['folder_id'] ) );
+			$where_conditions_document['folder_id'] = "d.folder_id IN ({$folder_id})";
+			$where_conditions_folder['folder_id']   = "f.parent IN ({$folder_id})";
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
@@ -1688,16 +1699,6 @@ class BP_Document {
 			}
 		}
 
-		// if ( ! empty( $document_ids ) ) {
-		// Loop through attachment ids and attempt to delete.
-		// foreach ( $document_ids as $document ) {
-		// $preview_attachment_id = bp_document_get_meta( $document, 'preview_attachment_id', true );
-		// if ( $preview_attachment_id ) {
-		// wp_delete_attachment( $preview_attachment_id, true );
-		// }
-		// }
-		// }
-
 		// Delete meta.
 		if ( ! empty( $document_ids ) ) {
 			// Delete all document meta entries for document items.
@@ -2028,137 +2029,6 @@ class BP_Document {
 			return @ set_time_limit( $time_limit );
 		}
 		return null;
-	}
-
-	/**
-	 * Does the actual PDF preview regenerate.
-	 */
-	static function bp_document_pdf_previews( $ids, $check_mime_type = false, $document_id ) {
-
-		$cnt                    = $num_updates = $num_fails = $time = 0;
-		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
-		if ( $ids && ! $preview_attachment_id ) {
-			$time = microtime( true );
-			$cnt = count( $ids );
-			self::bp_document_set_time_limit( max( $cnt * self::$per_pdf_secs, self::$min_time_limit ) );
-
-			foreach ( $ids as $idx => $id ) {
-				if ( $check_mime_type && 'application/pdf' !== get_post_mime_type( $id ) ) {
-					continue;
-				}
-				$file = get_attached_file( $id );
-				if ( false === $file || '' === $file ) {
-					$num_fails++;
-				} else {
-					// Get current metadata if any.
-					$old_value = get_metadata( 'post', $id, '_wp_attachment_metadata' );
-					if ( $old_value && ( ! is_array( $old_value ) || 1 !== count( $old_value ) ) ) {
-						$old_value = null;
-					}
-					// Remove old intermediate thumbnails if any.
-					if ( $old_value && ! empty( $old_value[0]['sizes'] ) && is_array( $old_value[0]['sizes'] ) ) {
-						$dirname = dirname( $file ) . '/';
-						foreach ( $old_value[0]['sizes'] as $sizeinfo ) {
-							// Check whether pre WP 4.7.3 lacking PDF marker and if so don't delete so as not to break links to thumbnails in content.
-							if ( false !== strpos( $sizeinfo['file'], '-pdf' ) ) {
-								@ unlink( $dirname . $sizeinfo['file'] );
-							}
-						}
-					}
-					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
-					}
-					// Generate new intermediate thumbnails.
-					$meta = wp_generate_attachment_metadata( $id, $file );
-					if ( ! $meta ) {
-						$num_fails++;
-					} else {
-						// wp_update_attachment_metadata() returns false if nothing to update so check first.
-						if ( ( $old_value && $old_value[0] === $meta ) || false !== wp_update_attachment_metadata( $id, $meta ) ) {
-							$num_updates++;
-						} else {
-							$num_fails++;
-						}
-					}
-
-					if ( $meta ) {
-						$upload_dir     = wp_upload_dir();
-						$preview_folder = '';
-						$output_file     = wp_get_attachment_image_url( $id, 'full' );
-						$output_file_src = bp_document_scaled_image_path( $id );
-
-						if ( '' !== $output_file && '' !== basename( $output_file ) && strstr( $output_file, 'bb_documents/' ) ) {
-							add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
-							$upload_dir = $upload_dir['basedir'];
-
-							// Create temp folder.
-							$upload_dir = $upload_dir . '/preview-image-folder-' . time();
-
-							// If folder not exists then create.
-							if ( ! is_dir( $upload_dir ) ) {
-
-								// Create temp folder.
-								wp_mkdir_p( $upload_dir );
-								chmod( $upload_dir, 0777 );
-
-								// Create given main parent folder.
-								$preview_folder = $upload_dir;
-								wp_mkdir_p( $preview_folder );
-
-								$file_name = basename( $output_file );
-								$extension_pos = strrpos($file_name, '.'); // find position of the last dot, so where the extension starts
-								$thumb = substr($file_name, 0, $extension_pos) . '_thumb' . substr($file_name, $extension_pos);
-								copy( $output_file_src, $preview_folder . '/' . $thumb );
-
-							}
-
-							$files     = scandir( $preview_folder );
-							$firstFile = $preview_folder . '/' . $files[2];
-							bp_document_chmod_r( $preview_folder );
-
-							$image_data = file_get_contents( $firstFile );
-							$filename   = basename( $output_file );
-							$upload_dir = wp_upload_dir();
-
-							if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-								$file = $upload_dir['path'] . '/' . $filename;
-							} else {
-								$file = $upload_dir['basedir'] . '/' . $filename;
-							}
-
-							file_put_contents( $file, $image_data );
-
-							$wp_filetype = wp_check_filetype( $filename, null );
-
-							$attachment = array(
-								'post_mime_type' => $wp_filetype['type'],
-								'post_title'     => sanitize_file_name( $filename ),
-								'post_content'   => '',
-								'post_status'    => 'inherit',
-							);
-
-							$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-							if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-								require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-								require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-								require_once ABSPATH . 'wp-admin' . '/includes/media.php';
-							}
-							$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
-							wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-							update_post_meta( $id, 'document_preview_generated', 'yes' );
-							update_post_meta( $id, 'document_preview_attachment_id', $preview_attachment_id );
-							bp_document_update_meta( $document_id, 'preview_attachment_id', $preview_attachment_id );
-							BP_Document::bp_document_remove_temp_directory( $preview_folder );
-							remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
-						}
-					}
-				}
-			}
-			$time = round( microtime( true ) - $time, self::$timing_dec_places );
-		}
-		return array( $cnt, $num_updates, $num_fails, $time );
 	}
 
 	/**

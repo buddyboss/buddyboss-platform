@@ -1894,3 +1894,65 @@ function bp_album_user_can_edit( $album = false ) {
 	 */
 	return (bool) apply_filters( 'bp_album_user_can_delete', $can_edit, $album );
 }
+
+/**
+ * Output the media photos/directory thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_media_photos_directory_image_thumbnail() {
+	echo bb_get_media_photos_directory_image_thumbnail();
+}
+
+/**
+ * Return the media photos/directory thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media photos/directory thumbnail url.
+ */
+function bb_get_media_photos_directory_image_thumbnail() {
+	global $media_template;
+
+	/**
+	 * Filters the media photos/directory being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media photos/directory thumbnail.
+	 */
+	return apply_filters( 'bb_get_media_photos_directory_image_thumbnail', $media_template->media->attachment_data->media_photos_directory_page );
+}
+
+/**
+ * Output the media photos/directory thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_media_photos_theatre_popup_image() {
+	echo bb_get_media_photos_theatre_popup_image();
+}
+
+/**
+ * Return the media theatre popup thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media theatre popup thumbnail url.
+ */
+function bb_get_media_photos_theatre_popup_image() {
+	global $media_template;
+
+	/**
+	 * Filters the media theatre popup being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media theatre popup thumbnail.
+	 */
+	return apply_filters( 'bb_get_media_photos_theatre_popup_image', $media_template->media->attachment_data->media_photos_directory_page );
+}

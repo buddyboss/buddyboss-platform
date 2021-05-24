@@ -654,12 +654,19 @@ class BP_Media {
 			}
 
 			// fetch attachment data.
-			$attachment_data                 = new stdClass();
-			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
-			$attachment_data->thumb          = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
-			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
-			$attachment_data->meta           = self::attachment_meta( $media->attachment_id );
-			$media->attachment_data          = $attachment_data;
+			$attachment_data                              = new stdClass();
+			$activity_thumb                               = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' );
+			$media_album_cover_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-album-image' );
+			$media_photos_page_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-directory-image' );
+			$media_theatre_popup                          = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' );
+			$attachment_data->full                        = $activity_thumb;
+			$attachment_data->thumb                       = $activity_thumb;
+			$attachment_data->media_album_cover           = $media_album_cover_thumb;
+			$attachment_data->media_photos_directory_page = $media_photos_page_thumb;
+			$attachment_data->media_theatre_popup         = $media_theatre_popup;
+			$attachment_data->activity_thumb              = $activity_thumb;
+			$attachment_data->meta                        = self::attachment_meta( $media->attachment_id );
+			$media->attachment_data                       = $attachment_data;
 
 			if( $media->type == 'video' && function_exists( 'bb_video_get_thumb_url' ) ) {
 				$get_video_thumb_ids = get_post_meta( $media->attachment_id, 'video_preview_thumbnails', true );

@@ -19,7 +19,7 @@ if ( $attachment_id ) {
 	$listing_class       = 'ac-document-list';
 	$document_type       = 'document';
 	$document_title 	 = bp_get_document_title();
-	$attachment_url 	 = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id() );
+	$attachment_url 	 = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
 	$mirror_text		 = bp_document_mirror_text( $attachment_id );
 }
 $link = bp_get_document_link( bp_get_document_id() );

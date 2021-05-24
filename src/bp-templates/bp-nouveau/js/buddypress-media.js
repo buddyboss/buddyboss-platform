@@ -769,6 +769,9 @@ window.bp = window.bp || {};
 						success: function ( response ) {
 							if ( response.success ) {
 								$( document ).find( '#div-listing-' + itemId + ' li#' + itemId + ' a' ).attr( 'data-privacy', value );
+								if ( response.data.document && response.data.document.video_symlink ) {
+									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
+								}
 							} else {
 								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
@@ -6323,7 +6326,7 @@ window.bp = window.bp || {};
 							download          : document_element.attr('href'),
 							mp3               : document_element.data('mp3-preview'),
 							can_edit          : document_element.data('can-edit'),
-							video             : document_element.data( 'video-preview' ),
+							video             : document_element.attr( 'data-video-preview' ),
 							is_forum          : false
 						};
 
@@ -6441,7 +6444,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
 				//fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();
 				$( window ).scroll();
 
