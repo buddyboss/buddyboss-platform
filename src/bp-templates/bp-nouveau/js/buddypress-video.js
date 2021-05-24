@@ -843,6 +843,21 @@ window.bp = window.bp || {};
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-submit' ).hide();
 					}
 					$( this ).closest( '.video-thumbnail-custom' ).addClass('is_hidden');
+					// call ajax to remove attachment video_thumbnail_delete
+					var thumbVideoAttachmentId = $( this ).closest( '.video-thumbnail-custom' ).siblings('.bb-action-check-wrap').find( 'input' ).val();
+					$.ajax(
+						{
+							type: 'POST',
+							url: BP_Nouveau.ajaxurl,
+							data: {
+								'action': 'video_thumbnail_delete',
+								'_wpnonce': BP_Nouveau.nonces.video,
+								'video_id': videoAttachmentId,
+								'video_attachment_id': thumbVideoAttachmentId,
+							},
+							success: function () {}
+						}
+					);
 				}
 			);
 
