@@ -369,7 +369,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			$suspended_record = BP_Core_Suspend::get_recode( $media->user_id, BP_Moderation_Members::$moderation_type );
 		}
 
-		if ( empty( $suspended_record ) ) {
+		if ( empty( $suspended_record ) || bp_moderation_is_content_hidden( $media->id, self::$type ) ) {
 			return;
 		}
 
