@@ -3877,6 +3877,7 @@ bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_
 function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 ) {
 
 	$attachment_urls = [];
+	$video           = new BP_Video( $video_id );
 	$auto_generated_thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
 	$preview_thumbnail_id      = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 	if ( $auto_generated_thumbnails ) {
@@ -3885,7 +3886,7 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
 				$attachment_urls['default_images'][] = array(
 					'id'	=> $auto_generated_thumbnail,
-					'url'	=> bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnail, 'full' )
+					'url'	=> bb_video_get_auto_gen_thumb_symlink( $video, $auto_generated_thumbnail, 'full' )
 				);
 			}
 		} else {
@@ -3903,7 +3904,7 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 	if( $preview_thumbnail_id ) {
 		$attachment_urls['selected_id'] = array(
 			'id'	=> $preview_thumbnail_id,
-			'url'	=> bb_video_get_auto_gen_thumb_symlink( $video_id, $preview_thumbnail_id, 'full' )
+			'url'	=> bb_video_get_auto_gen_thumb_symlink( $video, $preview_thumbnail_id, 'full' )
 		);
 	}
 	if ( isset($auto_generated_thumbnails['custom_image']) && !empty($auto_generated_thumbnails['custom_image']) ) {
@@ -3913,8 +3914,8 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 		$attachment_urls['preview'] = array(
 			'id'            => $id,
 			'attachment_id' => $auto_generated_thumbnails['custom_image'],
-			'thumb'         => bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
-			'url'           => bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnails['custom_image'], 'full' ),
+			'thumb'         => bb_video_get_auto_gen_thumb_symlink( $video, $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
+			'url'           => bb_video_get_auto_gen_thumb_symlink( $video, $auto_generated_thumbnails['custom_image'], 'full' ),
 			'name'          => $video->title,
 			'saved'         => true,
 			'dropzone'      => true
