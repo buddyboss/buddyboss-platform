@@ -615,9 +615,6 @@ class BP_Document {
 	protected static function get_document_data( $document_ids = array(), $thumb_gen = true ) {
 		global $wpdb;
 
-		error_log( print_r( $document_ids,1) );
-		error_log( $thumb_gen );
-
 		// Bail if no document ID's passed.
 		if ( empty( $document_ids ) ) {
 			return array();
@@ -1057,9 +1054,6 @@ class BP_Document {
 		} else {
 			$document_ids_document = $cached_document;
 		}
-
-		error_log( $document_ids_sql_folder );
-		error_log( $document_ids_sql_document );
 
 		if ( 'ids' === $r['fields'] ) {
 			$documents_folder   = array_map( 'intval', $document_ids_folder );
