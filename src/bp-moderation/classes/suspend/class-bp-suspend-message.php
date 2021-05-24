@@ -164,6 +164,10 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	public function manage_hidden_message( $message_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $message_id, self::$type ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -205,6 +209,10 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_message( $message_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $message_id, self::$type ) ) {
+			return;
+		}
 
 		$suspend_args = wp_parse_args(
 			$args,

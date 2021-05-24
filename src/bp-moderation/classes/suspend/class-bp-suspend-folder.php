@@ -190,6 +190,10 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	public function manage_hidden_folder( $folder_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $folder_id, self::$type ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -231,6 +235,10 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_folder( $folder_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $folder_id, self::$type ) ) {
+			return;
+		}
 
 		$suspend_args = wp_parse_args(
 			$args,

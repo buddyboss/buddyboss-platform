@@ -94,6 +94,10 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function manage_hidden_comment( $comment_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $comment_id, self::$type ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -135,6 +139,10 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_comment( $comment_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $comment_id, self::$type ) ) {
+			return;
+		}
 
 		$suspend_args = wp_parse_args(
 			$args,

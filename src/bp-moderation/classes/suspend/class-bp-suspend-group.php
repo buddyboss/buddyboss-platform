@@ -206,6 +206,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public function manage_hidden_group( $group_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $group_id, self::$type ) ) {
+			return;
+		}
+
 		$suspend_args = wp_parse_args(
 			$args,
 			array(
@@ -248,8 +252,11 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_group( $group_id, $hide_sitewide, $force_all, $args = array() ) {
-
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $group_id, self::$type ) ) {
+			return;
+		}
 
 		$suspend_args = wp_parse_args(
 			$args,

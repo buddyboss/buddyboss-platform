@@ -227,6 +227,10 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
+		if ( bp_moderation_is_content_hidden( $forum_id, self::$type ) ) {
+			return;
+		}
+
 		// if Group forums then return.
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
 		if ( ! empty( $group_ids ) && ( ! isset( $args['type'] ) || empty( $args['type'] ) ) ) {
@@ -280,6 +284,10 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 */
 	public function manage_unhidden_forum( $forum_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
+
+		if ( ! bp_moderation_is_content_hidden( $forum_id, self::$type ) ) {
+			return;
+		}
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
