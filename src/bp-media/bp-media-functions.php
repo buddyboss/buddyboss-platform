@@ -3802,7 +3802,7 @@ function bb_media_user_can_access( $id, $type ) {
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_document_delete_older_symlinks() {
+function bb_media_delete_older_symlinks() {
 
 	// Get documents previews symlink directory path.
 	$dir     = bp_media_symlink_path();
