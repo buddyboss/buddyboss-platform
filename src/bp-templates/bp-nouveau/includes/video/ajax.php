@@ -1566,6 +1566,9 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 			'default_images' => $default_images,
 		);
 		update_post_meta( $video_id, 'video_preview_thumbnails', $thumbnail_images );
+		if ( isset( $default_images ) && ! empty( $default_images ) ) {
+			update_post_meta( $video_id, 'bp_video_preview_thumbnail_id', $default_images[0] );
+		}
 		wp_delete_post( $video_attachment_id, true );
 		bb_video_delete_thumb_symlink( $video_id, $video_attachment_id );
 	}
