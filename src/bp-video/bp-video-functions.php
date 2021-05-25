@@ -3220,7 +3220,8 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 
 	if ( $do_symlink ) {
 
-		$attachment_url = bb_video_get_attachment_symlink( $video_id, $attachment_id, $size );
+		$video          = new BP_Video( $video_id );
+		$attachment_url = bb_video_get_attachment_symlink( $video, $attachment_id, $size );
 
 		if ( empty( $attachment_url ) ) {
 			$attachment_url = bb_get_video_default_placeholder_image();
