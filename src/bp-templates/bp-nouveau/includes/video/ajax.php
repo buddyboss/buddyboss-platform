@@ -224,12 +224,8 @@ function bp_nouveau_ajax_video_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_video_upload_dir' );
-
 	// Upload file.
 	$result = bp_video_upload();
-
-	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -263,12 +259,8 @@ function bp_nouveau_ajax_video_thumbnail_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_video_upload_dir' );
-
 	// Upload file.
 	$result = bp_video_thumbnail_upload();
-
-	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -1417,7 +1409,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 		ob_start();
 		if ( $auto_generated_thumbnails_arr ) {
 			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
-				$attachment_url = bb_video_get_auto_gen_thumb_symlink( $video, $auto_generated_thumbnail, 'full' );
+				$attachment_url = bb_video_get_attachment_symlink( $video, $auto_generated_thumbnail, 'bb-video-album-cover-and-add-thumbnail-poster-image' );
 				?>
 				<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
 					<div class="">
@@ -1522,7 +1514,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 	}
 
-	$thumbnail_url = bb_video_get_thumb_url( $video_id, $pre_selected_id, 'full' );
+	$thumbnail_url = bb_video_get_thumb_url( $video_id, $pre_selected_id, 'bb-video-profile-directory-poster-image' );
 
 	if ( empty( $thumbnail_url ) ) {
 		$thumbnail_url = bb_get_video_default_placeholder_image();

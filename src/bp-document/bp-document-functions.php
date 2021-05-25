@@ -3609,7 +3609,7 @@ function bp_document_get_thread_id( $document_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_symlink_path() {
-	add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+
 	$upload_dir = wp_upload_dir();
 	$upload_dir = $upload_dir['basedir'];
 
@@ -3624,7 +3624,6 @@ function bp_document_symlink_path() {
 		wp_mkdir_p( $document_symlinks_path );
 		chmod( $document_symlinks_path, 0755 );
 	}
-	remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 
 	return $document_symlinks_path;
 }
@@ -4536,3 +4535,46 @@ function bb_get_document_attachments( $document ) {
 	return $attachment_data;
 
 }
+
+/**
+ * A simple function that uses mtime to delete files older than a given age (in seconds)
+ * Very handy to rotate backup or log files, for example...
+ *
+ * @return array|void the list of deleted files.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_document_delete_older_symlinks() {
+
+	// Get documents previews symlink directory path.
+	$dir     = bp_document_symlink_path();
+	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$list    = array();
+	$limit   = time() - $max_age;
+	$dir     = realpath( $dir );
+
+	if ( ! is_dir( $dir ) ) {
+		return;
+	}
+
+	$dh = opendir( $dir );
+	if ( false === $dh ) {
+		return;
+	}
+
+	while ( ( $file = readdir( $dh ) ) !== false ) {
+		if ( $file === '.' || $file === '..' ) {
+			continue;
+		}
+		$file = $dir . '/' . $file;
+		if ( filemtime( $file ) < $limit ) {
+			$list[] = $file;
+			unlink( $file );
+		}
+	}
+	closedir( $dh );
+
+	return $list;
+
+}
+bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks' );

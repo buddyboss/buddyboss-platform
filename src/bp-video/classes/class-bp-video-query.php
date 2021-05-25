@@ -255,7 +255,7 @@ class BP_Video_Query extends BP_Recursive_Query {
 	 * Column names are checked against a whitelist of known tables.
 	 * See {@link BP_Video_Query::db_tables}.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $column The user-supplied column name.
 	 * @return string A validated column name value.

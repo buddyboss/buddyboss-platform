@@ -38,8 +38,8 @@ if ( 'video' === $media_template->media->type ) {
 	$poster_thumb     = $poster_full;
 
 	if ( $poster_id ) {
-		$poster_full  = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'full' );
-		$poster_thumb = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'medium' );
+		$poster_full  = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'bb-video-profile-directory-poster-image' );
+		$poster_thumb = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'bb-video-activity-image' );
 	}
 
 	$attachment_urls = bb_video_get_attachments_symlinks( $attachment_id, bp_get_media_id() );

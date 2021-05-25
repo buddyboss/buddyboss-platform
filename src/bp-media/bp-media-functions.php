@@ -3793,3 +3793,46 @@ function bb_media_user_can_access( $id, $type ) {
 	return apply_filters( 'bb_media_user_can_access', $data, $id, $type, $media_group_id );
 
 }
+
+/**
+ * A simple function that uses mtime to delete files older than a given age (in seconds)
+ * Very handy to rotate backup or log files, for example...
+ *
+ * @return array|void the list of deleted files
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_document_delete_older_symlinks() {
+
+	// Get documents previews symlink directory path.
+	$dir     = bp_media_symlink_path();
+	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$list    = array();
+	$limit   = time() - $max_age;
+	$dir     = realpath( $dir );
+
+	if ( ! is_dir( $dir ) ) {
+		return;
+	}
+
+	$dh = opendir( $dir );
+	if ( false === $dh ) {
+		return;
+	}
+
+	while ( ( $file = readdir( $dh ) ) !== false ) {
+		if ( $file === '.' || $file === '..' ) {
+			continue;
+		}
+		$file = $dir . '/' . $file;
+		if ( filemtime( $file ) < $limit ) {
+			$list[] = $file;
+			unlink( $file );
+		}
+	}
+	closedir( $dh );
+
+	return $list;
+
+}
+bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks' );

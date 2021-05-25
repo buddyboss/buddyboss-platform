@@ -13,7 +13,7 @@ global $video_album_template; ?>
 	<div class="bb-album-cover-wrap">
 		<a class="bs-cover-wrap" href="<?php bp_video_album_link(); ?>">
 			<?php if ( ! empty( $video_album_template->album->video['videos'] ) ) : ?>
-				<img src="<?php echo esc_url( $video_album_template->album->video['videos'][0]->attachment_data->thumb ); ?>" />
+				<img src="<?php echo esc_url( $video_album_template->album->video['videos'][0]->attachment_data->video_album_cover_thumb ); ?>" />
 			<?php endif; ?>
 
 			<div class="bb-album-content-wrap">
