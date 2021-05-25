@@ -4348,8 +4348,8 @@ function bb_document_get_image_sizes() {
 			'width'  => 608,
 		),
 		'bb-document-pdf-image-popup-image'        => array(
-			'height' => 800,
-			'width'  => 1300,
+			'height' => 900,
+			'width'  => 1500,
 		),
 		'bb-document-image-preview-activity-image' => array(
 			'height' => 250,

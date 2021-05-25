@@ -3517,7 +3517,7 @@ function bb_video_create_symlinks( $video ) {
 		return;
 	}
 
-	$do_symlink = apply_filters( 'bb_video_do_symlink', true, $video->id, $video->attachment_id, 'medium' );
+	$do_symlink = apply_filters( 'bb_video_do_symlink', true, $video->id, $video->attachment_id, '' );
 
 	if ( $do_symlink ) {
 		bb_video_get_symlink( $video );
@@ -3777,8 +3777,8 @@ function bb_video_get_image_sizes() {
 			'width'  => 400,
 		),
 		'bb-video-poster-popup-image'                         => array(
-			'height' => 800,
-			'width'  => 1300,
+			'height' => 900,
+			'width'  => 1500,
 		),
 		'bb-video-activity-image'                             => array(
 			'height' => 400,

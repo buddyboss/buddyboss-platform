@@ -3424,8 +3424,8 @@ function bp_media_get_image_sizes() {
 			'width'  => 400,
 		),
 		'bb-media-photos-popup-image'     => array(
-			'height' => 800,
-			'width'  => 1300,
+			'height' => 900,
+			'width'  => 1500,
 		)
 	);
 
