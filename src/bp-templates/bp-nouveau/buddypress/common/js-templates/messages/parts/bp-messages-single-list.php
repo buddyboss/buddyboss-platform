@@ -40,13 +40,13 @@
 					<strong class="bp-user-deleted">{{data.sender_name}}</strong>
 					<# } #>
 				<# } else { #>
-                    <# if ( data.sender_is_you ) { #>
-                        <a href="{{data.sender_link}}" class="bp-user-link">
+                    <a href="{{data.sender_link}}" class="bp-user-link">
+                        <# if ( data.sender_is_you ) { #>
                             <strong><?php _e( 'You', 'buddyboss' ); ?></strong>
-                        </a>
-                    <# } else { #>
-                    <strong>{{data.sender_name}}</strong>
-                    <# } #>
+                        <# } else { #>
+                            <strong>{{data.sender_name}}</strong>
+                        <# } #>
+                    </a>
 				<# } #>
 
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>

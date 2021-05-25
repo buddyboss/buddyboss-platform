@@ -664,10 +664,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Remove kses filters from title and content for capable users and if the nonce is verified.
-		if ( current_user_can( 'unfiltered_html' ) ) {
-			remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
-			remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
-		}
+		remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
+		remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
 
 		/** Discussion Title */
 		if ( ! empty( $topic->bbp_topic_title ) ) {
@@ -1273,11 +1271,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Remove kses filters from title and content for capable users.
-		if ( current_user_can( 'unfiltered_html' ) ) {
-			remove_filter( 'bbp_edit_topic_pre_title', 'wp_filter_kses' );
-			remove_filter( 'bbp_edit_topic_pre_content', 'bbp_encode_bad', 10 );
-			remove_filter( 'bbp_edit_topic_pre_content', 'bbp_filter_kses', 30 );
-		}
+		remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
+		remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
 
 		/** Topic Forum */
 		// Forum id was not passed.
