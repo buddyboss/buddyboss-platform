@@ -1954,5 +1954,5 @@ function bb_get_media_photos_theatre_popup_image() {
 	 *
 	 * @param string The media theatre popup thumbnail.
 	 */
-	return apply_filters( 'bb_get_media_photos_theatre_popup_image', $media_template->media->attachment_data->media_photos_directory_page );
+	return apply_filters( 'bb_get_media_photos_theatre_popup_image', $media_template->media->attachment_data->media_theatre_popup );
 }

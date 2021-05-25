@@ -3520,26 +3520,7 @@ function bb_video_create_symlinks( $video ) {
 	$do_symlink = apply_filters( 'bb_video_do_symlink', true, $video->id, $video->attachment_id, 'medium' );
 
 	if ( $do_symlink ) {
-
-		// Get videos previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_path();
-		$attachment_id       = $video->attachment_id;
-		$attached_file       = get_attached_file( $attachment_id );
-		$privacy             = $video->privacy;
-		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy );
-
-		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			if ( ! is_link( $attachment_path ) ) {
-				$get_existing = get_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', true );
-				if ( ! $get_existing ) {
-					update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', array( $attachment_path ) );
-				} else {
-					$get_existing[] = array_push( $get_existing, $attachment_path );
-					update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', $get_existing );
-				}
-				symlink( $attached_file, $attachment_path );
-			}
-		}
+		bb_video_get_symlink( $video );
 	}
 }
 
