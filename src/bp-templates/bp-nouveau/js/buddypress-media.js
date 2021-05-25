@@ -6067,7 +6067,7 @@ window.bp = window.bp || {};
 									function () { // Waiting to load dummy image
 										bp.Nouveau.reportPopUp();
 									},
-									1000
+									10
 								);
 							}
 						}
@@ -6120,7 +6120,7 @@ window.bp = window.bp || {};
 									function () { // Waiting to load dummy image
 										bp.Nouveau.reportPopUp();
 									},
-									1000
+									10
 								);
 							}
 						}
