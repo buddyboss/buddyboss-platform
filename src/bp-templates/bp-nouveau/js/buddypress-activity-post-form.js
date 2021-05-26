@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone */
+/* global bp, BP_Nouveau, _, Backbone, tinymce */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
@@ -13,16 +13,16 @@ window.bp = window.bp || {};
 
 	_.extend( bp, _.pick( wp, 'Backbone', 'ajax', 'template' ) );
 
-	bp.Models           = bp.Models || {};
-	bp.Collections      = bp.Collections || {};
-	bp.Views            = bp.Views || {};
+	bp.Models      = bp.Models || {};
+	bp.Collections = bp.Collections || {};
+	bp.Views       = bp.Views || {};
 
 	// Set the global variable for the edit activity privacy/album_id/folder_id/group_id maintain.
-	bp.privacyEditable  = true;
-	bp.album_id         = 0;
-	bp.folder_id        = 0;
-	bp.group_id         = 0;
-	bp.privacy          = 'public';
+	bp.privacyEditable = true;
+	bp.album_id        = 0;
+	bp.folder_id       = 0;
+	bp.group_id        = 0;
+	bp.privacy         = 'public';
 
 	/**
 	 * [Activity description]
@@ -83,20 +83,21 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url						: BP_Nouveau.ajaxurl,
-				timeout					: 3 * 60 * 60 * 1000,
-				dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage 		: BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles			: 'image/*',
-				autoProcessQueue		: true,
-				addRemoveLinks			: true,
-				uploadMultiple			: false,
-				maxFiles				: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize				: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				url                 : BP_Nouveau.ajaxurl,
+				timeout             : 3 * 60 * 60 * 1000,
+				dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles       : 'image/*',
+				autoProcessQueue    : true,
+				addRemoveLinks      : true,
+				uploadMultiple      : false,
+				maxFiles            : ! _.isUndefined( BP_Nouveau.media.maxFiles ) ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize         : ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
+				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 			};
 
 			// if defined, add custom dropzone options.
-			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
+			if ( ! _.isUndefined( BP_Nouveau.media.dropzone_options ) ) {
 				Object.assign( this.dropzone_options, BP_Nouveau.media.dropzone_options );
 			}
 		},
@@ -110,182 +111,229 @@ window.bp = window.bp || {};
 			// set edit activity data
 			self.editActivityData = activity_data;
 
-			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass('loading');
+			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass( 'loading' );
+			self.postForm.$el.removeClass( 'bp-hide' );
 
 			// add a pause to form to let it cool down a bit.
-			setTimeout( function() {
-				self.postForm.$el.find( '#whats-new' ).trigger( 'focus' );
-				self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
-				self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
+			setTimeout(
+				function() {
+					self.postForm.$el.find( '#whats-new' ).trigger( 'focus' );
+					self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
+					self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
 
-				var tool_box = $( '#whats-new-toolbar' );
+					var tool_box = $( '#whats-new-toolbar' );
 
-				// set object of activity and item id when group activity
-				if ( typeof activity_data.object !== 'undefined' && typeof activity_data.item_id !== 'undefined' && 'groups' === activity_data.object ) {
-					self.postForm.model.set( 'item_id', activity_data.item_id );
-					self.postForm.model.set( 'object', 'group' );
-				}
-
-				var bpActivityEvent = new Event( 'bp_activity_edit' );
-
-				if ( typeof self.activityToolbar !== 'undefined') {
-					// close and destroy existing gif instance
-					self.activityToolbar.closeGifSelector( bpActivityEvent );
-					// close and destroy existing media instance
-					self.activityToolbar.closeMediaSelector( bpActivityEvent );
-				}
-
-				if ( typeof activity_data.gif !== 'undefined' && Object.keys( activity_data.gif ).length ) {
-					// close and destroy existing media instance
-					self.activityToolbar.toggleGifSelector( bpActivityEvent );
-					self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
-
-					// Make tool box button disable.
-					if ( tool_box.find( '#activity-media-button' ) ) {
-						tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
-					}
-					if ( tool_box.find( '#activity-media-button' ) ) {
-						tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
-					}
-					if ( tool_box.find( '#activity-gif-button' ) ) {
-						tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active' );
-					}
-					// END Toolbox Button
-				}
-
-				// Display media for editing
-				if ( typeof activity_data.media !== 'undefined' && activity_data.media.length ) {
-					// open media uploader for editing media
-					if ( typeof self.activityToolbar !== 'undefined') {
-						self.activityToolbar.toggleMediaSelector( bpActivityEvent );
+					// set object of activity and item id when group activity
+					if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
+						  self.postForm.model.set( 'item_id', activity_data.item_id );
+						  self.postForm.model.set( 'object', 'group' );
+						  self.postForm.model.set( 'group_name', activity_data.group_name );
 					}
 
-					// Make tool box button disable.
-					if ( tool_box.find( '#activity-media-button' ) ) {
-						tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
-					}
-					if ( tool_box.find( '#activity-media-button' ) ) {
-						tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
-					}
-					if ( tool_box.find( '#activity-gif-button' ) ) {
-						tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
-					}
-					// END Toolbox Button
+					var bpActivityEvent = new Event( 'bp_activity_edit' );
 
-					var mock_file = false;
-					for ( var i = 0; i < activity_data.media.length; i++ ) {
-						mock_file = false;
+					if ( ! _.isUndefined( self.activityToolbar ) ) {
+						// close and destroy existing gif instance
+						self.activityToolbar.closeGifSelector( bpActivityEvent );
+						// close and destroy existing media instance
+						self.activityToolbar.closeMediaSelector( bpActivityEvent );
+					}
 
-						mock_file = {
-							name		: activity_data.media[i].title,
-							accepted	: true,
-							kind		: 'image',
-							upload: {
-								filename	: activity_data.media[i].title,
-								uuid	: activity_data.media[i].attachment_id
-							},
-							dataURL	: activity_data.media[i].url,
-							id		: activity_data.media[i].attachment_id,
-							media_edit_data: {
-								'id'			: activity_data.media[i].attachment_id,
-								'media_id'		: activity_data.media[i].id,
-								'name'			: activity_data.media[i].name,
-								'thumb'			: activity_data.media[i].thumb,
-								'url'			: activity_data.media[i].url,
-								'uuid'			: activity_data.media[i].attachment_id,
-								'menu_order'	: activity_data.media[i].menu_order,
-								'album_id'	: activity_data.media[i].album_id,
-								'group_id'	: activity_data.media[i].group_id,
-								'saved'			: true
-							}
-						};
+					if ( ! _.isUndefined( activity_data.gif ) && Object.keys( activity_data.gif ).length ) {
+						// close and destroy existing media instance
+						self.activityToolbar.toggleGifSelector( bpActivityEvent );
+						self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
 
-						if ( self.dropzone ) {
-							self.dropzone.files.push( mock_file );
-							self.dropzone.emit( 'addedfile', mock_file );
-							self.createThumbnailFromUrl( mock_file );
+						// Make tool box button disable.
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+						if ( tool_box.find( '#activity-gif-button' ) ) {
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active' );
+						}
+						// END Toolbox Button
+					}
+
+					// Display media for editing
+					if ( ! _.isUndefined( activity_data.media ) && activity_data.media.length ) {
+						// open media uploader for editing media
+						if ( ! _.isUndefined( self.activityToolbar ) ) {
+							self.activityToolbar.toggleMediaSelector( bpActivityEvent );
 						}
 
-					}
-				}
+						// Make tool box button disable.
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
+						}
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+						if ( tool_box.find( '#activity-gif-button' ) ) {
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+						// END Toolbox Button
 
-				if ( typeof activity_data.document !== 'undefined' && activity_data.document.length ) {
-					// open document uploader for editing document
+						var mock_file = false;
+						for ( var i = 0; i < activity_data.media.length; i++ ) {
+							mock_file = false;
 
-					if ( typeof self.activityToolbar !== 'undefined') {
-						self.activityToolbar.toggleDocumentSelector( bpActivityEvent );
-					}
+							mock_file = {
+								name		: activity_data.media[i].title,
+								accepted	: true,
+								kind		: 'image',
+								upload: {
+									filename	: activity_data.media[i].title,
+									uuid	: activity_data.media[i].attachment_id
+								},
+								dataURL	: activity_data.media[i].url,
+								id		: activity_data.media[i].attachment_id,
+								media_edit_data: {
+									'id'			: activity_data.media[i].attachment_id,
+									'media_id'		: activity_data.media[i].id,
+									'name'			: activity_data.media[i].name,
+									'thumb'			: activity_data.media[i].thumb,
+									'url'			: activity_data.media[i].url,
+									'uuid'			: activity_data.media[i].attachment_id,
+									'menu_order'	: activity_data.media[i].menu_order,
+									'album_id'	: activity_data.media[i].album_id,
+									'group_id'	: activity_data.media[i].group_id,
+									'saved'			: true
+								}
+							};
 
-					// Make tool box button disable.
-					if ( tool_box.find( '#activity-media-button' ) ) {
-						tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
-					}
-					if ( tool_box.find( '#activity-media-button' ) ) {
-						tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
-					}
-					if ( tool_box.find( '#activity-gif-button' ) ) {
-						tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
-					}
-					// END Toolbox Button
-
-					var doc_file = false;
-					for ( var doci = 0; doci < activity_data.document.length; doci++ ) {
-						doc_file = false;
-
-						doc_file = {
-							name				: activity_data.document[doci].name,
-							size				: activity_data.document[doci].size,
-							accepted			: true,
-							kind				: 'file',
-							upload: {
-								filename			: activity_data.document[doci].name,
-								uuid			: activity_data.document[doci].doc_id
-							},
-							dataURL				: activity_data.document[doci].url,
-							id					: activity_data.document[doci].doc_id,
-							document_edit_data: {
-								'id'			: activity_data.document[doci].doc_id,
-								'name'			: activity_data.document[doci].name,
-								'type'			: 'document',
-								'url'			: activity_data.document[doci].url,
-								'size'			: activity_data.document[doci].size,
-								'uuid'			: activity_data.document[doci].doc_id,
-								'document_id'	: activity_data.document[doci].id,
-								'menu_order'	: activity_data.document[doci].menu_order,
-								'folder_id'	: activity_data.document[doci].folder_id,
-								'group_id'	: activity_data.document[doci].group_id,
-								'saved'			: true
+							if ( self.dropzone ) {
+								self.dropzone.files.push( mock_file );
+								self.dropzone.emit( 'addedfile', mock_file );
+								self.createThumbnailFromUrl( mock_file );
 							}
-						};
 
-						if ( self.dropzone ) {
-
-							self.dropzone.files.push( doc_file );
-							self.dropzone.emit( 'addedfile', doc_file );
-							self.dropzone.emit( 'complete', doc_file );
 						}
 					}
-				}
-				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
-				self.postForm.$el.removeClass('loading');
 
-				// Make selected current privacy.
-				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
+					if ( ! _.isUndefined( activity_data.document ) && activity_data.document.length ) {
+						// open document uploader for editing document
 
-				$activityPrivacySelect.val( activity_data.privacy );
+						if ( ! _.isUndefined( self.activityToolbar ) ) {
+							self.activityToolbar.toggleDocumentSelector( bpActivityEvent );
+						}
 
-				var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
-				if ( typeof privacy !== 'undefined' ) {
-					$activityPrivacySelect.val( privacy );
-				}
+						// Make tool box button disable.
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
+						}
+						if ( tool_box.find( '#activity-gif-button' ) ) {
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+						// END Toolbox Button
 
-				// Do not allow the edit privacy if activity is belongs to any folder/album.
-				if ( ! bp.privacyEditable ) {
-					$activityPrivacySelect.css( 'visibility', 'hidden');
-				} else {
-					$activityPrivacySelect.css( 'visibility', 'visible');
-				}
-			},0 );
+						var doc_file = false;
+						for ( var doci = 0; doci < activity_data.document.length; doci++ ) {
+							doc_file = false;
+
+							doc_file = {
+								name				: activity_data.document[doci].name,
+								size				: activity_data.document[doci].size,
+								accepted			: true,
+								kind				: 'file',
+								upload: {
+									filename			: activity_data.document[doci].name,
+									uuid			: activity_data.document[doci].doc_id
+								},
+								dataURL				: activity_data.document[doci].url,
+								id					: activity_data.document[doci].doc_id,
+								document_edit_data: {
+									'id'			: activity_data.document[doci].doc_id,
+									'name'			: activity_data.document[doci].name,
+									'type'			: 'document',
+									'url'			: activity_data.document[doci].url,
+									'size'			: activity_data.document[doci].size,
+									'uuid'			: activity_data.document[doci].doc_id,
+									'document_id'	: activity_data.document[doci].id,
+									'menu_order'	: activity_data.document[doci].menu_order,
+									'folder_id'	: activity_data.document[doci].folder_id,
+									'group_id'	: activity_data.document[doci].group_id,
+									'saved'			: true
+								}
+							};
+
+							if ( self.dropzone ) {
+								self.dropzone.files.push( doc_file );
+								self.dropzone.emit( 'addedfile', doc_file );
+								self.dropzone.emit( 'complete', doc_file );
+							}
+						}
+					}
+
+					self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
+					self.postForm.$el.removeClass( 'loading' );
+
+					// Wrap content section for better scroll.
+					$( '#whats-new-content, #whats-new-attachments' ).wrapAll( '<div class="edit-activity-content-wrap"></div>' );
+
+					// Make selected current privacy.
+					var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
+
+					$activityPrivacySelect.val( activity_data.privacy );
+
+					var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
+					if ( ! _.isUndefined( privacy ) ) {
+						$activityPrivacySelect.val( privacy );
+					}
+
+					if ( ! _.isUndefined( activity_data ) ) {
+						if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
+
+							if ( ! _.isUndefined( activity_data.group_media ) && activity_data.group_media === false ) {
+								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+							} else {
+								$( '#whats-new-toolbar .post-media.media-support' ).show();
+							}
+
+							// check media is enable in groups or not.
+							if ( ! _.isUndefined( activity_data.group_document ) && activity_data.group_document === false ) {
+								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+							} else {
+								$( '#whats-new-toolbar .post-media.document-support' ).show();
+							}
+
+						} else {
+							// check media is enable in profile or not.
+							if ( ! _.isUndefined( activity_data.profile_media ) && activity_data.profile_media === false ) {
+								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+								$( '.activity-media-container #activity-post-media-uploader .dz-default.dz-message' ).hide();
+								$( '.activity-media-container' ).css( 'pointer-events', 'none' );
+							} else {
+								$( '.activity-media-container' ).css( 'pointer-events', 'auto' );
+								$( '#whats-new-toolbar .post-media.media-support' ).show();
+							}
+
+							// check media is enable in profile or not.
+							if ( ! _.isUndefined( activity_data.profile_document ) && activity_data.profile_document === false ) {
+								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+								$( '.activity-document-container #activity-post-document-uploader .dz-default.dz-message' ).hide();
+								$( '.activity-document-container' ).css( 'pointer-events', 'none' );
+							} else {
+								$( '.activity-document-container' ).css( 'pointer-events', 'auto' );
+								$( '#whats-new-toolbar .post-media.document-support' ).show();
+							}
+						}
+					}
+
+					// Do not allow the edit privacy if activity is belongs to any folder/album.
+					if ( ! bp.privacyEditable ) {
+						$activityPrivacySelect.parent().css( 'display', 'none' );
+					} else {
+						$activityPrivacySelect.parent().css( 'display', 'block' );
+					}
+				},
+				0
+			);
 
 		},
 
@@ -295,15 +343,14 @@ window.bp = window.bp || {};
 		 *
 		 * @param activity_data
 		 */
-
 		displayEditActivityForm : function( activity_data ) {
 			var self = this;
 
 			var $activityForm            = $( '#bp-nouveau-activity-form' );
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
-			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+			var $singleActivityFormWrap  = $( '#bp-nouveau-single-activity-edit-form-wrap' );
 
-			if ( $singleActivityFormWrap.length ){
+			if ( $singleActivityFormWrap.length ) {
 				$singleActivityFormWrap.show();
 			}
 
@@ -317,38 +364,44 @@ window.bp = window.bp || {};
 			// Set the activity value
 			self.displayEditActivity( activity_data );
 
+			var edit_activity_editor         = $( '#whats-new' )[0];
+			var edit_activity_editor_content = $( '#whats-new-content' )[0];
 
-
-			var edit_activity_editor = $('#whats-new')[0];
-			var edit_activity_editor_content = $('#whats-new-content')[0];
-
-			window.activity_edit_editor = new window.MediumEditor( edit_activity_editor, {
-				placeholder: {
-					text: '',
-					hideOnClick: true
-				},
-				toolbar: {
-					buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
-					relativeContainer: edit_activity_editor_content,
-					static: true,
-					updateOnEmptySelection: true
-				},
-				imageDragging: false
-			});
+			window.activity_edit_editor = new window.MediumEditor(
+				edit_activity_editor,
+				{
+					placeholder: {
+						text: '',
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: edit_activity_editor_content,
+						static: true,
+						updateOnEmptySelection: true
+					},
+					imageDragging: false
+				}
+			);
 
 			// Now Show the Modal
 			$activityForm.addClass( 'modal-popup' );
 
 			$activityFormPlaceholder.show();
 
-			setTimeout(function() {
-				$( '#whats-new img.emoji' ).each(function( index, Obj) {
-					$( Obj ).addClass( 'emojioneemoji' );
-					var emojis = $( Obj ).attr( 'alt' );
-					$( Obj ).attr( 'data-emoji-char', emojis );
-					$( Obj ).removeClass( 'emoji' );
-				});
-			}, 10);
+			setTimeout(
+				function() {
+					$( '#whats-new img.emoji' ).each(
+						function( index, Obj) {
+							$( Obj ).addClass( 'emojioneemoji' );
+							var emojis = $( Obj ).attr( 'alt' );
+							$( Obj ).attr( 'data-emoji-char', emojis );
+							$( Obj ).removeClass( 'emoji' );
+						}
+					);
+				},
+				10
+			);
 
 			self.activityEditHideModalEvent();
 		},
@@ -384,14 +437,19 @@ window.bp = window.bp || {};
 			bp.group_id        = 0;
 			bp.privacy         = 'public';
 
-			$('.activity-update-form.modal-popup').removeClass('modal-popup');
+			$( '.activity-update-form.modal-popup' ).removeClass( 'modal-popup group-activity' );
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
-			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+			var $singleActivityFormWrap  = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+
+			// unwrap hw wrapped content section
+			if ( $( '#whats-new-content' ).parent().is( '.edit-activity-content-wrap' ) ) {
+				$( '#whats-new-content' ).unwrap();
+			}
 
 			$activityFormPlaceholder.hide();
 
-			if ( $singleActivityFormWrap.length ){
+			if ( $singleActivityFormWrap.length ) {
 				$singleActivityFormWrap.hide();
 			}
 		},
@@ -421,7 +479,7 @@ window.bp = window.bp || {};
 		}
 	};
 
-	if ( typeof bp.View === 'undefined' ) {
+	if ( _.isUndefined( bp.View ) ) {
 		// Extend wp.Backbone.View with .prepare() and .inject().
 		bp.View = bp.Backbone.View.extend(
 			{
@@ -464,7 +522,7 @@ window.bp = window.bp || {};
 				link_description	: '',
 				link_url			: '',
 				gif_data			: {},
-				privacy				: 'public'
+				privacy				: 'public',
 			}
 		}
 	);
@@ -654,13 +712,15 @@ window.bp = window.bp || {};
 
 							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
-							response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+							response.data.group_id   = ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.group_id ) ? BP_Nouveau.media.group_id : false;
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							if ( ! jQuery( '.activity-media-error-popup' ).length) {
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -670,11 +730,13 @@ window.bp = window.bp || {};
 					'error',
 					function(file,response) {
 						if ( file.accepted ) {
-							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							if ( ! jQuery( '.activity-media-error-popup' ).length) {
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -686,7 +748,7 @@ window.bp = window.bp || {};
 						if ( self.media.length ) {
 							for ( var i in self.media ) {
 								if ( file.id === self.media[i].id ) {
-									if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
+									if ( ! _.isUndefined( self.media[i].saved ) && ! self.media[i].saved ) {
 										bp.Nouveau.Media.removeAttachment( file.id );
 									}
 									self.media.splice( i, 1 );
@@ -767,18 +829,19 @@ window.bp = window.bp || {};
 				self.destroyDocument();
 
 				var dropzone_options = {
-					url						: BP_Nouveau.ajaxurl,
-					timeout					: 3 * 60 * 60 * 1000,
-					dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-					acceptedFiles			: BP_Nouveau.media.document_type,
-					createImageThumbnails 	: false,
-					dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
-					autoProcessQueue		: true,
-					addRemoveLinks			: true,
-					uploadMultiple			: false,
-					maxFiles				: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize				: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-					dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
+					url                  : BP_Nouveau.ajaxurl,
+					timeout              : 3 * 60 * 60 * 1000,
+					dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
+					acceptedFiles        : BP_Nouveau.media.document_type,
+					createImageThumbnails: false,
+					dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
+					autoProcessQueue     : true,
+					addRemoveLinks       : true,
+					uploadMultiple       : false,
+					maxFiles             : ! _.isUndefined( BP_Nouveau.document.maxFiles ) ? BP_Nouveau.document.maxFiles : 10,
+					maxFilesize          : ! _.isUndefined( BP_Nouveau.document.max_upload_size ) ? BP_Nouveau.document.max_upload_size : 2,
+					dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+					dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-document-uploader', dropzone_options );
@@ -826,7 +889,7 @@ window.bp = window.bp || {};
 
 							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
-							response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+							response.data.group_id   = ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.group_id ) ? BP_Nouveau.media.group_id : false;
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
@@ -838,7 +901,7 @@ window.bp = window.bp || {};
 							_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 							_results = [];
 							for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-								node                            = _ref[_i];
+								node = _ref[_i];
 								_results.push( node.textContent = message );
 							}
 							return _results;
@@ -861,11 +924,13 @@ window.bp = window.bp || {};
 					'error',
 					function(file,response) {
 						if ( file.accepted ) {
-							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							if ( ! jQuery( '.document-error-popup' ).length) {
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -877,7 +942,7 @@ window.bp = window.bp || {};
 						if ( self.document.length ) {
 							for ( var i in self.document ) {
 								if ( file.id === self.document[i].id ) {
-									if ( typeof self.document[i].saved !== 'undefined' && ! self.document[i].saved ) {
+									if ( ! _.isUndefined( self.document[i].saved ) && ! self.document[i].saved ) {
 										bp.Nouveau.Media.removeAttachment( file.id );
 									}
 									self.document.splice( i, 1 );
@@ -942,12 +1007,12 @@ window.bp = window.bp || {};
 				if ( this.model.get( 'link_embed' ) == true ) {
 
 					// support for instgram embed after ajax.
-					if ( typeof window.instgrm !== 'undefined' ) {
+					if ( ! _.isUndefined( window.instgrm ) ) {
 						window.instgrm.Embeds.process();
 					}
 
 					// support for facebook embed after ajax.
-					if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+					if ( ! _.isUndefined( window.FB ) && ! _.isUndefined( window.FB.XFBML ) ) {
 						window.FB.XFBML.parse( this.el );
 					}
 
@@ -1397,12 +1462,12 @@ window.bp = window.bp || {};
 				// Insert the filtered content.
 				document.execCommand( 'insertHTML', false, data );
 
-			// trigger keyup event of this view to handle changes.
-			this.$el.trigger('keyup');
+				// trigger keyup event of this view to handle changes.
+				this.$el.trigger( 'keyup' );
 
-			// Prevent the standard paste behavior.
-			event.preventDefault();
-		},
+				// Prevent the standard paste behavior.
+				event.preventDefault();
+			},
 
 			handleKeyUp: function () {
 				var self = this;
@@ -1414,7 +1479,7 @@ window.bp = window.bp || {};
 				this.linkTimeout = setTimeout(
 					function () {
 						this.linkTimeout = null;
-						self.scrapURL( window.group_messages_editor.getContent() );
+						self.scrapURL( window.activity_editor.getContent() );
 					},
 					500
 				);
@@ -1461,7 +1526,7 @@ window.bp = window.bp || {};
 				var startIndex  = urlText.indexOf( prefix );
 				var responseUrl = '';
 
-				if ( typeof $( $.parseHTML( urlText ) ).attr( 'href' ) !== 'undefined' ) {
+				if ( ! _.isUndefined( $( $.parseHTML( urlText ) ).attr( 'href' ) ) ) {
 					urlString = $( urlText ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
@@ -1499,7 +1564,7 @@ window.bp = window.bp || {};
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
 
-					if ( typeof self.options.activity.get( 'link_success' ) !== 'undefined' && self.options.activity.get( 'link_success' ) == true ) {
+					if ( ! _.isUndefined( self.options.activity.get( 'link_success' ) ) && self.options.activity.get( 'link_success' ) == true ) {
 						return false;
 					}
 
@@ -1560,7 +1625,7 @@ window.bp = window.bp || {};
 							link_description	: response.description,
 							link_images			: response.images,
 							link_image_index	: 0,
-							link_embed			: typeof response.wp_embed !== 'undefined' && response.wp_embed
+							link_embed			: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 							}
 					);
 
@@ -1575,7 +1640,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '.activity-media-container' ).length ) {
-						if ( response.description.indexOf( 'iframe' ) > -1 || ( typeof response.wp_embed !== 'undefined' && response.wp_embed ) ) {
+						if ( response.description.indexOf( 'iframe' ) > -1 || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
 							$( '#whats-new-attachments' ).addClass( 'activity-video-preview' );
 						} else {
 							$( '#whats-new-attachments' ).addClass( 'activity-link-preview' );
@@ -1605,7 +1670,7 @@ window.bp = window.bp || {};
 
 							if ( ! $( this ).closest( '.edit-activity-modal-body' ).length ) {
 
-									window.group_messages_editor = new window.MediumEditor(
+									window.activity_editor = new window.MediumEditor(
 										$this,
 										{
 											placeholder: {
@@ -1629,7 +1694,7 @@ window.bp = window.bp || {};
 												],
 												cleanAttrs: ['class', 'style', 'dir', 'id'],
 												cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-												unwrapTags: []
+												unwrapTags: [ 'ul', 'ol', 'li' ]
 											},
 											imageDragging: false
 										  }
@@ -1646,7 +1711,7 @@ window.bp = window.bp || {};
 						$( '#message_content' ).focus();
 					}
 
-				} else if ( typeof tinymce !== 'undefined' ) {
+				} else if ( ! _.isUndefined( tinymce ) ) {
 					tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'whats-new' ); // jshint ignore:line
 				}
 			}
@@ -1744,6 +1809,25 @@ window.bp = window.bp || {};
 					this.model.clear();
 				} else {
 					this.model.set( 'selected', true );
+					var model_attributes = this.model.attributes;
+
+					// check media is enable in groups or not.
+					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
+						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+						var mediaCloseEvent = new Event( 'activity_media_close' );
+						document.dispatchEvent( mediaCloseEvent );
+					} else {
+						$( '#whats-new-toolbar .post-media.media-support' ).show();
+					}
+
+					// check media is enable in groups or not.
+					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
+						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+						var documentCloseEvent = new Event( 'activity_document_close' );
+						document.dispatchEvent( documentCloseEvent );
+					} else {
+						$( '#whats-new-toolbar .post-media.document-support' ).show();
+					}
 				}
 			}
 		}
@@ -1885,7 +1969,7 @@ window.bp = window.bp || {};
 			},
 
 			focusEditor: function ( e ) {
-				if ( window.group_messages_editor.exportSelection() === null ) {
+				if ( window.activity_editor.exportSelection() === null ) {
 					$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
 				}
 				e.preventDefault();
@@ -1999,16 +2083,16 @@ window.bp = window.bp || {};
 
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).hide();
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
 							var mediaCloseEvent = new Event( 'activity_media_close' );
 							document.dispatchEvent( mediaCloseEvent );
 						} else {
-							$( '#whats-new-toolbar .post-media.media-suppot' ).show();
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).hide();
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 							var documentCloseEvent = new Event( 'activity_document_close' );
 							document.dispatchEvent( documentCloseEvent );
 						} else {
@@ -2017,7 +2101,7 @@ window.bp = window.bp || {};
 
 						// check gif is enable in groups or not.
 						if ( BP_Nouveau.media.gif.groups === false ) {
-							$( '#whats-new-toolbar .post-gif' ).hide();
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
 							var gifCloseEvent = new Event( 'activity_gif_close' );
 							document.dispatchEvent( gifCloseEvent );
 						} else {
@@ -2035,7 +2119,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).hide();
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
 							var event = new Event( 'activity_media_close' );
 							document.dispatchEvent( event );
 						} else {
@@ -2044,7 +2128,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).hide();
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 							var documentEvent = new Event( 'activity_document_close' );
 							document.dispatchEvent( documentEvent );
 						} else {
@@ -2053,7 +2137,7 @@ window.bp = window.bp || {};
 
 						// check gif is enable in profile or not.
 						if ( BP_Nouveau.media.gif.profile === false ) {
-							$( '#whats-new-toolbar .post-gif' ).hide();
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
 							var gifCloseEvent2 = new Event( 'activity_gif_close' );
 							document.dispatchEvent( gifCloseEvent2 );
 						} else {
@@ -2233,16 +2317,17 @@ window.bp = window.bp || {};
 				$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 				if ( $( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
-					if ( window.group_messages_editor.exportSelection() != null ) {
+					if ( window.activity_editor.exportSelection() != null ) {
 						medium_editor.addClass( 'medium-editor-toolbar-active' );
 					}
 				} else {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
-					if ( window.group_messages_editor.exportSelection() === null ) {
+					if ( window.activity_editor.exportSelection() === null ) {
 						medium_editor.removeClass( 'medium-editor-toolbar-active' );
 					}
 				}
-				medium_editor.toggleClass( 'active' );
+				$( window.activity_editor.elements[0] ).focus();
+				medium_editor.toggleClass( 'medium-editor-toolbar-active active' );
 			}
 		}
 	);
@@ -2453,14 +2538,31 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.EditActivityPostIn = bp.View.extend(
+		{
+			template: bp.template( 'activity-edit-postin' ),
+			initialize: function () {
+				this.model.on( 'change', this.render, this );
+			},
+			render: function () {
+				this.$el.html( this.template( this.model.attributes ) );
+				return this;
+			}
+		}
+	);
+
 	bp.Views.FormSubmitWrapper = bp.View.extend(
 		{
 			tagName: 'div',
 			id: 'activity-form-submit-wrapper',
 			initialize: function () {
 				// Select box for the object
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || typeof bp.Nouveau.Activity.postForm.editActivityData === 'undefined' ) ) {
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) ) {
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
+
+					// when editing activity, need to display which object is being edited.
+				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && ! _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) {
+					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
 				}
 
 				// activity privacy dropdown for profile
@@ -2501,6 +2603,14 @@ window.bp = window.bp || {};
 						[ 'user_id', 'item_id', 'object' ]
 					)
 				);
+
+				if ( 'user' === BP_Nouveau.activity.params.object ) {
+					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
+						this.$el.addClass( 'bp-hide' );
+					} else {
+						this.$el.removeClass( 'bp-hide' );
+					}
+				}
 
 				// Clone the model to set the resetted one.
 				this.resetModel = this.model.clone();
@@ -2583,6 +2693,7 @@ window.bp = window.bp || {};
 					);
 				}
 
+				this.updateMultiMediaOptions();
 			},
 
 			resetForm: function () {
@@ -2607,6 +2718,14 @@ window.bp = window.bp || {};
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); // remove edit class if in edit mode
 				bp.Nouveau.Activity.postForm.editActivityData = false;
+
+				if ( 'user' === BP_Nouveau.activity.params.object ) {
+					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
+						this.$el.addClass( 'bp-hide' );
+					} else {
+						this.$el.removeClass( 'bp-hide' );
+					}
+				}
 
 				// Reset the model
 				this.model.clear();
@@ -2644,7 +2763,7 @@ window.bp = window.bp || {};
 					meta = {}, edit = false;
 
 				if ( event ) {
-					if ( 'keydown' === event.type && ( 13 !== event.keyCode || !event.ctrlKey ) ) {
+					if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
 						return event;
 					}
 
@@ -2663,7 +2782,7 @@ window.bp = window.bp || {};
 							if ( _.isUndefined( meta[pair.name] ) ) {
 								meta[pair.name] = pair.value;
 							} else {
-								if ( !_.isArray( meta[pair.name] ) ) {
+								if ( ! _.isArray( meta[pair.name] ) ) {
 									meta[pair.name] = [ meta[pair.name] ];
 								}
 
@@ -2682,12 +2801,14 @@ window.bp = window.bp || {};
 				}
 
 				// transform other emoji into emojionearea emoji.
-				$whatsNew.find( 'img.emoji' ).each(function( index, Obj) {
-					$( Obj ).addClass( 'emojioneemoji' );
-					var emojis = $( Obj ).attr( 'alt' );
-					$( Obj ).attr( 'data-emoji-char', emojis );
-					$( Obj ).removeClass( 'emoji' );
-				});
+				$whatsNew.find( 'img.emoji' ).each(
+					function( index, Obj) {
+						$( Obj ).addClass( 'emojioneemoji' );
+						var emojis = $( Obj ).attr( 'alt' );
+						$( Obj ).attr( 'data-emoji-char', emojis );
+						$( Obj ).removeClass( 'emoji' );
+					}
+				);
 
 				// Transform emoji image into emoji unicode.
 				$whatsNew.find( 'img.emojioneemoji' ).replaceWith(
@@ -2698,7 +2819,7 @@ window.bp = window.bp || {};
 
 				// Add valid line breaks.
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-				content = content.replace( /&nbsp;/g, ' ' );
+				content     = content.replace( /&nbsp;/g, ' ' );
 
 				self.model.set( 'content', content, { silent: true } );
 
@@ -2706,7 +2827,7 @@ window.bp = window.bp || {};
 				self.model.set( meta, { silent: true } );
 
 				var medias = self.model.get( 'media' );
-				if ( 'group' == self.model.get( 'object' ) && typeof medias !== 'undefined' && medias.length ) {
+				if ( 'group' == self.model.get( 'object' ) && ! _.isUndefined( medias ) && medias.length ) {
 					for ( var k = 0; k < medias.length; k++ ) {
 						medias[k].group_id = self.model.get( 'item_id' );
 					}
@@ -2714,7 +2835,7 @@ window.bp = window.bp || {};
 				}
 
 				var document = self.model.get( 'document' );
-				if ( 'group' == self.model.get( 'object' ) && typeof document !== 'undefined' && document.length ) {
+				if ( 'group' == self.model.get( 'object' ) && ! _.isUndefined( document ) && document.length ) {
 					for ( var d = 0; d < document.length; d++ ) {
 						document[d].group_id = self.model.get( 'item_id' );
 					}
@@ -2722,7 +2843,7 @@ window.bp = window.bp || {};
 				}
 
 				// validation for content editor.
-				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( typeof self.model.get( 'document' ) !== 'undefined' && !self.model.get( 'document' ).length ) && ( typeof self.model.get( 'media' ) !== 'undefined' && !self.model.get( 'media' ).length ) && ( typeof self.model.get( 'gif_data' ) !== 'undefined' && !Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) && ( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) && ( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
 					self.model.set(
 						'errors',
 						{
@@ -2763,7 +2884,7 @@ window.bp = window.bp || {};
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
 					var images = self.model.get( 'link_images' ),
-						index = self.model.get( 'link_image_index' );
+						index  = self.model.get( 'link_image_index' );
 					if ( images && images.length ) {
 						data = _.extend(
 							data,
@@ -2789,16 +2910,16 @@ window.bp = window.bp || {};
 				}
 
 				// Append zero-width character to allow post gif without activity content.
-				if ( !_.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
+				if ( ! _.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
 					data.content = '&#8203;';
 				}
 
 				// check if edit activity
 				if ( self.model.get( 'id' ) > 0 ) {
-					edit = true;
+					edit      = true;
 					data.edit = 1;
 
-					if ( !bp.privacyEditable ) {
+					if ( ! bp.privacyEditable ) {
 						data.privacy = bp.privacy;
 					}
 				}
@@ -2808,22 +2929,24 @@ window.bp = window.bp || {};
 
 						// check if edit activity then scroll up 1px so image will load automatically.
 						if ( self.model.get( 'id' ) > 0 ) {
-							$( 'html, body' ).animate( {
-								scrollTop: $( window ).scrollTop() + 1
-							} );
+							$( 'html, body' ).animate(
+								{
+									scrollTop: $( window ).scrollTop() + 1
+								}
+							);
 						}
 
 						// At first, hide the modal
 						bp.Nouveau.Activity.postForm.postActivityEditHideModal();
 
-						var store = bp.Nouveau.getStorage( 'bp-activity' ),
+						var store       = bp.Nouveau.getStorage( 'bp-activity' ),
 							searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
-							toPrepend = false;
+							toPrepend   = false;
 
 						// Look for matches if the stream displays search results.
 						if ( searchTerms ) {
 							searchTerms = new RegExp( searchTerms, 'im' );
-							matches = response.activity.match( searchTerms );
+							matches     = response.activity.match( searchTerms );
 						}
 
 						/**
@@ -2831,8 +2954,8 @@ window.bp = window.bp || {};
 						 * and search terms are consistent with it when posting from a single item or
 						 * from the Activity directory.
 						 */
-						if ( ( !searchTerms || matches ) ) {
-							toPrepend = !store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
+						if ( ( ! searchTerms || matches ) ) {
+							toPrepend = ! store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
 						}
 
 						/**
@@ -2841,11 +2964,19 @@ window.bp = window.bp || {};
 						 * "My Groups" tab is active.
 						 */
 						if ( toPrepend && response.is_directory ) {
-							toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || false === response.is_private ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
+							 toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || 'group' === self.model.get( 'object' ) ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
+						}
+
+						/**
+						 * In the user activity timeline, user is posting on other user's timeline
+						 * it will not have activity to prepend/append because of scope and privacy.
+						 */
+						if ( '' === response.activity && response.is_user_activity && response.is_active_activity_tabs ) {
+							toPrepend = false;
 						}
 
 						var medias = self.model.get( 'media' );
-						if ( typeof medias !== 'undefined' && medias.length ) {
+						if ( ! _.isUndefined( medias ) && medias.length ) {
 							for ( var k = 0; k < medias.length; k++ ) {
 								medias[k].saved = true;
 							}
@@ -2858,37 +2989,36 @@ window.bp = window.bp || {};
 						}
 
 						var documents = self.model.get( 'document' );
-						if ( typeof documents !== 'undefined' && documents.length ) {
+						if ( ! _.isUndefined( documents ) && documents.length ) {
 							for ( var d = 0; d < documents.length; d++ ) {
 								documents[d].saved = true;
 							}
 							self.model.set( 'document', documents );
 						}
 
-						// Reset formatting of editor
-
-						//window.group_messages_editor.execAction( 'selectAll' );
-						//window.group_messages_editor.execAction( 'removeFormate' );
-
 						// Reset the form.
 						self.resetForm();
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
-						if ( !toPrepend ) {
-							self.views.add( new bp.Views.activityFeedback( {
-								value: response.message,
-								type: 'updated'
-							} ) );
+						if ( ! toPrepend ) {
+							self.views.add(
+								new bp.Views.activityFeedback(
+									{
+										value: response.message,
+										type: 'updated'
+									}
+								)
+							);
 
 							// Edit activity
 						} else if ( edit ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
 
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
-						} else if ( !$( '#activity-' + response.id ).length ) {
+						} else if ( ! $( '#activity-' + response.id ).length ) {
 
 							// It's the very first activity, let's make sure the container can welcome it!
-							if ( !$( '#activity-stream ul.activity-list' ).length ) {
+							if ( ! $( '#activity-stream ul.activity-list' ).length ) {
 								$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
 							}
 
@@ -2899,10 +3029,10 @@ window.bp = window.bp || {};
 							jQuery( window ).scroll();
 
 							if ( link_embed ) {
-								if ( typeof window.instgrm !== 'undefined' ) {
+								if ( ! _.isUndefined( window.instgrm ) ) {
 									window.instgrm.Embeds.process();
 								}
-								if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+								if ( ! _.isUndefined( window.FB ) && ! _.isUndefined( window.FB.XFBML ) ) {
 									window.FB.XFBML.parse( $( document ).find( '#activity-' + response.id ).get( 0 ) );
 								}
 							}
@@ -2914,6 +3044,87 @@ window.bp = window.bp || {};
 						self.model.set( 'errors', { type: 'error', value: response.message } );
 					}
 				);
+			},
+
+			updateMultiMediaOptions: function () {
+
+				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
+
+					if ( 'user' !== this.model.get( 'object' ) ) {
+
+						// check media is enable in groups or not.
+						if ( BP_Nouveau.media.group_media === false ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+							var mediaCloseEvent = new Event( 'activity_media_close' );
+							document.dispatchEvent( mediaCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
+						}
+
+						// check media is enable in groups or not.
+						if ( BP_Nouveau.media.group_document === false ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+							var documentCloseEvent = new Event( 'activity_document_close' );
+							document.dispatchEvent( documentCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+
+						// check gif is enable in groups or not.
+						if ( BP_Nouveau.media.gif.groups === false ) {
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
+							var gifCloseEvent = new Event( 'activity_gif_close' );
+							document.dispatchEvent( gifCloseEvent );
+						} else {
+							$( '#whats-new-toolbar .post-gif' ).show();
+						}
+
+						// check emoji is enable in groups or not.
+						if ( BP_Nouveau.media.emoji.groups === false ) {
+							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
+							$( '#whats-new-toolbar .post-emoji' ).hide();
+						} else {
+							$( '#whats-new-toolbar .post-emoji' ).show();
+						}
+					} else {
+
+						// check media is enable in profile or not.
+						if ( BP_Nouveau.media.profile_media === false ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+							var event = new Event( 'activity_media_close' );
+							document.dispatchEvent( event );
+						} else {
+							$( '#whats-new-toolbar .post-media.media-support' ).show();
+						}
+
+						// check media is enable in profile or not.
+						if ( BP_Nouveau.media.profile_document === false ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+							var documentEvent = new Event( 'activity_document_close' );
+							document.dispatchEvent( documentEvent );
+						} else {
+							$( '#whats-new-toolbar .post-media.document-support' ).show();
+						}
+
+						// check gif is enable in profile or not.
+						if ( BP_Nouveau.media.gif.profile === false ) {
+							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
+							var gifCloseEvent2 = new Event( 'activity_gif_close' );
+							document.dispatchEvent( gifCloseEvent2 );
+						} else {
+							$( '#whats-new-toolbar .post-gif' ).show();
+						}
+
+						// check emoji is enable in profile or not.
+						if ( BP_Nouveau.media.emoji.profile === false ) {
+							$( '#whats-new-toolbar .post-emoji' ).hide();
+							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
+						} else {
+							$( '#whats-new-toolbar .post-emoji' ).show();
+						}
+					}
+					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+				}
 			}
 		}
 	);

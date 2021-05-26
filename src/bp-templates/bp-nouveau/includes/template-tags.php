@@ -304,7 +304,6 @@ function bp_nouveau_user_feedback( $feedback_id = '' ) {
 	$bp_nouveau->user_feedback = $feedback;
 
 	bp_get_template_part(
-
 		/**
 		 * Filter here if you wish to use a different templates than the notice one.
 		 *
@@ -562,7 +561,7 @@ function bp_nouveau_get_loop_classes() {
 	);
 
 	// Only the available components supports custom layouts.
-	if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() ) ) {
+	if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() || bp_is_groups_directory() ) ) {
 
 		// check for layout options in browsers storage
 		if ( bp_is_members_directory() || bp_is_user() ) {
@@ -798,6 +797,8 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		if ( 'group_manage' === $bp_nouveau->object_nav && bp_is_group_admin_page() ) {
 			$parent_slug .= '_manage';
+		} elseif ( 'group_messages' === $bp_nouveau->object_nav && bp_is_group_messages() ) {
+			$parent_slug .= '_messages';
 		} elseif ( 'group_invite' === $bp_nouveau->object_nav && bp_is_group_invites() ) {
 			$parent_slug .= '_invite';
 		} elseif ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
@@ -820,7 +821,7 @@ function bp_nouveau_has_nav( $args = array() ) {
 			)
 		);
 
-		// Build the nav for the displayed user
+		// Build the nav for the displayed user.
 	} elseif ( bp_is_user() ) {
 		$bp_nouveau->displayed_nav = 'personal';
 		$user_nav                  = buddypress()->members->nav;
@@ -862,7 +863,7 @@ function bp_nouveau_has_nav( $args = array() ) {
 	}
 
 	// The navigation can be empty.
-	if ( $nav === false ) {
+	if ( false === $nav ) {
 		$nav = array();
 	}
 
@@ -976,18 +977,18 @@ function bp_nouveau_get_nav_classes() {
 			$classes = (array) $nav_item->li_class;
 		}
 
-		if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
+		if ( bp_get_current_member_type() ) {
 			$classes[] = 'no-ajax';
 		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) {
 		$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-tab' );
 		$selected = bp_current_action();
 
-		// User's primary nav
+		// User's primary nav.
 		if ( ! empty( $nav_item->primary ) ) {
 			$selected = bp_current_component();
 
-			// Group Member Tabs
+			// Group Member Tabs.
 		} elseif ( 'group_members' === $bp_nouveau->object_nav ) {
 			$selected = bp_action_variable( 0 );
 			$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-member-tab' );
@@ -997,7 +998,7 @@ function bp_nouveau_get_nav_classes() {
 			$selected = bp_action_variable( 0 );
 			$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-admin-tab' );
 
-			// If we are here, it's the member's subnav
+			// If we are here, it's the member's sub nav.
 		} elseif ( 'personal' === $bp_nouveau->displayed_nav ) {
 			$classes = array( 'bp-' . $bp_nouveau->displayed_nav . '-sub-tab' );
 		}
@@ -1009,8 +1010,6 @@ function bp_nouveau_get_nav_classes() {
 		if ( 'document' === $nav_item->css_id && 'folders' === bp_current_action() && 'document' === bp_current_component() && (int) bp_action_variable( 0 ) > 0 ) {
 			$classes = array_merge( $classes, array( 'current', 'selected' ) );
 		}
-
-
 	}
 
 	if ( ! empty( $classes ) ) {
@@ -1275,9 +1274,7 @@ function bp_nouveau_nav_has_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
-		$count = 0 !== (int) groups_get_current_group()->total_member_count;
-	//} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
-		//$count = 0 !== (int) bp_document_get_total_group_document_count();
+		$count   = 0 !== (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
@@ -1324,11 +1321,11 @@ function bp_nouveau_get_nav_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
-		$count = groups_get_current_group()->total_member_count;
+		$count   = (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
-	//} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
-		//$count = bp_document_get_total_group_document_count();
+		// } elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
+		// $count = bp_document_get_total_group_document_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 		$count = bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
@@ -2371,7 +2368,8 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 	}
 
 	foreach ( $fields as $name => $attributes ) {
-		list( $label, $required, $value, $attribute_type, $type, $class ) = array_values( $attributes ); ?>
+		list( $label, $required, $value, $attribute_type, $type, $class ) = array_values( $attributes );
+		?>
 		<div class="bb-signup-field <?php echo esc_attr( $name ); ?>">
 		<?php
 		// Text fields are using strings, radios are using their inputs
@@ -2519,7 +2517,8 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		}
 
 		// Password strength is restricted to the signup_password field
-		if ( 'signup_password' === $name ) : ?>
+		if ( 'signup_password' === $name ) :
+			?>
 			<div id="pass-strength-result"></div>
 			<?php
 		endif;
@@ -2529,9 +2528,11 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 			?>
 			<div id="email-strength-result"></div>
 			<?php
-		endif; ?>
+		endif;
+		?>
 
-		</div><?php
+		</div>
+		<?php
 	}
 
 	/**
@@ -2552,9 +2553,10 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 function bp_nouveau_signup_terms_privacy() {
 
 	$page_ids = bp_core_get_directory_page_ids();
+	$show_legal_agreement = bb_register_legal_agreement();
 
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
-	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
 
 	// Do not show the page if page is not published.
 	if ( false !== $terms && 'publish' !== get_post_status( $terms ) ) {
@@ -2570,47 +2572,22 @@ function bp_nouveau_signup_terms_privacy() {
 		return false;
 	}
 
-	if ( $terms && ! $privacy ) {
-		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ). '</a>';
-		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
-		</p>
-		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
-			<?php
-			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content', $get_terms->post_content );
-			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
-		</div>
-		<?php
-	}
-
-	if ( ! $terms && $privacy ) {
+	if ( ! empty( $terms )  && ! empty( $privacy ) ) {
+		$terms_link   = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
 		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
-		</p>
-		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
-			<?php
-			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content', $get_privacy->post_content );
-			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
-		</div>
-		<?php
-	}
-
-	if ( $terms && $privacy ) {
-		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ). '</a>';
-		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
-		?>
-		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
-		</p>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
+			</p>
+		<?php } ?>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
@@ -2628,6 +2605,59 @@ function bp_nouveau_signup_terms_privacy() {
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<?php
+	} else if ( empty( $terms ) && ! empty ( $privacy ) ) {
+		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
+		?>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $privacy_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
+			</p>
+		<?php } ?>
+		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
+			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
+			<?php
+			$get_privacy = get_post( $privacy );
+			echo apply_filters( 'the_content', $get_privacy->post_content );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+		</div>
+		<?php
+	} else if ( ! empty ( $terms ) && empty ( $privacy ) ) {
+		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
+		?>
+		<?php if ( $show_legal_agreement ) { ?>
+			<div class="input-options checkbox-options">
+				<div class="bp-checkbox-wrap">
+					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
+					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $terms_link ); ?></label>
+				</div>
+			</div>
+		<?php } else { ?>
+			<p class="register-privacy-info">
+				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
+			</p>
+		<?php } ?>
+
+		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
+			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
+			<?php
+			$get_terms = get_post( $terms );
+			echo apply_filters( 'the_content', $get_terms->post_content );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+		</div>
+		<?php
+	}
+
+	if ( $show_legal_agreement ) {
+	    do_action('bp_legal_agreement_errors' );
 	}
 }
 

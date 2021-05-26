@@ -100,6 +100,15 @@
 		max-height: 100%;
 		overflow: auto;
 
+		.edit-activity-content-wrap {
+			max-height: calc(100vh - 230px);
+			overflow: auto;
+		}
+
+		#whats-new-form #whats-new-toolbar {
+			padding-top: 10px;
+		}
+
 		#whats-new-form {
 			width: 700px;
 			max-width: 90%;
@@ -170,12 +179,28 @@
 			}
 		}
 
+		.dropzone .dz-preview.dz-complete .dz-progress {
+			display: none;
+		}
+
+		@media screen and (max-width: 646px) {
+
+			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+
+				#buddypress & {
+					bottom: 111px;
+				}
+
+			}
+
+		}
+
 		@media screen and (max-width: 603px) {
 
 			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
 
 				#buddypress > & {
-					bottom: 58px;
+					bottom: 112px;
 				}
 
 			}
@@ -187,7 +212,15 @@
 			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
 
 				#buddypress > & {
-					bottom: 112px;
+					bottom: 146px;
+				}
+
+			}
+
+			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+
+				#buddypress & {
+					bottom: 146px;
 				}
 
 			}
@@ -564,6 +597,7 @@
 	font-size: 16px;
 }
 
+.bb-document-privacy-wrap,
 .bb-media-privacy-wrap {
 	display: inline-block;
 	position: relative;

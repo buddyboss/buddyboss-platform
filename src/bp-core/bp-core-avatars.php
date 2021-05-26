@@ -43,7 +43,7 @@ function bp_core_set_avatar_constants() {
 	}
 
 	if ( ! defined( 'BP_SHOW_AVATARS' ) ) {
-		define( 'BP_SHOW_AVATARS', bp_get_option( 'show_avatars' ) );
+		define( 'BP_SHOW_AVATARS', true );
 	}
 }
 add_action( 'bp_init', 'bp_core_set_avatar_constants', 3 );
@@ -734,6 +734,16 @@ function bp_core_fetch_avatar( $args = '' ) {
 		 */
 		$gravatar = apply_filters( 'bp_core_default_avatar_' . $params['object'], bp_core_avatar_default( 'local', $params ), $params );
 	}
+
+	/**
+	 * Filters a gravatar avatar URL.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param string $avatar_url URL for a gravatar.
+	 * @param array  $params     Array of parameters for the request.
+	 */
+	$gravatar = apply_filters( 'bp_core_fetch_gravatar_url_check', $gravatar, $params );
 
 	if ( true === $params['html'] ) {
 

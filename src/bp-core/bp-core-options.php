@@ -947,6 +947,29 @@ function bp_is_activity_edit_enabled( $default = false ) {
 }
 
 /**
+ * Check whether relevant feed is enabled.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+
+function bp_is_relevant_feed_enabled( $default = false ){
+
+	/**
+	 * Filters whether or not relevant feed is enabled.
+	 *
+	 * @since BuddyBoss 1.5.5
+	 *
+	 * @param bool $value Whether or not relevant feed is enabled.
+	 */
+
+	return (bool) apply_filters( 'bp_is_relevant_feed_enabled', (bool) bp_get_option( '_bp_enable_relevant_feed', $default ) );
+}
+
+/**
  * single time slot by time key.
  *
  * @param null $time Return single time slot by time key.
@@ -1126,6 +1149,11 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
  */
 function bp_force_friendship_to_message( $default = false ) {
 
+	$value = (bool) bp_get_option( 'bp-force-friendship-to-message', $default );
+	if ( ( ! is_admin() && bp_current_user_can( 'bp_moderate' ) ) || ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && bp_current_user_can( 'bp_moderate' ) ) ) {
+		$value = false;
+	}
+
 	/**
 	 * Filters whether or not friendship is forced to message each other.
 	 *
@@ -1133,7 +1161,7 @@ function bp_force_friendship_to_message( $default = false ) {
 	 *
 	 * @param bool $value Whether or not friendship is forced to message each other.
 	 */
-	return (bool) apply_filters( 'bp_force_friendship_to_message', (bool) bp_get_option( 'bp-force-friendship-to-message', $default ) );
+	return (bool) apply_filters( 'bp_force_friendship_to_message', $value );
 }
 
 /**
@@ -1459,7 +1487,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) && bp_get_option( 'show_avatars' ) ) );
 }
 
 /**
@@ -1543,6 +1571,27 @@ function bp_register_confirm_email( $default = false ) {
 	 * @param bool $value whether or not display email confirmation field in registrations.
 	 */
 	return (bool) apply_filters( 'bp_register_confirm_email', (bool) bp_get_option( 'register-confirm-email', $default ) );
+}
+
+/**
+ * Display legal agreement field in registrations.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Whether or not display legal agreement field in registrations.
+ */
+function bb_register_legal_agreement( $default = false ) {
+
+	/**
+	 * Filters whether or not display legal agreement field in registrations.
+	 *
+	 * @since BuddyBoss 1.5.8.3
+	 *
+	 * @param bool $value whether or not display legal agreement field in registrations.
+	 */
+	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
 }
 
 /**
@@ -1672,4 +1721,57 @@ function bp_disable_group_messages( $default = false ) {
 	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
 	 */
 	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bp_get_option( 'bp-disable-group-messages', $default ) );
+}
+
+/**
+ * Default display name format.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: first_name.
+ * @return string display name format.
+ */
+function bp_core_display_name_format( $default = 'first_name' ) {
+
+	/**
+	 * Filters default display name format.
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param string $value Default display name format.
+	 */
+	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
+}
+
+/**
+ * Enable private REST APIs.
+ * - Wrapper function to check settings with BuddyBoss APP and Platform both.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool True if  private REST APIs is enabled, otherwise false.
+ */
+function bp_rest_enable_private_network() {
+
+	$retval = (
+		function_exists( 'bp_enable_private_network' ) &&
+		true !== bp_enable_private_network() &&
+		(
+			! function_exists( 'bbapp_is_private_app_enabled' ) ||
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled() // Check for buddyboss app private network.
+			)
+		)
+	);
+
+	/**
+	 * Filters whether private private REST APIs is enabled.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param bool $value Whether private REST APIs is enabled.
+	 */
+	return apply_filters( 'bp_rest_enable_private_network', $retval );
 }

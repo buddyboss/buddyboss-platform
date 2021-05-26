@@ -148,8 +148,13 @@ function bp_has_document( $args = '' ) {
 	$group_id = false;
 
 	// The default scope should recognize custom slugs.
-	$scope = ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = ( isset( $args['scope'] ) && ! empty( $args['scope'] ) ? $args['scope'] : $scope );
 	$scope = bp_document_default_scope( $scope );
+
+	if ( isset( $args ) && isset( $args['scope'] ) ) {
+		unset( $args['scope'] );
+	}
 
 	/*
 	 * Parse Args.
@@ -862,7 +867,7 @@ function bp_get_document_folder_id() {
 	$id = 0;
 
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
-		$id = $document_template->document->id;
+		$id = $document_template->document->folder_id;
 	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->id ) ) {
 		$id = $document_folder_template->folder->id;
 	}

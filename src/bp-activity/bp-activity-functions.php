@@ -2329,7 +2329,7 @@ function bp_activity_post_update( $args = '' ) {
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
-					'error_type'        => $r[ 'error_type' ],
+					'error_type'        => $r['error_type'],
 				)
 			);
 
@@ -2379,7 +2379,6 @@ function bp_activity_post_update( $args = '' ) {
 		 * @param string $activity_content Content of the activity update.
 		 *
 		 * @since BuddyPress 1.6.0
-		 *
 		 */
 		$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
 
@@ -2482,7 +2481,7 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_post_object->component_id ) {
-		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', $post->post_content, $post, $post_url, $post->post_type );
+		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', '', $post, $post_url, $post->post_type );
 		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', $post_url, $post_id, $post->post_type );
 	} else {
 		$activity_content      = $post->post_content;
@@ -2785,7 +2784,7 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_comment_object->component_id ) {
-		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( $post_type_comment->comment_content, &$post_type_comment, $comment_link ) );
+		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( '', &$post_type_comment, $comment_link ) );
 		$activity_primary_link = apply_filters_ref_array( 'bp_blogs_activity_new_comment_primary_link', array( $comment_link, &$post_type_comment ) );
 	} else {
 		$activity_content      = $post_type_comment->comment_content;
@@ -3765,7 +3764,7 @@ function bp_activity_create_summary( $content, $activity ) {
 	);
 
 	// Get the WP_Post object if this activity type is a blog post.
-	if ( $activity['type'] === 'new_blog_post' ) {
+	if ( 'new_blog_post' === $activity['type'] ) {
 		$content = get_post( $activity['secondary_item_id'] );
 	}
 
@@ -3897,11 +3896,11 @@ function bp_activity_create_summary( $content, $activity ) {
 		)
 	);
 
-	if ( $use_media_type === 'embeds' ) {
-		$summary .= PHP_EOL . PHP_EOL . $extracted_media['url'];
-	} elseif ( $use_media_type === 'images' ) {
+	if ( 'embeds' === $use_media_type ) {
+		$summary .= PHP_EOL . PHP_EOL . '<p>' . $extracted_media['url'] . '</p>';
+	} elseif ( 'images' === $use_media_type ) {
 		$extracted_media_url = isset( $extracted_media['url'] ) ? $extracted_media['url'] : '';
-		$summary .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
+		$summary            .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
 	} elseif ( in_array( $use_media_type, array( 'audio', 'videos' ), true ) ) {
 		$summary .= PHP_EOL . PHP_EOL . $extracted_media['original'];  // Full shortcode.
 	}
@@ -4450,7 +4449,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	if ( ! post_type_supports( $post->post_type, 'buddypress-activity' ) ) {
 		return;
 	}
-
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 	/**
 	 * Fires before post type transition catch in activity
 	 *
@@ -4540,6 +4543,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		 */
 		do_action( 'bp_activity_post_type_transition_status_' . $post->post_type, $post, $new_status, $old_status );
 	}
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 }
 add_action( 'transition_post_status', 'bp_activity_catch_transition_post_type_status', 10, 3 );
 
@@ -4955,11 +4963,12 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		// get the excerpt first of post.
 		$excerpt = get_the_excerpt( $post->ID );
 
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
 		$content = ( $excerpt ) ?: $post->post_content;
 
 		// If content not empty.
 		if ( ! empty( $content ) ) {
+
 			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
 
 			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
@@ -4969,6 +4978,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
 				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
 			}
+
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
 				$activity->content = apply_filters(
@@ -5006,12 +5016,12 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
 }
-add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+//add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
 
 
 /**
@@ -5068,7 +5078,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 		// get the excerpt first of post.
 		$excerpt = get_the_excerpt( $post->ID );
 
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
 		$content = ( $excerpt ) ?: $post->post_content;
 
 		// If content not empty.
@@ -5110,12 +5120,12 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
 }
-add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+//add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
 
 /**
  * AJAX endpoint for link preview URL parser.
@@ -5169,6 +5179,11 @@ function bp_activity_media_sideload_attachment( $file ) {
 
 	$file_array['name'] = basename( $matches[0] );
 
+	// Load function download_url if not exists.
+	if ( ! function_exists( 'download_url' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+	}
+
 	// Download file to temp location.
 	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
 	$file                   = str_replace( '&amp;', '&', $file );
@@ -5221,6 +5236,11 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 	$file    = $file['file'];
 	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
 	$content = '';
+
+	// Load function wp_read_image_metadata if not exists.
+	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
 
 	// Use image exif/iptc data for title and caption defaults if possible.
 	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
@@ -5323,18 +5343,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 				$new_scope[] = 'media';
 				$new_scope[] = 'document';
 			}
-
-		} else if ( bp_is_user_activity() ) {
+		} elseif ( bp_is_user_activity() ) {
 			if ( empty( bp_current_action() ) ) {
 				$new_scope[] = 'just-me';
 			} else {
 				$new_scope[] = bp_current_action();
 			}
-		} else if ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
+		} elseif ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
 			$new_scope[] = 'groups';
 		}
-
-	} else if( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+	} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'public';
 	}
 
@@ -5342,6 +5360,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
+	}
+
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() && bp_is_relevant_feed_enabled() ) {
+		$key = array_search( 'public', $new_scope, true );
+		if ( is_array( $new_scope ) && false !== $key ) {
+			unset( $new_scope[ $key ] );
+			if ( bp_is_active( 'forums' ) ) {
+				$new_scope[] = 'forums';
+			}
+		}
 	}
 
 	/**
@@ -5352,5 +5380,158 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
 
 	return implode( ',', $new_scope );
+}
 
+/**
+ * Get the Activity edit data.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array|bool The Activity edit data or false otherwise.
+ */
+function bp_activity_get_edit_data( $activity_id = 0 ) {
+	global $activities_template;
+
+	// check activity empty or not.
+	if ( empty( $activity_id ) && empty( $activities_template ) ) {
+		return false;
+	}
+	// get activity.
+	if ( ! empty( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
+	} else {
+		$activity = new BP_Activity_Activity( $activity_id );
+	}
+
+	// check activity exists.
+	if ( empty( $activity->id ) ) {
+		return false;
+	}
+
+	$can_edit_privacy = true;
+	$album_id         = 0;
+	$folder_id        = 0;
+	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+	$group_name       = '';
+
+	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
+	if ( ! empty( $album_activity_id ) ) {
+		$album_id = $album_activity_id;
+	}
+
+	$folder_activity_id = bp_activity_get_meta( $activity_id, 'bp_document_folder_activity', true );
+	if ( ! empty( $folder_activity_id ) ) {
+		$folder_id = $folder_activity_id;
+	}
+
+	// if album or folder activity then set privacy edit to always false.
+	if ( $album_id || $folder_id ) {
+		$can_edit_privacy = false;
+	}
+
+	// if group activity then set privacy edit to always false.
+	if ( 0 < (int) $group_id ) {
+		$can_edit_privacy = false;
+		$group            = groups_get_group( $group_id );
+		$group_name       = bp_get_group_name( $group );
+	}
+
+	/**
+	 * Filter here to edit the activity edit data.
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param string $activity_data The Activity edit data.
+	 */
+	return apply_filters(
+		'bp_activity_get_edit_data',
+		array(
+			'id'               => $activity_id,
+			'can_edit_privacy' => $can_edit_privacy,
+			'album_id'         => $album_id,
+			'group_id'         => $group_id,
+			'group_name'       => $group_name,
+			'folder_id'        => $folder_id,
+			'content'          => stripslashes( $activity->content ),
+			'item_id'          => $activity->item_id,
+			'object'           => $activity->component,
+			'privacy'          => $activity->privacy,
+		)
+	);
+}
+
+/**
+ * Return the link to report activity
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args Arguments
+ *
+ * @return string Link for a report a activity
+ */
+function bp_activity_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'id'                => 'activity_report',
+			'component'         => 'moderation',
+			'position'          => 10,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_get_activity_id(),
+				'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Filter Activity report link
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	return apply_filters( 'bp_activity_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}
+
+/**
+ * Return the link to report activity activity
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args Arguments
+ *
+ * @return string Link for a report a activity comment
+ */
+function bp_activity_comment_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'id'                => 'activity_comment_report',
+			'component'         => 'moderation',
+			'position'          => 50,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_get_activity_comment_id(),
+				'data-bp-content-type' => BP_Moderation_Activity_Comment::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Filter Activity comment report link
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
 }

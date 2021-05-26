@@ -461,7 +461,7 @@ class BP_Media_Album {
 	 * @param array $album_ids Array of media IDs.
 	 * @return array
 	 */
-	protected static function get_album_data( $album_ids = array() ) {
+	public static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
 
 		// Bail if no media ID's passed.
@@ -471,6 +471,9 @@ class BP_Media_Album {
 
 		// Get BuddyPress.
 		$bp = buddypress();
+
+		// Media Privacy array
+		$media_privacy = bp_media_get_visibility_levels();
 
 		$albums       = array();
 		$uncached_ids = bp_get_non_cached_ids( $album_ids, 'bp_media_album' );
@@ -504,6 +507,22 @@ class BP_Media_Album {
 					'album_id'    => $album->id,
 					'count_total' => true,
 				) );
+
+			$group_name = '';
+			if ( bp_is_active( 'groups') && $album->group_id > 0 ) {
+				$group      = groups_get_group( $album->group_id );
+				$group_name = bp_get_group_name( $group );
+				$status     = bp_get_group_status( $group );
+				if ( 'hidden' === $status || 'private' === $status ) {
+					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				} else {
+					$visibility = ucfirst( $status );
+				}
+			} else {
+				$visibility       = $media_privacy[ $album->privacy ];
+			}
+			$album->group_name = $group_name;
+			$album->visibility = $visibility;
 
 			$albums[] = $album;
 		}

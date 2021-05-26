@@ -69,6 +69,8 @@ function bp_core_set_uri_globals() {
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
+	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) {
+		$path = esc_url( $_REQUEST['_wp_http_referer'] );
 	} else {
 		$path = esc_url( $_SERVER['REQUEST_URI'] );
 	}
@@ -393,6 +395,13 @@ function bp_core_set_uri_globals() {
 	}
 
 	$bp->current_action = $current_action;
+
+	/**
+	 * Extend support for the $bp setup based on uri.
+	 *
+	 * @since BuddyBoss 1.5.9
+	 */
+	do_action( 'bp_core_set_uri_globals', $bp, $bp_uri );
 
 	// Slice the rest of the $bp_uri array and reset offset.
 	$bp_uri     = array_slice( $bp_uri, $uri_offset + 2 );
@@ -1191,11 +1200,27 @@ function bp_private_network_template_redirect() {
 						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 							$fragments = explode( '/', $request_url );
 
+							// Allow to view if fragment matched.
 							foreach ( $fragments as $fragment ) {
 								if ( $fragment === trim( $url, '/' ) ) {
 									return;
 								}
 							}
+
+							// Allow to view if fragment matched with the trailing slash.
+							$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+							if( $is_matched_fragment === $url ) {
+								return;
+							}
+
+							// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
+							if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+								return;
+							}
+
+						// Check URL is fully matched without remove trailing slash.
+						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
+							return;
 						}
 					}
 				}
@@ -1460,20 +1485,67 @@ add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_pr
 function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
 
 	if ( ! is_user_logged_in() ) {
+		$privacy_policy_url = get_privacy_policy_url();
+		$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
+		$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
 
-		$enable_private_network = bp_enable_private_network();
-
-		if ( ! $enable_private_network ) {
-
-			$privacy_policy_url = get_privacy_policy_url();
-			$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
-			$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
-
-			if ( $privacy_policy_url && $page_title ) {
-				$get_privacy_policy = get_post( $policy_page_id );
-				$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), wp_kses_post( apply_filters( 'the_content', $get_privacy_policy->post_content ) ), esc_html( 'Close (Esc)' ), esc_html( '×' ) );
-			}
+		if ( $privacy_policy_url && $page_title ) {
+			$get_privacy_policy = get_post( $policy_page_id );
+			$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), wp_kses_post( apply_filters( 'the_content', $get_privacy_policy->post_content ) ), esc_html( 'Close (Esc)' ), esc_html( '×' ) );
 		}
+	}
+
+	$page_ids = bp_core_get_directory_page_ids();
+	$terms    = ! empty( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+	$privacy  = ! empty( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+
+	if (
+		( ! empty( $terms ) && 'publish' === get_post_status( $terms ) ) ||
+		( ! empty( $privacy ) && 'publish' === get_post_status( $privacy ) )
+	) {
+		if ( ! empty( $terms ) && ! empty( $privacy ) ) {
+			$page_title  = ! empty( $terms ) ? get_the_title( $terms ) : '';
+			$get_terms   = get_post( $terms );
+			$link        = sprintf(
+				'<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+				'#terms-modal',
+				$page_title,
+				$page_title,
+				wp_kses_post( apply_filters( 'the_content', $get_terms->post_content ) ),
+				esc_html( 'Close (Esc)' ),
+				esc_html( '×' )
+			);
+			$page_title  = ( $privacy ) ? get_the_title( $privacy ) : '';
+			$get_privacy = get_post( $privacy );
+			$link        .= ' and ';
+			$link        .= sprintf(
+				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+				'#privacy-modal',
+				$page_title,
+				$page_title,
+				wp_kses_post( apply_filters( 'the_content', $get_privacy->post_content ) ),
+				esc_html( 'Close (Esc)' ),
+				esc_html( '×' )
+			);
+		} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
+			$page_title  = ! empty( $privacy ) ? get_the_title( $privacy ) : '';
+			$get_privacy = get_post( $privacy );
+			$link        = sprintf(
+				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+				'#privacy-modal',
+				$page_title,
+				$page_title,
+				wp_kses_post( apply_filters( 'the_content', $get_privacy->post_content ) ),
+				esc_html( 'Close (Esc)' ),
+				esc_html( '×' )
+			);
+		} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
+			$page_title = ! empty( $terms ) ? get_the_title( $terms ) : '';
+			$get_terms  = get_post( $terms );
+			$link       = sprintf( '<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', $page_title, $page_title, wp_kses_post( apply_filters( 'the_content', $get_terms->post_content ) ), esc_html( 'Close (Esc)' ), esc_html( '×' ) );
+		}
+
+		$privacy_policy_url = '';
 	}
 
 	$link = apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );

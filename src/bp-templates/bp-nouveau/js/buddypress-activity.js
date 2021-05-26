@@ -70,15 +70,16 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
-					url					: BP_Nouveau.ajaxurl,
-					timeout				: 3 * 60 * 60 * 1000,
-					dictDefaultMessage 	: BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles		: 'image/*',
-					autoProcessQueue	: true,
-					addRemoveLinks		: true,
-					uploadMultiple		: false,
-					maxFiles			: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-					maxFilesize			: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					url                 : BP_Nouveau.ajaxurl,
+					timeout             : 3 * 60 * 60 * 1000,
+					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       : 'image/*',
+					autoProcessQueue    : true,
+					addRemoveLinks      : true,
+					uploadMultiple      : false,
+					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 				};
 
 				// if defined, add custom dropzone options.
@@ -278,6 +279,10 @@ window.bp = window.bp || {};
 			 * Finally trigger a pending event containing the activity heartbeat data
 			 */
 			$( '#buddypress [data-bp-list="activity"]' ).trigger( 'bp_heartbeat_pending', this.heartbeat_data );
+
+			if ( typeof bp.Nouveau !== 'undefined' ){
+				bp.Nouveau.reportPopUp();
+			}
 		},
 
 		/**
@@ -423,7 +428,7 @@ window.bp = window.bp || {};
 			comments.each(
 				function( c, comment ) {
 					comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
-					comment_items   = $( comment_parents ).find( 'li' ).not( '.document-action-class' );
+					comment_items   = $( comment_parents ).find( 'li' ).not( $( '.document-action-class, .media-action-class' ) );
 
 					if ( ! comment_items.length ) {
 						return;
@@ -554,10 +559,26 @@ window.bp = window.bp || {};
 			// Fix comments atwho query elements.
 			this.fixAtWhoActivity();
 
+			// Edit Activity Loader.
+			this.openEditActivityPopup();
+
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout( function() {
 				jQuery( window ).scroll();
 			},200);
+		},
+
+		openEditActivityPopup: function() {
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
+				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
+				if ( activity_item.length ) {
+					var activity_data = activity_item.data( 'bp-activity' );
+
+					if ( ! _.isUndefined( activity_data ) ) {
+						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+					}
+				}
+			}
 		},
 
 		activityPrivacyChange: function( event ) {
@@ -978,12 +999,14 @@ window.bp = window.bp || {};
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
+				var peak_offset = ( $( window ).height() / 2 - 75 );
+
 				$.scrollTo(
 					form,
 					500,
 					{
-						offset:-100,
-						easing:'swing'
+						offset: -peak_offset,
+						easing: 'swing'
 					}
 				);
 
@@ -1204,15 +1227,23 @@ window.bp = window.bp || {};
 			}
 
 			// Edit the activity
-			if ( target.hasClass( 'edit-activity' ) ) {
+			if ( target.hasClass( 'edit' ) && target.hasClass( 'edit-activity' ) ) {
 				// Stop event propagation
 				event.preventDefault();
 
 				var activity_data = activity_item.data('bp-activity');
 
 				if ( typeof activity_data !== 'undefined' ) {
-					//bp.Nouveau.Activity.postForm.displayEditActivity( activity_data );
 					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+
+					// Check if it's a Group activity
+					if( target.closest('li').hasClass( 'groups' ) ) {
+						$('#bp-nouveau-activity-form').addClass( 'group-activity' );
+					} else {
+						$('#bp-nouveau-activity-form').removeClass( 'group-activity' );
+					}
+
+
 					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
 					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
 						$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
@@ -1441,7 +1472,9 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								if(!jQuery('.comment-media-error-popup').length) {
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								}
 								this.removeFile(file);
 							}
 						}
@@ -1514,18 +1547,19 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url						: BP_Nouveau.ajaxurl,
-						timeout					: 3 * 60 * 60 * 1000,
-						dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-						acceptedFiles			: BP_Nouveau.media.document_type,
-						createImageThumbnails 	: false,
-						dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
-						autoProcessQueue		: true,
-						addRemoveLinks			: true,
-						uploadMultiple			: false,
-						maxFiles				: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-						maxFilesize				: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-						dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
+						url                  : BP_Nouveau.ajaxurl,
+						timeout              : 3 * 60 * 60 * 1000,
+						dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
+						acceptedFiles        : BP_Nouveau.media.document_type,
+						createImageThumbnails: false,
+						dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
+						autoProcessQueue     : true,
+						addRemoveLinks       : true,
+						uploadMultiple       : false,
+						maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+						maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+						dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+						dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 					};
 
 					// init dropzone.
@@ -1596,7 +1630,9 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								if(!jQuery('.comment-document-error-popup').length) {
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								}
 								this.removeFile(file);
 							}
 						}
@@ -1686,33 +1722,48 @@ window.bp = window.bp || {};
 		},
 
 		toggleMultiMediaOptions: function(form,target) {
-			if ( ! _.isUndefined( BP_Nouveau.media )) {
+			if ( !_.isUndefined( BP_Nouveau.media ) ) {
 
-				if (target.closest( 'li' ).hasClass( 'groups' )) {
+				var parent_activity = target.closest( '.activity-item' );
+				var activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+
+				if ( target.closest( 'li' ).hasClass( 'groups' ) || parent_activity.hasClass( 'groups' ) ) {
 
 					// check media is enable in groups or not.
-					if (BP_Nouveau.media.group_media === false) {
+					if ( !_.isUndefined( activity_data.group_media ) ) {
+						if ( activity_data.group_media === true ) {
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
+						}
+					} else if ( BP_Nouveau.media.group_media === false ) {
 						form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check media is enable in groups or not.
-					if (BP_Nouveau.media.group_document === false) {
+					if ( !_.isUndefined( activity_data.group_document ) ) {
+						if ( activity_data.group_document === true ) {
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
+						}
+					} else if ( BP_Nouveau.media.group_document === false ) {
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check gif is enable in groups or not.
-					if (BP_Nouveau.media.gif.groups === false) {
+					if ( BP_Nouveau.media.gif.groups === false ) {
 						form.find( '.ac-reply-toolbar .post-gif' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-gif-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-gif' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-gif-disabled' );
 					}
 
 					// check emoji is enable in groups or not.
-					if (BP_Nouveau.media.emoji.groups === false) {
+					if ( BP_Nouveau.media.emoji.groups === false ) {
 						form.find( '.ac-reply-toolbar .post-emoji' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-emoji-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-emoji' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-emoji-disabled' );
@@ -1720,28 +1771,40 @@ window.bp = window.bp || {};
 				} else {
 
 					// check media is enable in groups or not.
-					if (BP_Nouveau.media.profile_media === false) {
+					if ( !_.isUndefined( activity_data.profile_media ) ) {
+						if ( activity_data.profile_media === true ) {
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
+						}
+					} else if ( BP_Nouveau.media.profile_media === false ) {
 						form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check document is enable in groups or not.
-					if (BP_Nouveau.media.profile_document === false) {
+					if ( !_.isUndefined( activity_data.profile_document ) ) {
+						if ( activity_data.profile_document === true ) {
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
+						}
+					} else if ( BP_Nouveau.media.profile_document === false ) {
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check gif is enable sin groups or not.
-					if (BP_Nouveau.media.gif.profile === false) {
+					if ( BP_Nouveau.media.gif.profile === false ) {
 						form.find( '.ac-reply-toolbar .post-gif' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-gif-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-gif' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-gif-disabled' );
 					}
 
 					// check emoji is enable in groups or not.
-					if (BP_Nouveau.media.emoji.profile === false) {
+					if ( BP_Nouveau.media.emoji.profile === false ) {
 						form.find( '.ac-reply-toolbar .post-emoji' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-emoji-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-emoji' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-emoji-disabled' );
