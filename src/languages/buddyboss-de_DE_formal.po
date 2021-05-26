@@ -15792,7 +15792,7 @@ msgstr "Ein GIF veröffentlichen"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:189
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:109
-msgid "Search GIFs"
+msgid "Search GIPHY"
 msgstr "GIFs suchen"
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:117
