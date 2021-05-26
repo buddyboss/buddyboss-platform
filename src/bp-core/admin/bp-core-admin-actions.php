@@ -66,7 +66,7 @@ if ( function_exists( 'bp_enable_profile_gravatar ' ) && false === bp_enable_pro
 add_action( 'bp_admin_menu', 'bp_admin_separator' );
 
 // Check user nickname on backend user edit page.
-add_action( 'user_profile_update_errors', 'bp_check_user_nickname', 10, 3 );
+add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
 /**
  * When a new site is created in a multisite installation, run the activation
@@ -256,11 +256,13 @@ function bp_register_admin_integrations() {
 /**
  * Check user nickname is already taken or not.
  *
+ * @since BuddyBoss 1.6.0
+ *
  * @param object $errors error object.
  * @param bool   $update updating user or adding user.
  * @param object $user   user data.
  */
-function bp_check_user_nickname( &$errors, $update, &$user ) {
+function bb_check_user_nickname( &$errors, $update, &$user ) {
 	global $wpdb;
 
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
