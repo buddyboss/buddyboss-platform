@@ -123,6 +123,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$( document ).on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
 			$( document ).on( 'click', '.video-action_list .video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
+			$( document ).on( 'click', '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom .close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
 
 			// Video Album, Video Directory.
 			bpNouveau.on( 'click', '#bb-create-video-album', this.openCreateVideoAlbumModal.bind( this ) );
@@ -843,21 +844,6 @@ window.bp = window.bp || {};
 						$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-submit' ).hide();
 					}
 					$( this ).closest( '.video-thumbnail-custom' ).addClass('is_hidden');
-					// call ajax to remove attachment video_thumbnail_delete
-					var thumbVideoAttachmentId = $( this ).closest( '.video-thumbnail-custom' ).siblings('.bb-action-check-wrap').find( 'input' ).val();
-					$.ajax(
-						{
-							type: 'POST',
-							url: BP_Nouveau.ajaxurl,
-							data: {
-								'action': 'video_thumbnail_delete',
-								'_wpnonce': BP_Nouveau.nonces.video,
-								'video_id': videoAttachmentId,
-								'video_attachment_id': thumbVideoAttachmentId,
-							},
-							success: function () {}
-						}
-					);
 				}
 			);
 
@@ -1460,6 +1446,60 @@ window.bp = window.bp || {};
 				}
 			);
 
+		},
+
+		deleteVideoThumb: function ( event ) {
+
+			var target = $( event.currentTarget );
+			event.preventDefault();
+
+			// call ajax to remove attachment video_thumbnail_delete
+			var videoId = $( '.video-edit-thumbnail-hidden-video-id' ).val();
+			var videoAttachmentId = $( '.video-edit-thumbnail-hidden-attachment-id' ).val();
+			var thumbVideoAttachmentId = target.closest( '.video-thumbnail-custom' ).siblings('.bb-action-check-wrap').find( 'input' ).val();
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						'action': 'video_thumbnail_delete',
+						'_wpnonce': BP_Nouveau.nonces.video,
+						'video_id': videoId,
+						'attachment_id': videoAttachmentId,
+						'video_attachment_id': thumbVideoAttachmentId,
+					},
+					success: function ( response ) {
+						if ( response.data.video_attachments ) {
+							$('.video-action_list .edit_thumbnail_video a[data-video-attachment-id="'+videoAttachmentId+'"]').attr( 'data-video-attachments', response.data.video_attachments );
+						}
+						if( response.data.thumbnail_id && response.data.thumbnail_id !== 0 ) {
+							if( $( '#bb-video-' +  response.data.thumbnail_id ).length ) {
+								$( '#bb-video-' +  response.data.thumbnail_id ).prop( 'checked', true );
+								$( '.bp-video-thumbnail-submit' ).show();
+							}
+						}
+						if( response.data.thumbnail ) {
+							if( $( '.bb-video-thumb a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).length ) {
+								$( '.bb-video-thumb a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).attr( 'src', response.data.thumbnail );
+							}
+							if( $( '.bb-activity-video-elem a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).length ) {
+								$( '.bb-activity-video-elem a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).attr( 'src', response.data.thumbnail );
+							}
+							if( $( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( '.vjs-poster' ).length ) {
+								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).attr( 'poster', response.data.thumbnail );
+								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find('video').attr( 'poster', response.data.thumbnail );
+								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
+							}
+							if( $( '#theatre-video-' + videoId ).length ) {
+								$( '#theatre-video-' + videoId ).attr( 'poster', response.data.thumbnail );
+								$( '#theatre-video-' + videoId ).find('video').attr( 'poster', response.data.thumbnail );
+								$( '#theatre-video-' + videoId ).find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
+								$( '.bb-video-thumb a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).find( 'img' ).attr( 'src', response.data.thumbnail );
+							}
+						}
+					}
+				}
+			);
 		},
 
 		// Video Directory.

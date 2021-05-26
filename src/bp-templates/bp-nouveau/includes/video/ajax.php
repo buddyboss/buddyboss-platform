@@ -1556,22 +1556,38 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 		wp_send_json_error( $response );
 	}
 
+	$thumbnail_id        = 0;
+	$thumbnail_url       = '';
+
 	$video_id            = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
+	$attachment_id       = filter_input( INPUT_POST, 'attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
 
-	if ( ! empty( $video_id ) && ! empty( $video_attachment_id ) ) {
-		$auto_generated_thumbnails = get_post_meta( $video_id, 'video_preview_thumbnails', true );
+	if ( ! empty( $attachment_id ) && ! empty( $video_attachment_id ) ) {
+		$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
 		$default_images            = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
 		$thumbnail_images = array(
 			'default_images' => $default_images,
 		);
-		update_post_meta( $video_id, 'video_preview_thumbnails', $thumbnail_images );
+		update_post_meta( $attachment_id, 'video_preview_thumbnails', $thumbnail_images );
 		if ( isset( $default_images ) && ! empty( $default_images ) ) {
-			update_post_meta( $video_id, 'bp_video_preview_thumbnail_id', $default_images[0] );
+			update_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', $default_images[0] );
+			$thumbnail_id  = $default_images[0];
+			$thumbnail_url = bb_video_get_thumb_url( $video_id, $default_images[0], 'bb-video-profile-directory-poster-image' );
 		}
 		wp_delete_post( $video_attachment_id, true );
-		bb_video_delete_thumb_symlink( $video_id, $video_attachment_id );
+		bb_video_delete_thumb_symlink( $attachment_id, $video_attachment_id );
 	}
 
-	wp_send_json_success();
+	if ( empty( $thumbnail_url ) ) {
+		$thumbnail_url = bb_get_video_default_placeholder_image();
+	}
+
+	wp_send_json_success(
+		array(
+			'thumbnail'           => $thumbnail_url,
+			'thumbnail_id'        => $thumbnail_id,
+			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) )
+		)
+	);
 }
