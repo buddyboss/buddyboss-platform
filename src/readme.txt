@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.5.8.3
+Stable tag: 1.5.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,30 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.9 =
+* Profiles - Improvements to reflect uploaded profile and cover photo instantly
+* Profiles - Small bug fix to show only published profile type and group type in the dashboard options
+* Groups - Small improvement to show 404 screen when group type is invalid
+* Groups - Fixed issue with group members logic to improve performance
+* Groups - Fixed issue with a hidden group create a discussion to redirect to the discussion
+* Forums - Provided Email Preference option to stop receiving forum replies and discussion email
+* Forums - Fixed issue with duplicate reply notification generated
+* Activity - Fixed activity comment box scroll issue
+* Media - Fixed issue with Redis cache when photos moved into an album
+* Messages - Fixed iPhone bug when sending Private Messages
+* Messages - Fixed infinite loading issue on delete messages action
+* Network Search - Small code improvement
+* Moderation - Small bug fix to improve performance
+* REST API - Fixed issue with notification marked read/unread
+* REST API - Fixed notification endpoint invalid data issue
+* REST API - Email Preference forum options support added
+* REST API - Fixed registration label special character issue
+* REST API - Cache improvements to fix group issues
+* REST API - Fixed activity feed issue when activity tab disabled
+* REST API - Fixed activity endpoint edit issue
+* LearnDash - Fixed Courses slug compatibility issue
+* Translations - Updated German (formal) language files
 
 = 1.5.8.3 =
 * Registration - Provided Legal Agreement checkbox option

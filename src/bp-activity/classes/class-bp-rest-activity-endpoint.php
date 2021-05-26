@@ -154,6 +154,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 */
 	public function get_items( $request ) {
+		global $bp;
+
 		$args = array(
 			'exclude'           => $request['exclude'],
 			'in'                => $request['include'],
@@ -192,6 +194,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['user_id'] ) ) {
 			$args['filter']['user_id'] = $request['user_id'];
+			if ( ! empty( $request['user_id'] ) ) {
+				$bp->displayed_user->id = (int) $request['user_id'];
+			}
 		}
 
 		$item_id = 0;
@@ -1366,7 +1371,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $schema['properties']['component'] ) && isset( $request['component'] ) ) {
 			$prepared_activity->component = $request['component'];
 		} else {
-			$prepared_activity->component = buddypress()->activity->id;
+			$prepared_activity->component = ( isset( $activity->component ) ? $activity->component : buddypress()->activity->id );
 		}
 
 		// Activity Item ID.
@@ -2062,7 +2067,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )
 					)
 				) {
-					$new_scope[] = 'public';
+					if ( empty( $user_id ) ) {
+						$new_scope[] = 'public';
+					}
 
 					if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
 						$new_scope[] = 'mentions';
