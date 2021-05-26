@@ -1945,6 +1945,7 @@ function bp_core_activate_signup( $key ) {
 	} else {
 		$signups = BP_Signup::get(
 			array(
+				'exclude_active' => false,
 				'activation_key' => $key,
 			)
 		);
