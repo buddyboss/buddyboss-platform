@@ -11891,7 +11891,7 @@ msgstr "Publier un GIF"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:128
-msgid "Search GIPHY"
+msgid "Search GIFs"
 msgstr "Rechercher dans les GIFs"
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:69
