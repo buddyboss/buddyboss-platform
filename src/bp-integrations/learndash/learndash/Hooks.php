@@ -51,7 +51,7 @@ class Hooks {
 	/**
 	 * Skip the leardash course field from member search when course price type or course mode is 'open'.
 	 * 
-	 * @since BuddyBoss 1.5.9
+	 * @since BuddyBoss 1.6.0
 	 * 
 	 * @param bool  $has_access Default activity for leardash course search field.
 	 * @param mixed $field      Field attributes for learndash course.
