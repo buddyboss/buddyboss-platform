@@ -160,10 +160,13 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_media_tabs() {
 		$tabs = array();
-
+		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		add_filter( 'bp_get_total_media_count', array( $this, 'bp_rest_get_total_media_count' ) );
+
 		$tabs_items = function_exists( 'bp_nouveau_get_media_directory_nav_items' ) ? bp_nouveau_get_media_directory_nav_items() : array();
+
 		remove_filter( 'bp_get_total_media_count', array( $this, 'bp_rest_get_total_media_count' ) );
+		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 
 		if ( ! empty( $tabs_items ) ) {
 			foreach ( $tabs_items as $key => $item ) {
@@ -211,9 +214,6 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	 * @return int Media count.
 	 */
 	public function bp_rest_get_total_media_count() {
-		add_filter( 'bp_ajax_querystring', array( $this, 'bp_rest_media_object_results_media_all_scope' ), 20 );
-		bp_has_media( bp_ajax_querystring( 'media' ) );
-		remove_filter( 'bp_ajax_querystring', array( $this, 'bp_rest_media_object_results_media_all_scope' ), 20 );
 		$count = $GLOBALS['media_template']->total_media_count;
 
 		/**
@@ -227,26 +227,19 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
-	 * Media results all scope.
-	 * - from bp_media_object_results_media_all_scope().
+	 * Set Media Component while getting the photo count.
 	 *
-	 * @since 0.1.0
+	 * @param boolean $is_current_component Check is valid component.
+	 * @param string  $component            Current component name.
 	 *
-	 * @param array $querystring Query String parameters.
-	 *
-	 * @return string
+	 * @return boolean
 	 */
-	public function bp_rest_media_object_results_media_all_scope( $querystring ) {
-		$querystring = wp_parse_args( $querystring );
+	public function bp_rest_is_current_component( $is_current_component, $component ) {
+		if ( 'media' !== $component ) {
+			return $is_current_component;
+		}
 
-		$querystring['scope'] = $this->media_endpoint->bp_rest_media_default_scope( 'all', array() );
-
-		$querystring['page']        = 1;
-		$querystring['per_page']    = 1;
-		$querystring['user_id']     = 0;
-		$querystring['count_total'] = true;
-
-		return http_build_query( $querystring );
+		return true;
 	}
 
 }
