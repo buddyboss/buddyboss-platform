@@ -420,9 +420,14 @@ class BP_Core_Suspend {
 	 */
 	public static function check_user_suspend( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bb_check_user_suspend_' . $user_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result );
 	}

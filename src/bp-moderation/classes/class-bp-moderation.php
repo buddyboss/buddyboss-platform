@@ -175,9 +175,14 @@ class BP_Moderation {
 	public static function check_moderation_exist( $item_id, $item_type ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return is_numeric( $result ) ? (int) $result : false;
 	}
