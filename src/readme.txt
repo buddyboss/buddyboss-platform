@@ -70,6 +70,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * REST API - Fixed messages issue by providing media objects in the bulk URL details endpoint
 * REST API - Fixed empty profile type issue in the member endpoint
 * REST API - Fixed notification wrong 'from' field parameter issue
+* Translations - Updated German (formal) language files
 
 = 1.5.9 =
 * Profiles - Improvements to reflect uploaded profile and cover photo instantly
