@@ -2371,6 +2371,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 			$media_ids = explode( ',', $media_ids );
 
 			foreach ( $media_ids as $media_id ) {
+
+				if ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) {
+					continue;
+				}
+
 				$media = new BP_Media( $media_id );
 
 				$activity['media'][] = array(
@@ -2384,7 +2389,6 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'activity_id'   => $media->activity_id,
 					'saved'         => true,
 					'menu_order'    => $media->menu_order,
-					'hidden'        => ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) ? true : false,
 				);
 			}
 		}
