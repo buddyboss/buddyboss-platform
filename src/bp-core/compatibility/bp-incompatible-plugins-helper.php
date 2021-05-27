@@ -684,6 +684,8 @@ add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
 
 /**
  * Load rest compatibility.
+ *
+ * @since BuddyBoss 1.6.0
  */
 function bb_rest_compatibility_loader() {
 	// BuddyPress Groups Tabs creator pro plugin support.
