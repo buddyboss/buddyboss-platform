@@ -95,11 +95,9 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 			if ( ! $clone_id ) {
 				$checked_cloned_from = bp_xprofile_get_meta( $template_field_id, 'field', '_is_repeater_clone', true );
 				if ( ! $checked_cloned_from ) {
-					$clone_id_arr = bp_clone_field_for_repeater_sets( $template_field_id, $field_group_id, $count );
-					// Delete duplicate field order if exists.
-					if ( ! empty( $clone_id_arr ) ) {
-						bp_delete_duplicate_field_order( $field_group_id, $clone_id_arr['field_order'], $count );
-						$clone_id = $clone_id_arr['field_id'];
+					$clone_repeater_id = bp_clone_field_for_repeater_sets( $template_field_id, $field_group_id, $count );
+					if ( ! empty( $clone_repeater_id ) ) {
+						$clone_id = $clone_repeater_id;
 					}
 				}
 			}
@@ -415,9 +413,10 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 				array( '%d' ),
 				array( '%d' )
 			) ) {
-				bp_xprofile_update_meta( $new_field_id, 'field', 'field_status', 'update' );
+				// Delete duplicate field order if exists.
+				bp_delete_duplicate_field_order( $field_group_id, $field_order, $count );
 			}
-			return array( 'field_id' => $new_field_id, 'field_order' => $field_order, 'current_clone_number' => $current_clone_number );
+			return $new_field_id;
 		}
 	}
 
@@ -721,7 +720,7 @@ function bp_print_add_repeater_set_button() {
 	$group_id            = bp_get_current_profile_group_id();
 	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
-		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}' disabled='disabled' style='pointer-events:none;'>";
+		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}'>"; // disabled='disabled' style='pointer-events:none;'
 		echo '<span class="dashicons dashicons-plus-alt"></span>';
 		printf(
 			/* translators: %s = profile field group name */
@@ -976,20 +975,3 @@ function bp_delete_duplicate_field_order( $field_group_id, $clone_field_order, $
 	}
 }
 
-add_action( 'wp_ajax_bp_xprofile_check_repeater_set', 'bp_xprofile_check_repeater_set_callback' );
-add_action( 'wp_ajax_nopriv_bp_xprofile_check_repeater_set', 'bp_xprofile_check_repeater_set_callback' );
-/**
- * Ajax action will check last field status.
- */
-function bp_xprofile_check_repeater_set_callback() {
-	$get_field_id          = filter_input( INPUT_POST, 'field_ids', FILTER_SANITIZE_STRING );
-	$get_field_id_ex       = explode( ',', $get_field_id );
-	$last_field_id         = end( $get_field_id_ex );
-	$get_last_field_status = bp_xprofile_get_meta( $last_field_id, 'field', 'field_status', true );
-	if ( 'update' === $get_last_field_status ) {
-		echo 'true';
-	} else {
-		echo 'false';
-	}
-	wp_die();
-}

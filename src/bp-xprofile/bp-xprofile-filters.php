@@ -1126,7 +1126,6 @@ function bp_xprofile_repeater_field_repair_callback() {
 					} else {
 						$check_delete_group_data[] = $group_id;
 					}
-					bp_xprofile_update_meta( $group_field_id->id, 'field', 'field_status', 'update' );
 				}
 			}
 			// This will remove unnecessary data that may have remained after the above migration process.

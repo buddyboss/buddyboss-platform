@@ -44,6 +44,18 @@ window.bp = window.bp || {};
         });
 
         $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );
+
+         // Sortable
+         $( '.repeater_sets_sortable' ).sortable({
+            items: '.repeater_group_outer',
+            update: function( ) {
+                var repeater_set_sequence = [];
+                $( '#profile-edit-form .repeater_group_outer' ).each( function(){
+                    repeater_set_sequence.push( $(this).data('set_no') );
+                });
+                $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
+            }
+        });
         
     }
 
@@ -54,10 +66,12 @@ window.bp = window.bp || {};
         $(this).parents('.repeater_group_outer').toggleClass('active');
     });
 
+    
     if (window.location.href.indexOf('#bpxpro') > -1) {
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
       }
+      
 
 	var deleted_field_ids = [];
 
@@ -132,42 +146,13 @@ window.bp = window.bp || {};
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
 	
-	 // Check last field update or not in DB.
+	// Remove attr from button after page successfully load.
     if ( window.location.href.indexOf('#bpxpro') > 0 ) {
         document.addEventListener('DOMContentLoaded', function () {
-            $.ajax({
-                'url': ajaxurl,
-                'method': 'POST',
-                'data': {
-                    'action': 'bp_xprofile_check_repeater_set',
-                    'field_ids': $('#field_ids').val(),
-                },
-                'success': function (response) {
-                    if ('true' === response) {
-                        if ( $( '#profile-edit-form #btn_add_repeater_set' ).length ) {
-                            $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
-                            $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
-	                          // Sortable
-		                        $( '.repeater_sets_sortable' ).sortable({
-			                        items: '.repeater_group_outer',
-			                        update: function( ) {
-				                        var repeater_set_sequence = [];
-				                        $( '#profile-edit-form .repeater_group_outer' ).each( function(){
-					                        repeater_set_sequence.push( $(this).data('set_no') );
-				                        });
-				                        $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
-			                        }
-		                        });
-                        }
-                    }
-                }
-            });
-        });
-    } else {
-        if ( $( '#profile-edit-form #btn_add_repeater_set' ).length ) {
+            console.log('loaded');
             $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
             $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
-        }
+        });    
     }
 
     // Add repeater set button, on edit profile screens
