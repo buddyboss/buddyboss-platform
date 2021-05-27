@@ -45,8 +45,8 @@ window.bp = window.bp || {};
 
         $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );
 
-         // Sortable
-         $( '.repeater_sets_sortable' ).sortable({
+        // Sortable
+        $( '.repeater_sets_sortable' ).sortable({
             items: '.repeater_group_outer',
             update: function( ) {
                 var repeater_set_sequence = [];
@@ -146,7 +146,7 @@ window.bp = window.bp || {};
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
 	
-	// Remove attr from button after page successfully load.
+    // Remove attr from button after page successfully load.
     if ( window.location.href.indexOf('#bpxpro') > 0 ) {
         document.addEventListener('DOMContentLoaded', function () {
             console.log('loaded');
@@ -163,7 +163,7 @@ window.bp = window.bp || {};
         if ( $button.hasClass( 'disabled' ) ) {
             return;
         }
-				
+        
         $button.addClass('disabled');
         $button.attr('disabled', 'disabled');
         $button.css('pointer-events', 'none');
