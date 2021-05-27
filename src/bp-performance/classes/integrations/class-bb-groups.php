@@ -33,6 +33,10 @@ class BB_Groups extends Integration_Abstract {
 		$purge_events = array(
 			'bp_group_admin_edit_after',         // When Group change form admin.
 			'groups_create_group_step_complete', // When Group created from Manage.
+			'groups_delete_group',               // When Group was deleted.
+			'groups_join_group',                 // When user join the group.
+			'groups_leave_group',                // When user leave the group.
+			'bp_invitations_accepted_invite',    // When Group invitation has been accepted.
 
 			// Added moderation support.
 			'bp_suspend_groups_suspended',       // Any Group Suspended.
@@ -48,6 +52,7 @@ class BB_Groups extends Integration_Abstract {
 		$purge_single_events = array(
 			'bp_group_admin_edit_after'             => 1,  // When Group change form admin.
 			'groups_create_group_step_complete'     => 0,  // When Group created from Manage.
+			'groups_delete_group'                   => 1,  // When Group was deleted.
 			'groups_group_details_edited'           => 1,  // When Group Details updated form Manage.
 			'groups_group_settings_edited'          => 1,  // When Group setting updated form Manage.
 			'groups_avatar_uploaded'                => 1,  // When Group avatar updated form Manage.
@@ -56,6 +61,7 @@ class BB_Groups extends Integration_Abstract {
 			'groups_cover_image_deleted'            => 1,  // When Group cover photo deleted form Manage.
 			'bp_group_admin_after_edit_screen_save' => 1,  // When Group forums setting Manage.
 			'groups_join_group'                     => 1,  // When user join in group.
+			'groups_leave_group'                    => 2,  // When user leave the group.
 			'groups_member_after_save'              => 1,  // When Group member ban, unban, promoted, demoted.
 			'groups_member_after_remove'            => 1,  // When Group member removed.
 			'groups_membership_requested'           => 3,  // When Group membership request.
@@ -128,6 +134,17 @@ class BB_Groups extends Integration_Abstract {
 	}
 
 	/**
+	 * When Group was Deleted.
+	 *
+	 * @param int $group_id Group id.
+	 */
+	public function event_groups_delete_group( $group_id ) {
+		if ( ! empty( $group_id ) ) {
+			$this->purge_item_cache_by_item_id( $group_id );
+		}
+	}
+
+	/**
 	 * When Group Details updated form Manage
 	 *
 	 * @param int $group_id Group id.
@@ -187,6 +204,16 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_join_group( $group_id ) {
+		$this->purge_item_cache_by_item_id( $group_id );
+	}
+
+	/**
+	 * When user join in group
+	 *
+	 * @param int $group_id Group id.
+	 * @param int $user_id  User id.
+	 */
+	public function event_groups_leave_group( $group_id, $user_id ) {
 		$this->purge_item_cache_by_item_id( $group_id );
 	}
 

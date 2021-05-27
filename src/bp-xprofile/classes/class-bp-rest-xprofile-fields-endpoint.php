@@ -851,7 +851,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'group_id'          => (int) $field->group_id,
 			'parent_id'         => (int) $field->parent_id,
 			'type'              => $field->type,
-			'name'              => $field->name,
+			'name'              => wp_specialchars_decode( $field->name ),
 			'alternate_name'    => '',
 			'description'       => array(
 				'raw'      => $field->description,
@@ -933,7 +933,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Get alternate name for the field.
 		$alternate_name = bp_xprofile_get_meta( (int) $field->id, 'field', 'alternate_name' );
 		if ( ! empty( $alternate_name ) ) {
-			$data['alternate_name'] = $alternate_name;
+			$data['alternate_name'] = wp_specialchars_decode( $alternate_name );
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
