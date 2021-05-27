@@ -1701,14 +1701,14 @@ function bp_document_get_edit_activity_data( $activity ) {
 
 			$document_ids = explode( ',', $document_ids );
 
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
 				$document = new BP_Document( $document_id );
 
 				$size = 0;
 				$file = get_attached_file( $document->attachment_id );
 				if ( $file && file_exists( $file ) ) {
-				    $size = filesize( $file );
-                }
+					$size = filesize( $file );
+				}
 
 				$activity['document'][] = array(
 					'id'          => $document_id,
@@ -1722,6 +1722,7 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'size'        => $size,
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
+					'hidden'      => ( bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) ? true : false,
 				);
 			}
 		}

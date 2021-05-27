@@ -2384,6 +2384,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'activity_id'   => $media->activity_id,
 					'saved'         => true,
 					'menu_order'    => $media->menu_order,
+					'hidden'        => ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) ? true : false,
 				);
 			}
 		}
