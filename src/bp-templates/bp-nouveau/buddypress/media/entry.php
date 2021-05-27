@@ -187,7 +187,7 @@ if ( 'video' === $media_template->media->type ) {
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
 		<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap" data-id="<?php bp_media_id(); ?>" data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-privacy="<?php bp_media_privacy(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-album-id="<?php bp_media_album_id(); ?>" data-group-id="<?php bp_media_group_id(); ?>" data-attachment-id="<?php bp_media_attachment_id(); ?>" data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>" href="#">
-			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bb_media_photos_theatre_popup_image(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
+			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bb_media_photos_directory_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
 		<?php
 		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_edit ) || ( bp_is_group_albums() && $can_edit ) ) ) ) && ! bp_is_media_directory() ) :
