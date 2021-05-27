@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Added validation to restrict duplicate Nicknames in the dashboard
 * Profiles - Fixed issue when trying to search members using courses
 * Media - Fixed media preview issue for specific server configuration
+* Notifications - Fixed notification issue with blog post comments and replies
 * Registration - Small improvement to show relevant validation message on the account activation
 * REST API - Provided customer profile/group tab details in relevant endpoints
 * REST API - Improved caching for menu and settings
