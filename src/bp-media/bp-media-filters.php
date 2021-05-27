@@ -415,6 +415,12 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 			if ( ! empty( $old_media_ids ) ) {
 
+				foreach ( $old_media_ids as $media_id ) {
+					if ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) {
+						$media_ids[] = $media_id;
+					}
+				}
+
 				// This is hack to update/delete parent activity if new media added in edit.
 				bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', array_unique( array_merge( $media_ids, $old_media_ids ) ) ) );
 
@@ -2371,6 +2377,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 			$media_ids = explode( ',', $media_ids );
 
 			foreach ( $media_ids as $media_id ) {
+
+				if ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) {
+					continue;
+				}
+
 				$media = new BP_Media( $media_id );
 
 				$activity['media'][] = array(
@@ -2384,7 +2395,6 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'activity_id'   => $media->activity_id,
 					'saved'         => true,
 					'menu_order'    => $media->menu_order,
-					'hidden'        => ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) ? true : false,
 				);
 			}
 		}
