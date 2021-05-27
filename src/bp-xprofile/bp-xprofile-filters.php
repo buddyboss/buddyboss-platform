@@ -1213,7 +1213,7 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
 
 
 function bp_xprofile_repeater_field_repair_with_background() {
-	global $wpdb; //$bp_background_updater;
+	global $wpdb, $bp_background_updater;
 	$bp = buddypress();
 	$recipients_query = "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete=1";
 	$recipients       = $wpdb->get_row( $recipients_query );
