@@ -656,8 +656,8 @@ class BP_Media {
 			// fetch attachment data.
 			$attachment_data                              = new stdClass();
 			$activity_thumb                               = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' );
-			$media_album_cover_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-album-image' );
-			$media_photos_page_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-directory-image' );
+			$media_album_cover_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image' );
+			$media_photos_page_thumb                      = $media_album_cover_thumb;
 			$media_theatre_popup                          = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' );
 			$attachment_data->full                        = $activity_thumb;
 			$attachment_data->thumb                       = $activity_thumb;
@@ -678,9 +678,9 @@ class BP_Media {
 				$default_image                     = bb_get_video_default_placeholder_image();
 
 				if ( $get_video_thumb_id ) {
-					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-directory-poster-image' );
+					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 					$video_directory_page_thumb                  = $video_user_profile_thumb;
-					$video_album_cover_thumb                     = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-album-cover-and-add-thumbnail-poster-image' );
+					$video_album_cover_thumb                     = $video_user_profile_thumb;
 					$video_add_thumbnail_thumb                   = $video_album_cover_thumb;
 					$video_popup_thumb                           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-poster-popup-image' );
 					$video_activity_thumb                        = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-activity-image' );
@@ -696,9 +696,9 @@ class BP_Media {
 					$attachment_data->thumb_meta                 = wp_get_attachment_metadata( $get_video_thumb_id );
 				} elseif ( isset( $get_video_thumb_ids['default_images'] ) && ! empty( $get_video_thumb_ids['default_images'] ) ) {
 					$get_video_thumb_id                          = current( $get_video_thumb_ids['default_images'] );
-					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-directory-poster-image' );
+					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 					$video_directory_page_thumb                  = $video_user_profile_thumb;
-					$video_album_cover_thumb                     = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-album-cover-and-add-thumbnail-poster-image' );
+					$video_album_cover_thumb                     = $video_user_profile_thumb;
 					$video_add_thumbnail_thumb                   = $video_album_cover_thumb;
 					$video_popup_thumb                           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-poster-popup-image' );
 					$video_activity_thumb                        = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-activity-image' );

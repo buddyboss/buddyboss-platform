@@ -633,9 +633,9 @@ class BP_Video {
 
 			if ( $attachment_thumb_id ) {
 
-				$video_user_profile_thumb   = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-profile-directory-poster-image' );
+				$video_user_profile_thumb   = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 				$video_directory_page_thumb = $video_user_profile_thumb;
-				$video_album_cover_thumb    = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-album-cover-and-add-thumbnail-poster-image' );
+				$video_album_cover_thumb    = $video_user_profile_thumb;
 				$video_add_thumbnail_thumb  = $video_album_cover_thumb;
 				$video_popup_thumb          = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-poster-popup-image' );
 				$video_activity_thumb       = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-activity-image' );

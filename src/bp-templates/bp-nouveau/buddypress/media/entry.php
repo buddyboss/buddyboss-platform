@@ -38,7 +38,7 @@ if ( 'video' === $media_template->media->type ) {
 	$poster_thumb     = $poster_full;
 
 	if ( $poster_id ) {
-		$poster_full  = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'bb-video-profile-directory-poster-image' );
+		$poster_full  = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 		$poster_thumb = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'bb-video-activity-image' );
 	}
 

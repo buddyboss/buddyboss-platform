@@ -86,12 +86,11 @@ function bp_media_allowed_mimes( $mime_types ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_media_remove_default_image_sizes( $sizes ) {
-	if ( isset( $sizes['bb-media-activity-image'] ) && isset( $sizes['bb-media-album-image'] ) && isset( $sizes['bb-media-photos-directory-image'] ) && isset( $sizes['bb-media-photos-popup-image'] ) ) {
+	if ( isset( $sizes['bb-media-activity-image'] ) && isset( $sizes['bb-media-photos-album-directory-image'] ) && isset( $sizes['bb-media-photos-popup-image'] ) ) {
 		return array(
-			'bb-media-activity-image'         => $sizes['bb-media-activity-image'],
-			'bb-media-album-image'            => $sizes['bb-media-album-image'],
-			'bb-media-photos-directory-image' => $sizes['bb-media-photos-directory-image'],
-			'bb-media-photos-popup-image'     => $sizes['bb-media-photos-popup-image'],
+			'bb-media-activity-image'               => $sizes['bb-media-activity-image'],
+			'bb-media-photos-album-directory-image' => $sizes['bb-media-photos-album-directory-image'],
+			'bb-media-photos-popup-image'           => $sizes['bb-media-photos-popup-image'],
 		);
 	}
 
@@ -3293,13 +3292,7 @@ function bp_media_delete_symlinks( $media ) {
 		unlink( $attachment_path );
 	}
 
-	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-album-image' );
-
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
-
-	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-directory-image' );
+	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-album-directory-image' );
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
@@ -3411,19 +3404,15 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 function bp_media_get_image_sizes() {
 
 	$image_sizes = array(
-		'bb-media-activity-image'         => array(
+		'bb-media-activity-image'               => array(
 			'height' => 400,
 			'width'  => 640,
 		),
-		'bb-media-album-image'            => array(
-			'height' => 230,
-			'width'  => 400,
-		),
-		'bb-media-photos-directory-image' => array(
+		'bb-media-photos-album-directory-image' => array(
 			'height' => 267,
 			'width'  => 400,
 		),
-		'bb-media-photos-popup-image'     => array(
+		'bb-media-photos-popup-image'           => array(
 			'height' => 900,
 			'width'  => 1500,
 		)

@@ -133,28 +133,6 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 }
 
 /**
- * This will remove the default image sizes registered.
- *
- * @param array $sizes Image sizes registered.
- *
- * @return array Empty array.
- * @since BuddyBoss 1.7.0
- */
-function bp_video_remove_default_image_sizes( $sizes ) {
-
-	if ( isset( $sizes['bb-video-profile-directory-poster-image'] ) && isset( $sizes['bb-video-album-cover-and-add-thumbnail-poster-image'] ) && isset( $sizes['bb-video-poster-popup-image'] ) && isset( $sizes['bb-video-activity-image'] ) ) {
-		return array(
-			'bb-video-profile-directory-poster-image'             => $sizes['bb-video-profile-directory-poster-image'],
-			'bb-video-album-cover-and-add-thumbnail-poster-image' => $sizes['bb-video-album-cover-and-add-thumbnail-poster-image'],
-			'bb-video-poster-popup-image'                         => $sizes['bb-video-poster-popup-image'],
-			'bb-video-activity-image'                             => $sizes['bb-video-activity-image'],
-		);
-	}
-
-	return array();
-}
-
-/**
  * Create and upload the video thumbnail file
  *
  * @return array|null|WP_Error|WP_Post
@@ -3642,7 +3620,7 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
 				$attachment_urls['default_images'][] = array(
 					'id'	=> $auto_generated_thumbnail,
-					'url'	=> bb_video_get_attachment_symlink( $video, $auto_generated_thumbnail, 'bb-video-album-cover-and-add-thumbnail-poster-image' )
+					'url'	=> bb_video_get_attachment_symlink( $video, $auto_generated_thumbnail, 'bb-video-profile-album-add-thumbnail-directory-poster-image' )
 				);
 			}
 		} else {
@@ -3660,18 +3638,19 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 	if( $preview_thumbnail_id ) {
 		$attachment_urls['selected_id'] = array(
 			'id'	=> $preview_thumbnail_id,
-			'url'	=> bb_video_get_attachment_symlink( $video, $preview_thumbnail_id, 'bb-video-album-cover-and-add-thumbnail-poster-image' )
+			'url'	=> bb_video_get_attachment_symlink( $video, $preview_thumbnail_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' )
 		);
 	}
 	if ( isset($auto_generated_thumbnails['custom_image']) && !empty($auto_generated_thumbnails['custom_image']) ) {
 
 		$id                         = ( $video_id ) ? $video_id : bp_get_video_id();
 		$video                      = new BP_Video( $id );
+		$url                        = bb_video_get_attachment_symlink( $video, $auto_generated_thumbnails['custom_image'], 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 		$attachment_urls['preview'] = array(
 			'id'            => $id,
 			'attachment_id' => $auto_generated_thumbnails['custom_image'],
-			'thumb'         => bb_video_get_attachment_symlink( $video, $auto_generated_thumbnails['custom_image'], 'bb-video-album-cover-and-add-thumbnail-poster-image' ),
-			'url'           => bb_video_get_attachment_symlink( $video, $auto_generated_thumbnails['custom_image'], 'bb-video-album-cover-and-add-thumbnail-poster-image' ),
+			'thumb'         => $url,
+			'url'           => $url,
 			'name'          => $video->title,
 			'saved'         => true,
 			'dropzone'      => true
@@ -3768,19 +3747,15 @@ function bb_video_check_is_ffprobe_binary() {
  */
 function bb_video_get_image_sizes() {
 	$image_sizes = array(
-		'bb-video-profile-directory-poster-image'             => array(
+		'bb-video-profile-album-add-thumbnail-directory-poster-image' => array(
 			'height' => 267,
 			'width'  => 400,
 		),
-		'bb-video-album-cover-and-add-thumbnail-poster-image' => array(
-			'height' => 230,
-			'width'  => 400,
-		),
-		'bb-video-poster-popup-image'                         => array(
+		'bb-video-poster-popup-image'                                 => array(
 			'height' => 900,
 			'width'  => 1500,
 		),
-		'bb-video-activity-image'                             => array(
+		'bb-video-activity-image'                                     => array(
 			'height' => 400,
 			'width'  => 640,
 		)
@@ -3844,12 +3819,11 @@ function bb_video_image_remove_upload_filters() {
 function bb_video_remove_default_image_sizes( $sizes ) {
 
 
-	if ( isset( $sizes['bb-video-profile-directory-poster-image'] ) && isset( $sizes['bb-video-album-cover-and-add-thumbnail-poster-image'] ) && isset( $sizes['bb-video-poster-popup-image'] ) && isset( $sizes['bb-video-activity-image'] ) ) {
+	if ( isset( $sizes['bb-video-profile-album-add-thumbnail-directory-poster-image'] ) && isset( $sizes['bb-video-poster-popup-image'] ) && isset( $sizes['bb-video-activity-image'] ) ) {
 		return array(
-			'bb-video-profile-directory-poster-image'             => $sizes['bb-video-profile-directory-poster-image'],
-			'bb-video-album-cover-and-add-thumbnail-poster-image' => $sizes['bb-video-album-cover-and-add-thumbnail-poster-image'],
-			'bb-video-poster-popup-image'                         => $sizes['bb-video-poster-popup-image'],
-			'bb-video-activity-image'                             => $sizes['bb-video-activity-image'],
+			'bb-video-profile-album-add-thumbnail-directory-poster-image' => $sizes['bb-video-profile-album-add-thumbnail-directory-poster-image'],
+			'bb-video-poster-popup-image'                                 => $sizes['bb-video-poster-popup-image'],
+			'bb-video-activity-image'                                     => $sizes['bb-video-activity-image'],
 		);
 	}
 
