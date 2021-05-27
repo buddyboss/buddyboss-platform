@@ -568,6 +568,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				}
 				$field->field_order++;
 			}
+
 			// For new profile fields, set the $field_id. For existing profile
 			// fields, this will overwrite $field_id with the same value.
 			$field_id = $field->save();
@@ -636,6 +637,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 					$settings = isset( $_POST['field-settings'] ) ? wp_unslash( $_POST['field-settings'] ) : array();
 					$field->admin_save_settings( $settings );
 				}
+
 				/**
 				 * Fires at the end of the process to save a field for a user, if successful.
 				 *

@@ -446,11 +446,11 @@ function bp_the_profile_field_ids() {
 	 */
 function bp_get_the_profile_field_ids() {
 	global $profile_template;
-	
+
 	$field_ids = array();
 	foreach ( $profile_template->groups as $group ) {
 		if ( ! empty( $group->fields ) ) {
-			$field_ids            = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
+			$field_ids = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
 		}
 	}
 
@@ -465,8 +465,9 @@ function bp_get_the_profile_field_ids() {
 	if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
 		$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
 	}
-	
+
 	$field_ids = implode( ',', wp_parse_id_list( $field_ids ) );
+
 	/**
 	 * Filters the comma-separated list of field IDs.
 	 *
