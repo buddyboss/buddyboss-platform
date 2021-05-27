@@ -293,23 +293,19 @@ class BP_User_Query {
 			case 'active':
 			case 'newest':
 			case 'random':
-				$this->uid_name  = 'ID';
-				$this->uid_table = $wpdb->users;
-				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u LEFT JOIN {$bp->members->table_name_last_activity} a ON u.ID = a.user_id ";
-				
-				// Join condition move to in where condition.
-				$sql['where'][]  = $wpdb->prepare( " a.component = %s AND a.type = 'last_activity' AND u.user_status = 0 ", buddypress()->members->id );
+				$this->uid_name = 'user_id';
+				$this->uid_table = $bp->members->table_name_last_activity;
+				$sql['select']  = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
+				$sql['where'][] = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
 
 				if ( 'newest' == $type ) {
-					$sql['orderby'] = 'ORDER BY u.ID';
-					$sql['order']   = 'DESC';
+					$sql['orderby'] = "ORDER BY u.user_id";
+					$sql['order'] = "DESC";
 				} elseif ( 'random' == $type ) {
-					$sql['orderby'] = 'ORDER BY rand()';
+					$sql['orderby'] = "ORDER BY rand()";
 				} else {
-					$sql['orderby'] = array(
-						array( 'COALESCE( a.date_recorded, NULL )', 'DESC' ),
-						array( 'u.display_name', 'ASC' ),
-					);
+					$sql['orderby'] = "ORDER BY u.date_recorded";
+					$sql['order'] = "DESC";
 				}
 
 				break;
