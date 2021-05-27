@@ -763,12 +763,13 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	protected function prepare_links( $notification, $object ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 
-		$users = $notification->user_id;
-		if ( ( 'user' === $object ) ) {
-			$users = array(
-				$users,
-				$notification->secondary_item_id
+		if ( 'user' === $object && (int) $notification->user_id !== (int) $notification->secondary_item_id ) {
+			$users_ids = array(
+				$notification->user_id,
+				$notification->secondary_item_id,
 			);
+		} else {
+			$users_ids = $notification->user_id;
 		}
 
 		// Entity meta.
@@ -780,7 +781,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $users ) ),
+				'href'       => rest_url( bp_rest_get_user_url( $users_ids ) ),
 				'embeddable' => true,
 			),
 		);
