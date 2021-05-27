@@ -1217,20 +1217,22 @@ function bp_xprofile_repeater_field_repair_with_background() {
 	$bp = buddypress();
 	$recipients_query = "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete=1";
 	$recipients       = $wpdb->get_row( $recipients_query );
-	for( $counter = 1; $counter <= $recipients->total_id; $counter ++ ) {
+	for( $counter = 0; $counter <= $recipients->total_id; $counter ++ ) {
 		$bp_background_updater->push_to_queue(
 			array(
 				'callback' => bp_xprofile_repeater_field_repair_callback1( $counter ),
 			)
 		);
-		$bp_background_updater->save()->schedule_event();
+		// $bp_background_updater->save()->schedule_event();
+		$bp_background_updater->save()->dispatch();
 	}
 }
 
-function bp_xprofile_repeater_field_repair_callback1( $counter ) {
+function bp_xprofile_repeater_field_repair_callback1( $offset ) {
 	global $wpdb;
 	$bp     = buddypress();
-	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 2 OFFSET $counter ";
+	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 2 OFFSET $offset ";
+	error_log($recipients_query);
 	$recipients       = $wpdb->get_results( $recipients_query );
 	if ( ! empty( $recipients ) ) {
 		foreach ( $recipients as $recipient ) {
@@ -1280,17 +1282,11 @@ function bp_xprofile_repeater_field_repair_callback1( $counter ) {
 				}
 			}
 		}
-		$records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
-		return array(
-			'status'  => 'running',
-			'offset'  => $offset,
-			'records' => $records_updated,
-		);
-	} else {
-		bp_update_option( 'bb_migrate_xprofile_field_repeater_field', 'true' );
-		return array(
-			'status'  => 1,
-			'message' => __( 'repeater field update complete!', 'buddyboss' ),
-		);
+		// $records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		// return array(
+		// 	'status'  => 'running',
+		// 	'offset'  => $offset,
+		// 	'records' => $records_updated,
+		// );
 	}
 }
