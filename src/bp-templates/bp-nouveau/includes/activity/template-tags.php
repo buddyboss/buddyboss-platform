@@ -1498,7 +1498,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 
 	echo '</div>';
 	if ( ! empty( $media_id ) ) {
-		$media_privacy    = bb_media_user_can_access( $media_id,'photos' );
+		$media_privacy    = bb_media_user_can_access( $media_id,'photo' );
 		$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 		if ( $can_download_btn ) {
 			$download_url = bp_media_download_link( $attachment_id, $media_id );
