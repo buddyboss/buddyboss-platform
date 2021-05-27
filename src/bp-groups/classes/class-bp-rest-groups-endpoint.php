@@ -162,6 +162,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			)
 			&& function_exists( 'bp_groups_get_excluded_group_ids_by_type' )
 			&& ! empty( bp_groups_get_excluded_group_ids_by_type() )
+			&& empty( $request['parent_id'] )
 		) {
 			$args['exclude'] = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 		}
