@@ -7,7 +7,7 @@
  * @since BuddyBoss 1.7.0
  */
 
-if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>
+if ( ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>
 
 	<div class="bb-video-actions-wrap bb-media-actions-wrap">
 		<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
@@ -16,6 +16,13 @@ if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>
 		</div>
 	</div>
 
-	<?php bp_get_template_part( 'video/uploader' ); ?>
+	<?php
+	bp_get_template_part( 'video/uploader' );
 
-<?php endif; ?>
+} else {
+	?>
+	<div class="bb-video-actions-wrap bb-media-actions-wrap">
+		<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
+	</div>
+	<?php
+}
