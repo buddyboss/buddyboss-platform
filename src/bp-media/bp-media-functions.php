@@ -3175,6 +3175,7 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 		$file            = image_get_intermediate_size( $attachment_id, $size );
 
 		if ( $file && ! empty( $file['path'] ) ) {
+
 			$output_file_src = $upload_dir . '/' . $file['path'];
 
 			// Regenerate attachment thumbnails.
