@@ -323,22 +323,20 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 		if ( isset( $_POST['edit'] ) ) {
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
-			if ( ! empty( $old_document_ids ) ) {
 
+			if ( ! empty( $old_document_ids ) ) {
 				foreach ( $old_document_ids as $document_id ) {
-					if ( bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+					if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) && ! in_array( $document_id, $document_ids ) ) {
 						$document_ids[] = $document_id;
+					}
+
+					if ( ! in_array( $document_id, $document_ids ) ) {
+						bp_document_delete( array( 'id' => $document_id ) );
 					}
 				}
 
 				// This is hack to update/delete parent activity if new media added in edit.
 				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
-
-				foreach ( $old_document_ids as $document_id ) {
-					if ( ! in_array( $document_id, $document_ids ) ) {
-						bp_document_delete( array( 'id' => $document_id ) );
-					}
-				}
 			}
 		}
 		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $document_ids ) );
