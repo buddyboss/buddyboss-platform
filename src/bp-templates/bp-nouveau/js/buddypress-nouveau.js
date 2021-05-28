@@ -337,9 +337,44 @@ window.bp = window.bp || {};
 				if ( _url !== '' ) {
 					_newString = $.trim( _findtext.replace( _url, '' ) );
 				}
-				if ( 0 >= _newString.length ) {
-					if ( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length || $( this ).hasClass( 'wp-link-embed' ) ) {
-						$( this ).find( '.activity-inner > p:first a' ).hide();
+				if ( 0 <= _newString.length ) {
+					if ( ( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length || $( this ).hasClass( 'wp-link-embed' ) ) || $( this ).find( 'iframe' ) ) {
+						var _mainObj = $( this );
+						var _previewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
+                        if( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ){
+                            _previewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
+                        }else if(  $( this ).find( '.bb-video-wrapper' ).length > 0 ){
+                            _previewElem = $( this ).find( '.bb-video-wrapper' );
+                        }else{
+                            _previewElem = $( this ).find( 'iframe' ).parent();
+                        }
+                        var _linkCount = 0;
+                        _previewElem.siblings().each(function(){
+                            if( $( this ).find( 'a' ).length > 0 ){
+                                _linkCount = parseFloat( _linkCount ) + parseFloat( $( this ).find( 'a' ).length );
+                            }
+                        });
+                        _previewElem.siblings().each(function(){
+                            var _cloneobj = $( this ).clone(true);
+                            var _only_txt = _cloneobj.text().replace(/(<([^>]+)>)/ig,'').replace(/([a-z]+\:\/+)([^\/\s]+)([a-z0-9\-@\^=%&;\/~\+]*)[\?]?([^ \#\r\n]*)#?([^ \#\r\n]*)/mig, '');
+                            if( _linkCount == 1 ){
+                                if( _mainObj.find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ){
+                                    if( $( this ).find( 'a' ).length > 0 ){
+                                        if( $.trim( _only_txt ) === '' && $( this ).find( 'a' ).length == 1 ){
+                                            $( this ).hide();
+                                        }else{
+                                            $( this ).find( 'a' ).hide();
+                                        }
+                                    }
+                                }else{
+                                    if( $.trim( _only_txt ) === '' && $( this ).find( 'a' ).length == 1 ){
+                                        $( this ).hide();
+                                    }else{
+                                        $( this ).find( 'a' ).hide();
+                                    }
+                                }
+                            }
+                        });
 					}
 				}
 			}
