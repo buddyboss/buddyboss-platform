@@ -2187,9 +2187,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'update_callback' => array( $this, 'bp_documents_update_rest_field_callback_messages' ),
 				// The function to use to update the value of the REST Field.
 				'schema'          => array(                                // The example_field REST schema.
-					'description' => 'Messages Medias.',
+					'description' => 'Messages Documents.',
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 			)
 		);
