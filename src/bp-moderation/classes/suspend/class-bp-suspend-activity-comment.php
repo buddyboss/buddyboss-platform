@@ -193,6 +193,8 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $acomment_id, 'bb' );
 	}
 
 	/**
@@ -247,6 +249,8 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $acomment_id, 'bb' );
 	}
 
 	/**
@@ -386,6 +390,8 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 				}
 
 				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
+
+				wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $activity->id, 'bb' );
 			}
 		}
 
