@@ -288,6 +288,8 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $topic_id, 'bb' );
 	}
 
 	/**
@@ -342,6 +344,8 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $topic_id, 'bb' );
 	}
 
 	/**
@@ -413,7 +417,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int     $post_id Post ID.
+	 * @param int $post_id Post ID.
 	 */
 	public function sync_moderation_data_on_delete( $post_id ) {
 
@@ -428,5 +432,6 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
+		wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $post_id, 'bb' );
 	}
 }
