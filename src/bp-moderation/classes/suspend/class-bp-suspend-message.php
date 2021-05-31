@@ -191,6 +191,8 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $message_id, 'bb' );
 	}
 
 	/**
@@ -245,6 +247,8 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $message_id, 'bb' );
 	}
 
 	/**
@@ -266,7 +270,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int thread_id deleted thread id.
+	 * @param int $thread_id deleted thread id.
 	 */
 	public function sync_moderation_data_on_delete( $thread_id ) {
 
@@ -275,5 +279,6 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $thread_id, $this->item_type );
+		wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $thread_id, 'bb' );
 	}
 }
