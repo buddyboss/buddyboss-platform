@@ -3347,7 +3347,16 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			if ( ! file_exists( $preview_attachment_path ) ) {
 				bp_media_create_symlinks( $media, $size );
 			}
-			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+
+			$url        = explode( '/', $preview_attachment_path );
+			$search_key = array_search( 'bb-platform-previews', $url );
+			if ( is_array( $url ) && ! empty( $url ) && false !== $search_key ) {
+				$url            = array_slice( array_filter( $url ), $search_key );
+				$url            = implode( '/', $url );
+				$attachment_url = trailingslashit( $upload_directory['baseurl'] ) . $url;
+			} else {
+				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+			}
 		}
 	}
 
