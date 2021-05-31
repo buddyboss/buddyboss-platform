@@ -70,7 +70,7 @@ window.bp = window.bp || {};
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
     }
-      
+ 
 	var deleted_field_ids = [];
 
     // Delete button
