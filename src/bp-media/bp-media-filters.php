@@ -21,7 +21,7 @@ add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_med
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' ); // Delete activity medias.
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_gif' ); // Delete activity gif.
-add_filter( 'bp_activity_entry_content', 'bp_media_activity_embed_gif' );
+add_action( 'bp_activity_entry_content', 'bp_media_activity_embed_gif' );
 add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
@@ -1143,11 +1143,7 @@ function bp_media_activity_embed_gif() {
 		return false;
 	}
 
-	$gif_content = bp_media_activity_embed_gif_content( bp_get_activity_id() );
-
-	if ( ! empty( $gif_content ) ) {
-		echo $gif_content;
-	}
+	echo bp_media_activity_embed_gif_content( bp_get_activity_id() );
 }
 
 /**
