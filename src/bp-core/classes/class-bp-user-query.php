@@ -293,19 +293,22 @@ class BP_User_Query {
 			case 'active':
 			case 'newest':
 			case 'random':
-				$this->uid_name = 'user_id';
-				$this->uid_table = $bp->members->table_name_last_activity;
-				$sql['select']  = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-				$sql['where'][] = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
+				$this->uid_name  = 'ID';
+				$this->uid_table = $wpdb->users;
+				$sql['select']   = $wpdb->prepare( "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u" );
+				$sql['where'][]  = ' u.user_status = 0 ';
 
 				if ( 'newest' == $type ) {
-					$sql['orderby'] = "ORDER BY u.user_id";
-					$sql['order'] = "DESC";
+					$sql['orderby'] = 'ORDER BY u.ID';
+					$sql['order']   = 'DESC';
 				} elseif ( 'random' == $type ) {
-					$sql['orderby'] = "ORDER BY rand()";
+					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
-					$sql['orderby'] = "ORDER BY u.date_recorded";
-					$sql['order'] = "DESC";
+					$sql['orderby'] = array(
+						// Merge with active members id and wp_users id and sorting by descending order.
+						$this->order_by_activity(),
+						array( 'u.display_name', 'ASC' ),
+					);
 				}
 
 				break;
@@ -519,6 +522,28 @@ class BP_User_Query {
 		 * @param BP_User_Query $this Current BP_User_Query instance. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_pre_user_query', array( &$this ) );
+	}
+
+	/**
+	 * Order by activity for members 'active' querie.
+	 *
+	 * @since BuddyBoss 1.6.1
+	 * 
+	 * @return array
+	 */
+	public function order_by_activity() {
+		global $wpdb;
+
+		$bp         = buddypress();
+		$sql        = $wpdb->prepare( "SELECT user_id FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' ORDER BY COALESCE( date_recorded, NULL ) ASC", buddypress()->members->id );
+		// Get all active members id.
+		$members    = $wpdb->get_results( $sql );
+		$member_ids = wp_list_pluck( $members, 'user_id' );
+		$member_ids = empty( $member_ids ) ? array( 0 ) : $member_ids;
+		$member_ids = implode( ',', $member_ids );
+
+		// Merge with active members id and wp_users id and sorting by descending order.
+		return array( "field( u.{$this->uid_name}, {$member_ids} )", 'DESC' );
 	}
 
 	/**
