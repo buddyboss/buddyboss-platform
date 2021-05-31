@@ -1065,19 +1065,38 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 
 /**
  * Add xprofile notification repair list item.
- *
  * @param $repair_list
  *
- * @since BuddyBoss 1.5.0
  * @return array Repair list items.
  */
 function bp_xprofile_repeater_field_repair( $repair_list ) {
-	$repair_list[] = array(
-		'bp-xprofile-repeater-field-repair',
-		__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
-		'bp_xprofile_repeater_field_repair_callback',
-	);
+	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
+	if ( false === $get_bp_xprofile_migration ) {
+		$repair_list[] = array(
+			'bp-xprofile-repeater-field-repair',
+			__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
+			'bp_xprofile_repeater_field_repair_callback',
+		);
+	}
 	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will remove duplicate repeater field from database by repair tool.
+ * Also remove remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ * 
+ * @uses bp_xprofile_repeater_field_migration
+ */
+function bp_xprofile_repeater_field_repair_callback() {
+	$offset = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
+	if ( 1 === $offset ) {
+		$offset = 0;
+	} else {
+		$offset = $offset;
+	}
+	// Function will do migrate code for the repeated fields.
+	bp_xprofile_repeater_field_migration( $offset, $callback = true );
 }
 
 /**
@@ -1085,17 +1104,14 @@ function bp_xprofile_repeater_field_repair( $repair_list ) {
  * Also remove remove unnecessary data that may have remained after the migration process.
  * This function will be called only once.
  *
- * @since BuddyBoss 1.5.0
+ * @param int     $offset
+ * @param boolean $callback
+ *
+ * @return array
  */
-function bp_xprofile_repeater_field_repair_callback() {
+function bp_xprofile_repeater_field_migration( $offset, $callback ) {
 	global $wpdb;
-	$bp     = buddypress();
-	$offset = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
-	if ( 1 === $offset ) {
-		$offset = 0;
-	} else {
-		$offset = $offset;
-	}
+	$bp               = buddypress();
 	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 2 OFFSET $offset ";
 	$recipients       = $wpdb->get_results( $recipients_query );
 	if ( ! empty( $recipients ) ) {
@@ -1146,18 +1162,22 @@ function bp_xprofile_repeater_field_repair_callback() {
 				}
 			}
 		}
-		$records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
-		return array(
-			'status'  => 'running',
-			'offset'  => $offset,
-			'records' => $records_updated,
-		);
+		if ( true === $callback ) {
+			$records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+			return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+			);
+		}
 	} else {
-		bp_update_option( 'bb_migrate_xprofile_field_repeater_field', 'true' );
-		return array(
-			'status'  => 1,
-			'message' => __( 'repeater field update complete!', 'buddyboss' ),
-		);
+		bp_update_option( 'bp_xprofile_migration', 'true' );
+		if ( true === $callback ) {
+			return array(
+				'status'  => 1,
+				'message' => __( 'repeater field update complete!', 'buddyboss' ),
+			);
+		}
 	}
 }
 
@@ -1211,82 +1231,32 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
 	}
 }
 
-
+/**
+ * This function will work in the background for migration process which will remove duplicate repeater field from database.
+ * Also remove remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ *
+ * @uses bp_xprofile_repeater_field_migration
+ */
 function bp_xprofile_repeater_field_repair_with_background() {
-	global $wpdb, $bp_background_updater;
-	$bp = buddypress();
-	$recipients_query = "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete=1";
-	$recipients       = $wpdb->get_row( $recipients_query );
-	for( $counter = 0; $counter <= $recipients->total_id; $counter ++ ) {
-		$bp_background_updater->push_to_queue(
-			array(
-				'callback' => bp_xprofile_repeater_field_repair_callback1( $counter ),
-			)
-		);
-		// $bp_background_updater->save()->schedule_event();
-		$bp_background_updater->save()->dispatch();
-	}
-}
-
-function bp_xprofile_repeater_field_repair_callback1( $offset ) {
-	global $wpdb;
-	$bp     = buddypress();
-	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 2 OFFSET $offset ";
-	error_log($recipients_query);
-	$recipients       = $wpdb->get_results( $recipients_query );
-	if ( ! empty( $recipients ) ) {
-		foreach ( $recipients as $recipient ) {
-			$check_delete_group_data = array();
-			$group_id        = $recipient->id;
-			$group_field_ids = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . $bp->profile->table_name_fields . ' WHERE group_id =%d AND parent_id = 0', $group_id ) );
-			if ( ! empty( $group_field_ids ) ) {
-				foreach ( $group_field_ids as $group_field_id ) {
-					$get_field_order = $wpdb->get_var( $wpdb->prepare( 'SELECT count(field_order) FROM ' . $bp->profile->table_name_fields . ' WHERE field_order =%d AND group_id =%d', $group_field_id->field_order, $group_id ) );
-					if ( $get_field_order > 1 ) {
-						$limit           = $get_field_order - 1;
-						$field_id_result = $wpdb->get_results(
-							$wpdb->prepare( 'SELECT id FROM ' . $bp->profile->table_name_fields . ' WHERE field_order =%d AND group_id =%d ORDER BY id DESC LIMIT %d', $group_field_id->field_order, $group_id, $limit )
-						);
-						$field_id_arr    = array();
-						if ( ! empty( $field_id_result ) ) {
-							foreach ( $field_id_result as $field_id_obj ) {
-								$field_id_arr[] = $field_id_obj->id;
-							}
-						}
-						$delete_field_id = $wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_fields . ' WHERE field_order = ' . $group_field_id->field_order . ' AND group_id = ' . $group_id . ' AND id IN ( ' . implode( ',', $field_id_arr ) . ' )' );
-						if ( false !== $delete_field_id ) {
-							$delete_meta_qry = $wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_meta . ' WHERE object_id IN ( ' . implode( ',', $field_id_arr ) . ' ) AND object_type="field"' );
-							if ( false !== $delete_meta_qry ) {
-								$check_delete_group_data[] = $group_id;
-							}
-						}
-					} else {
-						$check_delete_group_data[] = $group_id;
-					}
-				}
-			}
-			// This will remove unnecessary data that may have remained after the above migration process.
-			if ( ! empty( $check_delete_group_data ) ) {
-				$meta_key            = 'field_set_count_' . $group_id;
-				$user_meta_for_group = $wpdb->get_row( 'SELECT MAX( CAST(meta_value AS DECIMAL) ) as max_value FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key =' . "'" . $meta_key . "'" . '' );
-				if ( ! empty( $user_meta_for_group ) ) {
-					$max_field_set_count = $user_meta_for_group->max_value;
-					if ( $max_field_set_count >= 10 ) {
-						$bdugf = bb_delete_unnecessory_groups_field( $group_id );
-						if ( true === $bdugf ) {
-							$offset ++;
-						}
-					} else {
-						$offset ++;
-					}
-				}
+	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
+	if ( false === $get_bp_xprofile_migration ) {
+		global $wpdb, $bp_background_updater;
+		$bp = buddypress();
+		$recipients_query = "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete=1";
+		$recipients       = $wpdb->get_row( $recipients_query );
+		
+		for( $counter = 0; $counter <= $recipients->total_id; $counter ++ ) {
+			if ( (int) $counter !== (int) $recipients->total_id ) {
+				$bp_background_updater->push_to_queue( 
+					array(
+						'callback' => bp_xprofile_repeater_field_migration( $counter, $callback = false ),
+					)
+				);
+				$bp_background_updater->save()->schedule_event();
+			} else {
+				bp_update_option( 'bp_xprofile_migration', true );
 			}
 		}
-		// $records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
-		// return array(
-		// 	'status'  => 'running',
-		// 	'offset'  => $offset,
-		// 	'records' => $records_updated,
-		// );
 	}
 }
