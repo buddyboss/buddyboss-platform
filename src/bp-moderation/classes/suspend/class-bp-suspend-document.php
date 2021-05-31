@@ -246,6 +246,8 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $document_id, 'bb' );
 	}
 
 	/**
@@ -300,6 +302,8 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $document_id, 'bb' );
 	}
 
 	/**
@@ -361,6 +365,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		foreach ( $documents as $document ) {
 			BP_Core_Suspend::delete_suspend( $document->id, $this->item_type );
+			wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $document->id, 'bb' );
 		}
 	}
 }
