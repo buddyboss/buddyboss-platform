@@ -255,8 +255,8 @@ function bp_video_admin_setting_callback_video_section() {
 					<br/>You need to add these FFmpeg binary files absolute path constants %2$s & %3$s in %4$s file. 
 					<br/>Ask your web host to provide the binary files absolute path.', 'extension notification', 'buddyboss' ), //phpcs:ignore
 					'<code><a href="https://ffmpeg.org/" target="_blank">FFmpeg</a></code>',
-					'<code>define( "BB_FFMPEG_BINARY_PATH", "PATH_OF_BINARY_FILE" )</code>',
-					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" )</code>',
+					'<code>define( "BB_FFMPEG_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>',
+					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>',
 					'<code>wp-config.php</code>'
 				);
 				?>
