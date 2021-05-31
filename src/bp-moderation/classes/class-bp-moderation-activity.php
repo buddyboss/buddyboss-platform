@@ -49,6 +49,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		 */
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+		add_filter( 'bb_moderation_restrict_single_item_' . $this->item_type, array(
+			$this,
+			'unbind_restrict_item_deletion'
+		), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
@@ -143,6 +147,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
 
+		if ( apply_filters( 'bb_moderation_restrict_single_item_' . self::$moderation_type, false, $activity ) ) {
+			return $restrict;
+		}
+
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( ! empty( $username_visible ) ) {
@@ -151,6 +159,23 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		if ( 'activity_comment' !== $activity->type && $this->is_content_hidden( (int) $activity->id ) ) {
 			return false;
+		}
+
+		return $restrict;
+	}
+
+	/**
+	 * Function to unrestrict activity data while deleting the activity.
+	 *
+	 * @param boolean $restrict restirct single item or not.
+	 * @param object  $activity activity data.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_item_deletion( $restrict, $activity ) {
+
+		if ( ! empty( did_action( 'bp_media_after_delete' ) ) ) {
+			return true;
 		}
 
 		return $restrict;
