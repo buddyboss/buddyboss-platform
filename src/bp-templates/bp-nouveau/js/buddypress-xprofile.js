@@ -56,7 +56,6 @@ window.bp = window.bp || {};
                 $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
             }
         });
-        
     }
 
     // Edit button
@@ -70,9 +69,8 @@ window.bp = window.bp || {};
     if (window.location.href.indexOf('#bpxpro') > -1) {
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
-      }
+    }
       
-
 	var deleted_field_ids = [];
 
     // Delete button
@@ -145,7 +143,6 @@ window.bp = window.bp || {};
     if ( repeater_set_count === 1 ) {
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
-	
     // Remove attr from button after page successfully load.
     if ( window.location.href.indexOf('#bpxpro') > 0 ) {
         document.addEventListener('DOMContentLoaded', function () {
@@ -163,7 +160,7 @@ window.bp = window.bp || {};
         if ( $button.hasClass( 'disabled' ) ) {
             return;
         }
-        
+
         $button.addClass('disabled');
         $button.attr('disabled', 'disabled');
         $button.css('pointer-events', 'none');
