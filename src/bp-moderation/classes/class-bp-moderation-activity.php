@@ -174,7 +174,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function unbind_restrict_item_deletion( $restrict, $activity ) {
 
-		if ( ! empty( did_action( 'bp_media_after_delete' ) ) ) {
+		if ( did_action( 'bp_media_after_delete' ) ) {
 			return true;
 		}
 

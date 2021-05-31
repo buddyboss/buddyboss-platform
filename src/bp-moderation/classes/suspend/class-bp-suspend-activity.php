@@ -282,7 +282,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 */
 	public function unbind_restrict_item_deletion( $restrict, $activity ) {
 
-		if ( ! empty( did_action( 'bp_media_after_delete' ) ) ) {
+		if ( did_action( 'bp_media_after_delete' ) ) {
 			return true;
 		}
 
