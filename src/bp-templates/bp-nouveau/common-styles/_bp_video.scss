@@ -71,6 +71,10 @@
 		pointer-events: none;
 	}
 
+	.video-js > video {
+		object-fit: cover;
+	}
+
 	.video-js.vjs-playing {
 
 		~ .bb-video-play,
