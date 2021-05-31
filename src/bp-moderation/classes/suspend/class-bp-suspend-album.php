@@ -217,6 +217,8 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $album_id, 'bb' );
 	}
 
 	/**
@@ -271,6 +273,8 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $album_id, 'bb' );
 	}
 
 	/**
@@ -332,6 +336,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 
 		foreach ( $albums as $album ) {
 			BP_Core_Suspend::delete_suspend( $album->id, $this->item_type );
+			wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $album->id, 'bb' );
 		}
 	}
 }
