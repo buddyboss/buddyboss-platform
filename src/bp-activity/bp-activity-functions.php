@@ -2992,10 +2992,8 @@ function bp_activity_new_comment( $args = '' ) {
 	// Filter to skip comment content check for comment notification.
 	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
 
-	// Check content empty or not for the media, document and gif.
-	// If content will empty for the media, document and gif then allow empty content in DB.
 	// Bail if missing necessary data.
-	if ( ( $check_empty_content && ( empty( $content ) && false === $r['skip_error'] ) ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+	if ( ( $check_empty_content && ( empty( $r['content'] ) && false === $r['skip_error'] ) ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
 
 		$error = new WP_Error( 'missing_data', $feedback );
 
