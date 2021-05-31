@@ -6059,6 +6059,9 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-media-model-wrapper.document' ).hide();
+			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
+			currentVideo ? currentVideo.pause() : '';
+			$( '.bb-media-model-wrapper.video' ).hide();
 			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open_media = true;
 
@@ -6131,6 +6134,9 @@ window.bp = window.bp || {};
 
 			$( '.bb-media-model-wrapper.media' ).hide();
 			$( '.bb-media-model-wrapper.document' ).show();
+			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
+			currentVideo ? currentVideo.pause() : '';
+			$( '.bb-media-model-wrapper.video' ).hide();
 			self.is_open_document = true;
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},

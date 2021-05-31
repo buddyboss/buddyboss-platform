@@ -7,7 +7,13 @@
 ?>
 
 <div class="bb-media-container group-media">
-	<?php bp_get_template_part( 'media/theatre' ); ?>
+	<?php
+		bp_get_template_part( 'media/theatre' ); 
+		if ( bp_is_profile_video_support_enabled() ) {
+			bp_get_template_part( 'video/theatre' );
+		}
+		bp_get_template_part( 'document/theatre' );
+	?>
 <?php
 
 switch ( bp_current_action() ) :
