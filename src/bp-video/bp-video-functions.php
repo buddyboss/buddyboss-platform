@@ -2158,6 +2158,10 @@ function bp_video_ie_nocache_headers_fix( $headers ) {
  */
 function bp_video_get_forum_id( $video_id ) {
 
+	if ( ! bp_is_active( 'forums' ) ) {
+		return 0;
+	}
+
 	$forum_id           = 0;
 	$forums_video_query = new WP_Query(
 		array(

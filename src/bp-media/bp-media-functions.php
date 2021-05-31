@@ -1599,6 +1599,10 @@ function bp_media_import_buddyboss_media_tables() {
  */
 function bp_media_import_buddyboss_forum_media() {
 
+    if ( ! bp_is_active( 'forums' ) ) {
+        return;
+    }
+
 	$forums_done = get_option( 'bp_media_import_forums_done', 0 );
 
 	$forums_media_query = new WP_Query(
@@ -2468,6 +2472,10 @@ function bp_media_ie_nocache_headers_fix( $headers ) {
 }
 
 function bp_media_get_forum_id( $media_id ) {
+
+    if ( ! bp_is_active( 'forums' ) ) {
+        return 0;
+    }
 
 	$forum_id           = 0;
 	$forums_media_query = new WP_Query(

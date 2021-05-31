@@ -3461,6 +3461,10 @@ function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
  */
 function bp_document_get_forum_id( $document_id ) {
 
+	if ( ! bp_is_active( 'forums' ) ) {
+		return 0;
+	}
+
 	$forum_id              = 0;
 	$forums_document_query = new WP_Query(
 		array(
@@ -3709,19 +3713,19 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 				$attached_file_info = pathinfo( $attached_file );
 				$file_path          = '';
 
-				if ( ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
+				if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
 					$file_path = $attached_file_info['dirname'];
 					$file_path = $file_path . '/' . $file['file'];
 				}
 
-				if ( ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
+				if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
 					// Regenerate attachment thumbnails.
 					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					$file      = image_get_intermediate_size( $attachment_id, $size );
 					$file_path = $file_path . '/' . $file['file'];
 				}
 
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+				if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
 					if ( ! is_link( $attachment_path ) ) {
 						symlink( $file_path, $attachment_path );
 					}
