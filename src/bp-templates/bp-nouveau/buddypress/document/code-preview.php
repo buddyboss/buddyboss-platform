@@ -2,16 +2,18 @@
 /**
  * BuddyBoss - Activity Document Code Preview
  *
- * @var $download_url
+ * @var string $download_url Download Url.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.5.7
  * @package BuddyBoss\Core
  */
 
 $attachment_id            = bp_get_document_attachment_id();
+$download_url             = bp_document_download_link( $attachment_id, bp_get_document_id() );
 $extension                = bp_get_document_extension();
 $bp_document_text_preview = apply_filters( 'bp_document_text_preview', true );
 $sizes                    = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
+
 if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 	if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
 		$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
