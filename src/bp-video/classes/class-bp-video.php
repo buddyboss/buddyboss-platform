@@ -619,17 +619,23 @@ class BP_Video {
 			}
 
 			// fetch video thumbnail attachment data.
-			$attachment_data                         = new stdClass();
-			$attachment_data->meta                   = new stdClass();
-			$attachment_data->meta->mime_type        = apply_filters( 'bb_video_extension', 'video/' . $ext, $video );
-			$length_formatted                        = wp_get_attachment_metadata( $video->attachment_id );
-			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
-			$attachment_thumb_id                     = bb_get_video_thumb_id( $video->attachment_id );
-			$default_thumb                           = bb_get_video_default_placeholder_image();
-			$attachment_data->full                   = $default_thumb;
-			$attachment_data->thumb                  = $default_thumb;
-			$attachment_data->activity_thumb         = $default_thumb;
-			$attachment_data->thumb_meta             = array();
+			$attachment_data                             = new stdClass();
+			$attachment_data->meta                       = new stdClass();
+			$attachment_data->meta->mime_type            = apply_filters( 'bb_video_extension', 'video/' . $ext, $video );
+			$length_formatted                            = wp_get_attachment_metadata( $video->attachment_id );
+			$attachment_data->meta->length_formatted     = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+			$attachment_thumb_id                         = bb_get_video_thumb_id( $video->attachment_id );
+			$default_thumb                               = bb_get_video_default_placeholder_image();
+			$attachment_data->full                       = $default_thumb;
+			$attachment_data->thumb                      = $default_thumb;
+			$attachment_data->activity_thumb             = $default_thumb;
+			$attachment_data->thumb_meta                 = array();
+			$attachment_data->video_user_profile_thumb   = $default_thumb;
+			$attachment_data->video_directory_page_thumb = $default_thumb;
+			$attachment_data->video_album_cover_thumb    = $default_thumb;
+			$attachment_data->video_add_thumbnail_thumb  = $default_thumb;
+			$attachment_data->video_popup_thumb          = $default_thumb;
+			$attachment_data->video_activity_thumb       = $default_thumb;
 
 			if ( $attachment_thumb_id ) {
 
@@ -649,9 +655,7 @@ class BP_Video {
 				$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
 				$attachment_data->video_popup_thumb          = $video_popup_thumb;
 				$attachment_data->video_activity_thumb       = $video_activity_thumb;
-
-				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $attachment_thumb_id );
-
+				$attachment_data->thumb_meta                 = wp_get_attachment_metadata( $attachment_thumb_id );
 			}
 
 			$video->attachment_data = $attachment_data;
