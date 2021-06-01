@@ -3223,7 +3223,49 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 		// Check if file exists.
 		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
 			if ( ! is_link( $attachment_path ) ) {
-				symlink( $output_file_src, $attachment_path );
+
+				$sym_status = get_transient( 'bb_media_symlink' );
+				$status     = false;
+
+				if ( empty( $sym_status ) || 'default' === $sym_status ) {
+					symlink( $output_file_src, $attachment_path );
+				}
+
+				if ( empty( $sym_status ) ) {
+					$symlink_url = bp_media_get_preview_image_url( $media->id, $media->attachment_id, $size );
+					if ( ! empty( $symlink_url ) ) {
+						$fetch = wp_remote_get( $symlink_url );
+
+						if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+							$status     = true;
+							$sym_status = 'default';
+						}
+					}
+
+					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
+						unlink( $attachment_path );
+					}
+				}
+
+				if ( false === $status && ( empty( $sym_status ) || 'relative' === $sym_status ) ) {
+					chdir( ABSPATH );
+					$sym_path   = bp_media_symlink_path();
+					$sym_status = 'relative';
+
+					$sym_path   = explode( '/', $sym_path );
+					$search_key = array_search( 'wp-content', $sym_path, true );
+					if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
+						$sym_path = array_slice( array_filter( $sym_path ), $search_key );
+						$sym_path = implode( '/', $sym_path );
+					}
+
+					chdir( 'wp-content/' . $sym_path );
+					$filename        = md5( $media->id . $attachment_id . $privacy . $size );
+					$output_file_src = '../../' . $file['path'];
+					symlink( $output_file_src, $filename );
+				}
+
+				set_transient( 'bb_media_symlink', $sym_status, MONTH_IN_SECONDS );
 			}
 		}
 
@@ -3337,7 +3379,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			}
 
 			$url        = explode( '/', $preview_attachment_path );
-			$search_key = array_search( 'bb-platform-previews', $url );
+			$search_key = array_search( 'uploads', $url, true );
 			if ( is_array( $url ) && ! empty( $url ) && false !== $search_key ) {
 				$url            = array_slice( array_filter( $url ), $search_key );
 				$url            = implode( '/', $url );
@@ -3345,6 +3387,9 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			} else {
 				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 			}
+
+			$attachment_url = str_replace( 'uploads/uploads', 'uploads', $attachment_url );
+
 		}
 	}
 
