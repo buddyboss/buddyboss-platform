@@ -3168,13 +3168,13 @@ function bp_video_delete_video_previews() {
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-activity-image' ) {
+function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-activity-image', $generate = true ) {
 
     $attachment_url = '';
 
 	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video_id, $attachment_id, $size );
 
-	if ( $do_symlink ) {
+	if ( $do_symlink && $generate ) {
 
 		$video          = new BP_Video( $video_id );
 		$attachment_url = bb_video_get_attachment_symlink( $video, $attachment_id, $size );
@@ -3483,11 +3483,12 @@ function bb_video_create_symlinks( $video ) {
 /**
  * Create symlink for a video.
  *
- * @param object $video BP_Video Object.
+ * @param object $video    BP_Video Object.
+ * @param bool   $generate Generate Symlink or not.
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_get_symlink( $video ) {
+function bb_video_get_symlink( $video, $generate = true ) {
 	// Check if video is id of video, create video object.
 	if ( ! $video instanceof BP_Video && is_int( $video ) ) {
 		$video = new BP_Video( $video );
@@ -3523,8 +3524,10 @@ function bb_video_get_symlink( $video ) {
 					update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', $get_existing );
 				}
 
-				// Generate Video Symlink.
-				bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
+				if ( $generate ) {
+					// Generate Video Symlink.
+					bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
+				}
 			}
 		}
 

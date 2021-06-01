@@ -5439,7 +5439,14 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
 			break;
 		case 'document':
-			$key = 'bb_document_symlink';
+			$key      = 'bb_document_symlink';
+			$sym_path = bp_document_symlink_path();
+			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			break;
+		case 'document_video':
+			$key      = 'bb_document_video_symlink';
+			$sym_path = bp_document_symlink_path();
+			$filename = md5( $item->id . $attachment_id . $item->privacy );
 			break;
 		case 'video':
 			$key      = 'bb_video_symlink';
@@ -5464,12 +5471,16 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 			}
 
 			if ( 'media' === $type ) {
-				$symlink_url = bp_media_get_preview_image_url( $item->id, $attachment_id, $size );
-            } elseif ( 'video' === $type ) {
-				$symlink_url = bb_video_get_symlink( $item->id );
-            } elseif ( 'video_thumb' === $type ) {
-				$symlink_url = bb_video_get_thumb_url( $item->id, $attachment_id, $size );
-            }
+				$symlink_url = bp_media_get_preview_image_url( $item->id, $attachment_id, $size, false );
+			} elseif ( 'video' === $type ) {
+				$symlink_url = bb_video_get_symlink( $item->id, false );
+			} elseif ( 'video_thumb' === $type ) {
+				$symlink_url = bb_video_get_thumb_url( $item->id, $attachment_id, $size, false );
+			} elseif ( 'document' === $type ) {
+				$symlink_url = bp_document_get_preview_url( $item->id, $attachment_id, $size, false );
+			} elseif ( 'document_video' === $type ) {
+				$symlink_url = bb_document_video_get_symlink( $item, false );
+			}
 
 			if ( empty( $sym_status ) ) {
 				if ( ! empty( $symlink_url ) ) {
@@ -5488,7 +5499,7 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 
 			if ( false === $status && ( empty( $sym_status ) || 'relative' === $sym_status ) ) {
 				$tmp = getcwd();
-				chdir( ABSPATH );
+				chdir( wp_normalize_path( ABSPATH ) );
 				$sym_status = 'relative';
 				$sym_path   = explode( '/', $sym_path );
 				$search_key = array_search( 'wp-content', $sym_path, true );
@@ -5496,12 +5507,16 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 					$sym_path = array_slice( array_filter( $sym_path ), $search_key );
 					$sym_path = implode( '/', $sym_path );
 				}
-				chdir( 'wp-content/' . $sym_path );
-				if ( empty( $file['path'] ) ) {
-					$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+				if ( is_dir( 'wp-content/' . $sym_path ) ) {
+					chdir( 'wp-content/' . $sym_path );
+					if ( empty( $file['path'] ) ) {
+						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+					}
+					$output_file_src = '../../' . $file['path'];
+					if ( file_exists( $output_file_src ) ) {
+						symlink( $output_file_src, $filename );
+					}
 				}
-				$output_file_src = '../../' . $file['path'];
-				symlink( $output_file_src, $filename );
 				chdir( $tmp );
 			}
 

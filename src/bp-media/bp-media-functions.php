@@ -3310,12 +3310,13 @@ function bp_media_delete_symlinks( $media ) {
  * @param int    $media_id      Media ID.
  * @param int    $attachment_id Attachment ID.
  * @param string $size          Size of preview.
+ * @param bool   $generate      Generate Symlink or not.
  *
  * @return mixed|void
  *
  * @since BuddyBoss 1.7.0
  */
-function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image' ) {
+function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image', $generate = true ) {
 	$attachment_url = '';
 
 	$do_symlink = apply_filters( 'bb_media_do_symlink', true, $media_id, $attachment_id, $size );
@@ -3330,7 +3331,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			$symlinks_path    = bp_media_symlink_path();
 
 			$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
-			if ( ! file_exists( $preview_attachment_path ) ) {
+			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 				bp_media_create_symlinks( $media, $size );
 			}
 
