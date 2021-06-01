@@ -795,12 +795,16 @@ class BP_Media {
 			'sizes'  => array(),
 		);
 
-		if ( isset( $metadata['sizes']['bp-media-thumbnail'] ) ) {
-			$meta['sizes']['bp-media-thumbnail'] = $metadata['sizes']['bp-media-thumbnail'];
+		if ( isset( $metadata['sizes']['bb-media-activity-image'] ) ) {
+			$meta['sizes']['bb-media-activity-image'] = $metadata['sizes']['bb-media-activity-image'];
 		}
 
-		if ( isset( $metadata['sizes']['bp-activity-media-thumbnail'] ) ) {
-			$meta['sizes']['bp-activity-media-thumbnail'] = $metadata['sizes']['bp-activity-media-thumbnail'];
+		if ( isset( $metadata['sizes']['bb-media-photos-album-directory-image'] ) ) {
+			$meta['sizes']['bb-media-photos-album-directory-image'] = $metadata['sizes']['bb-media-photos-album-directory-image'];
+		}
+
+		if ( isset( $metadata['sizes']['bb-media-photos-popup-image'] ) ) {
+			$meta['sizes']['bb-media-photos-popup-image'] = $metadata['sizes']['bb-media-photos-popup-image'];
 		}
 
 		return $meta;
