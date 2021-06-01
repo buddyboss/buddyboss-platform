@@ -49,11 +49,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return;
 		}
 
-		add_filter( 'bb_moderation_restrict_single_item_' . self::$type, array(
-			$this,
-			'unbind_restrict_item_deletion'
-		), 10, 2 );
-
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -267,23 +262,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
 			return false;
-		}
-
-		return $restrict;
-	}
-
-	/**
-	 * Function to unrestrict activity data while deleting the activity.
-	 *
-	 * @param boolean $restrict restirct single item or not.
-	 * @param object  $activity activity data.
-	 *
-	 * @return false
-	 */
-	public function unbind_restrict_item_deletion( $restrict, $activity ) {
-
-		if ( did_action( 'bp_media_after_delete' ) ) {
-			return true;
 		}
 
 		return $restrict;
