@@ -3208,6 +3208,7 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 				// Regenerate attachment thumbnails.
 				if ( ! file_exists( $output_file_src ) ) {
 					bp_media_regenerate_attachment_thumbnails( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, $size );
 				}
 			}
 		} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
@@ -3217,57 +3218,12 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 			// Regenerate attachment thumbnails.
 			if ( ! file_exists( $output_file_src ) ) {
 				bp_media_regenerate_attachment_thumbnails( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
 			}
 		}
 
-		// Check if file exists.
-		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-			if ( ! is_link( $attachment_path ) ) {
-
-				$sym_status = get_transient( 'bb_media_symlink' );
-				$status     = false;
-
-				if ( empty( $sym_status ) || 'default' === $sym_status ) {
-					symlink( $output_file_src, $attachment_path );
-				}
-
-				if ( empty( $sym_status ) ) {
-					$symlink_url = bp_media_get_preview_image_url( $media->id, $media->attachment_id, $size );
-					if ( ! empty( $symlink_url ) ) {
-						$fetch = wp_remote_get( $symlink_url );
-
-						if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-							$status     = true;
-							$sym_status = 'default';
-						}
-					}
-
-					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-						unlink( $attachment_path );
-					}
-				}
-
-				if ( false === $status && ( empty( $sym_status ) || 'relative' === $sym_status ) ) {
-					chdir( ABSPATH );
-					$sym_path   = bp_media_symlink_path();
-					$sym_status = 'relative';
-
-					$sym_path   = explode( '/', $sym_path );
-					$search_key = array_search( 'wp-content', $sym_path, true );
-					if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
-						$sym_path = array_slice( array_filter( $sym_path ), $search_key );
-						$sym_path = implode( '/', $sym_path );
-					}
-
-					chdir( 'wp-content/' . $sym_path );
-					$filename        = md5( $media->id . $attachment_id . $privacy . $size );
-					$output_file_src = '../../' . $file['path'];
-					symlink( $output_file_src, $filename );
-				}
-
-				set_transient( 'bb_media_symlink', $sym_status, MONTH_IN_SECONDS );
-			}
-		}
+		// Generate Media Symlink.
+		bb_core_symlink_generator( 'media', $media, $size, $file, $output_file_src, $attachment_path );
 
 		/**
 		 * Actions to execute to create symlinks.
