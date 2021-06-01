@@ -3510,7 +3510,8 @@ function bb_video_get_symlink( $video ) {
 		$attached_file       = get_attached_file( $attachment_id );
 		$privacy             = $video->privacy;
 		$upload_directory    = wp_get_upload_dir();
-		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . time() );
+		$time                = time();
+		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time );
 
 		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
 			if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
@@ -3521,11 +3522,13 @@ function bb_video_get_symlink( $video ) {
 					$get_existing[] = array_push( $get_existing, $attachment_path );
 					update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', $get_existing );
 				}
-				symlink( $attached_file, $attachment_path );
+
+				// Generate Video Symlink.
+				bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
 			}
 		}
 
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
+		$attachment_url = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
 
 	}
 
@@ -3926,12 +3929,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size ) {
 				bp_video_regenerate_attachment_thumbnails( $attachment_id );
 			}
 
-			// Check if file exists.
-			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-				if ( ! is_link( $attachment_path ) ) {
-					symlink( $output_file_src, $attachment_path );
-				}
-			}
+
 		} elseif ( ! $file ) {
 
 			bp_video_regenerate_attachment_thumbnails( $attachment_id );
@@ -3942,13 +3940,6 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size ) {
 
 				$output_file_src = $upload_dir . '/' . $file['path'];
 
-				// Check if file exists.
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
-
 			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 
 				$output_file_src = get_attached_file( $attachment_id );
@@ -3956,14 +3947,9 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size ) {
 				// Regenerate attachment thumbnails.
 				if ( ! file_exists( $output_file_src ) ) {
 					bp_video_regenerate_attachment_thumbnails( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, $size );
 				}
 
-				// Check if file exists.
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
 			}
 		} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 
@@ -3971,20 +3957,20 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size ) {
 
 			// Regenerate attachment thumbnails.
 			if ( ! file_exists( $output_file_src ) ) {
-				bp_media_regenerate_attachment_thumbnails( $attachment_id );
+				bp_video_regenerate_attachment_thumbnails( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
 			}
 
-			// Check if file exists.
-			if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-				if ( ! is_link( $attachment_path ) ) {
-					symlink( $output_file_src, $attachment_path );
-				}
-			}
 		}
+
+        // Override the video attachment id to given thumbnail id.
+		$video->attachment_id = $attachment_id;
+
+		// Generate Video Thumb Symlink.
+		bb_core_symlink_generator( 'video_thumb', $video, $size, $file, $output_file_src, $attachment_path );
+
 		$upload_directory = wp_get_upload_dir();
-
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
-
+		$attachment_url   = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
 
 	} else {
 		$attachment_url = wp_get_attachment_url( $attachment_id );

@@ -5419,28 +5419,37 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $size            Image Size.
  * @param array  $file            Array of file relative path, width, and height.
  * @param string $output_file_src Absolute path of the site.
- * @param string $attachment_path Symbling path to generate.
+ * @param string $attachment_path Symbolising path to generate.
  */
 function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
 	if ( empty( $type ) || empty( $item ) ) {
 		return;
 	}
-	$key         = '';
-	$symlink_url = '';
-	$sym_path    = '';
-	$filename    = '';
+
+	$key           = '';
+	$symlink_url   = '';
+	$sym_path      = '';
+	$filename      = '';
+	$attachment_id = $item->attachment_id;
+
 	switch ( $type ) {
 		case 'media':
-			$key           = 'bb_media_symlink';
-			$sym_path      = bp_media_symlink_path();
-			$filename      = md5( $item->id . $item->attachment_id . $item->privacy . $size );
-			$attachment_id = $item->attachment_id;
+			$key      = 'bb_media_symlink';
+			$sym_path = bp_media_symlink_path();
+			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
 			break;
 		case 'document':
 			$key = 'bb_document_symlink';
 			break;
 		case 'video':
-			$key = 'bb_video_symlink';
+			$key      = 'bb_video_symlink';
+			$sym_path = bb_video_symlink_path();
+			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			break;
+		case 'video_thumb':
+			$key      = 'bb_video_thumb_symlink';
+			$sym_path = bb_video_symlink_path();
+			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
 			break;
 	}
 
@@ -5456,6 +5465,10 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 
 			if ( 'media' === $type ) {
 				$symlink_url = bp_media_get_preview_image_url( $item->id, $attachment_id, $size );
+            } elseif ( 'video' === $type ) {
+				$symlink_url = bb_video_get_symlink( $item->id );
+            } elseif ( 'video_thumb' === $type ) {
+				$symlink_url = bb_video_get_thumb_url( $item->id, $attachment_id, $size );
             }
 
 			if ( empty( $sym_status ) ) {
@@ -5496,4 +5509,18 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 		}
 	}
 
+}
+
+function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
+	$url        = explode( '/', $preview_attachment_path );
+	$search_key = array_search( 'uploads', $url, true );
+	if ( is_array( $url ) && ! empty( $url ) && false !== $search_key ) {
+		$url            = array_slice( array_filter( $url ), $search_key );
+		$url            = implode( '/', $url );
+		$attachment_url = trailingslashit( $upload_directory['baseurl'] ) . $url;
+	} else {
+		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+	}
+
+	return str_replace( 'uploads/uploads', 'uploads', $attachment_url );
 }
