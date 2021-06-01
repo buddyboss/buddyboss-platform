@@ -3462,7 +3462,7 @@ function bb_document_user_can_upload( $user_id = 0, $group_id = 0 ) {
 function bp_document_get_forum_id( $document_id ) {
 
 	if ( ! bp_is_active( 'forums' ) ) {
-		return 0;
+		return;
 	}
 
 	$forum_id              = 0;

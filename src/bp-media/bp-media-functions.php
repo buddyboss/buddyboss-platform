@@ -2474,7 +2474,7 @@ function bp_media_ie_nocache_headers_fix( $headers ) {
 function bp_media_get_forum_id( $media_id ) {
 
     if ( ! bp_is_active( 'forums' ) ) {
-        return 0;
+        return;
     }
 
 	$forum_id           = 0;
