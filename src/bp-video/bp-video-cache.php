@@ -3,7 +3,7 @@
  * Functions related to the BuddyBoss Video component and the WP Cache.
  *
  * @package BuddyBoss\Video
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Clear a cached video item when that item is updated.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param BP_Video $video Video object.
  */
@@ -24,7 +24,7 @@ add_action( 'bp_video_after_save', 'bp_video_clear_cache_for_video' );
 /**
  * Clear cached data for deleted video items.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param array $deleted_ids IDs of deleted video items.
  */
@@ -41,7 +41,7 @@ add_action( 'bp_video_deleted_videos', 'bp_video_clear_cache_for_deleted_video' 
  * Called whenever an video item is created, updated, or deleted, this
  * function effectively invalidates all cached results of video queries.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True on success, false on failure.
  */
@@ -54,7 +54,7 @@ add_action( 'bp_video_add', 'bp_video_reset_cache_incrementor' );
 /**
  * Clear a user's cached video count.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param object $video Video object item.
  */
@@ -71,7 +71,7 @@ add_action( 'bp_video_add', 'bp_video_clear_video_user_object_cache', 10 );
 /**
  * Clear a user's cached video count when delete.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param array $videos DB results of video items.
  */
@@ -92,7 +92,7 @@ add_action( 'bp_video_before_delete', 'bp_video_clear_video_user_object_cache_on
 /**
  * Clear a user's cached video count.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int $user_id ID of the user deleted.
  */
@@ -105,7 +105,7 @@ add_action( 'bp_video_remove_all_user_data', 'bp_video_remove_all_user_object_ca
 /**
  * Clear a group's cached video count.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param object $video Video object item.
  */
@@ -121,7 +121,7 @@ add_action( 'bp_video_add', 'bp_video_clear_video_group_object_cache', 10 );
 /**
  * Clear a group's cached video count when delete.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param array $videos DB results of video items.
  */
@@ -141,7 +141,7 @@ add_action( 'bp_video_before_delete', 'bp_video_clear_video_group_object_cache_o
 /**
  * Clear a cached album item when that item is updated.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param BP_Video_Album $album Album object.
  */
@@ -153,7 +153,7 @@ add_action( 'bp_video_album_after_save', 'bp_video_clear_cache_for_album' );
 /**
  * Clear cached data for deleted album items.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param array $deleted_ids IDs of deleted album items.
  */
@@ -170,7 +170,7 @@ add_action( 'bp_video_albums_deleted_albums', 'bp_video_clear_cache_for_deleted_
  * Called whenever an album item is created, updated, or deleted, this
  * function effectively invalidates all cached results of album queries.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool True on success, false on failure.
  */
@@ -183,7 +183,7 @@ add_action( 'bp_video_album_add', 'bp_video_album_reset_cache_incrementor' );
 /**
  * Clear a group's cached album count.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param object $album Album object item.
  */
@@ -199,7 +199,7 @@ add_action( 'bp_video_album_add', 'bp_video_clear_album_group_object_cache', 10 
 /**
  * Clear a group's cached album count when delete.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param array $albums DB results of album items.
  */

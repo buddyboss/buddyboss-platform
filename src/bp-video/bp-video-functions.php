@@ -77,10 +77,10 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 	}
 
 	// Add upload filters.
-	bp_video_add_thumbnail_upload_filters();
+	bb_video_add_thumb_image_add_upload_filters();
 
 	// Register image sizes.
-	bp_video_register_thumbnail_image_sizes();
+	bb_video_register_image_sizes();
 
 	do_action( 'bb_before_bp_video_thumbnail_upload_handler' );
 
@@ -104,10 +104,10 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 	);
 
 	// Deregister image sizes.
-	bp_video_deregister_thumbnail_image_sizes();
+	bb_video_deregister_image_sizes();
 
 	// Remove upload filters.
-	bp_video_remove_thumbnail_upload_filters();
+	bb_video_add_thumb_image_remove_upload_filters();
 
 	do_action( 'bb_after_bp_video_thumbnail_upload_handler' );
 
@@ -130,98 +130,6 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 
 	return new WP_Error( 'error_uploading', __( 'Error while uploading thumbnail.', 'buddyboss' ), array( 'status' => 500 ) );
 
-}
-
-
-/**
- * Add video thumb upload filters.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_video_add_thumbnail_upload_filters() {
-	add_filter( 'intermediate_image_sizes_advanced', 'bp_video_remove_default_image_sizes' );
-}
-
-/**
- * Remove media upload filters.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_video_remove_thumbnail_upload_filters() {
-	remove_filter( 'intermediate_image_sizes_advanced', 'bp_video_remove_default_image_sizes' );
-}
-
-/**
- * Register media image sizes.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_video_register_thumbnail_image_sizes() {
-	$image_sizes = bp_video_get_thumbnail_image_sizes();
-
-	if ( ! empty( $image_sizes ) ) {
-		foreach ( $image_sizes as $name => $image_size ) {
-			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
-				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
-			}
-		}
-	}
-}
-
-/**
- * Deregister media image sizes.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_video_deregister_thumbnail_image_sizes() {
-	$image_sizes = bp_video_get_thumbnail_image_sizes();
-
-	if ( ! empty( $image_sizes ) ) {
-		foreach ( $image_sizes as $name => $image_size ) {
-			remove_image_size( sanitize_key( $name ) );
-		}
-	}
-}
-
-/**
- * Get media image sizes to register.
- *
- * @return array Image sizes.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_video_get_thumbnail_image_sizes() {
-	$image_sizes = array(
-		'bp-video-thumbnail'          => array(
-			'height' => 400,
-			'width'  => 400,
-		),
-		'bp-activity-video-thumbnail' => array(
-			'height' => 1600,
-			'width'  => 1600,
-		),
-	);
-
-	return (array) apply_filters( 'bp_video_add_thumbnail_image_sizes', $image_sizes );
-}
-
-/**
- * This will remove the default image sizes registered.
- *
- * @param array $sizes Image sizes registered.
- *
- * @return array Empty array.
- * @since BuddyBoss 1.7.0
- */
-function bp_video_remove_default_image_sizes( $sizes ) {
-	if ( isset( $sizes['bp-video-thumbnail'] ) && isset( $sizes['bp-activity-video-thumbnail'] ) ) {
-		return array(
-			'bp-video-thumbnail'          => $sizes['bp-video-thumbnail'],
-			'bp-activity-video-thumbnail' => $sizes['bp-activity-video-thumbnail'],
-		);
-	}
-
-	return array();
 }
 
 /**
@@ -310,7 +218,8 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	add_filter( 'upload_mimes', 'bp_video_allowed_mimes', 9, 1 );
+	// Add upload filters.
+	bb_video_add_upload_filters();
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -330,6 +239,9 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 			),
 		)
 	);
+
+	// Remove upload filters.
+	bb_video_remove_upload_filters();
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
@@ -392,7 +304,7 @@ function bp_video_file_upload_max_size() {
 	 *
 	 * @param mixed $max_size video upload max limit.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_file_upload_max_size', bp_video_allowed_upload_video_size() );
 }
@@ -405,7 +317,7 @@ function bp_video_file_upload_max_size() {
  * @param string    $type unit types.
  *
  * @return string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_format_size_units( $bytes, $post_string = false, $type = 'bytes' ) {
 
@@ -455,7 +367,7 @@ function bp_video_format_size_units( $bytes, $post_string = false, $type = 'byte
  * @param array|string $args See BP_Video::get() for description.
  *
  * @return array $video See BP_Video::get() for description.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @see   BP_Video::get() For more information on accepted arguments
  *      and the format of the returned value.
@@ -515,7 +427,7 @@ function bp_video_get( $args = '' ) {
 	 * @param BP_Video $video Requested video object.
 	 * @param array    $r     Arguments used for the video query.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters_ref_array( 'bp_video_get', array( &$video, &$r ) );
 }
@@ -531,7 +443,7 @@ function bp_video_get( $args = '' ) {
  *                            or array of IDs.
  * }
  * @return array $activity See BP_Video::get() for description.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @see   BP_Video::get() For more information on accepted arguments.
  */
@@ -572,7 +484,7 @@ function bp_video_get_specific( $args = '' ) {
 	 * @param array    $args     Original passed in arguments.
 	 * @param array    $get_args Constructed arguments used with request.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_get_specific', BP_Video::get( $get_args ), $args, $get_args );
 }
@@ -601,7 +513,7 @@ function bp_video_get_specific( $args = '' ) {
  * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  * @return WP_Error|bool|int The ID of the video on success. False on error.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_add( $args = '' ) {
 
@@ -672,7 +584,7 @@ function bp_video_add( $args = '' ) {
 	 *
 	 * @param object $video Video object.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_video_add', $video );
 
@@ -689,7 +601,7 @@ function bp_video_add( $args = '' ) {
  * @param int    $album_id album id.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_add_handler( $videos = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_video_upload_count, $bp_video_upload_activity_content;
@@ -762,7 +674,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 	 * @param array $video_ids Video IDs.
 	 * @param array $videos    Array of video from POST object or in function parameter.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_add_handler', $video_ids, (array) $videos );
 }
@@ -772,7 +684,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
  *
  * @param array $video video array.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_preview_image_by_js( $video ) {
 
@@ -792,7 +704,11 @@ function bp_video_preview_image_by_js( $video ) {
 
 	}
 
-	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+	// Add upload filters.
+	bb_video_image_add_upload_filters();
+
+	// Register image sizes.
+	bb_video_register_image_sizes();
 
 	$str         = wp_rand();
 	$unique_file = md5( $str );
@@ -839,7 +755,12 @@ function bp_video_preview_image_by_js( $video ) {
 		}
 	}
 
-	remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+	// Remove upload filters.
+	bb_video_image_add_upload_filters();
+
+	// Deregister image sizes.
+	bb_video_deregister_image_sizes();
+
 	bp_core_remove_temp_directory( $upload_dir );
 
 	do_action( 'bb_after_video_preview_image_by_js' );
@@ -852,7 +773,7 @@ function bp_video_preview_image_by_js( $video ) {
  * @param int   $attachment_id video attachment id.
  * @param array $videos videos array.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_add_generate_thumb_background_process( $attachment_id, $video ) {
 	if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
@@ -914,7 +835,7 @@ function bp_video_add_generate_thumb_background_process( $attachment_id, $video 
  * @param string $output_file   path to store the file.
  *
  * @return string image path.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_base64_to_jpeg( $base64_string, $output_file ) {
 	// open the output file for writing.
@@ -1007,7 +928,11 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 
 				do_action( 'bb_video_before_preview_generate' );
 
-				add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+				// Add upload filters.
+				bb_video_image_add_upload_filters();
+
+				// Register image sizes.
+				bb_video_register_image_sizes();
 
 				$thumbnail_list = array();
 				foreach ( $random_seconds as $second ) {
@@ -1021,7 +946,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 					$thumb_ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 					$video_thumb = $thumb_ffmpeg->ffmpeg->open( get_attached_file( $video['id'] ) );
-					$thumb_frame = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
+					$thumb_frame = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) )->addFilter( new FFMpeg\Filters\Frame\CustomFrameFilter('scale=1300x800'));
 
 					$error = '';
 					try {
@@ -1062,7 +987,13 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 						}
 					}
 				}
-				remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+
+				// Remove upload filters.
+				bb_video_image_add_upload_filters();
+
+				// Deregister image sizes.
+				bb_video_deregister_image_sizes();
+
 				bp_core_remove_temp_directory( $upload_dir );
 
 				if ( $thumbnail_list ) {
@@ -1115,7 +1046,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
  * @param bool         $from Context of deletion from. ex. attachment, activity etc.
  *
  * @return bool|int The ID of the video on success. False on error.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_delete( $args = '', $from = false ) {
 
@@ -1141,7 +1072,7 @@ function bp_video_delete( $args = '', $from = false ) {
 	 *
 	 * @param array $args Array of arguments to be used with the video deletion.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_before_video_delete', $args );
 
@@ -1155,7 +1086,7 @@ function bp_video_delete( $args = '', $from = false ) {
 	 *
 	 * @param array $args Array of arguments used with the video deletion.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_video_delete', $args );
 
@@ -1164,7 +1095,7 @@ function bp_video_delete( $args = '', $from = false ) {
 	 *
 	 * @param array $video_ids_deleted Array of affected video item IDs.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_video_deleted_videos', $video_ids_deleted );
 
@@ -1177,7 +1108,7 @@ function bp_video_delete( $args = '', $from = false ) {
  * @param int $user_id ID of the user whose video is being deleted.
  *
  * @return bool
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_remove_all_user_data( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
@@ -1195,7 +1126,7 @@ function bp_video_remove_all_user_data( $user_id = 0 ) {
 	 *
 	 * @param int $user_id ID of the user being deleted.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_video_remove_all_user_data', $user_id );
 }
@@ -1207,7 +1138,7 @@ add_action( 'delete_user', 'bp_video_remove_all_user_data' );
  * Get video visibility levels out of the $bp global.
  *
  * @return array
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_visibility_levels() {
 
@@ -1216,7 +1147,7 @@ function bp_video_get_visibility_levels() {
 	 *
 	 * @param array $visibility_levels Array of visibility levels.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_get_visibility_levels', buddypress()->video->visibility_levels );
 }
@@ -1229,7 +1160,7 @@ function bp_video_get_visibility_levels() {
  * @return object|boolean The video activity object or false.
  * @global object $video_template {@link BP_Video_Template}
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_video_activity( $activity_id ) {
 
@@ -1252,7 +1183,7 @@ function bp_video_get_video_activity( $activity_id ) {
 	 *
 	 * @param object $activity The video activity.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_get_video_activity', $result['activities'][0] );
 }
@@ -1261,12 +1192,12 @@ function bp_video_get_video_activity( $activity_id ) {
  * Get the video count of a user.
  *
  * @return int video count of the user.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_total_video_count() {
 
 	add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
-	bp_has_video( bp_ajax_querystring( 'video' ) );
+	bp_has_video( bp_ajax_querystring( 'video' ) . '&count_total=true&fields=ids' );
 	$count = $GLOBALS['video_template']->total_video_count;
 	remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 
@@ -1275,7 +1206,7 @@ function bp_video_get_total_video_count() {
 	 *
 	 * @param int $count Total video count for a given user.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_get_total_video_count', (int) $count );
 }
@@ -1284,7 +1215,7 @@ function bp_video_get_total_video_count() {
  * Get the groups video count of a given user.
  *
  * @return int video count of the user.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_user_total_group_video_count() {
 
@@ -1298,7 +1229,7 @@ function bp_video_get_user_total_group_video_count() {
 	 *
 	 * @param int $count Total video count for a given user.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_get_user_total_group_video_count', (int) $count );
 }
@@ -1309,7 +1240,7 @@ function bp_video_get_user_total_group_video_count() {
  * @param int $group_id ID of the group whose video are being counted.
  *
  * @return int video count of the group.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_total_group_video_count( $group_id = 0 ) {
 	if ( empty( $group_id ) && bp_get_current_group_id() ) {
@@ -1327,7 +1258,7 @@ function bp_video_get_total_group_video_count( $group_id = 0 ) {
 	 *
 	 * @param int $count Total video count for a given group.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_get_total_group_video_count', (int) $count );
 }
@@ -1338,7 +1269,7 @@ function bp_video_get_total_group_video_count( $group_id = 0 ) {
  * @param int $group_id ID of the group whose album are being counted.
  *
  * @return int album count of the group.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_total_group_album_count( $group_id = 0 ) {
 	if ( empty( $group_id ) && bp_get_current_group_id() ) {
@@ -1357,7 +1288,7 @@ function bp_video_get_total_group_album_count( $group_id = 0 ) {
 	 *
 	 * @param int $count Total album count for a given group.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_get_total_group_album_count', (int) $count );
 }
@@ -1366,7 +1297,7 @@ function bp_video_get_total_group_album_count( $group_id = 0 ) {
  * Return the total video count in your BP instance.
  *
  * @return int Video count.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_get_total_video_count() {
 
@@ -1380,7 +1311,7 @@ function bp_get_total_video_count() {
 	 *
 	 * @param int $count Total number of video.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_get_total_video_count', (int) $count );
 }
@@ -1388,7 +1319,7 @@ function bp_get_total_video_count() {
 /**
  * Video results all scope.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param string $querystring query string.
  *
@@ -1410,7 +1341,7 @@ function bp_video_object_results_video_all_scope( $querystring ) {
 /**
  * Object template results video personal scope.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param string $querystring query string.
  *
@@ -1431,7 +1362,7 @@ function bp_video_object_template_results_video_personal_scope( $querystring ) {
 /**
  * Object template results video groups scope.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param string $querystring query string.
  *
@@ -1462,7 +1393,7 @@ function bp_video_object_template_results_video_groups_scope( $querystring ) {
  * @param array|string $args See BP_Video_Album::get() for description.
  *
  * @return array $activity See BP_Video_Album::get() for description.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @see   BP_Video_Album::get() For more information on accepted arguments
  *      and the format of the returned value.
@@ -1513,7 +1444,7 @@ function bp_video_album_get( $args = '' ) {
 	 * @param BP_Video $album Requested video object.
 	 * @param array    $r     Arguments used for the album query.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters_ref_array( 'bp_video_album_get', array( &$album, &$r ) );
 }
@@ -1529,7 +1460,7 @@ function bp_video_album_get( $args = '' ) {
  *                            or array of IDs.
  * }
  * @return array $albums See BP_Video_Album::get() for description.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @see   BP_Video_Album::get() For more information on accepted arguments.
  */
@@ -1565,7 +1496,7 @@ function bp_video_album_get_specific( $args = '' ) {
 	 * @param array    $args     Original passed in arguments.
 	 * @param array    $get_args Constructed arguments used with request.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_video_album_get_specific', BP_Video_Album::get( $get_args ), $args, $get_args );
 }
@@ -1589,7 +1520,7 @@ function bp_video_album_get_specific( $args = '' ) {
  * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  * @return WP_Error|bool|int The ID of the album on success. False on error.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_album_add( $args = '' ) {
 
@@ -1639,7 +1570,7 @@ function bp_video_album_add( $args = '' ) {
 	 *
 	 * @param object $album Album object.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_video_album_add', $album );
 
@@ -1656,7 +1587,7 @@ function bp_video_album_add( $args = '' ) {
  *                           See that method for a description.
  *
  * @return bool True on Success. False on error.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_album_delete( $args ) {
 
@@ -1676,7 +1607,7 @@ function bp_video_album_delete( $args ) {
 	 *
 	 * @param array $args Array of arguments to be used with the album deletion.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_before_video_album_delete', $args );
 
@@ -1690,7 +1621,7 @@ function bp_video_album_delete( $args ) {
 	 *
 	 * @param array $args Array of arguments used with the album deletion.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_video_album_delete', $args );
 
@@ -1699,7 +1630,7 @@ function bp_video_album_delete( $args ) {
 	 *
 	 * @param array $album_ids_deleted Array of affected album item IDs.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_video_albums_deleted_albums', $album_ids_deleted );
 
@@ -1716,7 +1647,7 @@ function bp_video_album_delete( $args ) {
  * @param int $album_id ID of the album.
  *
  * @return BP_Video_Album $album The album object.
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function albums_get_video_album( $album_id ) {
 
@@ -1727,7 +1658,7 @@ function albums_get_video_album( $album_id ) {
 	 *
 	 * @param BP_Video_Album $album Single album object.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'albums_get_video_album', $album );
 }
@@ -1738,7 +1669,7 @@ function albums_get_video_album( $album_id ) {
  * @param int $album_id album id.
  *
  * @return bool
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function albums_check_video_album_access( $album_id ) {
 
@@ -1773,7 +1704,7 @@ function albums_check_video_album_access( $album_id ) {
 /**
  * Delete orphaned attachments uploaded
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_delete_orphaned_attachments() {
 
@@ -1806,7 +1737,7 @@ function bp_video_delete_orphaned_attachments() {
  * @param string $file The URL of the image to download.
  *
  * @return int|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_sideload_attachment( $file ) {
 	if ( empty( $file ) ) {
@@ -1856,7 +1787,7 @@ function bp_video_sideload_attachment( $file ) {
  * @param array $post_data  allows you to overwrite some of the attachment.
  *
  * @return int|object The ID of the attachment or a WP_Error on failure
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_handle_sideload( $file_array, $post_data = array() ) {
 
@@ -1924,7 +1855,7 @@ function bp_video_handle_sideload( $file_array, $post_data = array() ) {
 /**
  * Function to add the content on top of video listing
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_directory_page_content() {
 
@@ -1944,7 +1875,7 @@ add_action( 'bp_before_directory_video', 'bp_video_directory_page_content' );
  * @param int $attachment_id attachment id.
  *
  * @return array|bool
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_get_attachment_video_id( $attachment_id = 0 ) {
 	global $bp, $wpdb;
@@ -1966,7 +1897,7 @@ function bp_get_attachment_video_id( $attachment_id = 0 ) {
  * @param string $scope    Scope query parameter.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 
@@ -2025,7 +1956,7 @@ function bp_video_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
  * @param int    $activity_id Activity ID.
  * @param string $privacy     Privacy.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
 	global $wpdb, $bp;
@@ -2056,7 +1987,7 @@ function bp_video_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
  * @param string $scope Default scope.
  *
  * @return string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_default_scope( $scope ) {
 
@@ -2109,7 +2040,7 @@ function bp_video_default_scope( $scope ) {
 	/**
 	 * Filter to update default scope.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	$new_scope = apply_filters( 'bp_video_default_scope', $new_scope );
 
@@ -2160,7 +2091,7 @@ function bp_video_get_thread_id( $video_id ) {
  * @param int $video_id video id.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_download_link( $attachment_id, $video_id ) {
 
@@ -2177,7 +2108,7 @@ function bp_video_download_link( $attachment_id, $video_id ) {
 /**
  * Check if user have a access to download the file. If not redirect to homepage.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_download_url_file() {
 
@@ -2226,6 +2157,10 @@ function bp_video_ie_nocache_headers_fix( $headers ) {
  * @return mixed|void
  */
 function bp_video_get_forum_id( $video_id ) {
+
+	if ( ! bp_is_active( 'forums' ) ) {
+		return;
+	}
 
 	$forum_id           = 0;
 	$forums_video_query = new WP_Query(
@@ -2338,7 +2273,7 @@ function bp_video_get_forum_id( $video_id ) {
  * @param int $attachment_id attachment id.
  *
  * @return mixed|string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_mime_type( $attachment_id ) {
 
@@ -2356,7 +2291,7 @@ function bp_video_mime_type( $attachment_id ) {
  * @param string $type font.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) {
 
@@ -2418,7 +2353,7 @@ function bp_video_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) {
  * Return the icon list.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_svg_icon_list() {
 
@@ -2517,7 +2452,7 @@ function bp_video_multi_array_search( $array, $search ) {
  * Return all the allowed video extensions.
  *
  * @return array
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_get_allowed_extension() {
 	$extensions     = array();
@@ -2538,7 +2473,7 @@ function bp_video_get_allowed_extension() {
  * @param int $group_id group id.
  *
  * @return string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_user_video_album_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
 
@@ -2592,7 +2527,7 @@ function bp_video_user_video_album_tree_view_li_html( $user_id = 0, $group_id = 
  * @param bool  $first is first li.
  *
  * @return string
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_album_recursive_li_list( $array, $first = false ) {
 
@@ -2624,7 +2559,7 @@ function bp_video_album_recursive_li_list( $array, $first = false ) {
  * @param int $group_id group id.
  *
  * @return bool|int
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id = 0 ) {
 
@@ -2927,7 +2862,7 @@ function bp_video_get_activity_video( $activity_id ) {
  * @param array $pathdata upload path.
  *
  * @return mixed
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_upload_dir( $pathdata ) {
 
@@ -2956,7 +2891,7 @@ function bp_video_upload_dir( $pathdata ) {
  * @param array $pathdata upload path.
  *
  * @return mixed
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_upload_dir_script( $pathdata ) {
 
@@ -2977,7 +2912,7 @@ function bp_video_upload_dir_script( $pathdata ) {
 /**
  * Check given video is activity comment video.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int|object $video video id or object.
  *
@@ -3019,7 +2954,7 @@ function bp_video_is_activity_comment_video( $video ) {
  * @param int $album_id album id.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_album_download_link( $album_id ) {
 
@@ -3036,7 +2971,7 @@ function bp_video_album_download_link( $album_id ) {
 /**
  * Function to get video report link
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param array $args button arguments.
  *
@@ -3064,7 +2999,7 @@ function bp_video_get_report_link( $args = array() ) {
 	/**
 	 * Filter to return video report link
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $report_btn button.
 	 * @param array $args button arguments.
@@ -3093,7 +3028,7 @@ function bb_video_is_ffmpeg_installed() {
 /**
  * Function to get video attachments
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int $video_attachment_id video attachment id.
  * @param int $video_id            video id.
@@ -3146,7 +3081,7 @@ function bp_video_get_attachments( $video_attachment_id, $video_id = 0 ) {
  * @param int $user_id  given user id.
  * @param int $group_id given group id.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @return bool
  */
@@ -3174,36 +3109,8 @@ function bb_video_user_can_upload( $user_id = 0, $group_id = 0 ) {
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_symlink_original_video_path() {
-	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
-	$upload_dir = wp_upload_dir();
-	$upload_dir = $upload_dir['basedir'];
-
-	$platform_previews_path = $upload_dir . '/bb-platform-previews';
-	if ( ! is_dir( $platform_previews_path ) ) {
-		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
-	}
-
-	$video_symlinks_path = $platform_previews_path . '/' . md5( 'bb-videos' );
-	if ( ! is_dir( $video_symlinks_path ) ) {
-		wp_mkdir_p( $video_symlinks_path );
-		chmod( $video_symlinks_path, 0755 );
-	}
-	remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
-
-	return $video_symlinks_path;
-}
-
-/**
- * Return the video symlink path.
- *
- * @return string The symlink path.
- *
- * @since BuddyBoss 1.7.0
- */
 function bb_video_symlink_path() {
-	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+
 	$upload_dir = wp_upload_dir();
 	$upload_dir = $upload_dir['basedir'];
 
@@ -3218,7 +3125,6 @@ function bb_video_symlink_path() {
 		wp_mkdir_p( $video_symlinks_path );
 		chmod( $video_symlinks_path, 0755 );
 	}
-	remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
 
 	return $video_symlinks_path;
 }
@@ -3262,27 +3168,23 @@ function bp_video_delete_video_previews() {
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'medium' ) {
-	$attachment_url = '';
+function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-activity-image', $generate = true ) {
+
+    $attachment_url = '';
 
 	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video_id, $attachment_id, $size );
 
-	if ( $do_symlink ) {
+	if ( $do_symlink && $generate ) {
 
-		$video               = new BP_Video( $video_id );
-		$upload_directory    = wp_get_upload_dir();
-		$video_symlinks_path = bb_video_symlink_path();
-
-		$preview_attachment_path = $video_symlinks_path . '/' . md5( $video_id . $attachment_id . $video->privacy . $size );
-		if ( ! file_exists( $preview_attachment_path ) ) {
-			bb_video_create_thumb_symlinks( $video, $size );
-		}
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+		$video          = new BP_Video( $video_id );
+		$attachment_url = bb_video_get_attachment_symlink( $video, $attachment_id, $size );
 
 		if ( empty( $attachment_url ) ) {
 			$attachment_url = bb_get_video_default_placeholder_image();
 		}
-	}
+	} else {
+		$attachment_url = wp_get_attachment_url( $attachment_id );
+    }
 
 	return apply_filters( 'bb_video_get_thumb_url', $attachment_url, $video_id, $size, $attachment_id );
 }
@@ -3345,148 +3247,28 @@ function bb_get_video_default_placeholder_image() {
 }
 
 /**
- * Create symlink for a video.
+ * Regenerate video poster attachment thumbnails
  *
- * @param object $video BP_Video Object.
- * @param string $size  Size of thumb symlink.
+ * @param int $attachment_id Attachment ID.
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_create_thumb_symlinks( $video, $size = '' ) {
-	// Check if video is id of video, create video object.
-	if ( ! $video instanceof BP_Video && is_int( $video ) ) {
-		$video = new BP_Video( $video );
-	}
+function bp_video_regenerate_attachment_thumbnails( $attachment_id ) {
 
-	// Return if no video found.
-	if ( empty( $video ) ) {
-		return;
-	}
+    // Add upload filters.
+	bb_video_image_add_upload_filters();
 
-	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video->id, $video->attachment_id, 'medium' );
+	// Register image sizes.
+	bb_video_register_image_sizes();
 
-	if ( $do_symlink ) {
+	// Regenerate attachment thumbnails.
+	bp_core_regenerate_attachment_thumbnails( $attachment_id );
 
-		$attachment_id = bb_get_video_thumb_id( $video->attachment_id );
+	// Remove upload filters.
+	bb_video_image_remove_upload_filters();
 
-		if ( ! $attachment_id ) {
-			return bb_get_video_default_placeholder_image();
-		}
-
-		// Get video previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_path();
-		$attached_file       = get_attached_file( $attachment_id );
-		$privacy             = $video->privacy;
-
-		if ( '' !== $size ) {
-			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $size );
-			$file                = image_get_intermediate_size( $attachment_id, $size );
-			$attached_file_info  = pathinfo( $attached_file );
-			$file_path           = '';
-
-			if ( $file ) {
-				if ( ! empty( $attached_file_info['dirname'] ) && $file ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $file_path, $attachment_path );
-					}
-				}
-			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
-
-				$output_file_src = get_attached_file( $attachment_id );
-
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
-			}
-        } else {
-
-			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . 'medium' );
-			$file                = image_get_intermediate_size( $attachment_id, 'medium' );
-			$attached_file_info  = pathinfo( $attached_file );
-			$file_path           = '';
-
-			if ( $file ) {
-				if ( ! empty( $attached_file_info['dirname'] ) && $file ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $file_path, $attachment_path );
-					}
-				}
-			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
-
-				$output_file_src = get_attached_file( $attachment_id );
-
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
-			}
-
-			$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . 'large' );
-			$file            = image_get_intermediate_size( $attachment_id, 'large' );
-			$file_path       = '';
-
-			if ( $file ) {
-				if ( ! empty( $attached_file_info['dirname'] ) && $file ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $file_path, $attachment_path );
-					}
-				}
-			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
-
-				$output_file_src = get_attached_file( $attachment_id );
-
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
-			}
-
-			$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . 'full' );
-			$file            = image_get_intermediate_size( $attachment_id, 'full' );
-			$file_path       = '';
-
-			if ( $file ) {
-				if ( ! empty( $attached_file_info['dirname'] ) && $file ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $file_path, $attachment_path );
-					}
-				}
-			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
-
-				$output_file_src = get_attached_file( $attachment_id );
-
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
-			}
-        }
-	}
+	// Deregister image sizes.
+	bb_video_deregister_image_sizes();
 }
 
 /**
@@ -3537,6 +3319,18 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'full' );
 	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
+	}
+
+	$image_sizes = bb_video_get_image_sizes();
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+				$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . sanitize_key( $name ) );
+				if ( file_exists( $attachment_path ) ) {
+					unlink( $attachment_path );
+				}
+			}
+		}
 	}
 
 }
@@ -3602,6 +3396,18 @@ function bb_video_delete_symlinks( $video ) {
 		unlink( $attachment_path );
 	}
 
+	$image_sizes = bb_video_get_image_sizes();
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . sanitize_key( $name ) );
+				if ( file_exists( $attachment_path ) ) {
+					unlink( $attachment_path );
+				}
+			}
+		}
+	}
+
 	// Delete the extra preview images symlink.
 	$extra_preview_ids = bb_video_get_auto_generated_preview_ids( $old_video->attachment_id );
 	if ( ! empty( $extra_preview_ids ) ) {
@@ -3620,6 +3426,29 @@ function bb_video_delete_symlinks( $video ) {
 			$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'full' );
 			if ( file_exists( $attachment_path ) ) {
 				unlink( $attachment_path );
+			}
+
+			if ( ! empty( $image_sizes ) ) {
+				foreach ( $image_sizes as $name => $image_size ) {
+					if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+						$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . sanitize_key( $name ) );
+						if ( file_exists( $attachment_path ) ) {
+							unlink( $attachment_path );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	$get_video_thumb_id  = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $get_video_thumb_id . $privacy . sanitize_key( $name ) );
+				if ( file_exists( $attachment_path ) ) {
+					unlink( $attachment_path );
+				}
 			}
 		}
 	}
@@ -3644,40 +3473,22 @@ function bb_video_create_symlinks( $video ) {
 		return;
 	}
 
-	$do_symlink = apply_filters( 'bb_video_do_symlink', true, $video->id, $video->attachment_id, 'medium' );
+	$do_symlink = apply_filters( 'bb_video_do_symlink', true, $video->id, $video->attachment_id, '' );
 
 	if ( $do_symlink ) {
-
-		// Get videos previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_path();
-		$attachment_id       = $video->attachment_id;
-		$attached_file       = get_attached_file( $attachment_id );
-		$privacy             = $video->privacy;
-		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy );
-
-		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			if ( ! is_link( $attachment_path ) ) {
-				$get_existing = get_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', true );
-				if ( ! $get_existing ) {
-					update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', array( $attachment_path ) );
-				} else {
-					$get_existing[] = array_push( $get_existing, $attachment_path );
-					update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', $get_existing );
-				}
-				symlink( $attached_file, $attachment_path );
-			}
-		}
+		bb_video_get_symlink( $video );
 	}
 }
 
 /**
  * Create symlink for a video.
  *
- * @param object $video BP_Video Object.
+ * @param object $video    BP_Video Object.
+ * @param bool   $generate Generate Symlink or not.
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_get_symlink( $video ) {
+function bb_video_get_symlink( $video, $generate = true ) {
 	// Check if video is id of video, create video object.
 	if ( ! $video instanceof BP_Video && is_int( $video ) ) {
 		$video = new BP_Video( $video );
@@ -3696,11 +3507,12 @@ function bb_video_get_symlink( $video ) {
 	if ( $do_symlink ) {
 
 		// Get videos previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_original_video_path();
+		$video_symlinks_path = bb_video_symlink_path();
 		$attached_file       = get_attached_file( $attachment_id );
 		$privacy             = $video->privacy;
 		$upload_directory    = wp_get_upload_dir();
-		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . time() );
+		$time                = time();
+		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time );
 
 		if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
 			if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
@@ -3711,11 +3523,15 @@ function bb_video_get_symlink( $video ) {
 					$get_existing[] = array_push( $get_existing, $attachment_path );
 					update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', $get_existing );
 				}
-				symlink( $attached_file, $attachment_path );
+
+				if ( $generate ) {
+					// Generate Video Symlink.
+					bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
+				}
 			}
 		}
 
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
+		$attachment_url = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
 
 	}
 
@@ -3724,115 +3540,17 @@ function bb_video_get_symlink( $video ) {
 }
 
 /**
- * Create symlink for auto generated thumbnail of video.
- *
- * @param object $video BP_Video Object.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_video_get_auto_gen_thumb_symlink( $video, $auto_gen_thumb_id, $size ) {
-
-	// Check if video is id of video, create video object.
-	if ( ! $video instanceof BP_Video && is_int( $video ) ) {
-		$video = new BP_Video( $video );
-	}
-
-	// Return if no video found.
-	if ( empty( $video ) ) {
-		return;
-	}
-
-	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video->id, $video->attachment_id, 'medium' );
-
-	if ( $do_symlink ) {
-
-		if ( ! $auto_gen_thumb_id ) {
-			return bb_get_video_default_placeholder_image();
-		}
-
-		// Get video previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_path();
-		$attached_file       = get_attached_file( $auto_gen_thumb_id );
-		$privacy             = $video->privacy;
-		$upload_directory    = wp_get_upload_dir();
-
-		if ( '' !== $size ) {
-			$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $auto_gen_thumb_id . $privacy . $size );
-			$file            = image_get_intermediate_size( $auto_gen_thumb_id, $size );
-			$file_path       = '';
-			if ( $file ) {
-				if ( ! empty( $attached_file_info['dirname'] ) ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $file_path, $attachment_path );
-					}
-				}
-			} elseif ( wp_get_attachment_image_src( $auto_gen_thumb_id ) ) {
-				$output_file_src = get_attached_file( $auto_gen_thumb_id );
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
-			}
-        } else {
-			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $auto_gen_thumb_id . $privacy . 'medium' );
-			$file                = image_get_intermediate_size( $auto_gen_thumb_id, 'medium' );
-			$attached_file_info  = pathinfo( $attached_file );
-			$file_path           = '';
-			if ( ! empty( $attached_file_info['dirname'] ) && $file ) {
-				$file_path = $attached_file_info['dirname'];
-				$file_path = $file_path . '/' . $file['file'];
-			}
-			if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-				if ( ! is_link( $attachment_path ) ) {
-					symlink( $file_path, $attachment_path );
-				}
-			}
-			$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $auto_gen_thumb_id . $privacy . 'large' );
-			$file            = image_get_intermediate_size( $auto_gen_thumb_id, 'large' );
-			$file_path       = '';
-			if ( $file ) {
-				if ( ! empty( $attached_file_info['dirname'] ) ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				if ( ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $file_path, $attachment_path );
-					}
-				}
-			} elseif ( wp_get_attachment_image_src( $auto_gen_thumb_id ) ) {
-				$output_file_src = get_attached_file( $auto_gen_thumb_id );
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-						symlink( $output_file_src, $attachment_path );
-					}
-				}
-			}
-        }
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
-	} else {
-		$attachment_url = wp_get_attachment_url( $auto_gen_thumb_id );
-	}
-
-	return $attachment_url;
-}
-
-/**
  * A simple function that uses mtime to delete files older than a given age (in seconds)
  * Very handy to rotate backup or log files, for example...
  *
  * @return array|void the list of deleted files
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bb_video_delete_older_symlinks() {
 
 	// Get videos previews symlink directory path.
-	$dir     = bb_video_symlink_original_video_path();
+	$dir     = bb_video_symlink_path();
 	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
 	$list    = array();
 	$limit   = time() - $max_age;
@@ -3867,7 +3585,7 @@ bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_
 /**
  * Function to get video attachments symlinks.
  *
- * @since BuddyBoss 1.5.7
+ * @since BuddyBoss 1.7.0
  *
  * @param int $video_attachment_id video attachment id.
  * @param int $video_id            video id.
@@ -3877,6 +3595,7 @@ bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_
 function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 ) {
 
 	$attachment_urls = [];
+	$video           = new BP_Video( $video_id );
 	$auto_generated_thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
 	$preview_thumbnail_id      = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 	if ( $auto_generated_thumbnails ) {
@@ -3885,7 +3604,7 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
 				$attachment_urls['default_images'][] = array(
 					'id'	=> $auto_generated_thumbnail,
-					'url'	=> bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnail, 'full' )
+					'url'	=> bb_video_get_attachment_symlink( $video, $auto_generated_thumbnail, 'bb-video-profile-album-add-thumbnail-directory-poster-image' )
 				);
 			}
 		} else {
@@ -3903,18 +3622,19 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 	if( $preview_thumbnail_id ) {
 		$attachment_urls['selected_id'] = array(
 			'id'	=> $preview_thumbnail_id,
-			'url'	=> bb_video_get_auto_gen_thumb_symlink( $video_id, $preview_thumbnail_id, 'full' )
+			'url'	=> bb_video_get_attachment_symlink( $video, $preview_thumbnail_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' )
 		);
 	}
 	if ( isset($auto_generated_thumbnails['custom_image']) && !empty($auto_generated_thumbnails['custom_image']) ) {
 
 		$id                         = ( $video_id ) ? $video_id : bp_get_video_id();
 		$video                      = new BP_Video( $id );
+		$url                        = bb_video_get_attachment_symlink( $video, $auto_generated_thumbnails['custom_image'], 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 		$attachment_urls['preview'] = array(
 			'id'            => $id,
 			'attachment_id' => $auto_generated_thumbnails['custom_image'],
-			'thumb'         => bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnails['custom_image'], 'bp-media-thumbnail' ),
-			'url'           => bb_video_get_auto_gen_thumb_symlink( $video_id, $auto_generated_thumbnails['custom_image'], 'full' ),
+			'thumb'         => $url,
+			'url'           => $url,
 			'name'          => $video->title,
 			'saved'         => true,
 			'dropzone'      => true
@@ -4000,4 +3720,265 @@ function bb_video_check_is_ffprobe_binary() {
     }
 
 	return (object) $retval;
+}
+
+/**
+ * Get video thumbnail image sizes to register.
+ *
+ * @return array Image sizes.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_get_image_sizes() {
+	$image_sizes = array(
+		'bb-video-profile-album-add-thumbnail-directory-poster-image' => array(
+			'height' => 267,
+			'width'  => 400,
+		),
+		'bb-video-poster-popup-image'                                 => array(
+			'height' => 900,
+			'width'  => 1500,
+		),
+		'bb-video-activity-image'                                     => array(
+			'height' => 400,
+			'width'  => 640,
+		)
+	);
+
+	return (array) apply_filters( 'bb_video_get_image_sizes', $image_sizes );
+}
+
+/**
+ * Add video upload filters.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_add_upload_filters() {
+	add_filter( 'upload_dir', 'bp_video_upload_dir' );
+	add_filter( 'upload_mimes', 'bp_video_allowed_mimes', 9, 1 );
+}
+
+/**
+ * Remove video upload filters.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_remove_upload_filters() {
+	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
+	remove_filter( 'upload_mimes', 'bp_video_allowed_mimes' );
+}
+
+/**
+ * Add video upload filters.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_image_add_upload_filters() {
+	add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+	add_filter( 'intermediate_image_sizes_advanced', 'bb_video_remove_default_image_sizes' );
+	add_filter( 'upload_mimes', 'bb_video_thumb_cover_allowed_mimes', 9, 1 );
+	add_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * Remove video upload filters.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_image_remove_upload_filters() {
+	remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+	remove_filter( 'intermediate_image_sizes_advanced', 'bb_video_remove_default_image_sizes' );
+	remove_filter( 'upload_mimes', 'bb_video_thumb_cover_allowed_mimes' );
+	remove_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * This will remove the default image sizes registered.
+ *
+ * @param array $sizes Image sizes registered.
+ *
+ * @return array Empty array.
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_remove_default_image_sizes( $sizes ) {
+
+
+	if ( isset( $sizes['bb-video-profile-album-add-thumbnail-directory-poster-image'] ) && isset( $sizes['bb-video-poster-popup-image'] ) && isset( $sizes['bb-video-activity-image'] ) ) {
+		return array(
+			'bb-video-profile-album-add-thumbnail-directory-poster-image' => $sizes['bb-video-profile-album-add-thumbnail-directory-poster-image'],
+			'bb-video-poster-popup-image'                                 => $sizes['bb-video-poster-popup-image'],
+			'bb-video-activity-image'                                     => $sizes['bb-video-activity-image'],
+		);
+	}
+
+	return array();
+}
+
+/**
+ * Mine type for uploader allowed by buddyboss video for security reason.
+ *
+ * @param Array $mime_types carry mime information
+ *
+ * @return Array
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_thumb_cover_allowed_mimes( $mime_types ) {
+
+	// Creating a new array will reset the allowed filetypes.
+	$mime_types = array(
+		'jpg|jpeg|jpe' => 'image/jpeg',
+		'png'          => 'image/png',
+		'bmp'          => 'image/bmp',
+	);
+
+	return $mime_types;
+}
+
+/**
+ * Register video image sizes.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_register_image_sizes() {
+	$image_sizes = bb_video_get_image_sizes();
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
+				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
+			}
+		}
+	}
+}
+
+/**
+ * Deregister video image sizes.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_deregister_image_sizes() {
+	$image_sizes = bb_video_get_image_sizes();
+	if ( ! empty( $image_sizes ) ) {
+		foreach ( $image_sizes as $name => $image_size ) {
+			remove_image_size( sanitize_key( $name ) );
+		}
+	}
+}
+
+/**
+ * Add video upload filters.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_add_thumb_image_add_upload_filters() {
+	add_filter( 'upload_dir', 'bp_video_upload_dir' );
+	add_filter( 'intermediate_image_sizes_advanced', 'bb_video_remove_default_image_sizes' );
+	add_filter( 'upload_mimes', 'bb_video_thumb_cover_allowed_mimes', 9, 1 );
+	add_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * Remove video upload filters.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_add_thumb_image_remove_upload_filters() {
+	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
+	remove_filter( 'intermediate_image_sizes_advanced', 'bb_video_remove_default_image_sizes' );
+	remove_filter( 'upload_mimes', 'bb_video_thumb_cover_allowed_mimes' );
+	remove_filter( 'big_image_size_threshold', '__return_false' );
+}
+
+/**
+ * Return the video attachment symlink.
+ *
+ * @param int|object $video Video id or a video object.
+ * @param int $attachment_id Attachment id.
+ * @param string $size Size to get symlink.
+ *
+ * @return array|false|string|string[]|void
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_video_get_attachment_symlink( $video, $attachment_id, $size ) {
+
+	// Check if video is id of video, create video object.
+	if ( ! $video instanceof BP_Video && is_int( $video ) ) {
+		$video = new BP_Video( $video );
+	}
+
+	// Return if no video found.
+	if ( empty( $video ) || empty( $attachment_id ) || empty( $size ) ) {
+		return;
+	}
+
+	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video->id, $attachment_id, $size );
+
+	if ( $do_symlink ) {
+
+		$upload_dir = wp_upload_dir();
+		$upload_dir = $upload_dir['basedir'];
+
+		// Get video previews symlink directory path.
+		$video_symlinks_path = bb_video_symlink_path();
+		$privacy             = $video->privacy;
+		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $size );
+		$file                = image_get_intermediate_size( $attachment_id, $size );
+
+		if ( $file && ! empty( $file['path'] ) ) {
+			$output_file_src = $upload_dir . '/' . $file['path'];
+
+			// Regenerate attachment thumbnails.
+			if ( ! file_exists( $output_file_src ) ) {
+				bp_video_regenerate_attachment_thumbnails( $attachment_id );
+			}
+
+
+		} elseif ( ! $file ) {
+
+			bp_video_regenerate_attachment_thumbnails( $attachment_id );
+
+			$file = image_get_intermediate_size( $attachment_id, $size );
+
+			if ( $file && ! empty( $file['path'] ) ) {
+
+				$output_file_src = $upload_dir . '/' . $file['path'];
+
+			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+
+				$output_file_src = get_attached_file( $attachment_id );
+
+				// Regenerate attachment thumbnails.
+				if ( ! file_exists( $output_file_src ) ) {
+					bp_video_regenerate_attachment_thumbnails( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, $size );
+				}
+
+			}
+		} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+
+			$output_file_src = get_attached_file( $attachment_id );
+
+			// Regenerate attachment thumbnails.
+			if ( ! file_exists( $output_file_src ) ) {
+				bp_video_regenerate_attachment_thumbnails( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
+			}
+
+		}
+
+        // Override the video attachment id to given thumbnail id.
+		$video->attachment_id = $attachment_id;
+
+		// Generate Video Thumb Symlink.
+		bb_core_symlink_generator( 'video_thumb', $video, $size, $file, $output_file_src, $attachment_path );
+
+		$upload_directory = wp_get_upload_dir();
+		$attachment_url   = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
+
+	} else {
+		$attachment_url = wp_get_attachment_url( $attachment_id );
+    }
+
+	return $attachment_url;
+
 }

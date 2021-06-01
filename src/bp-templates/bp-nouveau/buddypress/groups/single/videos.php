@@ -7,14 +7,25 @@
 ?>
 
 <div class="bb-video-container bb-media-container group-video">
-	<?php bp_get_template_part( 'video/theatre' ); ?>
+	<?php
+		bp_get_template_part( 'media/theatre' ); 
+		bp_get_template_part( 'video/theatre' );
+		bp_get_template_part( 'document/theatre' );
+	?>
 <?php
 
 switch ( bp_current_action() ) :
 
 	// Home/Video.
 	case 'videos':
-		if ( bp_is_group_video() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
+		if (
+			bp_is_group_video() &&
+			(
+				groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
+				groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
+				groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() )
+			)
+		) {
 			bp_get_template_part( 'video/add-video' );
         } else {
 			?>

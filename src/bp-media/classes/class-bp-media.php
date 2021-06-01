@@ -654,12 +654,19 @@ class BP_Media {
 			}
 
 			// fetch attachment data.
-			$attachment_data                 = new stdClass();
-			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
-			$attachment_data->thumb          = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
-			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
-			$attachment_data->meta           = self::attachment_meta( $media->attachment_id );
-			$media->attachment_data          = $attachment_data;
+			$attachment_data                              = new stdClass();
+			$activity_thumb                               = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' );
+			$media_album_cover_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image' );
+			$media_photos_page_thumb                      = $media_album_cover_thumb;
+			$media_theatre_popup                          = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' );
+			$attachment_data->full                        = $activity_thumb;
+			$attachment_data->thumb                       = $activity_thumb;
+			$attachment_data->media_album_cover           = $media_album_cover_thumb;
+			$attachment_data->media_photos_directory_page = $media_photos_page_thumb;
+			$attachment_data->media_theatre_popup         = $media_theatre_popup;
+			$attachment_data->activity_thumb              = $activity_thumb;
+			$attachment_data->meta                        = self::attachment_meta( $media->attachment_id );
+			$media->attachment_data                       = $attachment_data;
 
 			if( $media->type == 'video' && function_exists( 'bb_video_get_thumb_url' ) ) {
 				$get_video_thumb_ids = get_post_meta( $media->attachment_id, 'video_preview_thumbnails', true );
@@ -668,23 +675,48 @@ class BP_Media {
 				$attachment_data->mime_type        = get_post_mime_type( $media->attachment_id );
 				$length_formatted                  = wp_get_attachment_metadata( $media->attachment_id );
 				$attachment_data->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+				$default_image                     = bb_get_video_default_placeholder_image();
 
 				if ( $get_video_thumb_id ) {
-					$attachment_data->full           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'full' );
-					$attachment_data->thumb          = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-video-thumbnail' );
-					$attachment_data->activity_thumb = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-activity-video-thumbnail' );
-					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
-				} elseif ( isset( $get_video_thumb_ids['default_images'] ) && !empty( $get_video_thumb_ids['default_images'] ) ) {
-					$get_video_thumb_id              = current( $get_video_thumb_ids['default_images'] );
-					$attachment_data->full           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'full' );
-					$attachment_data->thumb          = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-video-thumbnail' );
-					$attachment_data->activity_thumb = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bp-activity-video-thumbnail' );
-					$attachment_data->thumb_meta     = wp_get_attachment_metadata( $get_video_thumb_id );
+					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+					$video_directory_page_thumb                  = $video_user_profile_thumb;
+					$video_album_cover_thumb                     = $video_user_profile_thumb;
+					$video_add_thumbnail_thumb                   = $video_album_cover_thumb;
+					$video_popup_thumb                           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-poster-popup-image' );
+					$video_activity_thumb                        = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-activity-image' );
+					$attachment_data->full                       = $video_popup_thumb;
+					$attachment_data->thumb                      = $video_album_cover_thumb;
+					$attachment_data->activity_thumb             = $video_activity_thumb;
+					$attachment_data->video_user_profile_thumb   = $video_user_profile_thumb;
+					$attachment_data->video_directory_page_thumb = $video_directory_page_thumb;
+					$attachment_data->video_album_cover_thumb    = $video_album_cover_thumb;
+					$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
+					$attachment_data->video_popup_thumb          = $video_popup_thumb;
+					$attachment_data->video_activity_thumb       = $video_activity_thumb;
+					$attachment_data->thumb_meta                 = wp_get_attachment_metadata( $get_video_thumb_id );
+				} elseif ( isset( $get_video_thumb_ids['default_images'] ) && ! empty( $get_video_thumb_ids['default_images'] ) ) {
+					$get_video_thumb_id                          = current( $get_video_thumb_ids['default_images'] );
+					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+					$video_directory_page_thumb                  = $video_user_profile_thumb;
+					$video_album_cover_thumb                     = $video_user_profile_thumb;
+					$video_add_thumbnail_thumb                   = $video_album_cover_thumb;
+					$video_popup_thumb                           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-poster-popup-image' );
+					$video_activity_thumb                        = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-activity-image' );
+					$attachment_data->full                       = $video_popup_thumb;
+					$attachment_data->thumb                      = $video_album_cover_thumb;
+					$attachment_data->activity_thumb             = $video_activity_thumb;
+					$attachment_data->video_user_profile_thumb   = $video_user_profile_thumb;
+					$attachment_data->video_directory_page_thumb = $video_directory_page_thumb;
+					$attachment_data->video_album_cover_thumb    = $video_album_cover_thumb;
+					$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
+					$attachment_data->video_popup_thumb          = $video_popup_thumb;
+					$attachment_data->video_activity_thumb       = $video_activity_thumb;
+					$attachment_data->thumb_meta                 = wp_get_attachment_metadata( $get_video_thumb_id );
 				} else {
-					$attachment_data->full           = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-					$attachment_data->thumb          = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-					$attachment_data->activity_thumb = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
-					$attachment_data->thumb_meta     = buddypress()->plugin_url . 'bp-templates/bp-nouveau/images/video-placeholder.jpg';
+					$attachment_data->full           = $default_image;
+					$attachment_data->thumb          = $default_image;
+					$attachment_data->activity_thumb = $default_image;
+					$attachment_data->thumb_meta     = $default_image;
 				}
 
 				$media->attachment_data = $attachment_data;
@@ -763,12 +795,16 @@ class BP_Media {
 			'sizes'  => array(),
 		);
 
-		if ( isset( $metadata['sizes']['bp-media-thumbnail'] ) ) {
-			$meta['sizes']['bp-media-thumbnail'] = $metadata['sizes']['bp-media-thumbnail'];
+		if ( isset( $metadata['sizes']['bb-media-activity-image'] ) ) {
+			$meta['sizes']['bb-media-activity-image'] = $metadata['sizes']['bb-media-activity-image'];
 		}
 
-		if ( isset( $metadata['sizes']['bp-activity-media-thumbnail'] ) ) {
-			$meta['sizes']['bp-activity-media-thumbnail'] = $metadata['sizes']['bp-activity-media-thumbnail'];
+		if ( isset( $metadata['sizes']['bb-media-photos-album-directory-image'] ) ) {
+			$meta['sizes']['bb-media-photos-album-directory-image'] = $metadata['sizes']['bb-media-photos-album-directory-image'];
+		}
+
+		if ( isset( $metadata['sizes']['bb-media-photos-popup-image'] ) ) {
+			$meta['sizes']['bb-media-photos-popup-image'] = $metadata['sizes']['bb-media-photos-popup-image'];
 		}
 
 		return $meta;

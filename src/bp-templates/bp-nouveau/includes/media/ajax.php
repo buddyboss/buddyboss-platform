@@ -243,6 +243,15 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+
+	if (
+		( ( bp_is_my_profile() || bp_is_user_media() ) && empty( bb_user_can_create_media() ) ) ||
+		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ! groups_can_user_manage_media( bp_loggedin_user_id(), $group_id ) )
+	) {
+		wp_send_json_error( $response );
+	}
+
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $medias ) ) {
@@ -582,6 +591,14 @@ function bp_nouveau_ajax_media_album_save() {
 	if ( $id ) {
 		$album   = new BP_Media_Album( $id );
 		$user_id = $album->user_id;
+	}
+
+	if (
+		empty( $user_id ) ||
+		( ! empty( $group_id ) && bp_is_group() && ! groups_can_user_manage_albums( $user_id, $group_id ) ) ||
+		! empty( $user_id ) && bp_is_my_profile() && ! bb_user_can_create_media()
+	) {
+		wp_send_json_error( $response );
 	}
 
 	if ( ! array_key_exists( $privacy, bp_media_get_visibility_levels() ) && ! empty( $id ) ) {

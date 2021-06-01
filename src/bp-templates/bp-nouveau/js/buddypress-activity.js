@@ -613,6 +613,19 @@ window.bp = window.bp || {};
 						activity_item.find( '.privacy' ).addClass( target.data( 'value' ) );
 
 						if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.video_symlink !== 'undefined' ) {
+
+							// Update the document video file src on privacy update in activity feed.
+							if ( $( '.document-description-wrap' ).length && $( '.document-description-wrap .bb-open-document-theatre' ).length ) {
+								$( '.document-description-wrap .bb-open-document-theatre' ).attr( 'data-video-preview', response.data.video_symlink );
+								$( '.document-description-wrap .bb-open-document-theatre' ).attr( 'data-extension', response.data.extension );
+							}
+
+							// Update the document video file src on privacy update in activity feed.
+							if ( $( '.document-description-wrap' ).length && $( '.document-detail-wrap.document-detail-wrap-description-popup' ).length ) {
+								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-video-preview', response.data.video_symlink );
+								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-extension', response.data.extension );
+							}
+
 							var myPlayer = videojs( response.data.video_js_id );
 							myPlayer.src(
 								{
@@ -2003,7 +2016,13 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in groups or not.
-					if (BP_Nouveau.video.group_video === false) {
+					if ( !_.isUndefined( activity_data.group_video ) ) {
+						if ( activity_data.group_video === true ) {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
+						}
+					} else if ( BP_Nouveau.media.group_video === false ) {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
@@ -2050,8 +2069,14 @@ window.bp = window.bp || {};
 						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
-					// check video is enable in groups or not.
-					if ( BP_Nouveau.video.profile_video === false ) {
+					// check video is enable in profile or not.
+					if ( !_.isUndefined( activity_data.profile_video ) ) {
+						if ( activity_data.profile_video === true ) {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
+						} else {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
+						}
+					} else if ( BP_Nouveau.media.profile_video === false ) {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
 						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );

@@ -38,8 +38,8 @@ if ( 'video' === $media_template->media->type ) {
 	$poster_thumb     = $poster_full;
 
 	if ( $poster_id ) {
-		$poster_full  = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'full' );
-		$poster_thumb = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'medium' );
+		$poster_full  = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+		$poster_thumb = bb_video_get_thumb_url( bp_get_media_id(), $poster_id, 'bb-video-activity-image' );
 	}
 
 	$attachment_urls = bb_video_get_attachments_symlinks( $attachment_id, bp_get_media_id() );
@@ -186,21 +186,11 @@ if ( 'video' === $media_template->media->type ) {
 				</div>
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
-		<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
-		   data-id="<?php bp_media_id(); ?>"
-		   data-attachment-full="<?php bp_media_attachment_image(); ?>"
-		   data-activity-id="<?php bp_media_activity_id(); ?>"
-		   data-privacy="<?php bp_media_privacy(); ?>"
-		   data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
-		   data-album-id="<?php bp_media_album_id(); ?>"
-		   data-group-id="<?php bp_media_group_id(); ?>"
-		   data-attachment-id="<?php bp_media_attachment_id(); ?>"
-            data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>"
-		   href="#">
-			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
+		<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap" data-id="<?php bp_media_id(); ?>" data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-privacy="<?php bp_media_privacy(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-album-id="<?php bp_media_album_id(); ?>" data-group-id="<?php bp_media_group_id(); ?>" data-attachment-id="<?php bp_media_attachment_id(); ?>" data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>" href="#">
+			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bb_media_photos_directory_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
 		<?php
-		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_edit ) || ( bp_is_group_albums() && $can_edit ) ) ) ) && ! bp_is_media_directory() ) :
+		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_delete ) || ( bp_is_group_albums() && $can_delete ) ) ) ) && ! bp_is_media_directory() ) :
 			?>
 			<div class="bb-media-check-wrap bb-action-check-wrap">
 				<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />

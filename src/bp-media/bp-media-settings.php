@@ -518,9 +518,9 @@ function bp_media_settings_callback_group_media_support() {
 			$second_to_last_string_name = array_pop( $string_array );
 			$display_string            .= implode( ', ', $string_array );
 			if ( ! empty( $second_to_last_string_name ) ) {
-				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . '</strong> and <strong>';
 			} else {
-				$display_string .= ' and ';
+				$display_string .= '</strong> and <strong>';
 			}
 		}
 		$display_string .= $last_string;
@@ -729,9 +729,9 @@ function bp_media_settings_callback_groups_emoji_support() {
 		$second_to_last_string_name = array_pop( $string_array );
 		$display_string            .= implode( ', ', $string_array );
 		if ( ! empty( $second_to_last_string_name ) ) {
-			$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+			$display_string .= ', ' . esc_html( $second_to_last_string_name ) . '</strong> and <strong>';
 		} else {
-			$display_string .= ' and ';
+			$display_string .= '</strong> and <strong>';
 		}
 	}
 	$display_string .= $last_string;
@@ -942,9 +942,9 @@ function bp_media_settings_callback_groups_gif_support() {
 		$second_to_last_string_name = array_pop( $string_array );
 		$display_string            .= implode( ', ', $string_array );
 		if ( ! empty( $second_to_last_string_name ) ) {
-			$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+			$display_string .= ', ' . esc_html( $second_to_last_string_name ) . '</strong> and <strong>';
 		} else {
-			$display_string .= ' and ';
+			$display_string .= '</strong> and <strong>';
 		}
 	}
 	$display_string .= $last_string;
@@ -1130,9 +1130,9 @@ function bp_media_settings_callback_group_document_support() {
 			$second_to_last_string_name = array_pop( $string_array );
 			$display_string            .= implode( ', ', $string_array );
 			if ( ! empty( $second_to_last_string_name ) ) {
-				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . ' and ';
+				$display_string .= ', ' . esc_html( $second_to_last_string_name ) . '</strong> and <strong>';
 			} else {
-				$display_string .= ' and ';
+				$display_string .= '</strong> and <strong>';
 			}
 		}
 		$display_string .= $last_string;
@@ -1173,7 +1173,7 @@ function bp_media_settings_callback_forums_document_support() {
 		<?php checked( bp_is_forums_document_support_enabled() ); ?>
 	/>
 	<label for="bp_media_forums_document_support">
-		<?php _e( 'Allow members to upload documents in <strong>forum discussions and replies</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to upload documents in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }

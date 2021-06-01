@@ -100,7 +100,7 @@ class BP_Video_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @var string
 	 */
 	public $full_name;
@@ -111,7 +111,7 @@ class BP_Video_Template {
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Video::get()}.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see BP_Video::get() for a description of the argument
 	 *      structure, as well as default values.
@@ -186,6 +186,7 @@ class BP_Video_Template {
 				array(
 					'max'          => $max,
 					'count_total'  => $count_total,
+					'fields'       => $fields,
 					'per_page'     => $this->pag_num,
 					'page'         => $this->pag_page,
 					'sort'         => $sort,
@@ -244,7 +245,7 @@ class BP_Video_Template {
 	/**
 	 * Whether there are video items available in the loop.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see bp_has_video()
 	 *
@@ -261,7 +262,7 @@ class BP_Video_Template {
 	/**
 	 * Set up the next video item and iterate index.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @return object The next video item to iterate over.
 	 */
@@ -275,7 +276,7 @@ class BP_Video_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function rewind_videos() {
 		$this->current_video = -1;
@@ -291,7 +292,7 @@ class BP_Video_Template {
 	 * that controls iteration inside the video loop, eg:
 	 *     while ( bp_video() ) { ...
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see bp_video()
 	 *
@@ -326,7 +327,7 @@ class BP_Video_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see bp_the_video()
 	 */
@@ -345,7 +346,7 @@ class BP_Video_Template {
 			/**
 			 * Fires if the current video item is the first in the activity loop.
 			 *
-			 * @since BuddyBoss 1.5.7
+			 * @since BuddyBoss 1.7.0
 			 */
 			do_action( 'video_loop_start' );
 		}

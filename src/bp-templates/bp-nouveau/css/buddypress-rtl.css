@@ -18913,6 +18913,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   pointer-events: none;
 }
 
+.bb-activity-video-elem .video-js > video,
+.bb-video-thumb .video-js > video,
+.bb-media-section .video-js > video {
+  object-fit: cover;
+}
+
 .bb-activity-video-elem .video-js.vjs-playing ~ .bb-video-play,
 .bb-activity-video-elem .video-js.vjs-playing ~ .bb-video-duration,
 .bb-video-thumb .video-js.vjs-playing ~ .bb-video-play,

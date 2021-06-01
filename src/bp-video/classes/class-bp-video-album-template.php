@@ -234,7 +234,7 @@ class BP_Video_Album_Template {
 	/**
 	 * Whether there are album items available in the loop.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see bp_has_video_albums()
 	 *
@@ -251,7 +251,7 @@ class BP_Video_Album_Template {
 	/**
 	 * Set up the next album item and iterate index.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @return object The next album item to iterate over.
 	 */
@@ -265,7 +265,7 @@ class BP_Video_Album_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function rewind_albums() {
 		$this->current_album = -1;
@@ -281,7 +281,7 @@ class BP_Video_Album_Template {
 	 * that controls iteration inside the album loop, eg:
 	 *     while ( bp_video_albums() ) { ...
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see bp_video_albums()
 	 *
@@ -296,7 +296,7 @@ class BP_Video_Album_Template {
 			/**
 			 * Fires right before the rewinding of album posts.
 			 *
-			 * @since BuddyBoss 1.5.7
+			 * @since BuddyBoss 1.7.0
 			 */
 			do_action( 'album_loop_end' );
 
@@ -316,7 +316,7 @@ class BP_Video_Album_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current album item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see bp_the_album()
 	 */

@@ -108,7 +108,7 @@ class BP_Video_Album {
 	/**
 	 * Populate the object with data about the specific album item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function populate() {
 
@@ -141,7 +141,7 @@ class BP_Video_Album {
 	/**
 	 * Save the video album to the database.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @return WP_Error|bool True on success.
 	 */
@@ -163,7 +163,7 @@ class BP_Video_Album {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param BP_Video $this Current instance of the album being saved. Passed by reference.
 		 */
@@ -193,7 +193,7 @@ class BP_Video_Album {
 		/**
 		 * Fires after an album has been saved to the database.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param BP_Video $this Current instance of album being saved. Passed by reference.
 		 */
@@ -207,7 +207,7 @@ class BP_Video_Album {
 	/**
 	 * Get albums, as specified by parameters.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $args         {
 	 *                            An array of arguments. All items are optional.
@@ -271,7 +271,7 @@ class BP_Video_Album {
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
-			 * @since BuddyBoss 1.5.7
+			 * @since BuddyBoss 1.7.0
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 */
@@ -332,7 +332,7 @@ class BP_Video_Album {
 		/**
 		 * Filters the MySQL WHERE conditions for the albums get method.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into method.
@@ -352,7 +352,7 @@ class BP_Video_Album {
 		/**
 		 * Filter the MySQL JOIN clause for the main video query.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -384,7 +384,7 @@ class BP_Video_Album {
 		/**
 		 * Filters the paged video MySQL statement.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param string $album_ids_sql MySQL statement used to query for Video IDs.
 		 * @param array  $r             Array of arguments passed into method.
@@ -463,7 +463,7 @@ class BP_Video_Album {
 	 * @param array $album_ids Array of video IDs.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
@@ -542,7 +542,7 @@ class BP_Video_Album {
 	/**
 	 * Get whether an album exists for a given id.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $id ID to check.
 	 *
@@ -570,7 +570,7 @@ class BP_Video_Album {
 	/**
 	 * Append xProfile full names to an video array.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $albums Albums array.
 	 *
@@ -604,7 +604,7 @@ class BP_Video_Album {
 	 * associated objects, so that inline lookups - done primarily when
 	 * building action strings - do not result in excess database queries.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $albums Array of video albums.
 	 *
@@ -615,7 +615,7 @@ class BP_Video_Album {
 		/**
 		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with album.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $videos Array of video albums.
 		 */
@@ -625,7 +625,7 @@ class BP_Video_Album {
 	/**
 	 * Count total album for the given group
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int $group_id Group ID.
 	 *
@@ -653,7 +653,7 @@ class BP_Video_Album {
 	 * To delete a specific album, pass an 'id' parameter.
 	 * Otherwise use the filters.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $args         {
 	 *                            Array of Arguments.
@@ -718,7 +718,7 @@ class BP_Video_Album {
 		/**
 		 * Action to allow intercepting albums to be deleted.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $albums Array of video albums.
 		 * @param array $r      Array of parsed arguments.
@@ -737,7 +737,7 @@ class BP_Video_Album {
 		/**
 		 * Action to allow intercepting albums just deleted.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $albums Array of video albums.
 		 * @param array $r      Array of parsed arguments.

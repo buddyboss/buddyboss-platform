@@ -2408,8 +2408,8 @@ function bp_media_get_edit_activity_data( $activity ) {
 				$activity['media'][] = array(
 					'id'            => $media_id,
 					'attachment_id' => $media->attachment_id,
-					'thumb'         => bp_media_get_preview_image_url( $media->id, $media->attachment_id ),
-					'url'           => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' ),
+					'thumb'         => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' ),
+					'url'           => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
 					'name'          => $media->title,
 					'group_id'      => $media->group_id,
 					'album_id'      => $media->album_id,

@@ -57,7 +57,11 @@
 			<?php endif; ?>
 		</div>
 
-		<?php bp_get_template_part( 'video/theatre' ); ?>
+		<?php
+			bp_get_template_part( 'media/theatre' );
+			bp_get_template_part( 'video/theatre' );
+			bp_get_template_part( 'document/theatre' );
+		?>
 
 		<div id="video-stream" class="video" data-bp-list="video">
 			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-video-loading' ); ?></div>

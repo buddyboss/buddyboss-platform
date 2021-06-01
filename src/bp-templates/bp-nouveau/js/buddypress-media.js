@@ -769,6 +769,9 @@ window.bp = window.bp || {};
 						success: function ( response ) {
 							if ( response.success ) {
 								$( document ).find( '#div-listing-' + itemId + ' li#' + itemId + ' a' ).attr( 'data-privacy', value );
+								if ( response.data.document && response.data.document.video_symlink ) {
+									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
+								}
 							} else {
 								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
@@ -1378,7 +1381,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
 			$( '#bp-media-uploader-modal-status-text' ).text( '' );
 			$( '#bp-media-post-content' ).val( '' );
-			this.dropzone_obj.length ? this.dropzone_obj.destroy() : '';
+			this.dropzone_obj.element ? this.dropzone_obj.destroy() : '';
 			this.dropzone_media = [];
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-media-uploader' );
@@ -6056,6 +6059,9 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-media-model-wrapper.document' ).hide();
+			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
+			currentVideo ? currentVideo.pause() : '';
+			$( '.bb-media-model-wrapper.video' ).hide();
 			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open_media = true;
 
@@ -6128,6 +6134,9 @@ window.bp = window.bp || {};
 
 			$( '.bb-media-model-wrapper.media' ).hide();
 			$( '.bb-media-model-wrapper.document' ).show();
+			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
+			currentVideo ? currentVideo.pause() : '';
+			$( '.bb-media-model-wrapper.video' ).hide();
 			self.is_open_document = true;
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
@@ -6323,7 +6332,7 @@ window.bp = window.bp || {};
 							download          : document_element.attr('href'),
 							mp3               : document_element.data('mp3-preview'),
 							can_edit          : document_element.data('can-edit'),
-							video             : document_element.data( 'video-preview' ),
+							video             : document_element.attr( 'data-video-preview' ),
 							is_forum          : false
 						};
 
@@ -6441,7 +6450,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
 				//fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();
 				$( window ).scroll();
 

@@ -113,7 +113,7 @@ class BP_Video {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @var WP_Error
 	 */
@@ -122,7 +122,7 @@ class BP_Video {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @var string
 	 */
@@ -131,7 +131,7 @@ class BP_Video {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
 	 */
@@ -148,7 +148,7 @@ class BP_Video {
 	/**
 	 * Populate the object with data about the specific video item.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function populate() {
 
@@ -184,7 +184,7 @@ class BP_Video {
 	/**
 	 * Save the video item to the database.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @return WP_Error|bool True on success.
 	 */
@@ -211,7 +211,7 @@ class BP_Video {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param BP_Video $this Current instance of the video item being saved. Passed by reference.
 		 */
@@ -254,7 +254,7 @@ class BP_Video {
 		/**
 		 * Fires after an video item has been saved to the database.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param BP_Video $this Current instance of video item being saved. Passed by reference.
 		 */
@@ -268,7 +268,7 @@ class BP_Video {
 	/**
 	 * Get video items, as specified by parameters.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $args {
 	 *     An array of arguments. All items are optional.
@@ -342,7 +342,7 @@ class BP_Video {
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
-			 * @since BuddyBoss 1.5.7
+			 * @since BuddyBoss 1.7.0
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 */
@@ -422,7 +422,7 @@ class BP_Video {
 		/**
 		 * Filters the MySQL WHERE conditions for the Video items get method.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into method.
@@ -448,7 +448,7 @@ class BP_Video {
 		/**
 		 * Filter the MySQL JOIN clause for the main video query.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -480,7 +480,7 @@ class BP_Video {
 		/**
 		 * Filters the paged video MySQL statement.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param string $video_ids_sql    MySQL statement used to query for Video IDs.
 		 * @param array  $r                Array of arguments passed into method.
@@ -557,7 +557,7 @@ class BP_Video {
 	/**
 	 * Convert video IDs to video objects, as expected in template loop.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $video_ids Array of video IDs.
 	 * @return array
@@ -619,23 +619,43 @@ class BP_Video {
 			}
 
 			// fetch video thumbnail attachment data.
-			$attachment_data                         = new stdClass();
-			$attachment_data->meta                   = new stdClass();
-			$attachment_data->meta->mime_type        = apply_filters( 'bb_video_extension', 'video/' . $ext, $video );
-			$length_formatted                        = wp_get_attachment_metadata( $video->attachment_id );
-			$attachment_data->meta->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
-			$attachment_thumb_id                     = bb_get_video_thumb_id( $video->attachment_id );
-			$default_thumb                           = bb_get_video_default_placeholder_image();
-			$attachment_data->full                   = $default_thumb;
-			$attachment_data->thumb                  = $default_thumb;
-			$attachment_data->activity_thumb         = $default_thumb;
-			$attachment_data->thumb_meta             = array();
+			$attachment_data                             = new stdClass();
+			$attachment_data->meta                       = new stdClass();
+			$attachment_data->meta->mime_type            = apply_filters( 'bb_video_extension', 'video/' . $ext, $video );
+			$length_formatted                            = wp_get_attachment_metadata( $video->attachment_id );
+			$attachment_data->meta->length_formatted     = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+			$attachment_thumb_id                         = bb_get_video_thumb_id( $video->attachment_id );
+			$default_thumb                               = bb_get_video_default_placeholder_image();
+			$attachment_data->full                       = $default_thumb;
+			$attachment_data->thumb                      = $default_thumb;
+			$attachment_data->activity_thumb             = $default_thumb;
+			$attachment_data->thumb_meta                 = array();
+			$attachment_data->video_user_profile_thumb   = $default_thumb;
+			$attachment_data->video_directory_page_thumb = $default_thumb;
+			$attachment_data->video_album_cover_thumb    = $default_thumb;
+			$attachment_data->video_add_thumbnail_thumb  = $default_thumb;
+			$attachment_data->video_popup_thumb          = $default_thumb;
+			$attachment_data->video_activity_thumb       = $default_thumb;
 
 			if ( $attachment_thumb_id ) {
-				$attachment_data->full           = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'full' );
-				$attachment_data->thumb          = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bp-video-thumbnail' );
-				$attachment_data->activity_thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bp-activity-video-thumbnail' );
-				$attachment_data->thumb_meta     = wp_get_attachment_metadata( $attachment_thumb_id );
+
+				$video_user_profile_thumb   = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+				$video_directory_page_thumb = $video_user_profile_thumb;
+				$video_album_cover_thumb    = $video_user_profile_thumb;
+				$video_add_thumbnail_thumb  = $video_album_cover_thumb;
+				$video_popup_thumb          = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-poster-popup-image' );
+				$video_activity_thumb       = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-activity-image' );
+
+				$attachment_data->full                       = $video_popup_thumb;
+				$attachment_data->thumb                      = $video_album_cover_thumb;
+				$attachment_data->activity_thumb             = $video_activity_thumb;
+				$attachment_data->video_user_profile_thumb   = $video_user_profile_thumb;
+				$attachment_data->video_directory_page_thumb = $video_directory_page_thumb;
+				$attachment_data->video_album_cover_thumb    = $video_album_cover_thumb;
+				$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
+				$attachment_data->video_popup_thumb          = $video_popup_thumb;
+				$attachment_data->video_activity_thumb       = $video_activity_thumb;
+				$attachment_data->thumb_meta                 = wp_get_attachment_metadata( $attachment_thumb_id );
 			}
 
 			$video->attachment_data = $attachment_data;
@@ -697,7 +717,7 @@ class BP_Video {
 	/**
 	 * Append xProfile fullnames to an video array.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $videos Videos array.
 	 * @return array
@@ -730,7 +750,7 @@ class BP_Video {
 	 * associated objects, so that inline lookups - done primarily when
 	 * building action strings - do not result in excess database queries.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $videos Array of video.
 	 * @return array $videos Array of video.
@@ -740,7 +760,7 @@ class BP_Video {
 		/**
 		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with video item.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $videos Array of video.
 		 */
@@ -755,7 +775,7 @@ class BP_Video {
 	 *
 	 * Can handle multiple scopes.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param  mixed $scope  The video scope. Accepts string or array of scopes.
 	 * @param  array $r      Current activity arguments. Same as those of BP_Video::get(),
@@ -803,7 +823,7 @@ class BP_Video {
 			 *   - bp_groups_filter_video_scope() - used for 'groups' scope
 			 *   - bp_friends_filter_video_scope() - used for 'friends' scope
 			 *
-			 * @since BuddyBoss 1.5.7
+			 * @since BuddyBoss 1.7.0
 			 *
 			 * @param array {
 			 *     Video query clauses.
@@ -860,7 +880,7 @@ class BP_Video {
 	/**
 	 * Create SQL IN clause for filter queries.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @see BP_Video::get_filter_sql()
 	 *
@@ -901,7 +921,7 @@ class BP_Video {
 	 * To delete a specific video item, pass an 'id' parameter.
 	 * Otherwise use the filters.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $args          {
 	 *                             An array of arguments.
@@ -1013,7 +1033,7 @@ class BP_Video {
 		/**
 		 * Action to allow intercepting video items to be deleted.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $videos Array of video.
 		 * @param array $r          Array of parsed arguments.
@@ -1032,7 +1052,7 @@ class BP_Video {
 		/**
 		 * Action to allow intercepting video items just deleted.
 		 *
-		 * @since BuddyBoss 1.5.7
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $videos Array of video.
 		 * @param array $r          Array of parsed arguments.
@@ -1127,7 +1147,7 @@ class BP_Video {
 	/**
 	 * Count total video for the given user
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int $user_id User ID.
 	 *
@@ -1146,6 +1166,7 @@ class BP_Video {
 				'user_id'     => $user_id,
 				'privacy'     => $privacy,
 				'count_total' => true,
+				'fields'      => 'ids'
 			)
 		);
 
@@ -1156,7 +1177,7 @@ class BP_Video {
 	/**
 	 * Count total video for the given group
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param int $group_id Group id.
 	 *
@@ -1185,7 +1206,7 @@ class BP_Video {
 	 * @param int $user_id User ID.
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public static function total_user_group_video_count( $user_id = 0 ) {
 
@@ -1209,7 +1230,7 @@ class BP_Video {
 	/**
 	 * Get all video ids for the album
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @param int $album_id Media Album id.
 	 *
 	 * @return array
@@ -1235,7 +1256,7 @@ class BP_Video {
 	/**
 	 * Get video id for the activity.
 	 *
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 * @param bool $activity_id Activity id.
 	 *
 	 * @return array|bool
@@ -1274,7 +1295,7 @@ class BP_Video {
 	 * @param integer $activity_id Activity ID.
 	 *
 	 * @return integer|bool
-	 * @since BuddyBoss 1.5.7
+	 * @since BuddyBoss 1.7.0
 	 */
 	public static function get_activity_attachment_id( $activity_id = 0 ) {
 		global $bp, $wpdb;

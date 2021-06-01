@@ -10,7 +10,11 @@
 
 	<?php
 
-	bp_get_template_part( 'document/theatre' );
+		bp_get_template_part( 'media/theatre' );
+		if ( bp_is_profile_video_support_enabled() ) {
+			bp_get_template_part( 'video/theatre' );
+		}
+		bp_get_template_part( 'document/theatre' );
 
 	if ( bp_is_single_folder() ) {
 		bp_get_template_part( 'document/single-folder' );

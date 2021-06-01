@@ -122,6 +122,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'video_thumbnail_delete' => array(
+					'function' => 'bp_nouveau_ajax_video_thumbnail_delete',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -218,12 +224,8 @@ function bp_nouveau_ajax_video_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_video_upload_dir' );
-
 	// Upload file.
 	$result = bp_video_upload();
-
-	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -257,12 +259,8 @@ function bp_nouveau_ajax_video_thumbnail_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_video_upload_dir' );
-
 	// Upload file.
 	$result = bp_video_thumbnail_upload();
-
-	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -1411,7 +1409,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 		ob_start();
 		if ( $auto_generated_thumbnails_arr ) {
 			foreach ( $auto_generated_thumbnails_arr as $auto_generated_thumbnail ) {
-				$attachment_url = bb_video_get_auto_gen_thumb_symlink( $video, $auto_generated_thumbnail, 'full' );
+				$attachment_url = bb_video_get_attachment_symlink( $video, $auto_generated_thumbnail, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 				?>
 				<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
 					<div class="">
@@ -1512,16 +1510,11 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
 		update_post_meta( $pre_selected_id, 'bp_video_upload', 1 );
 
-		if ( (int) $old_thumbnail_id !== (int) $pre_selected_id ) {
-		    wp_delete_post( $old_thumbnail_id, true );
-			bb_video_delete_thumb_symlink( $video_id, $old_thumbnail_id );
-        }
-
 	} elseif ( $video_attachment_id && $pre_selected_id ) {
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 	}
 
-	$thumbnail_url = bb_video_get_thumb_url( $video_id, $pre_selected_id, 'full' );
+	$thumbnail_url = bb_video_get_thumb_url( $video_id, $pre_selected_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 
 	if ( empty( $thumbnail_url ) ) {
 		$thumbnail_url = bb_get_video_default_placeholder_image();
@@ -1532,6 +1525,69 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 			'thumbnail'           => $thumbnail_url,
 			'video_attachment_id' => $video_attachment_id,
 			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) )
+		)
+	);
+}
+
+/**
+ * Save the video thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_nouveau_ajax_video_thumbnail_delete() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_video';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$thumbnail_id        = 0;
+	$thumbnail_url       = '';
+
+	$video_id            = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
+	$attachment_id       = filter_input( INPUT_POST, 'attachment_id', FILTER_SANITIZE_NUMBER_INT );
+	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
+
+	if ( ! empty( $attachment_id ) && ! empty( $video_attachment_id ) ) {
+		$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+		$default_images            = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
+		$thumbnail_images = array(
+			'default_images' => $default_images,
+		);
+		update_post_meta( $attachment_id, 'video_preview_thumbnails', $thumbnail_images );
+		if ( isset( $default_images ) && ! empty( $default_images ) ) {
+			update_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', $default_images[0] );
+			$thumbnail_id  = $default_images[0];
+			$thumbnail_url = bb_video_get_thumb_url( $video_id, $default_images[0], 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+		}
+		wp_delete_post( $video_attachment_id, true );
+		bb_video_delete_thumb_symlink( $attachment_id, $video_attachment_id );
+	}
+
+	if ( empty( $thumbnail_url ) ) {
+		$thumbnail_url = bb_get_video_default_placeholder_image();
+	}
+
+	wp_send_json_success(
+		array(
+			'thumbnail'           => $thumbnail_url,
+			'thumbnail_id'        => $thumbnail_id,
+			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) )
 		)
 	);
 }
