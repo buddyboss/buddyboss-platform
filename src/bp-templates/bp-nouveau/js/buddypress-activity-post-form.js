@@ -2493,6 +2493,10 @@ window.bp = window.bp || {};
 					}
 				);
 
+				var buttomText = BP_Nouveau.activity.strings.postUpdateButton;
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
 				this.submit = new bp.Views.ActivityInput(
 					{
 						model: this.model,
@@ -2500,7 +2504,7 @@ window.bp = window.bp || {};
 						id: 'aw-whats-new-submit',
 						className: 'button',
 						name: 'aw-whats-new-submit',
-						value: BP_Nouveau.activity.strings.postUpdateButton
+						value: buttomText
 					}
 				);
 
