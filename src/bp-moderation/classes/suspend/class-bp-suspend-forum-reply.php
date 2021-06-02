@@ -237,7 +237,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	public function manage_hidden_reply( $reply_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( bp_moderation_is_content_hidden( $reply_id, self::$type ) ) {
+		if ( bp_moderation_is_hidden( $reply_id, self::$type ) ) {
 			return;
 		}
 
@@ -283,7 +283,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	public function manage_unhidden_reply( $reply_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( ! bp_moderation_is_content_hidden( $reply_id, self::$type ) ) {
+		if ( ! bp_moderation_is_hidden( $reply_id, self::$type ) ) {
 			return;
 		}
 

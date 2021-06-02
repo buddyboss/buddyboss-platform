@@ -228,7 +228,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	public function manage_hidden_media( $media_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( bp_moderation_is_content_hidden( $media_id, self::$type ) ) {
+		if ( bp_moderation_is_hidden( $media_id, self::$type ) ) {
 			return;
 		}
 
@@ -274,7 +274,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	public function manage_unhidden_media( $media_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( ! bp_moderation_is_content_hidden( $media_id, self::$type ) ) {
+		if ( ! bp_moderation_is_hidden( $media_id, self::$type ) ) {
 			return;
 		}
 

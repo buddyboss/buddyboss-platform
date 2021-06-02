@@ -281,7 +281,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public function manage_hidden_activity( $activity_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( bp_moderation_is_content_hidden( $activity_id, self::$type ) ) {
+		if ( bp_moderation_is_hidden( $activity_id, self::$type ) ) {
 			return;
 		}
 
@@ -327,7 +327,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public function manage_unhidden_activity( $activity_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( ! bp_moderation_is_content_hidden( $activity_id, self::$type ) ) {
+		if ( ! bp_moderation_is_hidden( $activity_id, self::$type ) ) {
 			return;
 		}
 

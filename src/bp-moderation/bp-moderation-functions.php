@@ -1108,3 +1108,21 @@ function bp_moderation_is_activity_related_content_hidden( $media_object ) {
 	// false = all the related data is unhidden.
 	return apply_filters( 'bp_moderation_is_activity_related_content_hidden', true, $activity_data );
 }
+
+/**
+ * Check the current content is hidden or not.
+ *
+ * @param int|array $item_id   Item ID.
+ * @param string    $item_type Item Type.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @return bool
+ */
+function bp_moderation_is_hidden( $item_id, $item_type ) {
+	if ( empty( $item_id ) || empty( $item_type ) ) {
+		return false;
+	}
+
+	return (bool) BP_Core_Suspend::check_hidden_content( $item_id, $item_type );
+}
