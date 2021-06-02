@@ -60,9 +60,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
-
-		// Check if activity has content.
-		add_filter( 'bp_moderation_is_activity_related_content_hidden', array( $this, 'is_activity_content_hidden' ), 20, 2 );
 	}
 
 	/**
@@ -234,26 +231,5 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
-	}
-
-	/**
-	 * Function to check if activity has content.
-	 *
-	 * @param bool   $hidden        is activity hidden.
-	 * @param object $activity_data activity object.
-	 *
-	 * @return bool
-	 */
-	public function is_activity_content_hidden( $hidden, $activity_data ) {
-
-		if ( false === $hidden ) {
-			return $hidden;
-		}
-
-		if ( ! empty( wp_strip_all_tags( $activity_data->content ) ) ) {
-			return false;
-		}
-
-		return true;
 	}
 }

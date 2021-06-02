@@ -56,6 +56,8 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
+		// Check if activity document is hidden.
+		add_filter( 'bp_moderation_is_activity_related_content_hidden', array( $this, 'is_activity_document_hidden' ), 10, 2 );
 	}
 
 	/**
@@ -404,5 +406,41 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		}
 
 		return $restrict;
+	}
+
+	/**
+	 * Function to check if activity document is hidden.
+	 *
+	 * @param bool   $hidden        is activity hidden.
+	 * @param object $activity_data activity object.
+	 *
+	 * @return bool
+	 */
+	public function is_activity_document_hidden( $hidden, $activity_data ) {
+
+		if ( false === $hidden ) {
+			return $hidden;
+		}
+
+		$activity_document_ids = bp_activity_get_meta( $activity_data->id, 'bp_document_ids', true );
+
+		if ( empty( $activity_document_ids ) ) {
+			return $hidden;
+		}
+
+		$document_ids          = explode( ',', $activity_document_ids );
+		$unhidden_document_ids = array();
+
+		foreach ( $document_ids as $document_id ) {
+			if ( ! bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+				$unhidden_document_ids[] = $document_id;
+			}
+		}
+
+		if ( ! empty( $unhidden_document_ids ) ) {
+			return bp_moderation_is_content_hidden( $unhidden_document_ids, BP_Moderation_Document::$moderation_type );
+		} else {
+			return $hidden;
+		}
 	}
 }

@@ -56,6 +56,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+		// Check if activity has content.
+		add_filter( 'bp_moderation_is_activity_related_content_hidden', array( $this, 'is_activity_content_hidden' ), 20, 2 );
 	}
 
 	/**
@@ -460,5 +462,26 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
 			}
 		}
+	}
+
+	/**
+	 * Function to check if activity has content.
+	 *
+	 * @param bool   $hidden        is activity hidden.
+	 * @param object $activity_data activity object.
+	 *
+	 * @return bool
+	 */
+	public function is_activity_content_hidden( $hidden, $activity_data ) {
+
+		if ( false === $hidden ) {
+			return $hidden;
+		}
+
+		if ( ! empty( wp_strip_all_tags( $activity_data->content ) ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }
