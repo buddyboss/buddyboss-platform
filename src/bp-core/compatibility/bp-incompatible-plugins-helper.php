@@ -681,3 +681,16 @@ function bb_get_elementor_maintenance_mode_template() {
 	}
 }
 add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
+
+/**
+ * Load rest compatibility.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bb_rest_compatibility_loader() {
+	// BuddyPress Groups Tabs creator pro plugin support.
+	if ( class_exists( 'BPGTC_Group_Tabs_Pro' ) ) {
+		require_once dirname( __FILE__ ) . '/bp-rest-groups-tabs-creator-pro.php';
+	}
+}
+add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
