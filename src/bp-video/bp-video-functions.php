@@ -3163,6 +3163,7 @@ function bp_video_delete_video_previews() {
  * @param int    $video_id      Video ID.
  * @param int    $attachment_id Attachment ID.
  * @param string $size          Size of preview.
+ * @param bool   $generate      Generate Symlink or not.
  *
  * @return mixed|void
  *
@@ -3174,10 +3175,10 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 
 	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video_id, $attachment_id, $size );
 
-	if ( $do_symlink && $generate ) {
+	if ( $do_symlink ) {
 
 		$video          = new BP_Video( $video_id );
-		$attachment_url = bb_video_get_attachment_symlink( $video, $attachment_id, $size );
+		$attachment_url = bb_video_get_attachment_symlink( $video, $attachment_id, $size, $generate );
 
 		if ( empty( $attachment_url ) ) {
 			$attachment_url = bb_get_video_default_placeholder_image();
@@ -3891,15 +3892,16 @@ function bb_video_add_thumb_image_remove_upload_filters() {
 /**
  * Return the video attachment symlink.
  *
- * @param int|object $video Video id or a video object.
- * @param int $attachment_id Attachment id.
- * @param string $size Size to get symlink.
+ * @param int|object $video         Video id or a video object.
+ * @param int        $attachment_id Attachment id.
+ * @param string     $size          Size to get symlink.
+ * @param bool       $generate      Generate Symlink or not.
  *
  * @return array|false|string|string[]|void
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_get_attachment_symlink( $video, $attachment_id, $size ) {
+function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $generate = true ) {
 
 	// Check if video is id of video, create video object.
 	if ( ! $video instanceof BP_Video && is_int( $video ) ) {
@@ -3969,8 +3971,10 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size ) {
         // Override the video attachment id to given thumbnail id.
 		$video->attachment_id = $attachment_id;
 
-		// Generate Video Thumb Symlink.
-		bb_core_symlink_generator( 'video_thumb', $video, $size, $file, $output_file_src, $attachment_path );
+		if ( $generate ) {
+			// Generate Video Thumb Symlink.
+			bb_core_symlink_generator( 'video_thumb', $video, $size, $file, $output_file_src, $attachment_path );
+		}
 
 		$upload_directory = wp_get_upload_dir();
 		$attachment_url   = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
