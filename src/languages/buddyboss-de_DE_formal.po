@@ -2,10 +2,10 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.5.8.3\n"
+"Project-Id-Version: BuddyBoss Platform 1.5.9.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-04-29 18:26:14+00:00\n"
-"PO-Revision-Date: 2021-05-13 13:27+0530\n"
+"POT-Creation-Date: 2021-05-17 18:49:59+00:00\n"
+"PO-Revision-Date: 2021-05-27 20:14+0530\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -475,7 +475,7 @@ msgstr "Abgeschickt am: %s"
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1336
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1414
 #: bp-templates/bp-nouveau/includes/document/ajax.php:405
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1089
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1105
 #: bp-xprofile/bp-xprofile-admin.php:915
 #: bp-xprofile/bp-xprofile-repeaters.php:777
 #: bp-xprofile/bp-xprofile-repeaters.php:779
@@ -624,7 +624,7 @@ msgstr "Antworten"
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1353
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1431
 #: bp-templates/bp-nouveau/includes/document/ajax.php:422
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1099
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1115
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
 #: bp-xprofile/classes/class-bp-xprofile-group.php:936
 msgid "Cancel"
@@ -924,7 +924,7 @@ msgstr "Neuigkeiten über Aktivitäten"
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
 #: bp-core/profile-search/templates/members/bps-form-default.php:33
-#: bp-friends/bp-friends-notifications.php:262
+#: bp-forums/groups.php:1522 bp-friends/bp-friends-notifications.php:262
 #: bp-groups/bp-groups-notifications.php:1230
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:283
 #: bp-messages/bp-messages-notifications.php:303
@@ -941,7 +941,7 @@ msgstr "Ja"
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
 #: bp-core/profile-search/templates/members/bps-form-default.php:34
-#: bp-friends/bp-friends-notifications.php:263
+#: bp-forums/groups.php:1523 bp-friends/bp-friends-notifications.php:263
 #: bp-groups/bp-groups-notifications.php:1231
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:290
 #: bp-messages/bp-messages-notifications.php:304
@@ -959,8 +959,8 @@ msgid "A member mentions you in an update using \"@%s\""
 msgstr "Ein Mitglied erwähnt Sie in einem Update mit „@%s“"
 
 #: bp-activity/bp-activity-notifications.php:435
-#: bp-activity/bp-activity-notifications.php:453
-#: bp-friends/bp-friends-notifications.php:274
+#: bp-activity/bp-activity-notifications.php:453 bp-forums/groups.php:1536
+#: bp-forums/groups.php:1558 bp-friends/bp-friends-notifications.php:274
 #: bp-friends/bp-friends-notifications.php:290
 #: bp-groups/bp-groups-notifications.php:1242
 #: bp-groups/bp-groups-notifications.php:1258
@@ -973,8 +973,8 @@ msgid "Yes, send email"
 msgstr "Ja, E-Mail senden"
 
 #: bp-activity/bp-activity-notifications.php:441
-#: bp-activity/bp-activity-notifications.php:459
-#: bp-friends/bp-friends-notifications.php:280
+#: bp-activity/bp-activity-notifications.php:459 bp-forums/groups.php:1545
+#: bp-forums/groups.php:1567 bp-friends/bp-friends-notifications.php:280
 #: bp-friends/bp-friends-notifications.php:296
 #: bp-groups/bp-groups-notifications.php:1248
 #: bp-groups/bp-groups-notifications.php:1264
@@ -1019,7 +1019,7 @@ msgstr[1] "Anzeigt wird %1$s - %2$s von %3$s Elementen"
 #: bp-groups/bp-groups-template.php:3205 bp-groups/bp-groups-template.php:3235
 #: bp-groups/bp-groups-template.php:4800 bp-groups/bp-groups-template.php:4842
 #: bp-groups/bp-groups-template.php:4886 bp-groups/bp-groups-template.php:6680
-#: bp-groups/classes/class-bp-groups-component.php:1090
+#: bp-groups/classes/class-bp-groups-component.php:1100
 #: bp-groups/classes/class-bp-groups-invite-template.php:249
 #: bp-groups/classes/class-bp-groups-invite-template.php:262
 #: bp-groups/classes/class-bp-groups-invite-template.php:274
@@ -1050,9 +1050,9 @@ msgstr "Gruppenlogo"
 #: bp-messages/bp-messages-functions.php:1062
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:852
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:900
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1836
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1898
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2086
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1837
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1899
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2087
 msgid "Group logo of %s"
 msgstr "Gruppenlogo von %s"
 
@@ -1073,7 +1073,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2855
-#: bp-groups/classes/class-bp-groups-component.php:964
+#: bp-groups/classes/class-bp-groups-component.php:974
 #: bp-groups/classes/class-bp-groups-list-table.php:409
 #: bp-groups/classes/class-bp-groups-list-table.php:573
 #: bp-members/classes/class-bp-members-list-table.php:177
@@ -1377,11 +1377,12 @@ msgstr "Alle Aktionen anzeigen"
 #: bp-forums/classes/class-bp-forums-component.php:278
 #: bp-forums/classes/class-bp-forums-component.php:329
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:49
-#: bp-media/bp-media-filters.php:1374 bp-media/bp-media-settings.php:212
-#: bp-media/bp-media-settings.php:219 bp-media/bp-media-settings.php:226
-#: bp-media/bp-media-settings.php:233
+#: bp-forums/groups.php:1521 bp-media/bp-media-filters.php:1374
+#: bp-media/bp-media-settings.php:212 bp-media/bp-media-settings.php:219
+#: bp-media/bp-media-settings.php:226 bp-media/bp-media-settings.php:233
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1122
 #: bp-search/bp-search-functions.php:369
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:740
 #: bp-templates/bp-nouveau/includes/customizer.php:202
 msgid "Forums"
 msgstr "Foren"
@@ -1518,16 +1519,16 @@ msgstr "%1$s - %2$s"
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:93
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:330
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:348
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:831
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:968
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1038
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:353
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:836
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:973
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1043
 msgid "Invalid activity ID."
 msgstr "Ungültige Aktivitäts-ID."
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:134
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:307
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:389
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:312
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:394
 #: bp-document/classes/class-bp-rest-document-endpoint.php:362
 #: bp-document/classes/class-bp-rest-document-endpoint.php:471
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:237
@@ -1570,7 +1571,7 @@ msgid "Sorry, Activity component was not enabled."
 msgstr "Tut mir leid, die Aktivitätskomponente war nicht aktiviert."
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:203
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:486
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:491
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:855
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1395
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:870
@@ -1581,7 +1582,7 @@ msgid "You don't have access to send the media."
 msgstr "Sie haben keinen Zugriff, um die Medien zu senden."
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:216
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:499
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:504
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:868
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1408
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:883
@@ -1592,7 +1593,7 @@ msgid "You don't have access to send the document."
 msgstr "Sie haben keinen Zugriff, um das Dokument zu senden."
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:229
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:512
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:517
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:881
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1421
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:896
@@ -1626,7 +1627,7 @@ msgstr "Eine Liste der Kommentare für die Aktivität."
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:441
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:71
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:109
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1623
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1628
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1150
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1517
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1327
@@ -1675,10 +1676,10 @@ msgid "My Friends"
 msgstr "Meine Kontakte"
 
 #: bp-activity/classes/class-bp-rest-activity-details-endpoint.php:267
-#: bp-groups/classes/class-bp-groups-component.php:587
-#: bp-groups/classes/class-bp-groups-component.php:621
-#: bp-groups/classes/class-bp-groups-component.php:1043
-#: bp-groups/classes/class-bp-groups-component.php:1083
+#: bp-groups/classes/class-bp-groups-component.php:597
+#: bp-groups/classes/class-bp-groups-component.php:631
+#: bp-groups/classes/class-bp-groups-component.php:1053
+#: bp-groups/classes/class-bp-groups-component.php:1093
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:537
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1063
 #: bp-templates/bp-nouveau/includes/document/functions.php:183
@@ -1695,180 +1696,180 @@ msgstr "Meine Gruppen"
 msgid "My Favorites"
 msgstr "Meine Favoriten"
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:399
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:404
 msgid "Sorry, you cannot view the activities."
 msgstr "Es tut uns leid, Sie können die Aktivitäten nicht anzeigen."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:471
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:702
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:476
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:707
 msgid "Please, enter some content."
 msgstr "Bitte geben Sie einige Inhalte ein."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:569
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:574
 msgid "Cannot create new activity."
 msgstr "Neue Aktivität kann nicht erstellt werden."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:627
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:641
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:632
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:646
 msgid "Sorry, you are not allowed to create activities."
 msgstr "Es tut uns leid, Sie dürfen keine Aktivitäten erstellen."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:746
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:751
 msgid "Sorry, you are not allow to update the privacy"
 msgstr ""
 "Es tut uns leid, es ist Ihnen nicht gestattet, den Datenschutz zu "
 "aktualisieren"
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:758
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:763
 msgid "Cannot update existing activity."
 msgstr "Bestehende Aktivität kann nicht aktualisiert werden."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:819
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:847
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:857
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:824
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:852
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:862
 msgid "Sorry, you are not allowed to update this activity."
 msgstr "Es tut uns leid, Sie dürfen diese Aktivität nicht aktualisieren."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:912
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:917
 msgid "Could not delete the activity."
 msgstr "Die Aktivität konnte nicht gelöscht werden."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:956
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:978
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:961
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:983
 msgid "Sorry, you are not allowed to delete this activity."
 msgstr "Es tut uns leid, Sie dürfen diese Aktivität nicht löschen."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1050
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1055
 msgid "Sorry, you cannot remove the activity from your favorites."
 msgstr "Sie können die Aktivität leider nicht aus Ihren Favoriten entfernen."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1056
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1061
 msgid "Sorry, you cannot add the activity to your favorites."
 msgstr "Sie können die Aktivität leider nicht zu Ihren Favoriten hinzufügen."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1114
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1119
 msgid "Sorry, you are not allowed to update favorites."
 msgstr "Es ist Ihnen leider nicht erlaubt, Favoriten zu aktualisieren."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1629
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1634
 msgid "The ID of some other object primarily associated with this one."
 msgstr ""
 "Die ID eines anderen Objekts, das in erster Linie diesem zugeordnet ist."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1634
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1639
 msgid "The ID of some other object also associated with this one."
 msgstr ""
 "Die ID eines anderen Objekts, das ebenfalls diesem Objekt zugeordnet ist."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1639
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1644
 msgid "The ID for the author of the activity."
 msgstr "Die ID für den Autor der Aktivität."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1644
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1649
 msgid "User's display name for the activity."
 msgstr "Anzeigename des Benutzers für die Aktivität."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1649
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1654
 msgid "The permalink to this activity on the site."
 msgstr "Der Permalink zu dieser Aktivität auf der Website."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1655
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1660
 msgid "The active BuddyPress component the activity relates to."
 msgstr "Die aktive BuddyPress-Komponente, auf die sich die Aktivität bezieht."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1664
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1669
 msgid "The activity type of the activity."
 msgstr "Der Aktivitätstyp der Aktivität."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1673
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1678
 msgid "The description of the activity's type (eg: Username posted an update)"
 msgstr ""
 "Die Beschreibung des Aktivitätstyps (z. B.: Benutzername wurde aktualisiert)"
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1682
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1687
 msgid "Allowed HTML content for the activity."
 msgstr "Zulässiger HTML-Inhalt für die Aktivität."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1692
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1697
 msgid "Content for the activity, as it exists in the database."
 msgstr "Inhalt für die Aktivität, wie sie in der Datenbank vorhanden ist."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1697
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1702
 msgid "HTML content for the activity, transformed for display."
 msgstr "HTML-Inhalt für die Aktivität, für die Anzeige transformiert."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1706
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1711
 msgid "The date the activity was published, in the site's timezone."
 msgstr ""
 "Das Datum, an dem die Aktivität in der Zeitzone der Website veröffentlicht "
 "wurde."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1712
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1717
 msgid "Whether the activity has been marked as spam or not."
 msgstr "Gibt an, ob die Aktivität als Spam markiert wurde oder nicht."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1722
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1727
 msgid "A list of objects children of the activity object."
 msgstr "Eine Liste der untergeordneten Objekte des Aktivitätsobjekts."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1728
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1733
 msgid "Total number of comments of the activity object."
 msgstr "Gesamtanzahl der Kommentare des Aktivitätsobjekts."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1734
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1739
 msgid "Whether the activity object should be sitewide hidden or not."
 msgstr ""
 "Gibt an, ob das Aktivitätsobjekt standortweit ausgeblendet werden soll oder "
 "nicht."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1739
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1744
 msgid "Whether the activity object has been favorited by the current user."
 msgstr ""
 "Gibt an, ob das Aktivitätsobjekt vom aktuellen Benutzer als Favorit "
 "bezeichnet wurde."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1745
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1750
 msgid "Whether or not user have the favorite access for the activity object."
 msgstr ""
 "Ob das Mitglied den bevorzugten Zugriff für das Aktivitätsobjekt hat oder "
 "nicht."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1751
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1756
 msgid "Favorite count for the activity object."
 msgstr "Favoritenanzahl für das Aktivitätsobjekt."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1757
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1762
 msgid "Whether or not user have the comment access for the activity object."
 msgstr ""
 "Gibt an, ob der Benutzer den Kommentarzugriff für das Aktivitätsobjekt hat "
 "oder nicht."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1763
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1768
 msgid "Comment count for the activity object."
 msgstr "Kommentaranzahl für das Aktivitätsobjekt."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1769
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1774
 msgid "Whether or not user have the edit access for the activity object."
 msgstr ""
 "Gibt an, ob der Benutzer den Bearbeitungszugriff für das Aktivitätsobjekt "
 "hat oder nicht."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1775
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1780
 msgid "Whether or not user have the delete access for the activity object."
 msgstr ""
 "Gibt an, ob der Benutzer den Löschzugriff für das Aktivitätsobjekt hat oder "
 "nicht."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1781
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1786
 msgid "Content for the activity without HTML tags."
 msgstr "Inhalt für die Aktivität ohne HTML-Tags."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1787
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1962
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1792
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1967
 msgid "Privacy of the activity."
 msgstr "Datenschutz der Aktivität."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1793
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1798
 msgid "Activity data for allow edit or not."
 msgstr "Aktivitätsdaten zum Bearbeiten erlauben oder nicht erlauben."
 
@@ -1877,13 +1878,13 @@ msgstr "Aktivitätsdaten zum Bearbeiten erlauben oder nicht erlauben."
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
 #. translators: Full image size for the member Avatar
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1806
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1811
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:479
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1431
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:298
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1169
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2004
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:965
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:974
 msgid "Avatar URL with full image size (%1$d x %2$d pixels)."
 msgstr "Avatar-URL mit voller Bildgröße (%1$d x %2$d Pixel)."
 
@@ -1895,22 +1896,22 @@ msgstr "Avatar-URL mit voller Bildgröße (%1$d x %2$d Pixel)."
 #. translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in
 #. pixels
 #. translators: Thumb image size for the member Avatar
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1814
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1819
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:487
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1439
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:306
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1177
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2011
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:973
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:982
 msgid "Avatar URL with thumb image size (%1$d x %2$d pixels)."
 msgstr "Avatar-URL mit Vorschaubildgröße (%1$d x %2$d Pixel)."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1821
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1826
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1997
 msgid "Avatar URLs for the author of the activity."
 msgstr "Avatar-URLs für den Autor der Aktivität."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1847
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1852
 #: bp-core/classes/class-bp-rest-learndash-courses-endpoint.php:599
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:599
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1159
@@ -1919,7 +1920,7 @@ msgstr "Avatar-URLs für den Autor der Aktivität."
 msgid "Ensure result set excludes specific IDs."
 msgstr "Stellen Sie sicher, dass das Resultset bestimmte IDs ausschließt."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1856
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1861
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:531
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1150
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1709
@@ -1929,7 +1930,7 @@ msgstr "Stellen Sie sicher, dass das Resultset bestimmte IDs ausschließt."
 msgid "Ensure result set includes specific IDs."
 msgstr "Stellen Sie sicher, dass das Resultset bestimmte IDs enthält."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1865
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1870
 #: bp-core/classes/class-bp-rest-learndash-courses-endpoint.php:622
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1685
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1145
@@ -1940,29 +1941,29 @@ msgstr "Stellen Sie sicher, dass das Resultset bestimmte IDs enthält."
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1506
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:802
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:811
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1025
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1034
 msgid "Order sort attribute ascending or descending."
 msgstr "Sortiert Attribute aufsteigend oder absteigend."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1874
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1879
 msgid ""
 "Limit result set to items published after a given ISO8601 compliant date."
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Elemente, die nach einem bestimmten "
 "ISO8601-Datum veröffentlicht wurden."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1881
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1886
 msgid "Limit result set to items created by a specific user (ID)."
 msgstr ""
 "Ergebnismenge auf Elemente beschränken, die von einem bestimmten Benutzer "
 "(ID) erstellt wurden."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1889
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1894
 #: bp-core/classes/class-bp-rest-components-endpoint.php:513
 msgid "Limit result set to items with a specific status."
 msgstr "Ergebnismenge auf Elemente mit einem bestimmten Status beschränken."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1898
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1903
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1129
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1591
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1298
@@ -1970,42 +1971,42 @@ msgid "Limit result set to items with a specific scope."
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Elemente mit einem bestimmten Umfang."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1906
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1911
 msgid "Limit result set to items created by a specific group."
 msgstr ""
 "Ergebnismenge auf Elemente beschränken, die von einer bestimmten Gruppe "
 "erstellt wurden."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1914
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1919
 msgid "Limit result set to items created by a specific site."
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Elemente, die von einer bestimmten "
 "Website erstellt wurden."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1922
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1927
 msgid "Limit result set to items with a specific prime association ID."
 msgstr ""
 "Ergebnismenge auf Elemente mit einer bestimmten Prim-Zuordnungs-ID "
 "beschränken."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1930
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1935
 msgid "Limit result set to items with a specific secondary association ID."
 msgstr ""
 "Ergebnismenge auf Elemente mit einer bestimmten sekundären Zuordnungs-ID "
 "beschränken."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1938
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1943
 msgid "Limit result set to items with a specific active BuddyPress component."
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Elemente mit einer bestimmten aktiven "
 "BuddyPress-Komponente."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1946
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1951
 msgid "Limit result set to items with a specific activity type."
 msgstr ""
 "Ergebnismenge auf Elemente mit einer bestimmten Aktivitätsart beschränken."
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1954
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1959
 msgid ""
 "No comments by default, stream for within stream display, threaded for below "
 "each activity item."
@@ -2601,8 +2602,8 @@ msgstr "Felder bearbeiten"
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:427
 #: bp-groups/bp-groups-admin.php:166
-#: bp-groups/classes/class-bp-groups-component.php:413
-#: bp-groups/classes/class-bp-groups-component.php:913
+#: bp-groups/classes/class-bp-groups-component.php:423
+#: bp-groups/classes/class-bp-groups-component.php:923
 #: bp-integrations/compatibility/bp-compatibility-integration.php:80
 msgid "Settings"
 msgstr "Einstellungen"
@@ -2891,7 +2892,7 @@ msgstr "Shortcode"
 
 #: bp-core/admin/bp-core-admin-functions.php:1723
 #: bp-members/bp-members-functions.php:3063
-#: bp-members/bp-members-functions.php:3545
+#: bp-members/bp-members-functions.php:3546
 #: bp-members/classes/class-bp-members-admin.php:973
 #: bp-members/classes/class-bp-members-admin.php:2733
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:22
@@ -2920,7 +2921,7 @@ msgid "e.g. Student"
 msgstr "z. B. Student"
 
 #: bp-core/admin/bp-core-admin-functions.php:1777
-#: bp-members/bp-members-functions.php:3548
+#: bp-members/bp-members-functions.php:3549
 msgid "Members Directory"
 msgstr "Mitgliederverzeichnis"
 
@@ -3004,7 +3005,7 @@ msgstr ""
 "anzuzeigen, fügen Sie den folgenden Shortcode zu jeder WordPress-Seite hinzu."
 
 #: bp-core/admin/bp-core-admin-functions.php:2067
-#: bp-groups/bp-groups-admin.php:2264 bp-members/bp-members-functions.php:3799
+#: bp-groups/bp-groups-admin.php:2264 bp-members/bp-members-functions.php:3800
 msgid "Copy to clipboard"
 msgstr "In die Zwischenablage kopieren"
 
@@ -3202,7 +3203,7 @@ msgstr "Website-Ressourcen"
 #: bp-core/admin/bp-core-admin-pages.php:42
 #: bp-core/admin/bp-core-admin-pages.php:46
 #: bp-core/classes/class-bp-admin-tab.php:245
-#: bp-core/classes/class-bp-admin-tab.php:262 bp-forums/groups.php:305
+#: bp-core/classes/class-bp-admin-tab.php:262 bp-forums/groups.php:308
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:35
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
@@ -3696,7 +3697,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1157
 msgid ""
-"Require non-members to explicity agree to your Terms of Service And Privacy "
+"Require non-members to explicitly agree to your Terms of Service and Privacy "
 "Policy before registering."
 msgstr ""
 "Verlangen Sie von Nicht-Mitgliedern die ausdrückliche Zustimmung zu Ihren "
@@ -3775,7 +3776,7 @@ msgstr "Profil-Dashboard"
 #: bp-document/classes/class-bp-document-component.php:262
 #: bp-document/classes/class-bp-document-component.php:313
 #: bp-document/classes/class-bp-document-theme-compat.php:165
-#: bp-groups/classes/class-bp-groups-component.php:802
+#: bp-groups/classes/class-bp-groups-component.php:812
 #: bp-media/bp-media-settings.php:30 bp-media/bp-media-settings.php:1353
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1199
 #: bp-moderation/classes/class-bp-moderation-document.php:102
@@ -3817,11 +3818,11 @@ msgstr "Was möchten Sie importieren?"
 #: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:783
 #: bp-core/classes/class-bp-email-tokens.php:404 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1396 bp-groups/bp-groups-admin.php:2052
-#: bp-groups/bp-groups-functions.php:3986
-#: bp-groups/bp-groups-functions.php:4005
-#: bp-groups/bp-groups-functions.php:4022 bp-groups/bp-groups-template.php:5439
-#: bp-groups/classes/class-bp-groups-component.php:635
-#: bp-groups/classes/class-bp-groups-component.php:944
+#: bp-groups/bp-groups-functions.php:3987
+#: bp-groups/bp-groups-functions.php:4006
+#: bp-groups/bp-groups-functions.php:4023 bp-groups/bp-groups-template.php:5439
+#: bp-groups/classes/class-bp-groups-component.php:645
+#: bp-groups/classes/class-bp-groups-component.php:954
 #: bp-groups/classes/class-bp-groups-list-table.php:439
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:443
 #: bp-members/classes/class-bp-core-members-widget.php:307
@@ -3854,7 +3855,7 @@ msgstr "Profilfelder (mit Daten)"
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:920
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1026
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:740
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:778
 #: bp-templates/bp-nouveau/includes/activity/functions.php:284
 #: bp-templates/bp-nouveau/includes/customizer.php:196
 msgid "Connections"
@@ -3878,9 +3879,9 @@ msgstr "Private Nachrichten"
 #: bp-groups/bp-groups-admin.php:49 bp-groups/bp-groups-admin.php:211
 #: bp-groups/bp-groups-admin.php:1102 bp-groups/bp-groups-admin.php:1129
 #: bp-groups/bp-groups-admin.php:2283
-#: bp-groups/classes/class-bp-groups-component.php:559
-#: bp-groups/classes/class-bp-groups-component.php:566
-#: bp-groups/classes/class-bp-groups-component.php:1014
+#: bp-groups/classes/class-bp-groups-component.php:569
+#: bp-groups/classes/class-bp-groups-component.php:576
+#: bp-groups/classes/class-bp-groups-component.php:1024
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:219
 #: bp-media/bp-media-settings.php:138 bp-media/bp-media-settings.php:145
@@ -4177,14 +4178,14 @@ msgstr "Reparatur der Benutzernamen&hellip; %s"
 #: bp-templates/bp-nouveau/includes/document/ajax.php:191
 #: bp-templates/bp-nouveau/includes/document/ajax.php:507
 #: bp-templates/bp-nouveau/includes/document/ajax.php:584
-#: bp-templates/bp-nouveau/includes/document/ajax.php:696
-#: bp-templates/bp-nouveau/includes/document/ajax.php:802
-#: bp-templates/bp-nouveau/includes/document/ajax.php:936
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1037
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1124
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1261
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1443
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1510
+#: bp-templates/bp-nouveau/includes/document/ajax.php:699
+#: bp-templates/bp-nouveau/includes/document/ajax.php:805
+#: bp-templates/bp-nouveau/includes/document/ajax.php:942
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1043
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1130
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1270
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1452
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1519
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:106
@@ -4192,10 +4193,10 @@ msgstr "Reparatur der Benutzernamen&hellip; %s"
 #: bp-templates/bp-nouveau/includes/media/ajax.php:132
 #: bp-templates/bp-nouveau/includes/media/ajax.php:228
 #: bp-templates/bp-nouveau/includes/media/ajax.php:310
-#: bp-templates/bp-nouveau/includes/media/ajax.php:430
-#: bp-templates/bp-nouveau/includes/media/ajax.php:530
-#: bp-templates/bp-nouveau/includes/media/ajax.php:645
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1176
+#: bp-templates/bp-nouveau/includes/media/ajax.php:440
+#: bp-templates/bp-nouveau/includes/media/ajax.php:543
+#: bp-templates/bp-nouveau/includes/media/ajax.php:658
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1192
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -4423,7 +4424,7 @@ msgid "Default View"
 msgstr "Standardansicht"
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:21
-#: bp-groups/classes/class-bp-groups-component.php:438
+#: bp-groups/classes/class-bp-groups-component.php:448
 #: bp-invites/bp-invites-admin.php:421 bp-invites/bp-invites-admin.php:422
 #: bp-invites/bp-invites-admin.php:438 bp-invites/bp-invites-admin.php:439
 #: bp-invites/bp-invites-functions.php:58
@@ -5230,7 +5231,7 @@ msgstr ""
 "Gesonderte Community-Rollen existieren nicht mehr. Bitte stattdessen die "
 "zugewiesenen Berechtigungen (Capabilities) verwenden"
 
-#: bp-core/bp-core-catchuri.php:355
+#: bp-core/bp-core-catchuri.php:357
 msgid ""
 "This user has been marked as a spammer. Only site admins can view this "
 "profile."
@@ -5238,18 +5239,18 @@ msgstr ""
 "Dieser Benutzer wurde als Spammer markiert. Nur blogübergreifende "
 "Administratoren können das Profil sehen."
 
-#: bp-core/bp-core-catchuri.php:672 bp-core/bp-core-catchuri.php:782
-#: bp-core/bp-core-catchuri.php:1245
+#: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
+#: bp-core/bp-core-catchuri.php:1254
 msgid "Please login to access this website."
 msgstr "Bitte loggen Sie sich ein, um auf diese Website zuzugreifen."
 
-#: bp-core/bp-core-catchuri.php:780
+#: bp-core/bp-core-catchuri.php:789
 msgid "Please login to access this group."
 msgstr "Bitte loggen Sie sich ein, um auf diese Gruppe zuzugreifen."
 
-#: bp-core/bp-core-catchuri.php:1261 bp-core/bp-core-catchuri.php:1277
-#: bp-core/bp-core-catchuri.php:1304 bp-core/bp-core-catchuri.php:1321
-#: bp-core/bp-core-catchuri.php:1345 bp-core/bp-core-catchuri.php:1365
+#: bp-core/bp-core-catchuri.php:1270 bp-core/bp-core-catchuri.php:1286
+#: bp-core/bp-core-catchuri.php:1313 bp-core/bp-core-catchuri.php:1330
+#: bp-core/bp-core-catchuri.php:1354 bp-core/bp-core-catchuri.php:1374
 msgid "You must log in to access the page you requested."
 msgstr "Sie müssen angemeldet sein, um Zugriff auf diese Seite zu haben."
 
@@ -5484,7 +5485,7 @@ msgstr ""
 "werden falsch aussehen, bis Sie sie aktualisieren."
 
 #: bp-core/bp-core-functions.php:783
-#: bp-groups/classes/class-bp-groups-component.php:774
+#: bp-groups/classes/class-bp-groups-component.php:784
 #: bp-media/bp-media-filters.php:78 bp-media/bp-media-settings.php:25
 #: bp-media/classes/class-bp-media-component.php:70
 #: bp-media/classes/class-bp-media-component.php:259
@@ -5820,7 +5821,7 @@ msgid "Site Notices"
 msgstr "Website-Hinweise"
 
 #: bp-core/bp-core-functions.php:2865
-#: bp-groups/classes/class-bp-groups-component.php:1062
+#: bp-groups/classes/class-bp-groups-component.php:1072
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1079
 msgid "Create Group"
 msgstr "Gruppe erstellen"
@@ -5847,7 +5848,7 @@ msgstr "Mein  %s"
 
 #: bp-core/bp-core-functions.php:2959 bp-members/bp-members-adminbar.php:185
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:878
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:891
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:929
 #: bp-settings/classes/class-bp-settings-component.php:213
 #: bp-settings/classes/class-bp-settings-component.php:282
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/delete-account.php:12
@@ -7073,8 +7074,8 @@ msgid "You have posted an inappropriate word."
 msgstr "Sie haben eine unpassendes Wort geschrieben."
 
 #: bp-core/bp-core-options.php:34
-#: bp-groups/classes/class-bp-groups-component.php:409
-#: bp-groups/classes/class-bp-groups-component.php:904
+#: bp-groups/classes/class-bp-groups-component.php:419
+#: bp-groups/classes/class-bp-groups-component.php:914
 msgid "Details"
 msgstr "Details"
 
@@ -7085,9 +7086,9 @@ msgstr "Details"
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:46
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
-#: bp-templates/bp-nouveau/includes/document/ajax.php:862
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1184
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1342
+#: bp-templates/bp-nouveau/includes/document/ajax.php:868
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1193
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1351
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
 msgstr "Name"
@@ -7118,12 +7119,12 @@ msgstr ""
 "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
 
 #. translators: %1$s and %2$s is replaced with the registered type(s)
-#: bp-core/bp-core-rest-api.php:240
+#: bp-core/bp-core-rest-api.php:249
 msgid "The member type you provided, %1$s, is not one of %2$s."
 msgstr "Der von Ihnen angegebene Elementtyp %1$s gehört nicht zu %2$s."
 
 #. translators: %1$s and %2$s is replaced with the registered types
-#: bp-core/bp-core-rest-api.php:289
+#: bp-core/bp-core-rest-api.php:298
 msgid "The group type you provided, %1$s, is not one of %2$s."
 msgstr "Der von Ihnen angegebene Gruppentyp %1$s gehört nicht zu %2$s."
 
@@ -9141,7 +9142,7 @@ msgid "Edit Details"
 msgstr "Details bearbeiten"
 
 #: bp-core/deprecated/buddypress/2.1.php:378
-#: bp-groups/classes/class-bp-groups-component.php:1105
+#: bp-groups/classes/class-bp-groups-component.php:1115
 msgid "Group Profile Photo"
 msgstr "Gruppen-Profilbild"
 
@@ -9543,13 +9544,13 @@ msgstr "Ein Mitglied hat Ihnen eine neue Nachricht geschrieben\t"
 
 #: bp-core/gdpr/class-bp-settings-export.php:161
 #: bp-friends/bp-friends-notifications.php:270
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:745
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:783
 msgid "A member invites you to connect"
 msgstr "Ein Mitglied lädt Sie ein, sich zu verbinden"
 
 #: bp-core/gdpr/class-bp-settings-export.php:162
 #: bp-friends/bp-friends-notifications.php:286
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:757
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:795
 msgid "A member accepts your connection request"
 msgstr "Ein Mitglied akzeptiert Ihre Kontaktanfrage"
 
@@ -9589,6 +9590,16 @@ msgstr "Ihre Anfrage einer Gruppe beizutreten wurde genehmigt oder verweigert"
 msgid "Message from Group Send Message"
 msgstr "Nachricht über das Modul „Nachricht aus einer Gruppe“ senden"
 
+#: bp-core/gdpr/class-bp-settings-export.php:174 bp-forums/groups.php:1529
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:745
+msgid "A member replies to a discussion you are subscribed"
+msgstr "Ein Mitglied antwortet auf eine Diskussion, die Sie abonniert haben"
+
+#: bp-core/gdpr/class-bp-settings-export.php:175 bp-forums/groups.php:1551
+msgid "A member creates discussion in a forum you are subscribed"
+msgstr ""
+"Ein Mitglied erstellt eine Diskussion in einem Forum, das Sie abonniert haben"
+
 #: bp-core/gdpr/class-bp-xprofile-export.php:29
 msgid "User Profile Information"
 msgstr "Informationen zum Benutzerprofil"
@@ -9598,8 +9609,8 @@ msgid "Avatar"
 msgstr "Profilbild"
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:91
-#: bp-groups/classes/class-bp-groups-component.php:430
-#: bp-groups/classes/class-bp-groups-component.php:934
+#: bp-groups/classes/class-bp-groups-component.php:440
+#: bp-groups/classes/class-bp-groups-component.php:944
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:817
 #: bp-xprofile/bp-xprofile-functions.php:2109
 #: bp-xprofile/classes/class-bp-xprofile-component.php:299
@@ -9629,7 +9640,7 @@ msgid "Field"
 msgstr "Feld"
 
 #: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2280
-#: bp-members/bp-members-functions.php:3546
+#: bp-members/bp-members-functions.php:3547
 msgid "Label"
 msgstr "Beschriftung"
 
@@ -9968,9 +9979,9 @@ msgstr "Ordner für Dokumente"
 #: bp-templates/bp-nouveau/includes/document/ajax.php:439
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
 #: bp-templates/bp-nouveau/includes/document/functions.php:105
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1113
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1129
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:667
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2410
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2411
 msgid "Download"
 msgstr "Herunterladen"
 
@@ -10360,14 +10371,14 @@ msgstr "Datenschutz des Dokuments."
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1394
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:177
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:605
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2348
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2349
 msgid "Your browser does not support the audio element."
 msgstr "Ihr Browser unterstützt das Audioelement nicht."
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1417
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:203
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:632
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2375
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2376
 msgid "Click to expand"
 msgstr "Zum Erweitern anklicken"
 
@@ -11394,7 +11405,7 @@ msgstr ""
 "Wählen Sie aus, ob die Diskussion geöffnet oder geschlossen werden soll."
 
 #: bp-forums/admin/metaboxes.php:392 bp-forums/admin/metaboxes.php:451
-#: bp-forums/groups.php:1092
+#: bp-forums/groups.php:1095
 #: bp-forums/templates/default/bbpress/form-topic.php:107
 #: bp-forums/topics/template.php:63
 msgid "Forum:"
@@ -13104,7 +13115,7 @@ msgstr ""
 msgid "Discussion \"%1$s\" successfully unmarked as spam."
 msgstr "Die Diskussion „%1$s“ erfolgreich als „kein Spam“ markiert."
 
-#: bp-forums/admin/topics.php:739 bp-forums/groups.php:295
+#: bp-forums/admin/topics.php:739 bp-forums/groups.php:298
 #: bp-forums/templates/default/bbpress/form-topic.php:111
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:1088
 msgid "(No Forum)"
@@ -14650,7 +14661,7 @@ msgstr "<strong>FEHLER</strong>: Ungültiger Autorenname übermittelt!"
 msgid "<strong>ERROR</strong>: Invalid email address submitted!"
 msgstr "<strong>FEHLER</strong>: Ungültige E-Mail-Adresse eingegeben!"
 
-#: bp-forums/common/functions.php:1980 bp-forums/common/template.php:1134
+#: bp-forums/common/functions.php:1990 bp-forums/common/template.php:1134
 msgid ""
 "Conditional query tags do not work before the query is run. Before then, "
 "they always return false."
@@ -14661,9 +14672,9 @@ msgstr ""
 #. translators: user role
 #: bp-forums/common/locale.php:43 bp-groups/bp-groups-admin.php:1451
 #: bp-groups/bp-groups-functions.php:1302
-#: bp-groups/bp-groups-functions.php:3988
-#: bp-groups/bp-groups-functions.php:4007
-#: bp-groups/bp-groups-functions.php:4024
+#: bp-groups/bp-groups-functions.php:3989
+#: bp-groups/bp-groups-functions.php:4008
+#: bp-groups/bp-groups-functions.php:4025
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:321
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:337
 msgid "Organizer"
@@ -14672,9 +14683,9 @@ msgstr "Organisator"
 #. translators: user role
 #: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2462
 #: bp-groups/bp-groups-admin.php:1452 bp-groups/bp-groups-functions.php:1310
-#: bp-groups/bp-groups-functions.php:3990
-#: bp-groups/bp-groups-functions.php:4009
-#: bp-groups/bp-groups-functions.php:4026
+#: bp-groups/bp-groups-functions.php:3991
+#: bp-groups/bp-groups-functions.php:4010
+#: bp-groups/bp-groups-functions.php:4027
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:322
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:338
 msgid "Moderator"
@@ -14871,7 +14882,7 @@ msgstr "Diskussionsautor anzeigen:"
 
 #: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5459
 #: bp-notifications/bp-notifications-template.php:1002
-#: bp-templates/bp-nouveau/includes/template-tags.php:2170
+#: bp-templates/bp-nouveau/includes/template-tags.php:2160
 msgid "Order By:"
 msgstr "Sortieren nach:"
 
@@ -15012,8 +15023,8 @@ msgstr ""
 "Kein aufgezeichneter Verlauf. Akismet hat diesen Beitrag nicht überprüft."
 
 #: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:416
-#: bp-forums/groups.php:341 bp-forums/groups.php:522
-#: bp-forums/notifications.php:365 bp-forums/replies/functions.php:124
+#: bp-forums/groups.php:344 bp-forums/groups.php:525
+#: bp-forums/notifications.php:366 bp-forums/replies/functions.php:124
 #: bp-forums/replies/functions.php:569 bp-forums/replies/functions.php:1332
 #: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:570
 #: bp-forums/topics/functions.php:1234 bp-forums/topics/functions.php:1556
@@ -15181,12 +15192,12 @@ msgstr "Abbestellen"
 msgid " (+ %d hidden)"
 msgstr " (+ %d verborgen)"
 
-#: bp-forums/groups.php:273 bp-forums/groups.php:276
+#: bp-forums/groups.php:276 bp-forums/groups.php:279
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:1046
 msgid "Group Forum Settings"
 msgstr "Gruppenforum-Einstellungen"
 
-#: bp-forums/groups.php:277
+#: bp-forums/groups.php:280
 msgid ""
 "Connect a discussion forum to allow members of this group to communicate in "
 "a structured, bulletin-board style fashion. Unchecking this option will not "
@@ -15196,15 +15207,15 @@ msgstr ""
 "strukturierte Kommunikation im Bulletin-Board-Stil zu ermöglichen. Wenn Sie "
 "diese Option deaktivieren, werden vorhandene Forumsinhalte nicht gelöscht."
 
-#: bp-forums/groups.php:282 bp-forums/groups.php:507
+#: bp-forums/groups.php:285 bp-forums/groups.php:510
 msgid "Yes, I want this group to have a discussion forum."
 msgstr "Ja, ich möchte, dass diese Gruppe ein Diskussionsforum erhält."
 
-#: bp-forums/groups.php:289
+#: bp-forums/groups.php:292
 msgid "Connected Forum"
 msgstr "Verbundenes Forum"
 
-#: bp-forums/groups.php:290
+#: bp-forums/groups.php:293
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:1067
 msgid ""
 "Only site administrators can reconfigure which forum belongs to this group."
@@ -15212,15 +15223,15 @@ msgstr ""
 "Nur Websiteadministratoren können festlegen, welches Forum zu dieser Gruppe "
 "gehört."
 
-#: bp-forums/groups.php:458
+#: bp-forums/groups.php:461
 msgid "Discussion Forum"
 msgstr "Diskussionsforum"
 
-#: bp-forums/groups.php:501
+#: bp-forums/groups.php:504
 msgid "Group Forum"
 msgstr "Gruppenforum"
 
-#: bp-forums/groups.php:503
+#: bp-forums/groups.php:506
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:1048
 msgid ""
 "Create a discussion forum to allow members of this group to communicate in a "
@@ -15230,7 +15241,7 @@ msgstr ""
 "Möglichkeit zu geben, strukturiert und im Stil eines Bulletin-Boards zu "
 "kommunizieren."
 
-#: bp-forums/groups.php:812
+#: bp-forums/groups.php:815
 msgid "This group does not currently have a forum."
 msgstr "Diese Gruppe hat derzeit kein Forum."
 
@@ -15262,7 +15273,7 @@ msgstr "%3$s erwähnte Sie in %2$s"
 msgid "You have %1$d new mention to %2$s"
 msgstr "Sie haben %1$d neue Erwähnung zu %2$s"
 
-#: bp-forums/notifications.php:369
+#: bp-forums/notifications.php:370
 msgid ""
 "<strong>ERROR</strong>: You do not have permission to mark notifications for "
 "that user."
@@ -15523,12 +15534,12 @@ msgstr "Antworten: %s"
 
 #: bp-forums/replies/functions.php:2428 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1453 bp-groups/bp-groups-functions.php:1318
-#: bp-groups/bp-groups-functions.php:3992
-#: bp-groups/bp-groups-functions.php:4011
-#: bp-groups/bp-groups-functions.php:4028
+#: bp-groups/bp-groups-functions.php:3993
+#: bp-groups/bp-groups-functions.php:4012
+#: bp-groups/bp-groups-functions.php:4029
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:323
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:339
-#: bp-members/bp-members-functions.php:3821
+#: bp-members/bp-members-functions.php:3822
 #: bp-members/classes/class-bp-members-admin.php:955
 msgid "Member"
 msgstr "Mitglied"
@@ -15748,7 +15759,7 @@ msgstr "E-Mail (wird nicht veröffentlicht, erforderlich):"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:159
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:79
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:81
 msgid "Show formatting"
 msgstr "Formatierung anzeigen"
 
@@ -15756,7 +15767,7 @@ msgstr "Formatierung anzeigen"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:159
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:79
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:81
 msgid "Hide formatting"
 msgstr "Formatierung ausblenden"
 
@@ -15765,7 +15776,7 @@ msgstr "Formatierung ausblenden"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:16
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:167
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:87
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:89
 msgid "Attach a photo"
 msgstr "Foto anfügen"
 
@@ -15774,7 +15785,7 @@ msgstr "Foto anfügen"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:26
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:174
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:94
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:96
 msgid "Attach a document"
 msgstr "Ein Dokument anhängen"
 
@@ -15783,7 +15794,7 @@ msgstr "Ein Dokument anhängen"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:30
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:34
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:182
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:102
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:104
 msgid "Post a GIF"
 msgstr "Ein GIF veröffentlichen"
 
@@ -15791,7 +15802,7 @@ msgstr "Ein GIF veröffentlichen"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:189
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:109
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:111
 msgid "Search GIFs"
 msgstr "GIFs suchen"
 
@@ -15800,7 +15811,7 @@ msgstr "GIFs suchen"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:36
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:41
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:203
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:123
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:125
 msgid "Insert an emoji"
 msgstr "Emojis einfügen"
 
@@ -15842,9 +15853,9 @@ msgstr "Forumtyp"
 #: bp-forums/templates/default/bbpress/form-forum.php:95
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:71
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:39
-#: bp-templates/bp-nouveau/includes/document/ajax.php:876
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1198
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1356
+#: bp-templates/bp-nouveau/includes/document/ajax.php:882
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1207
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1365
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1671
 msgid "Visibility"
 msgstr "Sichtbarkeit"
@@ -16215,7 +16226,7 @@ msgstr "Sie müssen angemeldet sein, um neue Diskussionen erstellen zu können."
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2107
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:196
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:42
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2243
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2244
 msgid "This content has been hidden as the member is suspended."
 msgstr "Dieser Inhalt wurde ausgeblendet, da das Mitglied gesperrt wurde."
 
@@ -16228,7 +16239,7 @@ msgstr "Dieser Inhalt wurde ausgeblendet, da das Mitglied gesperrt wurde."
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2109
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:44
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1132
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2245
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2246
 msgid "This content has been hidden as you have blocked this member."
 msgstr ""
 "Dieser Inhalt wurde ausgeblendet, da Sie dieses Mitglied blockiert haben."
@@ -16651,9 +16662,9 @@ msgstr ""
 "Probleme gefunden: %s"
 
 #: bp-forums/topics/functions.php:2095
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1125
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1163
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1198
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1134
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1172
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1207
 msgid "Pending"
 msgstr "Ausstehend"
 
@@ -17158,7 +17169,7 @@ msgid "Mutual Connections"
 msgstr "Gemeinsame Kontakte"
 
 #: bp-friends/classes/class-bp-friends-component.php:215
-#: bp-groups/classes/class-bp-groups-component.php:954
+#: bp-groups/classes/class-bp-groups-component.php:964
 msgid "Requests"
 msgstr "Anfragen"
 
@@ -17646,9 +17657,9 @@ msgstr "Organisatoren und Moderatoren"
 #: bp-groups/bp-groups-admin.php:1206 bp-groups/bp-groups-admin.php:1227
 #: bp-groups/bp-groups-admin.php:1239 bp-groups/bp-groups-admin.php:1251
 #: bp-groups/bp-groups-admin.php:1263 bp-groups/bp-groups-admin.php:1390
-#: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3982
-#: bp-groups/bp-groups-functions.php:4001
-#: bp-groups/bp-groups-functions.php:4018
+#: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3983
+#: bp-groups/bp-groups-functions.php:4002
+#: bp-groups/bp-groups-functions.php:4019
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:441
 msgid "Organizers"
 msgstr "Organisatoren"
@@ -17738,9 +17749,9 @@ msgid "Enter a comma-separated list of user logins."
 msgstr "Geben Sie eine kommaseparierte Liste von Benutzerlogins ein."
 
 #: bp-groups/bp-groups-admin.php:1393 bp-groups/bp-groups-admin.php:2024
-#: bp-groups/bp-groups-functions.php:3984
-#: bp-groups/bp-groups-functions.php:4003
-#: bp-groups/bp-groups-functions.php:4020
+#: bp-groups/bp-groups-functions.php:3985
+#: bp-groups/bp-groups-functions.php:4004
+#: bp-groups/bp-groups-functions.php:4021
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:442
 msgid "Moderators"
 msgstr "Moderatoren"
@@ -17933,14 +17944,14 @@ msgid "Groups Filter"
 msgstr "Gruppenfilter"
 
 #: bp-groups/bp-groups-admin.php:2308 bp-groups/bp-groups-admin.php:2319
-#: bp-members/bp-members-functions.php:3574
-#: bp-members/bp-members-functions.php:3585
+#: bp-members/bp-members-functions.php:3575
+#: bp-members/bp-members-functions.php:3586
 msgid "Show"
 msgstr "Zeigen"
 
 #: bp-groups/bp-groups-admin.php:2310 bp-groups/bp-groups-admin.php:2317
-#: bp-members/bp-members-functions.php:3576
-#: bp-members/bp-members-functions.php:3583
+#: bp-members/bp-members-functions.php:3577
+#: bp-members/bp-members-functions.php:3584
 #: bp-moderation/classes/class-bp-moderation-list-table.php:398
 #: bp-moderation/classes/class-bp-moderation-list-table.php:402
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:149
@@ -18070,6 +18081,7 @@ msgid "You have an invitation to the group: %s"
 msgstr "Sie haben eine Einladung in die Gruppe: %s"
 
 #: bp-groups/bp-groups-notifications.php:1322
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:718
 msgid "A group sends you a new message"
 msgstr "Eine Gruppe sendet Ihnen eine neue Nachricht"
 
@@ -18194,8 +18206,8 @@ msgid "Request Sent"
 msgstr "Anfrage gesendet"
 
 #: bp-groups/bp-groups-template.php:4307 bp-groups/bp-groups-template.php:4320
-#: bp-groups/classes/class-bp-groups-component.php:710
 #: bp-groups/classes/class-bp-groups-component.php:720
+#: bp-groups/classes/class-bp-groups-component.php:730
 msgid "Request Access"
 msgstr "Zugang beantragen"
 
@@ -18344,36 +18356,36 @@ msgstr "Keine Gruppe entspricht dem aktuellem Filter."
 msgid "You do not have access to this content."
 msgstr "Sie haben keinen Zugriff auf diesen Inhalt."
 
-#: bp-groups/classes/class-bp-groups-component.php:270
+#: bp-groups/classes/class-bp-groups-component.php:280
 msgid "Search Groups&hellip;"
 msgstr "Gruppen durchsuchen&hellip;"
 
-#: bp-groups/classes/class-bp-groups-component.php:423
-#: bp-groups/classes/class-bp-groups-component.php:923
+#: bp-groups/classes/class-bp-groups-component.php:433
+#: bp-groups/classes/class-bp-groups-component.php:933
 msgid "Photo"
 msgstr "Foto"
 
-#: bp-groups/classes/class-bp-groups-component.php:598
+#: bp-groups/classes/class-bp-groups-component.php:608
 msgid "Invitations"
 msgstr "Einladungen"
 
-#: bp-groups/classes/class-bp-groups-component.php:635
+#: bp-groups/classes/class-bp-groups-component.php:645
 msgid " %s"
 msgstr " %s"
 
-#: bp-groups/classes/class-bp-groups-component.php:670
+#: bp-groups/classes/class-bp-groups-component.php:680
 #: bp-templates/bp-nouveau/includes/groups/classes.php:343
 #: bp-templates/bp-nouveau/includes/groups/functions.php:860
 msgid "Feed"
 msgstr "Neuigkeiten"
 
-#: bp-groups/classes/class-bp-groups-component.php:686
+#: bp-groups/classes/class-bp-groups-component.php:696
 #: bp-templates/bp-nouveau/includes/groups/classes.php:310
 msgid "Subgroups"
 msgstr "Untergruppen"
 
-#: bp-groups/classes/class-bp-groups-component.php:732
-#: bp-groups/classes/class-bp-groups-component.php:755
+#: bp-groups/classes/class-bp-groups-component.php:742
+#: bp-groups/classes/class-bp-groups-component.php:765
 #: bp-invites/classes/class-bp-invites-component.php:236
 #: bp-invites/classes/class-bp-invites-component.php:297
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1225
@@ -18388,7 +18400,7 @@ msgstr "Untergruppen"
 msgid "Send Invites"
 msgstr "Einladungen versenden"
 
-#: bp-groups/classes/class-bp-groups-component.php:764
+#: bp-groups/classes/class-bp-groups-component.php:774
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1069
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:12
 #: bp-templates/bp-nouveau/includes/groups/functions.php:138
@@ -18398,7 +18410,7 @@ msgstr "Einladungen versenden"
 msgid "Pending Invites"
 msgstr "Ausstehende Einladungen"
 
-#: bp-groups/classes/class-bp-groups-component.php:787
+#: bp-groups/classes/class-bp-groups-component.php:797
 #: bp-media/bp-media-filters.php:76 bp-media/bp-media-filters.php:1362
 #: bp-media/classes/class-bp-media-component.php:294
 #: bp-search/bp-search-settings.php:777
@@ -18410,40 +18422,40 @@ msgstr "Ausstehende Einladungen"
 msgid "Albums"
 msgstr "Alben"
 
-#: bp-groups/classes/class-bp-groups-component.php:837
+#: bp-groups/classes/class-bp-groups-component.php:847
 #: bp-templates/bp-nouveau/includes/groups/classes.php:352
 msgid "Send Messages"
 msgstr "Nachrichten versenden"
 
-#: bp-groups/classes/class-bp-groups-component.php:860
+#: bp-groups/classes/class-bp-groups-component.php:870
 msgid "Send Group Message"
 msgstr "Gruppennachricht senden"
 
-#: bp-groups/classes/class-bp-groups-component.php:869
+#: bp-groups/classes/class-bp-groups-component.php:879
 msgid "Send Private Message"
 msgstr "Private Nachricht senden"
 
-#: bp-groups/classes/class-bp-groups-component.php:880
+#: bp-groups/classes/class-bp-groups-component.php:890
 #: bp-templates/bp-nouveau/includes/groups/classes.php:272
 msgid "Manage"
 msgstr "Verwalten"
 
-#: bp-groups/classes/class-bp-groups-component.php:1015
+#: bp-groups/classes/class-bp-groups-component.php:1025
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1069
 msgid "No Pending Invites"
 msgstr "Keine ausstehenden Einladungen"
 
 #. translators: %s: Group invitation count for the current user
-#: bp-groups/classes/class-bp-groups-component.php:1020
+#: bp-groups/classes/class-bp-groups-component.php:1030
 msgid "Groups %s"
 msgstr "Gruppen  %s"
 
 #. translators: %s: Group invitation count for the current user
-#: bp-groups/classes/class-bp-groups-component.php:1026
+#: bp-groups/classes/class-bp-groups-component.php:1036
 msgid "Pending Invites %s"
 msgstr "Anstehende Einladungen %s"
 
-#: bp-groups/classes/class-bp-groups-component.php:1110
+#: bp-groups/classes/class-bp-groups-component.php:1120
 msgid "No Group Profile Photo"
 msgstr "Kein Gruppen Profilbild"
 
@@ -21928,7 +21940,7 @@ msgid "Edit Profile Type"
 msgstr "Profiltyp bearbeiten"
 
 #: bp-members/bp-members-functions.php:3057
-#: bp-members/bp-members-functions.php:3549
+#: bp-members/bp-members-functions.php:3550
 #: bp-members/classes/class-bp-members-admin.php:2250
 #: bp-members/classes/class-bp-members-admin.php:2272
 msgid "Users"
@@ -21946,11 +21958,11 @@ msgstr "Keine Profiltypen im Papierkorb gefunden"
 msgid "Search Profile Types"
 msgstr "Profiltypen suchen"
 
-#: bp-members/bp-members-functions.php:3547
+#: bp-members/bp-members-functions.php:3548
 msgid "Members Filter"
 msgstr "Mitgliederfilter"
 
-#: bp-members/bp-members-functions.php:3794
+#: bp-members/bp-members-functions.php:3795
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to trash it?"
@@ -21958,7 +21970,7 @@ msgstr ""
 "Sie haben {total_users} Mitglieder mit diesem Profiltyp, sind Sie sicher, "
 "dass Sie es löschen möchten?"
 
-#: bp-members/bp-members-functions.php:3795
+#: bp-members/bp-members-functions.php:3796
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to delete it?"
@@ -21966,7 +21978,7 @@ msgstr ""
 "Sie haben {total_users} Mitglieder mit diesem Profiltyp, sind Sie sicher, "
 "dass Sie es löschen möchten?"
 
-#: bp-members/bp-members-functions.php:3796
+#: bp-members/bp-members-functions.php:3797
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "trash it?"
@@ -21974,7 +21986,7 @@ msgstr ""
 "Sie haben Mitglieder mit diesen Profiltypen, sind Sie sicher, dass Sie diese "
 "löschen möchten?"
 
-#: bp-members/bp-members-functions.php:3797
+#: bp-members/bp-members-functions.php:3798
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "delete it?"
@@ -21982,22 +21994,22 @@ msgstr ""
 "Sie haben Mitglieder mit diesen Profiltypen, sind Sie sicher, dass Sie diese "
 "löschen möchten?"
 
-#: bp-members/bp-members-functions.php:3798
+#: bp-members/bp-members-functions.php:3799
 msgid "Copied"
 msgstr "Kopiert"
 
-#: bp-members/bp-members-functions.php:3861
-#: bp-members/bp-members-functions.php:3869
-#: bp-members/bp-members-functions.php:3877
-#: bp-members/bp-members-functions.php:3882
+#: bp-members/bp-members-functions.php:3862
+#: bp-members/bp-members-functions.php:3870
+#: bp-members/bp-members-functions.php:3878
+#: bp-members/bp-members-functions.php:3883
 msgid "their"
 msgstr "sein/ihr"
 
-#: bp-members/bp-members-functions.php:3873
+#: bp-members/bp-members-functions.php:3874
 msgid "his"
 msgstr "sein(e)"
 
-#: bp-members/bp-members-functions.php:3875
+#: bp-members/bp-members-functions.php:3876
 msgid "her"
 msgstr "ihr(e)"
 
@@ -22914,7 +22926,7 @@ msgid "Yes, I'd like to create a new site"
 msgstr "Ja, ich will eine neue Webseite erstellen"
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:275
-#: bp-templates/bp-nouveau/includes/template-tags.php:2411
+#: bp-templates/bp-nouveau/includes/template-tags.php:2401
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
@@ -22924,16 +22936,16 @@ msgstr ""
 
 #. translators: 1. Term agreement page. 2. Privacy page.
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:310
-#: bp-templates/bp-nouveau/includes/template-tags.php:2593
+#: bp-templates/bp-nouveau/includes/template-tags.php:2583
 msgid "I agree to the %1$s and %2$s."
-msgstr "Ich bin mit den %1$s und %2$s einverstanden."
+msgstr "Ich bin mit den %1$s und der %2$s einverstanden."
 
 #. translators: Term agreement page.
 #. translators: Privacy page.
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:317
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:323
-#: bp-templates/bp-nouveau/includes/template-tags.php:2625
-#: bp-templates/bp-nouveau/includes/template-tags.php:2649
+#: bp-templates/bp-nouveau/includes/template-tags.php:2615
+#: bp-templates/bp-nouveau/includes/template-tags.php:2639
 msgid "I agree to the %s."
 msgstr "Ich stimme mit den %s überein."
 
@@ -23111,7 +23123,7 @@ msgid "Messages marked as read"
 msgstr "Nachrichten als gelesen markiert"
 
 #: bp-messages/actions/bulk-manage.php:67
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1528
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1529
 msgid "Messages marked as unread."
 msgstr "Nachrichten als ungelesen markiert."
 
@@ -23273,7 +23285,7 @@ msgstr ""
 "können."
 
 #: bp-messages/bp-messages-functions.php:316
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1772
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1773
 msgid ""
 "You need to be connected with this member to continue this conversation."
 msgstr ""
@@ -23288,7 +23300,7 @@ msgstr ""
 "senden zu können."
 
 #: bp-messages/bp-messages-functions.php:318
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1767
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1768
 msgid ""
 "You need to be connected with all recipients to continue this conversation."
 msgstr ""
@@ -23457,8 +23469,8 @@ msgstr "Ihnen"
 
 #: bp-messages/bp-messages-template.php:2184
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1344
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2142
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2200
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2143
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2201
 msgid "This message was deleted."
 msgstr "Diese Nachricht wurde gelöscht."
 
@@ -23758,39 +23770,39 @@ msgstr ""
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1541
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:881
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:930
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1866
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1927
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2116
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1867
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1928
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2117
 msgid "Deleted Group"
 msgstr "Gelöschte Gruppe"
 
 #. translators: %s: Group name
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1282
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2118
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2119
 msgid "Sent from group %s to all group members."
 msgstr "Von der Gruppe „%s“ an alle Gruppenmitglieder versandt."
 
 #. translators: %s: Group name
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1288
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2120
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2121
 msgid "Sent from group %s to the people in this conversation."
 msgstr "Von der Gruppe %s an die Personen zu diesem Dialog versandt."
 
 #. translators: %s: Group name
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1294
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2122
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2123
 msgid "Sent from group %s individually to all group members."
 msgstr "Wird von der Gruppe %s an alle Gruppenmitglieder einzeln versandt."
 
 #. translators: %s: Group name
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1300
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2124
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2125
 msgid "Sent from group %s to individual members."
 msgstr "Von der Gruppe %s an einzelne Mitglieder versandt."
 
 #. translators: 1: Group link. 2: Group name.
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1308
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2128
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2129
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to all group members."
 msgstr ""
 "Wird von der Gruppe <a href=\"%1$s\">%2$s</a> an alle Gruppenmitglieder "
@@ -23798,7 +23810,7 @@ msgstr ""
 
 #. translators: 1: Group link. 2: Group name.
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1315
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2130
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2131
 msgid ""
 "Sent from group <a href=\"%1$s\">%2$s</a> to the people in this conversation."
 msgstr ""
@@ -23807,7 +23819,7 @@ msgstr ""
 
 #. translators: 1: Group link. 2: Group name.
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1322
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2132
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2133
 msgid ""
 "Sent from group <a href=\"%1$s\">%2$s</a> individually to all group members."
 msgstr ""
@@ -23816,7 +23828,7 @@ msgstr ""
 
 #. translators: 1: Group link. 2: Group name.
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1329
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2134
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2135
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to individual members."
 msgstr ""
 "Wird von der Gruppe <a href=\"%1$s\">%2$s</a> an einzelne Mitglieder "
@@ -24809,10 +24821,10 @@ msgstr "Mitglied blocken?"
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:135
-#: bp-templates/bp-nouveau/includes/template-tags.php:2607
-#: bp-templates/bp-nouveau/includes/template-tags.php:2615
-#: bp-templates/bp-nouveau/includes/template-tags.php:2639
-#: bp-templates/bp-nouveau/includes/template-tags.php:2664
+#: bp-templates/bp-nouveau/includes/template-tags.php:2597
+#: bp-templates/bp-nouveau/includes/template-tags.php:2605
+#: bp-templates/bp-nouveau/includes/template-tags.php:2629
+#: bp-templates/bp-nouveau/includes/template-tags.php:2654
 msgid "Close (Esc)"
 msgstr "Schließen (Esc)"
 
@@ -24922,7 +24934,7 @@ msgid "Unread %s"
 msgstr "Ungelesen %s"
 
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:60
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:882
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:891
 msgid "A unique numeric ID for the notification."
 msgstr "Eine eindeutige numerische ID für die Benachrichtigung."
 
@@ -24957,79 +24969,79 @@ msgstr ""
 msgid "Cannot update the status of this notification."
 msgstr "Der Status dieser Meldung kann nicht aktualisiert werden."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:888
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:897
 msgid "The ID of the user the notification is addressed to."
 msgstr "Die ID des Benutzers, an den die Benachrichtigung gerichtet ist."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:894
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:903
 msgid "The ID of the item associated with the notification."
 msgstr "Die ID des der Benachrichtigung zugeordneten Elements."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:899
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:908
 msgid "The ID of the secondary item associated with the notification."
 msgstr ""
 "Die ID des sekundären Elements, das der Benachrichtigung zugeordnet ist."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:904
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:913
 msgid "The name of the BuddyPress component the notification relates to."
 msgstr ""
 "Der Name der BuddyPress-Komponente, auf die sich die Benachrichtigung "
 "bezieht."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:909
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:918
 msgid "The name of the component's action the notification is about."
 msgstr ""
 "Der Name der Aktion der Komponente, um die es in der Benachrichtigung geht."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:913
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:922
 msgid "The date the notification was created, in the site's timezone."
 msgstr ""
 "Das Datum, an dem die Benachrichtigung erstellt wurde, in der Zeitzone der "
 "Website."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:920
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:929
 msgid "Whether it's a new notification or not."
 msgstr "Unabhängig davon, ob es sich um eine neue Meldung handelt oder nicht."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:926
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:935
 msgid "The name of the notification object."
 msgstr "Der Name des Benachrichtigungsobjekts."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:931
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:940
 msgid "The ID of the notification object."
 msgstr "Die ID des Benachrichtigungsobjekts."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:936
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:945
 msgid "Description of notification."
 msgstr "Beschreibung der Meldung."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:941
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:950
 msgid "HTML description for the object, transformed for display."
 msgstr "HTML-Beschreibung für das Objekt, für die Anzeige umgewandelt."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:950
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:959
 msgid "Link URL for the notification."
 msgstr "Link-URL der Meldung."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:955
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:964
 msgid "Rest Actions which perform accept/reject based on the status."
 msgstr "Rest-Aktionen, basierend auf dem Status Annehmen/Ablehnen."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:980
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:989
 msgid "Avatar URLs for the notification."
 msgstr "Avatar-URLs der Benachrichtigung."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1009
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1018
 msgid "Name of the field to order according to."
 msgstr "Name des Feldes, nach dem sortiert werden soll."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1034
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1043
 msgid "Limit result set to notifications associated with a specific component"
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Benachrichtigungen, die mit einer "
 "bestimmten Komponente verbunden sind"
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1042
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1051
 msgid ""
 "Limit result set to notifications associated with a specific component's "
 "action name."
@@ -25037,19 +25049,19 @@ msgstr ""
 "Beschränken Sie die Ergebnismenge auf Benachrichtigungen, die mit dem "
 "Aktionsnamen einer bestimmten Komponente verknüpft sind."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1050
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1059
 msgid "Limit result set to notifications addressed to a specific user."
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Benachrichtigungen, die an einen "
 "bestimmten Benutzer gerichtet sind."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1058
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1067
 msgid "Limit result set to notifications associated with a specific item ID."
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Benachrichtigungen, die mit einer "
 "bestimmten Element-ID verknüpft sind."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1066
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1075
 msgid ""
 "Limit result set to notifications associated with a specific secondary item "
 "ID."
@@ -25057,22 +25069,22 @@ msgstr ""
 "Beschränken Sie die Ergebnismenge auf Benachrichtigungen, die mit einer "
 "bestimmten sekundären Element-ID verknüpft sind."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1074
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1083
 msgid "Limit result set to items from specific states."
 msgstr ""
 "Beschränken Sie die Ergebnismenge auf Elemente aus bestimmten Zuständen."
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1123
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1149
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1161
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1184
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1196
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1132
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1158
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1170
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1193
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1205
 msgid "Accepted"
 msgstr "Akzeptiert"
 
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1135
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1173
-#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1208
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1144
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1182
+#: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1217
 msgid "Rejected"
 msgstr "Abgelehnt"
 
@@ -25284,7 +25296,7 @@ msgstr "Alle Ergebnisse"
 
 #. translators: %s: User's full name.
 #: bp-settings/actions/delete-account.php:50
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1343
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1381
 msgid "%s was successfully deleted."
 msgstr "%s wurde erfolgreich gelöscht."
 
@@ -25294,55 +25306,55 @@ msgstr ""
 "Es tut uns leid, dass etwas schief gelaufen ist, bitte versuche es erneut."
 
 #: bp-settings/actions/export.php:43
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1288
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1326
 msgid "Unable to initiate the data export request."
 msgstr "Es war nicht möglich, die Datenexportanforderung zu initiieren."
 
 #: bp-settings/actions/export.php:53
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1293
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1331
 msgid "Please check your email to confirm the data export request."
 msgstr ""
 "Bitte überprüfen Sie Ihre E-Mail, um die Datenexportanfrage zu bestätigen."
 
 #: bp-settings/actions/general.php:188
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1090
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1128
 msgid "That email address is invalid. Check the formatting and try again."
 msgstr ""
 "Diese E-Mail-Adresse ist ungültig. Prüfen Sie die Formatierung und versuchen "
 "Sie es erneut."
 
 #: bp-settings/actions/general.php:191
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1093
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1131
 msgid "That email address is currently unavailable for use."
 msgstr "Diese E-Mail-Adresse kann derzeit nicht verwendet werden."
 
 #: bp-settings/actions/general.php:194
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1096
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1134
 msgid "That email address is already taken."
 msgstr "Diese E-Mail-Adresse wird bereits verwendet."
 
 #: bp-settings/actions/general.php:197
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1099
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1137
 msgid "Email address cannot be empty."
 msgstr "E-Mail-Adresse darf nicht leer sein."
 
 #: bp-settings/actions/general.php:207
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1109
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1147
 msgid "Your current password is invalid."
 msgstr "Ihr aktuelles Passwort ist falsch."
 
 #: bp-settings/actions/general.php:210
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1112
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1150
 msgid "The new password fields did not match."
 msgstr "Die neuen Passworteingaben stimmen nicht überein."
 
 #: bp-settings/actions/general.php:213
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1115
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1153
 msgid "One of the password fields was empty."
 msgstr "Eines der Passwortfelder ist leer."
 
 #: bp-settings/actions/general.php:216
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1118
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1156
 msgid "The new password must be different from the current password."
 msgstr "Das neue Passwort muss sich vom aktuellen Passwort unterscheiden."
 
@@ -25351,8 +25363,8 @@ msgid "Your settings have been saved."
 msgstr "Ihre Einstellungen wurden gespeichert."
 
 #: bp-settings/actions/general.php:231
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1130
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1349
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1168
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1387
 msgid "No changes were made to your account."
 msgstr "Es wurden keine Änderungen an Ihrem Konto vorgenommen."
 
@@ -25488,33 +25500,34 @@ msgstr "Geben Sie Ihr neues Passwort ein"
 msgid "Repeat Your New Password"
 msgstr "Wiederholen Sie Ihr neues Passwort"
 
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:718
-msgid "Group Message"
-msgstr "Gruppennachricht"
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:757
+msgid "A member has creates a new forum discussion you are subscribed"
+msgstr ""
+"Ein Mitglied hat eine neue Forumsdiskussion erstellt, die Sie abonniert haben"
 
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:837
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:875
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/group-invites.php:27
 msgid "Restrict Group invites to members who are connected."
 msgstr ""
 "Gruppeneinladungen auf die Mitglieder beschränken, die miteinander verbunden "
 "sind."
 
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:860
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:898
 #: bp-templates/bp-nouveau/includes/functions.php:1489
 msgid "Request Data Export"
 msgstr "Datenexport anfordern"
 
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:883
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:921
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/delete-account.php:21
 msgid "I understand the consequences."
 msgstr "Ich verstehe die Konsequenzen."
 
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1339
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1377
 msgid "Sorry, You can not able to delete the account."
 msgstr "Leider können Sie das Konto nicht löschen."
 
 #. translators: 1: New email. 2: Current email.
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1388
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1426
 msgid ""
 "There is a pending change of your email address to %1$s. Check your email "
 "(%2$s) for the verification link."
@@ -25533,9 +25546,9 @@ msgstr "Berechtigungen"
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:41
-#: bp-templates/bp-nouveau/includes/document/ajax.php:899
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1222
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1380
+#: bp-templates/bp-nouveau/includes/document/ajax.php:905
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1231
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1389
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
 msgid "Load More"
 msgstr "Mehr anzeigen"
@@ -25758,7 +25771,7 @@ msgstr "Einladen"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:15
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:73
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:121
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:39
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:41
 msgid "Type the names of one or more people"
 msgstr "Geben Sie die Namen einer oder mehrerer Personen ein"
 
@@ -25948,7 +25961,7 @@ msgstr "Klicken Sie auf"
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:119
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:668
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2411
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2412
 msgid "Collapse"
 msgstr "Einklappen"
 
@@ -25956,14 +25969,14 @@ msgstr "Einklappen"
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:52
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:37
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:670
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2413
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2414
 msgid "More actions"
 msgstr "Weitere Aktionen"
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:133
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:246
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:669
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2412
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2413
 msgid "Copy Download Link"
 msgstr "Download-Link kopieren"
 
@@ -26060,9 +26073,9 @@ msgid "Edit Post Privacy"
 msgstr "Datenschutz bearbeiten"
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:52
-#: bp-templates/bp-nouveau/includes/document/ajax.php:869
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1191
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1349
+#: bp-templates/bp-nouveau/includes/document/ajax.php:875
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1200
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1358
 msgid "Modified"
 msgstr "Geändert"
 
@@ -26377,7 +26390,7 @@ msgid "Customize the message of your invite."
 msgstr "Passen Sie die Nachricht Ihrer Einladung an."
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:16
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:40
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:42
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1316
 msgid "All Group Members"
 msgstr "Alle Gruppenmitglieder"
@@ -26407,7 +26420,7 @@ msgid "New Private Message"
 msgstr "Neue Privatnachricht"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:120
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:38
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:40
 msgid "Send to"
 msgstr "Senden an"
 
@@ -26420,12 +26433,12 @@ msgid "Create New Thread"
 msgstr "Neues Thema erstellen"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:216
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:143
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:145
 msgid "Send Message"
 msgstr "Nachricht senden"
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:27
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:28
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:29
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:30
 msgid "New Group Message"
 msgstr "Neue Gruppennachricht"
 
@@ -27012,10 +27025,10 @@ msgstr "Es trat ein Fehler auf beim Löschen. Bitte versuchen Sie es erneut."
 #: bp-templates/bp-nouveau/includes/document/ajax.php:261
 #: bp-templates/bp-nouveau/includes/document/ajax.php:340
 #: bp-templates/bp-nouveau/includes/document/ajax.php:468
-#: bp-templates/bp-nouveau/includes/media/ajax.php:716
-#: bp-templates/bp-nouveau/includes/media/ajax.php:795
-#: bp-templates/bp-nouveau/includes/media/ajax.php:838
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1026
+#: bp-templates/bp-nouveau/includes/media/ajax.php:732
+#: bp-templates/bp-nouveau/includes/media/ajax.php:811
+#: bp-templates/bp-nouveau/includes/media/ajax.php:854
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1042
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 "Beim Anzeigen des Inhalts ist ein Problem aufgetreten. Bitte versuchen Sie "
@@ -27167,15 +27180,15 @@ msgstr "(bearbeitet)"
 #: bp-templates/bp-nouveau/includes/document/ajax.php:404
 #: bp-templates/bp-nouveau/includes/document/ajax.php:411
 #: bp-templates/bp-nouveau/includes/document/ajax.php:414
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1088
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1094
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1104
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1110
 msgid "Add a description"
 msgstr "Beschreibung hinzufügen"
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1351
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1429
 #: bp-templates/bp-nouveau/includes/document/ajax.php:420
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1098
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1114
 msgid "Done Editing"
 msgstr "Bearbeiten beenden"
 
@@ -27310,7 +27323,7 @@ msgid "uploaded a document"
 msgstr "lud ein Dokument hoch"
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:481
-#: bp-templates/bp-nouveau/includes/media/ajax.php:813
+#: bp-templates/bp-nouveau/includes/media/ajax.php:829
 msgid "Please provide attachment id to delete."
 msgstr "Bitte geben Sie die ID des zu löschenden Anhangs an."
 
@@ -27323,98 +27336,98 @@ msgid "Please login to upload a document."
 msgstr "Bitte melden Sie sich an, um ein Dokument hochzuladen."
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:602
-#: bp-templates/bp-nouveau/includes/document/ajax.php:721
+#: bp-templates/bp-nouveau/includes/document/ajax.php:724
 msgid "Please login to create a folder."
 msgstr "Bitte melden Sie sich an, um einen Ordner zu erstellen."
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:609
-#: bp-templates/bp-nouveau/includes/document/ajax.php:716
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1060
+#: bp-templates/bp-nouveau/includes/document/ajax.php:719
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1066
 msgid "Please enter title of folder."
 msgstr "Bitte geben Sie den Titel des Ordners ein."
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:615
-#: bp-templates/bp-nouveau/includes/document/ajax.php:726
-#: bp-templates/bp-nouveau/includes/document/ajax.php:996
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1069
+#: bp-templates/bp-nouveau/includes/document/ajax.php:729
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1002
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1075
 msgid "Invalid folder name"
 msgstr "Ungültiger Ordnername"
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:660
-#: bp-templates/bp-nouveau/includes/document/ajax.php:760
+#: bp-templates/bp-nouveau/includes/document/ajax.php:763
 msgid "There was a problem when trying to create the folder."
 msgstr "Beim Erstellen des Ordners ist ein Problem aufgetreten."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:744
+#: bp-templates/bp-nouveau/includes/document/ajax.php:747
 msgid "You don't have permission to create folder inside this folder."
 msgstr ""
 "Sie haben nicht die Berechtigung, einen Ordner innerhalb dieses Ordners zu "
 "erstellen."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:831
-#: bp-templates/bp-nouveau/includes/document/ajax.php:839
+#: bp-templates/bp-nouveau/includes/document/ajax.php:834
+#: bp-templates/bp-nouveau/includes/document/ajax.php:842
 msgid "You don't have permission to move this document."
 msgstr "Sie haben keine Erlaubnis, dieses Dokument zu verschieben."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:859
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1181
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1339
+#: bp-templates/bp-nouveau/includes/document/ajax.php:865
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1190
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1348
 msgid "Sort By:"
 msgstr "Sortieren nach:"
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:966
+#: bp-templates/bp-nouveau/includes/document/ajax.php:972
 msgid "You don't have a permission to rename the document."
 msgstr "Sie dürfen das Dokument nicht umbenennen."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1003
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1009
 msgid "You don't have permission to rename folder"
 msgstr "Sie haben keine Berechtigung zum Umbenennen von Ordnern"
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1082
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1088
 msgid "You don't have permission to rename this folder"
 msgstr "Sie dürfen diesen Ordner nicht umbenennen"
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1102
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1108
 msgid "There was a problem when trying to rename the folder."
 msgstr "Beim Versuch, den Ordner umzubenennen, gab es ein Problem."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1286
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1294
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1295
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1303
 msgid "You don't have permission to move this folder."
 msgstr "Sie haben keine Berechtigung zum Verschieben dieses Ordners."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1307
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1316
 msgid "Couldn’t move item. "
 msgstr "Element konnte nicht verschoben werden. "
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1319
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1328
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 "Das Objekt konnte nicht verschoben werden, da es sich um einen "
 "übergeordneten Ordner handelt. "
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1422
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1431
 msgid " Documents"
 msgstr " Dokumente"
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1453
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1462
 msgid "Please login to edit a privacy."
 msgstr "Bitte melden Sie sich an, um den Datenschutz zu bearbeiten."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1474
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1483
 msgid "You don't have permission to update this folder privacy."
 msgstr ""
 "Sie haben nicht die Berechtigung, den Datenschutz dieses Ordners zu "
 "aktualisieren."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1482
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1491
 msgid "You don't have permission to update this document privacy."
 msgstr ""
 "Sie haben nicht die Befugnis, den Datenschutz für dieses Dokument zu "
 "aktualisieren."
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1489
-#: bp-templates/bp-nouveau/includes/media/ajax.php:577
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1498
+#: bp-templates/bp-nouveau/includes/media/ajax.php:590
 msgid "Invalid privacy status."
 msgstr "Ungültiger Datenschutz-Status."
 
@@ -28177,7 +28190,7 @@ msgstr "Für die Gruppe sind keine ausstehenden Einladungen mehr vorhanden."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:879
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1066
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1628
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1629
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
 "Es gab ein Problem beim Laden der Empfänger. Bitte versuchen Sie es erneut."
@@ -28448,7 +28461,7 @@ msgid "Notify group members of these changes via email"
 msgstr "Benachrichtigen Sie Gruppenmitglieder bei Änderungen via E-Mail"
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:251
-#: bp-templates/bp-nouveau/includes/media/ajax.php:453
+#: bp-templates/bp-nouveau/includes/media/ajax.php:463
 msgid "Please upload media before saving."
 msgstr "Bitte laden Sie Medien vor dem Speichern hoch."
 
@@ -28460,67 +28473,67 @@ msgstr "Bitte wählen Sie die zu löschenden Medien aus."
 msgid "There was a problem deleting media."
 msgstr "Es gab ein Problem beim Löschen von Medien."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:464
+#: bp-templates/bp-nouveau/includes/media/ajax.php:474
 msgid "Please provide album to move media."
 msgstr "Bitte geben Sie ein Album an, um Medien dorthin zu verschieben."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:490
+#: bp-templates/bp-nouveau/includes/media/ajax.php:500
 msgid "There was a problem when trying to move the media."
 msgstr "Beim Versuch, die Medien zu verschieben, gab es ein Problem."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:553
+#: bp-templates/bp-nouveau/includes/media/ajax.php:566
 msgid "Please enter title of album."
 msgstr "Bitte geben Sie den Titel des Albums ein."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:595
+#: bp-templates/bp-nouveau/includes/media/ajax.php:608
 msgid "There was a problem when trying to create the album."
 msgstr "Beim Erstellen des Albums ist ein Problem aufgetreten."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:669
+#: bp-templates/bp-nouveau/includes/media/ajax.php:682
 msgid "Please provide ID of album to delete."
 msgstr "Bitte geben Sie die ID des zu löschenden Albums an."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:678
+#: bp-templates/bp-nouveau/includes/media/ajax.php:691
 msgid "You do not have permission to delete this album."
 msgstr "Sie haben nicht die Berechtigung, dieses Album zu löschen."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:856
+#: bp-templates/bp-nouveau/includes/media/ajax.php:872
 msgid "Please provide media id to update."
 msgstr "Bitte geben Sie die Medien-ID für die Aktualisierung an."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:867
+#: bp-templates/bp-nouveau/includes/media/ajax.php:883
 msgid "Please provide privacy to update."
 msgstr "Bitte sorgen Sie für den Datenschutz bei der Aktualisierung."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:876
+#: bp-templates/bp-nouveau/includes/media/ajax.php:892
 msgid "Privacy option is not valid."
 msgstr "Die Option zum Datenschutz ist nicht gültig."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:885
+#: bp-templates/bp-nouveau/includes/media/ajax.php:901
 msgid "You don't have a permission to update privacy."
 msgstr "Sie haben keine Berechtigung zur Aktualisierung des Datenschutzes."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:919
+#: bp-templates/bp-nouveau/includes/media/ajax.php:935
 msgid "There was a problem. Please try again."
 msgstr "Es gab ein Problem. Bitte versuchen Sie es erneut."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:937
-#: bp-templates/bp-nouveau/includes/media/ajax.php:948
+#: bp-templates/bp-nouveau/includes/media/ajax.php:953
+#: bp-templates/bp-nouveau/includes/media/ajax.php:964
 msgid "There was an error in updating a description. Please try again."
 msgstr ""
 "Bei der Aktualisierung einer Beschreibung ist ein Fehler aufgetreten. Bitte "
 "versuchen Sie es erneut."
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1077
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1093
 msgid "uploaded an image"
 msgstr "lud ein Bild hoch"
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1151
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1167
 msgid " Medias"
 msgstr " Medien"
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1210
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1218
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1226
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1234
 msgid "You don't have permission to move this media."
 msgstr "Es ist Ihnen nicht gestattet, dieses Medium zu verschieben."
 
@@ -28624,7 +28637,7 @@ msgstr "Bitte geben Sie die Thread-ID an."
 
 #. translators: %s: download url
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:665
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2408
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2409
 msgid "Click to view"
 msgstr "Zur Ansicht anklicken"
 
@@ -28635,7 +28648,7 @@ msgstr "Nicht autorisierte Anfrage."
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:767
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1228
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1740
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1741
 #: bp-templates/bp-nouveau/includes/messages/functions.php:104
 msgid "Sorry, no messages were found."
 msgstr "Keine Nachrichten gefunden."
@@ -28665,88 +28678,88 @@ msgid "Hidden content from suspended member."
 msgstr "Ausgeblendeter Inhalt von gesperrtem Mitglied."
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1254
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1296
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2482
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1297
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2483
 msgid "There was a problem deleting your messages. Please try again."
 msgstr ""
 "Beim Löschen Ihrer Nachrichten ist ein Problem aufgetreten. Bitte versuchen "
 "Sie es erneut."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1391
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1392
 msgid "There was a problem starring your messages. Please try again."
 msgstr ""
 "Es gab ein Problem beim Markieren Ihrer Nachrichten. Bitte versuchen Sie es "
 "erneut."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1393
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1394
 msgid "There was a problem unstarring your messages. Please try again."
 msgstr ""
 "Beim Aufheben der Markierung Ihrer Nachrichten ist ein Problem aufgetreten. "
 "Bitte versuche es erneut."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1477
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1478
 msgid "Messages successfully starred."
 msgstr "Nachrichten erfolgreich mit einem „Stern“ markiert."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1479
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1480
 msgid "Messages successfully unstarred."
 msgstr "Die Stern-Markierung wurde erfolgreich von den Nachrichten entfernt."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1504
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1505
 msgid "There was a problem marking your messages as read. Please try again."
 msgstr ""
 "Beim Markieren Ihrer Nachrichten „als gelesen“ ist ein Problem aufgetreten. "
 "Bitte versuchen Sie es erneut."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1510
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1511
 msgid "There was a problem marking your messages as unread. Please try again."
 msgstr ""
 "Beim Markieren Ihrer Nachrichten „als ungelesen“ ist ein Problem "
 "aufgetreten. Bitte versuchen Sie es erneut."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1530
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1531
 msgid "Messages marked as read."
 msgstr "Nachrichten als gelesen markiert."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1568
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1569
 msgid "There was a problem dismissing the notice. Please try again."
 msgstr ""
 "Es gab ein Problem beim Ablehnen der Benachrichtigung. Bitte versuchen Sie "
 "es erneut."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1607
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1608
 msgid "Sitewide notice dismissed"
 msgstr "Seitenübergreifende Hinweise abgelehnt"
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1745
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1746
 msgid "Sorry, no more messages can be loaded."
 msgstr "Es tut uns leid, es können keine weiteren Nachrichten geladen werden."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1787
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1788
 msgid "You can't message suspended member."
 msgstr "Sie können einem gesperrten Mitglied keine Nachricht senden."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1792
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1793
 msgid "You can't message a blocked member."
 msgstr "Sie können einem blockierten Mitglied keine Nachricht senden."
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2140
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2198
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2141
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2199
 msgid "<p class=\"joined\">Left \"%s\"</p>"
 msgstr "<p class=\"joined\">Verließ „%s“</p>"
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2144
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2202
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2145
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2203
 msgid "<p class=\"joined\">Removed Ban \"%s\"</p>"
 msgstr "<p class=\"joined\">Sperre aufgehoben „%s“</p>"
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2146
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2204
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2147
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2205
 msgid "<p class=\"joined\">Ban \"%s\"</p>"
 msgstr "<p class=\"joined\">„%s“ sperren</p>"
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2148
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2206
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2149
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2207
 msgid "<p class=\"joined\">Joined \"%s\"</p>"
 msgstr "<p class=\"joined\">„%s“ beigetreten</p>"
 
@@ -28838,29 +28851,29 @@ msgstr "Als gelesen markieren"
 msgid "Loading Suggestions"
 msgstr "Lädt gerade Vorschläge"
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2173
+#: bp-templates/bp-nouveau/includes/template-tags.php:2163
 msgid "Show:"
 msgstr "Zeige:"
 
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
-#: bp-templates/bp-nouveau/includes/template-tags.php:2392
+#: bp-templates/bp-nouveau/includes/template-tags.php:2382
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr "<label for=\"%1$s\">%2$s %3$s</label>"
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2598
+#: bp-templates/bp-nouveau/includes/template-tags.php:2588
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr "Mit der Erstellung eines Kontos stimmen Sie den %1$s und der %2$s zu."
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2607
-#: bp-templates/bp-nouveau/includes/template-tags.php:2615
-#: bp-templates/bp-nouveau/includes/template-tags.php:2639
-#: bp-templates/bp-nouveau/includes/template-tags.php:2664
+#: bp-templates/bp-nouveau/includes/template-tags.php:2597
+#: bp-templates/bp-nouveau/includes/template-tags.php:2605
+#: bp-templates/bp-nouveau/includes/template-tags.php:2629
+#: bp-templates/bp-nouveau/includes/template-tags.php:2654
 msgid "×"
 msgstr "×"
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2630
-#: bp-templates/bp-nouveau/includes/template-tags.php:2654
+#: bp-templates/bp-nouveau/includes/template-tags.php:2620
+#: bp-templates/bp-nouveau/includes/template-tags.php:2644
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 "Durch die Erstellung eines Kontos erklären Sie sich mit den %s einverstanden."
@@ -30332,7 +30345,7 @@ msgid "type"
 msgstr "Typ"
 
 #. translators: placeholder: URL for CPT Archive.
-#: bp-integrations/learndash/bp-learndash-filters.php:348
+#: bp-integrations/learndash/bp-learndash-filters.php:350
 msgctxt "placeholder: URL for CPT Archive"
 msgid "Archive URL: %s"
 msgstr "Archiv-URL: %s"
@@ -30399,6 +30412,9 @@ msgstr "%s Fortschrittsübersicht"
 msgctxt "Pending Certificate Status Label"
 msgid "Pending"
 msgstr "Ausstehend"
+
+#~ msgid "Group Message"
+#~ msgstr "Gruppennachricht"
 
 #~ msgid "&#160;"
 #~ msgstr "&#160;"
