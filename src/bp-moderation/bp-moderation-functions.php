@@ -965,7 +965,7 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
 	$user_ids = 0;
-	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
+	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_ids = $class::get_content_owner_id( $moderation_item_id );
@@ -1109,20 +1109,3 @@ function bp_moderation_is_activity_related_content_hidden( $media_object ) {
 	return apply_filters( 'bp_moderation_is_activity_related_content_hidden', true, $activity_data );
 }
 
-/**
- * Check the current content is hidden or not.
- *
- * @param int|array $item_id   Item ID.
- * @param string    $item_type Item Type.
- *
- * @since BuddyBoss 1.5.6
- *
- * @return bool
- */
-function bp_moderation_is_hidden( $item_id, $item_type ) {
-	if ( empty( $item_id ) || empty( $item_type ) ) {
-		return false;
-	}
-
-	return (bool) BP_Core_Suspend::check_hidden_content( $item_id, $item_type );
-}

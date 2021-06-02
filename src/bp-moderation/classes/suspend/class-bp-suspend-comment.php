@@ -94,7 +94,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function manage_hidden_comment( $comment_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( bp_moderation_is_hidden( $comment_id, self::$type ) ) {
+		if ( (bool) BP_Core_Suspend::check_hidden_content( $comment_id, self::$type ) ) {
 			return;
 		}
 
@@ -140,7 +140,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function manage_unhidden_comment( $comment_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( ! bp_moderation_is_hidden( $comment_id, self::$type ) ) {
+		if ( ! (bool) BP_Core_Suspend::check_hidden_content( $comment_id, self::$type ) ) {
 			return;
 		}
 

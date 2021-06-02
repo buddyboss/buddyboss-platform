@@ -223,7 +223,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_hidden_document( $document_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( bp_moderation_is_hidden( $document_id, self::$type ) ) {
+		if ( (bool) BP_Core_Suspend::check_hidden_content( $document_id, self::$type ) ) {
 			return;
 		}
 
@@ -269,7 +269,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_unhidden_document( $document_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( ! bp_moderation_is_hidden( $document_id, self::$type ) ) {
+		if ( ! (bool) BP_Core_Suspend::check_hidden_content( $document_id, self::$type ) ) {
 			return;
 		}
 

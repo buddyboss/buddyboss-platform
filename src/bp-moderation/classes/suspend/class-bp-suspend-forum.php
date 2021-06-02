@@ -228,7 +228,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( bp_moderation_is_hidden( $forum_id, self::$type ) ) {
+		if ( (bool) BP_Core_Suspend::check_hidden_content( $forum_id, self::$type ) ) {
 			return;
 		}
 
@@ -286,7 +286,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function manage_unhidden_forum( $forum_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		if ( ! bp_moderation_is_hidden( $forum_id, self::$type ) ) {
+		if ( ! (bool) BP_Core_Suspend::check_hidden_content( $forum_id, self::$type ) ) {
 			return;
 		}
 
