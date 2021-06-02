@@ -2897,11 +2897,7 @@ window.bp = window.bp || {};
 							}
 						);
 					}
-
-					// Append zero-width character to allow post link without activity content.
-					if ( _.isEmpty( data.content ) ) {
-						data.content = '&#8203;';
-					}
+					
 				} else {
 					data = _.omit(
 						data,
@@ -2911,11 +2907,6 @@ window.bp = window.bp || {};
 							'link_url'
 						]
 					);
-				}
-
-				// Append zero-width character to allow post gif without activity content.
-				if ( ! _.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
-					data.content = '&#8203;';
 				}
 
 				// check if edit activity
