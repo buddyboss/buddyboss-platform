@@ -524,7 +524,6 @@ function bb_moderation_suspend_after_delete( $recode ) {
 }
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
 
-
 /**
  * Function to clear the cahe for moderation item.
  *
@@ -532,8 +531,8 @@ add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
  *
  * @param object $moderation_data moderation item data.
  */
-function bp_clear_cache_moderation_item_cache( $moderation_data ) {
+function bb_clear_cache_moderation_item_cache( $moderation_data ) {
 	wp_cache_delete( 'bb_check_moderation_' . $moderation_data->item_type . '_' . $moderation_data->id, 'bb' );
 }
 
-add_action( 'bp_moderation_after_save', 'bp_clear_cache_moderation_item_cache' );
+add_action( 'bp_moderation_after_save', 'bb_clear_cache_moderation_item_cache' );
