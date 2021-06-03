@@ -147,7 +147,7 @@ function bp_has_video( $args = '' ) {
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
 		$privacy  = array( 'grouponly', 'forums', 'comment' );
-		if ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) {
+		if ( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) {
 			$privacy = false;
 		}
 		$user_id = false;
