@@ -631,6 +631,8 @@ window.bp = window.bp || {};
 								} );
 
 								currentAction.removeClass( 'loading' );
+							} else {
+								currentAction.removeClass( 'loading' );
 							}
 						}
 					}
@@ -3861,6 +3863,13 @@ window.bp = window.bp || {};
 								$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show' ).show();
 								$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
 							}
+
+							if ( false === response.data.create_album ) {
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide();
+							} else {
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide();
+							}
+
 							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
 							$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
 							$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
