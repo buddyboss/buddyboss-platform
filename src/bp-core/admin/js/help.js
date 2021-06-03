@@ -145,7 +145,7 @@
 						window.history.replaceState( {}, null, jQuery( this ).attr( 'href' ) );
 						bp_help_load_page(); // then load the page again.
 						jQuery( 'html, body' ).animate( {
-							scrollTop: jQuery( '.wrap' ).offset().top
+							scrollTop: 0
 						}, 'fast' );
 					}
 				} );
@@ -166,7 +166,7 @@
 						window.history.replaceState( {}, null, redirec_url );
 						bp_help_load_page(); // then load the page again.
 						jQuery( 'html, body' ).animate( {
-							scrollTop: jQuery( '.wrap' ).offset().top
+							scrollTop: 0
 						}, 'fast' );
 					}
 				} );
