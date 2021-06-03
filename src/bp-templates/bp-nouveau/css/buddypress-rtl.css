@@ -19606,6 +19606,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   overflow: visible;
 }
 
+.bb-media-model-wrapper.video .bb-media-info-section .bp-activity-head .activity-header {
+  margin-left: 25px;
+}
+
 .bb-media-model-wrapper.video .bb-media-section {
   position: initial;
 }
