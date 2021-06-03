@@ -385,6 +385,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 					if ( ! is_array( $value ) ) {
 						$value = (array) $value;
+						$value = array_filter( $value );
 					}
 				}
 
@@ -408,6 +409,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 						if ( ! is_array( $value ) ) {
 							$value = (array) $value;
+							$value = array_filter( $value );
 						}
 					}
 
