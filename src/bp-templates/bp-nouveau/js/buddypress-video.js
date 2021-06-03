@@ -209,7 +209,7 @@ window.bp = window.bp || {};
 
 			if ( $( target ).hasClass( 'bb-field-uploader-next' ) ) {
 				currentPopup.find( '.bb-field-steps-1' ).slideUp( 200 ).siblings( '.bb-field-steps' ).slideDown( 200 );
-				currentPopup.find( '#bp-video-submit, #bp-video-prev, .bp-video-open-create-popup-album, #bb-video-privacy' ).show();
+				currentPopup.find( '#bp-video-submit, #bp-video-prev, .bp-video-open-create-popup-album.create-album, #bb-video-privacy' ).show();
 				if ( Number( $( currentPopup ).find( '.bb-album-selected-id' ) ) !== 0 && $( currentPopup ).find( '.location-album-list li.is_active' ).length ) {
 					$( currentPopup ).find( '.location-album-list' ).scrollTop( $( currentPopup ).find( '.location-album-list li.is_active' ).offset().top - $( currentPopup ).find( '.location-album-list' ).offset().top );
 				}
@@ -547,6 +547,12 @@ window.bp = window.bp || {};
 									} else {
 										$( document ).find( '.open-popup .location-album-list-wrap-main span.no-album-exists' ).hide();
 										$( document ).find( '.open-popup .location-album-list-wrap' ).show();
+									}
+
+									if ( false === response.data.create_album ) {
+										$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).removeClass( 'create-album' );
+									} else {
+										$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).addClass( 'create-album' );
 									}
 
 									$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show' ).show();
@@ -1731,6 +1737,13 @@ window.bp = window.bp || {};
 								$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show' ).show();
 								$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
 							}
+
+							if ( false === response.data.create_album ) {
+								$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).removeClass( 'create-album' );
+							} else {
+								$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).addClass( 'create-album' );
+							}
+
 							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
 							$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
 							$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
