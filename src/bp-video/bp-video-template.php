@@ -710,12 +710,8 @@ function bp_video_user_can_delete( $video = false ) {
 			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $video->group_id );
 			if ( $manage ) {
 				$can_delete = true;
-			} else {
-				if ( bp_loggedin_user_id() === $video->user_id ) {
-					$can_delete = true;
-				} elseif ( $is_mod || $is_admin ) {
-					$can_delete = true;
-				}
+			} elseif ( $is_mod || $is_admin ) {
+				$can_delete = true;
 			}
 		}
 	}
