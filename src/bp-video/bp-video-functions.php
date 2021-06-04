@@ -749,7 +749,7 @@ function bp_video_preview_image_by_js( $video ) {
 				$default_images            = isset( $auto_generated_thumbnails['default_images'] ) && ! empty( $auto_generated_thumbnails['default_images'] ) ? $auto_generated_thumbnails['default_images'] : array();
 				$thumbnail_images          = array(
 					'default_images' => $default_images,
-					'custom_image'   => $preview_attachment_id
+					'custom_image'   => $preview_attachment_id,
 				);
 				update_post_meta( $video['id'], 'video_preview_thumbnails', $thumbnail_images );
 			}
