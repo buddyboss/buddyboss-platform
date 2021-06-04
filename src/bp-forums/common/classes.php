@@ -320,16 +320,22 @@ if ( class_exists( 'Walker' ) ) :
 		 * @param array  $args Will only append content if style argument value is 'ol' or 'ul'
 		 */
 		public function end_lvl( &$output = '', $depth = 0, $args = array() ) {
-			bbpress()->reply_query->reply_depth = (int) $depth + 1;
-
+			$view_more_depth = $depth + 2;
+			bbpress()->reply_query->reply_depth = (int) $view_more_depth;
 			switch ( $args['style'] ) {
 				case 'div':
 					break;
 				case 'ol':
+					if( !$args['remove_view_more'] ){
+						echo "<li class='bp_view_more depth-".$view_more_depth."' data-depth='".$view_more_depth."' data-reply-to = '".bbp_get_reply_to($args['child_id'])."' data-click='1' data-child-count='".$args['children_count']."'><div class='bs-reply-list-item'>View more replies</div></li>";
+					}
 					echo "</ol>\n";
 					break;
 				case 'ul':
 				default:
+					if( !$args['remove_view_more'] ){
+						echo "<li class='bp_view_more depth-".$view_more_depth."' data-depth='".$view_more_depth."' data-reply-to = '".bbp_get_reply_to($args['child_id'])."' data-click='1' data-child-count='".$args['children_count']."'><div class='bs-reply-list-item'>View more replies</div></li>";
+					}
 					echo "</ul>\n";
 					break;
 			}
@@ -343,21 +349,138 @@ if ( class_exists( 'Walker' ) ) :
 			if ( empty( $element ) ) {
 				return;
 			}
-
-			// Get element's id
+			if($element->reply_to && $depth == 0){
+				return;
+			}
+		
 			$id_field = $this->db_fields['id'];
-			$id       = $element->$id_field;
-
-			// Display element
-			parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
-
-			// If we're at the max depth and the current element still has children, loop over those
-			// and display them at this level to prevent them being orphaned to the end of the list.
-			if ( ( $max_depth <= (int) $depth + 1 ) && isset( $children_elements[ $id ] ) ) {
-				foreach ( $children_elements[ $id ] as $child ) {
-					$this->display_element( $child, $children_elements, $max_depth, $depth, $args, $output );
+			$id = $element->$id_field;
+			
+			if(isset($_REQUEST['bbp-ajax']) && $_REQUEST['bbp-ajax'] == true && isset($_REQUEST['bbp_ajax_depth']) && $_REQUEST['bbp_ajax_depth'] == true){
+				if(!isset($args[0]['is_children'])){
+					$depth = $_REQUEST['bbp_ajax_depth']-1;
 				}
+				$children_elements[$id] = array();
+		
+				// Default query args
+				$default = array(
+					'post_type'           => array('reply', 'topic'),         // Only replies
+					'orderby'             => 'date',                     // Sorted by date
+					'order'               => 'ASC',                      // Oldest to newest
+					'hierarchical'        => true,    // Hierarchical replies
+					'meta_query' => array(
+						array(
+							'key'     => '_bbp_reply_to',
+							'value'   => $element->ID,
+							'compare' => '='
+						),
+					),
+				);
+		
+				// What are the default allowed statuses (based on user caps)
+				if ( bbp_get_view_all() ) {
+		
+					// Default view=all statuses
+					$post_statuses = array(
+						bbp_get_public_status_id(),
+						bbp_get_closed_status_id(),
+						bbp_get_spam_status_id(),
+						bbp_get_trash_status_id(),
+					);
+		
+					// Add support for private status
+					if ( current_user_can( 'read_private_replies' ) ) {
+						$post_statuses[] = bbp_get_private_status_id();
+					}
+		
+					// Join post statuses together
+					$default['post_status'] = implode( ',', $post_statuses );
+		
+					// Lean on the 'perm' query var value of 'readable' to provide statuses
+				} else {
+					$default['perm'] = 'readable';
+				}
+		
+				/** Setup */
+				$new_args = array();
+				// Parse arguments against default values
+				$r = bbp_parse_args( $new_args, $default, 'has_replies' );
+		
+				// Set posts_per_page value if replies are threaded
+				$replies_per_page = $r['posts_per_page'];
+				if ( true === $r['hierarchical'] ) {
+					$r['posts_per_page'] = - 1;
+				}
+		
+		
+		
+				// Call the query
+				$bbp_query = new WP_Query( $r );
+				if($bbp_query->have_posts()){
+					foreach ( $bbp_query->posts as &$post ) {
+						$post->reply_to = bbp_get_reply_to($post->ID);
+						$children_elements[$id][] = $post;
+					}
+				}
+				wp_reset_postdata();
+			}
+			$orphans = true;
+			$args[0]['remove_view_more'] = false;
+		
+			// Display this element.
+			$this->has_children = ! empty( $children_elements[ $id ] );
+			if ( isset( $args[0] ) && is_array( $args[0] ) ) {
+				$args[0]['has_children'] = $this->has_children; // Back-compat.
+			}
+		
+			$this->start_el( $output, $element, $depth, ...array_values( $args ) );
+			$child_id = 0;
+			// Descend only when the depth is right and there are children for this element.
+			if ( ( 0 == $max_depth || $max_depth > $depth + 1 ) && isset( $children_elements[ $id ] ) ) {
+				$show_limit = 0;
+				foreach ( $children_elements[ $id ] as $child ) {
+					if($show_limit >= bbp_get_replies_per_page()){
+						$orphans = false;
+						break;
+					}
+					if ( ! isset( $newlevel ) ) {
+						$newlevel = true;
+						// Start the child delimiter.
+						if(isset($_REQUEST['bbp-ajax']) && $_REQUEST['bbp-ajax'] == true && isset($_REQUEST['bbp_ajax_depth']) && $_REQUEST['bbp_ajax_depth'] == true){
+							$args[0]['is_children'] = true; 
+						}
+						$this->start_lvl( $output, $depth, ...array_values( $args ) );
+					}
+		
+					$this->display_element( $child, $children_elements, $max_depth, $depth + 1, $args, $output );
+					$show_limit = $show_limit + 1;
+					$child_id = $child->ID;
+				}
+				if(bbp_get_replies_per_page()>=count($children_elements[ $id ])){
+					$args[0]['remove_view_more'] = true;
+				}
+				$args[0]['children_count'] = count($children_elements[ $id ]);
+				$args[0]['child_id'] = $child_id;
+				
 				unset( $children_elements[ $id ] );
+			}
+		
+			if ( isset( $newlevel ) && $newlevel ) {
+				// End the child delimiter.
+				$this->end_lvl( $output, $depth, ...array_values( $args ) );
+			}
+		
+			// End this element.
+			$this->end_el( $output, $element, $depth, ...array_values( $args ) );
+			if($orphans){
+				// If we're at the max depth and the current element still has children, loop over those
+				// and display them at this level to prevent them being orphaned to the end of the list.
+				if ( ( $max_depth <= (int) $depth + 1 ) && isset( $children_elements[ $id ] ) ) {
+					foreach ( $children_elements[ $id ] as $child ) {
+						$this->display_element( $child, $children_elements, $max_depth, $depth, $args, $output );
+					}
+					unset( $children_elements[ $id ] );
+				}
 			}
 		}
 
@@ -369,7 +492,12 @@ if ( class_exists( 'Walker' ) ) :
 		public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
 
 			// Set up reply
-			$depth++;
+			if(isset($args['is_children'])){
+				$depth = $depth + 1;
+			}
+			else{
+				$depth++;
+			}
 			bbpress()->reply_query->reply_depth = $depth;
 			bbpress()->reply_query->post        = $object;
 			bbpress()->current_reply_id         = $object->ID;
@@ -386,7 +514,6 @@ if ( class_exists( 'Walker' ) ) :
 			} else {
 				echo "<li class='depth-$depth' data-depth='$depth'>\n";
 			}
-
 			bbp_get_template_part( 'loop', 'single-reply' );
 		}
 

@@ -297,6 +297,75 @@ function bbp_has_replies( $args = '' ) {
 	return apply_filters( 'bbp_has_replies', $bbp->reply_query->have_posts(), $bbp->reply_query );
 }
 
+// The threaded replies loop. WordPress makes this easy for us.
+function bbp_has_replies_thread( $reply_to, $args = '' ) {
+	global $wp_rewrite;
+
+	$default_post_type      = ( bbp_is_single_topic() && bbp_show_lead_topic() ) ? bbp_get_reply_post_type() : array(
+		bbp_get_topic_post_type(),
+		bbp_get_reply_post_type()
+	);
+	$default_thread_replies = (bool) ( bbp_is_single_topic() && bbp_thread_replies() );
+
+	// Default query args
+	$default = array(
+		'post_type'           => $default_post_type,         // Only replies
+		'orderby'             => 'date',                     // Sorted by date
+		'order'               => 'ASC',                      // Oldest to newest
+		'hierarchical'        => $default_thread_replies,    // Hierarchical replies
+		'meta_query' => array(
+        array(
+            'key'     => '_bbp_reply_to',
+            'value'   => $reply_to,
+			'compare' => '='
+        ),
+    ),
+	);
+
+	// What are the default allowed statuses (based on user caps)
+	if ( bbp_get_view_all() ) {
+
+		// Default view=all statuses
+		$post_statuses = array(
+			bbp_get_public_status_id(),
+			bbp_get_closed_status_id(),
+			bbp_get_spam_status_id(),
+			bbp_get_trash_status_id(),
+		);
+
+		// Add support for private status
+		if ( current_user_can( 'read_private_replies' ) ) {
+			$post_statuses[] = bbp_get_private_status_id();
+		}
+
+		// Join post statuses together
+		$default['post_status'] = implode( ',', $post_statuses );
+
+		// Lean on the 'perm' query var value of 'readable' to provide statuses
+	} else {
+		$default['perm'] = 'readable';
+	}
+
+	/** Setup */
+
+	// Parse arguments against default values
+	$r = bbp_parse_args( $args, $default, 'has_replies' );
+
+	// Set posts_per_page value if replies are threaded
+	$replies_per_page = $r['posts_per_page'];
+	if ( true === $r['hierarchical'] ) {
+		$r['posts_per_page'] = - 1;
+	}
+
+	// Get Forums
+	$bbp = bbpress();
+
+	// Call the query
+	$bbp->reply_query = new WP_Query( $r );
+	
+	return apply_filters( 'bbp_has_replies_thread', $bbp->reply_query->have_posts(), $bbp->reply_query );
+}
+
 /**
  * Whether there are more replies available in the loop
  *

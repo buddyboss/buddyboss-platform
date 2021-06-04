@@ -2061,6 +2061,16 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 	return $content . implode( '', $embeds_array );
 }
 
+//This function handles the replies threads pagination.
+function bbp_replies_thread_handler( $reply_to, $click ){
+	$args = array(
+		'per_page' => bbp_get_replies_per_page(),
+		'page' => $click,
+	);
+	do_action('bbp_reply_thread_pagination', $reply_to, $args);
+	exit;
+}
+
 /** Filters *******************************************************************/
 
 /**
