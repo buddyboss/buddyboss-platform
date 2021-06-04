@@ -98,6 +98,13 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		/**
+		 * Hook fire before item suspended
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $args Item data.
+		 */
 		do_action( 'bp_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
@@ -246,6 +253,13 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		/**
+		 * Hook fire before item unsuspended
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $args item id.
+		 */
 		do_action( 'bp_suspend_before_remove_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
@@ -267,7 +281,7 @@ class BP_Core_Suspend {
 
 			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 
-			// Remove suspend record if item is not hidden
+			// Remove suspend record if item is not hidden.
 			self::maybe_delete( $where['item_id'], $where['item_type'] );
 
 			/**

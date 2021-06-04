@@ -525,14 +525,33 @@ function bb_moderation_suspend_after_delete( $recode ) {
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
 
 /**
- * Function to clear the cahe for moderation item.
+ * Function to clear the cache data on item suspend.
  *
  * @since BuddyBoss 1.5.6
  *
- * @param object $moderation_data moderation item data.
+ * @param array $moderation_data moderation item data.
  */
-function bb_clear_cache_moderation_item_cache( $moderation_data ) {
-	wp_cache_delete( 'bb_check_moderation_' . $moderation_data->item_type . '_' . $moderation_data->id, 'bb' );
+function bb_moderation_clear_cache_item_suspend( $moderation_data ) {
+	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_user_suspend_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 }
 
-add_action( 'bp_moderation_after_save', 'bb_clear_cache_moderation_item_cache' );
+add_action( 'bp_suspend_before_add_suspend', 'bb_moderation_clear_cache_item_suspend' );
+
+/**
+ * Function to clear the cache data on item unsuspend.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $moderation_data moderation item data.
+ */
+function bb_moderation_clear_cache_item_unsuspend( $moderation_data ) {
+	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_user_suspend_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+}
+
+add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_cache_item_unsuspend' );
