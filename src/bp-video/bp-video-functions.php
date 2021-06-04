@@ -654,11 +654,13 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 					)
 				);
 
-				if ( ! empty( $video['js_preview'] ) ) {
+				if ( ! empty( $video['js_preview'] ) && ! empty( $video_id ) ) {
 					bp_video_preview_image_by_js( $video );
 				}
 
-				bp_video_add_generate_thumb_background_process( $video_id, $video );
+				if ( ! empty( $video_id ) ) {
+					bp_video_add_generate_thumb_background_process( $video_id, $video );
+                }
 
 			}
 
@@ -738,17 +740,16 @@ function bp_video_preview_image_by_js( $video ) {
 				}
 				$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $upload_file['file'] );
 				wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-				$thumbnail_list[] = $preview_attachment_id;
 				update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
 				update_post_meta( $preview_attachment_id, 'video_id', $video['id'] );
 				update_post_meta( $preview_attachment_id, 'bp_video_upload', 1 );
 
 				update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', $preview_attachment_id );
 				$auto_generated_thumbnails = get_post_meta( $video['id'], 'video_preview_thumbnails', true );
-				$default_images            = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
-				$thumbnail_images = array(
+				$default_images            = isset( $auto_generated_thumbnails['default_images'] ) && ! empty( $auto_generated_thumbnails['default_images'] ) ? $auto_generated_thumbnails['default_images'] : array();
+				$thumbnail_images          = array(
 					'default_images' => $default_images,
-					'custom_image'  => $preview_attachment_id
+					'custom_image'   => $preview_attachment_id
 				);
 				update_post_meta( $video['id'], 'video_preview_thumbnails', $thumbnail_images );
 			}
@@ -756,7 +757,7 @@ function bp_video_preview_image_by_js( $video ) {
 	}
 
 	// Remove upload filters.
-	bb_video_image_add_upload_filters();
+	bb_video_image_remove_upload_filters();
 
 	// Deregister image sizes.
 	bb_video_deregister_image_sizes();
@@ -989,7 +990,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 				}
 
 				// Remove upload filters.
-				bb_video_image_add_upload_filters();
+				bb_video_image_remove_upload_filters();
 
 				// Deregister image sizes.
 				bb_video_deregister_image_sizes();
