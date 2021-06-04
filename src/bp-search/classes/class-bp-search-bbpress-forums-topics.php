@@ -193,14 +193,19 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		 * @return array
 		 */
 		public function nested_child_forum_ids( $forum_id ) {
-			$child_forums = get_posts( array(
-				'child_of'     => $forum_id,
-				'post_type'    => 'forum',
-				'post__not_in' => array( $forum_id ),
-				'post_status'  => array( 'publish', 'private', 'hidden' )
+			$childs = get_posts( array ( 
+				'post_parent' => $forum_id,
+				'post_type'   => 'forum',
+				'post_status' => array( 'publish', 'private', 'hidden' ),
+				'numberposts' => -1 
 			) );
 
-			return wp_list_pluck( $child_forums, 'ID' );
+			foreach ( $childs as $child ) {
+				$child_ids[] = $child->ID;
+				$child_ids   = $this->nested_child_forum_ids( $child->ID, $child_ids );
+			}
+
+			return $child_ids;
 		}
 
 		/**
