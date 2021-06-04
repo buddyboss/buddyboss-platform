@@ -266,8 +266,6 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
-
-		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $forum_id, 'bb' );
 	}
 
 	/**
@@ -328,8 +326,6 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
-
-		wp_cache_delete( 'bb_check_moderation_' . self::$type . '_' . $forum_id, 'bb' );
 	}
 
 	/**
