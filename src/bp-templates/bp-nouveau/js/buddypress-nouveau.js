@@ -2188,10 +2188,19 @@ window.bp = window.bp || {};
 								img.src = image;
 		
 								if ( file.previewElement ) {
-									$( file.previewElement ).find( target ).append( img );
+									if ( $( file.previewElement ).find( target ).find( 'img' ).length ) {
+										$( file.previewElement ).find( target ).find( 'img' ).attr( 'src', image );
+									} else {
+										$( file.previewElement ).find( target ).append( img );
+									}
+
 									$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 								} else {
-									$( target ).append( img );
+									if ( $( target ).find( 'img' ).length ) {
+										$( target ).find( 'img' ).attr( 'src', image );
+									} else {
+										$( target ).append( img );
+									}
 								}
 		
 								URL.revokeObjectURL( url );
