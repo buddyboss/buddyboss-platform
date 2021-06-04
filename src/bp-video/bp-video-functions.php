@@ -894,7 +894,8 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 				$duration = $ff_probe->ffprob->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
 			}
 
-			if ( ! empty( $duration ) ) {
+			$is_preview_generated = get_post_meta( $video['id'], 'bb_ffmpeg_preview_generated', true );
+			if ( ! empty( $duration ) && ( false === $is_preview_generated || 'no' === $is_preview_generated ) ) {
 
 				/**
 				 * Hook for before background thumbnail create.
