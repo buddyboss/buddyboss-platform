@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-05-31 13:28:03+00:00\n"
+"POT-Creation-Date: 2021-06-04 07:09:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -926,9 +926,9 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:459
 #: bp-document/bp-document-template.php:333
-#: bp-document/bp-document-template.php:1415 bp-media/bp-media-template.php:325
-#: bp-media/bp-media-template.php:1323 bp-video/bp-video-template.php:329
-#: bp-video/bp-video-template.php:1281
+#: bp-document/bp-document-template.php:1419 bp-media/bp-media-template.php:325
+#: bp-media/bp-media-template.php:1327 bp-video/bp-video-template.php:329
+#: bp-video/bp-video-template.php:1274
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
@@ -1322,7 +1322,7 @@ msgstr ""
 #: bp-search/bp-search-functions.php:369
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:740
 #: bp-templates/bp-nouveau/includes/customizer.php:202
-#: bp-video/classes/class-bp-video.php:676
+#: bp-video/classes/class-bp-video.php:680
 msgid "Forums"
 msgstr ""
 
@@ -3594,7 +3594,7 @@ msgstr ""
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:778
 #: bp-templates/bp-nouveau/includes/activity/functions.php:284
 #: bp-templates/bp-nouveau/includes/customizer.php:196
-#: bp-video/classes/class-bp-video.php:672
+#: bp-video/classes/class-bp-video.php:676
 msgid "Connections"
 msgstr ""
 
@@ -3906,7 +3906,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:449
 #: bp-templates/bp-nouveau/includes/media/ajax.php:552
 #: bp-templates/bp-nouveau/includes/media/ajax.php:675
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1209
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1214
 #: bp-templates/bp-nouveau/includes/video/ajax.php:155
 #: bp-templates/bp-nouveau/includes/video/ajax.php:325
 #: bp-templates/bp-nouveau/includes/video/ajax.php:425
@@ -5280,7 +5280,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
 #: bp-forums/admin/metaboxes.php:40 bp-forums/classes/class-bbpress.php:482
-#: bp-moderation/classes/class-bp-moderation-forum-topics.php:102
+#: bp-moderation/classes/class-bp-moderation-forum-topics.php:106
 #: bp-performance/classes/class-settings.php:126
 #: bp-search/bp-search-functions.php:370
 msgid "Forum Discussions"
@@ -8423,7 +8423,7 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-bbp-gdpr-replies.php:57
 #: bp-forums/classes/class-bbpress.php:511
-#: bp-moderation/classes/class-bp-moderation-forum-replies.php:102
+#: bp-moderation/classes/class-bp-moderation-forum-replies.php:106
 #: bp-search/bp-search-functions.php:371
 msgid "Forum Replies"
 msgstr ""
@@ -9228,7 +9228,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-privacy.php:59
 #: bp-media/classes/class-bp-media.php:730
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:56
-#: bp-video/classes/class-bp-video.php:665
+#: bp-video/classes/class-bp-video.php:669
 msgid "Group Members"
 msgstr ""
 
@@ -9250,7 +9250,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media.php:739
 #: bp-messages/bp-messages-template.php:1465
 #: bp-templates/bp-nouveau/includes/customizer.php:336
-#: bp-video/classes/class-bp-video.php:674
+#: bp-video/classes/class-bp-video.php:678
 msgid "Message"
 msgstr ""
 
@@ -22222,7 +22222,7 @@ msgstr ""
 msgid "Harassment or bullying behavior"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-forums.php:102
+#: bp-moderation/classes/class-bp-moderation-forums.php:106
 msgid "Standalone Forums"
 msgstr ""
 
@@ -26202,12 +26202,12 @@ msgstr ""
 msgid "uploaded an image"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1184
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1185
 msgid " Medias"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1243
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1251
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1248
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1256
 msgid "You don't have permission to move this media."
 msgstr ""
 
@@ -26710,11 +26710,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:3700
+#: bp-video/bp-video-functions.php:3681
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:3739
+#: bp-video/bp-video-functions.php:3720
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 

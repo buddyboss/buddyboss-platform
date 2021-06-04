@@ -19953,8 +19953,16 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   min-height: 120px;
 }
 
+.bp-video-thumbnail-uploader {
+  word-break: break-word;
+}
+
 .bp-video-thumbnail-uploader .thumbnail_notice {
   display: none;
+}
+
+.bp-video-thumbnail-uploader .video-thumbnail-uploader-dropzone-select .dz-default {
+  min-height: 100% !important;
 }
 
 .bp-video-thumbnail-uploader .modal-container > p {
@@ -20563,6 +20571,14 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
     width: calc(100% - 10px);
     margin: 0 5px 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .bp-video-move-file .bb-model-footer .bp-video-open-create-popup-album {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 15px;
   }
 }
 
