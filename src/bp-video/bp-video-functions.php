@@ -3923,6 +3923,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 		// Get video previews symlink directory path.
 		$video_symlinks_path = bb_video_symlink_path();
 		$privacy             = $video->privacy;
+		$output_file_src     = '';
 		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $size );
 		$file                = image_get_intermediate_size( $attachment_id, $size );
 
