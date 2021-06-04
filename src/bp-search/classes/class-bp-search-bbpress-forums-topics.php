@@ -131,9 +131,9 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			// Get all forum regarding group.
 			$forum_query = "SELECT p.ID as forum_id 
 				FROM $wpdb->posts p 
-					LEFT JOIN $wpdb->postmeta pm ON pm.post_id=p.ID
+					LEFT JOIN $wpdb->postmeta pm ON pm.post_id = p.ID
 				WHERE 1=1
-					AND p.post_type='forum'
+					AND p.post_type = 'forum'
 					AND p.post_status IN ( {$post_status} ) 
 					{$group_query}";
 			 
