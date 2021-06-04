@@ -3573,7 +3573,7 @@ function bb_video_delete_older_symlinks() {
 			continue;
 		}
 		$file = $dir . '/' . $file;
-		if ( filemtime( $file ) < $limit ) {
+		if ( file_exists( $file ) && filemtime( $file ) < $limit ) {
 			$list[] = $file;
 			unlink( $file );
 		}
