@@ -192,7 +192,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		 * 
 		 * @return array
 		 */
-		public function nested_child_forum_ids( $forum_id ) {
+		public function nested_child_forum_ids( $forum_id, $child_ids = array() ) {
 			$childs = get_posts( array ( 
 				'post_parent' => $forum_id,
 				'post_type'   => 'forum',
