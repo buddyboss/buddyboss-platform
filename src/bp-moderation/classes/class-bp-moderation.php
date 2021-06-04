@@ -167,19 +167,20 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $item_id   Moderation item id.
-	 * @param int $item_type Moderation item type.
+	 * @param int  $item_id     Moderation item id.
+	 * @param int  $item_type   Moderation item type.
+	 * @param bool $force_check bypass caching or not.
 	 *
-	 * @return false
+	 * @return false|int
 	 */
-	public static function check_moderation_exist( $item_id, $item_type ) {
+	public static function check_moderation_exist( $item_id, $item_type, $force_check = false ) {
 		global $wpdb;
 
 		$bp        = buddypress();
 		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id;
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		if ( false === $result ) {
+		if ( false === $result || true === $force_check ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}
@@ -1010,7 +1011,7 @@ class BP_Moderation {
 		/**
 		 * Check Content report already exist or not.
 		 */
-		$this->id        = self::check_moderation_exist( $this->item_id, $this->item_type );
+		$this->id        = self::check_moderation_exist( $this->item_id, $this->item_type, true );
 		$this->report_id = self::check_moderation_report_exist( $this->id, $this->user_id );
 
 		/**
@@ -1129,7 +1130,7 @@ class BP_Moderation {
 
 		// If this is a new moderation report item, set the $id property.
 		if ( empty( $this->id ) ) {
-			$this->id = self::check_moderation_exist( $this->item_id, $this->item_type );
+			$this->id = self::check_moderation_exist( $this->item_id, $this->item_type, true );
 		}
 
 		return true;
