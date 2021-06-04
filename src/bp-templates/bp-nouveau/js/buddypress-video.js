@@ -383,10 +383,8 @@ window.bp = window.bp || {};
 
 									// It's the very first media, let's make sure the container can welcome it!
 									if ( ! $( '#video-stream ul.video-list' ).length ) {
-										$( '#video-stream' ).html(
-											$( '<ul></ul>' ).
-											addClass( 'video-list item-list bp-list bb-video-list grid' )
-										);
+										$( '#video-stream .bp-feedback' ).remove();
+										$( '#video-stream' ).append( '<ul class="video-list item-list bp-list bb-video-list grid"></ul>' );
 										$( '.bb-videos-actions' ).show();
 									}
 
@@ -1049,14 +1047,12 @@ window.bp = window.bp || {};
 									if ( response.data.default_images ) {
 										ulSelector.html( '' );
 										ulSelector.html( response.data.default_images );
-										ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 									}
 
 									if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
 										ulSelector.html( '' );
-										ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 									}
-									ulSelector.removeClass( 'loading' );
+									ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 
 								}
 							}
@@ -2621,7 +2617,7 @@ window.bp = window.bp || {};
 						fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_enlarge_text );
 						var error_block = $( this ).find( '.vjs-error-display.vjs-modal-dialog' );
 						var video_block_main = $( this );
-						
+
 						setTimeout( function() {
 							fullscreen_btn.on( 'click', function() {
 								//Set current time of video and id
