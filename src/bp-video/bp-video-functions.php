@@ -948,7 +948,7 @@ function bp_video_background_create_thumbnail( $video_id, $video ) {
 					$thumb_ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 					$video_thumb = $thumb_ffmpeg->ffmpeg->open( get_attached_file( $video['id'] ) );
-					$thumb_frame = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) )->addFilter( new FFMpeg\Filters\Frame\CustomFrameFilter('scale=1300x800'));
+					$thumb_frame = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) )->addFilter( new FFMpeg\Filters\Frame\CustomFrameFilter( 'scale=1500x900' ) );
 
 					$error = '';
 					try {
