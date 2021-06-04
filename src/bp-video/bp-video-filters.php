@@ -588,11 +588,6 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 					bp_video_preview_image_by_js( $video );
 				}
 
-				$video = array(
-					'id' => $attachment_id,
-				);
-				bp_video_add_generate_thumb_background_process( $attachment_id, $video );
-
 				$video_ids[] = $video_id;
 
 				// save video is saved in attachment.

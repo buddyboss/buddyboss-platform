@@ -902,7 +902,10 @@ function bp_video_background_create_thumbnail( $video ) {
 				$duration = $ff_probe->ffprob->streams( get_attached_file( $video_attachment_id ) )->videos()->first()->get( 'duration' );
 			}
 
-			if ( ! empty( $duration ) ) {
+			$is_auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
+			$is_default_images            = isset( $is_auto_generated_thumbnails['default_images'] ) && ! empty( $is_auto_generated_thumbnails['default_images'] ) ? $is_auto_generated_thumbnails['default_images'] : array();
+
+			if ( ! empty( $duration ) && empty( $is_default_images ) ) {
 
 				/**
 				 * Hook for before background thumbnail create.
@@ -1030,7 +1033,7 @@ function bp_video_background_create_thumbnail( $video ) {
 				 */
 				do_action( 'bp_video_after_background_create_thumbnail', $video );
 			} else {
-				update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', 'no' );
+				update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', ( ! empty( $is_default_images ) ? 'yes' : 'no' ) );
 			}
 
 			do_action( 'bb_try_after_video_background_create_thumbnail', $video );
