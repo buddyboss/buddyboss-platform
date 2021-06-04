@@ -98,6 +98,8 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		do_action( 'bp_suspend_before_add_suspend', $args );
+
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
 			$where = array(
@@ -243,6 +245,8 @@ class BP_Core_Suspend {
 			$member = $args['blocked_user'];
 			unset( $args['blocked_user'] );
 		}
+
+		do_action( 'bp_suspend_before_remove_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {

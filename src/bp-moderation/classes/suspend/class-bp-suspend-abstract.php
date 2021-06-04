@@ -130,6 +130,9 @@ abstract class BP_Suspend_Abstract {
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
+
+					do_action( 'bp_suspend_hide_before', $content_type, $content_id, $args );
+
 					/**
 					 * Add related content of reported item into hidden list
 					 *
@@ -191,6 +194,9 @@ abstract class BP_Suspend_Abstract {
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
+
+					do_action( 'bp_suspend_unhide_before', $content_type, $content_id, $args );
+
 					/**
 					 * Remove related content of reported item from hidden list.
 					 *
