@@ -19221,7 +19221,15 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   .bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button,
   .bb-video-thumb .video-js .vjs-control-bar .enlarge_button,
   .bb-media-section .video-js .vjs-control-bar .enlarge_button {
-    width: 3em;
+    background-color: transparent !important;
+    padding: 0;
+    border: 0;
+    width: 4em;
+    font-size: 10px;
+    line-height: 1.3;
+    box-shadow: none;
+    text-shadow: none;
+    font-family: inherit;
   }
 }
 

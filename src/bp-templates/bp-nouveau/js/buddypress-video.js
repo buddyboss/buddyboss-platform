@@ -2621,15 +2621,18 @@ window.bp = window.bp || {};
 						fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_enlarge_text );
 						var error_block = $( this ).find( '.vjs-error-display.vjs-modal-dialog' );
 						var video_block_main = $( this );
-						fullscreen_btn.on( 'click', function() {
-							//Set current time of video and id
-							if( player[ele_id].currentTime() > 0 ) {
-								bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
-								bp.Nouveau.Video.Player.playerID = $( '#' + ele_id ).parent().find('.video-js video').attr('id');
-							}
-							player[ele_id].pause();
-							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
-						} );
+						
+						setTimeout( function() {
+							fullscreen_btn.on( 'click', function() {
+								//Set current time of video and id
+								if( player[ele_id].currentTime() > 0 ) {
+									bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
+									bp.Nouveau.Video.Player.playerID = $( '#' + ele_id ).parent().find('.video-js video').attr('id');
+								}
+								player[ele_id].pause();
+								$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
+							});
+						}, 100);
 
 						error_block.on( 'click', function() {
 							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
