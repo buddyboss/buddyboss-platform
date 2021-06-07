@@ -131,6 +131,15 @@ abstract class BP_Suspend_Abstract {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
 
+					/**
+					 * Fire before hide item
+					 *
+					 * @since BuddyBoss 1.5.6
+					 *
+					 * @param string $content_type content type
+					 * @param int    $content_id   item id
+					 * @param array  $args         unhide item arguments
+					 */
 					do_action( 'bp_suspend_hide_before', $content_type, $content_id, $args );
 
 					/**
@@ -195,6 +204,15 @@ abstract class BP_Suspend_Abstract {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
 
+					/**
+					 * Fire before unhide item
+					 *
+					 * @since BuddyBoss 1.5.6
+					 *
+					 * @param string $content_type content type
+					 * @param int    $content_id   item id
+					 * @param array  $args         unhide item arguments
+					 */
 					do_action( 'bp_suspend_unhide_before', $content_type, $content_id, $args );
 
 					/**
