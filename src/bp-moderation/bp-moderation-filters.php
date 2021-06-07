@@ -555,3 +555,19 @@ function bb_moderation_clear_cache_item_unsuspend( $moderation_data ) {
 }
 
 add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_cache_item_unsuspend' );
+
+/**
+ * Function to clear cache on suspend item delete.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param object $suspend_record suspend item record.
+ */
+function bp_moderation_clear_cache_item_delete( $suspend_record ) {
+	wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+	wp_cache_delete( 'bb_check_user_suspend_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+}
+
+add_action( 'suspend_after_delete', 'bp_moderation_clear_cache_item_delete' );
