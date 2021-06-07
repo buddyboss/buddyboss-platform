@@ -560,7 +560,30 @@ function bp_moderation_clear_delete_cache( $suspend_record ) {
 	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_user_suspend_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 }
+
 add_action( 'bp_moderation_after_save', 'bp_moderation_clear_delete_cache' );
 add_action( 'suspend_after_delete', 'bp_moderation_clear_delete_cache' );
 add_action( 'bp_moderation_after_hide', 'bp_moderation_clear_delete_cache' );
 add_action( 'bp_moderation_after_unhide', 'bp_moderation_clear_delete_cache' );
+
+/**
+ * Function to clear cache when item hide/unhide
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param string $content_type content type.
+ * @param int    $content_id   content id.
+ * @param array  $args         item arguments.
+ */
+function bp_moderation_clear_status_change_cache( $content_type, $content_id, $args ) {
+	if ( empty( $content_type ) || empty( $content_id ) ) {
+		return;
+	}
+	wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bb' );
+	wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bb' );
+	wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bb' );
+	wp_cache_delete( 'bb_check_user_suspend_' . $content_type . '_' . $content_id, 'bb' );
+}
+
+add_action( 'bp_suspend_hide_before', 'bp_moderation_clear_status_change_cache', 10, 3 );
+add_action( 'bp_suspend_unhide_before', 'bp_moderation_clear_status_change_cache', 10, 3 );
