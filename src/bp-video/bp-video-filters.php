@@ -288,6 +288,9 @@ function bp_video_activity_comment_entry( $comment_id ) {
 	}
 
 	$args['privacy'] = array( 'comment' );
+	if ( ! isset( $args['album_id'] ) ) {
+		$args['album_id'] = 'existing-video';
+	}
 
 	$is_forum_activity = false;
 	if (

@@ -80,7 +80,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		$type             = 'group';
 		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
 		$move_to_id_popup = $group_id;
-	} elseif ( bp_is_user_video() || bp_is_user_albums() ) {
+	} elseif ( bp_is_user_media() || bp_is_user_video() || bp_is_user_albums() ) {
 		$album_id         = (int) bp_action_variable( 0 );
 		$type             = 'profile';
 		$move_to_id_popup = $user_id;
