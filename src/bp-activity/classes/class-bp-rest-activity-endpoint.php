@@ -523,10 +523,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( empty( $request['content'] ) ) {
-			$request['content'] = '&#8203;';
-		}
-
 		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
 			$request['hidden'] = $prepared_activity->hide_sitewide;
 		}
@@ -709,10 +705,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
-		}
-
-		if ( empty( $activity_object->content ) ) {
-			$activity_object->content = '&#8203;';
 		}
 
 		/**
