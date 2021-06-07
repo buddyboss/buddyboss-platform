@@ -531,30 +531,18 @@ add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
  *
  * @param array $moderation_data moderation item data.
  */
-function bb_moderation_clear_cache_item_suspend( $moderation_data ) {
+function bb_moderation_clear_suspend_cache( $moderation_data ) {
+	if ( empty( $moderation_data['item_type'] ) || empty( $moderation_data['item_id'] ) ) {
+		return;
+	}
 	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_check_user_suspend_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 }
 
-add_action( 'bp_suspend_before_add_suspend', 'bb_moderation_clear_cache_item_suspend' );
-
-/**
- * Function to clear the cache data on item unsuspend.
- *
- * @since BuddyBoss 1.5.6
- *
- * @param array $moderation_data moderation item data.
- */
-function bb_moderation_clear_cache_item_unsuspend( $moderation_data ) {
-	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-	wp_cache_delete( 'bb_check_user_suspend_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-}
-
-add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_cache_item_unsuspend' );
+add_action( 'bp_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
+add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cache' );
 
 /**
  * Function to clear cache on suspend item delete.
@@ -563,11 +551,16 @@ add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_cache_item_
  *
  * @param object $suspend_record suspend item record.
  */
-function bp_moderation_clear_cache_item_delete( $suspend_record ) {
+function bp_moderation_clear_delete_cache( $suspend_record ) {
+	if ( empty( $suspend_record->item_type ) || empty( $suspend_record->item_id ) ) {
+		return;
+	}
 	wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_user_suspend_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 }
-
-add_action( 'suspend_after_delete', 'bp_moderation_clear_cache_item_delete' );
+add_action( 'bp_moderation_after_save', 'bp_moderation_clear_delete_cache' );
+add_action( 'suspend_after_delete', 'bp_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_hide', 'bp_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_unhide', 'bp_moderation_clear_delete_cache' );
