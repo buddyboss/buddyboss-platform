@@ -3582,10 +3582,17 @@ function bb_media_user_can_access( $id, $type ) {
 		$activity_id    = $document->activity_id;
 	}
 
-	if ( $media_privacy === 'comment' && bp_is_active( 'activity' ) && ! empty( $activity_id )) {
+	if ( $media_privacy === 'comment' && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 		$activity = new BP_Activity_Activity( $activity_id );
-		if( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
-			$media_privacy  = $activity->privacy;
+		if ( ! empty( $activity->item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $activity->item_id );
+			if ( ! empty( $parent_activity->id ) && ! empty( $parent_activity->privacy ) ) {
+				$media_privacy = $parent_activity->privacy;
+			} else if ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
+				$media_privacy = $activity->privacy;
+			}
+		} else if ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
+			$media_privacy = $activity->privacy;
 		}
 	}
 

@@ -2312,7 +2312,7 @@ function bp_is_moderation_component() {
  * @return bool True if the current page is part of the Video component.
  */
 function bp_is_video_component() {
-	return (bool) bp_is_current_component( 'video' );
+	return (bool) bp_is_current_component( 'video' ) || (bool) bp_is_current_component( 'media' );
 }
 
 /**
