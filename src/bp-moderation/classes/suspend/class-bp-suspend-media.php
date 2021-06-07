@@ -366,7 +366,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		foreach ( $medias as $media ) {
 			BP_Core_Suspend::delete_suspend( $media->id, $this->item_type );
-			wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $media->id, 'bb' );
 		}
 	}
 }

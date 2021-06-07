@@ -376,7 +376,6 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $group->id, $this->item_type );
-		wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $group->id, 'bb' );
 	}
 
 	/**

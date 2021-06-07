@@ -427,13 +427,12 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $comment_id, $this->item_type );
-		wp_cache_delete( 'bb_check_moderation_' . $this->item_type . '_' . $comment_id, 'bb' );
 	}
 
 	/**
 	 * Check comment author is suspended or not
 	 *
-	 * @param int $comment_id comment id
+	 * @param int $comment_id comment id.
 	 *
 	 * @return bool
 	 */
