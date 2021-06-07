@@ -1002,12 +1002,14 @@ window.bp = window.bp || {};
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
+				var peak_offset = ( $( window ).height() / 2 - 75 );
+
 				$.scrollTo(
 					form,
 					500,
 					{
-						offset:-100,
-						easing:'swing'
+						offset: -peak_offset,
+						easing: 'swing'
 					}
 				);
 
@@ -1105,29 +1107,17 @@ window.bp = window.bp || {};
 				// add media data if enabled or uploaded.
 				if ( this.dropzone_media.length ) {
 					comment_data.media = this.dropzone_media;
-
-					if ( _.isEmpty( comment_data.content ) ) {
-						comment_data.content = '&#8203;';
-					}
 				}
 
 				// add media data if enabled or uploaded.
 				if ( this.dropzone_document.length ) {
 					comment_data.document = this.dropzone_document;
-
-					if ( _.isEmpty( comment_data.content ) ) {
-						comment_data.content = '&#8203;';
-					}
 				}
 
 				// add gif data if enabled or uploaded.
 				if ( ! _.isUndefined( this.models[activity_id] ) ) {
 					model                 = this.models[activity_id];
 					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
-
-					if ( _.isEmpty( comment_data.content ) ) {
-						comment_data.content = '&#8203;';
-					}
 				}
 
 				parent.ajax( comment_data, 'activity' ).done(

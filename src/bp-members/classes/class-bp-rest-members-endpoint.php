@@ -882,12 +882,14 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					 * --Added support for display name format support from platform.
 					 */
 
+					$field_value = $item->data->value;
+
 					$data['groups'][ $group->id ]['fields'][ $item->id ] = array(
 						'name'  => $item->name,
 						'value' => array(
-							'raw'          => $fields_endpoint->get_profile_field_raw_value( $item->data->value, $item ),
-							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $item->data->value, $item ),
-							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $item->data->value, $item ),
+							'raw'          => $fields_endpoint->get_profile_field_raw_value( $field_value, $item ),
+							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $field_value, $item ),
+							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $field_value, $item ),
 						),
 					);
 				}
@@ -1331,6 +1333,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$copied_arr = array();
 
 		foreach ( $fields as $f ) {
+			// Disable search for some individual field.
+			if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
+				continue;
+			}
+			
 			if ( ! isset( $f->filter ) ) {
 				continue;
 			}

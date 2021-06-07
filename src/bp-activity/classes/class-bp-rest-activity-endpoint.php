@@ -154,6 +154,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 */
 	public function get_items( $request ) {
+		global $bp;
+
 		$args = array(
 			'exclude'           => $request['exclude'],
 			'in'                => $request['include'],
@@ -192,6 +194,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['user_id'] ) ) {
 			$args['filter']['user_id'] = $request['user_id'];
+			if ( ! empty( $request['user_id'] ) ) {
+				$bp->displayed_user->id = (int) $request['user_id'];
+			}
 		}
 
 		$item_id = 0;
@@ -241,7 +246,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['show_hidden'] = true;
 		}
 
-		$args['scope'] = $this->bp_rest_activity_default_scope( $args['scope'], ( $request['user_id'] ? $request['user_id'] : 0 ), $args['group_id'] );
+		$args['scope'] = $this->bp_rest_activity_default_scope(
+			$args['scope'],
+			( $request['user_id'] ? $request['user_id'] : 0 ),
+			$args['group_id'],
+			isset( $request['component'] ) ? $request['component'] : '',
+			$request['primary_id']
+		);
 
 		if ( empty( $args['scope'] ) ) {
 			$args['privacy'] = 'public';
@@ -512,10 +523,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( empty( $request['content'] ) ) {
-			$request['content'] = '&#8203;';
-		}
-
 		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
 			$request['hidden'] = $prepared_activity->hide_sitewide;
 		}
@@ -698,10 +705,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
-		}
-
-		if ( empty( $activity_object->content ) ) {
-			$activity_object->content = '&#8203;';
 		}
 
 		/**
@@ -1134,10 +1137,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function render_item( $activity ) {
 		$rendered = '';
 
-		if ( empty( $activity->content ) ) {
-			return $rendered;
-		}
-
 		// Do not truncate activities.
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
 
@@ -1364,7 +1363,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $schema['properties']['component'] ) && isset( $request['component'] ) ) {
 			$prepared_activity->component = $request['component'];
 		} else {
-			$prepared_activity->component = buddypress()->activity->id;
+			$prepared_activity->component = ( isset( $activity->component ) ? $activity->component : buddypress()->activity->id );
 		}
 
 		// Activity Item ID.
@@ -1477,10 +1476,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$group = groups_get_group( $activity->item_id );
 
 			$links['group'] = array(
-				'href'       => bp_get_group_permalink( $group ),
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, buddypress()->groups->id, $activity->item_id ) ),
 				'embeddable' => true,
 			);
 		}
@@ -2030,13 +2028,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * Get default scope for the activity
 	 * - from: bp_activity_default_scope();
 	 *
-	 * @param string $scope    Default scope.
-	 * @param int    $user_id  User ID.
-	 * @param int    $group_id Group ID.
+	 * @param string $scope      Default scope.
+	 * @param int    $user_id    User ID.
+	 * @param int    $group_id   Group ID.
+	 * @param string $component  Component name.
+	 * @param int    $primary_id Primary ID.
 	 *
 	 * @return string
 	 */
-	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0 ) {
+	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0, $component = '', $primary_id = 0 ) {
 		$new_scope = array();
 
 		if (
@@ -2047,7 +2047,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				|| 'just-me' === $scope
 			)
 		) {
-			if ( bp_is_active( 'groups' ) && ! empty( $group_id ) ) {
+			if ( bp_is_active( 'groups' ) && ( ! empty( $group_id ) || ( ! empty( $component ) && 'groups' === $component && ! empty( $primary_id ) ) ) ) {
 				$new_scope[] = 'activity';
 			} else {
 				$new_scope[] = 'just-me';
@@ -2059,7 +2059,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )
 					)
 				) {
-					$new_scope[] = 'public';
+					if ( empty( $user_id ) ) {
+						$new_scope[] = 'public';
+					}
 
 					if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
 						$new_scope[] = 'mentions';
