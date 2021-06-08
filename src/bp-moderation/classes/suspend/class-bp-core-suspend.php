@@ -449,7 +449,7 @@ class BP_Core_Suspend {
 	public static function check_user_suspend( $user_id ) {
 		global $wpdb;
 		$bp        = buddypress();
-		$cache_key = 'bb_check_user_suspend_' . $user_id;
+		$cache_key = 'bb_check_user_suspend_user_' . $user_id;
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
 		if ( false === $result ) {
