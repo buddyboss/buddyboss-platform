@@ -367,6 +367,10 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Group Forums.
 			$results['bbp_enable_group_forums']  = bbp_is_group_forums_active();
 			$results['bbp_group_forums_root_id'] = bbp_get_group_forums_root_id();
+
+			// Check Permalinks for platform forms slugs.
+			$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+			$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
 		}
 
 		// Activity settings.
@@ -572,6 +576,34 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Forum Integration for BuddyPress.
 			'bbp_enable_group_forums'    => bbp_is_group_forums_active(),
 			'bbp_group_forums_root_id'   => bbp_get_group_forums_root_id(),
+		);
+
+		// Check Permalinks for platform forms slugs.
+		$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+		$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
+
+		return $results;
+	}
+
+	/**
+	 * Get Permalinks settings.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_get_forum_slugs_settings() {
+		$results = array(
+			// Single forum slugs.
+			'forum'         => get_option( '_bbp_forum_slug', 'forum' ),
+			'topic'         => get_option( '_bbp_topic_slug', 'discussions' ),
+			'topic_tag'     => get_option( '_bbp_topic_tag_slug', 'topic-tag' ),
+			'view'          => get_option( '_bbp_view_slug', 'view' ),
+			'reply'         => get_option( '_bbp_reply_slug', 'reply' ),
+			'search'        => get_option( '_bbp_search_slug', 'search' ),
+
+			// Forum Profile Slugs.
+			'replies'       => bbp_get_reply_archive_slug(),
+			'favorites'     => bbp_get_user_favorites_slug(),
+			'subscriptions' => bbp_get_user_subscriptions_slug(),
 		);
 
 		return $results;

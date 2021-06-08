@@ -1374,7 +1374,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response
 	 * @since 0.1.0
 	 */
-	public function prepare_item_for_response( $media, $request ) {
+	public function prepare_item_for_response( $media, $request ) {	
 		$data = array(
 			'id'               => $media->id,
 			'blog_id'          => $media->blog_id,
@@ -2045,7 +2045,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'schema'          => array(                                // The example_field REST schema.
 					'description' => 'Messages Medias.',
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 			)
 		);
@@ -2061,7 +2061,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'schema'          => array(                                // The example_field REST schema.
 					'description' => 'Message Gifs.',
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 			)
 		);
@@ -3019,7 +3019,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$retval = array();
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array() )
+				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
 			);
 		}
 

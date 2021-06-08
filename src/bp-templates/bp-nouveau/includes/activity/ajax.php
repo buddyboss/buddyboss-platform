@@ -370,8 +370,12 @@ function bp_nouveau_ajax_new_activity_comment() {
 	if ( ! is_user_logged_in() ) {
 		wp_send_json_error( $response );
 	}
-
-	if ( empty( $_POST['content'] ) ) {
+	
+	// Check content empty or not for the media, document and gif.
+	// If content will empty then return true and allow empty content in DB for the media, document and gif.
+	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
+	
+	if ( false === $content ) { // Check if $content will false then content would be empty.
 		wp_send_json_error(
 			array(
 				'feedback' => sprintf(
@@ -391,6 +395,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 			'activity_id' => $_POST['form_id'],
 			'content'     => $_POST['content'],
 			'parent_id'   => $_POST['comment_id'],
+			'skip_error'  => false === $content ? false : true // Pass true when $content will be not empty.
 		)
 	);
 
