@@ -860,31 +860,34 @@ function bp_feed_settings_callback_post_type( $args ) {
  * Allow activity comments on posts and comments.
  *
  * @since BuddyBoss 1.6.2
+ *
+ * @param array $args Feed settings.
+ *
+ * @return void
  */
 function bp_feed_settings_callback_post_type_comments( $args ) {
-	
 	$post_type     = $args['post_type'];
 	$option_name   = bp_post_type_feed_comment_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
 	?>
 
 	<input
-		class="bp-feed-post-type-commenet-checkbox <?php echo 'bp-feed-post-type-comment-' . $post_type; ?>"
-		name="<?php echo $option_name; ?>"
-		id="<?php echo $option_name; ?>"
+		class="bp-feed-post-type-commenet-checkbox <?php echo 'bp-feed-post-type-comment-' . esc_attr( $post_type ); ?>"
+		name="<?php echo esc_attr( $option_name ); ?>"
+		id="<?php echo esc_attr( $option_name ); ?>"
 		type="checkbox"
 		value="1"
 		<?php checked( bp_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
 	/>
-	<label for="<?php echo $option_name; ?>">
-		<?php echo 'post' === $post_type ? __( 'Show blog post comments', 'buddyboss' ) : sprintf( __( 'Enable comments in %s activity posts.', 'buddyboss' ), $post_type_obj->labels->name ); ?>
+	<label for="<?php echo esc_attr( $option_name ); ?>">
+		<?php echo 'post' === $post_type ? esc_html__( 'Show blog post comments', 'buddyboss' ) : sprintf( esc_html__( 'Enable comments in %s activity posts.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
 	</label>
 	<?php
 
-	// Description for the WordPress Blog Posts
+	// Description for the WordPress Blog Posts.
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php _e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ); ?></p>
 		<?php
 	}
 }
