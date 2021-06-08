@@ -958,7 +958,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Set forum id when activity component is groups.
-			if ( 'groups' == $activity->component ) {
+			if ( 'groups' === $activity->component ) {
 				$topic_id = $activity->secondary_item_id;
 				$forum_id = bbp_get_topic_forum_id( $topic_id );
 			}
