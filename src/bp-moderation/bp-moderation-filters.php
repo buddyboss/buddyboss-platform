@@ -551,7 +551,7 @@ add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cac
  *
  * @param object $suspend_record suspend item record.
  */
-function bp_moderation_clear_delete_cache( $suspend_record ) {
+function bb_moderation_clear_delete_cache( $suspend_record ) {
 	if ( empty( $suspend_record->item_type ) || empty( $suspend_record->item_id ) ) {
 		return;
 	}
@@ -561,10 +561,10 @@ function bp_moderation_clear_delete_cache( $suspend_record ) {
 	wp_cache_delete( 'bb_check_user_suspend_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 }
 
-add_action( 'bp_moderation_after_save', 'bp_moderation_clear_delete_cache' );
-add_action( 'suspend_after_delete', 'bp_moderation_clear_delete_cache' );
-add_action( 'bp_moderation_after_hide', 'bp_moderation_clear_delete_cache' );
-add_action( 'bp_moderation_after_unhide', 'bp_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_save', 'bb_moderation_clear_delete_cache' );
+add_action( 'suspend_after_delete', 'bb_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_hide', 'bb_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_unhide', 'bb_moderation_clear_delete_cache' );
 
 /**
  * Function to clear cache when item hide/unhide
@@ -575,7 +575,7 @@ add_action( 'bp_moderation_after_unhide', 'bp_moderation_clear_delete_cache' );
  * @param int    $content_id   content id.
  * @param array  $args         item arguments.
  */
-function bp_moderation_clear_status_change_cache( $content_type, $content_id, $args ) {
+function bb_moderation_clear_status_change_cache( $content_type, $content_id, $args ) {
 	if ( empty( $content_type ) || empty( $content_id ) ) {
 		return;
 	}
@@ -585,5 +585,5 @@ function bp_moderation_clear_status_change_cache( $content_type, $content_id, $a
 	wp_cache_delete( 'bb_check_user_suspend_' . $content_type . '_' . $content_id, 'bb' );
 }
 
-add_action( 'bp_suspend_hide_before', 'bp_moderation_clear_status_change_cache', 10, 3 );
-add_action( 'bp_suspend_unhide_before', 'bp_moderation_clear_status_change_cache', 10, 3 );
+add_action( 'bp_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+add_action( 'bp_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
