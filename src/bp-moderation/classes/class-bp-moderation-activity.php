@@ -197,13 +197,43 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 				break;
 			case 'bbp_topic_create':
-				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-				$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
+				if ( bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Topics::$moderation_type ) ) {
+					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
+					$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
 				break;
 			case 'bbp_reply_create':
-				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-				$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
+				if ( bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Replies::$moderation_type ) ) {
+					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
+					$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
 				break;
+		}
+
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) ) ) {
+			if ( bp_is_active( 'media' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+				$sub_items['id']   = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
+		}
+
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_activity', true ) ) ) {
+			if ( bp_is_active( 'document' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+				$sub_items['id']   = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+				$sub_items['type'] = BP_Moderation_Document::$moderation_type;
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
 		}
 
 		return $sub_items;
