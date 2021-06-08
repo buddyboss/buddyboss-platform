@@ -724,7 +724,7 @@ function bb_learndash_delete_group( $post_id = 0 ) {
 
 	$post_parent = get_post( $post->post_parent );
 
-	if ( 'groups' != $post_parent->post_type ) {
+	if ( 'groups' !== $post_parent->post_type ) {
 		return;
 	}
 
