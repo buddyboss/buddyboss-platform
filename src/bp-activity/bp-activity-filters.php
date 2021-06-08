@@ -2432,7 +2432,7 @@ function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 	$activity = array_shift( $activities['activities'] );
 
 	// When activity component is not blog.
-	if ( 'blogs' != $activity->component ) {
+	if ( 'blogs' !== $activity->component ) {
 		return $buttons;
 	}
 
