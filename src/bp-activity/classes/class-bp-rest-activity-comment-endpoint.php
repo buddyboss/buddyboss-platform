@@ -239,10 +239,6 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$request['parent_id'] = '';
 		}
 
-		if ( empty( $request['content'] ) ) {
-			$request['content'] = '&#8203;';
-		}
-
 		$comment_id = bp_activity_new_comment(
 			array(
 				'activity_id' => $request['id'],

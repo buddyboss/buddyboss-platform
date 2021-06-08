@@ -4890,6 +4890,10 @@ function bp_core_parse_url( $url ) {
 
 	$parsed_url_data = array();
 
+	if ( strstr( $url, site_url() ) && ( strstr( $url, 'download_document_file' ) || strstr( $url, 'download_media_file' ) || strstr( $url, 'download_video_file' )) ) {
+		return array();
+	}
+
 	// Fetch the oembed code for URL.
 	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
 	if ( ! empty( $embed_code ) ) {
