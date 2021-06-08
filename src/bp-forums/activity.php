@@ -360,41 +360,41 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @uses bbp_get_reply()           Get reply post data.
 		 * @uses bbp_get_topic_permalink() Get discussion permalink.
 		 *
-		 * @return void
+		 * @return string|void
 		 */
 		public function before_activity_content() {
 			global $activities_template;
 
 			// When the activity type does not match with the topic or reply.
-			if ( ! in_array( $activities_template->activity->type, array( $this->topic_create, $this->reply_create ) ) ) {
+			if ( ! in_array( $activities_template->activity->type, array( $this->topic_create, $this->reply_create ), true ) ) {
 				return '';
 			}
 
 			// Set topic id when activity component is not groups.
-			if ( $this->component == $activities_template->activity->component ) {
+			if ( $this->component === $activities_template->activity->component ) {
 				// Set topic id when activity type topic.
 				$topic_id = $activities_template->activity->item_id;
 
 				// Set topic id when activity type reply.
 				if ( $this->reply_create === $activities_template->activity->type ) {
-					$topic = bbp_get_reply( $topic_id );
+					$topic    = bbp_get_reply( $topic_id );
 					$topic_id = $topic->post_parent;
 				}
 			}
 
 			// Set topic id when activity component is groups.
-			if ( 'groups' == $activities_template->activity->component ) {
+			if ( 'groups' === $activities_template->activity->component ) {
 				// Set topic id when activity type topic.
 				$topic_id = $activities_template->activity->secondary_item_id;
 
 				// Set topic id when activity type reply.
 				if ( $this->reply_create === $activities_template->activity->type ) {
-					$topic = bbp_get_reply( $topic_id );
+					$topic    = bbp_get_reply( $topic_id );
 					$topic_id = $topic->post_parent;
 				}
 			}
 
-			// Topic
+			// Topic.
 			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 
@@ -417,11 +417,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			if ( is_user_logged_in() ) {
 				// Print discussion title.
-				echo empty( $buttons['activity_topic_title'] ) ? '' : '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">' . $buttons['activity_topic_title'] . '</div>';
+				echo empty( $buttons['activity_topic_title'] ) ? '' : sprintf( '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">%s</div>', esc_html( $buttons['activity_topic_title'] ) );
 			} else {
-				echo '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="' . $topic_permalink . '">' . $topic_title . '</a></p>';
+				echo sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%$1s">%$2s</a></p>', esc_url( $topic_permalink ), esc_html( $topic_title ) );
 			}
-			
 		}
 
 		/**
@@ -449,17 +448,17 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity = array_shift( $activities['activities'] );
 
 			// Set deafult meta buttons when the activity type is not topic.
-			if ( $this->topic_create != $activity->type ) {
+			if ( $this->topic_create !== $activity->type ) {
 				return $buttons;
 			}
 
 			// Set topic id when the activity component is not groups.
-			if ( $this->component == $activity->component ) {
+			if ( $this->component === $activity->component ) {
 				$topic_id = $activity->item_id;
 			}
 
 			// Set topic id when the activity component is groups.
-			if ( 'groups' == $activity->component ) {
+			if ( 'groups' === $activity->component ) {
 				$topic_id = $activity->secondary_item_id;
 			}
 
@@ -469,11 +468,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				unset( $buttons['activity_delete'] );
 			}
 
-			// Topic title
+			// Topic title.
 			$forum_id    = bbp_get_topic_forum_id( $topic_id );
 			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
 
-			// New meta button as 'Join discussion'
+			// New meta button as 'Join discussion'.
 			$buttons['activity_discussionsss'] = array(
 				'id'                => 'activity_discussionsss',
 				'position'          => 5,
@@ -492,10 +491,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				),
 			);
 
-			// Current users has access for quick reply
+			// Current users has access for quick reply.
 			if ( bbp_current_user_can_access_create_reply_form() ) {
-				
-				// New meta button as 'Quick Reply'
+
+				// New meta button as 'Quick Reply'.
 				$buttons['quick_reply'] = array(
 					'id'                => 'quick_reply',
 					'position'          => 5,
@@ -513,14 +512,14 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						'data-topic-title' => esc_attr( $topic_title ),
 						'data-topic-id'    => $topic_id,
 						'aria-expanded'    => 'false',
-						'href'             => "#new-post",
+						'href'             => '#new-post',
 					),
 				);
 			}
-			
+
 			// Delete button set as the last meta buttion.
 			if ( ! empty( $delete ) ) {
-				 $buttons['activity_delete'] = $delete;
+					$buttons['activity_delete'] = $delete;
 			}
 
 			return $buttons;
@@ -543,7 +542,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		public function nouveau_get_activity_reply_buttons( $buttons, $activity_id ) {
 			// Activity post data.
 			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-			
+
 			if ( empty( $activities['activities'] ) ) {
 				return $buttons;
 			}
@@ -551,19 +550,19 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity = array_shift( $activities['activities'] );
 
 			// Set deafult meta buttons when the activity type is not reply.
-			if ( $this->reply_create != $activity->type ) {
+			if ( $this->reply_create !== $activity->type ) {
 				return $buttons;
 			}
 
 			// Set topic id when the activity component is not groups.
-			if ( $this->component == $activity->component ) {
+			if ( $this->component === $activity->component ) {
 				$topic_id = $activity->item_id;
 				$topic    = bbp_get_reply( $topic_id );
 				$topic_id = $topic->post_parent;
 			}
 
 			// Set topic id when the activity component is groups.
-			if ( 'groups' == $activity->component ) {
+			if ( 'groups' === $activity->component ) {
 				$topic_id = $activity->secondary_item_id;
 				$topic    = bbp_get_reply( $topic_id );
 				$topic_id = $topic->post_parent;
@@ -575,7 +574,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				unset( $buttons['activity_delete'] );
 			}
 
-			// New meta button as 'Join discussion'
+			// New meta button as 'Join discussion'.
 			$buttons['activity_reply_discussionsss'] = array(
 				'id'                => 'activity_reply_discussionsss',
 				'position'          => 5,
@@ -590,14 +589,14 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				'button_attr'       => array(
 					'class'         => 'button bb-icon-discussion bp-secondary-action',
 					'aria-expanded' => 'false',
-					'href'          => bbp_get_topic_permalink( $topic_id )
+					'href'          => bbp_get_topic_permalink( $topic_id ),
 				),
-				
+
 			);
-			
+
 			// Delete button set as the last meta buttion.
 			if ( ! empty( $delete ) ) {
-				 $buttons['activity_delete'] = $delete;
+					$buttons['activity_delete'] = $delete;
 			}
 
 			return $buttons;
@@ -615,15 +614,15 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		public function bp_activity_quick_reply() {
 			?>
 			<div id="bbpress-forums" class="bbpress-forums-activity" data-component="activity">
-				<?php 
+				<?php
 					// Timeline quick reply form template.
-					bbp_get_template_part( 'form', 'reply' ); 
+					bbp_get_template_part( 'form', 'reply' );
 				?>
 			</div>
-			
-			<?php 
+
+			<?php
 			// Success message template.
-			bbp_get_template_part( 'form-reply', 'success' ); 
+			bbp_get_template_part( 'form-reply', 'success' );
 		}
 
 		/** Topics ****************************************************************/
@@ -1161,17 +1160,17 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		public function activity_secondary_avatar( $avatar ) {
 			global $activities_template;
-		
+
 			// Set empty group icon when activity type is topic.
-			if ( $this->topic_create == $activities_template->activity->type ) {
+			if ( $this->topic_create === $activities_template->activity->type ) {
 				return '';
 			}
 
 			// Set empty group icon when activity type is reply.
-			if ( $this->reply_create == $activities_template->activity->type ) {
+			if ( $this->reply_create === $activities_template->activity->type ) {
 				return '';
 			}
-			
+
 			return $avatar;
 		}
 
