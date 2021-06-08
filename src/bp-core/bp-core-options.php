@@ -871,8 +871,8 @@ function bp_disable_blogforum_comments( $default = false ) {
  *              items, otherwise false.
  */
 function bp_is_post_type_feed_comment_enable( $post_type, $default = false ) {
-	$option_name = bp_post_type_feed_comment_option_name( $post_type );;
-	
+	$option_name = bp_post_type_feed_comment_option_name( $post_type );
+
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
 	 *
@@ -1859,14 +1859,14 @@ function bp_feed_post_types() {
 	// Get all active custom post type.
 	$post_types = get_post_types( array( 'public' => true ) );
 
-	// Exclude BP CPT
+	// Exclude BP CPT.
 	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 
 	$bp_excluded_cpt = array();
-	
+
 	foreach ( $post_types as $post_type ) {
 		// Exclude all the custom post type which is already in BuddyPress Activity support.
-		if ( in_array( $post_type, $bp_exclude_cpt ) ) {
+		if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
 			continue;
 		}
 
