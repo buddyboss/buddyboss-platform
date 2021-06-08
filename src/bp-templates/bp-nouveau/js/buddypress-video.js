@@ -1364,7 +1364,11 @@ window.bp = window.bp || {};
 									$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
 								}
 
-								if ( false === response.data.delete_activity ) {
+								if ( true === response.data.delete_activity ) {
+									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
+									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
+									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+								} else {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
