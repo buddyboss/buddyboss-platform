@@ -698,15 +698,15 @@ add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
 /**
  * Remove the 'group_leader' role for Learndash group author.
  * If the author is not the leader of any gorup.
- * 
+ *
  * @since BuddyBoss 1.6.1
- * 
- * @param int $post_id
- * 
+ *
+ * @param int $post_id WP Post ID.
+ *
  * @uses learndash_is_admin_user()                Is the author has administrator role.
  * @uses learndash_is_group_leader_user()         Is the author has group_leader role.
  * @uses learndash_get_administrators_group_ids() Gets the list of group IDs administered by the user.
- * 
+ *
  * @return void
  */
 function bb_learndash_delete_group( $post_id = 0 ) {
@@ -716,7 +716,7 @@ function bb_learndash_delete_group( $post_id = 0 ) {
 	}
 
 	$post = get_post( $post_id );
-	
+
 	// Is it trash or not.
 	if ( 'revision' !== $post->post_type ) {
 		return;
@@ -742,19 +742,19 @@ function bb_learndash_delete_group( $post_id = 0 ) {
 	}
 
 	// When the group author has no group_leader role.
-	if ( ! learndash_is_group_leader_user( $author  ) ) {
+	if ( ! learndash_is_group_leader_user( $author ) ) {
 		return;
 	}
 
 	// Gets the list of group IDs administered by the user.
-	$group_ids = learndash_get_administrators_group_ids( $author  );
+	$group_ids = learndash_get_administrators_group_ids( $author );
 
 	if ( ! empty( $group_ids ) ) {
 		return;
 	}
 
 	$user = new \WP_User( $author );
-	// Add role
+	// Add role.
 	$user->remove_role( 'group_leader' );
 }
 add_action( 'delete_post', 'bb_learndash_delete_group' );
@@ -762,15 +762,15 @@ add_action( 'delete_post', 'bb_learndash_delete_group' );
 /**
  * Add the 'group_leader' role for Learndash group author.
  * When learndash group status change form trash to draft.
- * 
+ *
  * @since BuddyBoss 1.6.1
- * 
- * @param int $post_id
- * 
+ *
+ * @param int $post_id WP Post ID.
+ *
  * @uses learndash_is_admin_user() Is the author has administrator role.
  * @uses bb_learndash_role_add()   Add group author role as 'group_leade'.
- * 
- * @return void 
+ *
+ * @return void
  */
 function bb_learndash_untrash_group( $post_id ) {
 	// Is Learndash active or not.
@@ -780,7 +780,7 @@ function bb_learndash_untrash_group( $post_id ) {
 
 	$ldgroup = get_post( $post_id );
 
-	if ( 'groups' != $ldgroup->post_type || 'trash' != $ldgroup->post_status ) {
+	if ( 'groups' !== $ldgroup->post_type || 'trash' !== $ldgroup->post_status ) {
 		return;
 	}
 
@@ -795,7 +795,7 @@ function bb_learndash_untrash_group( $post_id ) {
 	}
 
 	$author = $ldgroup->post_author;
-	
+
 	// When the group author has administrator role.
 	if ( learndash_is_admin_user( $author ) ) {
 		return;
@@ -807,11 +807,11 @@ add_action( 'untrash_post', 'bb_learndash_untrash_group' );
 
 /**
  * Add user role as 'group_leader'
- * 
+ *
  * @since BuddyBoss 1.6.1
- * 
- * @param int $user_id
- * 
+ *
+ * @param int $user_id User id.
+ *
  * @return void
  */
 function bb_learndash_role_add( $user_id ) {
