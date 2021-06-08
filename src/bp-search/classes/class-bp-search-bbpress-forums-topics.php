@@ -143,7 +143,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			// Get all nested child forum id according parent forum.
 			foreach ( $forum_ids as $forum_id ) {
-				$single_forum_child_ids = $this->nested_child_forum_ids( 728 );
+				$single_forum_child_ids = $this->nested_child_forum_ids( $forum_id );
 				$forum_child_ids        = array_merge( $forum_child_ids, $single_forum_child_ids );
 			}
 
