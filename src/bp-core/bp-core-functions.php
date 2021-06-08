@@ -5353,10 +5353,10 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	}
 	$bp = buddypress();
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
-	if ( $query->query_vars['search_wildcard'] === 'left' ) {
+	if ( 'left' === $query->query_vars['search_wildcard'] ) {
 		$search_terms_nospace = '%' . $search_terms_clean;
 		$search_terms_space   = '%' . $search_terms_clean . ' %';
-	} elseif ( $query->query_vars['search_wildcard'] === 'right' ) {
+	} elseif ( 'right' === $query->query_vars['search_wildcard'] ) {
 		$search_terms_nospace = $search_terms_clean . '%';
 		$search_terms_space   = '% ' . $search_terms_clean . '%';
 	} else {
