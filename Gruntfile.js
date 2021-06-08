@@ -279,7 +279,7 @@ module.exports = function (grunt) {
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**',
-					'**/bp-integrations/**'
+					'!**/bp-integrations/**'
 					],
 					options: {
 						process : function( content ) {

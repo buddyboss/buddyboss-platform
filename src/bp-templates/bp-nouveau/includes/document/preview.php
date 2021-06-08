@@ -33,6 +33,12 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 
 			echo '// Silence is golden.';
 			exit();
 		}
+
+		// Clear all output buffer
+		while ( ob_get_level() ) {
+		    ob_end_clean();
+		}
+		
 		header( "Content-Type: $type" );
 		readfile( "$output_file_src" );
 	} else {

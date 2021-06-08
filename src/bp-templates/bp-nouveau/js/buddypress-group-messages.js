@@ -43,6 +43,7 @@ window.bp = window.bp || {};
 
 			this.setupGlobals();
 
+			var xhr_submit_message     = null;
 			var $group_messages_select = $( 'body' ).find( '#group-messages-send-to-input' );
 			var page                   = 1;
 			var total_pages            = 1;
@@ -504,6 +505,9 @@ window.bp = window.bp || {};
 					var user, type;
 					var target     = $( e.currentTarget );
 					var users_list = [];
+					if ( xhr_submit_message ) {
+						return;
+					}
 
 					var isGroupThreadPageSelector = $( '.groups.group-messages.public-message' );
 					if ( isGroupThreadPageSelector.length ) {
@@ -622,9 +626,9 @@ window.bp = window.bp || {};
 						'gif_data'     	: gif
 					};
 
-					target.addClass( 'loading' );
+					target.addClass( 'loading' ).attr( 'disabled', true );
 
-					$.ajax(
+					xhr_submit_message = $.ajax(
 						{
 							type: 'POST',
 							url: BP_Nouveau.ajaxurl,
@@ -634,7 +638,8 @@ window.bp = window.bp || {};
 								var containerAttachment = $( '#whats-new-attachments .bp-group-messages-attached-gif-container' );
 								var inputHiddenGif 		= $( '#bp_group_messages_gif' );
 								var feedbackSelector 	= $( '#item-body .bb-groups-messages-right-top .bp-messages-feedback' );
-								target.removeClass( 'loading' );
+								target.removeClass( 'loading' ).attr( 'disabled', false );
+								xhr_submit_message = null;
 								if ( response.success ) {
 
 									$( '#item-body #group-messages-container .bb-groups-messages-right .select2-container' ).hide();

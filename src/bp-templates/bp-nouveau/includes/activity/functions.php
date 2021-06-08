@@ -190,6 +190,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => __( 'Post Update', 'buddyboss' ),
+		'updatePostButton'    => __( 'Update Post', 'buddyboss' ),
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
 		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),

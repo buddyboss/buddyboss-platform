@@ -1928,6 +1928,10 @@ window.bp = window.bp || {};
 						return false;
 					}
 
+					if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) ) ) {
+						return false;
+					}
+
 					var urlResponse = false;
 					if ( self.loadedURLs.length ) {
 						$.each(
@@ -2914,6 +2918,10 @@ window.bp = window.bp || {};
 					}
 				);
 
+				var buttomText = BP_Nouveau.activity.strings.postUpdateButton;
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
 				this.submit = new bp.Views.ActivityInput(
 					{
 						model: this.model,
@@ -2921,7 +2929,7 @@ window.bp = window.bp || {};
 						id: 'aw-whats-new-submit',
 						className: 'button',
 						name: 'aw-whats-new-submit',
-						value: BP_Nouveau.activity.strings.postUpdateButton
+						value: buttomText
 					}
 				);
 
@@ -3327,10 +3335,6 @@ window.bp = window.bp || {};
 						);
 					}
 
-					// Append zero-width character to allow post link without activity content.
-					if ( _.isEmpty( data.content ) ) {
-						data.content = '&#8203;';
-					}
 				} else {
 					data = _.omit(
 						data,
@@ -3342,12 +3346,7 @@ window.bp = window.bp || {};
 					);
 				}
 
-				// Append zero-width character to allow post gif without activity content.
-				if ( ! _.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
-					data.content = '&#8203;';
-				}
-
-				// check if edit activity.
+				// check if edit activity
 				if ( self.model.get( 'id' ) > 0 ) {
 					edit      = true;
 					data.edit = 1;
