@@ -5540,3 +5540,37 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 	 */
 	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
 }
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_get_activity_hierarchy( $activity_id ) {
+
+	global $wpdb, $bp;
+
+	$activity_table = $bp->activity->table_name;
+	$activity_query = $wpdb->prepare(
+		"SELECT c.id
+	    FROM (
+	        SELECT
+	            @r AS _id,
+	            (SELECT @r := secondary_item_id FROM {$activity_table} WHERE id = _id) AS secondary_item_id,
+	            @l := @l + 1 AS level
+	        FROM
+	            (SELECT @r := %d, @l := 0) vars, {$activity_table} m
+	        WHERE @r <> 0) d
+	    JOIN {$activity_table} c
+	    ON d._id = c.id ORDER BY d.level ASC",
+		$activity_id
+	);
+
+	$data = $wpdb->get_results( $activity_query, ARRAY_A ); // db call ok; no-cache ok;
+
+	return array_filter( $data );
+}
