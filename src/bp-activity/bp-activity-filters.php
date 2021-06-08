@@ -2412,7 +2412,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 /**
  * Meta button for activity blog post comment.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param array $buttons
  * @param int   $activity_id
@@ -2463,7 +2463,7 @@ function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 /**
  * Disable activity stream comments for discussion and reply.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param boolean $can_comment
  *
@@ -2496,7 +2496,7 @@ function bp_activity_has_comment_access( $can_comment = true ) {
  * Enable comment status.
  * More deatial check this method bp_comments_open()
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param boolean $retval
  * @param boolean $component
@@ -2516,7 +2516,7 @@ function bp_activity_blog_post_comment_status( $retval, $open, $post_id ) {
 /**
  * Remove the meta button for activity blog post comment form.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param boolean $retval
  * @param string  $component
@@ -2541,7 +2541,7 @@ function bp_is_active_comment_form_media_button( $retval, $component ) {
 /**
  * Set attribute in activity comment form submit button.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param array  $attributes
  * @param string $name
@@ -2564,7 +2564,7 @@ function bp_set_form_field_attributes( $attributes, $name ) {
 /**
  * Access control for showing activity state.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param boolean $status
  * @param int     $activity_id
@@ -2589,7 +2589,7 @@ function bp_has_activity_state( $status, $activity_id ) {
 /**
  * Access control for showing activity state.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param array $buttons             The list of buttons.
  * @param int   $activity_comment_id The current activity comment ID.
