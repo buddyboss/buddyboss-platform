@@ -143,7 +143,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			// Get all nested child forum id according parent forum.
 			foreach ( $forum_ids as $forum_id ) {
-				$single_forum_child_ids = $this->nested_child_forum_ids( $forum_id );
+				$single_forum_child_ids = $this->nested_child_forum_ids( 728 );
 				$forum_child_ids        = array_merge( $forum_child_ids, $single_forum_child_ids );
 			}
 
@@ -192,20 +192,19 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		 * 
 		 * @return array
 		 */
-		public function nested_child_forum_ids( $forum_id, $child_ids = array() ) {
-			$childs = get_posts( array ( 
-				'post_parent' => $forum_id,
-				'post_type'   => 'forum',
-				'post_status' => array( 'publish', 'private', 'hidden' ),
-				'numberposts' => -1 
-			) );
+		public function nested_child_forum_ids( $forum_id ) {
+			global $wpdb;
 
-			foreach ( $childs as $child ) {
-				$child_ids[] = $child->ID;
-				$child_ids   = $this->nested_child_forum_ids( $child->ID, $child_ids );
-			}
+			// SQL query for getting all nested child forum id from parent forum id.
+			$sql = "SELECT ID
+				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = 'forum' AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
+					  ( SELECT @pv := %d ) initialisation
+				WHERE FIND_IN_SET( post_parent, @pv )
+				AND   LENGTH( @pv := CONCAT(@pv, ',', ID ) )";
 
-			return $child_ids;
+			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, $forum_id ) );
+
+			return $child_forum_ids;
 		}
 
 		/**
