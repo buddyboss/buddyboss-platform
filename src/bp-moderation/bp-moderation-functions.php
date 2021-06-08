@@ -1073,6 +1073,8 @@ function bp_moderation_item_count( $args = array() ) {
 /**
  * Function to check if the media activity content is hidden.
  *
+ * @since BuddyBoss 1.5.6
+ *
  * @param object $media_object media id.
  *
  * @return boolean

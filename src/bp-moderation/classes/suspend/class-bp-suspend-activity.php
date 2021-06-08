@@ -467,6 +467,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Function to check if activity has content.
 	 *
+	 * @since BuddyBoss 1.5.6
+	 *
 	 * @param bool   $hidden        is activity hidden.
 	 * @param object $activity_data activity object.
 	 *

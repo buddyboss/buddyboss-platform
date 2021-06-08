@@ -401,6 +401,8 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Function to un-restrict activity data while deleting the activity.
 	 *
+	 * @since BuddyBoss 1.5.6
+	 *
 	 * @param boolean $restrict restrict single item or not.
 	 *
 	 * @return false
@@ -416,6 +418,8 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 	/**
 	 * Function to check if activity media is hidden.
+	 *
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $hidden        is activity hidden.
 	 * @param object $activity_data activity object.
