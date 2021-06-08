@@ -821,6 +821,6 @@ function bb_learndash_role_add( $user_id ) {
 	}
 
 	$user = new Buddyboss\LearndashIntegration\Library\SyncGenerator();
-	$user->promoteAsGroupLeader( $user_id );
+	$user->promote_as_group_leader( $user_id );
 }
 add_action( 'profile_update', 'bb_learndash_role_add' );
