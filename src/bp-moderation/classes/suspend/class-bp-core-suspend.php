@@ -101,7 +101,7 @@ class BP_Core_Suspend {
 		/**
 		 * Hook fire before item suspended
 		 *
-		 * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.6.2
 		 *
 		 * @param array $args Item data.
 		 */
@@ -256,7 +256,7 @@ class BP_Core_Suspend {
 		/**
 		 * Hook fire before item unsuspended
 		 *
-		 * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.6.2
 		 *
 		 * @param array $args item id.
 		 */

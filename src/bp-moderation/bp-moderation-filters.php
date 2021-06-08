@@ -527,7 +527,7 @@ add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
 /**
  * Function to clear the cache data on item suspend.
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.6.2
  *
  * @param array $moderation_data moderation item data.
  */
@@ -547,7 +547,7 @@ add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cac
 /**
  * Function to clear cache on suspend item delete.
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.6.2
  *
  * @param object $suspend_record suspend item record.
  */
@@ -569,7 +569,7 @@ add_action( 'bp_moderation_after_unhide', 'bp_moderation_clear_delete_cache' );
 /**
  * Function to clear cache when item hide/unhide
  *
- * @since BuddyBoss 1.5.6
+ * @since BuddyBoss 1.6.2
  *
  * @param string $content_type content type.
  * @param int    $content_id   content id.

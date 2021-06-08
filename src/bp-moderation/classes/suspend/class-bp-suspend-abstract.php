@@ -134,7 +134,7 @@ abstract class BP_Suspend_Abstract {
 					/**
 					 * Fire before hide item
 					 *
-					 * @since BuddyBoss 1.5.6
+					 * @since BuddyBoss 1.6.2
 					 *
 					 * @param string $content_type content type
 					 * @param int    $content_id   item id
@@ -207,7 +207,7 @@ abstract class BP_Suspend_Abstract {
 					/**
 					 * Fire before unhide item
 					 *
-					 * @since BuddyBoss 1.5.6
+					 * @since BuddyBoss 1.6.2
 					 *
 					 * @param string $content_type content type
 					 * @param int    $content_id   item id
