@@ -388,7 +388,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_id = $activities_template->activity->secondary_item_id;
 
 				// Set topic id when activity type reply.
-				if ( $this->reply_create == $activities_template->activity->type ) {
+				if ( $this->reply_create === $activities_template->activity->type ) {
 					$topic = bbp_get_reply( $topic_id );
 					$topic_id = $topic->post_parent;
 				}
