@@ -133,11 +133,11 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				FROM $wpdb->posts p 
 					LEFT JOIN $wpdb->postmeta pm ON pm.post_id = p.ID
 				WHERE 1=1
-					AND p.post_type = 'forum'
+					AND p.post_type = %s
 					AND p.post_status IN ( {$post_status} ) 
 					{$group_query}";
 			 
-			$forums          = $wpdb->get_results( $forum_query );
+			$forums          = $wpdb->get_results( $wpdb->prepare( $forum_query, bbp_get_forum_post_type() ) );
 			$forum_ids       = wp_list_pluck( $forums, 'forum_id' );
 			$forum_child_ids = array();
 
@@ -188,6 +188,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		 * 
 		 * @since BuddyBoss 1.6.2
 		 * 
+		 * @uses bbp_get_forum_post_type() Get forum post type.
+		 * 
 		 * @param int $forum_id
 		 * 
 		 * @return array
@@ -197,12 +199,12 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			// SQL query for getting all nested child forum id from parent forum id.
 			$sql = "SELECT ID
-				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = 'forum' AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
+				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
 					  ( SELECT @pv := %d ) initialisation
 				WHERE FIND_IN_SET( post_parent, @pv )
 				AND   LENGTH( @pv := CONCAT(@pv, ',', ID ) )";
 
-			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, $forum_id ) );
+			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id ) );
 
 			return $child_forum_ids;
 		}
