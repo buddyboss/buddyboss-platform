@@ -324,9 +324,9 @@ function bp_version_updater() {
 			bb_update_to_1_5_6();
 		}
 
-		// Version 1.5.9
+		// Version 1.6.2
 		if ( $raw_db_version < 16459 ) {
-			bb_update_to_1_5_9();
+			bb_update_to_1_6_2();
 		}
 	}
 
@@ -1144,12 +1144,12 @@ function bb_update_to_1_5_6() {
 }
 
 /**
- * 1.5.9 update routine.
+ * 1.6.2 update routine.
  *
  * @since BuddyBoss 1.6.2
  */
-function bb_update_to_1_5_9() {
-	bb_update_to_1_5_9_ativity_setting_feed_comments_migration();
+function bb_update_to_1_6_2() {
+	bb_update_to_1_6_2_ativity_setting_feed_comments_migration();
 }
 
 /**
@@ -1158,13 +1158,18 @@ function bb_update_to_1_5_9() {
  *
  * @since BuddyBoss 1.6.2
  *
+ * @uses bp_feed_post_types()                    Get all post types.
+ * @uses bp_post_type_feed_option_name()         Option key for individual post type.
+ * @uses bp_post_type_feed_comment_option_name() Option key for individual post type comment.
+ * @uses bp_is_post_type_feed_enable()           Checks if post type feed is enabled.
+ *
  * @return void
  */
-function bb_update_to_1_5_9_ativity_setting_feed_comments_migration() {
+function bb_update_to_1_6_2_ativity_setting_feed_comments_migration() {
 	$custom_post_types = bp_feed_post_types();
-	
+
 	// Run over all custom post type.
-	foreach( $custom_post_types as $post_type ) {
+	foreach ( $custom_post_types as $post_type ) {
 		// Post type option name.
 		$pt_opt_name = bp_post_type_feed_option_name( $post_type );
 
