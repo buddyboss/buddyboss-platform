@@ -1033,7 +1033,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$field = $profile_field;
 
 		if ( 'membertypes' === $profile_field->type ) {
-			$all_member_type = $this->get_member_type_options( $profile_field->id, array( 'show_all' => true ) );
+			// Need to pass $profile_field as object.
+			$all_member_type = $this->get_member_type_options( $profile_field, array( 'show_all' => true ) );
 			if ( ! empty( $all_member_type ) ) {
 				$all_member_type = array_column( $all_member_type, 'name', 'id' );
 			}
