@@ -143,6 +143,8 @@ add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
+// Filter check content empty or not for the media, document and GIF data.
+add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 /** Functions *****************************************************************/
 
 /**
@@ -2386,4 +2388,24 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 	}
 
 	return $content;
+}
+
+/**
+ * Function will check content empty or not for the media, document and gif.
+ * If content will empty then return true and allow empty content in DB for the media, document and gif.
+ *
+ * @param array $data Get post data for the comments.
+ *
+ * @return bool
+ */
+function bb_check_is_activity_content_empty( $data ) {
+	if ( empty( $data['content'] ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
+		return true;
+	} elseif ( empty( $data['content'] ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
+		return true;
+	} elseif ( ! empty( $data['content'] ) ) {
+		return true;
+	} else {
+		return false;
+	}
 }

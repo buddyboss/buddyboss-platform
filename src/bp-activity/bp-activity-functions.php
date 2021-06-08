@@ -2975,6 +2975,7 @@ function bp_activity_new_comment( $args = '' ) {
 			'primary_link'      => '',
 			'skip_notification' => false,
 			'error_type'        => 'bool',
+			'skip_error'        => true,
 		)
 	);
 
@@ -2987,9 +2988,13 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
+	
+	// Filter to skip comment content check for comment notification.
+	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
 
 	// Bail if missing necessary data.
-	if ( empty( $r['content'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+	if ( ( $check_empty_content && ( empty( $r['content'] ) && false === $r['skip_error'] ) ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+
 		$error = new WP_Error( 'missing_data', $feedback );
 
 		if ( 'wp_error' === $r['error_type'] ) {
