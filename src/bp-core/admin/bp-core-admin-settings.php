@@ -835,8 +835,8 @@ function bp_feed_settings_callback_post_type( $args ) {
 	}
 	?>
 	<input
-		class="bp-feed-post-type-checkbox <?php echo 'bp-feed-post-type-' . $post_type; ?>"
-		data-post_type="<?php echo $post_type; ?>"
+		class="bp-feed-post-type-checkbox <?php echo 'bp-feed-post-type-' . esc_attr( $post_type ); ?>"
+		data-post_type="<?php echo esc_attr( $post_type ); ?>"
 		name="<?php echo $option_name; ?>"
 		id="<?php echo $option_name; ?>"
 		type="checkbox"
