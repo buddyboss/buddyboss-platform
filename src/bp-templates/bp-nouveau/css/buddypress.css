@@ -2919,6 +2919,8 @@ span.dashicons.dashicons-admin-file:before {
   max-height: 90vh;
   min-height: 90vh;
   position: static;
+  overflow: scroll;
+  /*Prevent flickering issue*/
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
