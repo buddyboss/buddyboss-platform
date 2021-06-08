@@ -3327,15 +3327,23 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 		if ( wp_attachment_is_image( $attachment_id ) && file_exists( $output_file_src ) ) {
 			$media = new BP_Media( $media_id );
 
-			$upload_directory = wp_get_upload_dir();
-			$symlinks_path    = bp_media_symlink_path();
+			if ( bb_enable_symlinks() ) {
 
-			$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
-			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
-				bp_media_create_symlinks( $media, $size );
-			}
+				$upload_directory = wp_get_upload_dir();
+				$symlinks_path    = bp_media_symlink_path();
 
-			$attachment_url = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
+				$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
+				if ( ! file_exists( $preview_attachment_path ) && $generate ) {
+					bp_media_create_symlinks( $media, $size );
+				}
+
+				$attachment_url = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
+
+			} else {
+				$media_id       = 'forbidden_' . $media_id;
+				$attachment_id  = 'forbidden_' . $attachment_id;
+				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . $size;
+            }
 
 		}
 	}
@@ -3818,6 +3826,10 @@ function bb_media_user_can_access( $id, $type ) {
  */
 function bb_media_delete_older_symlinks() {
 
+    if ( ! bb_enable_symlinks() ) {
+        return;
+    }
+
 	// Get documents previews symlink directory path.
 	$dir     = bp_media_symlink_path();
 	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
@@ -3850,3 +3862,4 @@ function bb_media_delete_older_symlinks() {
 
 }
 bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks' );
+

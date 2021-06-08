@@ -5543,3 +5543,23 @@ function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_direct
 
 	return str_replace( 'uploads/uploads', 'uploads', $attachment_url );
 }
+
+/**
+ * Return absolute path of the document file.
+ *
+ * @param $path
+ * @since BuddyBoss 1.7.0
+ */
+function bb_core_scaled_attachment_path( $attachment_id ) {
+	$is_image         = wp_attachment_is_image( $attachment_id );
+	$img_url          = get_attached_file( $attachment_id );
+	$meta             = wp_get_attachment_metadata( $attachment_id );
+	$img_url_basename = wp_basename( $img_url );
+	if ( ! $is_image ) {
+		if ( ! empty( $meta['sizes']['full'] ) ) {
+			$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
+		}
+	}
+
+	return $img_url;
+}
