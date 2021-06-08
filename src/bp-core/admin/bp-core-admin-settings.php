@@ -859,7 +859,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 /**
  * Allow activity comments on posts and comments.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  */
 function bp_feed_settings_callback_post_type_comments( $args ) {
 	
@@ -1395,7 +1395,7 @@ function bp_admin_moderation_report_setting_tutorial() {
 /**
  * After update activity setting
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param string $tab_name
  * @param object $class_obj

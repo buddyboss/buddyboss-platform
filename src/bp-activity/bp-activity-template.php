@@ -1867,7 +1867,7 @@ function bp_get_activity_is_favorite() {
 /**
  * Output the comment markup for an activity blog post item.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param array $args Commet args.
  *
@@ -1893,7 +1893,7 @@ function bp_activity_blog_post_comments( $args = array() ) {
 /**
  * Get the comment markup for an activity blog post item.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @uses bp_activity_recurse_post_comments() Render WP list comments.
  *
@@ -1942,7 +1942,7 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 /**
  * Render all comments for singe blog post.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @uses buddyboss_activity_blog_post_comment() Render single comment.
  *
@@ -1959,7 +1959,7 @@ function bp_activity_recurse_blog_post_comments( $comments ) {
 	/**
 	 * Filters the opening tag for the template that lists activity comments.
 	 *
-	 * @since BuddyBoss 1.5.9
+	 * @since BuddyBoss 1.6.2
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */

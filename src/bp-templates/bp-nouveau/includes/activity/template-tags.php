@@ -269,7 +269,7 @@ function bp_nouveau_activity_state() {
 	/**
 	 * Filter here to access control in activity state.
 	 *
-	 * @since BuddyBoss 1.5.9
+	 * @since BuddyBoss 1.6.2
 	 *
 	 * @param bool $value Access status.
 	 * @param int  $activity_id Activity id.
@@ -1067,7 +1067,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 /**
  * Get the action buttons for the activity blog post comments
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param object comment
  * @param array  $args 

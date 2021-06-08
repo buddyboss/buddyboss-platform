@@ -1146,7 +1146,7 @@ function bb_update_to_1_5_6() {
 /**
  * 1.5.9 update routine.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  */
 function bb_update_to_1_5_9() {
 	bb_update_to_1_5_9_ativity_setting_feed_comments_migration();
@@ -1156,7 +1156,7 @@ function bb_update_to_1_5_9() {
  * Migration for activity setting feed comments.
  * Enable all custom post type comments when the default post type comments are enable.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @return void
  */

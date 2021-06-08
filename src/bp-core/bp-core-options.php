@@ -862,7 +862,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 /**
  * Are any post type/comment activity feed comments enable?
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param bool $post_type custom post type.
  * @param bool $default   Optional. Fallback value if not found in the database.
@@ -876,7 +876,7 @@ function bp_is_post_type_feed_comment_enable( $post_type, $default = false ) {
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
 	 *
-	 * @since BuddyBoss 1.5.9
+	 * @since BuddyBoss 1.6.2
 	 *
 	 * @param bool $value Whether or not custom post type activity feed comments are enable.
 	 */
@@ -1803,7 +1803,7 @@ function bp_rest_enable_private_network() {
  * Option name for custom post type.
  * From the activity settings whether any custom post enable or disable for timeline feed.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param bool $post_type custom post type.
  *
@@ -1817,7 +1817,7 @@ function bp_post_type_feed_option_name( $post_type ) {
  * Option name for custom post type comments.
  * From the activity settings whether any custom post comments are enable or disable for timeline feed.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @param bool $post_type custom post type.
  *
@@ -1830,7 +1830,7 @@ function bp_post_type_feed_comment_option_name( $post_type ) {
 /**
  * Custom post types for activity settings.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss 1.6.2
  *
  * @return array.
  */
