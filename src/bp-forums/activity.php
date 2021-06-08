@@ -947,7 +947,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		public function topic_activity_action_callback( $action, $activity ) {
 			// Return default action when activity type is not topic.
-			if ( $this->topic_create != $activity->type ) {
+			if ( $this->topic_create !== $activity->type ) {
 				return $action;
 			}
 
@@ -963,15 +963,15 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$forum_id = bbp_get_topic_forum_id( $topic_id );
 			}
 
-			// User
+			// User.
 			$user_id   = $activity->user_id;
 			$user_link = bbp_get_user_profile_link( $user_id );
 
-			// Forum
+			// Forum.
 			$forum_permalink = bbp_get_forum_permalink( $forum_id );
 			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
 			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
-			
+
 			return sprintf(
 				esc_html__( '%1$s started a new discussion in the forum %2$s', 'buddyboss' ),
 				$user_link,
@@ -999,7 +999,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$reply_id = $activity->item_id;
 			$forum_id = bbp_get_reply_forum_id( $reply_id );
 
-			// User
+			// User.
 			$user_link = bbp_get_user_profile_link( $user_id );
 
 			// Update forum id when activity component is groups.
@@ -1008,7 +1008,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$forum_id = bbp_get_topic_forum_id( $topic_id );
 			}
 
-			// Forum
+			// Forum.
 			$forum_permalink = bbp_get_forum_permalink( $forum_id );
 			$forum_title     = get_post_field( 'post_title', $forum_id, 'raw' );
 			$forum_link      = '<a href="' . $forum_permalink . '">' . $forum_title . '</a>';
