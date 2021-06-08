@@ -718,7 +718,7 @@ function bb_learndash_delete_group( $post_id = 0 ) {
 	$post = get_post( $post_id );
 	
 	// Is it trash or not.
-	if ( 'revision' != $post->post_type ) {
+	if ( 'revision' !== $post->post_type ) {
 		return;
 	}
 
