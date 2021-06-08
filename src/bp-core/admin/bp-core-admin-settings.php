@@ -877,7 +877,7 @@ function bp_feed_settings_callback_post_type_comments( $args ) {
 		<?php checked( bp_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php echo $post_type === 'post' ? esc_html__( 'Show blog post comments', 'buddyboss' ) : 'Enable comments in ' . $post_type_obj->labels->name . ' activity posts.'; ?>
+		<?php echo $post_type === 'post' ? __( 'Show blog post comments', 'buddyboss' ) : sprintf( __( 'Enable comments in %s activity posts.' ), $post_type_obj->labels->name ); ?>
 	</label>
 	<?php
 
