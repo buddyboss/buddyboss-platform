@@ -1035,6 +1035,8 @@ window.bp = window.bp || {};
 						this.thumbnail_xhr.abort();
 					}
 
+					$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
+
 					this.thumbnail_xhr = $.ajax(
 						{
 							type: 'POST',
