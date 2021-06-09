@@ -149,7 +149,7 @@ class SyncGenerator {
 	 * Remove the 'group_leader' role for Learndash group author.
 	 * If the author is not the leader of any gorup.
 	 *
-	 * @since BuddyBoss 1.6.1
+	 * @since BuddyBoss 1.6.2
 	 *
 	 * @param int $ld_group_id Leardash group id.
 	 *
