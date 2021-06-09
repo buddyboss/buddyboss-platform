@@ -470,6 +470,9 @@
 .bb-icon-file-png:before { content: '\e9c6'; }
 .bb-icon-file-video:before { content: '\e962'; }
 .bb-icon-trash-small:before { content: '\eaea'; }
+.bb-icon-rounded-clubhouse:before { content: '\e9cb'; }
+.bb-icon-rounded-telegram:before { content: '\e9cc'; }
+.bb-icon-rounded-tiktok:before { content: '\e9cd'; }
 .bb-icon-rounded-instagram:before { content: '\eaec'; }
 .bb-icon-rounded-facebook:before { content: '\eaed'; }
 .bb-icon-rounded-medium:before { content: '\eafa'; }
