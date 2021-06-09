@@ -409,6 +409,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				}
 			}
 		}
+
 		return $related_content_hide;
 	}
 
