@@ -1876,12 +1876,12 @@ function bp_get_activity_is_favorite() {
  *
  * @param array $args Commet args.
  *
- * @uses bp_activity_get_blog_post_comments()     Get comments.
- * @uses bp_activity_recurse_blog_post_comments() Render comments.
+ * @uses bb_activity_get_blog_post_comments()     Get comments.
+ * @uses bb_activity_recurse_blog_post_comments() Render comments.
  *
  * @return void
  */
-function bp_activity_blog_post_comments( $args = array() ) {
+function bb_activity_blog_post_comments( $args = array() ) {
     global $activities_template;
 
     if ( empty( $activities_template->activity ) ) {
@@ -1889,10 +1889,10 @@ function bp_activity_blog_post_comments( $args = array() ) {
     }
 
     $activity_id = empty( $activities_template->activity ) ? false : $activities_template->activity->secondary_item_id;
-    $comments    = bp_activity_get_blog_post_comments( $activities_template->activity->secondary_item_id, $args );
+    $comments    = bb_activity_get_blog_post_comments( $activities_template->activity->secondary_item_id, $args );
 
     // Render WP list comments.
-    bp_activity_recurse_blog_post_comments( $comments );
+    bb_activity_recurse_blog_post_comments( $comments );
 }
 
 /**
@@ -1909,7 +1909,7 @@ function bp_activity_blog_post_comments( $args = array() ) {
  *
  * @return void
  */
-function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
+function bb_activity_get_blog_post_comments( $post_id, $args = array() ) {
     // Invalid post id.
     if ( empty( (int) $post_id ) ) {
         return;
@@ -1958,7 +1958,7 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
  *
  * @return void|string
  */
-function bp_activity_recurse_blog_post_comments( $comments ) {
+function bb_activity_recurse_blog_post_comments( $comments ) {
     // When there is not comments.
     if ( empty( $comments ) ) {
         return '';
