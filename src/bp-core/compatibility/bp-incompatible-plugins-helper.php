@@ -808,7 +808,7 @@ add_action( 'untrash_post', 'bb_learndash_untrash_group' );
 /**
  * Add user role as 'group_leader'
  *
- * @since BuddyBoss 1.6.1
+ * @since BuddyBoss 1.6.2
  *
  * @param int $user_id User id.
  *
