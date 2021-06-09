@@ -479,7 +479,7 @@ function bp_get_comment_depth( $my_comment_id ) {
  *
  * @global BP_Activity_Template $activities_template
  *
- * @return string JSON reply.
+ * @return string JSON
  */
 function bp_nouveau_ajax_new_activity_blog_post_comment() {
 	$response = array(
@@ -494,8 +494,8 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 		wp_send_json_error( $response );
 	}
 
-	// Nonce check!
-	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( $_POST['_wpnonce_new_activity_comment'], 'new_activity_comment' ) ) {
+	// Nonce check!.
+	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce_new_activity_comment'] ), 'new_activity_comment' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -518,24 +518,23 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 		wp_send_json_error( $response );
 	}
 
-
 	// Get userdata.
-	if ( get_current_user_id() == bp_loggedin_user_id() ) {
+	if ( get_current_user_id() === bp_loggedin_user_id() ) {
 		$user = buddypress()->loggedin_user->userdata;
 	} else {
 		$user = bp_core_get_core_userdata( $params['user_id'] );
 	}
 
 	$activities = bp_activity_get_specific( array( 'activity_ids' => $_POST['form_id'] ) );
-	$activity = array_shift( $activities['activities'] );
+	$activity   = array_shift( $activities['activities'] );
 
 	// Comment args.
 	$args = array(
-		'comment_post_ID' => $activity->secondary_item_id, //(int) $_POST['comment_post_id'],
+		'comment_post_ID' => $activity->secondary_item_id, // (int) $_POST['comment_post_id'].
 		'author'          => bp_core_get_user_displayname( get_current_user_id() ),
 		'email'           => $user->user_email,
 		'url'             => bp_core_get_user_domain( get_current_user_id(), $user->user_nicename, $user->user_login ),
-		'comment'         => sanitize_text_field(  wp_unslash( $_POST['content'] ) ),
+		'comment'         => sanitize_text_field( wp_unslash( $_POST['content'] ) ),
 		'comment_parent'  => (int) $_POST['comment_id'],
 	);
 
@@ -551,9 +550,11 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 
 	if ( is_wp_error( $comment ) ) {
 		$error_message = $comment->get_error_message();
-		wp_send_json_error( array(
-			'feedback' => '<div class="bp-feedback bp-messages error">' . $error_message . '</div>'
-		) );
+		wp_send_json_error(
+			array(
+				'feedback' => '<div class="bp-feedback bp-messages error">' . $error_message . '</div>',
+			)
+		);
 	}
 
 	$thread_comments = get_option( 'thread_comments', false );
@@ -568,13 +569,17 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 
 	ob_start();
 		// Get activity comment template part.
-		buddyboss_activity_blog_post_comment( $comment, array(
-			'avatar_size' => 80,
-			'short_ping'  => true,
-			'max_depth'   => $comment_deep,
-			'style'       => 'li'
-		), $depth );
-		
+		buddyboss_activity_blog_post_comment(
+			$comment,
+			array(
+				'avatar_size' => 80,
+				'short_ping'  => true,
+				'max_depth'   => $comment_deep,
+				'style'       => 'li',
+			),
+			$depth
+		);
+
 		$response = array( 'contents' => ob_get_contents() );
 	ob_end_clean();
 
