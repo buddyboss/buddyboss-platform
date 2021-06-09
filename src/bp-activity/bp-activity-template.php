@@ -1876,7 +1876,7 @@ function bp_get_activity_is_favorite() {
  *
  * @param array $args Commet args.
  *
- * @uses bp_activity_get_blog_post_comments() Get comments.
+ * @uses bp_activity_get_blog_post_comments()     Get comments.
  * @uses bp_activity_recurse_blog_post_comments() Render comments.
  *
  * @return void
