@@ -2622,7 +2622,7 @@ window.bp = window.bp || {};
 						var error_block = $( this ).find( '.vjs-error-display.vjs-modal-dialog' );
 						var video_block_main = $( this );
 
-						fullscreen_btn.on( 'click', function() {
+						fullscreen_btn.on( 'click touchstart', function() {
 							//Set current time of video and id
 							if( player[ele_id].currentTime() > 0 ) {
 								bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
