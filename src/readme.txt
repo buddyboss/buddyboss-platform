@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.5.9
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,28 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.6.1 =
+* Activity - Small improvement to stop saving zero width space html entity with post update
+* Activity - Fixed minor button text for edit activity popup
+* Media - Fixed media link embed issue in Activity, Comments, Private message, Forums, etc
+* Messages - Fixed issue to stop triggering multiple messages on frequent clicks
+* REST API - Code refactoring
+
+= 1.6.0 =
+* Profiles - Added validation to restrict duplicate Nicknames in the dashboard
+* Profiles - Fixed issue when trying to search members using courses
+* Media - Fixed media preview issue for specific server configuration
+* Notifications - Fixed notification issue with blog post comments and replies
+* Registration - Small improvement to show relevant validation message on the account activation
+* REST API - Provided customer profile/group tab details in relevant endpoints
+* REST API - Improved caching for menu and settings
+* REST API - Fixed issue with hiding subgroups option not working on groups endpoint
+* REST API - Fixed issue with forum screen in settings endpoint when forum slug updated
+* REST API - Fixed messages issue by providing media objects in the bulk URL details endpoint
+* REST API - Fixed empty profile type issue in the member endpoint
+* REST API - Fixed notification wrong 'from' field parameter issue
+* Translations - Updated German (formal) language files
 
 = 1.5.9 =
 * Profiles - Improvements to reflect uploaded profile and cover photo instantly
