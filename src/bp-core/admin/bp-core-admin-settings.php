@@ -1418,8 +1418,8 @@ function bp_admin_moderation_report_setting_tutorial() {
  *
  * @since BuddyBoss 1.6.2
  *
- * @param string $tab_name
- * @param object $class_obj
+ * @param string $tab_name  Settings tab name.
+ * @param object $class_obj Tab property.
  *
  * @uses bp_feed_post_types()                    Get all post type name.
  * @uses bp_post_type_feed_option_name()         Settings option name for post type.
@@ -1428,18 +1428,18 @@ function bp_admin_moderation_report_setting_tutorial() {
  * @return void
  */
 function bp_after_update_activity_settings( $tab_name, $class_obj ) {
-	if ( 'bp-activity' != $tab_name ) {
+	if ( 'bp-activity' !== $tab_name ) {
 		return;
 	}
-	
+
 	foreach ( bp_feed_post_types() as $key => $post_type ) {
 		// Post type option name.
 		$pt_opt_name = bp_post_type_feed_option_name( $post_type );
-		
+
 		// Post type comment option name.
 		$ptc_opt_name = bp_post_type_feed_comment_option_name( $post_type );
 
-		// Get the post type activity status
+		// Get the post type activity status.
 		$opt_value = bp_get_option( $pt_opt_name, '' );
 
 		// If the post type activity disable then its comment also make disable.
