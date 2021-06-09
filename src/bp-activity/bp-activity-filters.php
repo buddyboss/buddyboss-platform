@@ -144,10 +144,10 @@ add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
 // Filter meta button for blog post comment.
-add_action( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_blog_post_comment_buttons', 10 ,2 );
+add_action( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_blog_post_comment_buttons', 10 ,2 );
 
 // Obey BuddyBoss commenting rules
-add_filter( 'bp_activity_can_comment', 'bp_activity_has_comment_access' );
+add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
 
 // Filter for set attribute in activity post comment button.
 add_filter( 'bp_get_form_field_attributes', 'bp_set_form_field_attributes', 10, 2 );
@@ -156,7 +156,7 @@ add_filter( 'bp_get_form_field_attributes', 'bp_set_form_field_attributes', 10, 
 add_filter( 'bp_is_active', 'bp_is_active_comment_form_media_button', 10, 2 );
 
 // Filter for enable comment status.
-add_filter( 'bp_force_comment_status', 'bp_activity_blog_post_comment_status', 10, 3 );
+add_filter( 'bp_force_comment_status', 'bb_activity_blog_post_comment_status', 10, 3 );
 
 // Hook for access control in activity state.
 add_filter( 'bp_nouveau_has_activity_state', 'bp_has_activity_state', 10, 2 );
@@ -2424,7 +2424,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
  *
  * @return array
  */
-function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
+function bb_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 	// Activity post data.
 	$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
 
@@ -2472,7 +2472,7 @@ function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
  *
  * @return boolean
  */
-function bp_activity_has_comment_access( $can_comment = true ) {
+function bb_activity_has_comment_access( $can_comment = true ) {
 	// Already forced off, so comply.
 	if ( false === $can_comment ) {
 		return $can_comment;
@@ -2507,7 +2507,7 @@ function bp_activity_has_comment_access( $can_comment = true ) {
  *
  * @return boolean
  */
-function bp_activity_blog_post_comment_status( $retval, $open, $post_id ) {
+function bb_activity_blog_post_comment_status( $retval, $open, $post_id ) {
 	// Set true when current component is activity.
 	if ( bp_is_activity_component() ) {
 		return $open;
