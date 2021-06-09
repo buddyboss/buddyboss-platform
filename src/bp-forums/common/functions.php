@@ -1188,6 +1188,11 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 			continue;
 		}
 
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
+			continue;
+		}
+
 		// Send notification email.
 		bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
 	}
@@ -1309,6 +1314,11 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 		// Don't send notifications to the person who made the post
 		if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
+			continue;
+		}
+
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
 			continue;
 		}
 
