@@ -8168,13 +8168,17 @@ ul.bbp-stats .bbp-count {
   -moz-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
   color: #737373;
-  margin: 10px 0;
+  margin: 10px 0 20px 0;
   position: relative;
 }
 
 .bp-feedback p {
   margin: 0;
   padding: 10px 5px;
+}
+
+.bp-feedback .bp-errors p + p {
+  padding-top: 0;
 }
 
 .bp-feedback span.bp-icon {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-03 13:26:28+00:00\n"
+"POT-Creation-Date: 2021-06-08 08:02:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4589,7 +4589,7 @@ msgstr ""
 #: bp-core/bp-core-adminbar.php:220 bp-core/bp-core-functions.php:2791
 #: bp-core/classes/class-bp-core-login-widget.php:84
 #: bp-core/deprecated/buddypress/1.5.php:325
-#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2704
+#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2706
 #: bp-members/bp-members-template.php:1353
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1245
 msgid "Log Out"
@@ -7879,7 +7879,7 @@ msgstr ""
 msgid "Blog Authors"
 msgstr ""
 
-#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2841
+#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2843
 msgid "Edit %s's Profile"
 msgstr ""
 
@@ -12918,7 +12918,7 @@ msgid "(Edit)"
 msgstr ""
 
 #: bp-forums/common/template.php:2403 bp-forums/common/template.php:2522
-#: bp-forums/common/template.php:2794 bp-forums/core/theme-compat.php:768
+#: bp-forums/common/template.php:2796 bp-forums/core/theme-compat.php:768
 #: bp-forums/templates/default/extras/taxonomy-topic-tag-edit.php:16
 #: bp-forums/templates/default/extras/taxonomy-topic-tag.php:16
 msgid "Discussion Tag: %s"
@@ -12932,55 +12932,55 @@ msgstr ""
 msgid "&rsaquo;"
 msgstr ""
 
-#: bp-forums/common/template.php:2758
+#: bp-forums/common/template.php:2760
 msgid "Forum Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2763
+#: bp-forums/common/template.php:2765
 msgid "Discussion Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2768
+#: bp-forums/common/template.php:2770
 msgid "Reply Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2773
+#: bp-forums/common/template.php:2775
 msgid "Discussion Tag Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2780
+#: bp-forums/common/template.php:2782
 msgid "Forum: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2785
+#: bp-forums/common/template.php:2787
 msgid "Discussion: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2812
+#: bp-forums/common/template.php:2814
 msgid "%s Discussions"
 msgstr ""
 
-#: bp-forums/common/template.php:2816
+#: bp-forums/common/template.php:2818
 msgid "%s Replies"
 msgstr ""
 
-#: bp-forums/common/template.php:2820
+#: bp-forums/common/template.php:2822
 msgid "%s Saved"
 msgstr ""
 
-#: bp-forums/common/template.php:2824
+#: bp-forums/common/template.php:2826
 msgid "%s Subscriptions"
 msgstr ""
 
-#: bp-forums/common/template.php:2828
+#: bp-forums/common/template.php:2830
 msgid "%s Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2836
+#: bp-forums/common/template.php:2838
 msgid "Edit Your Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2849
+#: bp-forums/common/template.php:2851
 msgid "View: %s"
 msgstr ""
 
@@ -27453,12 +27453,12 @@ msgctxt "memory unit"
 msgid "B"
 msgstr ""
 
-#: bp-forums/common/template.php:2803
+#: bp-forums/common/template.php:2805
 msgctxt "User viewing his/her own profile"
 msgid "Your"
 msgstr ""
 
-#: bp-forums/common/template.php:2807
+#: bp-forums/common/template.php:2809
 msgctxt "User viewing another users profile"
 msgid "%s's"
 msgstr ""

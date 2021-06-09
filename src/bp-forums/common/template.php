@@ -2653,9 +2653,11 @@ function bbp_template_notices() {
 
 		<div class="bp-feedback error">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p>
-				<?php echo implode( "</p>\n<p>", $errors ); ?>
-			</p>
+			<div class="bp-errors">
+				<p>
+					<?php echo implode( "</p>\n<p>", $errors ); ?>
+				</p>
+			</div>
 		</div>
 
 		<?php
