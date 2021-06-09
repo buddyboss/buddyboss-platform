@@ -383,7 +383,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $activity_id, $args = array() ) {
-
 		$related_contents = array(
 			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),
 		);
@@ -394,10 +393,23 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'media' ) ) {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta' );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta' );
 		}
 
-		return $related_contents;
+		$related_content_hide = array();
+
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				foreach ( $related_content as $item ) {
+					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key ) && ! empty( $args['action'] ) && 'hide' === $args['action'] ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && ! empty( $args['action'] ) && 'unhide' === $args['action'] && ! isset( $args['hide_parent'] ) ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+				}
+			}
+		}
+		return $related_content_hide;
 	}
 
 	/**
