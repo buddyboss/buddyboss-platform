@@ -151,7 +151,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
 
 			// Hook after member activity content in timeline.
-			add_action( 'bp_after_member_activity_content', array( $this, 'bp_activity_quick_reply' ) );
+			add_action( 'bp_after_member_activity_content', array( $this, 'activity_quick_reply' ) );
 		}
 
 		/**
@@ -611,7 +611,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @return void
 		 */
-		public function bp_activity_quick_reply() {
+		public function activity_quick_reply() {
 			?>
 			<div id="bbpress-forums" class="bbpress-forums-activity" data-component="activity">
 				<?php
