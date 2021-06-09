@@ -5353,7 +5353,7 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		return $sql;
 	}
 
-	$bp = buddypress();
+	$bp                 = buddypress();
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 	if ( 'left' === $query->query_vars['search_wildcard'] ) {
 		$search_terms_nospace = '%' . $search_terms_clean;
@@ -5366,21 +5366,21 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$search_terms_space   = '%' . $search_terms_clean . '%';
 	}
 
-	//get the firstname,last and nickname field id.
+	// Get the firstname,last and nickname field id.
 	$firstname_field_id = bp_xprofile_firstname_field_id();
-	$last_field_id 		= bp_xprofile_lastname_field_id();
-	$nickname_field_id 	= bp_xprofile_nickname_field_id();
+	$last_field_id      = bp_xprofile_lastname_field_id();
+	$nickname_field_id  = bp_xprofile_nickname_field_id();
 
 	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-	$current_value 		= bp_get_option( 'bp-display-name-format' );
-	$where_condition 	= '';
+	$current_value   = bp_get_option( 'bp-display-name-format' );
+	$where_condition = '';
 
 	// If First Name selected then do not add last name field.
 	if ( 'first_name' === $current_value ) {
-		$where_condition .= "( ( field_id = ". $firstname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) ) OR ( ( field_id = ". $nickname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) )";
+		$where_condition .= "( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
 
-		if( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ){
-			$where_condition .= " OR ( (field_id = ". $last_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) )";
+		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
+			$where_condition .= " OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
 		}
 		// If Nick Name selected then do not add first & last name field.
 	} elseif ( 'nickname' === $current_value ) {
@@ -5392,44 +5392,50 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
 			$where_condition .= " OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
 		}
-		
+
 	} else {
 		$where_condition .= "( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
 	}
 
-	// Combine the core search (against wp_users) into a single OR clause
-	// with the xprofile_data search.
+	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
 	$matched_user_ids = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . $where_condition
 		)
 	);
 
-	// Checked profile fields based on privacy settings of particular user while searching
+	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
 		$matched_user_data = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$bp->profile->table_name_data} WHERE " . $where_condition
 			)
 		);
-		foreach ( $matched_user_data as $key => $user ) {
-			$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-			if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
+
+		if ( ! empty( $matched_user_data ) ) {
+			foreach ( $matched_user_data as $k => $user ) {
+				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
+				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
+					$key = array_search( $user->user_id, $matched_user_ids, true );
+					if ( false !== $key ) {
+						unset( $matched_user_ids[ $key ] );
+					}
 				}
-			}
-			if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
+				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
+					$key = array_search( $user->user_id, $matched_user_ids, true );
+					if ( false !== $key ) {
+						unset( $matched_user_ids[ $key ] );
+					}
 				}
 			}
 		}
 	}
+
 	if ( ! empty( $matched_user_ids ) ) {
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
 	}
+
 	return $sql;
 }
