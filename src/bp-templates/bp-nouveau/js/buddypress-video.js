@@ -2622,17 +2622,15 @@ window.bp = window.bp || {};
 						var error_block = $( this ).find( '.vjs-error-display.vjs-modal-dialog' );
 						var video_block_main = $( this );
 
-						setTimeout( function() {
-							fullscreen_btn.on( 'click', function() {
-								//Set current time of video and id
-								if( player[ele_id].currentTime() > 0 ) {
-									bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
-									bp.Nouveau.Video.Player.playerID = $( '#' + ele_id ).parent().find('.video-js video').attr('id');
-								}
-								player[ele_id].pause();
-								$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
-							});
-						}, 100);
+						fullscreen_btn.on( 'click', function() {
+							//Set current time of video and id
+							if( player[ele_id].currentTime() > 0 ) {
+								bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
+								bp.Nouveau.Video.Player.playerID = $( '#' + ele_id ).parent().find('.video-js video').attr('id');
+							}
+							player[ele_id].pause();
+							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
+						});
 
 						error_block.on( 'click', function() {
 							$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
