@@ -2614,3 +2614,23 @@ function bp_remove_discussion_comment_reply_button( $buttons, $activity_comment_
 
 	return $buttons;
 }
+
+/**
+ * Function will check content empty or not for the media, document and gif.
+ * If content will empty then return true and allow empty content in DB for the media, document and gif.
+ *
+ * @param array $data Get post data for the comments.
+ *
+ * @return bool
+ */
+function bb_check_is_activity_content_empty( $data ) {
+	if ( empty( $data['content'] ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
+		return true;
+	} elseif ( empty( $data['content'] ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
+		return true;
+	} elseif ( ! empty( $data['content'] ) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
