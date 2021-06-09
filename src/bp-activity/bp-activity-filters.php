@@ -150,19 +150,19 @@ add_action( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_blog_post_c
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
 
 // Filter for set attribute in activity post comment button.
-add_filter( 'bp_get_form_field_attributes', 'bp_set_form_field_attributes', 10, 2 );
+add_filter( 'bp_get_form_field_attributes', 'bb_set_form_field_attributes', 10, 2 );
 
 // Filter comment form meta button.
-add_filter( 'bp_is_active', 'bp_is_active_comment_form_media_button', 10, 2 );
+add_filter( 'bp_is_active', 'bb_is_active_comment_form_media_button', 10, 2 );
 
 // Filter for enable comment status.
 add_filter( 'bp_force_comment_status', 'bb_activity_blog_post_comment_status', 10, 3 );
 
 // Hook for access control in activity state.
-add_filter( 'bp_nouveau_has_activity_state', 'bp_has_activity_state', 10, 2 );
+add_filter( 'bp_nouveau_has_activity_state', 'bb_has_activity_state', 10, 2 );
 
 // Filter for comment meta button
-add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bp_remove_discussion_comment_reply_button', 10, 3 );
+add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_comment_reply_button', 10, 3 );
 
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
@@ -2526,7 +2526,7 @@ function bb_activity_blog_post_comment_status( $retval, $open, $post_id ) {
  *
  * @return boolean
  */
-function bp_is_active_comment_form_media_button( $retval, $component ) {
+function bb_is_active_comment_form_media_button( $retval, $component ) {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity ) ) {
@@ -2551,7 +2551,7 @@ function bp_is_active_comment_form_media_button( $retval, $component ) {
  *
  * @return array
  */
-function bp_set_form_field_attributes( $attributes, $name ) {
+function bb_set_form_field_attributes( $attributes, $name ) {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity ) ) {
@@ -2574,7 +2574,7 @@ function bp_set_form_field_attributes( $attributes, $name ) {
  *
  * @return boolean
  */
-function bp_has_activity_state( $status, $activity_id ) {
+function bb_has_activity_state( $status, $activity_id ) {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity ) ) {
@@ -2600,7 +2600,7 @@ function bp_has_activity_state( $status, $activity_id ) {
  *
  * @return boolean
  */
-function bp_remove_discussion_comment_reply_button( $buttons, $activity_comment_id, $activity_id ) {
+function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_id, $activity_id ) {
 	// Get the current action name.
 	$action_name = bp_get_activity_action_name();
 
