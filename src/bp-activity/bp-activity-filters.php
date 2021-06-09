@@ -2618,6 +2618,7 @@ function bp_remove_discussion_comment_reply_button( $buttons, $activity_comment_
 	return $buttons;
 }
 
+/**
  * Function will check content empty or not for the media, document and gif.
  * If content will empty then return true and allow empty content in DB for the media, document and gif.
  *

@@ -1895,6 +1895,9 @@ function bp_activity_blog_post_comments( $args = array() ) {
  *
  * @since BuddyBoss 1.6.2
  *
+ * @param int   $post_id Blog post id.
+ * @param array $args    Meta data.
+ *
  * @uses bp_activity_recurse_post_comments() Render WP list comments.
  *
  * @global object $activities_template {@link BP_Activity_Template}
@@ -1907,10 +1910,10 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 		return;
 	}
 
-	$default = array( 
+	$default = array(
 		'order'        => 'ASC',
 		'orderby'      => 'comment_date_gmt',
-		'number'       => 1 == bp_get_option( 'page_comments', false ) ? bp_get_option( 'comments_per_page', '' ) : '',
+		'number'       => 1 === bp_get_option( 'page_comments', false ) ? bp_get_option( 'comments_per_page', '' ) : '',
 		'status'       => 'approve',
 		'paged'        => 1,
 		'parent'       => 0,
@@ -1919,14 +1922,14 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
 	);
 
 	if ( is_user_logged_in() ) {
-        $default['include_unapproved'] = array( get_current_user_id() );
-    } else {
-        $unapproved_email = wp_get_unapproved_comment_author_email();
+		$default['include_unapproved'] = array( get_current_user_id() );
+	} else {
+		$unapproved_email = wp_get_unapproved_comment_author_email();
 
-        if ( $unapproved_email ) {
-            $default['include_unapproved'] = array( $unapproved_email );
-        }
-    }
+		if ( $unapproved_email ) {
+			$default['include_unapproved'] = array( $unapproved_email );
+		}
+	}
 
 	$r = bp_parse_args( $args, $default );
 
@@ -1948,7 +1951,7 @@ function bp_activity_get_blog_post_comments( $post_id, $args = array() ) {
  *
  * @param array $comments Post comments.
  *
- * @return void
+ * @return void|string
  */
 function bp_activity_recurse_blog_post_comments( $comments ) {
 	// When there is not comments.
@@ -1964,13 +1967,13 @@ function bp_activity_recurse_blog_post_comments( $comments ) {
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
 	echo apply_filters( 'bp_activity_recurse_blog_post_comments_start_ul', '<ul>' );
-	
+
 	// Render comments.
 	wp_list_comments(
 		array(
 			'callback'    => 'buddyboss_activity_blog_post_comment',
 			'short_ping'  => true,
-			'avatar_size' => 80
+			'avatar_size' => 80,
 		),
 		$comments
 	);
