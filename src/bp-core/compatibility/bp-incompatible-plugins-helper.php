@@ -699,7 +699,7 @@ add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
  * Remove the 'group_leader' role for Learndash group author.
  * If the author is not the leader of any gorup.
  *
- * @since BuddyBoss 1.6.1
+ * @since BuddyBoss 1.6.2
  *
  * @param int $post_id WP Post ID.
  *
