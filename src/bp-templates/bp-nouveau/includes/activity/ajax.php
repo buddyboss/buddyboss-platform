@@ -57,7 +57,7 @@ add_action(
 			),
 			array(
 				'new_activity_blog_post_comment' => array(
-					'function' => 'bp_nouveau_ajax_new_activity_blog_post_comment',
+					'function' => 'bb_nouveau_ajax_new_activity_blog_post_comment',
 					'nopriv'   => false,
 				),
 			),
@@ -484,15 +484,13 @@ function bb_get_comment_depth( $comment_id ) {
 }
 
 /**
- * Posts new Activity comments received via a POST request.
+ * New post activity comments received via a POST request.
  *
- * @since BuddyPress 3.0.0
- *
- * @global BP_Activity_Template $activities_template
+ * @since BuddyBoss 1.6.2
  *
  * @return string JSON
  */
-function bp_nouveau_ajax_new_activity_blog_post_comment() {
+function bb_nouveau_ajax_new_activity_blog_post_comment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
