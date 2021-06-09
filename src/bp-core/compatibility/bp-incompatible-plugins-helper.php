@@ -763,7 +763,7 @@ add_action( 'delete_post', 'bb_learndash_delete_group' );
  * Add the 'group_leader' role for Learndash group author.
  * When learndash group status change form trash to draft.
  *
- * @since BuddyBoss 1.6.1
+ * @since BuddyBoss 1.6.2
  *
  * @param int $post_id WP Post ID.
  *
