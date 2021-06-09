@@ -1158,23 +1158,23 @@ function bb_update_to_1_6_2() {
  *
  * @since BuddyBoss 1.6.2
  *
- * @uses bp_feed_post_types()                    Get all post types.
- * @uses bp_post_type_feed_option_name()         Option key for individual post type.
- * @uses bp_post_type_feed_comment_option_name() Option key for individual post type comment.
+ * @uses bb_feed_post_types()                    Get all post types.
+ * @uses bb_post_type_feed_option_name()         Option key for individual post type.
+ * @uses bb_post_type_feed_comment_option_name() Option key for individual post type comment.
  * @uses bp_is_post_type_feed_enable()           Checks if post type feed is enabled.
  *
  * @return void
  */
 function bb_update_to_1_6_2_ativity_setting_feed_comments_migration() {
-	$custom_post_types = bp_feed_post_types();
+	$custom_post_types = bb_feed_post_types();
 
 	// Run over all custom post type.
 	foreach ( $custom_post_types as $post_type ) {
 		// Post type option name.
-		$pt_opt_name = bp_post_type_feed_option_name( $post_type );
+		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
 
 		// Post type comment option name.
-		$ptc_opt_name = bp_post_type_feed_comment_option_name( $post_type );
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
 
 		if ( bp_is_post_type_feed_enable( $post_type ) ) {
 			bp_update_option( $ptc_opt_name, 1 );
