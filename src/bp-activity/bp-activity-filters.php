@@ -2417,8 +2417,8 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
  *
  * @since BuddyBoss 1.6.2
  *
- * @param array $buttons
- * @param int   $activity_id
+ * @param array $buttons     Button content.
+ * @param int   $activity_id Activity id.
  *
  * @uses bp_activity_get_specific() Get activity post data.
  *
@@ -2448,16 +2448,16 @@ function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 	// Get comment post.
 	$post = get_post( $activity->secondary_item_id );
 
-	$buttons['activity_conversation']['link_text'] =  sprintf(
+	$buttons['activity_conversation']['link_text'] = sprintf(
 		'<span class="bp-screen-reader-text">%1$s</span><span class="comment-count">%2$s</span><span class="bb-comment-text"> %3$s</span>',
 		__( 'Comments', 'buddyboss' ),
 		esc_attr( $post->comment_count ),
 		__( 'Comments', 'buddyboss' )
 	);
-	
+
 	// Delete button set as the last meta buttion.
 	if ( ! empty( $delete ) ) {
-		 $buttons['activity_delete'] = $delete;
+		$buttons['activity_delete'] = $delete;
 	}
 
 	return $buttons;
@@ -2468,27 +2468,27 @@ function bp_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
  *
  * @since BuddyBoss 1.6.2
  *
- * @param boolean $can_comment
+ * @param boolean $can_comment Has comment permission.
  *
  * @return boolean
  */
 function bp_activity_has_comment_access( $can_comment = true ) {
-	// Already forced off, so comply
+	// Already forced off, so comply.
 	if ( false === $can_comment ) {
 		return $can_comment;
 	}
 
-	// Get the current action name
+	// Get the current action name.
 	$action_name = bp_get_activity_action_name();
 
-	// Setup the array of possibly disabled actions
+	// Setup the array of possibly disabled actions.
 	$disabled_actions = array(
 		'bbp_topic_create',
 		'bbp_reply_create',
 	);
 
 	// Comment is disabled for discussion and reply discussion.
-	if ( in_array( $action_name, $disabled_actions ) ) {
+	if ( in_array( $action_name, $disabled_actions, true ) ) {
 		$can_comment = false;
 	}
 
@@ -2501,9 +2501,9 @@ function bp_activity_has_comment_access( $can_comment = true ) {
  *
  * @since BuddyBoss 1.6.2
  *
- * @param boolean $retval
- * @param boolean $component
- * @param int     $post_id
+ * @param boolean $retval  Default value.
+ * @param boolean $open    Generated value.
+ * @param int     $post_id Comment post id.
  *
  * @return boolean
  */
@@ -2521,20 +2521,20 @@ function bp_activity_blog_post_comment_status( $retval, $open, $post_id ) {
  *
  * @since BuddyBoss 1.6.2
  *
- * @param boolean $retval
- * @param string  $component
+ * @param boolean $retval    Is active media button.
+ * @param string  $component Comment content.
  *
  * @return boolean
  */
 function bp_is_active_comment_form_media_button( $retval, $component ) {
 	global $activities_template;
-	
+
 	if ( empty( $activities_template->activity ) ) {
 		return $retval;
 	}
 
 	// Remove the media meta button.
-	if ( 'media' == $component && 'blogs' == $activities_template->activity->component ) {
+	if ( 'media' === $component && 'blogs' === $activities_template->activity->component ) {
 		return false;
 	}
 
@@ -2546,14 +2546,14 @@ function bp_is_active_comment_form_media_button( $retval, $component ) {
  *
  * @since BuddyBoss 1.6.2
  *
- * @param array  $attributes
- * @param string $name
+ * @param array  $attributes Activity form field attributes.
+ * @param string $name       Field name.
  *
  * @return array
  */
 function bp_set_form_field_attributes( $attributes, $name ) {
 	global $activities_template;
-	
+
 	if ( empty( $activities_template->activity ) ) {
 		return $attributes;
 	}
@@ -2569,20 +2569,20 @@ function bp_set_form_field_attributes( $attributes, $name ) {
  *
  * @since BuddyBoss 1.6.2
  *
- * @param boolean $status
- * @param int     $activity_id
+ * @param boolean $status      Activity status.
+ * @param int     $activity_id Activity id.
  *
  * @return boolean
  */
 function bp_has_activity_state( $status, $activity_id ) {
 	global $activities_template;
-	
+
 	if ( empty( $activities_template->activity ) ) {
 		return $status;
 	}
 
 	// Remove the access when activity component is blogs.
-	if ( 'blogs' == $activities_template->activity->component ) {
+	if ( 'blogs' === $activities_template->activity->component ) {
 		return false;
 	}
 
@@ -2601,17 +2601,17 @@ function bp_has_activity_state( $status, $activity_id ) {
  * @return boolean
  */
 function bp_remove_discussion_comment_reply_button( $buttons, $activity_comment_id, $activity_id ) {
-	// Get the current action name
+	// Get the current action name.
 	$action_name = bp_get_activity_action_name();
 
-	// Setup the array of possibly disabled actions
+	// Setup the array of possibly disabled actions.
 	$disabled_actions = array(
 		'bbp_topic_create',
 		'bbp_reply_create',
 	);
 
 	// Comment is disabled for discussion and reply discussion.
-	if ( !empty( $buttons['activity_comment_reply'] ) && in_array( $action_name, $disabled_actions ) ) {
+	if ( ! empty( $buttons['activity_comment_reply'] ) && in_array( $action_name, $disabled_actions, true ) ) {
 		unset( $buttons['activity_comment_reply'] );
 	}
 
