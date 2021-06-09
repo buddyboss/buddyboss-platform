@@ -1074,7 +1074,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
  *
  * @return void
  */
-function bp_nouveau_activity_comment_meta_buttons( $comment, $args ) {
+function bb_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 	$buttons = array();
 
 	/*

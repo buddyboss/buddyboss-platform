@@ -865,7 +865,7 @@ function bp_feed_settings_callback_post_type( $args ) {
  *
  * @return void
  */
-function bp_feed_settings_callback_post_type_comments( $args ) {
+function bb_feed_settings_callback_post_type_comments( $args ) {
 	$post_type     = $args['post_type'];
 	$option_name   = bb_post_type_feed_comment_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
@@ -1427,7 +1427,7 @@ function bp_admin_moderation_report_setting_tutorial() {
  *
  * @return void
  */
-function bp_after_update_activity_settings( $tab_name, $class_obj ) {
+function bb_after_update_activity_settings( $tab_name, $class_obj ) {
 	if ( 'bp-activity' !== $tab_name ) {
 		return;
 	}
@@ -1448,4 +1448,4 @@ function bp_after_update_activity_settings( $tab_name, $class_obj ) {
 		}
 	}
 }
-add_action( 'bp_admin_tab_setting_save', 'bp_after_update_activity_settings', 10, 2 );
+add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 2 );
