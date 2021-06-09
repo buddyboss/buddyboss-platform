@@ -1052,14 +1052,14 @@ function bp_get_activity_avatar( $args = '' ) {
 
         // Backpat.
         if ( isset( $bp->avatar->full->height ) || isset( $bp->avatar->thumb->height ) ) {
-            $height = ( 'full' == $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
+            $height = ( 'full' === $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
         } else {
             $height = 20;
         }
 
         // Backpat.
         if ( isset( $bp->avatar->full->width ) || isset( $bp->avatar->thumb->width ) ) {
-            $width = ( 'full' == $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
+            $width = ( 'full' === $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
         } else {
             $width = 20;
         }
@@ -1089,7 +1089,7 @@ function bp_get_activity_avatar( $args = '' ) {
     $item_id = apply_filters( 'bp_get_activity_avatar_item_id', $item_id );
 
     // If this is a user object pass the users' email address for Gravatar so we don't have to prefetch it.
-    if ( 'user' == $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
+    if ( 'user' === $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
         $email = $current_activity_item->user_email;
     }
 
@@ -3072,11 +3072,11 @@ function bp_get_activity_filter_links( $args = false ) {
     foreach ( (array) $components as $component ) {
 
         // Skip the activity comment filter.
-        if ( 'activity' == $component ) {
+        if ( 'activity' === $component ) {
             continue;
         }
 
-        if ( isset( $_GET['afilter'] ) && $component == $_GET['afilter'] ) {
+        if ( isset( $_GET['afilter'] ) && $component === $_GET['afilter'] ) {
             $selected = ' class="selected"';
         } else {
             $selected = '';
