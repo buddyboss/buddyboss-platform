@@ -1129,7 +1129,7 @@ function bp_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 		$content .= $return;
 	}
 
-	echo empty( $content ) ? '' : printf( '<div class="bp-generic-meta activity-meta action">%s</div>', $content );
+	echo empty( $content ) ? '' : '<div class="bp-generic-meta activity-meta action">' . $content . '</div>';
 }
 
 /**
