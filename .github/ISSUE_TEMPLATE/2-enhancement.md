@@ -1,7 +1,6 @@
 ---
 name: "\U0001F4A1 New Product Improvement (Internal-Use Only)"
-about: For the product team to add scoped and approved improvements. Customers should
-  not add feature improvements here.
+about: For the product team to add scoped and approved improvements.  Feature requests and suggestions will be closed.
 title: ''
 labels: 'feature: enhancement, needs priority'
 assignees: ''
