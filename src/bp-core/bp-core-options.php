@@ -847,7 +847,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 	}
 	
 	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
-	$disable = (bool) bp_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
+	$disable = (bool) bb_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
 	/**
 	 * Filters whether or not blog and forum activity feed comments are disabled.
@@ -870,8 +870,8 @@ function bp_disable_blogforum_comments( $default = false ) {
  * @return bool True if activity comments are enable for blog and forum
  *              items, otherwise false.
  */
-function bp_is_post_type_feed_comment_enable( $post_type, $default = false ) {
-	$option_name = bp_post_type_feed_comment_option_name( $post_type );
+function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
+	$option_name = bb_post_type_feed_comment_option_name( $post_type );
 
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
@@ -880,7 +880,7 @@ function bp_is_post_type_feed_comment_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether or not custom post type activity feed comments are enable.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
+	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
 }
 
 /**
@@ -1333,7 +1333,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether post type feed enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bp_post_type_feed_option_name( $post_type ), $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ) );
 }
 
 /**
@@ -1830,7 +1830,7 @@ function bp_rest_enable_private_network() {
  *
  * @return string.
  */
-function bp_post_type_feed_option_name( $post_type ) {
+function bb_post_type_feed_option_name( $post_type ) {
 	return 'bp-feed-custom-post-type-' . $post_type;
 }
 
@@ -1844,7 +1844,7 @@ function bp_post_type_feed_option_name( $post_type ) {
  *
  * @return string.
  */
-function bp_post_type_feed_comment_option_name( $post_type ) {
+function bb_post_type_feed_comment_option_name( $post_type ) {
 	return 'bp-feed-custom-post-type-' . $post_type . '-comments';
 }
 
@@ -1855,7 +1855,7 @@ function bp_post_type_feed_comment_option_name( $post_type ) {
  *
  * @return array.
  */
-function bp_feed_post_types() {
+function bb_feed_post_types() {
 	// Get all active custom post type.
 	$post_types = get_post_types( array( 'public' => true ) );
 

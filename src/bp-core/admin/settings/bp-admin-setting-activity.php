@@ -125,7 +125,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$count       = 0;
 		$description = 0;
 		
-		foreach ( bp_feed_post_types() as $key => $post_type ) {
+		foreach ( bb_feed_post_types() as $key => $post_type ) {
 
 			$fields = array();
 
@@ -134,8 +134,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				'description' => false,
 			);
 
-			$post_type_option_name = bp_post_type_feed_option_name( $post_type );
-			$comment_option_name   = bp_post_type_feed_comment_option_name( $post_type );
+			$post_type_option_name = bb_post_type_feed_option_name( $post_type );
+			$comment_option_name   = bb_post_type_feed_comment_option_name( $post_type );
 
 			if ( 'post' === $post_type ) {
 				$parent_fields = array_merge(

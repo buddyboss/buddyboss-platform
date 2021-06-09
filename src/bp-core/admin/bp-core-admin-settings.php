@@ -824,7 +824,7 @@ function bp_admin_setting_callback_member_invite_member_type() {
 function bp_feed_settings_callback_post_type( $args ) {
 
 	$post_type     = $args['post_type'];
-	$option_name   = bp_post_type_feed_option_name( $post_type );
+	$option_name   = bb_post_type_feed_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
 
 	// Description for the last option of CPT
@@ -867,7 +867,7 @@ function bp_feed_settings_callback_post_type( $args ) {
  */
 function bp_feed_settings_callback_post_type_comments( $args ) {
 	$post_type     = $args['post_type'];
-	$option_name   = bp_post_type_feed_comment_option_name( $post_type );
+	$option_name   = bb_post_type_feed_comment_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
 	?>
 
@@ -877,7 +877,7 @@ function bp_feed_settings_callback_post_type_comments( $args ) {
 		id="<?php echo esc_attr( $option_name ); ?>"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
+		<?php checked( bb_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
 		<?php echo 'post' === $post_type ? esc_html__( 'Show blog post comments', 'buddyboss' ) : sprintf( esc_html__( 'Enable comments in %s activity posts.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
@@ -1421,9 +1421,9 @@ function bp_admin_moderation_report_setting_tutorial() {
  * @param string $tab_name  Settings tab name.
  * @param object $class_obj Tab property.
  *
- * @uses bp_feed_post_types()                    Get all post type name.
- * @uses bp_post_type_feed_option_name()         Settings option name for post type.
- * @uses bp_post_type_feed_comment_option_name() Settings option name for post type comment.
+ * @uses bb_feed_post_types()                    Get all post type name.
+ * @uses bb_post_type_feed_option_name()         Settings option name for post type.
+ * @uses bb_post_type_feed_comment_option_name() Settings option name for post type comment.
  *
  * @return void
  */
@@ -1432,12 +1432,12 @@ function bp_after_update_activity_settings( $tab_name, $class_obj ) {
 		return;
 	}
 
-	foreach ( bp_feed_post_types() as $key => $post_type ) {
+	foreach ( bb_feed_post_types() as $key => $post_type ) {
 		// Post type option name.
-		$pt_opt_name = bp_post_type_feed_option_name( $post_type );
+		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
 
 		// Post type comment option name.
-		$ptc_opt_name = bp_post_type_feed_comment_option_name( $post_type );
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
 
 		// Get the post type activity status.
 		$opt_value = bp_get_option( $pt_opt_name, '' );
