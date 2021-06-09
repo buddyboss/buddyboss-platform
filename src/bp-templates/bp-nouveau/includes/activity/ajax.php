@@ -462,13 +462,24 @@ function bp_nouveau_ajax_new_activity_comment() {
 	wp_send_json_success( $response );
 }
 
-function bp_get_comment_depth( $my_comment_id ) {
+/**
+ * Get post comment depth.
+ *
+ * @since BuddyPress 1.6.2
+ *
+ * @param $comment_id Post comment id.
+ *
+ * @return int
+ */
+function bb_get_comment_depth( $comment_id ) {
 	$depth_level = 0;
-	while( $my_comment_id > 0  ) { // if you have ideas how we can do it without a loop, please, share it with us in comments
-		$my_comment = get_comment( $my_comment_id );
-		$my_comment_id = $my_comment->comment_parent;
+	
+	while( $comment_id > 0  ) { 
+		$comment    = get_comment( $comment_id );
+		$comment_id = $comment->comment_parent;
 		$depth_level++;
 	}
+	
 	return $depth_level;
 }
 
@@ -565,7 +576,7 @@ function bp_nouveau_ajax_new_activity_blog_post_comment() {
 		$comment_deep = -1;
 	}
 
-	$depth = bp_get_comment_depth( $comment->comment_ID );
+	$depth = bb_get_comment_depth( $comment->comment_ID );
 
 	ob_start();
 		// Get activity comment template part.
