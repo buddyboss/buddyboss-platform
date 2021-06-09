@@ -5340,17 +5340,19 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 /**
  * When search_terms are passed to BP_User_Query, search against xprofile fields.
  *
- * @since BuddyPress 2.0.0
+ * @since BuddyBoss 1.6.2
  *
  * @param array         $sql   Clauses in the user_id SQL query.
  * @param BP_User_Query $query User query object.
  * @return array
  */
 function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_User_Query $query ) {
+
 	global $wpdb;
 	if ( empty( $query->query_vars['search_terms'] ) || empty( $sql['where']['search'] ) ) {
 		return $sql;
 	}
+
 	$bp = buddypress();
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 	if ( 'left' === $query->query_vars['search_wildcard'] ) {
@@ -5366,14 +5368,40 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 
 	//get the firstname,last and nickname field id.
 	$firstname_field_id = bp_xprofile_firstname_field_id();
-	$last_field_id = bp_xprofile_lastname_field_id();
-	$nickname_field_id = bp_xprofile_nickname_field_id();
+	$last_field_id 		= bp_xprofile_lastname_field_id();
+	$nickname_field_id 	= bp_xprofile_nickname_field_id();
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value 		= bp_get_option( 'bp-display-name-format' );
+	$where_condition 	= '';
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value ) {
+		$where_condition .= "( ( field_id = ". $firstname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) ) OR ( ( field_id = ". $nickname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) )";
+
+		if( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ){
+			$where_condition .= " OR ( (field_id = ". $last_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) )";
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value ) {
+		$where_condition .= " ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+
+		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
+			$where_condition .= " OR ( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		}
+		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
+			$where_condition .= " OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		}
+		
+	} elseif ( 'first_last_name' === $current_value ) {
+		$where_condition .= "( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+	}
 
 	// Combine the core search (against wp_users) into a single OR clause
 	// with the xprofile_data search.
 	$matched_user_ids = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE ( ( field_id = ". $firstname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) ) OR ( (field_id = ". $last_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) ) OR ( ( field_id = ". $nickname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) )"
+			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . $where_condition
 		)
 	);
 
@@ -5381,7 +5409,7 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	if ( ! empty( $matched_user_ids ) ) {
 		$matched_user_data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$bp->profile->table_name_data} WHERE ( ( field_id = ". $firstname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) ) OR ( (field_id = ". $last_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) ) OR ( ( field_id = ". $nickname_field_id ." ) AND ( value LIKE '". $search_terms_nospace ."' OR value LIKE '". $search_terms_space ."' ) )"
+				"SELECT * FROM {$bp->profile->table_name_data} WHERE " . $where_condition
 			)
 		);
 		foreach ( $matched_user_data as $key => $user ) {
