@@ -5393,7 +5393,7 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 			$where_condition .= " OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
 		}
 		
-	} elseif ( 'first_last_name' === $current_value ) {
+	} else {
 		$where_condition .= "( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
 	}
 
