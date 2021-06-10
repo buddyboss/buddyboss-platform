@@ -541,8 +541,8 @@ function bb_moderation_clear_suspend_cache( $moderation_data ) {
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 }
 
-add_action( 'bp_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
-add_action( 'bp_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cache' );
+add_action( 'bb_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
+add_action( 'bb_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cache' );
 
 /**
  * Function to clear cache on suspend item delete.
@@ -585,5 +585,5 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . $content_id, 'bb' );
 }
 
-add_action( 'bp_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
-add_action( 'bp_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );

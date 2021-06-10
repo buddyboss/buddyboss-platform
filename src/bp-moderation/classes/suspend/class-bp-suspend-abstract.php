@@ -140,7 +140,7 @@ abstract class BP_Suspend_Abstract {
 					 * @param int    $content_id   item id
 					 * @param array  $args         unhide item arguments
 					 */
-					do_action( 'bp_suspend_hide_before', $content_type, $content_id, $args );
+					do_action( 'bb_suspend_hide_before', $content_type, $content_id, $args );
 
 					/**
 					 * Add related content of reported item into hidden list
@@ -213,7 +213,7 @@ abstract class BP_Suspend_Abstract {
 					 * @param int    $content_id   item id
 					 * @param array  $args         unhide item arguments
 					 */
-					do_action( 'bp_suspend_unhide_before', $content_type, $content_id, $args );
+					do_action( 'bb_suspend_unhide_before', $content_type, $content_id, $args );
 
 					/**
 					 * Remove related content of reported item from hidden list.

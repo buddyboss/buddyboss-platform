@@ -105,7 +105,7 @@ class BP_Core_Suspend {
 		 *
 		 * @param array $args Item data.
 		 */
-		do_action( 'bp_suspend_before_add_suspend', $args );
+		do_action( 'bb_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
@@ -260,7 +260,7 @@ class BP_Core_Suspend {
 		 *
 		 * @param array $args item id.
 		 */
-		do_action( 'bp_suspend_before_remove_suspend', $args );
+		do_action( 'bb_suspend_before_remove_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
@@ -382,7 +382,7 @@ class BP_Core_Suspend {
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
 		if ( false === $result ) {
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}
 
@@ -430,7 +430,7 @@ class BP_Core_Suspend {
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
 		if ( false === $result ) {
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}
 
@@ -453,7 +453,7 @@ class BP_Core_Suspend {
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
 		if ( false === $result ) {
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}
 
