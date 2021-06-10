@@ -203,6 +203,9 @@ function bb_media_symlink_validate( $old_value, $value ) {
 		'bb_video_thumb_symlink',
 	);
 
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
+
 	if ( ! empty( $value ) ) {
 
 		$media = get_posts(
@@ -221,9 +224,6 @@ function bb_media_symlink_validate( $old_value, $value ) {
 			$attachment_id  = current( $media )->ID;
 			$attachment_url = wp_get_attachment_image_src( $attachment_id );
 			$attchment_file = get_attached_file( $attachment_id );
-
-			$upload_dir = wp_upload_dir();
-			$upload_dir = $upload_dir['basedir'];
 
 			// Get media previews symlink directory path.
 			$symlinks_path   = bp_media_symlink_path();
@@ -315,11 +315,15 @@ function bb_media_symlink_validate( $old_value, $value ) {
 			foreach ( $keys as $k ) {
 				bp_delete_option( $k );
 			}
+
+			bp_core_remove_temp_directory( $upload_dir . '/bb-platform-previews' );
 		}
 	} else {
 		foreach ( $keys as $k ) {
 			bp_delete_option( $k );
 		}
+
+		bp_core_remove_temp_directory( $upload_dir . '/bb-platform-previews' );
 	}
 }
 add_action( 'update_option_bp_media_symlink_support', 'bb_media_symlink_validate', 10, 2 );
