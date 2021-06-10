@@ -105,7 +105,7 @@ class BP_Core_Suspend {
 		 *
 		 * @param array $args Item data.
 		 */
-		do_action( 'bp_suspend_before_add_suspend', $args );
+		do_action( 'bb_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
@@ -260,7 +260,7 @@ class BP_Core_Suspend {
 		 *
 		 * @param array $args item id.
 		 */
-		do_action( 'bp_suspend_before_remove_suspend', $args );
+		do_action( 'bb_suspend_before_remove_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
