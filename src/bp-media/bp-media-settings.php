@@ -46,10 +46,11 @@ function bp_media_get_settings_sections() {
 			'title'             => __( 'Animated GIFs', 'buddyboss' ),
 			'tutorial_callback' => 'bp_animated_gifs_tutorial',
 		),
-		'bp_media_settings_symlinks'      => array(
+		'bp_media_settings_symlinks'  => array(
 			'page'              => 'media',
 			'title'             => __( 'Media Miscellaneous', 'buddyboss' ),
 			'tutorial_callback' => 'bb_symlinks_tutorial',
+			'callback'          => 'bb_admin_setting_callback_symlinks_section',
 		),
 	);
 
@@ -1903,6 +1904,18 @@ function bb_symlinks_tutorial() {
 	<?php
 }
 
+/**
+ *  Print the Symlinks notice.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_admin_setting_callback_symlinks_section() {
+	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink' ) ) ) {
+		?>
+        <p class="alert"><?php _e( 'Symlink not working into your system. Please disable it.', 'buddyboss' ); ?></p>
+		<?php
+	}
+}
 
 /**
  * Setting > Media > Media Miscellaneous
