@@ -76,6 +76,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			}
 
 			$group_memberships = '';
+			$ban_groups        = array();
+
 			if ( bp_is_active( 'groups' ) ) {
 				$group_memberships = bp_get_user_groups(
 					get_current_user_id(),
@@ -123,6 +125,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					$ban_groups
 				);
 				
+				// Get group associated forum ids. Where current user is not connected to those groups.
 				$ban_group_forum_ids = get_posts(
 					array(
 						'fields'      => 'ids',
@@ -141,15 +144,17 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				
 				$ban_group_forum_child_ids = array();
 
+				// Get group associated child forum ids. Where current user is not connected to those groups.
 				foreach ( $ban_group_forum_ids as $forum_id ) {
 					$single_forum_child_ids    = $this->nested_child_forum_ids( $forum_id );
 					$ban_group_forum_child_ids = array_merge( $ban_group_forum_child_ids, $single_forum_child_ids );
 				}
 
+				// Get group associated forum and child forum ids. Where current user is not connected to those groups.
 				$ban_group_forum_ids = array_merge( $ban_group_forum_ids, $ban_group_forum_child_ids );
 			}
 
-			// Get only parent forum id that are not associate any group
+			// Get all forum ids.
 			$forum_ids = get_posts(
 				array(
 					'fields'      => 'ids',
@@ -159,7 +164,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				)
 			);
 	
-			// Merge all forum and all nested child forum ids. This ids are also filter with group.
+			// Remove private group associated forum ids from all forum ids. Where current user is not connected to those groups.
 			$all_forum_ids = array_diff( $forum_ids, $ban_group_forum_ids );
 			$forum_id_in   = implode( ',', $all_forum_ids );
 
@@ -167,7 +172,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$where[] = '1=1';
 			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
-
 			$where[] = " pm.meta_value IN ( $forum_id_in ) ";
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
