@@ -1691,7 +1691,12 @@ window.bp = window.bp || {};
 							},
 							cache: true,
 							processResults: function( data ) {
-								var ArrayData = [];
+								var cval = $( this.container.$container ).find( '.select2-search__field' ).val();
+								if ( cval.length < 1 ) {
+									return {
+										results: []
+									};
+								}
 								// Removed the element from results if already selected.
 								if ( false === jQuery.isEmptyObject( ArrayData ) ) {
 									$.each(
