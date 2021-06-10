@@ -87,36 +87,22 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
 
-				$public_groups = groups_get_groups(
+				$restricted_groups = groups_get_groups(
 					array(
-						'fields'   => 'ids',
-						'status'   => 'public',
-						'per_page' => - 1,
+						'fields'      => 'ids',
+						'status'      => array( 'private', 'hidden' ),
+						'show_hidden' => true,
+						'per_page'    => - 1,
 					)
 				);
 
-				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-					$public_groups = $public_groups['groups'];
+				if ( ! empty( $restricted_groups ) && ! empty( $restricted_groups['groups'] ) ) {
+					$restricted_groups = $restricted_groups['groups'];
 				} else {
-					$public_groups = array();
+					$restricted_groups = array();
 				}
 
-				$group_memberships = array_merge( $public_groups, $group_memberships );
-				$group_memberships = array_unique( $group_memberships );
-			}
-
-			$group_query = '';
-			if ( ! empty( $group_memberships ) ) {
-				$in = array_map(
-					function ( $group_id ) {
-						return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-					},
-					$group_memberships
-				);
-
-				$in = implode( '', $in );
-
-				$group_query = ' AND pm.meta_key = \'_bbp_group_ids\' AND pm.meta_value IN(' . trim( $in, ',' ) . ')';
+				$group_memberships = array_diff( $restricted_groups, $group_memberships );
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
@@ -126,19 +112,47 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			} else {
 				$post_status = array( "'publish'" );
 			}
+			
+			$post_status     = join( ',', $post_status );
+			$group_forum_ids = array();
 
-			$post_status = join( ',', $post_status );
-			// Get all forum regarding group.
-			$forum_query = "SELECT p.ID as forum_id 
+			if ( ! empty( $group_memberships ) ) {
+				$in = array_map(
+					function ( $group_id ) {
+						return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
+					},
+					$group_memberships
+				);
+
+				$in = implode( '', $in );
+				$in = trim( $in, ',' );
+
+				// Get only parent forum id that are associate with group.
+				$group_forum_query = "SELECT DISTINCT p.ID as forum_id 
+					FROM $wpdb->posts p 
+						LEFT JOIN $wpdb->postmeta pm ON pm.post_id = p.ID
+					WHERE 1=1
+						AND p.post_type = %s
+						AND p.post_parent = '0'
+						AND p.post_status IN ( {$post_status} ) 
+						AND pm.meta_key = '_bbp_group_ids' 
+						AND pm.meta_value IN( $in )";
+
+				$group_forum_ids = $wpdb->get_col( $wpdb->prepare( $group_forum_query, bbp_get_forum_post_type() ) );
+			}
+
+			$group_forum_id_in = empty( $group_forum_ids ) ? '-1' : implode( ',', $group_forum_ids );
+			
+			// Get only parent forum id that are not associate any group
+			$forum_query = "SELECT DISTINCT p.ID as forum_id 
 				FROM $wpdb->posts p 
-					LEFT JOIN $wpdb->postmeta pm ON pm.post_id = p.ID
 				WHERE 1=1
 					AND p.post_type = %s
-					AND p.post_status IN ( {$post_status} ) 
-					{$group_query}";
-			 
-			$forums          = $wpdb->get_results( $wpdb->prepare( $forum_query, bbp_get_forum_post_type() ) );
-			$forum_ids       = wp_list_pluck( $forums, 'forum_id' );
+					AND p.post_parent = '0'
+					AND p.post_status IN ( {$post_status} )
+					AND p.ID NOT IN ( {$group_forum_id_in} )";
+
+			$forum_ids       = $wpdb->get_col( $wpdb->prepare( $forum_query, bbp_get_forum_post_type() ) );
 			$forum_child_ids = array();
 
 			// Get all nested child forum id according parent forum.
