@@ -79,6 +79,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$ban_groups        = array();
 
 			if ( bp_is_active( 'groups' ) ) {
+				// Current user associated group ids.
 				$group_memberships = bp_get_user_groups(
 					get_current_user_id(),
 					array(
@@ -87,8 +88,10 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					)
 				);
 
+				// Set Current user associated group ids.
 				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
 
+				// Get all private and hidden group ids.
 				$restricted_groups = groups_get_groups(
 					array(
 						'fields'      => 'ids',
@@ -104,6 +107,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					$restricted_groups = array();
 				}
 
+				// Remove the parive and hidden group ids where the current user is assigned.
 				$ban_groups = array_diff( $restricted_groups, $group_memberships );
 			}
 
