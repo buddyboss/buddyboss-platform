@@ -102,67 +102,65 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					$restricted_groups = array();
 				}
 
-				$group_memberships = array_diff( $restricted_groups, $group_memberships );
+				$ban_groups = array_diff( $restricted_groups, $group_memberships );
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
-				$post_status = array( "'publish'", "'private'", "'hidden'" );
+				$post_status = array( 'publish', 'private', 'hidden' );
 			} elseif ( current_user_can( 'read_private_forums' ) ) {
-				$post_status = array( "'publish'", "'private'" );
+				$post_status = array( 'publish', 'private' );
 			} else {
-				$post_status = array( "'publish'" );
+				$post_status = array( 'publish' );
 			}
 			
-			$post_status     = join( ',', $post_status );
-			$group_forum_ids = array();
+			$ban_group_forum_ids = array();
 
-			if ( ! empty( $group_memberships ) ) {
+			if ( ! empty( $ban_groups ) ) {
 				$in = array_map(
 					function ( $group_id ) {
-						return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
+						return maybe_serialize( array( $group_id ) );
 					},
-					$group_memberships
+					$ban_groups
 				);
+				
+				$ban_group_forum_ids = get_posts(
+					array(
+						'fields'      => 'ids',
+						'post_status' => $post_status,
+						'post_type'   => bbp_get_forum_post_type(),
+						'numberposts' => '-1',
+						'meta_query'  => array(
+							array(
+								'key'     => '_bbp_group_ids',
+								'value'   => $in,
+								'compare' => 'IN'
+							)
+						)
+					)
+				);
+				
+				$ban_group_forum_child_ids = array();
 
-				$in = implode( '', $in );
-				$in = trim( $in, ',' );
+				foreach ( $ban_group_forum_ids as $forum_id ) {
+					$single_forum_child_ids    = $this->nested_child_forum_ids( $forum_id );
+					$ban_group_forum_child_ids = array_merge( $ban_group_forum_child_ids, $single_forum_child_ids );
+				}
 
-				// Get only parent forum id that are associate with group.
-				$group_forum_query = "SELECT DISTINCT p.ID as forum_id 
-					FROM $wpdb->posts p 
-						LEFT JOIN $wpdb->postmeta pm ON pm.post_id = p.ID
-					WHERE 1=1
-						AND p.post_type = %s
-						AND p.post_parent = '0'
-						AND p.post_status IN ( {$post_status} ) 
-						AND pm.meta_key = '_bbp_group_ids' 
-						AND pm.meta_value IN( $in )";
-
-				$group_forum_ids = $wpdb->get_col( $wpdb->prepare( $group_forum_query, bbp_get_forum_post_type() ) );
+				$ban_group_forum_ids = array_merge( $ban_group_forum_ids, $ban_group_forum_child_ids );
 			}
 
-			$group_forum_id_in = empty( $group_forum_ids ) ? '-1' : implode( ',', $group_forum_ids );
-			
 			// Get only parent forum id that are not associate any group
-			$forum_query = "SELECT DISTINCT p.ID as forum_id 
-				FROM $wpdb->posts p 
-				WHERE 1=1
-					AND p.post_type = %s
-					AND p.post_parent = '0'
-					AND p.post_status IN ( {$post_status} )
-					AND p.ID NOT IN ( {$group_forum_id_in} )";
-
-			$forum_ids       = $wpdb->get_col( $wpdb->prepare( $forum_query, bbp_get_forum_post_type() ) );
-			$forum_child_ids = array();
-
-			// Get all nested child forum id according parent forum.
-			foreach ( $forum_ids as $forum_id ) {
-				$single_forum_child_ids = $this->nested_child_forum_ids( $forum_id );
-				$forum_child_ids        = array_merge( $forum_child_ids, $single_forum_child_ids );
-			}
-
+			$forum_ids = get_posts(
+				array(
+					'fields'      => 'ids',
+					'post_status' => $post_status,
+					'post_type'   => bbp_get_forum_post_type(),
+					'numberposts' => '-1'
+				)
+			);
+	
 			// Merge all forum and all nested child forum ids. This ids are also filter with group.
-			$all_forum_ids = array_merge( $forum_ids, $forum_child_ids );
+			$all_forum_ids = array_diff( $forum_ids, $ban_group_forum_ids );
 			$forum_id_in   = implode( ',', $all_forum_ids );
 
 			$where   = array();
@@ -257,4 +255,3 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 	// End class Bp_Search_Posts
 
 endif;
-
