@@ -1691,7 +1691,7 @@ window.bp = window.bp || {};
 							},
 							cache: true,
 							processResults: function( data ) {
-
+								var ArrayData = [];
 								// Removed the element from results if already selected.
 								if ( false === jQuery.isEmptyObject( ArrayData ) ) {
 									$.each(
@@ -1711,7 +1711,7 @@ window.bp = window.bp || {};
 								};
 							}
 						}
-						}
+					}
 				);
 
 				// Add element into the Arrdata array.
