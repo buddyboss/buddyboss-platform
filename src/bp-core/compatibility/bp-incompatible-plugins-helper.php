@@ -762,15 +762,15 @@ add_action( 'delete_post', 'bb_learndash_delete_group' );
 /**
  * Add the 'group_leader' role for Learndash group author.
  * When learndash group status change form trash to draft.
- *
- * @since BuddyBoss 1.6.2
- *
- * @param int $post_id WP Post ID.
- *
+ * 
+ * @since BuddyBoss 1.6.1
+ * 
+ * @param int $post_id LearnDash group id.
+ * 
  * @uses learndash_is_admin_user() Is the author has administrator role.
  * @uses bb_learndash_role_add()   Add group author role as 'group_leade'.
- *
- * @return void
+ * 
+ * @return void 
  */
 function bb_learndash_untrash_group( $post_id ) {
 	// Is Learndash active or not.
@@ -780,7 +780,7 @@ function bb_learndash_untrash_group( $post_id ) {
 
 	$ldgroup = get_post( $post_id );
 
-	if ( 'groups' !== $ldgroup->post_type || 'trash' !== $ldgroup->post_status ) {
+	if ( 'groups' != $ldgroup->post_type || 'trash' != $ldgroup->post_status ) {
 		return;
 	}
 
@@ -795,13 +795,14 @@ function bb_learndash_untrash_group( $post_id ) {
 	}
 
 	$author = $ldgroup->post_author;
-
+	
 	// When the group author has administrator role.
 	if ( learndash_is_admin_user( $author ) ) {
 		return;
 	}
 
-	bb_learndash_role_add( $author );
+	$user = new Buddyboss\LearndashIntegration\Library\SyncGenerator();
+	$user->promoteAsGroupLeader( $author, 'admin' );
 }
 add_action( 'untrash_post', 'bb_learndash_untrash_group' );
 
