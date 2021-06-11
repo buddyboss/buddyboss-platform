@@ -390,41 +390,6 @@ class SyncGenerator {
 	}
 
 	/**
-	 * Promote the uesr as a learndash group leader.
-	 * 
-	 * @since BuddyBoss 1.6.3
-	 * 
-	 * @param int $userId Member id.
-	 * 
-	 * @return void
-	 */
-	public function promoteAsGroupLeader( $userId, $ldRole, $remove = false ) {
-		// Default settings options.
-		$options = $this->default_sync_options();
-
-		// When synchronization disable.
-		if ( empty( $options ) ) {
-			return;
-		}
-
-		// Remove user.
-		if ( true === $remove || 'user' === $ldRole ) {
-			$this->remove_group_leader_role( $userId );
-			return;
-		} 
-
-		// Set learndash admin role.
-		if ( 'admin' === $ldRole ) {
-			$this->set_role( $userId, $options['admin'] );
-		}
-
-		// Set learndash moderator role.
-		if ( 'mod' === $ldRole ) {
-			$this->set_role( $userId, $options['mod'] );
-		}
-	}
-
-	/**
 	 * Sync a bp mod to ld
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -887,5 +852,40 @@ class SyncGenerator {
 		}
 
 		$this->setSyncGropuIds();
+	}
+
+	/**
+	 * Promote the uesr as a learndash group leader.
+	 * 
+	 * @since BuddyBoss 1.6.3
+	 * 
+	 * @param int $userId Member id.
+	 * 
+	 * @return void
+	 */
+	public function promoteAsGroupLeader( $userId, $ldRole, $remove = false ) {
+		// Default settings options.
+		$options = $this->default_sync_options();
+
+		// When synchronization disable.
+		if ( empty( $options ) ) {
+			return;
+		}
+
+		// Remove user.
+		if ( true === $remove || 'user' === $ldRole ) {
+			$this->remove_group_leader_role( $userId );
+			return;
+		} 
+
+		// Set learndash admin role.
+		if ( 'admin' === $ldRole ) {
+			$this->set_role( $userId, $options['admin'] );
+		}
+
+		// Set learndash moderator role.
+		if ( 'mod' === $ldRole ) {
+			$this->set_role( $userId, $options['mod'] );
+		}
 	}
 }
