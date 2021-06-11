@@ -934,4 +934,27 @@ class SyncGenerator {
 			$this->remove_group_leader_role( $userId );
 		}
 	}
+
+	/**
+	 * Add BB group member role as LD group leader.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 * 
+	 * @param int $userID Member id.
+	 *
+	 * @uses learndash_is_admin_user()        Is member admin user.
+	 * @uses learndash_is_group_leader_user() Is member has already group leader role.
+	 *
+	 * @return void
+	 */
+	public function set_group_leader_role( $userId ) {
+		// If the user has already 'Administrator' or 'group_leader' role.
+		if ( learndash_is_admin_user( $userId ) || learndash_is_group_leader_user( $userId  ) ) {
+			return;
+		}
+
+		$user = new \WP_User( $userId );
+		// Add role
+		$user->add_role( 'group_leader' );
+	}
 }
