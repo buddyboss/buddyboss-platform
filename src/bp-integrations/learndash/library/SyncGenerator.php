@@ -378,7 +378,7 @@ class SyncGenerator {
 			function() use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'admin' ), array( $userId, $this->ldGroupId, $remove ) );
 				$this->maybeRemoveAsLdUser( 'admin', $userId );
-				$this->promote_as_group_leader( $userId );
+				$this->promoteAsGroupLeader( $userId, 'admin', $remove );
 			}
 		);
 
