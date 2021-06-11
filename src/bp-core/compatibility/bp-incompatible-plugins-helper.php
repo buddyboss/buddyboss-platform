@@ -699,7 +699,7 @@ add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
  * Remove the 'group_leader' role for Learndash group author.
  * If the author is not the leader of any gorup.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.6.3
  *
  * @param int $post_id WP Post ID.
  *
@@ -763,7 +763,7 @@ add_action( 'delete_post', 'bb_learndash_delete_group' );
  * Add the 'group_leader' role for Learndash group author.
  * When learndash group status change form trash to draft.
  * 
- * @since BuddyBoss 1.6.1
+ * @since BuddyBoss 1.6.2
  * 
  * @param int $post_id LearnDash group id.
  * 
@@ -780,7 +780,7 @@ function bb_learndash_untrash_group( $post_id ) {
 
 	$ldgroup = get_post( $post_id );
 
-	if ( 'groups' != $ldgroup->post_type || 'trash' != $ldgroup->post_status ) {
+	if ( 'groups' !== $ldgroup->post_type || 'trash' !== $ldgroup->post_status ) {
 		return;
 	}
 
@@ -809,7 +809,7 @@ add_action( 'untrash_post', 'bb_learndash_untrash_group' );
 /**
  * Add user role as 'group_leader'
  * 
- * @since BuddyBoss 1.6.1
+ * @since BuddyBoss 1.6.3
  * 
  * @param int $user_id Update user id.
  * 
@@ -821,7 +821,7 @@ function bb_learndash_role_add( $user_id, $before ) {
 		return;
 	}
 
-	if ( ! in_array( 'group_leader', $before->roles ) ) {
+	if ( ! in_array( 'group_leader', $before->roles, true ) ) {
 		return;
 	}
 
