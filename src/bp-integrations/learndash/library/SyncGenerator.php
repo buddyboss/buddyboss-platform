@@ -392,9 +392,9 @@ class SyncGenerator {
 	/**
 	 * Promote the uesr as a learndash group leader.
 	 * 
-	 * @since BuddyBoss 1.6.1
+	 * @since BuddyBoss 1.6.3
 	 * 
-	 * @param int $userId.
+	 * @param int $userId Member id.
 	 * 
 	 * @return void
 	 */
