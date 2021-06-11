@@ -810,7 +810,7 @@ add_action( 'untrash_post', 'bb_learndash_untrash_group' );
  * 
  * @since BuddyBoss 1.6.1
  * 
- * @param int $user_id
+ * @param int $user_id Update user id.
  * 
  * @return void
  */
