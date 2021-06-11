@@ -880,12 +880,12 @@ class SyncGenerator {
 
 		// Set learndash admin role.
 		if ( 'admin' === $ldRole ) {
-			$this->set_role( $userId, $options['admin'] );
+			$this->member_role_generate( $userId, $options['admin'] );
 		}
 
 		// Set learndash moderator role.
 		if ( 'mod' === $ldRole ) {
-			$this->set_role( $userId, $options['mod'] );
+			$this->member_role_generate( $userId, $options['mod'] );
 		}
 	}
 
@@ -912,5 +912,26 @@ class SyncGenerator {
 			'admin' => $option_admin,
 			'mod'   => $option_mod
 		);
+	}
+
+	/**
+	 * Create or remove learndash group leader role for BB group member.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 *
+	 * @param int $userId  BB group member id.
+	 * @param string $role BB member role in group.
+	 *
+	 * @uses set_group_leader_role()    Add group leader role.
+	 * @uses remove_group_leader_role() Remove group leader role.
+	 *
+	 * @return void
+	 */
+	public function member_role_generate( $userId, $role ) {
+		if ( 'admin' === $role ) {
+			$this->set_group_leader_role( $userId );
+		} else {
+			$this->remove_group_leader_role( $userId );
+		}
 	}
 }
