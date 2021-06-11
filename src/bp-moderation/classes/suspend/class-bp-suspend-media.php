@@ -411,10 +411,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 		}
 
-		error_log( print_r( 'media_related', 1 ) );
-		error_log( print_r( $media_id, 1 ) );
-		error_log( print_r( $related_contents, 1 ) );
-
 		return $related_contents;
 	}
 
