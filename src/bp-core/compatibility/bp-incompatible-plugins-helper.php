@@ -807,20 +807,24 @@ add_action( 'untrash_post', 'bb_learndash_untrash_group' );
 
 /**
  * Add user role as 'group_leader'
- *
- * @since BuddyBoss 1.6.2
- *
- * @param int $user_id User id.
- *
+ * 
+ * @since BuddyBoss 1.6.1
+ * 
+ * @param int $user_id
+ * 
  * @return void
  */
-function bb_learndash_role_add( $user_id ) {
+function bb_learndash_role_add( $user_id, $before ) {
 	// Is Learndash active or not.
 	if ( ! defined( 'LEARNDASH_VERSION' ) ) {
 		return;
 	}
 
+	if ( ! in_array( 'group_leader', $before->roles ) ) {
+		return;
+	}
+
 	$user = new Buddyboss\LearndashIntegration\Library\SyncGenerator();
-	$user->promote_as_group_leader( $user_id );
+	$user->promoteAsGroupLeader( $user_id, 'admin' );
 }
-add_action( 'profile_update', 'bb_learndash_role_add' );
+add_action( 'profile_update', 'bb_learndash_role_add', 10, 2 );
