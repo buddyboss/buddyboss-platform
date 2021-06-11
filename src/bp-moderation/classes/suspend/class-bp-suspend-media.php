@@ -337,12 +337,43 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Activity::$type ][]       = $media->activity_id;
 			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $media->activity_id );
 
-			if ( ( 'hide' === $args['action'] && true === bp_moderation_is_activity_related_content_hidden( $media ) ) || ( 'unhide' === $args['action'] && false === bp_moderation_is_activity_related_content_hidden( $media ) ) ) {
+			if (
+				(
+					'hide' === $args['action'] &&
+					true === bp_moderation_is_activity_related_content_hidden( $media )
+				) ||
+				(
+					'unhide' === $args['action'] &&
+					false === bp_moderation_is_activity_related_content_hidden( $media )
+				)
+			) {
 				$attachment_id = $media->attachment_id;
 
 				if ( ! empty( $attachment_id ) ) {
-					$parent_activity_id                               = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
-					$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity_id;
+
+					/**
+					 * Remove pre-validate check.
+					 *
+					 * @since BuddyBoss X.X.X.
+					 */
+					do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
+
+					$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+					$parent_activity    = new BP_Activity_Activity( $parent_activity_id );
+					if ( ! empty( $parent_activity ) && ! empty( $parent_activity->type ) ) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+
+					/**
+					 * Added pre-validate check.
+					 *
+					 * @since BuddyBoss X.X.X.
+					 */
+					do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 				}
 			}
 		}

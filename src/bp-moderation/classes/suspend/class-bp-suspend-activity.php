@@ -42,6 +42,9 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		// Delete moderation data when actual activity deleted.
 		add_action( 'bp_activity_after_delete', array( $this, 'sync_moderation_data_on_delete' ), 10, 1 );
 
+		do_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
+		do_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
+
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -475,6 +478,24 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
 			}
 		}
+	}
+
+	/**
+	 * Remove Pre-validate check.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	protected function remove_pre_validate_check() {
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+	}
+
+	/**
+	 * Add Pre-validate check.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	protected function add_pre_validate_check() {
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**
