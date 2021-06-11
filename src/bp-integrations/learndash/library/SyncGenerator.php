@@ -139,7 +139,7 @@ class SyncGenerator {
 	public function deleteLdGroup( $ldGroupId ) {
 		$this->syncingToLearndash(
 			function() use ( $ldGroupId ) {
-				$this->remove_user_role( $ldGroupId );
+				$this->remove_ld_group_author_role( $ldGroupId );
 				wp_delete_post( $ldGroupId, true );
 			}
 		);
@@ -159,7 +159,7 @@ class SyncGenerator {
 	 *
 	 * @return void
 	 */
-	public function remove_user_role( $ld_group_id ) {
+	public function remove_ld_group_author_role( $ld_group_id ) {
 
 		$ldgroup = get_post( $ld_group_id );
 		$author  = $ldgroup->post_author;
@@ -181,9 +181,7 @@ class SyncGenerator {
 			return;
 		}
 
-		$user = new \WP_User( $author );
-		// Add role.
-		$user->remove_role( 'group_leader' );
+		$this->remove_group_leader_role( $author );
 	}
 
 	/**
