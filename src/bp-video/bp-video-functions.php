@@ -3534,34 +3534,39 @@ function bb_video_get_symlink( $video, $generate = true ) {
 		    if ( ! empty( $attachment_id ) && ! empty( $video_id ) && file_exists( $output_file_src ) ) {
 			    $attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id );
 		    }
-        } else {
-		    // Get videos previews symlink directory path.
-		    $video_symlinks_path = bb_video_symlink_path();
-		    $attached_file       = get_attached_file( $attachment_id );
-		    $privacy             = $video->privacy;
-		    $upload_directory    = wp_get_upload_dir();
-		    $time                = time();
-		    $attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time );
-		    if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-			    if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
-				    $get_existing = get_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', true );
-				    if ( ! $get_existing ) {
-					    update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', array( $attachment_path ) );
-				    } else {
-					    $get_existing[] = array_push( $get_existing, $attachment_path );
-					    update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', $get_existing );
-				    }
-
-				    if ( $generate ) {
-					    // Generate Video Symlink.
-					    bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
-				    }
+        } elseif ( bb_check_ios_device() ) {
+			    $video_id        = 'forbidden_' . $video->id;
+			    $attachment_id   = 'forbidden_' . $video->attachment_id;
+			    $output_file_src = get_attached_file( $video->attachment_id );
+			    if ( ! empty( $attachment_id ) && ! empty( $video_id ) && file_exists( $output_file_src ) ) {
+				    $attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id );
 			    }
-		    }
-		    $attachment_url = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
+        } else {
+            // Get videos previews symlink directory path.
+            $video_symlinks_path = bb_video_symlink_path();
+            $attached_file       = get_attached_file( $attachment_id );
+            $privacy             = $video->privacy;
+            $upload_directory    = wp_get_upload_dir();
+            $time                = time();
+            $attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time );
+            if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+                if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
+                    $get_existing = get_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', true );
+                    if ( ! $get_existing ) {
+                        update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', array( $attachment_path ) );
+                    } else {
+                        $get_existing[] = array_push( $get_existing, $attachment_path );
+                        update_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', $get_existing );
+                    }
 
+                    if ( $generate ) {
+                        // Generate Video Symlink.
+                        bb_core_symlink_generator( 'video', $video, $time, array(), $attached_file, $attachment_path );
+                    }
+                }
+            }
+            $attachment_url = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
         }
-
 	}
 
 	return apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id );

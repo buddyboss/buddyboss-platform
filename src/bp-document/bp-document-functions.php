@@ -4340,44 +4340,50 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 		if ( bb_enable_symlinks() ) {
 
-			// Get videos previews symlink directory path.
-			$video_symlinks_path = bp_document_symlink_path();
-			$privacy             = $document->privacy;
-			$upload_directory    = wp_get_upload_dir();
-			$attachment_path     = $video_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
-
-			if ( function_exists( 'mime_content_type' ) ) {
-				$mime = mime_content_type( $attached_file );
-			} elseif ( class_exists( 'finfo' ) ) {
-				$finfo = new finfo();
-
-				if ( is_resource( $finfo ) === true ) {
-					$mime = $finfo->file( $attached_file, FILEINFO_MIME_TYPE );
-				}
+			if ( bb_check_ios_device() ) {
+				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( 'forbidden_' . $attachment_id ) . '&id1=' . base64_encode( 'forbidden_' . $document_id );
 			} else {
-				$filetype = wp_check_filetype( $attached_file );
-				$mime     = $filetype['type'];
-			}
 
-			if ( strstr( $mime, 'video/' ) ) {
-				if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
-						$get_existing = get_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', true );
-						if ( ! $get_existing ) {
-							update_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', array( $attachment_path ) );
-						} else {
-							$get_existing[] = array_push( $get_existing, $attachment_path );
-							update_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', $get_existing );
-						}
+				// Get videos previews symlink directory path.
+				$video_symlinks_path = bp_document_symlink_path();
+				$privacy             = $document->privacy;
+				$upload_directory    = wp_get_upload_dir();
+				$attachment_path     = $video_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
 
-						if ( $generate ) {
-							// Generate Document Video Symlink.
-							bb_core_symlink_generator( 'document_video', $document, '', array(), $attached_file, $attachment_path );
+				if ( function_exists( 'mime_content_type' ) ) {
+					$mime = mime_content_type( $attached_file );
+				} elseif ( class_exists( 'finfo' ) ) {
+					$finfo = new finfo();
+
+					if ( is_resource( $finfo ) === true ) {
+						$mime = $finfo->file( $attached_file, FILEINFO_MIME_TYPE );
+					}
+				} else {
+					$filetype = wp_check_filetype( $attached_file );
+					$mime     = $filetype['type'];
+				}
+
+				if ( strstr( $mime, 'video/' ) ) {
+					if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+						if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
+							$get_existing = get_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', true );
+							if ( ! $get_existing ) {
+								update_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', array( $attachment_path ) );
+							} else {
+								$get_existing[] = array_push( $get_existing, $attachment_path );
+								update_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', $get_existing );
+							}
+
+							if ( $generate ) {
+								// Generate Document Video Symlink.
+								bb_core_symlink_generator( 'document_video', $document, '', array(), $attached_file, $attachment_path );
+							}
 						}
 					}
+
+					$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
 				}
 
-				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
 			}
 
 		} else {

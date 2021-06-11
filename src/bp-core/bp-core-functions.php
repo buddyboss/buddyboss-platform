@@ -5529,3 +5529,22 @@ function bb_core_scaled_attachment_path( $attachment_id ) {
 
 	return $img_url;
 }
+
+/**
+ * Check is device is IOS.
+ *
+ * @return bool
+ */
+function bb_check_ios_device() {
+
+    $is_ios = false;
+	$ipod   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' );
+	$iphone = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' );
+	$ipad   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' );
+
+	if ( $ipod || $iphone || $ipad ) {
+		$is_ios = true;
+	}
+
+	return $is_ios;
+}
