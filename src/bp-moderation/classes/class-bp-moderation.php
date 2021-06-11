@@ -179,7 +179,7 @@ class BP_Moderation {
 
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
 
-		return is_numeric( $result ) ? (int) $result : false;
+		return ! empty( $result ) ? (int) $result : false;
 	}
 
 	/**

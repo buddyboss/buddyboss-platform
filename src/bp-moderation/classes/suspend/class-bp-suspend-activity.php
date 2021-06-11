@@ -402,11 +402,12 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( ! empty( $related_contents ) ) {
 			foreach ( $related_contents as $key => $related_content ) {
+				$related_content = (array) $related_content;
 				foreach ( $related_content as $item ) {
 					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key ) && ! empty( $args['action'] ) && 'hide' === $args['action'] ) {
 						$related_content_hide[ $key ][] = $item;
 					}
-					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && ! empty( $args['action'] ) && 'unhide' === $args['action'] && ! isset( $args['hide_parent'] ) ) {
+					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && ! BP_Moderation::check_moderation_exist( $item, $key ) && ! empty( $args['action'] ) && 'unhide' === $args['action'] && ! isset( $args['hide_parent'] ) ) {
 						$related_content_hide[ $key ][] = $item;
 					}
 				}
