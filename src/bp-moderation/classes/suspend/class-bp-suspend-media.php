@@ -145,7 +145,15 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $media_ids ) ) {
 			foreach ( $media_ids as $k => $media_id ) {
-				if ( bp_moderation_is_content_hidden( $media_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_hidden_content( $media_id, self::$type ) ) {
+					unset( $media_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( self::is_content_reported_hidden( $media_id, self::$type ) ) {
 					unset( $media_ids[ $k ] );
 				}
 			}
@@ -326,7 +334,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $media_id, $args = array() ) {
-		$action = ! empty( $args['action'] ) ? $args['action'] : '';
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$related_contents = array();
 		$media            = new BP_Media( $media_id );
 
@@ -335,6 +343,14 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			! empty( $media ) &&
 			! empty( $media->activity_id )
 		) {
+
+			/**
+			 * Remove pre-validate check.
+			 *
+			 * @since BuddyBoss X.X.X.
+			 */
+			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
+
 			$activity = new BP_Activity_Activity( $media->activity_id );
 			if ( ! empty( $activity ) && ! empty( $activity->type ) ) {
 				if ( 'activity_comment' === $activity->type ) {
@@ -348,13 +364,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 			if ( 'hide' === $action && ! empty( $media->attachment_id ) ) {
 				$attachment_id = $media->attachment_id;
-
-				/**
-				 * Remove pre-validate check.
-				 *
-				 * @since BuddyBoss X.X.X.
-				 */
-				do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
 
 				$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
 				if ( ! empty( $parent_activity_id ) ) {
@@ -374,18 +383,37 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 						}
 					}
 				}
-
-				/**
-				 * Added pre-validate check.
-				 *
-				 * @since BuddyBoss X.X.X.
-				 */
-				do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 			}
+
+			if ( 'unhide' === $action && ! empty( $media->attachment_id ) ) {
+				$attachment_id      = $media->attachment_id;
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+					if (
+						! empty( $parent_activity ) &&
+						! empty( $parent_activity->type )
+					) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Added pre-validate check.
+			 *
+			 * @since BuddyBoss X.X.X.
+			 */
+			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 		}
 
-
-
+		error_log( print_r( 'media_related', 1 ) );
+		error_log( print_r( $media_id, 1 ) );
+		error_log( print_r( $related_contents, 1 ) );
 
 		return $related_contents;
 	}

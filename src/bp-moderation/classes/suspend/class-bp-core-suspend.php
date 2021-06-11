@@ -375,13 +375,13 @@ class BP_Core_Suspend {
 	 *
 	 * @return bool
 	 */
-	public static function check_hidden_content( $item_id, $item_type ) {
+	public static function check_hidden_content( $item_id, $item_type, $force = false ) {
 		global $wpdb;
 		$bp        = buddypress();
 		$cache_key = 'bb_check_hidden_content_' . $item_type . '_' . $item_id;
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		if ( false === $result ) {
+		if ( false === $result || true === $force ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}

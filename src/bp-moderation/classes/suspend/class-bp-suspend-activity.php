@@ -56,6 +56,9 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+
+		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
+		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 	}
 
 	/**
@@ -383,7 +386,23 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
-		return $related_contents;
+		$related_content_hide = array();
+
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				$related_content = (array) $related_content;
+				foreach ( $related_content as $item ) {
+					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key ) && 'hide' === $action ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && 'unhide' === $action ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+				}
+			}
+		}
+
+		return $related_content_hide;
 	}
 
 	/**
@@ -448,5 +467,23 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
 			}
 		}
+	}
+
+	/**
+	 * Remove Pre-validate check.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	public function remove_pre_validate_check() {
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+	}
+
+	/**
+	 * Add Pre-validate check.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	public function add_pre_validate_check() {
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 }
