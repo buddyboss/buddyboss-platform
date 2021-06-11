@@ -488,7 +488,7 @@ function bp_core_get_packaged_component_ids() {
 		'settings',
 		'notifications',
 		'search',
-        'moderation'
+		'moderation'
 	);
 
 	return $components;
@@ -2661,8 +2661,8 @@ function bp_core_get_components( $type = 'all' ) {
 			</ul>
 			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
 		),
-        // @todo: used for bp-performance will enable in feature.
-        /*
+		// @todo: used for bp-performance will enable in feature.
+		/*
 		'performance'       => array(
 			'title'       => __( 'API Caching', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -2677,7 +2677,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss' ),
 			'default'     => false,
 		),
-        */
+		*/
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -5373,34 +5373,35 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 
 	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 	$current_value   = bp_get_option( 'bp-display-name-format' );
-	$where_condition = '';
-
+	$enabled_fields = array();
+	
 	// If First Name selected then do not add last name field.
 	if ( 'first_name' === $current_value ) {
-		$where_condition .= "( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
-
-		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-			$where_condition .= " OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
+		if ( ! empty( bp_hide_last_name() ) ) {
+			$enabled_fields['lastname'] = bp_xprofile_lastname_field_id();
 		}
 		// If Nick Name selected then do not add first & last name field.
 	} elseif ( 'nickname' === $current_value ) {
-		$where_condition .= " ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
-
-		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-			$where_condition .= " OR ( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		$enabled_fields['nickname'] = bp_xprofile_nickname_field_id();
+		if ( ! empty( bp_hide_nickname_first_name() ) ) {
+			$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
 		}
-		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-			$where_condition .= " OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		if ( ! empty( bp_hide_last_name() ) ) {
+			$enabled_fields['lastname'] = bp_xprofile_lastname_field_id();
 		}
-
 	} else {
-		$where_condition .= "( ( field_id = " . $firstname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( (field_id = " . $last_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) ) OR ( ( field_id = " . $nickname_field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		$enabled_fields['lastname']   = bp_xprofile_lastname_field_id();
+		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
 	}
 
+	$where_condition = array();
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
 	$matched_user_ids = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . $where_condition
+			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " .  implode( ' OR ', $where_condition )
 		)
 	);
 
@@ -5408,7 +5409,7 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	if ( ! empty( $matched_user_ids ) ) {
 		$matched_user_data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$bp->profile->table_name_data} WHERE " . $where_condition
+				"SELECT * FROM {$bp->profile->table_name_data} WHERE " .  implode( ' OR ', $where_condition )
 			)
 		);
 
