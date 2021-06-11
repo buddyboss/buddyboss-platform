@@ -125,8 +125,14 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function hide_related_content( $item_id, $hide_sitewide, $args = array() ) {
-		$related_contents = $this->get_related_contents( $item_id );
-		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
+		if ( empty( $args['action'] ) ) {
+			$args['action'] = 'hide';
+		}
+
+		$related_contents = $this->get_related_contents( $item_id, $args );
+
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
@@ -198,8 +204,14 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
+		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
+		if ( empty( $args['action'] ) ) {
+			$args['action'] = 'unhide';
+		}
+
 		$related_contents = $this->get_related_contents( $item_id, $args );
-		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {

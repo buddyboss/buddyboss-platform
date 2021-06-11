@@ -122,18 +122,18 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @return array Document IDs
 	 */
-	public static function get_document_ids_meta( $item_id, $function = 'get_post_meta' ) {
+	public static function get_document_ids_meta( $item_id, $function = 'get_post_meta', $action = '' ) {
 		$document_ids = array();
 
 		if ( function_exists( $function ) ) {
 			if ( ! empty( $item_id ) ) {
 				$post_document = $function( $item_id, 'bp_document_ids', true );
-				if ( empty( $post_document ) ){
+				if ( empty( $post_document ) ) {
 					$post_document = BP_Document::get_activity_document_id( $item_id );
 				}
 
-				if ( ! empty( $post_document )  ){
-					$document_ids  = wp_parse_id_list( $post_document );
+				if ( ! empty( $post_document ) ) {
+					$document_ids = wp_parse_id_list( $post_document );
 				}
 			}
 		}

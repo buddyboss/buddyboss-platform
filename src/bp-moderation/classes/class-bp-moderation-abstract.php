@@ -79,7 +79,7 @@ abstract class BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_class( $type = '' ) {
-		$class = self::class;
+		$class = new stdClass();
 		if ( ! empty( $type ) && ! empty( self::$moderation ) && isset( self::$moderation[ $type ] ) ) {
 			if ( class_exists( self::$moderation[ $type ] ) ) {
 				$class = self::$moderation[ $type ];
