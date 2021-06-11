@@ -888,4 +888,29 @@ class SyncGenerator {
 			$this->set_role( $userId, $options['mod'] );
 		}
 	}
+
+	/**
+	 * Get group to learndash sync setting options.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 *
+	 * @uses bp_get_option() Get options value.
+	 *
+	 * @return array
+	 */
+	public function default_sync_options() {
+		$options = bp_get_option( 'bp_ld_sync_settings', array() );
+
+		if ( empty( $options['buddypress'] ) || empty( $options['buddypress']['enabled'] ) ) {
+			return array();
+		}
+
+		$option_admin = empty( $options['buddypress']['default_admin_sync_to'] ) ? 'admin' : $options['buddypress']['default_admin_sync_to'];
+		$option_mod   = empty( $options['buddypress']['default_mod_sync_to'] )   ? 'admin' : $options['buddypress']['default_mod_sync_to'];
+
+		return array(
+			'admin' => $option_admin,
+			'mod'   => $option_mod
+		);
+	}
 }
