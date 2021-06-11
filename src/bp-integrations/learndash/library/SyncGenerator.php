@@ -957,4 +957,19 @@ class SyncGenerator {
 		// Add role
 		$user->add_role( 'group_leader' );
 	}
+
+	/**
+	 * Remove LD group leader role.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 *
+	 * @param int $userID Member id.
+	 *
+	 * @return void
+	 */
+	public function remove_group_leader_role( $userId ) {
+		$user = new \WP_User( (int) $userId );
+		// Remove role
+		$user->remove_role( 'group_leader' );
+	}
 }
