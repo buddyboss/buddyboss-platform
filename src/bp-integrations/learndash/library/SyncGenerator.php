@@ -139,7 +139,7 @@ class SyncGenerator {
 	public function deleteLdGroup( $ldGroupId ) {
 		$this->syncingToLearndash(
 			function() use ( $ldGroupId ) {
-				$this->remove_user_role( $ldGroupId );
+				$this->remove_ld_group_author_role( $ldGroupId );
 				wp_delete_post( $ldGroupId, true );
 			}
 		);
@@ -149,7 +149,7 @@ class SyncGenerator {
 	 * Remove the 'group_leader' role for Learndash group author.
 	 * If the author is not the leader of any gorup.
 	 *
-	 * @since BuddyBoss 1.6.2
+	 * @since BuddyBoss 1.6.3
 	 *
 	 * @param int $ld_group_id Leardash group id.
 	 *
@@ -159,7 +159,7 @@ class SyncGenerator {
 	 *
 	 * @return void
 	 */
-	public function remove_user_role( $ld_group_id ) {
+	public function remove_ld_group_author_role( $ld_group_id ) {
 
 		$ldgroup = get_post( $ld_group_id );
 		$author  = $ldgroup->post_author;
@@ -181,9 +181,7 @@ class SyncGenerator {
 			return;
 		}
 
-		$user = new \WP_User( $author );
-		// Add role.
-		$user->remove_role( 'group_leader' );
+		$this->remove_group_leader_role( $author );
 	}
 
 	/**
@@ -378,7 +376,7 @@ class SyncGenerator {
 			function() use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'admin' ), array( $userId, $this->ldGroupId, $remove ) );
 				$this->maybeRemoveAsLdUser( 'admin', $userId );
-				$this->promote_as_group_leader( $userId );
+				$this->promoteAsGroupLeader( $userId, 'admin', $remove );
 			}
 		);
 
@@ -387,26 +385,6 @@ class SyncGenerator {
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Promote the uesr as a learndash group leader.
-	 *
-	 * @since BuddyBoss 1.6.2
-	 *
-	 * @param int $user_id User id.
-	 *
-	 * @return void
-	 */
-	public function promote_as_group_leader( $user_id ) {
-		// If the user has already 'Administrator' or 'group_leader' role.
-		if ( learndash_is_admin_user( $user_id ) || learndash_is_group_leader_user( $user_id ) ) {
-			return;
-		}
-
-		$user = new \WP_User( $user_id );
-		// Add role.
-		$user->add_role( 'group_leader' );
 	}
 
 	/**
@@ -872,5 +850,124 @@ class SyncGenerator {
 		}
 
 		$this->setSyncGropuIds();
+	}
+
+	/**
+	 * Promote the uesr as a learndash group leader.
+	 * 
+	 * @since BuddyBoss 1.6.3
+	 * 
+	 * @param int $userId Member id.
+	 * 
+	 * @return void
+	 */
+	public function promoteAsGroupLeader( $userId, $ldRole, $remove = false ) {
+		// Default settings options.
+		$options = $this->default_sync_options();
+
+		// When synchronization disable.
+		if ( empty( $options ) ) {
+			return;
+		}
+
+		// Remove user.
+		if ( true === $remove || 'user' === $ldRole ) {
+			$this->remove_group_leader_role( $userId );
+			return;
+		} 
+
+		// Set learndash admin role.
+		if ( 'admin' === $ldRole ) {
+			$this->member_role_generate( $userId, $options['admin'] );
+		}
+
+		// Set learndash moderator role.
+		if ( 'mod' === $ldRole ) {
+			$this->member_role_generate( $userId, $options['mod'] );
+		}
+	}
+
+	/**
+	 * Get group to learndash sync setting options.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 *
+	 * @uses bp_get_option() Get options value.
+	 *
+	 * @return array
+	 */
+	public function default_sync_options() {
+		$options = bp_get_option( 'bp_ld_sync_settings', array() );
+
+		if ( empty( $options['buddypress'] ) || empty( $options['buddypress']['enabled'] ) ) {
+			return array();
+		}
+
+		$option_admin = empty( $options['buddypress']['default_admin_sync_to'] ) ? 'admin' : $options['buddypress']['default_admin_sync_to'];
+		$option_mod   = empty( $options['buddypress']['default_mod_sync_to'] )   ? 'admin' : $options['buddypress']['default_mod_sync_to'];
+
+		return array(
+			'admin' => $option_admin,
+			'mod'   => $option_mod
+		);
+	}
+
+	/**
+	 * Create or remove learndash group leader role for BB group member.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 *
+	 * @param int $userId  BB group member id.
+	 * @param string $role BB member role in group.
+	 *
+	 * @uses set_group_leader_role()    Add group leader role.
+	 * @uses remove_group_leader_role() Remove group leader role.
+	 *
+	 * @return void
+	 */
+	public function member_role_generate( $userId, $role ) {
+		if ( 'admin' === $role ) {
+			$this->set_group_leader_role( $userId );
+		} else {
+			$this->remove_group_leader_role( $userId );
+		}
+	}
+
+	/**
+	 * Add BB group member role as LD group leader.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 * 
+	 * @param int $userID Member id.
+	 *
+	 * @uses learndash_is_admin_user()        Is member admin user.
+	 * @uses learndash_is_group_leader_user() Is member has already group leader role.
+	 *
+	 * @return void
+	 */
+	public function set_group_leader_role( $userId ) {
+		// If the user has already 'Administrator' or 'group_leader' role.
+		if ( learndash_is_admin_user( $userId ) || learndash_is_group_leader_user( $userId  ) ) {
+			return;
+		}
+
+		$user = new \WP_User( $userId );
+		// Add role
+		$user->add_role( 'group_leader' );
+	}
+
+	/**
+	 * Remove LD group leader role.
+	 *
+	 * @since BuddyBoss 1.6.3
+	 *
+	 * @param int $userID Member id.
+	 *
+	 * @return void
+	 */
+	public function remove_group_leader_role( $userId ) {
+		$user = new \WP_User( (int) $userId );
+		// Remove role
+		$user->remove_role( 'group_leader' );
 	}
 }
