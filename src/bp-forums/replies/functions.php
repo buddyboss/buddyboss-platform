@@ -1918,8 +1918,8 @@ function bbp_untrashed_reply( $reply_id = 0, $previous_status ) {
 	}
 
 	$update_reply = array(
-		'ID' 			=> $reply_id,
-		'post_status'	=>	$previous_status
+		'ID' => $reply_id,
+		'post_status' => $previous_status
 	);
 	wp_update_post($update_reply);
 
