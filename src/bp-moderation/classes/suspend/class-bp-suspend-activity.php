@@ -405,7 +405,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key ) && 'hide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
-					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && 'unhide' === $action ) {
+					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key ) || BP_Core_Suspend::check_suspended_content( $item, $key ) ) && 'unhide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
 				}
@@ -413,7 +413,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		}
 
 		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
-
 		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
 			foreach ( $related_content_hide as $key => $related_content ) {
 				foreach ( (array) $related_content as $k => $item ) {

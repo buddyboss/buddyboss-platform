@@ -326,13 +326,12 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key ) && 'hide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
-					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && 'unhide' === $action ) {
+					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key ) || BP_Core_Suspend::check_suspended_content( $item, $key ) ) && 'unhide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
 				}
 			}
 		}
-
 
 		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
 
@@ -342,7 +341,6 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 					if ( BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
 						unset( $related_content_hide[ $key ][ $k ] );
 					}
-
 				}
 			}
 		}
