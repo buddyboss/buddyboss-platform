@@ -413,7 +413,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int     $post_id Post ID.
+	 * @param int $post_id Post ID.
 	 */
 	public function sync_moderation_data_on_delete( $post_id ) {
 
