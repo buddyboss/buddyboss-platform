@@ -3129,7 +3129,7 @@ function bp_core_get_suggestions( $args ) {
 	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
 	//Add action only for xprofile fields First, last and nickname
-	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
 
 	$suggestions = new $class( $args );
 	$validation  = $suggestions->validate();
@@ -3144,7 +3144,7 @@ function bp_core_get_suggestions( $args ) {
 	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
 	//Removed action only for xprofile fields First, last and nickname
-	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
 	/**
 	 * Filters the available type of at-mentions.
 	 *
@@ -5346,7 +5346,7 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
  * @param BP_User_Query $query User query object.
  * @return array
  */
-function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_User_Query $query ) {
+function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_User_Query $query ) {
 
 	global $wpdb;
 	if ( empty( $query->query_vars['search_terms'] ) || empty( $sql['where']['search'] ) ) {
