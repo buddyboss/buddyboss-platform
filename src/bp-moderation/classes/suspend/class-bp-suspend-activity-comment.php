@@ -60,11 +60,12 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_activity_comment_ids( $member_id ) {
+	public static function get_member_activity_comment_ids( $member_id, $action = '' ) {
 		$activities_ids = array();
 
 		$activities = BP_Activity_Activity::get(
@@ -83,6 +84,22 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
+		}
+
+		if ( 'hide' === $action && ! empty( $activities_ids ) ) {
+			foreach ( $activities_ids as $k => $activity_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $activity_id, self::$type ) ) {
+					unset( $activities_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $activities_ids ) ) {
+			foreach ( $activities_ids as $k => $activity_id ) {
+				if ( ! BP_Core_Suspend::check_suspended_content( $activity_id, self::$type ) ) {
+					unset( $activities_ids[ $k ] );
+				}
+			}
 		}
 
 		return $activities_ids;
@@ -290,6 +307,8 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $acomment_id, $args = array() ) {
+		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 
 		$related_contents = array();
 
@@ -299,14 +318,46 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $acomment_id, 'bp_activity_get_meta' );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $acomment_id, 'bp_activity_get_meta' );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
 		}
 
-		return $related_contents;
+		$related_content_hide = array();
+
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				$related_content = (array) $related_content;
+				foreach ( $related_content as $item ) {
+					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key ) && 'hide' === $action ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && 'unhide' === $action ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+				}
+			}
+		}
+
+
+		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
+
+		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
+			foreach ( $related_content_hide as $key => $related_content ) {
+				foreach ( (array) $related_content as $k => $item ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
+						unset( $related_content_hide[ $key ][ $k ] );
+					}
+					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key ) && 'unhide' === $action ) {
+						unset( $related_content_hide[ $key ][ $k ] );
+					}
+				}
+			}
+		}
+
+		return $related_content_hide;
 	}
 
 	/**

@@ -66,11 +66,12 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_activity_ids( $member_id ) {
+	public static function get_member_activity_ids( $member_id, $action = '' ) {
 		$activities_ids = array();
 
 		$activities = BP_Activity_Activity::get(
@@ -87,6 +88,22 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
+		}
+
+		if ( 'hide' === $action && ! empty( $activities_ids ) ) {
+			foreach ( $activities_ids as $k => $activity_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $activity_id, self::$type ) ) {
+					unset( $activities_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $activities_ids ) ) {
+			foreach ( $activities_ids as $k => $activity_id ) {
+				if ( ! BP_Core_Suspend::check_suspended_content( $activity_id, self::$type ) ) {
+					unset( $activities_ids[ $k ] );
+				}
+			}
 		}
 
 		return $activities_ids;
@@ -372,7 +389,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $activity_id, $args = array() ) {
-		$action = ! empty( $args['action'] ) ? $args['action'] : '';
+		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 
 		$related_contents = array(
 			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),
@@ -397,6 +415,21 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 					}
 					if ( BP_Core_Suspend::check_hidden_content( $item, $key ) && 'unhide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
+					}
+				}
+			}
+		}
+
+		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
+
+		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
+			foreach ( $related_content_hide as $key => $related_content ) {
+				foreach ( (array) $related_content as $k => $item ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
+						unset( $related_content_hide[ $key ][ $k ] );
+					}
+					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key ) && 'unhide' === $action ) {
+						unset( $related_content_hide[ $key ][ $k ] );
 					}
 				}
 			}

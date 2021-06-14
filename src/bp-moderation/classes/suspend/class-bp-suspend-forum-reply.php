@@ -67,11 +67,12 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_reply_ids( $member_id ) {
+	public static function get_member_reply_ids( $member_id, $action = '' ) {
 		$reply_ids = array();
 
 		$reply_query = new WP_Query(
@@ -90,6 +91,22 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		if ( $reply_query->have_posts() ) {
 			$reply_ids = $reply_query->posts;
+		}
+
+		if ( 'hide' === $action && ! empty( $reply_ids ) ) {
+			foreach ( $reply_ids as $k => $reply_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type ) ) {
+					unset( $reply_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $reply_ids ) ) {
+			foreach ( $reply_ids as $k => $reply_id ) {
+				if ( ! BP_Core_Suspend::check_suspended_content( $reply_id, self::$type ) ) {
+					unset( $reply_ids[ $k ] );
+				}
+			}
 		}
 
 		return $reply_ids;

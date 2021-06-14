@@ -84,7 +84,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $document_ids ) ) {
 			foreach ( $document_ids as $k => $document_id ) {
-				if ( BP_Core_Suspend::check_hidden_content( $document_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_suspended_content( $document_id, self::$type ) ) {
 					unset( $document_ids[ $k ] );
 				}
 			}
@@ -92,7 +92,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		if ( 'unhide' === $action && ! empty( $document_ids ) ) {
 			foreach ( $document_ids as $k => $document_id ) {
-				if ( self::is_content_reported_hidden( $document_id, self::$type ) ) {
+				if ( ! BP_Core_Suspend::check_suspended_content( $document_id, self::$type ) ) {
 					unset( $document_ids[ $k ] );
 				}
 			}
@@ -348,6 +348,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $document_id, $args = array() ) {
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$related_contents = array();
 		$document         = new BP_Document( $document_id );
 
@@ -418,6 +419,21 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			 * @since BuddyBoss X.X.X.
 			 */
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
+		}
+
+		$related_contents = json_decode( wp_json_encode( $related_contents ), true );
+
+		if ( ! empty( $blocked_user ) && ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				foreach ( (array) $related_content as $k => $item ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
+						unset( $related_contents[ $key ][ $k ] );
+					}
+					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key ) && 'unhide' === $action ) {
+						unset( $related_contents[ $key ][ $k ] );
+					}
+				}
+			}
 		}
 
 		return $related_contents;

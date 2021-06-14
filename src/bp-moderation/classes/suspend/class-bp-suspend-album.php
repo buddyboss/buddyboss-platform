@@ -61,11 +61,12 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_album_ids( $member_id ) {
+	public static function get_member_album_ids( $member_id, $action = '' ) {
 		$album_ids = array();
 
 		$albums = bp_album_get(
@@ -79,6 +80,22 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 
 		if ( ! empty( $albums['albums'] ) ) {
 			$album_ids = $albums['albums'];
+		}
+
+		if ( 'hide' === $action && ! empty( $album_ids ) ) {
+			foreach ( $album_ids as $k => $album_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $album_id, self::$type ) ) {
+					unset( $album_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $album_ids ) ) {
+			foreach ( $album_ids as $k => $album_id ) {
+				if ( ! BP_Core_Suspend::check_suspended_content( $album_id, self::$type ) ) {
+					unset( $album_ids[ $k ] );
+				}
+			}
 		}
 
 		return $album_ids;

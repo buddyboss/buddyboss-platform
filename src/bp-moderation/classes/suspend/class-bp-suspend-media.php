@@ -65,11 +65,12 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_media_ids( $member_id ) {
+	public static function get_member_media_ids( $member_id, $action = '' ) {
 		$media_ids = array();
 
 		$medias = bp_media_get(
@@ -85,6 +86,22 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			$media_ids = $medias['medias'];
 		}
 
+		if ( 'hide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $media_id, self::$type ) ) {
+					unset( $media_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( ! BP_Core_Suspend::check_suspended_content( $media_id, self::$type ) ) {
+					unset( $media_ids[ $k ] );
+				}
+			}
+		}
+
 		return $media_ids;
 	}
 
@@ -94,11 +111,10 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $group_id group id.
-	 * @param string $action   Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_group_media_ids( $group_id, $action = '' ) {
+	public static function get_group_media_ids( $group_id ) {
 		$media_ids = array();
 
 		$medias = bp_media_get(
@@ -112,22 +128,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		if ( ! empty( $medias['medias'] ) ) {
 			$media_ids = $medias['medias'];
-		}
-
-		if ( 'hide' === $action && ! empty( $media_ids ) ) {
-			foreach ( $media_ids as $k => $media_id ) {
-				if ( BP_Core_Suspend::check_hidden_content( $media_id, self::$type ) ) {
-					unset( $media_ids[ $k ] );
-				}
-			}
-		}
-
-		if ( 'unhide' === $action && ! empty( $media_ids ) ) {
-			foreach ( $media_ids as $k => $media_id ) {
-				if ( self::is_content_reported_hidden( $media_id, self::$type ) ) {
-					unset( $media_ids[ $k ] );
-				}
-			}
 		}
 
 		return $media_ids;
@@ -353,6 +353,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $media_id, $args = array() ) {
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$related_contents = array();
 		$media            = new BP_Media( $media_id );
 
@@ -427,6 +428,21 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			 * @since BuddyBoss X.X.X.
 			 */
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
+		}
+
+		$related_contents = json_decode( wp_json_encode( $related_contents ), true );
+
+		if ( ! empty( $blocked_user ) && ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				foreach ( (array) $related_content as $k => $item ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
+						unset( $related_contents[ $key ][ $k ] );
+					}
+					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key ) && 'unhide' === $action ) {
+						unset( $related_contents[ $key ][ $k ] );
+					}
+				}
+			}
 		}
 
 		return $related_contents;

@@ -64,11 +64,12 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id Member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_comment_ids( $member_id ) {
+	public static function get_member_comment_ids( $member_id, $action = '' ) {
 
 		$comment_ids = get_comments(
 			array(
@@ -78,6 +79,22 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 				'update_comment_post_cache' => false,
 			)
 		);
+
+		if ( 'hide' === $action && ! empty( $comment_ids ) ) {
+			foreach ( $comment_ids as $k => $comment_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
+					unset( $comment_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $comment_ids ) ) {
+			foreach ( $comment_ids as $k => $comment_id ) {
+				if ( ! BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
+					unset( $comment_ids[ $k ] );
+				}
+			}
+		}
 
 		return $comment_ids;
 	}
