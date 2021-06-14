@@ -5340,7 +5340,7 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 /**
  * When search_terms are passed to BP_User_Query, search against xprofile fields.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.6.3
  *
  * @param array         $sql   Clauses in the user_id SQL query.
  * @param BP_User_Query $query User query object.
@@ -5374,7 +5374,7 @@ function bp_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 	$current_value   = bp_get_option( 'bp-display-name-format' );
 	$enabled_fields = array();
-	
+
 	// If First Name selected then do not add last name field.
 	if ( 'first_name' === $current_value ) {
 		$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
