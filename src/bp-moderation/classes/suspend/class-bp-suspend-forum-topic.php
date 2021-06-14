@@ -100,14 +100,6 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( 'unhide' === $action && ! empty( $topic_ids ) ) {
-			foreach ( $topic_ids as $k => $topic_id ) {
-				if ( ! BP_Core_Suspend::check_suspended_content( $topic_id, self::$type ) ) {
-					unset( $topic_ids[ $k ] );
-				}
-			}
-		}
-
 		return $topic_ids;
 	}
 

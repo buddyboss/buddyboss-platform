@@ -101,14 +101,6 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( 'unhide' === $action && ! empty( $reply_ids ) ) {
-			foreach ( $reply_ids as $k => $reply_id ) {
-				if ( ! BP_Core_Suspend::check_suspended_content( $reply_id, self::$type ) ) {
-					unset( $reply_ids[ $k ] );
-				}
-			}
-		}
-
 		return $reply_ids;
 	}
 

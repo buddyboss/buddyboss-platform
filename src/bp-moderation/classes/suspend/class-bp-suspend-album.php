@@ -90,14 +90,6 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( 'unhide' === $action && ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $k => $album_id ) {
-				if ( ! BP_Core_Suspend::check_suspended_content( $album_id, self::$type ) ) {
-					unset( $album_ids[ $k ] );
-				}
-			}
-		}
-
 		return $album_ids;
 	}
 

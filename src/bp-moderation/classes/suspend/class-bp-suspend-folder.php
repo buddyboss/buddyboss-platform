@@ -90,14 +90,6 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( 'unhide' === $action && ! empty( $folder_ids ) ) {
-			foreach ( $folder_ids as $k => $folder_id ) {
-				if ( ! BP_Core_Suspend::check_suspended_content( $folder_id, self::$type ) ) {
-					unset( $folder_ids[ $k ] );
-				}
-			}
-		}
-
 		return $folder_ids;
 	}
 

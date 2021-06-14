@@ -94,14 +94,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( 'unhide' === $action && ! empty( $media_ids ) ) {
-			foreach ( $media_ids as $k => $media_id ) {
-				if ( ! BP_Core_Suspend::check_suspended_content( $media_id, self::$type ) ) {
-					unset( $media_ids[ $k ] );
-				}
-			}
-		}
-
 		return $media_ids;
 	}
 
@@ -436,9 +428,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			foreach ( $related_contents as $key => $related_content ) {
 				foreach ( (array) $related_content as $k => $item ) {
 					if ( BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
-						unset( $related_contents[ $key ][ $k ] );
-					}
-					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key ) && 'unhide' === $action ) {
 						unset( $related_contents[ $key ][ $k ] );
 					}
 				}
