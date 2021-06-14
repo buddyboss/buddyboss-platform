@@ -138,6 +138,22 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			}
 		}
 
+		if ( 'hide' === $action && ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $k => $document_id ) {
+				if ( BP_Core_Suspend::check_hidden_content( $document_id, self::$type ) ) {
+					unset( $document_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $k => $document_id ) {
+				if ( self::is_content_reported_hidden( $document_id, self::$type ) ) {
+					unset( $document_ids[ $k ] );
+				}
+			}
+		}
+
 		return $document_ids;
 	}
 
@@ -313,7 +329,80 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $document_id, $args = array() ) {
-		return array();
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$related_contents = array();
+		$document         = new BP_Document( $document_id );
+
+		if ( bp_is_active( 'activity' ) && ! empty( $document ) && ! empty( $document->activity_id ) ) {
+
+			/**
+			 * Remove pre-validate check.
+			 *
+			 * @since BuddyBoss X.X.X.
+			 */
+			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
+
+			$activity = new BP_Activity_Activity( $document->activity_id );
+			if ( ! empty( $activity ) && ! empty( $activity->type ) ) {
+				if ( 'activity_comment' === $activity->type ) {
+					$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $activity->id;
+				} else {
+					$related_contents[ BP_Suspend_Activity::$type ][] = $activity->id;
+				}
+			}
+
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $document->activity_id );
+
+			if ( 'hide' === $action && ! empty( $media->attachment_id ) ) {
+				$attachment_id = $media->attachment_id;
+
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent_activity  = new BP_Activity_Activity( $parent_activity_id );
+					$parent_media_ids = self::get_document_ids_meta( $parent_activity_id, 'bp_activity_get_meta', $action );
+
+					if (
+						empty( $parent_media_ids ) &&
+						! empty( $parent_activity ) &&
+						! empty( $parent_activity->type ) &&
+						empty( wp_strip_all_tags( $parent_activity->content ) )
+					) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+				}
+			}
+
+			if ( 'unhide' === $action && ! empty( $media->attachment_id ) ) {
+				$attachment_id      = $media->attachment_id;
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+					if (
+						! empty( $parent_activity ) &&
+						! empty( $parent_activity->type )
+					) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Added pre-validate check.
+			 *
+			 * @since BuddyBoss X.X.X.
+			 */
+			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
+		}
+
+		return $related_contents;
 	}
 
 	/**
