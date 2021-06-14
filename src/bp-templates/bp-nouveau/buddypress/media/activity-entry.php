@@ -32,8 +32,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 $more_media     = $media_template->media_count > 5 ? true : false;
 ?>
 
-<div class="bb-activity-media-elem media-activity
-<?php
+<div class="bb-activity-media-elem media-activity <?php
 echo esc_attr( bp_media_id() ) . ' ';
 echo $media_template->current_media > 4 ? esc_attr( 'hide' ) : '';
 echo 1 === $media_template->media_count || $media_template->media_count > 1 && 0 === $media_template->current_media ? esc_attr( 'act-grid-1-1 ' ) : '';
