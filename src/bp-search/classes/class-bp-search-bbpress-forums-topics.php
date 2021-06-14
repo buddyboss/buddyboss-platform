@@ -75,11 +75,18 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$where_clause        = ' OR ';
 			}
 
+			if ( current_user_can( 'read_hidden_forums' ) ) {
+				$post_status = array( 'publish', 'private', 'hidden' );
+			} elseif ( current_user_can( 'read_private_forums' ) ) {
+				$post_status = array( 'publish', 'private' );
+			} else {
+				$post_status = array( 'publish' );
+			}
+
 			$group_memberships = '';
-			$ban_groups        = array();
+			$membership_in     = array();
 
 			if ( bp_is_active( 'groups' ) ) {
-				// Current user associated group ids.
 				$group_memberships = bp_get_user_groups(
 					get_current_user_id(),
 					array(
@@ -88,95 +95,91 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					)
 				);
 
-				// Set Current user associated group ids.
 				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
 
-				// Get all private and hidden group ids.
-				$restricted_groups = groups_get_groups(
+				$public_groups = groups_get_groups(
 					array(
-						'fields'      => 'ids',
-						'status'      => array( 'private', 'hidden' ),
-						'show_hidden' => true,
-						'per_page'    => - 1,
+						'fields'   => 'ids',
+						'status'   => 'public',
+						'per_page' => - 1,
 					)
 				);
-
-				if ( ! empty( $restricted_groups ) && ! empty( $restricted_groups['groups'] ) ) {
-					$restricted_groups = $restricted_groups['groups'];
+				
+				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
+					$public_groups = $public_groups['groups'];
 				} else {
-					$restricted_groups = array();
+					$public_groups = array();
 				}
 
-				// Remove the parive and hidden group ids where the current user is assigned.
-				$ban_groups = array_diff( $restricted_groups, $group_memberships );
+				$group_memberships = array_merge( $public_groups, $group_memberships );
+				$group_memberships = array_unique( $group_memberships );
 			}
 
-			if ( current_user_can( 'read_hidden_forums' ) ) {
-				$post_status = array( 'publish', 'private', 'hidden' );
-			} elseif ( current_user_can( 'read_private_forums' ) ) {
-				$post_status = array( 'publish', 'private' );
-			} else {
-				$post_status = array( 'publish' );
-			}
-			
-			$ban_group_forum_ids = array();
-
-			if ( ! empty( $ban_groups ) ) {
-				$in = array_map(
+			if ( ! empty( $group_memberships ) ) {
+				$membership_in = array_map(
 					function ( $group_id ) {
 						return maybe_serialize( array( $group_id ) );
 					},
-					$ban_groups
+					$group_memberships
 				);
-				
-				// Get group associated forum ids. Where current user is not connected to those groups.
-				$ban_group_forum_ids = get_posts(
-					array(
-						'fields'      => 'ids',
-						'post_status' => $post_status,
-						'post_type'   => bbp_get_forum_post_type(),
-						'numberposts' => '-1',
-						'meta_query'  => array(
-							array(
-								'key'     => '_bbp_group_ids',
-								'value'   => $in,
-								'compare' => 'IN'
-							)
-						)
-					)
-				);
-				
-				$ban_group_forum_child_ids = array();
-
-				// Get group associated child forum ids. Where current user is not connected to those groups.
-				foreach ( $ban_group_forum_ids as $forum_id ) {
-					$single_forum_child_ids    = $this->nested_child_forum_ids( $forum_id );
-					$ban_group_forum_child_ids = array_merge( $ban_group_forum_child_ids, $single_forum_child_ids );
-				}
-
-				// Get group associated forum and child forum ids. Where current user is not connected to those groups.
-				$ban_group_forum_ids = array_merge( $ban_group_forum_ids, $ban_group_forum_child_ids );
 			}
-
-			// Get all forum ids.
-			$forum_ids = get_posts(
+			
+			// Get all private group forum ids where current user is not enrolled.
+			$group_forum_ids = get_posts(
 				array(
 					'fields'      => 'ids',
 					'post_status' => $post_status,
 					'post_type'   => bbp_get_forum_post_type(),
-					'numberposts' => '-1'
+					'numberposts' => '-1',
+					'meta_query'  => array(
+						array(
+							'key'     => '_bbp_group_ids',
+							'compare' => 'EXISTS'
+						),
+						array(
+							'key'     => '_bbp_group_ids',
+							'value'   => 'a:0:{}',
+							'compare' => '!='
+						),
+						array(
+							'key'     => '_bbp_group_ids',
+							'value'   => $membership_in,
+							'compare' => 'NOT IN'
+						)
+					)
 				)
 			);
-	
-			// Remove private group associated forum ids from all forum ids. Where current user is not connected to those groups.
-			$all_forum_ids = array_diff( $forum_ids, $ban_group_forum_ids );
-			$forum_id_in   = implode( ',', $all_forum_ids );
+			
+			$group_forum_child_ids = array();
+			
+			// Get child forum ids where parent forum are associated with private gorup. 
+			foreach ( $group_forum_ids as $forum_id ) {
+				$single_forum_child_ids = $this->nested_child_forum_ids( $forum_id );
+				$group_forum_child_ids  = array_merge( $group_forum_child_ids, $single_forum_child_ids );
+			}
 
+			// Merge all forum ids and its child forum ids.
+			$group_forum_ids = array_merge( $group_forum_ids, $group_forum_child_ids );
+			
+			// Get group associated forum ids. Where current user is not connected to those groups.
+			$forum_ids = get_posts(
+				array(
+					'fields'       => 'ids',
+					'post_status'  => $post_status,
+					'post_type'    => bbp_get_forum_post_type(),
+					'numberposts'  => '-1',
+					'post__not_in' => $group_forum_ids
+				)
+			);
+
+			$forum_id_in   = implode( ',', $forum_ids );
+			
 			$where   = array();
 			$where[] = '1=1';
 			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 			$where[] = " pm.meta_value IN ( $forum_id_in ) ";
+
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
@@ -192,7 +195,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$sql = 'SELECT ' . $columns . ' FROM ' . $from . $tax_sql . $where_clause . implode( ' AND ', $where );
 
 			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
+			
 			return apply_filters(
 				'Bp_Search_Forums_sql',
 				$query,
