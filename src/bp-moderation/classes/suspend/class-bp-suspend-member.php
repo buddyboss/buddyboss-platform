@@ -473,6 +473,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $member_id, $args = array() ) {
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$related_contents = array();
 
 		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id );
@@ -494,12 +495,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'document' ) ) {
 			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_member_folder_ids( $member_id );
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_member_document_ids( $member_id );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_member_document_ids( $member_id, $action );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
 			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_member_album_ids( $member_id );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id, $action );
 		}
 
 		return $related_contents;

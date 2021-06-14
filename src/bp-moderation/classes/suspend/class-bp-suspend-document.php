@@ -61,11 +61,12 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_document_ids( $member_id ) {
+	public static function get_member_document_ids( $member_id, $action = '' ) {
 		$document_ids = array();
 
 		$documents = BP_Document::get(
@@ -79,6 +80,22 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		if ( ! empty( $documents['documents'] ) ) {
 			$document_ids = $documents['documents'];
+		}
+
+		if ( 'hide' === $action && ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $k => $document_id ) {
+				if ( BP_Core_Suspend::check_hidden_content( $document_id, self::$type ) ) {
+					unset( $document_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $k => $document_id ) {
+				if ( self::is_content_reported_hidden( $document_id, self::$type ) ) {
+					unset( $document_ids[ $k ] );
+				}
+			}
 		}
 
 		return $document_ids;
@@ -119,6 +136,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
+	 * @param string $action   Action name to perform.
 	 *
 	 * @return array Document IDs
 	 */

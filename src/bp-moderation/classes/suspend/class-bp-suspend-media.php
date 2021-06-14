@@ -93,11 +93,12 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $group_id group id.
+	 * @param int    $group_id group id.
+	 * @param string $action   Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_group_media_ids( $group_id ) {
+	public static function get_group_media_ids( $group_id, $action = '' ) {
 		$media_ids = array();
 
 		$medias = bp_media_get(
@@ -113,6 +114,22 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			$media_ids = $medias['medias'];
 		}
 
+		if ( 'hide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( BP_Core_Suspend::check_hidden_content( $media_id, self::$type ) ) {
+					unset( $media_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( self::is_content_reported_hidden( $media_id, self::$type ) ) {
+					unset( $media_ids[ $k ] );
+				}
+			}
+		}
+
 		return $media_ids;
 	}
 
@@ -123,6 +140,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
+	 * @param string $action   Action name to perform.
 	 *
 	 * @return array Media IDs
 	 */
