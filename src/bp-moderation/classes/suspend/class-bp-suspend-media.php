@@ -362,7 +362,10 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			 */
 			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
 
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $media->activity_id );
+
 			$activity = new BP_Activity_Activity( $media->activity_id );
+
 			if ( ! empty( $activity ) && ! empty( $activity->type ) ) {
 				if ( 'activity_comment' === $activity->type ) {
 					$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $activity->id;
@@ -370,8 +373,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 					$related_contents[ BP_Suspend_Activity::$type ][] = $activity->id;
 				}
 			}
-
-			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $media->activity_id );
 
 			if ( 'hide' === $action && ! empty( $media->attachment_id ) ) {
 				$attachment_id = $media->attachment_id;

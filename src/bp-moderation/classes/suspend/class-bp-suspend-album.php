@@ -293,7 +293,10 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $album_id, $args = array() ) {
-		return array();
+		$related_contents                            = array();
+		$related_contents[ BP_Suspend_Media::$type ] = BP_Media::get_album_media_ids( $album_id );;
+
+		return $related_contents;
 	}
 
 	/**
