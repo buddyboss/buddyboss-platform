@@ -84,7 +84,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $folder_ids ) ) {
 			foreach ( $folder_ids as $k => $folder_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $folder_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_suspended_content( $folder_id, self::$type, true ) ) {
 					unset( $folder_ids[ $k ] );
 				}
 			}

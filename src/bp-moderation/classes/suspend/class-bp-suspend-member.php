@@ -507,7 +507,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( ! empty( $related_contents ) ) {
 			foreach ( $related_contents as $key => $related_content ) {
 				foreach ( (array) $related_content as $item ) {
-					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
+					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					} else {
 						$related_content_hide[ $key ][] = $item;

@@ -95,7 +95,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $reply_ids ) ) {
 			foreach ( $reply_ids as $k => $reply_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
 					unset( $reply_ids[ $k ] );
 				}
 			}
@@ -346,7 +346,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$reply_id = bbp_get_reply_id();
 
-		if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 

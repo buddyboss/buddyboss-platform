@@ -94,7 +94,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $k => $form_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $form_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_suspended_content( $form_id, self::$type, true ) ) {
 					unset( $forum_ids[ $k ] );
 				}
 			}
@@ -225,7 +225,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type, true ) ) {
 			return null;
 		}
 

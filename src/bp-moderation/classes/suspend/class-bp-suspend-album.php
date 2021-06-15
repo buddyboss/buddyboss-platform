@@ -84,7 +84,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $album_ids ) ) {
 			foreach ( $album_ids as $k => $album_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $album_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_suspended_content( $album_id, self::$type, true ) ) {
 					unset( $album_ids[ $k ] );
 				}
 			}

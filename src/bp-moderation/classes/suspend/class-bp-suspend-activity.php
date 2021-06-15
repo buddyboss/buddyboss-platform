@@ -92,7 +92,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $activities_ids ) ) {
 			foreach ( $activities_ids as $k => $activity_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $activity_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_suspended_content( $activity_id, self::$type, true ) ) {
 					unset( $activities_ids[ $k ] );
 				}
 			}
@@ -268,7 +268,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type, true ) ) {
 			return false;
 		}
 
@@ -405,7 +405,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key, true ) && 'hide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
-					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key ) ) && 'unhide' === $action ) {
+					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key, true ) ) && 'unhide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
 				}
@@ -416,7 +416,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
 			foreach ( $related_content_hide as $key => $related_content ) {
 				foreach ( (array) $related_content as $k => $item ) {
-					if ( BP_Core_Suspend::check_suspended_content( $item, $key ) && 'hide' === $action ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
 						unset( $related_content_hide[ $key ][ $k ] );
 					}
 				}
