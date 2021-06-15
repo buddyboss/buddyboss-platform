@@ -288,6 +288,9 @@ function bp_video_activity_comment_entry( $comment_id ) {
 	}
 
 	$args['privacy'] = array( 'comment' );
+	if ( ! isset( $args['album_id'] ) ) {
+		$args['album_id'] = 'existing-video';
+	}
 
 	$is_forum_activity = false;
 	if (
@@ -587,11 +590,6 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 				if ( ! empty( $video['js_preview'] ) ) {
 					bp_video_preview_image_by_js( $video );
 				}
-
-				$video = array(
-					'id' => $attachment_id,
-				);
-				bp_video_add_generate_thumb_background_process( $attachment_id, $video );
 
 				$video_ids[] = $video_id;
 

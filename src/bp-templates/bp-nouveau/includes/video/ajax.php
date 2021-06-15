@@ -1221,13 +1221,13 @@ function bp_nouveau_ajax_video_get_video_description() {
 			?>
 		</li>
 		<?php
-		$video_description = ob_get_contents();
-		ob_end_clean();
+		$video_description = ob_get_clean();
 
 		if ( ! empty( $video_id ) ) {
 			$args = array(
-				'user_id' => false,
-				'include' => $video_id,
+				'user_id'  => false,
+				'include'  => $video_id,
+				'album_id' => 'existing-video',
 			);
 			ob_start();
 			if ( bp_has_video( $args ) ) {
@@ -1236,8 +1236,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 					bp_get_template_part( 'video/single-video' );
 				}
 			}
-			$video_data = ob_get_contents();
-			ob_end_clean();
+			$video_data = ob_get_clean();
 		}
 	}
 

@@ -2915,10 +2915,12 @@ span.dashicons.dashicons-admin-file:before {
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
 #buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
 #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
-  padding-bottom: 40px;
+  padding-bottom: 50px;
   max-height: 90vh;
   min-height: 90vh;
   position: static;
+  overflow: scroll;
+  /*Prevent flickering issue*/
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
@@ -19221,7 +19223,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   .bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button,
   .bb-video-thumb .video-js .vjs-control-bar .enlarge_button,
   .bb-media-section .video-js .vjs-control-bar .enlarge_button {
-    width: 3em;
+    background-color: transparent !important;
+    padding: 0;
+    border: 0;
+    width: 4em;
+    font-size: 10px;
+    line-height: 1.3;
+    box-shadow: none;
+    text-shadow: none;
+    font-family: inherit;
+    display: block;
+    z-index: 1111;
   }
 }
 
@@ -19606,6 +19618,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   overflow: visible;
 }
 
+.bb-media-model-wrapper.video .bb-media-info-section .bp-activity-head .activity-header {
+  margin-right: 25px;
+}
+
 .bb-media-model-wrapper.video .bb-media-section {
   position: initial;
 }
@@ -19949,8 +19965,16 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   min-height: 120px;
 }
 
+.bp-video-thumbnail-uploader {
+  word-break: break-word;
+}
+
 .bp-video-thumbnail-uploader .thumbnail_notice {
   display: none;
+}
+
+.bp-video-thumbnail-uploader .video-thumbnail-uploader-dropzone-select .dz-default {
+  min-height: 100% !important;
 }
 
 .bp-video-thumbnail-uploader .modal-container > p {
@@ -20562,6 +20586,14 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   }
 }
 
+@media screen and (max-width: 480px) {
+  .bp-video-move-file .bb-model-footer .bp-video-open-create-popup-album {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 15px;
+  }
+}
+
 @keyframes faded {
   0% {
     transform: translateX(-300px);
@@ -20623,7 +20655,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 .dropzone .dz-preview {
   position: relative;
-  margin: 0 5px 10px;
+  margin: 0 4px 10px;
 }
 
 .dz-image {

@@ -824,7 +824,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
 			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted playsinline>
+				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
@@ -1129,7 +1129,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
 			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted playsinline>
+				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">

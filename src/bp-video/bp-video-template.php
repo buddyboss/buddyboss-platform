@@ -147,7 +147,7 @@ function bp_has_video( $args = '' ) {
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
 		$privacy  = array( 'grouponly', 'forums', 'comment' );
-		if ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) {
+		if ( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) {
 			$privacy = false;
 		}
 		$user_id = false;
@@ -706,19 +706,12 @@ function bp_video_user_can_delete( $video = false ) {
 
 		if ( bp_is_active( 'groups' ) && $video->group_id > 0 ) {
 			$manage   = groups_can_user_manage_video( bp_loggedin_user_id(), $video->group_id );
-			$status   = bp_group_get_video_status( $video->group_id );
 			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $video->group_id );
 			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $video->group_id );
 			if ( $manage ) {
-				if ( bp_loggedin_user_id() === $video->user_id ) {
-					$can_delete = true;
-				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
-					$can_delete = true;
-				} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
-					$can_delete = true;
-				} elseif ( 'admins' === $status && $is_admin ) {
-					$can_delete = true;
-				}
+				$can_delete = true;
+			} elseif ( $is_mod || $is_admin ) {
+				$can_delete = true;
 			}
 		}
 	}

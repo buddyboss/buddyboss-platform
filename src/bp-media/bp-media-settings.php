@@ -21,14 +21,14 @@ function bp_media_get_settings_sections() {
 
 	$settings = array(
 		'bp_media_settings_photos'    => array(
-			'page'  => 'media',
-			'title' => __( 'Photos', 'buddyboss' ),
+			'page'              => 'media',
+			'title'             => __( 'Photos', 'buddyboss' ),
 			'tutorial_callback' => 'bp_photo_uploading_tutorial',
 		),
 		'bp_media_settings_documents' => array(
-			'page'     => 'doc',
-			'title'    => __( 'Documents', 'buddyboss' ),
-			'callback' => 'bp_media_admin_setting_callback_document_section',
+			'page'              => 'doc',
+			'title'             => __( 'Documents', 'buddyboss' ),
+			'callback'          => 'bp_media_admin_setting_callback_document_section',
 			'tutorial_callback' => 'bp_document_uploading_tutorial',
 		),
 		'bp_media_settings_videos'    => array(
@@ -37,14 +37,20 @@ function bp_media_get_settings_sections() {
 			'callback' => 'bp_video_admin_setting_callback_video_section',
 		),
 		'bp_media_settings_emoji'     => array(
-			'page'  => 'media',
-			'title' => __( 'Emoji', 'buddyboss' ),
+			'page'              => 'media',
+			'title'             => __( 'Emoji', 'buddyboss' ),
 			'tutorial_callback' => 'bp_emoji_tutorial',
 		),
 		'bp_media_settings_gifs'      => array(
-			'page'  => 'media',
-			'title' => __( 'Animated GIFs', 'buddyboss' ),
+			'page'              => 'media',
+			'title'             => __( 'Animated GIFs', 'buddyboss' ),
 			'tutorial_callback' => 'bp_animated_gifs_tutorial',
+		),
+		'bp_media_settings_symlinks'  => array(
+			'page'              => 'media',
+			'title'             => __( 'Media Miscellaneous', 'buddyboss' ),
+			'tutorial_callback' => 'bb_symlinks_tutorial',
+			'callback'          => 'bb_admin_setting_callback_symlinks_section',
 		),
 	);
 
@@ -345,6 +351,18 @@ function bp_media_get_settings_fields() {
 	$fields['bp_media_settings_gifs']['bp_animated_gifs_tutorial'] = array(
 		'title'    => __( '&#160;', 'buddyboss' ),
 		'callback' => 'bp_animated_gifs_tutorial',
+	);
+
+	$fields['bp_media_settings_symlinks']['bp_media_symlink_support'] = array(
+		'title'             => __( 'Symlinks', 'buddyboss' ),
+		'callback'          => 'bb_media_settings_callback_symlink_support',
+		'sanitize_callback' => 'absint',
+		'args'              => array(),
+	);
+
+	$fields['bp_media_settings_symlinks']['bb_symlinks_tutorial'] = array(
+		'title'    => __( '&#160;', 'buddyboss' ),
+		'callback' => 'bb_symlinks_tutorial',
 	);
 
 	return (array) apply_filters( 'bp_media_get_settings_fields', $fields );
@@ -1856,5 +1874,59 @@ function bp_media_settings_callback_extension_video_support() {
 		</tr>
 		</tfoot>
 	</table>
+	<?php
+}
+
+/**
+ * Link to Media Miscellaneous tutorial
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_symlinks_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62829,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+
+/**
+ *  Print the Symlinks notice.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_admin_setting_callback_symlinks_section() {
+	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+		?>
+        <p class="alert"><?php _e( 'Symlink not working into your system. Please disable it.', 'buddyboss' ); ?></p>
+		<?php
+	}
+}
+
+/**
+ * Setting > Media > Media Miscellaneous
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_media_settings_callback_symlink_support() {
+	?>
+    <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
+    <label for="bp_media_symlink_support">
+		<?php _e( 'Allow symlinks in <strong>photos, documents</strong> and <strong>videos</strong>', 'buddyboss' ); ?>
+    </label>
 	<?php
 }

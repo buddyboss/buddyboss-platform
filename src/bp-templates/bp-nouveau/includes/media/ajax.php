@@ -595,7 +595,7 @@ function bp_nouveau_ajax_media_album_save() {
 
 	if (
 		empty( $user_id ) ||
-		( ! empty( $group_id ) && bp_is_group() && ! groups_can_user_manage_albums( $user_id, $group_id ) ) ||
+		( ! empty( $group_id ) && ! groups_can_user_manage_albums( $user_id, $group_id ) ) ||
 		! empty( $user_id ) && bp_is_my_profile() && ! bb_user_can_create_media()
 	) {
 		wp_send_json_error( $response );
@@ -1179,13 +1179,17 @@ function bp_nouveau_ajax_media_get_album_view() {
 		$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id(), $id );
 	}
 
-	$first_text = '';
+	$first_text   = '';
+	$create_album = false;
 	if ( 'profile' === $type ) {
-		$first_text = esc_html__( ' Medias', 'buddyboss' );
+		$first_text   = esc_html__( ' Medias', 'buddyboss' );
+		$create_album = is_user_logged_in() && bp_is_profile_media_support_enabled() && bb_user_can_create_media();
+
 	} else {
 		if ( bp_is_active( 'groups' ) ) {
-			$group      = groups_get_group( (int) $id );
-			$first_text = bp_get_group_name( $group );
+			$group        = groups_get_group( (int) $id );
+			$first_text   = bp_get_group_name( $group );
+			$create_album = groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $id );
 		}
 	}
 
@@ -1194,6 +1198,7 @@ function bp_nouveau_ajax_media_get_album_view() {
 			'message'         => 'success',
 			'html'            => $ul,
 			'first_span_text' => stripslashes( $first_text ),
+			'create_album'    => $create_album,
 		)
 	);
 }

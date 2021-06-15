@@ -631,6 +631,8 @@ window.bp = window.bp || {};
 								} );
 
 								currentAction.removeClass( 'loading' );
+							} else {
+								currentAction.removeClass( 'loading' );
 							}
 						}
 					}
@@ -1224,7 +1226,11 @@ window.bp = window.bp || {};
 									$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
 								}
 
-								if ( false === response.data.delete_activity ) {
+								if ( true === response.data.delete_activity ) {
+									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
+									$( 'body .bb-activity-media-elem.media-activity.' + id ).remove();
+									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+								} else {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
@@ -3339,6 +3345,13 @@ window.bp = window.bp || {};
 										$( document ).find( '.open-popup .location-album-list-wrap' ).show();
 									}
 
+									if ( false === response.data.create_album ) {
+										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).removeClass( 'create-album' );
+										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide( );
+									} else {
+										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).addClass( 'create-album' );
+									}
+
 									$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show' ).show();
 									$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
 
@@ -3861,6 +3874,15 @@ window.bp = window.bp || {};
 								$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show' ).show();
 								$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
 							}
+
+							if ( false === response.data.create_album ) {
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).removeClass( 'create-album' );
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide();
+							} else {
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).addClass( 'create-album' );
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).show();
+							}
+
 							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
 							$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
 							$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
@@ -5511,7 +5533,7 @@ window.bp = window.bp || {};
 
 			if ( $( target ).hasClass( 'bb-field-uploader-next' ) ) {
 				currentPopup.find( '.bb-field-steps-1' ).slideUp( 200 ).siblings( '.bb-field-steps' ).slideDown( 200 );
-				currentPopup.find( '#bp-media-submit, #bp-media-prev, .bp-media-open-create-popup-folder' ).show();
+				currentPopup.find( '#bp-media-submit, #bp-media-prev, .bp-media-open-create-popup-folder.create-album' ).show();
 				currentPopup.find( '#bb-media-privacy' ).show();
 				if ( Number( $( currentPopup ).find( '.bb-album-selected-id' ) ) !== 0 && $( currentPopup ).find( '.location-album-list li.is_active' ).length ) {
 					$( currentPopup ).find( '.location-album-list' ).scrollTop( $( currentPopup ).find( '.location-album-list li.is_active' ).offset().top - $( currentPopup ).find( '.location-album-list' ).offset().top );
@@ -6060,7 +6082,10 @@ window.bp = window.bp || {};
 
 			$( '.bb-media-model-wrapper.document' ).hide();
 			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
-			currentVideo ? currentVideo.pause() : '';
+			if( currentVideo ) {
+				currentVideo.pause();
+				currentVideo.src = '';
+			}
 			$( '.bb-media-model-wrapper.video' ).hide();
 			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open_media = true;
@@ -6135,7 +6160,10 @@ window.bp = window.bp || {};
 			$( '.bb-media-model-wrapper.media' ).hide();
 			$( '.bb-media-model-wrapper.document' ).show();
 			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
-			currentVideo ? currentVideo.pause() : '';
+			if( currentVideo ) {
+				currentVideo.pause();
+				currentVideo.src = '';
+			}
 			$( '.bb-media-model-wrapper.video' ).hide();
 			self.is_open_document = true;
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
@@ -6233,6 +6261,9 @@ window.bp = window.bp || {};
 			var self = this;
 
 			$('.bb-media-model-wrapper.media .bb-media-section').find('img').attr('src', '');
+			if( $('.bb-media-model-wrapper.video .bb-media-section').find('video').length ){
+				$('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('src', '');
+			}
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_media = false;
 
@@ -6450,7 +6481,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<video id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
 				//fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();
 				$( window ).scroll();
 

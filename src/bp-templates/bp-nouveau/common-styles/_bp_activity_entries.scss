@@ -898,10 +898,11 @@ span.dashicons.dashicons-admin-file:before {
 		float: right;
 
 		.activity-item {
-			padding-bottom: 40px;
+			padding-bottom: 50px;
 			max-height: 90vh;
 			min-height: 90vh;
 			position: static;
+			overflow: scroll; /*Prevent flickering issue*/
 		}
 
 		.download-media,

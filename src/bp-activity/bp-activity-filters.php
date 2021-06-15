@@ -2472,14 +2472,16 @@ function bp_activity_video_add( $video ) {
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
 						$video->group_id = $comment_activity->item_id;
 						$video->privacy  = 'comment';
+						$video->album_id = 0;
 					}
 				}
 			}
 
 			// Check when new activity coment is empty then set privacy comment - - 2121
 			if ( ! empty( $bp_new_activity_comment ) ) {
-				$activity_id    = $bp_new_activity_comment;
-				$video->privacy = 'comment';
+				$activity_id     = $bp_new_activity_comment;
+				$video->privacy  = 'comment';
+				$video->album_id = 0;
 			} else {
 
 				$args = array(

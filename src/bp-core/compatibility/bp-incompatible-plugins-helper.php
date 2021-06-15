@@ -879,6 +879,19 @@ function bb_get_elementor_maintenance_mode_template() {
 add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
 
 /**
+ * Load rest compatibility.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bb_rest_compatibility_loader() {
+	// BuddyPress Groups Tabs creator pro plugin support.
+	if ( class_exists( 'BPGTC_Group_Tabs_Pro' ) ) {
+		require_once dirname( __FILE__ ) . '/bp-rest-groups-tabs-creator-pro.php';
+	}
+}
+add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
+
+/**
  * Make all the media to private signed URL if someone using the offload media to store in AWS.
  *
  * @handles `as3cf_upload_acl`
@@ -898,12 +911,11 @@ function bb_media_private_upload_acl( $acl ) {
 /**
  * Filter to download the video on local server.
  *
- * @param int    $video_id video id to recreate the preview image attachment.
- * @param object $video    video object.
+ * @param BP_Video $video Video object.
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_set_wp_offload_download_video_local( $video_id, $video ) {
+function bb_video_set_wp_offload_download_video_local( $video ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
@@ -913,17 +925,16 @@ function bb_video_set_wp_offload_download_video_local( $video_id, $video ) {
 		}
 	}
 }
-add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_offload_download_video_local', 99999, 2 );
+add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_offload_download_video_local', 99999, 1 );
 
 /**
  * Filter to download the video on local server.
  *
- * @param int    $video_id video id to recreate the preview image attachment.
- * @param object $video    video object.
+ * @param BP_Video $video Video object.
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_video_unset_wp_offload_download_video_local( $video_id, $video ) {
+function bb_video_unset_wp_offload_download_video_local( $video ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
@@ -933,7 +944,7 @@ function bb_video_unset_wp_offload_download_video_local( $video_id, $video ) {
 		}
 	}
 }
-add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp_offload_download_video_local', 99999, 2 );
+add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp_offload_download_video_local', 99999, 1 );
 
 /**
  * Return the offload media plugin attachment url.

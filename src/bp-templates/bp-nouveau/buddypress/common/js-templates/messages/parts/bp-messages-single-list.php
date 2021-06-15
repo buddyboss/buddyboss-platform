@@ -163,7 +163,7 @@
             <div class="activity-attached-gif-container">
                 <div class="gif-image-container">
                     <div class="gif-player">
-                        <video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted playsinline>
+                        <video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted>
                             <source src="{{data.gif.video_url}}" type="video/mp4">
                         </video>
                         <a href="#" class="gif-play-button">
