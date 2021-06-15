@@ -3954,35 +3954,54 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 
 	if ( $do_symlink ) {
 
-		$upload_dir = wp_upload_dir();
-		$upload_dir = $upload_dir['basedir'];
 
-		// Get video previews symlink directory path.
-		$video_symlinks_path = bb_video_symlink_path();
-		$privacy             = $video->privacy;
-		$output_file_src     = '';
-		$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $size );
-		$file                = image_get_intermediate_size( $attachment_id, $size );
+		if ( ! bb_enable_symlinks() ) {
+			$video_id       = 'forbidden_' . $video->id;
+			$attachment_id  = 'forbidden_' . $attachment_id;
+			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id ) . '&size=' . $size;
 
-		if ( $file && ! empty( $file['path'] ) ) {
-			$output_file_src = $upload_dir . '/' . $file['path'];
+		} else {
 
-			// Regenerate attachment thumbnails.
-			if ( ! file_exists( $output_file_src ) ) {
-				bp_video_regenerate_attachment_thumbnails( $attachment_id );
-			}
+			$upload_dir = wp_upload_dir();
+			$upload_dir = $upload_dir['basedir'];
 
-
-		} elseif ( ! $file ) {
-
-			bp_video_regenerate_attachment_thumbnails( $attachment_id );
-
-			$file = image_get_intermediate_size( $attachment_id, $size );
+			// Get video previews symlink directory path.
+			$video_symlinks_path = bb_video_symlink_path();
+			$privacy             = $video->privacy;
+			$output_file_src     = '';
+			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $size );
+			$file                = image_get_intermediate_size( $attachment_id, $size );
 
 			if ( $file && ! empty( $file['path'] ) ) {
-
 				$output_file_src = $upload_dir . '/' . $file['path'];
 
+				// Regenerate attachment thumbnails.
+				if ( ! file_exists( $output_file_src ) ) {
+					bp_video_regenerate_attachment_thumbnails( $attachment_id );
+				}
+
+
+			} elseif ( ! $file ) {
+
+				bp_video_regenerate_attachment_thumbnails( $attachment_id );
+
+				$file = image_get_intermediate_size( $attachment_id, $size );
+
+				if ( $file && ! empty( $file['path'] ) ) {
+
+					$output_file_src = $upload_dir . '/' . $file['path'];
+
+				} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
+
+					$output_file_src = get_attached_file( $attachment_id );
+
+					// Regenerate attachment thumbnails.
+					if ( ! file_exists( $output_file_src ) ) {
+						bp_video_regenerate_attachment_thumbnails( $attachment_id );
+						$file = image_get_intermediate_size( $attachment_id, $size );
+					}
+
+				}
 			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 
 				$output_file_src = get_attached_file( $attachment_id );
@@ -3994,29 +4013,18 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 				}
 
 			}
-		} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 
-			$output_file_src = get_attached_file( $attachment_id );
+			// Override the video attachment id to given thumbnail id.
+			$video->attachment_id = $attachment_id;
 
-			// Regenerate attachment thumbnails.
-			if ( ! file_exists( $output_file_src ) ) {
-				bp_video_regenerate_attachment_thumbnails( $attachment_id );
-				$file = image_get_intermediate_size( $attachment_id, $size );
+			if ( $generate ) {
+				// Generate Video Thumb Symlink.
+				bb_core_symlink_generator( 'video_thumb', $video, $size, $file, $output_file_src, $attachment_path );
 			}
 
+			$upload_directory = wp_get_upload_dir();
+			$attachment_url   = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
 		}
-
-        // Override the video attachment id to given thumbnail id.
-		$video->attachment_id = $attachment_id;
-
-		if ( $generate ) {
-			// Generate Video Thumb Symlink.
-			bb_core_symlink_generator( 'video_thumb', $video, $size, $file, $output_file_src, $attachment_path );
-		}
-
-		$upload_directory = wp_get_upload_dir();
-		$attachment_url   = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
-
 	} else {
 		$attachment_url = wp_get_attachment_url( $attachment_id );
     }
