@@ -3591,19 +3591,18 @@ function bb_media_user_can_access( $id, $type ) {
 	}
 
 	if ( 'comment' === $media_privacy && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
-		$hierarchy               = bb_get_activity_hierarchy( $activity_id );
-		$parent_activity_privacy = '';
+		$hierarchy = bb_get_activity_hierarchy( $activity_id );
 		if ( ! empty( $hierarchy ) ) {
 			$main_parent_id = end( $hierarchy );
 			if ( ! empty( $main_parent_id ) ) {
-				$parent_activity = new BP_Activity_Activity( $main_parent_id );
+				$parent_activity = new BP_Activity_Activity( $main_parent_id['id'] );
 				if ( ! empty( $parent_activity->id ) && ! empty( $parent_activity->privacy ) ) {
-					$parent_activity_privacy = $parent_activity->privacy;
+					$media_privacy = $parent_activity->privacy;
 				}
 			}
 		}
 
-		if ( empty( $parent_activity_privacy ) ) {
+		if ( empty( $media_privacy ) ) {
 			$activity = new BP_Activity_Activity( $activity_id );
 			if ( ! empty( $activity->item_id ) ) {
 				$parent_activity = new BP_Activity_Activity( $activity->item_id );
@@ -3615,20 +3614,6 @@ function bb_media_user_can_access( $id, $type ) {
 			} else if ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
 				$media_privacy = $activity->privacy;
 			}
-		}
-	}
-
-	if ( $media_privacy === 'comment' && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
-		$activity = new BP_Activity_Activity( $activity_id );
-		if ( ! empty( $activity->item_id ) ) {
-			$parent_activity = new BP_Activity_Activity( $activity->item_id );
-			if ( ! empty( $parent_activity->id ) && ! empty( $parent_activity->privacy ) ) {
-				$media_privacy = $parent_activity->privacy;
-			} else if ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
-				$media_privacy = $activity->privacy;
-			}
-		} else if ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
-			$media_privacy = $activity->privacy;
 		}
 	}
 
