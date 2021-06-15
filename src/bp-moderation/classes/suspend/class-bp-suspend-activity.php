@@ -405,7 +405,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key, true ) && 'hide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
-					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key ) || empty( $blocked_user ) ) && 'unhide' === $action ) {
+					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key ) ) && 'unhide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
 				}
