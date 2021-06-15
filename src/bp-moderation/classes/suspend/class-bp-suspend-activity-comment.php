@@ -323,10 +323,10 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			foreach ( $related_contents as $key => $related_content ) {
 				$related_content = (array) $related_content;
 				foreach ( $related_content as $item ) {
-					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key ) && 'hide' === $action ) {
+					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key, true ) && 'hide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
-					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key ) || BP_Core_Suspend::check_suspended_content( $item, $key ) || empty( $blocked_user ) ) && 'unhide' === $action ) {
+					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key ) || empty( $blocked_user ) ) && 'unhide' === $action ) {
 						$related_content_hide[ $key ][] = $item;
 					}
 				}

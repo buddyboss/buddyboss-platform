@@ -150,7 +150,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $document_ids ) ) {
 			foreach ( $document_ids as $k => $document_id ) {
-				if ( BP_Core_Suspend::check_hidden_content( $document_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_hidden_content( $document_id, self::$type, true ) ) {
 					unset( $document_ids[ $k ] );
 				}
 			}

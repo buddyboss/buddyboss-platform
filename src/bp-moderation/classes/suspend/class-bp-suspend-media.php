@@ -155,7 +155,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $media_ids ) ) {
 			foreach ( $media_ids as $k => $media_id ) {
-				if ( BP_Core_Suspend::check_hidden_content( $media_id, self::$type ) ) {
+				if ( BP_Core_Suspend::check_hidden_content( $media_id, self::$type, true ) ) {
 					unset( $media_ids[ $k ] );
 				}
 			}
