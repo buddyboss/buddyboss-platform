@@ -75,7 +75,17 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$where_clause        = ' OR ';
 			}
 
+			if ( current_user_can( 'read_hidden_forums' ) ) {
+				$post_status = array( 'publish', 'private', 'hidden' );
+			} elseif ( current_user_can( 'read_private_forums' ) ) {
+				$post_status = array( 'publish', 'private' );
+			} else {
+				$post_status = array( 'publish' );
+			}
+
 			$group_memberships = '';
+			$membership_in     = array();
+
 			if ( bp_is_active( 'groups' ) ) {
 				$group_memberships = bp_get_user_groups(
 					get_current_user_id(),
@@ -94,7 +104,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 						'per_page' => - 1,
 					)
 				);
-
+				
 				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
 					$public_groups = $public_groups['groups'];
 				} else {
@@ -105,58 +115,71 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$group_memberships = array_unique( $group_memberships );
 			}
 
-			$group_query = '';
 			if ( ! empty( $group_memberships ) ) {
-				$in = array_map(
+				$membership_in = array_map(
 					function ( $group_id ) {
-						return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
+						return maybe_serialize( array( $group_id ) );
 					},
 					$group_memberships
 				);
-
-				$in = implode( '', $in );
-
-				$group_query = ' AND pm.meta_key = \'_bbp_group_ids\' AND pm.meta_value IN(' . trim( $in, ',' ) . ')';
 			}
-
-			if ( current_user_can( 'read_hidden_forums' ) ) {
-				$post_status = array( "'publish'", "'private'", "'hidden'" );
-			} elseif ( current_user_can( 'read_private_forums' ) ) {
-				$post_status = array( "'publish'", "'private'" );
-			} else {
-				$post_status = array( "'publish'" );
-			}
-
-			$post_status = join( ',', $post_status );
-			// Get all forum regarding group.
-			$forum_query = "SELECT p.ID as forum_id 
-				FROM $wpdb->posts p 
-					LEFT JOIN $wpdb->postmeta pm ON pm.post_id = p.ID
-				WHERE 1=1
-					AND p.post_type = %s
-					AND p.post_status IN ( {$post_status} ) 
-					{$group_query}";
-			 
-			$forums          = $wpdb->get_results( $wpdb->prepare( $forum_query, bbp_get_forum_post_type() ) );
-			$forum_ids       = wp_list_pluck( $forums, 'forum_id' );
-			$forum_child_ids = array();
-
-			// Get all nested child forum id according parent forum.
-			foreach ( $forum_ids as $forum_id ) {
+			
+			// Get all private group forum ids where current user is not enrolled.
+			$group_forum_ids = get_posts(
+				array(
+					'fields'      => 'ids',
+					'post_status' => $post_status,
+					'post_type'   => bbp_get_forum_post_type(),
+					'numberposts' => '-1',
+					'meta_query'  => array(
+						array(
+							'key'     => '_bbp_group_ids',
+							'compare' => 'EXISTS'
+						),
+						array(
+							'key'     => '_bbp_group_ids',
+							'value'   => 'a:0:{}',
+							'compare' => '!='
+						),
+						array(
+							'key'     => '_bbp_group_ids',
+							'value'   => $membership_in,
+							'compare' => 'NOT IN'
+						)
+					)
+				)
+			);
+			
+			$group_forum_child_ids = array();
+			
+			// Get child forum ids where parent forum are associated with private gorup. 
+			foreach ( $group_forum_ids as $forum_id ) {
 				$single_forum_child_ids = $this->nested_child_forum_ids( $forum_id );
-				$forum_child_ids        = array_merge( $forum_child_ids, $single_forum_child_ids );
+				$group_forum_child_ids  = array_merge( $group_forum_child_ids, $single_forum_child_ids );
 			}
 
-			// Merge all forum and all nested child forum ids. This ids are also filter with group.
-			$all_forum_ids = array_merge( $forum_ids, $forum_child_ids );
-			$forum_id_in   = implode( ',', $all_forum_ids );
+			// Merge all forum ids and its child forum ids.
+			$group_forum_ids = array_merge( $group_forum_ids, $group_forum_child_ids );
+			
+			// Get group associated forum ids. Where current user is not connected to those groups.
+			$forum_ids = get_posts(
+				array(
+					'fields'       => 'ids',
+					'post_status'  => $post_status,
+					'post_type'    => bbp_get_forum_post_type(),
+					'numberposts'  => '-1',
+					'post__not_in' => $group_forum_ids
+				)
+			);
 
+			$forum_id_in   = implode( ',', $forum_ids );
+			
 			$where   = array();
 			$where[] = '1=1';
 			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
-
 			$where[] = " pm.meta_value IN ( $forum_id_in ) ";
+
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
@@ -172,7 +195,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$sql = 'SELECT ' . $columns . ' FROM ' . $from . $tax_sql . $where_clause . implode( ' AND ', $where );
 
 			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
+			
 			return apply_filters(
 				'Bp_Search_Forums_sql',
 				$query,
@@ -186,7 +209,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		/**
 		 * Get all nested child forum ids.
 		 * 
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.6.3
 		 * 
 		 * @uses bbp_get_forum_post_type() Get forum post type.
 		 * 
@@ -243,4 +266,3 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 	// End class Bp_Search_Posts
 
 endif;
-
