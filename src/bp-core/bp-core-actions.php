@@ -196,11 +196,11 @@ function bb_media_symlink_validate( $old_value, $value ) {
 	}
 
 	$keys = array(
-		'bb_media_symlink',
-		'bb_document_symlink',
-		'bb_document_video_symlink',
-		'bb_video_symlink',
-		'bb_video_thumb_symlink',
+		'bb_media_symlink_type',
+		'bb_document_symlink_type',
+		'bb_document_video_symlink_type',
+		'bb_video_symlink_type',
+		'bb_video_thumb_symlink_type',
 	);
 
 	$upload_dir = wp_upload_dir();
@@ -238,7 +238,7 @@ function bb_media_symlink_validate( $old_value, $value ) {
 			}
 
 			$upload_directory        = wp_get_upload_dir();
-			$key                     = 'bb_media_symlink';
+			$key                     = 'bb_media_symlink_type';
 			$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
 			$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 

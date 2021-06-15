@@ -1910,7 +1910,7 @@ function bb_symlinks_tutorial() {
  * @since BuddyBoss 1.7.0
  */
 function bb_admin_setting_callback_symlinks_section() {
-	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink' ) ) ) {
+	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
 		?>
         <p class="alert"><?php _e( 'Symlink not working into your system. Please disable it.', 'buddyboss' ); ?></p>
 		<?php
