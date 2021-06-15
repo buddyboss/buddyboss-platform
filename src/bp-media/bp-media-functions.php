@@ -3591,10 +3591,10 @@ function bb_media_user_can_access( $id, $type ) {
 	}
 
 	if ( 'comment' === $media_privacy && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
-		$heirarchy               = bb_get_activity_hierarchy( $activity_id );
+		$hierarchy               = bb_get_activity_hierarchy( $activity_id );
 		$parent_activity_privacy = '';
-		if ( ! empty( $heirarchy ) ) {
-			$main_parent_id = end( $heirarchy );
+		if ( ! empty( $hierarchy ) ) {
+			$main_parent_id = end( $hierarchy );
 			if ( ! empty( $main_parent_id ) ) {
 				$parent_activity = new BP_Activity_Activity( $main_parent_id );
 				if ( ! empty( $parent_activity->id ) && ! empty( $parent_activity->privacy ) ) {
