@@ -496,7 +496,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @since BuddyBoss X.X.X
 	 */
 	public function remove_pre_validate_check() {
-		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10 );
 	}
 
 	/**
