@@ -1742,8 +1742,10 @@ window.bp = window.bp || {};
 
 							if ( false === response.data.create_album ) {
 								$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).removeClass( 'create-album' );
+								$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).hide();
 							} else {
 								$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).addClass( 'create-album' );
+								$( document ).find( '.open-popup .bp-video-open-create-popup-album' ).show();
 							}
 
 							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();

@@ -3347,8 +3347,10 @@ window.bp = window.bp || {};
 
 									if ( false === response.data.create_album ) {
 										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).removeClass( 'create-album' );
+										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide( );
 									} else {
 										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).addClass( 'create-album' );
+										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).show();
 									}
 
 									$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show' ).show();
@@ -3876,8 +3878,10 @@ window.bp = window.bp || {};
 
 							if ( false === response.data.create_album ) {
 								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).removeClass( 'create-album' );
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide();
 							} else {
 								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).addClass( 'create-album' );
+								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).show();
 							}
 
 							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
