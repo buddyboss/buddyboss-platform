@@ -3350,7 +3350,6 @@ window.bp = window.bp || {};
 										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide( );
 									} else {
 										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).addClass( 'create-album' );
-										$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).show();
 									}
 
 									$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show' ).show();
