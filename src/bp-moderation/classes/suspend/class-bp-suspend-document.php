@@ -54,6 +54,8 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_document_search_join_sql_document', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
 	}
 
 	/**
@@ -452,7 +454,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			$suspended_record = BP_Core_Suspend::get_recode( $document->user_id, BP_Moderation_Members::$moderation_type );
 		}
 
-		if ( empty( $suspended_record ) ) {
+		if ( empty( $suspended_record ) || bp_moderation_is_content_hidden( $document->id, self::$type ) ) {
 			return;
 		}
 
@@ -475,5 +477,23 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		foreach ( $documents as $document ) {
 			BP_Core_Suspend::delete_suspend( $document->id, $this->item_type );
 		}
+	}
+
+	/**
+	 * Function to un-restrict activity data while deleting the activity.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param boolean $restrict restrict single item or not.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_single_item( $restrict ) {
+
+		if ( empty( $restrict ) && did_action( 'bp_document_after_delete' ) ) {
+			$restrict = true;
+		}
+
+		return $restrict;
 	}
 }

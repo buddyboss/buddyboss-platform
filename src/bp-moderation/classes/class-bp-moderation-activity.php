@@ -143,6 +143,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
 
+		if ( apply_filters( 'bb_moderation_restrict_single_item_' . self::$moderation_type, false, $activity ) ) {
+			return $restrict;
+		}
+
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( ! empty( $username_visible ) ) {

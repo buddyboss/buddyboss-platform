@@ -59,6 +59,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		add_filter( 'bp_forums_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bbp_get_forum', array( $this, 'restrict_single_item' ), 10, 2 );
+
+		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -422,5 +424,23 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
+	}
+
+	/**
+	 * Function to un-restrict activity data while deleting the activity.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param boolean $restrict restrict single item or not.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_single_item( $restrict ) {
+
+		if ( empty( $restrict ) && ( did_action( 'bbp_delete_forum' ) || did_action( 'bbp_trash_forum' ) ) ) {
+			$restrict = true;
+		}
+
+		return $restrict;
 	}
 }

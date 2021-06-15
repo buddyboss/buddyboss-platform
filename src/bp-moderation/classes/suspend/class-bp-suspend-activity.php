@@ -262,6 +262,10 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
 
+		if ( apply_filters( 'bb_moderation_restrict_single_item_' . self::$type, false, $activity ) ) {
+			return $restrict;
+		}
+
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( ! empty( $username_visible ) ) {
@@ -458,7 +462,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$suspended_record = BP_Core_Suspend::get_recode( $activity->user_id, BP_Moderation_Members::$moderation_type );
 		}
 
-		if ( empty( $suspended_record ) ) {
+		if ( empty( $suspended_record ) || bp_moderation_is_content_hidden( $activity->id, self::$type ) ) {
 			return;
 		}
 
