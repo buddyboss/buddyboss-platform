@@ -2167,7 +2167,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'id'                        => bp_get_the_thread_message_id(),
 				'content'                   => $content,
 				'sender_id'                 => bp_get_the_thread_message_sender_id(),
-				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
+				'sender_name'               => bp_get_the_thread_message_sender_name(),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
 				'sender_is_you'             => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
 				'sender_avatar'             => esc_url(
@@ -2215,7 +2215,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'id'            => bp_get_the_thread_message_id(),
 				'content'       => $content,
 				'sender_id'     => bp_get_the_thread_message_sender_id(),
-				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
+				'sender_name'   => bp_get_the_thread_message_sender_name(),
 				'is_deleted'    => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
 				'sender_link'   => bp_get_the_thread_message_sender_link(),
 				'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
