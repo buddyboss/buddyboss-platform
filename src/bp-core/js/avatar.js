@@ -307,6 +307,11 @@ window.bp = window.bp || {};
 							}
 						);
 
+						if( $( '.header-aside-inner .user-link .avatar' ).length ){
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+						}
+
 						// Inject the Delete nav
 						bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
 
@@ -437,6 +442,11 @@ window.bp = window.bp || {};
 								{ url: response.avatar, action: 'deleted' }
 							)
 						);
+
+						if( $( '.header-aside-inner .user-link .avatar' ).length ){
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+						}
 
 				}
 			).fail(
