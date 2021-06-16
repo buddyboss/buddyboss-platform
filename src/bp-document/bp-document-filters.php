@@ -268,8 +268,23 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 
-	$documents = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$actions   = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$documents           = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$documents           = ! empty( $documents ) ? $documents : array();
+	$actions             = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$moderated_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+
+	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_documents ) ) {
+		$moderated_documents = explode( ',', $moderated_documents );
+		foreach ( $moderated_documents as $document_id ) {
+			if ( bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+				$bp_document                = new BP_Document( $document_id );
+				$documents[]['document_id'] = $document_id;
+				$documents[]['folder_id']   = $bp_document->folder_id;
+				$documents[]['group_id']    = $bp_document->group_id;
+				$documents[]['menu_order']  = $bp_document->menu_order;
+			}
+		}
+	}
 
 	if ( ! isset( $documents ) || empty( $documents ) ) {
 

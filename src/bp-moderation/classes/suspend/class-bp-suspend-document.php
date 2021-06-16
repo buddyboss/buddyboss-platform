@@ -56,6 +56,8 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
+
+		add_action( 'bb_moderation_' . BP_Moderation_Activity::$moderation_type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
 	}
 
 	/**
@@ -495,5 +497,37 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		}
 
 		return $restrict;
+	}
+
+	/**
+	 * Function to update suspend record on activity delete.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param object $activity_data activity data.
+	 */
+	public function update_suspend_data_on_activity_delete( $activity_data ) {
+		$secondary_item_id = ! empty( $activity_data->secondary_item_id ) ? $activity_data->secondary_item_id : 0;
+
+		if ( empty( $secondary_item_id ) ) {
+			return;
+		}
+
+		$documents = bp_activity_get_meta( $secondary_item_id, 'bp_document_ids', true );
+		$documents = ! empty( $documents ) ? explode( ',', $documents ) : array();
+
+		if ( ! empty( $documents ) && 1 === count( $documents ) ) {
+			foreach ( $documents as $document ) {
+				if ( bp_moderation_is_content_hidden( $document, $this->item_type ) ) {
+					BP_Core_Suspend::add_suspend(
+						array(
+							'item_id'     => $secondary_item_id,
+							'item_type'   => BP_Moderation_Activity::$moderation_type,
+							'hide_parent' => 1,
+						)
+					);
+				}
+			}
+		}
 	}
 }

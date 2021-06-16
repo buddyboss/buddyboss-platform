@@ -489,6 +489,16 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 					continue;
 				}
 
+				/**
+				 * Fires before activity suspend record delete.
+				 *
+				 * @since BuddyBoss X.X.X
+				 *
+				 * @param object $activity_data activity data.
+				 */
+
+				do_action( 'bb_moderation_' . $this->item_type . '_before_delete_suspend', $activity );
+
 				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
 			}
 		}
