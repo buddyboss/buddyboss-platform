@@ -2591,7 +2591,6 @@ function bbp_get_topic_pagination_count() {
 	$to_num    = bbp_number_format( ( $start_num + ( $bbp->reply_query->posts_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->posts_per_page - 1 ) );
 	$total     = bbp_number_format( $total_int );
 
-	// When last page then display viewing like this - Viewing 6 - 10 of 10 replies.
 	if ( (int) $total_pages === (int) $bbp->reply_query->paged ) {
 		$to_num = $total;
 	}
