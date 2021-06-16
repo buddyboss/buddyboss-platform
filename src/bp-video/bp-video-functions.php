@@ -2944,6 +2944,9 @@ function bp_video_is_activity_comment_video( $video ) {
 		$activity = new BP_Activity_Activity( $video_activity_id );
 
 		if ( $activity ) {
+			if ( 'activity_comment' === $activity->type ) {
+				$is_comment_video = true;
+			}
 			if ( $activity->secondary_item_id ) {
 				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if ( $load_parent_activity ) {
