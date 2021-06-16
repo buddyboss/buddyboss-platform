@@ -5404,19 +5404,11 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		}
 	}
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition )
-		)
-	);
+	$matched_user_ids = $wpdb->get_col("SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$bp->profile->table_name_data} WHERE " .  implode( ' OR ', $where_condition )
-			)
-		);
+		$matched_user_data = $wpdb->get_results("SELECT * FROM {$bp->profile->table_name_data} WHERE " .  implode( ' OR ', $where_condition ) );
 
 		if ( ! empty( $matched_user_data ) ) {
 			foreach ( $matched_user_data as $k => $user ) {
