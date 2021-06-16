@@ -1310,16 +1310,16 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	.dz-progress-count {
 		position: absolute;
 		z-index: 1;
-		bottom: 5%;
+		bottom: 10px;
 		left: 50%;
 		width: 50%;
 		transform: translateX(-50%);
 		background-color: #333;
 		color: #fff;
 		border-radius: 30px;
-		padding: 0 20px 0 10px;
-		font-size: 12px;
-		line-height: 2;
+		padding: 0 20px 0 15px;
+		font-size: 13px;
+		line-height: 2.5;
 		min-width: 130px;
 	}
 
@@ -1327,41 +1327,12 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		background: #f0f3f7;
 	}
 
-	.dz-video-icon {
-		max-width: 70%;
-		margin: auto;
-		background: url(../images/video-play.svg) !important;
-		background-color: #ccc !important;
-		height: 52px;
-		width: 52px;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 11;
-		opacity: 1;
-		border: 0;
-		transition: all ease 0.3s !important;
-		border-radius: 50%;
-	}
-
-	.dz-preview .dz-progress {
-		position: absolute;
-		top: inherit;
-		bottom: 27%;
-		opacity: 1;
-		height: 6px;
-		border-radius: 3px;
-		background-color: rgba(255, 2255, 255, 0.5);
-		transform: translateY(50%);
-	}
-
 	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
-		bottom: 6%;
+		bottom: 15px;
 		top: inherit;
 		left: 50%;
-		margin-left: 52px;
+		margin-left: 48px;
 		transform: translateX(-50%);
 		background-color: transparent;
 		line-height: 1;
@@ -1370,10 +1341,21 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		box-shadow: none;
 
 		&:after {
-			font-size: 23px;
+			font-size: 26px;
+			color: #fff;
 			line-height: 1;
 			position: static;
 		}
+	}
+
+	.dz-preview .dz-progress-ring-wrap {
+		height: 60px;
+		width: 60px;
+	}
+
+	.dz-preview .dz-filename {
+		opacity: 0;
+		visibility: hidden;
 	}
 
 	.dz-preview.dz-complete.dz-file-preview {
@@ -1395,6 +1377,14 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			border-radius: 4px;
 		}
 
+		.dz-progress-ring-wrap {
+			display: block;
+
+			.dz-progress-ring circle {
+				display: none;
+			}
+		}
+
 		.dz-remove {
 			bottom: inherit;
 			transform: none;
@@ -1402,18 +1392,38 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 			top: 5px;
 			left: inherit;
 			right: 5px;
-			background-color: #fd4343;
+			background-color: #f8f8f8;
 			height: 14px;
 			width: 14px;
 			line-height: inherit;
 
 			&:after {
 				font-size: 14px;
+				color: #9ea8b3;
 				line-height: 1;
 				position: relative;
 				top: -2px;
 				left: 0;
 			}
+		}
+
+	}
+
+	.dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
+		background-color: #f8f8f8;
+		z-index: 1;
+		border-radius: 4px;
+
+		.dz-details {
+			background-color: transparent;
+		}
+
+		.dz-filename {
+			opacity: 1;
+			visibility: visible;
+			position: absolute;
+			bottom: 20px;
+			color: #828890;
 		}
 
 	}
