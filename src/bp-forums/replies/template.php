@@ -271,6 +271,7 @@ function bbp_has_replies( $args = '' ) {
 			$total_pages = ceil( (int) $total_count / (int) $replies_per_page );
 		}
 		$bbp->reply_query->total_count = $total_count; // thread_reply
+		$bbp->reply_query->total_pages = $total_pages; // total_pages
 		// Add pagination to query object
 		$bbp->reply_query->pagination_links = paginate_links(
 			apply_filters(
@@ -2581,13 +2582,19 @@ function bbp_get_topic_pagination_count() {
 	$bbp = bbpress();
 
 	// Define local variable(s)
-	$retstr    = '';
-	$total_int = $bbp->reply_query->total_count; // thread_reply
+	$retstr      = '';
+	$total_int   = $bbp->reply_query->total_count; // thread_reply
+	$total_pages = $bbp->reply_query->total_pages; // total_pages
 	// Set pagination values
 	$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
 	$from_num  = bbp_number_format( $start_num );
 	$to_num    = bbp_number_format( ( $start_num + ( $bbp->reply_query->posts_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->posts_per_page - 1 ) );
 	$total     = bbp_number_format( $total_int );
+
+	// When last page then display viewing like this - Viewing 6 - 10 of 10 replies.
+	if ( (int) $total_pages === (int) $bbp->reply_query->paged ) {
+		$to_num = $total;
+	}
 
 	// We are threading replies
 	if ( bbp_thread_replies() && bbp_is_single_topic() ) {
