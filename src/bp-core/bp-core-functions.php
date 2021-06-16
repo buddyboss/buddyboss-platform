@@ -488,7 +488,7 @@ function bp_core_get_packaged_component_ids() {
 		'settings',
 		'notifications',
 		'search',
-        'moderation'
+		'moderation'
 	);
 
 	return $components;
@@ -2661,8 +2661,8 @@ function bp_core_get_components( $type = 'all' ) {
 			</ul>
 			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
 		),
-        // @todo: used for bp-performance will enable in feature.
-        /*
+		// @todo: used for bp-performance will enable in feature.
+		/*
 		'performance'       => array(
 			'title'       => __( 'API Caching', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -2677,7 +2677,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss' ),
 			'default'     => false,
 		),
-        */
+		*/
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -3125,6 +3125,12 @@ function bp_core_get_suggestions( $args ) {
 		return new WP_Error( 'missing_parameter' );
 	}
 
+	//Remove action for remove search against xprofile fields
+	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+
+	//Add action only for xprofile fields First, last and nickname
+	add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+
 	$suggestions = new $class( $args );
 	$validation  = $suggestions->validate();
 
@@ -3134,6 +3140,11 @@ function bp_core_get_suggestions( $args ) {
 		$retval = $suggestions->get_suggestions();
 	}
 
+	//Add action again for search against xprofile fields
+	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+
+	//Removed action only for xprofile fields First, last and nickname
+	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
 	/**
 	 * Filters the available type of at-mentions.
 	 *
@@ -5324,4 +5335,105 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 		true           // tells the function "yes, please remove them all".
 	);
 
+}
+
+/**
+ * When search_terms are passed to BP_User_Query, search against xprofile fields.
+ *
+ * @since BuddyBoss 1.6.3
+ *
+ * @param array         $sql   Clauses in the user_id SQL query.
+ * @param BP_User_Query $query User query object.
+ * @return array
+ */
+function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_User_Query $query ) {
+
+	global $wpdb;
+	if ( empty( $query->query_vars['search_terms'] ) || empty( $sql['where']['search'] ) ) {
+		return $sql;
+	}
+
+	$bp                 = buddypress();
+	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
+	if ( 'left' === $query->query_vars['search_wildcard'] ) {
+		$search_terms_nospace = '%' . $search_terms_clean;
+		$search_terms_space   = '%' . $search_terms_clean . ' %';
+	} elseif ( 'right' === $query->query_vars['search_wildcard'] ) {
+		$search_terms_nospace = $search_terms_clean . '%';
+		$search_terms_space   = '% ' . $search_terms_clean . '%';
+	} else {
+		$search_terms_nospace = '%' . $search_terms_clean . '%';
+		$search_terms_space   = '%' . $search_terms_clean . '%';
+	}
+
+	// Get the firstname,last and nickname field id.
+	$firstname_field_id = bp_xprofile_firstname_field_id();
+	$last_field_id      = bp_xprofile_lastname_field_id();
+	$nickname_field_id  = bp_xprofile_nickname_field_id();
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value   = bp_get_option( 'bp-display-name-format' );
+	$enabled_fields = array();
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value ) {
+		$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
+		if ( ! empty( bp_hide_last_name() ) ) {
+			$enabled_fields['lastname'] = bp_xprofile_lastname_field_id();
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value ) {
+		$enabled_fields['nickname'] = bp_xprofile_nickname_field_id();
+		if ( ! empty( bp_hide_nickname_first_name() ) ) {
+			$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		}
+		if ( ! empty( bp_hide_last_name() ) ) {
+			$enabled_fields['lastname'] = bp_xprofile_lastname_field_id();
+		}
+	} else {
+		$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		$enabled_fields['lastname']   = bp_xprofile_lastname_field_id();
+		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
+	}
+
+	$where_condition = array();
+	if ( ! empty( $enabled_fields ) ) {
+		foreach ( $enabled_fields as $field_name => $field_id ) {
+			$where_condition[] = " ( ( field_id = " . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		}
+	}
+	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
+	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+
+	// Checked profile fields based on privacy settings of particular user while searching.
+	if ( ! empty( $matched_user_ids ) ) {
+		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " .  implode( ' OR ', $where_condition ) );
+
+		if ( ! empty( $matched_user_data ) ) {
+			foreach ( $matched_user_data as $k => $user ) {
+				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
+				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
+					$key = array_search( $user->user_id, $matched_user_ids, true );
+					if ( false !== $key ) {
+						unset( $matched_user_ids[ $key ] );
+					}
+				}
+				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
+					$key = array_search( $user->user_id, $matched_user_ids, true );
+					if ( false !== $key ) {
+						unset( $matched_user_ids[ $key ] );
+					}
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $matched_user_ids ) ) {
+		$search_core            = $sql['where']['search'];
+		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
+		$sql['where']['search'] = $search_combined;
+	}
+
+	return $sql;
 }
