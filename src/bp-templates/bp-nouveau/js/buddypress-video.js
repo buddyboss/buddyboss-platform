@@ -2402,6 +2402,7 @@ window.bp = window.bp || {};
 
 								$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).html( response.data.video_data );
 								$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).find( 'video' ).attr( 'autoplay', true );
+								$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).find( 'video' ).addClass( 'popup-video' );
 								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
 								$( '.bb-media-info-section:visible' ).show();
 
@@ -2578,7 +2579,7 @@ window.bp = window.bp || {};
 			var player = this.player;
 
 			$( '.video-js:not(.loaded)' ).each(
-				function () {
+				function ( videoIndex ) {
 
 					var self    = this;
 					var options = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
@@ -2592,6 +2593,13 @@ window.bp = window.bp || {};
 							function () {
 							}
 						);
+						this.on('play', function() {
+							$( '.video-js:not(.popup-video)' ).each( function ( index ) {
+								if ( videoIndex !== index ) {
+									this.player.pause();
+								}
+							});
+						});
 					}
 					);
 
