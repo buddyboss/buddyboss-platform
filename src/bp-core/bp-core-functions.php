@@ -5435,5 +5435,6 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$sql['where']['search'] = $search_combined;
 	}
 
+
 	return $sql;
 }
