@@ -1410,7 +1410,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	}
 
 	.dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
-		background-color: #f8f8f8;
+		background-color: #f8f8f8 !important;
 		z-index: 1;
 		border-radius: 4px;
 
