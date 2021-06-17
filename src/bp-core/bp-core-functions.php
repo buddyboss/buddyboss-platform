@@ -5556,13 +5556,13 @@ function bb_check_ios_device() {
  */
 function bb_core_enable_default_symlink_support() {
 
-    if ( ! bp_is_active( 'media' ) ) {
-        return;
-    }
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
 
-    if ( function_exists( 'bb_enable_symlinks' ) && bb_enable_symlinks() ) {
-        return;
-    }
+	if ( function_exists( 'bb_enable_symlinks' ) && bb_enable_symlinks() ) {
+		return;
+	}
 
 	$upload_dir      = wp_upload_dir();
 	$upload_dir      = $upload_dir['basedir'];
@@ -5600,49 +5600,49 @@ function bb_core_enable_default_symlink_support() {
 
 		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
 
-		    if ( ! is_link( $attachment_path ) ) {
+			if ( ! is_link( $attachment_path ) ) {
 
-                symlink( $output_file_src, $attachment_path );
+				symlink( $output_file_src, $attachment_path );
 
-                if ( ! empty( $symlink_url ) ) {
-                    $fetch = wp_remote_get( $symlink_url );
+				if ( ! empty( $symlink_url ) ) {
+					$fetch = wp_remote_get( $symlink_url );
 
-                    if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-	                    bp_update_option( 'bp_media_symlink_support', 1 );
-                    }
-                }
-			    unlink( $attachment_path );
+					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+						bp_update_option( 'bp_media_symlink_support', 1 );
+					}
+				}
+				unlink( $attachment_path );
 
-			    if ( bb_enable_symlinks() ) {
-				    return;
-			    }
+				if ( bb_enable_symlinks() ) {
+					return;
+				}
 
-                $tmp = getcwd();
-                chdir( wp_normalize_path( ABSPATH ) );
-                $sym_path   = explode( '/', $symlinks_path );
-                $search_key = array_search( 'wp-content', $sym_path, true );
-                if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
-                    $sym_path = array_slice( array_filter( $sym_path ), $search_key );
-                    $sym_path = implode( '/', $sym_path );
-                }
-                if ( is_dir( 'wp-content/' . $sym_path ) ) {
-                    chdir( 'wp-content/' . $sym_path );
-                    if ( empty( $file['path'] ) ) {
-                        $file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
-                    }
-                    $output_file_src = '../../' . $file['path'];
-                    if ( file_exists( $output_file_src ) ) {
-                        symlink( $output_file_src, $symlink_name );
-                    }
-                }
-                chdir( $tmp );
+				$tmp = getcwd();
+				chdir( wp_normalize_path( ABSPATH ) );
+				$sym_path   = explode( '/', $symlinks_path );
+				$search_key = array_search( 'wp-content', $sym_path, true );
+				if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
+					$sym_path = array_slice( array_filter( $sym_path ), $search_key );
+					$sym_path = implode( '/', $sym_path );
+				}
+				if ( is_dir( 'wp-content/' . $sym_path ) ) {
+					chdir( 'wp-content/' . $sym_path );
+					if ( empty( $file['path'] ) ) {
+						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+					}
+					$output_file_src = '../../' . $file['path'];
+					if ( file_exists( $output_file_src ) ) {
+						symlink( $output_file_src, $symlink_name );
+					}
+				}
+				chdir( $tmp );
 
-                if ( ! empty( $symlink_url ) ) {
-                    $fetch = wp_remote_get( $symlink_url );
-                    if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-	                    bp_update_option( 'bp_media_symlink_support', 1 );
-                    }
-                }
+				if ( ! empty( $symlink_url ) ) {
+					$fetch = wp_remote_get( $symlink_url );
+					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+						bp_update_option( 'bp_media_symlink_support', 1 );
+					}
+				}
 			}
 		}
 	}
