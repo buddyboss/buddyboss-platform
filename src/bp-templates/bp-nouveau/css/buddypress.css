@@ -6058,6 +6058,16 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   background-color: #ccc;
 }
 
+/* Hide sidebar and header for web view in App */
+.in-bbapp #secondary {
+  display: none;
+}
+
+.in-bbapp #buddypress #item-header,
+.in-bbapp #buddypress .bp-wrap .main-navs {
+  display: none;
+}
+
 /**
 *-------------------------------------------
 * @subsection 5.2.2.3 - Groups
