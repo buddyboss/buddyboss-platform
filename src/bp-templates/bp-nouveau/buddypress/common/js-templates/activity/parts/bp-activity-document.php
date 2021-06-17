@@ -10,7 +10,7 @@
 				<div class="dz-size" data-dz-size></div>
 			</div>
 			<div class="dz-progress-ring-wrap">
-				<i class="bb-icon bb-icon-attach"></i>
+				<i class="bb-icon bb-icon-attach-fill"></i>
 				<svg class="dz-progress-ring" width="52" height="52">
 					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24" cx="26" cy="26" stroke-dasharray="150.796, 150.796" stroke-dashoffset="151";/>
 				</svg>

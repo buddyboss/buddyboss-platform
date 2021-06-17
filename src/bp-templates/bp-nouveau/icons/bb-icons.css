@@ -441,6 +441,9 @@
 .bb-icon-rounded-clubhouse:before { content: '\e9cf'; }
 .bb-icon-rounded-telegram:before { content: '\e9d0'; }
 .bb-icon-rounded-tiktok:before { content: '\e9d1'; }
+.bb-icon-attach-fill:before { content: '\e9d2'; }
+.bb-icon-camera-fill:before { content: '\e9d3'; }
+.bb-icon-video-fill:before { content: '\e9d4'; }
 .bb-icon-quotes:before { content: '\e961'; }
 .bb-icon-file-7z:before { content: '\e9a6'; }
 .bb-icon-file-hlsm:before { content: '\e9a7'; }
