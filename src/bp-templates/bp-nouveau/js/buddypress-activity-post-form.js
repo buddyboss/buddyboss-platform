@@ -1250,6 +1250,8 @@ window.bp = window.bp || {};
 					'uploadprogress',
 					function( element, file ) {
 						
+						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
 						var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 						var radius = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;

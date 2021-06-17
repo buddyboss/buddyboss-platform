@@ -15596,11 +15596,11 @@ div.dropzone .dz-preview .dz-filename {
   font-size: 14px;
 }
 
-.dz-preview.dz-image-preview .dz-image {
+.dz-preview .dz-image {
   height: 160px;
 }
 
-.dz-preview.dz-image-preview .dz-image img {
+.dz-preview .dz-image img {
   max-width: 160px;
   height: 100%;
   object-fit: contain;
@@ -20140,7 +20140,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   padding: 0 20px 0 15px;
   font-size: 13px;
   line-height: 2.5;
-  min-width: 130px;
+  min-width: 140px;
 }
 
 #activity-post-video-uploader .dz-preview,
@@ -20168,7 +20168,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   bottom: 15px;
   top: inherit;
   left: 50%;
-  margin-left: 48px;
+  margin-left: 53px;
   transform: translateX(-50%);
   background-color: transparent;
   line-height: 1;
@@ -20203,19 +20203,6 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview .dz-progress-ring-wrap {
   height: 60px;
   width: 60px;
-}
-
-#activity-post-video-uploader .dz-preview .dz-progress-ring-wrap .bb-icon,
-#bp-video-dropzone-content .dz-preview .dz-progress-ring-wrap .bb-icon,
-#forums-post-video-uploader .dz-preview .dz-progress-ring-wrap .bb-icon,
-#messages-post-video-uploader .dz-preview .dz-progress-ring-wrap .bb-icon,
-#bp-group-messages-post-video-uploader .dz-preview .dz-progress-ring-wrap .bb-icon,
-#boss-video-create-album-popup .dz-preview .dz-progress-ring-wrap .bb-icon,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview .dz-progress-ring-wrap .bb-icon,
-#video-uploader.dropzone .dz-preview .dz-progress-ring-wrap .bb-icon,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview .dz-progress-ring-wrap .bb-icon {
-  font-size: 24px;
-  margin-top: 0;
 }
 
 #activity-post-video-uploader .dz-preview .dz-filename,
@@ -21300,32 +21287,37 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   transform: translate(-50%, -50%);
   color: #fff;
   z-index: 11;
-  font-size: 20px;
+  font-size: 18px;
 }
 
-.activity-document-container .dropzone .dz-preview .dz-progress-ring-wrap {
+.activity-document-container .dropzone .dz-preview .dz-progress-ring-wrap,
+.dropzone.document .dz-preview .dz-progress-ring-wrap {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-filename {
+.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-filename,
+.dropzone.document .dz-preview.dz-complete .dz-details .dz-filename {
   position: static;
   padding-right: 0;
   margin-top: 30px;
 }
 
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-size {
+.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-size,
+.dropzone.document .dz-preview.dz-complete .dz-details .dz-size {
   display: block;
 }
 
-.activity-document-container .dropzone .dz-preview .dz-details .dz-filename {
+.activity-document-container .dropzone .dz-preview .dz-details .dz-filename,
+.dropzone.document .dz-preview .dz-details .dz-filename {
   position: absolute;
-  bottom: 7px;
+  bottom: 12px;
   left: 10px;
   right: 0;
   padding-right: 20px;
 }
 
-.activity-document-container .dropzone .dz-preview .dz-details .dz-size {
+.activity-document-container .dropzone .dz-preview .dz-details .dz-size,
+.dropzone.document .dz-preview .dz-details .dz-size {
   display: none;
 }
 

@@ -2,9 +2,6 @@
 	<div class="dropzone closed" id="activity-post-document-uploader"></div>
 	<div class="activity-post-document-template" style="display:none;">
 		<div class="dz-preview dz-file-preview">
-			<div class="dz-image">
-				<img data-dz-thumbnail />
-			</div>
 			<div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 				<div class="dz-size" data-dz-size></div>

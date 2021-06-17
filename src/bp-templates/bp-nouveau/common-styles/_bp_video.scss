@@ -1320,7 +1320,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		padding: 0 20px 0 15px;
 		font-size: 13px;
 		line-height: 2.5;
-		min-width: 130px;
+		min-width: 140px;
 	}
 
 	.dz-preview {
@@ -1332,7 +1332,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 		bottom: 15px;
 		top: inherit;
 		left: 50%;
-		margin-left: 48px;
+		margin-left: 53px;
 		transform: translateX(-50%);
 		background-color: transparent;
 		line-height: 1;
@@ -1351,12 +1351,6 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 	.dz-preview .dz-progress-ring-wrap {
 		height: 60px;
 		width: 60px;
-
-		.bb-icon {
-			font-size: 24px;
-			margin-top: 0;
-		}
-
 	}
 
 	.dz-preview .dz-filename {
