@@ -2214,6 +2214,20 @@ window.bp = window.bp || {};
 					);
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
+						'uploadprogress',
+						function( element ) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+	
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
+						}
+					);
+
+					self.dropzone_obj[ dropzone_obj_key ].on(
 						'error',
 						function ( file, response ) {
 							if ( file.accepted ) {
@@ -2405,7 +2419,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'uploadprogress',
-						function( element) {
+						function( element ) {
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -2541,7 +2555,7 @@ window.bp = window.bp || {};
 
 					self.document_dropzone_obj.on(
 						'uploadprogress',
-						function( element) {
+						function( element ) {
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -2881,6 +2895,20 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#forums-document-button' ) ) {
 								tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+						}
+					);
+
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'uploadprogress',
+						function( element ) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+	
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
 						}
 					);
 

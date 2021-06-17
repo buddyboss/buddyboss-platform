@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-17 12:50:58+00:00\n"
+"POT-Creation-Date: 2021-06-17 13:23:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14019,7 +14019,7 @@ msgstr ""
 msgid "Email (will not be published) (required):"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:88
+#: bp-forums/templates/default/bbpress/form-attachments.php:135
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:111
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-video.php:32
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-video.php:32
@@ -14029,7 +14029,7 @@ msgstr ""
 msgid "0% Uploaded"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:99
+#: bp-forums/templates/default/bbpress/form-attachments.php:146
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:243
@@ -14037,7 +14037,7 @@ msgstr ""
 msgid "Show formatting"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:99
+#: bp-forums/templates/default/bbpress/form-attachments.php:146
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:243
@@ -14045,7 +14045,7 @@ msgstr ""
 msgid "Hide formatting"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:110
+#: bp-forums/templates/default/bbpress/form-attachments.php:157
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:127
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:16
@@ -14054,7 +14054,7 @@ msgstr ""
 msgid "Attach a photo"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:121
+#: bp-forums/templates/default/bbpress/form-attachments.php:168
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:133
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:26
@@ -14063,7 +14063,7 @@ msgstr ""
 msgid "Attach a video"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:132
+#: bp-forums/templates/default/bbpress/form-attachments.php:179
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:138
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:32
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:37
@@ -14072,7 +14072,7 @@ msgstr ""
 msgid "Attach a document"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:144
+#: bp-forums/templates/default/bbpress/form-attachments.php:191
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:145
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:41
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:45
@@ -14081,7 +14081,7 @@ msgstr ""
 msgid "Post a GIF"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:150
+#: bp-forums/templates/default/bbpress/form-attachments.php:197
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:283
@@ -14089,7 +14089,7 @@ msgstr ""
 msgid "Search GIPHY"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:166
+#: bp-forums/templates/default/bbpress/form-attachments.php:213
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:152
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:47
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:52

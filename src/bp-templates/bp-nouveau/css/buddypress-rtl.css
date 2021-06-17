@@ -20098,8 +20098,7 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
 #bp-group-messages-post-video-uploader .dz-default.dz-message,
 #boss-video-create-album-popup .dz-default.dz-message,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-default.dz-message,
-#video-uploader.dropzone .dz-default.dz-message,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-default.dz-message {
+#video-uploader.dropzone .dz-default.dz-message {
   flex-basis: 100%;
   max-width: inherit;
   min-height: 20vh;
@@ -20112,8 +20111,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-default.dz-message .dz-button,
 #boss-video-create-album-popup .dz-default.dz-message .dz-button,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-default.dz-message .dz-button,
-#video-uploader.dropzone .dz-default.dz-message .dz-button,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-default.dz-message .dz-button {
+#video-uploader.dropzone .dz-default.dz-message .dz-button {
   font-size: 16px !important;
   background-size: 48px !important;
   padding: 50px 0 0 0 !important;
@@ -20126,8 +20124,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-progress-count,
 #boss-video-create-album-popup .dz-progress-count,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-progress-count,
-#video-uploader.dropzone .dz-progress-count,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-progress-count {
+#video-uploader.dropzone .dz-progress-count {
   position: absolute;
   z-index: 1;
   bottom: 10px;
@@ -20150,8 +20147,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview,
 #boss-video-create-album-popup .dz-preview,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview,
-#video-uploader.dropzone .dz-preview,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview {
+#video-uploader.dropzone .dz-preview {
   background: #f0f3f7;
 }
 
@@ -20162,8 +20158,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader div.dz-preview.dz-file-preview .dz-remove,
 #boss-video-create-album-popup div.dz-preview.dz-file-preview .dz-remove,
 .ac-reply-content .ac-reply-attachments .dropzone.video div.dz-preview.dz-file-preview .dz-remove,
-#video-uploader.dropzone div.dz-preview.dz-file-preview .dz-remove,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments div.dz-preview.dz-file-preview .dz-remove {
+#video-uploader.dropzone div.dz-preview.dz-file-preview .dz-remove {
   position: absolute;
   bottom: 15px;
   top: inherit;
@@ -20184,8 +20179,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader div.dz-preview.dz-file-preview .dz-remove:after,
 #boss-video-create-album-popup div.dz-preview.dz-file-preview .dz-remove:after,
 .ac-reply-content .ac-reply-attachments .dropzone.video div.dz-preview.dz-file-preview .dz-remove:after,
-#video-uploader.dropzone div.dz-preview.dz-file-preview .dz-remove:after,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments div.dz-preview.dz-file-preview .dz-remove:after {
+#video-uploader.dropzone div.dz-preview.dz-file-preview .dz-remove:after {
   font-size: 26px;
   color: #fff;
   line-height: 1;
@@ -20199,8 +20193,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview .dz-progress-ring-wrap,
 #boss-video-create-album-popup .dz-preview .dz-progress-ring-wrap,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview .dz-progress-ring-wrap,
-#video-uploader.dropzone .dz-preview .dz-progress-ring-wrap,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview .dz-progress-ring-wrap {
+#video-uploader.dropzone .dz-preview .dz-progress-ring-wrap {
   height: 60px;
   width: 60px;
 }
@@ -20212,8 +20205,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview .dz-filename,
 #boss-video-create-album-popup .dz-preview .dz-filename,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview .dz-filename,
-#video-uploader.dropzone .dz-preview .dz-filename,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview .dz-filename {
+#video-uploader.dropzone .dz-preview .dz-filename {
   opacity: 0;
   visibility: hidden;
 }
@@ -20225,8 +20217,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-filename,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-filename,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-filename,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-filename,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-filename {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-filename {
   color: #fff;
 }
 
@@ -20237,8 +20228,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-progress {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress {
   display: none;
 }
 
@@ -20249,8 +20239,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-progress-count {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-count {
   display: none;
 }
 
@@ -20261,8 +20250,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview {
   background-color: #ddd;
   border-radius: 4px;
 }
@@ -20274,8 +20262,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap {
   display: block;
 }
 
@@ -20286,8 +20273,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle {
   display: none;
 }
 
@@ -20298,8 +20284,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-remove,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-remove,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-remove {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove {
   bottom: inherit;
   transform: none;
   margin: 0;
@@ -20319,8 +20304,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
   font-size: 14px;
   color: #9ea8b3;
   line-height: 1;
@@ -20336,8 +20320,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
   background-color: #f8f8f8 !important;
   z-index: 1;
   border-radius: 4px;
@@ -20350,8 +20333,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details {
   background-color: transparent;
 }
 
@@ -20362,8 +20344,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename {
+#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename {
   opacity: 1;
   visibility: visible;
   position: absolute;
@@ -20378,8 +20359,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
 #boss-video-create-album-popup .dz-preview.dz-file-preview .dz-remove,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-remove,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview .dz-remove {
+#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove {
   background-color: #fd4343;
   position: absolute;
   top: 5px;
@@ -20398,8 +20378,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove:after,
 #boss-video-create-album-popup .dz-preview.dz-file-preview .dz-remove:after,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-remove:after,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove:after,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview .dz-remove:after {
+#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove:after {
   position: absolute;
   top: -1px;
   right: 1px;
@@ -20414,8 +20393,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader #dropzone-video-preview,
 #boss-video-create-album-popup #dropzone-video-preview,
 .ac-reply-content .ac-reply-attachments .dropzone.video #dropzone-video-preview,
-#video-uploader.dropzone #dropzone-video-preview,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments #dropzone-video-preview {
+#video-uploader.dropzone #dropzone-video-preview {
   height: 100%;
   width: 100%;
   position: absolute;
@@ -20433,8 +20411,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
 #boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview .dz-details {
+#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details {
   min-height: 165px;
 }
 
@@ -20445,8 +20422,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
 #boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details .dz-size,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details .dz-size,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details .dz-size,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview .dz-details .dz-size {
+#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details .dz-size {
   display: none !important;
 }
 
@@ -20457,8 +20433,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename > span,
 #boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details .dz-filename > span,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview .dz-details .dz-filename > span {
+#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details .dz-filename > span {
   max-width: 70%;
   margin: auto;
 }
@@ -20470,8 +20445,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-success-mark,
 #boss-video-create-album-popup .dz-success-mark,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-success-mark,
-#video-uploader.dropzone .dz-success-mark,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-success-mark {
+#video-uploader.dropzone .dz-success-mark {
   top: 70%;
   right: -5px;
 }
@@ -20483,8 +20457,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
 #boss-video-create-album-popup .dz-preview.dz-file-preview,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
-#video-uploader.dropzone .dz-preview.dz-file-preview,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview {
+#video-uploader.dropzone .dz-preview.dz-file-preview {
   width: 260px;
   min-height: 165px;
 }
@@ -20496,8 +20469,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
 #boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview .dz-details {
+#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details {
   width: 100%;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.3);
@@ -20511,8 +20483,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-video-thumbnail,
 #boss-video-create-album-popup .dz-video-thumbnail,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-video-thumbnail,
-#video-uploader.dropzone .dz-video-thumbnail,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-video-thumbnail {
+#video-uploader.dropzone .dz-video-thumbnail {
   position: absolute;
   top: 0;
   right: 0;
@@ -20529,8 +20500,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-video-thumbnail img,
 #boss-video-create-album-popup .dz-video-thumbnail img,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-video-thumbnail img,
-#video-uploader.dropzone .dz-video-thumbnail img,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-video-thumbnail img {
+#video-uploader.dropzone .dz-video-thumbnail img {
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -20543,8 +20513,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-success-mark,
 #boss-video-create-album-popup .dz-success-mark,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-success-mark,
-#video-uploader.dropzone .dz-success-mark,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-success-mark {
+#video-uploader.dropzone .dz-success-mark {
   display: none;
 }
 
@@ -20555,8 +20524,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 #bp-group-messages-post-video-uploader .dz-error-message,
 #boss-video-create-album-popup .dz-error-message,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-error-message,
-#video-uploader.dropzone .dz-error-message,
-body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-error-message {
+#video-uploader.dropzone .dz-error-message {
   top: 150px;
   right: 50%;
   transform: translateX(50%);
@@ -20571,8 +20539,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
   #boss-video-create-album-popup .dz-preview.dz-file-preview,
   .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
-  #video-uploader.dropzone .dz-preview.dz-file-preview,
-  body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview {
+  #video-uploader.dropzone .dz-preview.dz-file-preview {
     width: calc(50% - 11.5px);
     margin: 0 5px 10px;
   }
@@ -20583,8 +20550,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview:last-child,
   #boss-video-create-album-popup .dz-preview.dz-file-preview:last-child,
   .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview:last-child,
-  #video-uploader.dropzone .dz-preview.dz-file-preview:last-child,
-  body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview:last-child {
+  #video-uploader.dropzone .dz-preview.dz-file-preview:last-child {
     margin-left: 0;
   }
 }
@@ -20597,8 +20563,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
   #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
   #boss-video-create-album-popup .dz-preview.dz-file-preview,
   .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
-  #video-uploader.dropzone .dz-preview.dz-file-preview,
-  body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachments .dz-preview.dz-file-preview {
+  #video-uploader.dropzone .dz-preview.dz-file-preview {
     width: calc(100% - 10px);
     margin: 0 5px 10px;
   }
@@ -21292,6 +21257,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 #bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-progress-ring-wrap,
 #messages-post-document-uploader.dropzone .dz-preview .dz-progress-ring-wrap,
+#forums-post-document-uploader.dropzone .dz-preview .dz-progress-ring-wrap,
 .activity-document-container .dropzone .dz-preview .dz-progress-ring-wrap,
 .dropzone.document .dz-preview .dz-progress-ring-wrap {
   background-color: rgba(0, 0, 0, 0.3);
@@ -21299,6 +21265,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 #bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
 #messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
+#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
 .activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-filename,
 .dropzone.document .dz-preview.dz-complete .dz-details .dz-filename {
   position: static;
@@ -21308,6 +21275,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 #bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-size,
 #messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-size,
+#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-size,
 .activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-size,
 .dropzone.document .dz-preview.dz-complete .dz-details .dz-size {
   display: block;
@@ -21315,6 +21283,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 #bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
 #messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
+#forums-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
 .activity-document-container .dropzone .dz-preview .dz-details .dz-filename,
 .dropzone.document .dz-preview .dz-details .dz-filename {
   position: absolute;
@@ -21326,6 +21295,7 @@ body.reply-edit #bbpress-forums div.bbp-reply-form .bbp-form #whats-new-attachme
 
 #bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-size,
 #messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-size,
+#forums-post-document-uploader.dropzone .dz-preview .dz-details .dz-size,
 .activity-document-container .dropzone .dz-preview .dz-details .dz-size,
 .dropzone.document .dz-preview .dz-details .dz-size {
   display: none;

@@ -970,7 +970,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function( element) {
+					function( element ) {
 						var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 						var radius = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;
@@ -1161,7 +1161,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function( element) {
+					function( element ) {
 						var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 						var radius = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;
