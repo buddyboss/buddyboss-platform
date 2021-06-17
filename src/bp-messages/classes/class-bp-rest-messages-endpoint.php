@@ -250,38 +250,36 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the messages.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$user = bp_rest_get_user( $request['user_id'] );
 
-		$user = bp_rest_get_user( $request['user_id'] );
-
-		if ( true === $retval && ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && (int) bp_loggedin_user_id() !== $user->ID && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the messages.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! $user instanceof WP_User ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid member ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( (int) bp_loggedin_user_id() === $user->ID || bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = true;
+			} else {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you cannot view the messages.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -343,46 +341,31 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$error  = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		$thread = $this->get_thread_object( $request['id'] );
+		if ( is_user_logged_in() ) {
+			$thread = $this->get_thread_object( $request['id'] );
 
-		if ( true === $retval && empty( $thread->thread_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Sorry, this thread does not exist.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = true;
-		} else {
-			$id = messages_check_thread_access( $thread->thread_id );
-			if ( true === $retval && is_null( $id ) ) {
+			if ( empty( $thread->thread_id ) ) {
 				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
+					'bp_rest_invalid_id',
+					__( 'Sorry, this thread does not exist.', 'buddyboss' ),
 					array(
-						'status' => rest_authorization_required_code(),
+						'status' => 404,
 					)
 				);
-			}
-
-			if ( true === $retval ) {
+			} elseif ( bp_current_user_can( 'bp_moderate' ) || messages_check_thread_access( $thread->thread_id ) ) {
 				$retval = true;
+			} else {
+				$retval = $error;
 			}
 		}
 
@@ -556,7 +539,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
@@ -566,6 +555,18 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		} else {
+			$thread_id = (int) $request->get_param( 'id' );
+
+			// It's an existing thread.
+			if ( $thread_id ) {
+				if ( bp_current_user_can( 'bp_moderate' ) || ( messages_is_valid_thread( $thread_id ) && messages_check_thread_access( $thread_id ) ) ) {
+					$retval = true;
+				}
+			} else {
+				// It's a new thread.
+				$retval = true;
+			}
 		}
 
 		/**
@@ -986,17 +987,20 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_starred_permissions_check( $request ) {
-		$retval    = true;
-		$thread_id = messages_get_message_thread_id( $request['id'] );
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to star/unstar messages.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() || ! messages_check_thread_access( $thread_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to star/unstar messages.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$thread_id = messages_get_message_thread_id( $request['id'] );
+
+			if ( messages_check_thread_access( $thread_id ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -1018,7 +1022,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {PATCH} /wp-json/buddyboss/v1/messages/:id Delete Thread
+	 * @api            {DELETE} /wp-json/buddyboss/v1/messages/:id Delete Thread
 	 * @apiName        DeleteBBThread
 	 * @apiGroup       Messages
 	 * @apiDescription Delete thread
@@ -1028,6 +1032,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} user_id The user ID to remove from the thread.
 	 */
 	public function delete_item( $request ) {
+		global $wpdb, $bp;
+
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
@@ -1045,7 +1051,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$recipient_ids = wp_parse_id_list( wp_list_pluck( $thread->recipients, 'user_id' ) );
 
 		// Delete a thread.
-		if ( ! in_array( $user_id, $recipient_ids, true ) || ! messages_delete_thread( $thread->thread_id, $user_id ) ) {
+		if ( ! in_array( $user_id, $recipient_ids, true ) ) {
 			return new WP_Error(
 				'bp_rest_messages_delete_thread_failed',
 				__( 'There was an error trying to delete the thread.', 'buddyboss' ),
@@ -1054,6 +1060,59 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				)
 			);
 		}
+
+		$thread_id = $thread->thread_id;
+
+		// Removed the thread id from the group meta.
+		if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			// Get the group id from the first message.
+			$first_message    = BP_Messages_Thread::get_first_message( (int) $thread_id );
+			$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+			if ( $message_group_id > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
+				if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
+					groups_update_groupmeta( $message_group_id, 'group_message_thread', '' );
+				}
+			}
+		}
+
+		// Get the message ids in order to pass to the action.
+		$messages = BP_Messages_Message::get(
+			array(
+				'fields'          => 'ids',
+				'include_threads' => array( $thread_id ),
+				'order'           => 'DESC',
+				'per_page'        => - 1,
+				'orderby'         => 'id',
+			)
+		);
+
+		$message_ids = ( isset( $messages['messages'] ) && is_array( $messages['messages'] ) ) ? $messages['messages'] : array();
+
+		if ( bp_is_active( 'notifications' ) ) {
+			// Delete Message Notifications.
+			bp_messages_message_delete_notifications( $thread_id, $message_ids );
+		}
+
+		// Delete thread messages.
+		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $query ); // db call ok; no-cache ok.
+
+		// Delete messages meta.
+		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+
+		// Delete thread.
+		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
+
+		/**
+		 * Fires after message thread deleted.
+		 */
+		do_action( 'bp_messages_message_delete_thread', $thread_id );
 
 		// Build the response.
 		$response = new WP_REST_Response();
@@ -1087,7 +1146,23 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = $this->get_item_permissions_check( $request );
+
+		$retval  = $this->get_item_permissions_check( $request );
+		$user_id = bp_loggedin_user_id();
+
+		if ( ! empty( $request['user_id'] ) ) {
+			$user_id = $request['user_id'];
+		}
+
+		if ( true === $retval && ! bp_user_can( $user_id, 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to delete this thread messages.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
 
 		/**
 		 * Filter the thread `delete_item` permissions check.
@@ -1297,11 +1372,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'sender_id'                 => (int) $message->sender_id,
 			'subject'                   => array(
 				'raw'      => $message->subject,
-				'rendered' => apply_filters( 'bp_get_message_thread_subject', wp_staticize_emoji( $message->subject ) ),
+				'rendered' => apply_filters( 'bp_get_message_thread_subject', $message->subject ),
 			),
 			'message'                   => array(
 				'raw'      => wp_strip_all_tags( $message->message ),
-				'rendered' => apply_filters( 'bp_get_the_thread_message_content', wp_staticize_emoji( $message->message ) ),
+				'rendered' => apply_filters( 'bp_get_the_thread_message_content', $message->message ),
 			),
 			'date_sent'                 => bp_rest_prepare_date_response( $message->date_sent ),
 			'display_date'              => bp_core_time_since( $message->date_sent ),

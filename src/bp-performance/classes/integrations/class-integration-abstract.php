@@ -514,10 +514,10 @@ abstract class Integration_Abstract {
 
 									if ( ! empty( $unique_key ) && is_array( $unique_key ) ) {
 										$item_id     = $this->prepare_key( $result_data, $unique_key );
-										$cache_group = $cache_group . '_' . $item_id;
+										$cache_group = ! empty( $item_id ) ? $cache_group . '_' . $item_id : $cache_group;
 									} else {
 										$item_id     = ( empty( $param_value ) && isset( $result_data[ $unique_key ] ) ) ? $result_data[ $unique_key ] : $param_value;
-										$cache_group = $cache_group . '_' . $item_id;
+										$cache_group = ! empty( $item_id ) ? $cache_group . '_' . $item_id : $cache_group;
 									}
 
 									Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $cache_group, $user_id );
@@ -610,15 +610,23 @@ abstract class Integration_Abstract {
 		);
 		// To add filter for this you need to execute code form mu level.
 		$disallow_headers = apply_filters( 'rest_post_disprepare_header_cache', $disallow_headers );
-		foreach ( headers_list() as $header ) {
-			$header = explode( ':', $header );
-			if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-				$headers[ $header[0] ] = $header[1];
+
+		$header_list = headers_list();
+		if ( ! empty( $header_list ) ) {
+			foreach ( $header_list as $header ) {
+				$header = explode( ':', $header );
+				if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
+					$headers[ $header[0] ] = $header[1];
+				}
 			}
 		}
-		foreach ( $results->get_headers() as $header ) {
-			if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-				$headers[ $header[0] ] = $header[1];
+
+		$results_header = $results->get_headers();
+		if ( ! empty( $results_header ) ) {
+			foreach ( $results_header as $header_key => $header_val ) {
+				if ( ! in_array( $header_key, $disallow_headers, true ) ) {
+					$headers[ $header_key ] = $header_val;
+				}
 			}
 		}
 

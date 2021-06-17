@@ -276,7 +276,7 @@ module.exports = function (grunt) {
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**',
-					'**/bp-integrations/**'
+					'!**/bp-integrations/**'
 				],
 				options: {
 					process : function( content ) {
@@ -392,7 +392,7 @@ module.exports = function (grunt) {
 				stdout: false
 			},
 			rest_performance: {
-				command: 'git clone -b dev https://github.com/buddyboss/buddyboss-platform-api.git',
+				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 				cwd: SOURCE_DIR,
 				stdout: false
 			},
