@@ -414,10 +414,8 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$updated = BP_Notifications_Notification::update(
-			array( 'is_new' => $request['is_new'] ),
-			array( 'id' => $notification->id )
-		);
+		$notification->is_new = $request['is_new'];
+		$updated              = $notification->save();
 
 		if ( ! (bool) $updated ) {
 			return new WP_Error(
@@ -667,7 +665,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $notification ) );
+		$response->add_links( $this->prepare_links( $notification, $object ) );
 
 		/**
 		 * Filter a notification value returned from the API.
@@ -757,12 +755,22 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @param BP_Notifications_Notification $notification Notification item.
+	 * @param string                        $object Notification object.
 	 *
 	 * @return array Links for the given plugin.
 	 * @since 0.1.0
 	 */
-	protected function prepare_links( $notification ) {
+	protected function prepare_links( $notification, $object ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
+
+		if ( 'user' === $object && (int) $notification->user_id !== (int) $notification->secondary_item_id ) {
+			$users_ids = array(
+				$notification->user_id,
+				$notification->secondary_item_id,
+			);
+		} else {
+			$users_ids = $notification->user_id;
+		}
 
 		// Entity meta.
 		$links = array(
@@ -773,7 +781,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $notification->user_id ) ),
+				'href'       => rest_url( bp_rest_get_user_url( $users_ids ) ),
 				'embeddable' => true,
 			),
 		);

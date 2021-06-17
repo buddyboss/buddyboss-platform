@@ -248,6 +248,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-site-registration'              => bp_enable_site_registration(),
 			'allow-custom-registration'                => bp_allow_custom_registration(),
 			'register-confirm-email'                   => bp_register_confirm_email(),
+			'register-legal-agreement'                 => ( function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false ),
 			'register-confirm-password'                => bp_register_confirm_password(),
 			'bp-disable-account-deletion'              => bp_disable_account_deletion(),
 			'bp-enable-private-network'                => ! bp_enable_private_network(),
@@ -263,30 +264,59 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-member-type-enable-disable'            => bp_member_type_enable_disable(),
 			'bp-member-type-display-on-profile'        => ! empty( bp_member_type_enable_disable() ) && bp_member_type_display_on_profile(),
 			'bp-member-type-default-on-registration'   => bp_member_type_default_on_registration(),
-			'bp-enable-profile-search'                 => bp_disable_advanced_profile_search(),
+			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
 
 		);
 
 		if ( bp_is_active( 'moderation' ) ) {
+			$confirmation = array();
+			if ( bp_is_active( 'activity' ) ) {
+				$confirmation[] = esc_html__( 'See blocked member\'s posts', 'buddyboss' );
+			}
+
+			$confirmation[] = esc_html__( 'Mention this member in posts', 'buddyboss' );
+
+			if ( bp_is_active( 'groups' ) ) {
+				$confirmation[] = esc_html__( 'Invite this member to groups', 'buddyboss' );
+			}
+
+			if ( bp_is_active( 'messages' ) ) {
+				$confirmation[] = esc_html__( 'Message this member', 'buddyboss' );
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$confirmation[] = esc_html__( 'Add this member as a connection', 'buddyboss' );
+			}
+
+			$notes = '';
+			if ( bp_is_active( 'friends' ) ) {
+				$notes .= esc_html__( 'This action will also remove this member from your connections and send a report to the site admin. ', 'buddyboss' );
+			}
+
+			$notes .= esc_html__( 'Please allow a few minutes for this process to complete.', 'buddyboss' );
+
 			// Blocking Settings.
 			$results['bpm_blocking_member_blocking']        = bp_is_moderation_member_blocking_enable( false );
 			$results['bpm_blocking_auto_suspend']           = bp_is_moderation_auto_suspend_enable( false );
 			$results['bpm_blocking_auto_suspend_threshold'] = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 			$results['bpm_blocking_email_notification']     = bp_is_moderation_blocking_email_notification_enable( false );
+			$results['bpm_blocking_confirmation']           = $confirmation;
+			$results['bpm_blocking_note']                   = $notes;
 
 			// Reporting Settings.
 			$results['bpm_reporting_content_reporting']   = $this->bp_rest_reporting_content_type();
 			$results['bpm_reporting_auto_hide']           = $this->bp_rest_reporting_auto_hide();
 			$results['bpm_reporting_auto_hide_threshold'] = $this->bp_rest_reporting_auto_hide_threshold();
 			$results['bpm_reporting_email_notification']  = bp_is_moderation_reporting_email_notification_enable( false );
+
 		}
 
 		// Groups settings.
 		if ( bp_is_active( 'groups' ) ) {
 			// Group Settings.
-			$results['bp_restrict_group_creation']           = bp_restrict_group_creation();
+			$results['bp_restrict_group_creation']           = ! bp_user_can_create_groups();
 			$results['bp-disable-group-avatar-uploads']      = bp_disable_group_avatar_uploads();
 			$results['bp-disable-group-cover-image-uploads'] = bp_disable_group_cover_image_uploads();
 
@@ -337,6 +367,10 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Group Forums.
 			$results['bbp_enable_group_forums']  = bbp_is_group_forums_active();
 			$results['bbp_group_forums_root_id'] = bbp_get_group_forums_root_id();
+
+			// Check Permalinks for platform forms slugs.
+			$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+			$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
 		}
 
 		// Activity settings.
@@ -450,6 +484,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		$results['enable_messages']               = bp_is_active( 'messages' );
 		$results['bp_page_privacy']               = $privacy;
 		$results['bp_page_terms']                 = $terms;
+		$results['wp_page_privacy']               = (int) get_option( 'wp_page_for_privacy_policy' );
 
 		return $results;
 	}
@@ -541,6 +576,34 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Forum Integration for BuddyPress.
 			'bbp_enable_group_forums'    => bbp_is_group_forums_active(),
 			'bbp_group_forums_root_id'   => bbp_get_group_forums_root_id(),
+		);
+
+		// Check Permalinks for platform forms slugs.
+		$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+		$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
+
+		return $results;
+	}
+
+	/**
+	 * Get Permalinks settings.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_get_forum_slugs_settings() {
+		$results = array(
+			// Single forum slugs.
+			'forum'         => get_option( '_bbp_forum_slug', 'forum' ),
+			'topic'         => get_option( '_bbp_topic_slug', 'discussions' ),
+			'topic_tag'     => get_option( '_bbp_topic_tag_slug', 'topic-tag' ),
+			'view'          => get_option( '_bbp_view_slug', 'view' ),
+			'reply'         => get_option( '_bbp_reply_slug', 'reply' ),
+			'search'        => get_option( '_bbp_search_slug', 'search' ),
+
+			// Forum Profile Slugs.
+			'replies'       => bbp_get_reply_archive_slug(),
+			'favorites'     => bbp_get_user_favorites_slug(),
+			'subscriptions' => bbp_get_user_subscriptions_slug(),
 		);
 
 		return $results;

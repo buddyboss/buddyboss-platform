@@ -2784,7 +2784,7 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_comment_object->component_id ) {
-		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( $post_type_comment->comment_content, &$post_type_comment, $comment_link ) );
+		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( '', &$post_type_comment, $comment_link ) );
 		$activity_primary_link = apply_filters_ref_array( 'bp_blogs_activity_new_comment_primary_link', array( $comment_link, &$post_type_comment ) );
 	} else {
 		$activity_content      = $post_type_comment->comment_content;
@@ -2975,6 +2975,7 @@ function bp_activity_new_comment( $args = '' ) {
 			'primary_link'      => '',
 			'skip_notification' => false,
 			'error_type'        => 'bool',
+			'skip_error'        => true,
 		)
 	);
 
@@ -2987,9 +2988,13 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
+	
+	// Filter to skip comment content check for comment notification.
+	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
 
 	// Bail if missing necessary data.
-	if ( empty( $r['content'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+	if ( ( $check_empty_content && ( empty( $r['content'] ) && false === $r['skip_error'] ) ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+
 		$error = new WP_Error( 'missing_data', $feedback );
 
 		if ( 'wp_error' === $r['error_type'] ) {
@@ -4449,7 +4454,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	if ( ! post_type_supports( $post->post_type, 'buddypress-activity' ) ) {
 		return;
 	}
-
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 	/**
 	 * Fires before post type transition catch in activity
 	 *
@@ -4539,6 +4548,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		 */
 		do_action( 'bp_activity_post_type_transition_status_' . $post->post_type, $post, $new_status, $old_status );
 	}
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 }
 add_action( 'transition_post_status', 'bp_activity_catch_transition_post_type_status', 10, 3 );
 
@@ -5468,7 +5482,8 @@ function bp_activity_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args( $args,
+	$args = wp_parse_args(
+		$args,
 		array(
 			'id'                => 'activity_report',
 			'component'         => 'moderation',
@@ -5504,7 +5519,8 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args( $args,
+	$args = wp_parse_args(
+		$args,
 		array(
 			'id'                => 'activity_comment_report',
 			'component'         => 'moderation',

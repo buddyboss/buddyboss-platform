@@ -440,7 +440,7 @@ function bp_admin_setting_callback_group_creation() {
 	?>
 
 	<input id="bp_restrict_group_creation" name="bp_restrict_group_creation" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( ! bp_restrict_group_creation( false ) ); ?> />
-	<label for="bp_restrict_group_creation"><?php _e( 'Enable social group creation by all users', 'buddyboss' ); ?></label>
+	<label for="bp_restrict_group_creation"><?php _e( 'Enable social group creation by all members', 'buddyboss' ); ?></label>
 	<p class="description" id="bp_group_creation_description"><?php _e( 'Administrators can always create groups, regardless of this setting.', 'buddyboss' ); ?></p>
 
 	<?php
@@ -1140,6 +1140,24 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 	<?php
 }
 
+/*
+  Admin settings for showing the legal agreement confirmation field.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ */
+function bb_admin_setting_callback_register_show_legal_agreement() {
+	?>
+
+	<input id="register-legal-agreement" name="register-legal-agreement" type="checkbox" value="1" <?php checked( bb_register_legal_agreement( false ) ); ?> />
+	<label for="register-legal-agreement"><?php _e( 'Add Legal Agreement checkbox to register form', 'buddyboss' ); ?></label>
+	<?php
+		printf(
+			'<p class="description">%s</p>',
+			__( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' )
+		);
+}
+
 /**
  * Admin settings for showing the password confirmation field.
  *
@@ -1223,7 +1241,7 @@ function bp_group_directories_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => '',
+					'article' => '83107',
 				),
 				'admin.php'
 			)

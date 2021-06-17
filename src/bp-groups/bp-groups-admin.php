@@ -361,7 +361,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed media statuses.
 		 */
 		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
-		$media_status         = in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+		$media_status         = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
 
 		/**
 		 * Filters the allowed media status values for the group.
@@ -371,7 +371,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed media statuses.
 		 */
 		$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
-		$document_status         = in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
+		$document_status         = isset( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -381,7 +381,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed album statuses.
 		 */
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
-		$album_status         = in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -391,7 +391,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed album statuses.
 		 */
 		$allowed_message_status = apply_filters( 'groups_allowed_group_message_status', array( 'members', 'mods', 'admins' ) );
-		$message_status         = in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'members';
+		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'members';
 
 		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $document_status, $album_status, $message_status ) ) {
 			$error = $group_id;
@@ -2201,7 +2201,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?>
+						<?php _e( 'Select which profile types can join private groups with this group type without approval.', 'buddyboss' ); ?>
 					</td>
 				</tr>
 
@@ -2223,6 +2223,21 @@ function bp_group_type_permissions_meta_box( $post ) {
 				</tr>
 
 			<?php } ?>
+
+			<?php
+			if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+				$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+				$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
+				if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
+					echo '<tr><td>';
+					echo sprintf( __( 'If members are restricted from joining groups in the <a href="%s">Group Access</a> settings, they will be unable to join this group type even if they have the profile type specified above.', 'buddyboss' ), esc_url( bp_get_admin_url( add_query_arg( array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-groups#group_access_control_block'
+					), 'admin.php' ) ) ) );
+					echo '</td></tr>';
+				}
+			}
+			?>
 
 			</tbody>
 		</table>
@@ -2465,7 +2480,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_remove = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
 
 	$member_type                           = ( isset( $_POST['bp-member-type'] ) ) ? $_POST['bp-member-type'] : '';
-	$member_type_group_invites             = $_POST['bp-member-type-group-invites'];
+	$member_type_group_invites             = ( isset( $_POST['bp-member-type-group-invites'] ) ) ? $_POST['bp-member-type-group-invites'] : '';
 	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 
 	$term = term_exists( sanitize_key( $key ), 'bp_group_type' );

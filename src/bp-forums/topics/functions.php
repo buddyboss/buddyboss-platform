@@ -195,11 +195,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
-		 && empty( $_POST['bbp_media'] )
-		 && empty( $_POST['bbp_document'] )
-		 && empty( $_POST['bbp_media_gif'] )
-	) {
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) ) && empty( $_POST['bbp_media'] ) && empty( $_POST['bbp_document'] ) && empty( $_POST['bbp_media_gif'] ) ) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
 
@@ -268,6 +264,27 @@ function bbp_new_topic_handler( $action = '' ) {
 					bbp_add_error( 'bbp_new_topic_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss' ) );
 				}
 			}
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_media'] ) ) {
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_media ) {
+			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_document'] ) ) {
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_document ) {
+			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_gif ) {
+			bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss' ) );
 		}
 	}
 
@@ -3530,10 +3547,33 @@ function bbp_topic_content_autoembed() {
 	global $wp_embed;
 
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
-		add_filter( 'bbp_get_topic_content', array( $wp_embed, 'autoembed' ), 2 );
+		add_filter( 'bbp_get_topic_content', 'bb_validate_topic_embed', 1 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
-		add_filter( 'bbp_get_reply_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
+		add_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
 	}
+}
+
+/**
+ * Validate is the embed url or not.
+ *
+ * @param string $content Content.
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return mixed
+ */
+function bb_validate_topic_embed( $content ) {
+	global $wp_embed;
+
+	if ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) {
+		return $content;
+	}
+
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
+		add_filter( 'bbp_get_topic_content', array( $wp_embed, 'autoembed' ), 2 );
+	}
+
+	return $content;
 }
 
 /**
@@ -3544,12 +3584,20 @@ function bbp_topic_content_autoembed() {
  * @return string
  */
 function bbp_topic_content_autoembed_paragraph( $content ) {
+	global $wp_embed;
+
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
+		remove_filter( 'bbp_get_reply_content', array( $wp_embed, 'autoembed' ), 2 );
+	}
 
 	if ( strpos( $content, '<iframe' ) !== false ) {
 		return $content;
 	}
 
-	global $wp_embed;
+	if ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) {
+		return $content;
+	}
+
 	$embed_urls = $embeds_array = array();
 	$flag       = true;
 

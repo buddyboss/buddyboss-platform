@@ -399,7 +399,17 @@ function bp_nouveau_ajax_media_delete() {
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 	}
 	if( bp_is_group_media() ) {
+
+	    // Update the count of photos in groups in navigation menu.
+	    wp_cache_flush();
+
 		$media_group_count = bp_media_get_total_group_media_count();
+	}
+
+	if ( bp_is_group_albums() ) {
+
+		// Update the count of photos in groups in navigation menu when you are in single albums page.
+		wp_cache_flush();
 	}
 
 	wp_send_json_success(
@@ -475,7 +485,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		$album_privacy = $album->privacy;
 	}
 
-	// save media
+	// Save media.
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
 
@@ -495,6 +505,9 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 		$media_ids[] = $media_id;
 	}
+
+	// Flush the cache.
+	wp_cache_flush();
 
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
@@ -691,6 +704,9 @@ function bp_nouveau_ajax_media_album_delete() {
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
 		$redirect_url = trailingslashit( $group_link . '/albums/' );
+
+		// Flush the cache so update the count.
+		wp_cache_flush();
 	} else {
 		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' );
 	}
@@ -879,9 +895,30 @@ function bp_nouveau_ajax_media_update_privacy() {
 		wp_send_json_error( $response );
 	}
 
+    if ( ! bp_media_user_can_edit( $media_id ) ) {
+	    $response['feedback'] = sprintf(
+		    '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+		    esc_html__( 'You don\'t have a permission to update privacy.', 'buddyboss' )
+	    );
+
+	    wp_send_json_error( $response );
+    }
+
 	$media          = new BP_Media( $media_id );
 	$media->privacy = $privacy;
 	$media->save();
+
+	if ( bp_is_active( 'activity' ) && ! empty( $media->id ) ) {
+		$attachment_id = $media->attachment_id;
+		$activity_id   = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+		if ( ! empty( $activity_id ) ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			if ( ! empty( $activity->id ) ) {
+				$activity->privacy = $privacy;
+				$activity->save();
+			}
+		}
+	}
 
 	wp_send_json_success();
 }
@@ -1200,6 +1237,10 @@ function bp_nouveau_ajax_media_move() {
 	}
 
 	$media    = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+
+	// Flush the cache.
+	wp_cache_flush();
+
 	$response = bp_media_get_activity_media( $activity_id );
 
 	if ( $media > 0 ) {

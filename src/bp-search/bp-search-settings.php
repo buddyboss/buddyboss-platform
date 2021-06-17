@@ -23,16 +23,19 @@ function bp_search_get_settings_sections() {
 				'page'     => 'search',
 				'title'    => __( 'Network Search', 'buddyboss' ),
 				'callback' => 'bp_search_settings_callback_community_section',
+				'tutorial_callback' => '',
 			),
 			'bp_search_settings_post_types' => array(
 				'page'     => 'search',
 				'title'    => __( 'Pages and Posts Search', 'buddyboss' ),
 				'callback' => 'bp_search_settings_callback_post_type_section',
+				'tutorial_callback' => '',
 			),
 			'bp_search_settings_general'    => array(
 				'page'     => 'search',
 				'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
 				'callback' => '',
+				'tutorial_callback' => 'bp_search_settings_tutorial',
 			),
 		)
 	);
@@ -65,10 +68,6 @@ function bp_search_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bp_search_tutorial'          => array(
-			'title'    => __( '&#65279', 'buddyboss' ),
-			'callback' => 'bp_search_settings_tutorial',
-		),
 	);
 
 	$fields['bp_search_settings_community'] = array(

@@ -81,6 +81,33 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	if ( ! empty( $_POST['media'] ) ) {
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_media ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
+	if ( ! empty( $_POST['document'] ) ) {
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_document ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
+	if ( ! empty( $_POST['gif_data'] ) ) {
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_gif ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
 	// Create a new message object.
 	$message               = new BP_Messages_Message();
 	$message->thread_id    = $r['thread_id'];
@@ -92,7 +119,8 @@ function messages_new_message( $args = '' ) {
 	$message->mark_visible = $r['mark_visible'];
 
 	$new_reply       = false;
-	$is_group_thread = isset( $r['group_thread'] ) ? $r['group_thread'] : false;
+	$is_group_thread = isset( $r['group_thread'] ) ? (bool) $r['group_thread'] : false;
+
 	// If we have a thread ID...
 	if ( ! empty( $r['thread_id'] ) ) {
 
@@ -117,14 +145,34 @@ function messages_new_message( $args = '' ) {
 			}
 		}
 
-		$new_reply = true;
-
-		if ( isset( $thread->messages[0]->id ) ) {
-			$group = bp_messages_get_meta( $thread->messages[0]->id, 'group_id', true ); // group id
-			if ( ! empty( $group ) ) {
-				$is_group_thread = true;
+		$new_reply     = true;
+		$first_message = BP_Messages_Thread::get_first_message( (int) $r['thread_id'] );
+		$message_id    = $first_message->id;
+		if ( isset( $message_id ) ) {
+			$group = (int) bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+			if ( ! empty( $group ) && bp_is_active( 'groups' ) && $group > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $group, 'group_message_thread' );
+				if ( (int) $r['thread_id'] === $group_thread ) {
+					$is_group_thread = true;
+				}
+			} elseif ( ! empty( $group ) && ! bp_is_active( 'groups' ) && $group > 0 ) {
+				$prefix             = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_meta_table  = $prefix . 'bp_groups_groupmeta';
+				$thread_id          = (int) $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$groups_meta_table} WHERE meta_key = %s AND group_id = %d", 'group_message_thread', $group ) ); // db call ok; no-cache ok;
+				if ( (int) $r['thread_id'] === $thread_id ) {
+					$is_group_thread = true;
+				}
 			}
 		}
+
+		// Check user can send the reply.
+		if ( ! $is_group_thread ) {
+			$has_access = bb_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
+			if ( is_wp_error( $has_access ) ) {
+				return $has_access;
+			}
+		}
+
 		// ...otherwise use the recipients passed
 	} else {
 
@@ -221,11 +269,11 @@ function messages_new_message( $args = '' ) {
 
 				$first_message = BP_Messages_Thread::get_first_message( (int) $thread->thread_id );
 				$message_id    = $first_message->id;
-				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
-				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
-				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
-				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
-				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual.
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private.
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply.
+				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group.
 
 				if ( ! empty( $group ) && 'all' === $message_users && 'open' === $message_type && 'new' === $thread_type && 'group' === $message_from ) {
 					$previous_thread = null;
@@ -243,11 +291,9 @@ function messages_new_message( $args = '' ) {
 					}
 				}
 			}
-
 		} else {
 			$previous_threads = null;
 		}
-
 
 		if ( $previous_thread && $r['append_thread'] ) {
 			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
@@ -262,7 +308,7 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	// check if force friendship is enabled and check recipients
+	// Check if force friendship is enabled and check recipients.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) {
 
 		$error_messages = array(
@@ -275,11 +321,11 @@ function messages_new_message( $args = '' ) {
 		foreach ( (array) $message->recipients as $i => $recipient ) {
 			if ( ! friends_check_friendship( $message->sender_id, $recipient->user_id ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					if ( $new_reply && sizeof( $message->recipients ) == 1 ) {
+					if ( $new_reply && 1 === count( $message->recipients ) ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_reply'] );
-					} elseif ( $new_reply && sizeof( $message->recipients ) > 1 ) {
+					} elseif ( $new_reply && count( $message->recipients ) > 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_reply'] );
-					} elseif ( sizeof( $message->recipients ) > 1 ) {
+					} elseif ( count( $message->recipients ) > 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_message'] );
 					} else {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_message'] );
@@ -291,7 +337,15 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	// preapre to upadte the deleted user's last message if message sending successfull
+	// Check user can send the message.
+	if ( true !== $is_group_thread ) {
+		$has_access = bb_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
+		if ( is_wp_error( $has_access ) ) {
+			return $has_access;
+		}
+	}
+
+	// Prepare to update the deleted user's last message if message sending successful.
 	$last_message_data = BP_Messages_Thread::prepare_last_message_status( $message->thread_id );
 
 	// Bail if message failed to send.
@@ -308,7 +362,7 @@ function messages_new_message( $args = '' ) {
 		return false;
 	}
 
-	// only update after the send()
+	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
 
 	/**
@@ -590,7 +644,6 @@ function messages_get_default_subject_length() {
  *
  * @return bool True on successful delete, false on failure.
  * @see   delete_metadata() for full documentation excluding $meta_type variable.
- *
  */
 function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
 	// Legacy - if no meta_key is passed, delete all for the item.
@@ -634,7 +687,6 @@ function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = 
  *
  * @return mixed
  * @see   get_metadata() for full documentation excluding $meta_type variable.
- *
  */
 function bp_messages_get_meta( $message_id, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -657,7 +709,6 @@ function bp_messages_get_meta( $message_id, $meta_key = '', $single = true ) {
  *
  * @return mixed
  * @see   update_metadata() for full documentation excluding $meta_type variable.
- *
  */
 function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -682,7 +733,6 @@ function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_val
  *
  * @return mixed
  * @see   add_metadata() for full documentation excluding $meta_type variable.
- *
  */
 function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -780,7 +830,6 @@ function messages_notification_new_message( $raw_args = array() ) {
 	 *
 	 * @deprecated       2.5.0 Use the filters in BP_Email.
 	 *                   $email_subject and $email_content arguments unset and deprecated.
-	 *
 	 */
 	do_action( 'bp_messages_sent_notification_email', $recipients, '', '', $args );
 }
@@ -871,7 +920,6 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	 *
 	 * @deprecated       2.5.0 Use the filters in BP_Email.
 	 *                   $email_subject and $email_content arguments unset and deprecated.
-	 *
 	 */
 	do_action( 'group_messages_notification_new_message', $recipients, '', '', $args );
 }
@@ -988,11 +1036,10 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 						)
 					)
 				),
-				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) )
+				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
 			);
 		}
 	}
-
 
 	$first_message    = end( $thread_messages );
 	$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
@@ -1017,7 +1064,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 							'html'       => false,
 						)
 					),
-					'name' => $group_name
+					'name' => $group_name,
 				);
 			} else {
 
@@ -1028,7 +1075,6 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				 * @since BuddyBoss 1.4.7
 				 *
 				 * @param int $wpdb ->base_prefix table prefix
-				 *
 				 */
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
@@ -1047,7 +1093,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					if ( '' !== $avatar ) {
 						$group_avatar = array(
 							'url'  => $avatar,
-							'name' => $group_name
+							'name' => $group_name,
 						);
 					}
 				}
@@ -1071,4 +1117,33 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	 * @param array $avatar_urls avatar urls in
 	 */
 	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
+}
+
+/**
+ * Check whether given thread is group thread or not.
+ *
+ * @param int $thread_id Thread id.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool
+ */
+function bb_messages_is_group_thread( $thread_id ) {
+
+	if ( ! $thread_id || ! bp_is_active( 'messages' ) ) {
+		return false;
+	}
+
+	$is_group_message_thread = false;
+	$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+	$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+	$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+	if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		$is_group_message_thread = true;
+	}
+
+	return $is_group_message_thread;
 }

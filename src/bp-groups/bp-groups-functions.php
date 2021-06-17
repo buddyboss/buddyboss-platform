@@ -1467,6 +1467,10 @@ function groups_can_user_manage_media( $user_id, $group_id ) {
 		return false;
 	}
 
+	if ( ! bp_is_active( 'media' ) || ! bp_is_group_media_support_enabled() ) {
+		return false;
+	}
+
 	// Site admins always have access.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		return true;
@@ -1504,6 +1508,10 @@ function groups_can_user_manage_albums( $user_id, $group_id ) {
 	$is_allowed = false;
 
 	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( ! bp_is_active( 'media' ) || ! bp_is_group_albums_support_enabled() ) {
 		return false;
 	}
 
@@ -3547,14 +3555,15 @@ function bp_get_active_group_types( $args = array() ) {
 	$bp_active_group_types = array();
 
 	$args = bp_parse_args( $args, array(
-		'posts_per_page' => - 1,
-		'post_type'      => bp_groups_get_group_type_post_type(),
-		'orderby'        => 'menu_order',
-		'order'          => 'ASC',
-		'fields'         => 'ids'
-	), 'group_types' );
+        'posts_per_page' => - 1,
+        'post_type'      => bp_groups_get_group_type_post_type(),
+        'post_status'    => 'publish',
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+        'fields'         => 'ids'
+    ), 'group_types' );
 
-	$bp_active_group_types_query = new \WP_Query( $args );
+    $bp_active_group_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_group_types_query->have_posts() ) {
 		$bp_active_group_types = $bp_active_group_types_query->posts;
@@ -4095,6 +4104,10 @@ function groups_can_user_manage_document( $user_id, $group_id ) {
 	$is_allowed = false;
 
 	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( ! bp_is_active( 'document' ) || ! bp_is_group_document_support_enabled() ) {
 		return false;
 	}
 

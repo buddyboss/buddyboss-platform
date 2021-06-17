@@ -21,7 +21,7 @@ add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_med
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' ); // Delete activity medias.
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_gif' ); // Delete activity gif.
-add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+add_action( 'bp_activity_entry_content', 'bp_media_activity_embed_gif' );
 add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
@@ -66,7 +66,6 @@ add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
-
 /**
  * Add Media items for search
  */
@@ -575,7 +574,7 @@ function bp_media_update_media_privacy( $album ) {
  */
 function bp_media_forums_new_post_media_save( $post_id ) {
 
-	if ( bp_is_forums_media_support_enabled() && ! empty( $_POST['bbp_media'] ) ) {
+	if ( ! empty( $_POST['bbp_media'] ) ) {
 
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
@@ -674,7 +673,41 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
 
 	// Do not embed attachment in wp-admin area.
-	if ( is_admin() || ! bp_is_forums_media_support_enabled() ) {
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_media_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_group_media_support_enabled()
+		)
+	) {
 		return $content;
 	}
 
@@ -722,8 +755,42 @@ function bp_media_forums_embed_attachments( $content, $id ) {
  */
 function bp_media_forums_embed_gif( $content, $id ) {
 
-	// check if forums gif support enabled.
-	if ( ! bp_is_forums_gif_support_enabled() ) {
+	// Do not embed attachment in wp-admin area.
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_gif_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_groups_gif_support_enabled()
+		)
+	) {
 		return $content;
 	}
 
@@ -765,11 +832,6 @@ function bp_media_forums_embed_gif( $content, $id ) {
  * @param $post_id
  */
 function bp_media_forums_save_gif_data( $post_id ) {
-
-	// check if forums gif support enabled.
-	if ( ! bp_is_forums_gif_support_enabled() ) {
-		return;
-	}
 
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
 
@@ -963,7 +1025,7 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
  */
 function bp_media_messages_save_gif_data( &$message ) {
 
-	if ( ! bp_is_messages_gif_support_enabled() || empty( $_POST['gif_data'] ) ) {
+	if ( empty( $_POST['gif_data'] ) ) {
 		return;
 	}
 
@@ -1025,18 +1087,18 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
 }
 
 /**
- * Return activity gif embed HTML
+ * Return activity gif embed HTML.
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $activity_id
+ * @param int $activity_id Activity id.
  *
  * @return false|string|void
  */
 function bp_media_activity_embed_gif_content( $activity_id ) {
 
 	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
-
+	
 	if ( empty( $gif_data ) ) {
 		return;
 	}
@@ -1068,36 +1130,26 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 }
 
 /**
- * Embed gif in activity content
- *
- * @param $content
- * @param $activity
+ * Embed gif in activity content.
  *
  * @since BuddyBoss 1.0.0
  *
  * @return string
  */
-function bp_media_activity_embed_gif( $content, $activity ) {
+function bp_media_activity_embed_gif() {
 
 	// check if profile and groups activity gif support enabled.
-	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
-		return $content;
+	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_groups_gif_support_enabled() ) ) {
+		return false;
 	}
 
-	$gif_content = bp_media_activity_embed_gif_content( $activity->id );
-
-	if ( ! empty( $gif_content ) ) {
-		$content .= $gif_content;
-	}
-
-	return $content;
+	echo bp_media_activity_embed_gif_content( bp_get_activity_id() );
 }
 
 /**
- * Embed gif in activity comment content
+ * Embed gif in activity comment content.
  *
- * @param $content
- * @param $activity
+ * @param int $comment_id Comment id for the activity.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -2334,11 +2386,13 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 			$activity['gif'] = $gif_raw_data;
 		}
+
+		$activity['profile_media'] = bp_is_profile_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_media']   = bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 	}
 
 	return $activity;
 }
-
 /**
  * Added activity entry class for media.
  *
@@ -2361,3 +2415,4 @@ function bp_media_activity_entry_css_class( $class ) {
 	return $class;
 
 }
+

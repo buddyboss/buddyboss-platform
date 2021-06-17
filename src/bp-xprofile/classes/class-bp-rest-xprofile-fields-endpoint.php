@@ -220,7 +220,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -317,7 +317,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -851,7 +851,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'group_id'          => (int) $field->group_id,
 			'parent_id'         => (int) $field->parent_id,
 			'type'              => $field->type,
-			'name'              => $field->name,
+			'name'              => wp_specialchars_decode( $field->name ),
 			'alternate_name'    => '',
 			'description'       => array(
 				'raw'      => $field->description,
@@ -863,7 +863,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'option_order'      => (int) $field->option_order,
 			'order_by'          => $field->order_by,
 			'is_default_option' => (bool) $field->is_default_option,
-			'options'           => '',
+			'options'           => array(),
 		);
 
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
@@ -876,10 +876,12 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$data['data']['id'] = $field->data->id;
 			}
 
+			$field_value = isset( $field->data->value ) ? $field->data->value : '';
+
 			$data['data']['value'] = array(
-				'raw'          => $this->get_profile_field_raw_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
-				'unserialized' => $this->get_profile_field_unserialized_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
-				'rendered'     => $this->get_profile_field_rendered_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
+				'raw'          => $this->get_profile_field_raw_value( $field_value, $field ),
+				'unserialized' => $this->get_profile_field_unserialized_value( $field_value, $field ),
+				'rendered'     => $this->get_profile_field_rendered_value( $field_value, $field ),
 			);
 		}
 
@@ -933,7 +935,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Get alternate name for the field.
 		$alternate_name = bp_xprofile_get_meta( (int) $field->id, 'field', 'alternate_name' );
 		if ( ! empty( $alternate_name ) ) {
-			$data['alternate_name'] = $alternate_name;
+			$data['alternate_name'] = wp_specialchars_decode( $alternate_name );
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -1030,6 +1032,18 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Set the $field global as the `xprofile_filter_link_profile_data` filter needs it.
 		$field = $profile_field;
 
+		if ( 'membertypes' === $profile_field->type ) {
+			// Need to pass $profile_field as object.
+			$all_member_type = $this->get_member_type_options( $profile_field, array( 'show_all' => true ) );
+			if ( ! empty( $all_member_type ) ) {
+				$all_member_type = array_column( $all_member_type, 'name', 'id' );
+			}
+
+			if ( ! empty( $all_member_type ) && array_key_exists( $profile_field->data->value, $all_member_type ) ) {
+				$value = $all_member_type[ $profile_field->data->value ];
+			}
+		}
+
 		/**
 		 * Apply Filters to sanitize XProfile field value.
 		 *
@@ -1044,7 +1058,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Reset the global before returning the value.
 		$field = $reset_global;
 
-		return $value;
+		return wp_specialchars_decode( $value );
 	}
 
 	/**
@@ -1074,7 +1088,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		return $value;
+		return wp_specialchars_decode( $value );
 	}
 
 	/**
@@ -1105,7 +1119,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$unserialized_value = maybe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
-			$unserialized_value = (array) $unserialized_value;
+			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value );
 		}
 
 		return $unserialized_value;
@@ -1484,7 +1498,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
-				if ( '' === $enabled || '1' === $enabled ) {
+				if ( '' === $enabled || '1' === $enabled || ! empty( $request['show_all'] ) ) {
 					$options[] = array(
 						'id'                => $post->ID,
 						'group_id'          => $field->group_id,

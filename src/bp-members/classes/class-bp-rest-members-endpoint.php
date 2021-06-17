@@ -304,7 +304,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -336,7 +336,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -715,6 +715,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			: ''
 		);
 
+		$data['create_friendship'] = ( bp_is_active( 'friends' ) && is_user_logged_in() && apply_filters( 'bp_rest_user_can_create_friendship', true, $user->ID ) );
+
 		$data['is_following'] = (bool) (
 		function_exists( 'bp_is_following' )
 			? bp_is_following(
@@ -880,12 +882,14 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					 * --Added support for display name format support from platform.
 					 */
 
+					$field_value = $item->data->value;
+
 					$data['groups'][ $group->id ]['fields'][ $item->id ] = array(
 						'name'  => $item->name,
 						'value' => array(
-							'raw'          => $fields_endpoint->get_profile_field_raw_value( $item->data->value, $item ),
-							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $item->data->value, $item ),
-							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $item->data->value, $item ),
+							'raw'          => $fields_endpoint->get_profile_field_raw_value( $field_value, $item ),
+							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $field_value, $item ),
+							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $field_value, $item ),
 						),
 					);
 				}
@@ -1143,6 +1147,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'create_friendship'  => array(
+					'description' => __( 'Logged in user can create friendship with current user.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
 				'is_following'       => array(
 					'description' => __( 'Check if a user is following or not.', 'buddyboss' ),
 					'type'        => 'boolean',
@@ -1323,6 +1333,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$copied_arr = array();
 
 		foreach ( $fields as $f ) {
+			// Disable search for some individual field.
+			if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
+				continue;
+			}
+			
 			if ( ! isset( $f->filter ) ) {
 				continue;
 			}
