@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-17 13:23:08+00:00\n"
+"POT-Creation-Date: 2021-06-17 14:07:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23244,7 +23244,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:48
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:31
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:97
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:41
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:48
 #: bp-templates/bp-nouveau/buddypress/video/video-loop.php:34
@@ -23668,7 +23668,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:34
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:17
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:31
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:50
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:74
 msgid "Create new folder"
 msgstr ""
 
@@ -23784,23 +23784,23 @@ msgstr ""
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:35
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:24
 msgid "Select Folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:68
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:92
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:96
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:118
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:141
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:67
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:121
 msgid "Done"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:69
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:119
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:93
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:142
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:122
 msgid "Back"
 msgstr ""
@@ -24168,7 +24168,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:14
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:16
-#: bp-templates/bp-nouveau/buddypress/media/create-album.php:52
+#: bp-templates/bp-nouveau/buddypress/media/create-album.php:75
 #: bp-templates/bp-nouveau/buddypress/media/index.php:37
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:15
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:19
@@ -24204,7 +24204,7 @@ msgid "No albums found. Please create and select album."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/location-move.php:14
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:46
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:69
 #: bp-templates/bp-nouveau/buddypress/video/location-move.php:14
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:77
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:84

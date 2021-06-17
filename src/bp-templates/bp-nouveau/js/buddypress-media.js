@@ -3516,6 +3516,10 @@ window.bp = window.bp || {};
 
 				} );
 
+				var uploaderMediaTemplate = document.getElementsByClassName('uploader-post-media-template').length ? document.getElementsByClassName('uploader-post-media-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
+				self.options.previewTemplate = uploaderMediaTemplate;
+
 				self.dropzone_obj = new Dropzone( 'div#media-uploader', self.options );
 
 				self.dropzone_obj.on(
@@ -3523,6 +3527,19 @@ window.bp = window.bp || {};
 					function ( file, xhr, formData ) {
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+					}
+				);
+
+				self.dropzone_obj.on(
+					'uploadprogress',
+					function( element ) {var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+						var radius = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -3756,6 +3773,10 @@ window.bp = window.bp || {};
 					}
 				} );
 
+				var uploaderdocumentTemplate = document.getElementsByClassName('uploader-post-document-template').length ? document.getElementsByClassName('uploader-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
+				self.options.previewTemplate = uploaderdocumentTemplate;
+
 				self.dropzone_obj = new Dropzone( 'div#media-uploader', self.options );
 
 				self.dropzone_obj.on(
@@ -3763,6 +3784,19 @@ window.bp = window.bp || {};
 					function ( file, xhr, formData ) {
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+					}
+				);
+
+				self.dropzone_obj.on(
+					'uploadprogress',
+					function( element ) {var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+						var radius = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
