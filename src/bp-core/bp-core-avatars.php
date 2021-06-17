@@ -2134,6 +2134,8 @@ function bp_avatar_template_check() {
  * @param array       $args        Arguments passed to get_avatar_url(), after processing.
  *
  * @return mixed|void
+ *
+ * @since BuddyBoss 1.6.4
  */
 function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
 
