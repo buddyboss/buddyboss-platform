@@ -212,8 +212,8 @@ function bb_media_symlink_validate( $old_value, $value ) {
 			array(
 				'post_type'      => 'attachment',
 				'posts_per_page' => 1,
-				'order'          => 'ASC',
-				'orderby'        => 'rand',
+				'order'          => 'DESC',
+				'orderby'        => 'date',
 				'meta_key'       => 'bp_media_saved',
 				'meta_value'     => '1',
 			)
