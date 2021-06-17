@@ -5548,3 +5548,102 @@ function bb_check_ios_device() {
 
 	return $is_ios;
 }
+
+/**
+ * Enable symlink automatically.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_core_enable_default_symlink_support() {
+
+    if ( ! bp_is_active( 'media' ) ) {
+        return;
+    }
+
+    if ( function_exists( 'bb_enable_symlinks' ) && bb_enable_symlinks() ) {
+        return;
+    }
+
+	$upload_dir      = wp_upload_dir();
+	$upload_dir      = $upload_dir['basedir'];
+	$output_file_src = '';
+	$media           = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'posts_per_page' => 1,
+			'order'          => 'ASC',
+			'orderby'        => 'rand',
+			'meta_key'       => 'bp_media_saved',
+			'meta_value'     => '1',
+		)
+	);
+
+	if ( ! empty( $media ) ) {
+
+		$attachment_id           = current( $media )->ID;
+		$attachment_url          = wp_get_attachment_image_src( $attachment_id );
+		$attachment_file         = get_attached_file( $attachment_id );
+		$symlinks_path           = bp_media_symlink_path();
+		$size                    = 'thumbnail';
+		$symlink_name            = md5( 'testsymlink' . $attachment_id . $size );
+		$attachment_path         = $symlinks_path . '/' . $symlink_name;
+		$file                    = image_get_intermediate_size( $attachment_id, $size );
+		$upload_directory        = wp_get_upload_dir();
+		$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
+		$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
+
+		if ( $file && ! empty( $file['path'] ) ) {
+			$output_file_src = $upload_dir . '/' . $file['path'];
+		} elseif ( $attachment_url ) {
+			$output_file_src = $attachment_file;
+		}
+
+		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+
+		    if ( ! is_link( $attachment_path ) ) {
+
+                symlink( $output_file_src, $attachment_path );
+
+                if ( ! empty( $symlink_url ) ) {
+                    $fetch = wp_remote_get( $symlink_url );
+
+                    if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+	                    bp_update_option( 'bp_media_symlink_support', 1 );
+                    }
+                }
+			    unlink( $attachment_path );
+
+			    if ( bb_enable_symlinks() ) {
+				    return;
+			    }
+
+                $tmp = getcwd();
+                chdir( wp_normalize_path( ABSPATH ) );
+                $sym_path   = explode( '/', $symlinks_path );
+                $search_key = array_search( 'wp-content', $sym_path, true );
+                if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
+                    $sym_path = array_slice( array_filter( $sym_path ), $search_key );
+                    $sym_path = implode( '/', $sym_path );
+                }
+                if ( is_dir( 'wp-content/' . $sym_path ) ) {
+                    chdir( 'wp-content/' . $sym_path );
+                    if ( empty( $file['path'] ) ) {
+                        $file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+                    }
+                    $output_file_src = '../../' . $file['path'];
+                    if ( file_exists( $output_file_src ) ) {
+                        symlink( $output_file_src, $symlink_name );
+                    }
+                }
+                chdir( $tmp );
+
+                if ( ! empty( $symlink_url ) ) {
+                    $fetch = wp_remote_get( $symlink_url );
+                    if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+	                    bp_update_option( 'bp_media_symlink_support', 1 );
+                    }
+                }
+			}
+		}
+	}
+}
