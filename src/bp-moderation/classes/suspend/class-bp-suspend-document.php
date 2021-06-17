@@ -58,6 +58,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
 
 		add_action( 'bb_moderation_' . BP_Moderation_Activity::$moderation_type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+		add_action( 'bb_moderation_' . BP_Moderation_Activity_Comment::$moderation_type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
 	}
 
 	/**
