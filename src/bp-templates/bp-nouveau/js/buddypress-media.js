@@ -60,6 +60,8 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 			}
 
+			var ForumDocumentTemplates = document.getElementsByClassName('forum-post-document-template').length ? document.getElementsByClassName('forum-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
 			this.documentOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
@@ -74,6 +76,7 @@ window.bp = window.bp || {};
 				maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
+				previewTemplate: ForumDocumentTemplates,
 			};
 
 			var ForumVideoTemplate = document.getElementsByClassName('forum-post-video-template').length ? document.getElementsByClassName('forum-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
@@ -91,10 +94,11 @@ window.bp = window.bp || {};
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
-				previewTemplate: ForumVideoTemplate
+				previewTemplate: ForumVideoTemplate,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
+				var ForumDocumentTemplate = document.getElementsByClassName('forum-post-document-template').length ? document.getElementsByClassName('forum-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
@@ -109,8 +113,10 @@ window.bp = window.bp || {};
 					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 					dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
+					previewTemplate: ForumDocumentTemplate,
 				};
 			} else {
+				var ForumMediaTemplate = document.getElementsByClassName('forum-post-media-template').length ? document.getElementsByClassName('forum-post-media-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
@@ -123,6 +129,7 @@ window.bp = window.bp || {};
 					maxFiles: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+					previewTemplate: ForumMediaTemplate,
 				};
 			}
 
@@ -2397,6 +2404,20 @@ window.bp = window.bp || {};
 					);
 
 					self.dropzone_obj.on(
+						'uploadprogress',
+						function( element) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+	
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
+						}
+					);
+
+					self.dropzone_obj.on(
 						'error',
 						function ( file, response ) {
 							if ( file.accepted ) {
@@ -2515,6 +2536,20 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
 								tool_box.find( '#bp-group-messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+						}
+					);
+
+					self.document_dropzone_obj.on(
+						'uploadprogress',
+						function( element) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+	
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
 						}
 					);
 
