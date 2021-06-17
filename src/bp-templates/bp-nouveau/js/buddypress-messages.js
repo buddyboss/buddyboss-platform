@@ -941,6 +941,9 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
+				var messageMediaTemplate = document.getElementsByClassName('message-post-media-template').length ? document.getElementsByClassName('message-post-media-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+				bp.Nouveau.Messages.dropzone_options.previewTemplate = messageMediaTemplate;
+
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-media-uploader', bp.Nouveau.Messages.dropzone_options );
 
 				bp.Nouveau.Messages.dropzone.on(
@@ -962,6 +965,20 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#messages-media-button' ) ) {
 							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'uploadprogress',
+					function( element) {
+						var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+						var radius = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -1088,6 +1105,9 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
+				var messageDocumentTemplate = document.getElementsByClassName('message-post-document-template').length ? document.getElementsByClassName('message-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+				bp.Nouveau.Messages.dropzone_document_options.previewTemplate = messageDocumentTemplate;
+
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-document-uploader', bp.Nouveau.Messages.dropzone_document_options );
 
 				bp.Nouveau.Messages.dropzone.on(
@@ -1136,6 +1156,20 @@ window.bp = window.bp || {};
 							}
 							return _results;
 						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'uploadprogress',
+					function( element) {
+						var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+						var radius = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
