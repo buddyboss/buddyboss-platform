@@ -2117,8 +2117,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		background: #f0f3f7;
 		text-align: center;
 		height: 100%;
-		min-height: 120px;
-		width: 120px;
+		min-height: 160px;
+		width: 160px;
 		flex-flow: column;
 		align-items: center;
 		justify-content: center;
@@ -2373,7 +2373,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 }
 
 div.dropzone .dz-preview {
-	min-width: 120px;
+	min-width: 160px;
 
 	.dz-success-mark,
 	.dz-progress,
@@ -2388,10 +2388,10 @@ div.dropzone .dz-preview {
 }
 
 .dz-preview.dz-image-preview .dz-image {
-	height: 120px;
+	height: 160px;
 
 	img {
-		max-width: 120px;
+		max-width: 160px;
 		height: 100%;
 		object-fit: contain;
 	}

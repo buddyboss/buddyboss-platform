@@ -624,6 +624,10 @@
 		display: none;
 	}
 
+	.dz-image img {
+		width: 160px;
+	}
+
 	.dz-progress-ring-wrap {
 		position: absolute;
 		z-index: 11;
@@ -632,8 +636,8 @@
 		transform: translate(-50%, -50%);
 		background-color: rgba(0, 0, 0, 0.5);
 		border-radius: 50%;
-		height: 50px;
-		width: 50px;
+		height: 60px;
+		width: 60px;
 
 		.dz-progress-ring {
 			position: absolute;
@@ -674,6 +678,7 @@
 		.dz-filename {
 			position: static;
 			padding-right: 0;
+			margin-top: 30px;
 		}
 
 		.dz-size {
