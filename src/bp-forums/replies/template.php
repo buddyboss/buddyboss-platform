@@ -2817,6 +2817,8 @@ function bbp_get_form_reply_edit_reason() {
  * @param string $topic_id Current topic ID.
  *
  * @param string $new_topic_reply_count Get all topic reply count.
+ *
+ * @since 1.6.3
  */
 function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_count, $action ) {
 	global $wpdb;
@@ -2865,6 +2867,8 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
  * @param string $topic_id Current topic ID.
  *
  * @return string $parent_reply_count Count of total parent reply.
+ *
+ * @since 1.6.3
  */
 function bbp_get_total_parent_reply( $topic_id ) {
 	$parent_reply_count = '';
