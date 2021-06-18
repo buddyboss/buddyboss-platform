@@ -27,9 +27,6 @@
 						</a>
 					</header>
 
-					<p><?php esc_html_e( 'Select or upload a picture that shows what\'s in your video. A good thumbnail stands out and draws the viewer\'s attention.', 'buddyboss' ); ?></p>
-					<small>For best results, upload an image that is 1300px by 800px or larger.</small>
-
 					<div class="video-thumbnail-content">
 
 						<div class="bb-dropzone-wrap bp-video-thumbnail-upload-tab-content bp-upload-tab-content bp-video-thumbnail-dropzone-content" id="">
