@@ -1007,6 +1007,8 @@
 
 		.bb-field-wrap {
 			margin-bottom: 0;
+			position: relative;
+			z-index: 111;
 		}
 
 		.dropzone {

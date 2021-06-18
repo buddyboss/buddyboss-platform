@@ -19856,6 +19856,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap {
   margin-bottom: 0;
+  position: relative;
+  z-index: 111;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone {
