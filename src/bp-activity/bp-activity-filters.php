@@ -2412,6 +2412,8 @@ add_filter( 'bb_add_feature_image_blog_post_as_avtivity_content', 'bb_add_featur
  * @param int    $blog_post_id
  * 
  * @return string $content
+ * 
+ * @since x.x.x
  */
 function bb_add_feature_image_blog_post_as_avtivity_content_callback( $content, $blog_post_id ) {
 	$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post_id ), 'full', false );
