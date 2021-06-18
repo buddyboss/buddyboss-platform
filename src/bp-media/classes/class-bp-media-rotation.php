@@ -121,7 +121,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 
 			if ( $ort > 1 ) {
 				$destination = $source;
-				$size        = getimagesize( $source );
+				$size        = @getimagesize( $source );
 
 				$width  = $size[0];
 				$height = $size[1];
