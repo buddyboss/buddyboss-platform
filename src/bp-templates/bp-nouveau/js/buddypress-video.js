@@ -2586,11 +2586,12 @@ window.bp = window.bp || {};
 			var player = this.player;
 
 			$( '.video-js:not(.loaded)' ).each(
-				function ( videoIndex ) {
+				function () {
 
 					var self    = this;
 					var options = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
 
+					var videoIndex = $( this ).attr( 'id' );
 					player[ $( this ).attr('id') ] = videojs(
 						self,
 						options,
@@ -2601,8 +2602,8 @@ window.bp = window.bp || {};
 							}
 						);
 						this.on('play', function() {
-							$( '.video-js:not(.popup-video)' ).each( function ( index ) {
-								if ( videoIndex !== index ) {
+							$( '.video-js' ).each( function () {
+								if ( videoIndex !== $( this ).attr( 'id' ) ) {
 									this.player.pause();
 								}
 							});
