@@ -5567,20 +5567,10 @@ function bb_core_enable_default_symlink_support() {
 	$upload_dir      = wp_upload_dir();
 	$upload_dir      = $upload_dir['basedir'];
 	$output_file_src = '';
-	$media           = get_posts(
-		array(
-			'post_type'      => 'attachment',
-			'posts_per_page' => 1,
-			'order'          => 'DESC',
-			'orderby'        => 'date',
-			'meta_key'       => 'bp_media_saved',
-			'meta_value'     => '1',
-		)
-	);
+	$attachment_id   = bb_core_upload_dummy_attachment();
 
-	if ( ! empty( $media ) ) {
+	if ( ! empty( $attachment_id ) ) {
 
-		$attachment_id           = current( $media )->ID;
 		$attachment_url          = wp_get_attachment_image_src( $attachment_id );
 		$attachment_file         = get_attached_file( $attachment_id );
 		$symlinks_path           = bp_media_symlink_path();
@@ -5645,5 +5635,38 @@ function bb_core_enable_default_symlink_support() {
 				}
 			}
 		}
+		wp_delete_post( $attachment_id, true );
 	}
+}
+
+/**
+ * Create a dummy attachment and return the id.
+ *
+ * @return int|WP_Error
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_core_upload_dummy_attachment() {
+
+	$file          = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+	$filename      = basename( $file );
+	$upload_file   = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+	$attachment_id = 0;
+	if ( ! $upload_file['error'] ) {
+		$wp_filetype   = wp_check_filetype( $filename, null );
+		$attachment    = array(
+			'post_mime_type' => $wp_filetype['type'],
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+			'post_content'   => '',
+			'post_status'    => 'inherit'
+		);
+		$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+		if ( ! is_wp_error( $attachment_id ) ) {
+			require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
+			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
+			wp_update_attachment_metadata( $attachment_id, $attachment_data );
+		}
+	}
+
+	return $attachment_id;
 }
