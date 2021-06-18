@@ -414,6 +414,11 @@ function bp_has_groups( $args = '' ) {
 		$parent_id = 0;
     }
 
+	$show_hidden = true;
+	if ( ! empty( bp_displayed_user_id() ) && ! empty( bp_current_user_id() ) && bp_displayed_user_id() === bp_current_user_id() ) {
+		$show_hidden = false;
+	}
+
 	// Parse defaults and requested arguments.
 	$r = bp_parse_args(
 		$args,
@@ -424,7 +429,7 @@ function bp_has_groups( $args = '' ) {
 			'page'               => 1,
 			'per_page'           => 20,
 			'max'                => false,
-			'show_hidden'        => false,
+			'show_hidden'        => $show_hidden,
 			'page_arg'           => 'grpage',
 			'user_id'            => bp_displayed_user_id(),
 			'slug'               => $slug,
@@ -1893,7 +1898,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?> data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -4321,6 +4326,16 @@ function bp_group_join_button( $group = false ) {
 					break;
 			}
 		}
+
+		/**
+		 * Filters if the current logged in user can join group.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param string $button HTML button for joining a group.
+		 * @param object $group BuddyPress group object
+		 */
+		$button = apply_filters( 'bp_user_can_join_groups', $button, $group );
 
 		/**
 		 * Filters the HTML button for joining a group.
@@ -7480,6 +7495,7 @@ function bp_groups_get_profile_stats( $args = '' ) {
 function bp_group_current_invite_tab() {
 	echo bp_get_group_current_invite_tab();
 }
+
 /**
  * Returns the current group invite tab slug.
  *
@@ -7502,6 +7518,38 @@ function bp_get_group_current_invite_tab() {
 	 * @param string $tab Current group invite tab slug.
 	 */
 	return apply_filters( 'bp_get_group_current_invite_tab', $tab );
+}
+
+/**
+ * Echo the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_group_current_messages_tab() {
+	echo bp_get_group_current_messages_tab();
+}
+/**
+ * Returns the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bp_get_group_current_messages_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group invite tab slug.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $tab Current group invite tab slug.
+	 */
+	return apply_filters( 'bp_get_group_current_messages_tab', $tab );
 }
 
 /**
@@ -7603,4 +7651,37 @@ function bp_group_show_messages_status_setting( $setting, $group = false ) {
 	if ( $setting == $message_status ) {
 		echo ' checked="checked"';
 	}
+}
+
+/**
+ * Echo the current group message tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bb_group_current_messages_tab() {
+	echo bb_get_group_current_messages_tab();
+}
+
+/**
+ * Returns the current group message tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bb_get_group_current_messages_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group message tab slug.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $tab Current group message tab slug.
+	 */
+	return apply_filters( 'bb_get_group_current_messages_tab', $tab );
 }

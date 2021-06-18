@@ -538,7 +538,11 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 	$course_access_users = get_course_users_access_from_meta( $course_id );
 	$course_user_ids     = array_merge( $course_user_ids, $course_access_users );
 
-	$course_groups_users = get_course_groups_users_access( $course_id );
+	if ( function_exists( 'learndash_get_course_groups_users_access' ) ) {
+		$course_groups_users = learndash_get_course_groups_users_access( $course_id );
+	} else {
+		$course_groups_users = get_course_groups_users_access( $course_id );
+	}
 	$course_user_ids     = array_merge( $course_user_ids, $course_groups_users );
 
 	if ( ! empty( $course_user_ids ) ) {

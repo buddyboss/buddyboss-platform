@@ -22,13 +22,16 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-media' => array(
-			'file'         => 'js/buddypress-media%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-media' => array(
+				'file'         => 'js/buddypress-media%s.js',
+				'dependencies' => array( 'bp-nouveau' ),
+				'footer'       => true,
+			),
 		)
-	) );
+	);
 }
 
 /**
@@ -41,16 +44,16 @@ function bp_nouveau_media_enqueue_scripts() {
 	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
 
 	if ( bp_is_user_media() ||
-	     bp_is_single_album() ||
-	     bp_is_media_directory() ||
-	     bp_is_activity_component() ||
-	     bp_is_group_activity() ||
-	     bp_is_group_media() ||
-	     bp_is_group_albums() ||
-	     bp_is_group_document() ||
-	     bp_is_group_folders() ||
-	     bp_is_group_messages() ||
-	     bp_is_messages_component()
+		 bp_is_single_album() ||
+		 bp_is_media_directory() ||
+		 bp_is_activity_component() ||
+		 bp_is_group_activity() ||
+		 bp_is_group_media() ||
+		 bp_is_group_albums() ||
+		 bp_is_group_document() ||
+		 bp_is_group_folders() ||
+		 bp_is_group_messages() ||
+		 bp_is_messages_component()
 	) {
 
 		$gif = false;
@@ -87,24 +90,61 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
-	//initialize media vars because it is used globally
+	$album_id         = 0;
+	$type             = '';
+	$user_id          = bp_loggedin_user_id();
+	$group_id         = 0;
+	$move_to_id_popup = $user_id;
+	if ( bp_is_group_media() || bp_is_group_albums() || bp_is_group_single() ) {
+		$album_id         = (int) bp_action_variable( 1 );
+		$type             = 'group';
+		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : 0;
+		$move_to_id_popup = $group_id;
+	} elseif ( bp_is_user_media() || bp_is_user_albums() ) {
+		$album_id         = (int) bp_action_variable( 0 );
+		$type             = 'profile';
+		$move_to_id_popup = $user_id;
+	} elseif ( bp_is_media_directory() ) {
+		$album_id = 0;
+		$type     = 'profile';
+	}
+
+	if ( bp_is_active( 'activity' ) && bp_is_single_activity() ) {
+		$activity_id = bp_current_action();
+		if ( ! empty( $activity_id ) ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			if ( ! empty( $activity->id ) && 'groups' === $activity->component ) {
+				$group_id = $activity->item_id;
+			}
+		}
+	}
+
+	// initialize media vars because it is used globally.
 	$params['media'] = array(
-		'max_upload_size'              => bp_media_file_upload_max_size(),
-		'profile_media'                 => bp_is_profile_media_support_enabled(),
-		'profile_album'                 => bp_is_profile_albums_support_enabled(),
-		'group_media'                  => bp_is_group_media_support_enabled(),
-		'group_album'                  => bp_is_group_albums_support_enabled(),
-		'messages_media'               => bp_is_messages_media_support_enabled(),
-		'dropzone_media_message'       => __( 'Drop images here to upload', 'buddyboss' ),
-		'media_select_error'           => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
-		'empty_media_type'             => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
-		'invalid_media_type'           => __( 'Unable to upload the file', 'buddyboss' ),
-		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
-		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'               => __( "File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
-		'maxFiles'                     => apply_filters( 'bp_media_upload_chunk_limit', 10 ),
-		'cover_photo_size_error_header'=> __( 'Unable to reposition the image ', 'buddyboss' ),
-		'cover_photo_size_error_description'=> __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
+		'max_upload_size'                    => bp_media_file_upload_max_size(),
+		'profile_media'                      => bp_is_profile_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), 0 ),
+		'profile_album'                      => bp_is_profile_albums_support_enabled(),
+		'group_media'                        => bp_is_group_media_support_enabled() && ( bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
+		'group_album'                        => bp_is_group_albums_support_enabled(),
+		'messages_media'                     => bp_is_messages_media_support_enabled() && bb_user_can_create_media(),
+		'messages_media_active'              => bp_is_messages_media_support_enabled(),
+		'dropzone_media_message'             => __( 'Drop images here to upload', 'buddyboss' ),
+		'media_select_error'                 => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
+		'empty_media_type'                   => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
+		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
+		'media_size_error_header'            => __( 'File too large ', 'buddyboss' ),
+		'media_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
+		'dictFileTooBig'                     => __( 'File is too large ({{filesize}} MB). Max file size: {{maxFilesize}} MB.', 'buddyboss' ),
+		'cover_photo_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss' ),
+		'cover_photo_size_error_description' => __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
+		'maxFiles'                           => bp_media_allowed_upload_media_per_batch(),
+		'is_media_directory'                 => ( bp_is_media_directory() ) ? 'yes' : 'no',
+		'create_album_error_title'           => __( 'Please enter title of album', 'buddyboss' ),
+		'current_album'                      => $album_id,
+		'current_type'                       => $type,
+		'move_to_id_popup'                   => $move_to_id_popup,
+		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_media_per_batch() ) ),
+		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -117,7 +157,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$params['media']['group_id'] = bp_get_current_group_id();
-    }
+	}
 
 	$params['media']['emoji']            = array(
 		'profile'  => bp_is_profiles_emoji_support_enabled(),
@@ -145,9 +185,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'no_photos_found'      => __( 'Sorry, no photos were found', 'buddyboss' ),
 		'upload'               => __( 'Upload', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
-		'upload_status'        => __( '%d out of %d uploaded', 'buddyboss' ),
+		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
 	);
 
 	return $params;
@@ -162,7 +203,6 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
  */
 function bp_nouveau_get_media_directory_nav_items() {
 	$nav_items = array();
-
 
 	$nav_items['all'] = array(
 		'component' => 'media',
@@ -227,7 +267,7 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 		// get filename.
 		$file_name = basename( $the_file );
 
-		bp_media_download_file_force( $the_file, $file_name );
+		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	}
 
 }
@@ -246,7 +286,7 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {
-			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
+			$buttons['activity_edit']['button_attr']['href'] = bp_activity_get_permalink( $activity_id ) . 'edit';
 
 			$classes  = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
 			$edit_key = array_search( 'edit', $classes, true );

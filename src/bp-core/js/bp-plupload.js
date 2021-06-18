@@ -324,8 +324,6 @@ window.bp = window.bp || {};
 					'FILE_SIZE_ERROR':        self.strings.file_exceeds_size_limit.replace( '%1$s' , $( '<span />' ).text( pluploadError.file.name ).html() ).replace( '%2$s' , max_size )
 				};
 
-				console.log(  );
-
 				// Check for plupload errors.
 				for ( key in errors ) {
 					if ( pluploadError.code === plupload[ key ] ) {

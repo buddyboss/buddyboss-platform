@@ -238,6 +238,7 @@ module.exports = function (grunt) {
 					'**/bp-document/**',
 					'**/bp-members/**',
 					'**/bp-messages/**',
+					'**/bp-moderation/**',
 					'**/bp-notifications/**',
 					'**/bp-settings/**',
 					'**/bp-xprofile/**',
@@ -271,17 +272,40 @@ module.exports = function (grunt) {
 					'!**/bp-document/**',
 					'!**/bp-members/**',
 					'!**/bp-messages/**',
+					'!**/bp-moderation/**',
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**',
-					'**/bp-integrations/**'
+					'!**/bp-integrations/**'
 				],
 				options: {
 					process : function( content ) {
 						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 					}
 				}
-			}
+			},
+			bp_rest_performance: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
+				dest: SOURCE_DIR + 'bp-performance/classes/',
+				expand: true,
+				src: '**',
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
+			},
+			bp_rest_mu: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/MuPlugin/',
+				dest: SOURCE_DIR + 'bp-performance/mu-plugins/',
+				expand: true,
+				src: '**',
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
+			},
 		},
 		uglify: {
 			core: {
@@ -366,7 +390,12 @@ module.exports = function (grunt) {
 				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 				cwd: SOURCE_DIR,
 				stdout: false
-			}
+			},
+			rest_performance: {
+				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+				cwd: SOURCE_DIR,
+				stdout: false
+			},
 		},
 		jsvalidate: {
 			options: {
@@ -414,8 +443,10 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
+	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
     grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
+    grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 

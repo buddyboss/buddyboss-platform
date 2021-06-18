@@ -63,6 +63,8 @@ add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
 
 add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email_content' );
 
+add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
+
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
@@ -87,6 +89,10 @@ function bp_document_add_theatre_template() {
  * @BuddyBoss 1.2.5
  */
 function bp_document_activity_entry() {
+
+	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profile_document_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_group_document_support_enabled() ) ) {
+		return false;
+	}
 
 	$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
 
@@ -261,7 +267,11 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
-	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+
+	$documents = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$actions   = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+
+	if ( ! isset( $documents ) || empty( $documents ) ) {
 
 		// delete document ids and meta for activity if empty document in request.
 		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
@@ -286,9 +296,9 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $actions ) && 'new_activity_comment' === $actions ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
-		if ( $parent_activity->component === 'groups' ) {
+		if ( 'groups' === $parent_activity->component ) {
 			$_POST['privacy'] = 'grouponly';
 		} elseif ( ! empty( $parent_activity->privacy ) ) {
 			$_POST['privacy'] = $parent_activity->privacy;
@@ -300,7 +310,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler( $_POST['document'], $_POST['privacy'] );
+	$document_ids = bp_document_add_handler( $documents, $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -309,11 +319,15 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
-		// Delete document if not exists in current document ids
+		// Delete document if not exists in current document ids.
 		if ( isset( $_POST['edit'] ) ) {
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
 			if ( ! empty( $old_document_ids ) ) {
+
+				// This is hack to update/delete parent activity if new media added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
+
 				foreach ( $old_document_ids as $document_id ) {
 					if ( ! in_array( $document_id, $document_ids ) ) {
 						bp_document_delete( array( 'id' => $document_id ) );
@@ -564,6 +578,40 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 		return $content;
 	}
 
+	$forum_id = 0;
+
+	// Get current forum ID.
+	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_reply_forum_id( $id );
+	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bbp_get_topic_forum_id( $id );
+	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+		$forum_id = $id;
+	}
+
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+	if (
+		(
+			(
+				empty( $group_id ) ||
+				(
+					! empty( $group_id ) &&
+					! bp_is_active( 'groups' )
+				)
+			) &&
+			! bp_is_forums_document_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			! bp_is_group_document_support_enabled()
+		)
+	) {
+		return $content;
+	}
+
 	$document_ids = get_post_meta( $id, 'bp_document_ids', true );
 
 	if ( ! empty( $document_ids ) && bp_has_document(
@@ -606,40 +654,22 @@ function bp_document_attach_document_to_message( &$message ) {
 		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
 		$document_list = $_POST['document'];
-		$document_ids  = array();
 
-		foreach ( $document_list as $document_index => $document ) {
-			$title         = ! empty( $document['name'] ) ? $document['name'] : '&nbsp;';
-			$attachment_id = ! empty( $document['id'] ) ? $document['id'] : 0;
-			$menu_order	   = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
-
-			$attachment_data = get_post( $document['id'] );
-			$file            = get_attached_file( $document['id'] );
-			$file_type       = wp_check_filetype( $file );
-			$file_name       = basename( $file );
-
-			$document_id = bp_document_add(
-				array(
-					'attachment_id' => $attachment_id,
-					'title'         => $title,
-					'privacy'       => 'message',
-					'error_type'    => 'wp_error',
-					'menu_order'    => $menu_order,
-				)
-			);
-
-			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
-				$document_ids[] = $document_id;
-
-				// save document meta.
-				bp_document_update_meta( $document_id, 'file_name', $file_name );
-				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
-				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
-
-				// save document is saved in attachment.
-				update_post_meta( $attachment_id, 'bp_document_saved', true );
+		if ( ! empty( $document_list ) ) {
+			foreach( $document_list as $k => $document ) {
+				if( array_key_exists( 'group_id', $document ) ) {
+					unset( $document_list[ $k ]['group_id'] );
+				}
 			}
 		}
+
+		$document_ids = bp_document_add_handler( $document_list, 'message' );
+
+		if ( ! empty( $document_ids ) ) {
+			foreach( $document_ids as $document_id ) {
+				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
+			}
+        }
 
 		$document_ids = implode( ',', $document_ids );
 
@@ -711,7 +741,7 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @param array|object $post              Request object.
  *
  * @return bool
- * 
+ *
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
@@ -1398,8 +1428,11 @@ function bp_document_admin_repair_document() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-						$wpdb->query( $update_query );
+						$up_document           = new BP_Document( $document->id );
+						$up_document->privacy  = 'grouponly';
+						$up_document->group_id = $activity->item_id;
+						$up_document->save();
+
 					}
 					if ( 'document' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1409,8 +1442,10 @@ function bp_document_admin_repair_document() {
 									$document_activity = new BP_Activity_Activity( $document_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $document_activity->component ) {
-									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
-									$wpdb->query( $update_query );
+									$up_document           = new BP_Document( $document->id );
+									$up_document->privacy  = 'grouponly';
+									$up_document->group_id = $document_activity->item_id;
+									$up_document->save();
 									$activity->item_id   = $document_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1644,6 +1679,7 @@ function bp_document_activity_after_email_content( $activity ) {
 	}
 }
 
+
 /**
  * Adds activity document data for the edit activity
  *
@@ -1668,22 +1704,54 @@ function bp_document_get_edit_activity_data( $activity ) {
 			foreach( $document_ids as $document_id ) {
 				$document = new BP_Document( $document_id );
 
+				$size = 0;
+				$file = get_attached_file( $document->attachment_id );
+				if ( $file && file_exists( $file ) ) {
+				    $size = filesize( $file );
+                }
+
 				$activity['document'][] = array(
-						'id'            => $document_id,
-						'doc_id'        => $document->attachment_id,
-						'name'          => $document->title,
-						'group_id'      => $document->group_id,
-						'folder_id'      => $document->folder_id,
-						'activity_id'   => $document->activity_id,
-						'type'          => 'document',
-						'url'           => wp_get_attachment_url( $document->attachment_id ),
-						'size'           => filesize( get_attached_file( ( $document->attachment_id ) ) ),
-						'saved'         => true,
-						'menu_order'    => $document->menu_order,
+					'id'          => $document_id,
+					'doc_id'      => $document->attachment_id,
+					'name'        => $document->title,
+					'group_id'    => $document->group_id,
+					'folder_id'   => $document->folder_id,
+					'activity_id' => $document->activity_id,
+					'type'        => 'document',
+					'url'         => wp_get_attachment_url( $document->attachment_id ),
+					'size'        => $size,
+					'saved'       => true,
+					'menu_order'  => $document->menu_order,
 				);
 			}
 		}
+
+		$activity['profile_document'] = bp_is_profile_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), 0 );
+		$activity['group_document']   = bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
+
 	}
 
 	return $activity;
+}
+
+/**
+ * Added activity entry class for media.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param string $class class.
+ *
+ * @return string
+ */
+function bp_document_activity_entry_css_class( $class ) {
+
+	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
+		$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+		if ( ! empty( $document_ids ) ) {
+			$class .= ' document-activity';
+		}
+	}
+
+	return $class;
+
 }

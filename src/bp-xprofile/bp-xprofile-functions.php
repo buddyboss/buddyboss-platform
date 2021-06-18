@@ -1696,7 +1696,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
-		if ( isset( $original_option_values ) && ! empty( $original_option_values ) ) {
+		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
@@ -1998,41 +1998,31 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
 }
 
 /**
- * Function returns user progress data by checking if data already exists in transient first. IF NO then follow checking the progress logic.
+ * Function returns user progress data by checking if data already exists in transient first. IF NO then follow
+ * checking the progress logic.
  *
- * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields added/updated/deleted.
+ * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields
+ * added/updated/deleted.
  *
- * @param array $profile_groups - set of fieldset selected to show in progress
- * @param array $profile_phototype - profile or cover photo selected to show in progress
- * @param int $widget_id - Widget id specific user progress
+ * @param array $settings - set of fieldset selected to show in progress & profile or cover photo selected to show in
+ *                        progress.
  *
  * @return array $user_progress - user progress to render profile completion
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.3
  */
-function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype, $widget_id ) {
+function bp_xprofile_get_user_profile_progress_data( $settings ) {
 
-	$user_progress = array();
+	$user_progress         = array();
+	$user_progress_options = bp_xprofile_get_selected_options_user_progress( $settings );
 
-	// Check if data avail in transient.
-	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
-	$pc_transient_data = get_transient( $pc_transient_name );
-
-	if ( ! empty( $pc_transient_data ) ) {
-
-		$user_progress = $pc_transient_data;
-
-	} else {
-
-		// Get logged in user Progress.
-		$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_phototype );
-
-		// Format User Progress array to pass on to the template.
-		$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_arr );
-
-		// set Transient here with 3hours expiration.
-		set_transient( $pc_transient_name, $user_progress, HOUR_IN_SECONDS * 3 );
+	// Do not proceed if no fields found based on settings.
+	if ( isset( $user_progress_options['total_fields'] ) && $user_progress_options['total_fields'] <= 0 ) {
+		return $user_progress;
 	}
+
+	// Format User Progress array to pass on to the template.
+	$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_options );
 
 	return $user_progress;
 }
@@ -2082,7 +2072,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				 * Need to check $profile_url is send 200 status or not.
 				 */
 				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
-				$profile_url      = get_avatar_url( $user_id, [ 'default' => '404' ] );
+				$profile_url      = get_avatar_url( $user_id, array( 'default' => '404' ) );
 				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
 
 				$headers = get_headers($profile_url, 1);
@@ -2322,3 +2312,37 @@ function bp_xprofile_reset_cover_image_position( $user_id ) {
 }
 add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
 add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_position', 10, 1 );
+
+/**
+ * Function will return the users id based on given xprofile field id and field value.
+ *
+ * @param int    $field_id  to check against the filed id.
+ * @param string $field_val to check against the filed value.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool|array
+ */
+function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
+	global $wpdb, $bp;
+
+	$bp_table = $bp->profile->table_name_data;
+
+	$query = $wpdb->prepare(
+		"SELECT U.ID " .
+		"FROM $bp_table B, $wpdb->users U " .
+		"WHERE B.user_id = U.ID " .
+		"AND B.field_id = %d " .
+		"AND B.value = %s"
+		, $field_id
+		, $field_val
+	);
+
+	$get_desired = $wpdb->get_results( $query );
+
+	if( count( $get_desired ) ) {
+		return $get_desired;
+	} else {
+		return false;
+	}
+}

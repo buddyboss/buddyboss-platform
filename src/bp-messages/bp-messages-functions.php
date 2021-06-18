@@ -8,7 +8,7 @@
  * true or false on success or failure.
  *
  * @package BuddyBoss\Messages\Functions
- * @since BuddyPress 1.5.0
+ * @since   BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -19,23 +19,24 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.4.0 Added 'error_type' as an additional $args parameter.
  *
- * @param array|string $args {
- *     Array of arguments.
- *     @type int    $sender_id     Optional. ID of the user who is sending the
+ * @param array|string $args         {
+ *                                   Array of arguments.
+ *
+ * @type int           $sender_id    Optional. ID of the user who is sending the
  *                                 message. Default: ID of the logged-in user.
- *     @type int    $thread_id     Optional. ID of the parent thread. Leave blank to
+ * @type int           $thread_id    Optional. ID of the parent thread. Leave blank to
  *                                 create a new thread for the message.
- *     @type array  $recipients    IDs or usernames of message recipients. If this
+ * @type array         $recipients   IDs or usernames of message recipients. If this
  *                                 is an existing thread, it is unnecessary to pass a $recipients
  *                                 argument - existing thread recipients will be assumed.
- *     @type string $subject       Optional. Subject line for the message. For
+ * @type string        $subject      Optional. Subject line for the message. For
  *                                 existing threads, the existing subject will be used. For new
  *                                 threads, 'No Subject' will be used if no $subject is provided.
- *     @type string $content       Content of the message. Cannot be empty.
- *     @type string $date_sent     Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
- *     @type bool   $is_hidden     Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
- *     @type bool   $mark_visible  Optional. Whether to mark thread visible to all other participants. Default: false.
- *     @type string $error_type    Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * @type string        $content      Content of the message. Cannot be empty.
+ * @type string        $date_sent    Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
+ * @type bool          $is_hidden    Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
+ * @type bool          $mark_visible Optional. Whether to mark thread visible to all other participants. Default: false.
+ * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  *
  * @return int|bool|WP_Error ID of the message thread on success, false on failure.
@@ -80,6 +81,33 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	if ( ! empty( $_POST['media'] ) ) {
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_media ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
+	if ( ! empty( $_POST['document'] ) ) {
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_document ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
+	if ( ! empty( $_POST['gif_data'] ) ) {
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_gif ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
 	// Create a new message object.
 	$message               = new BP_Messages_Message();
 	$message->thread_id    = $r['thread_id'];
@@ -90,8 +118,9 @@ function messages_new_message( $args = '' ) {
 	$message->is_hidden    = $r['is_hidden'];
 	$message->mark_visible = $r['mark_visible'];
 
-	$new_reply = false;
-	$is_group_thread = isset( $r['group_thread'] ) ? $r['group_thread'] : false;
+	$new_reply       = false;
+	$is_group_thread = isset( $r['group_thread'] ) ? (bool) $r['group_thread'] : false;
+
 	// If we have a thread ID...
 	if ( ! empty( $r['thread_id'] ) ) {
 
@@ -116,14 +145,34 @@ function messages_new_message( $args = '' ) {
 			}
 		}
 
-		$new_reply = true;
-
-		if ( isset( $thread->messages[0]->id ) ) {
-			$group = bp_messages_get_meta( $thread->messages[0]->id, 'group_id', true ); // group id
-			if ( !empty( $group ) ) {
-				$is_group_thread = true;
+		$new_reply     = true;
+		$first_message = BP_Messages_Thread::get_first_message( (int) $r['thread_id'] );
+		$message_id    = $first_message->id;
+		if ( isset( $message_id ) ) {
+			$group = (int) bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+			if ( ! empty( $group ) && bp_is_active( 'groups' ) && $group > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $group, 'group_message_thread' );
+				if ( (int) $r['thread_id'] === $group_thread ) {
+					$is_group_thread = true;
+				}
+			} elseif ( ! empty( $group ) && ! bp_is_active( 'groups' ) && $group > 0 ) {
+				$prefix             = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_meta_table  = $prefix . 'bp_groups_groupmeta';
+				$thread_id          = (int) $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$groups_meta_table} WHERE meta_key = %s AND group_id = %d", 'group_message_thread', $group ) ); // db call ok; no-cache ok;
+				if ( (int) $r['thread_id'] === $thread_id ) {
+					$is_group_thread = true;
+				}
 			}
 		}
+
+		// Check user can send the reply.
+		if ( ! $is_group_thread ) {
+			$has_access = bb_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
+			if ( is_wp_error( $has_access ) ) {
+				return $has_access;
+			}
+		}
+
 		// ...otherwise use the recipients passed
 	} else {
 
@@ -220,13 +269,13 @@ function messages_new_message( $args = '' ) {
 
 				$first_message = BP_Messages_Thread::get_first_message( (int) $thread->thread_id );
 				$message_id    = $first_message->id;
-				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
-				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
-				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
-				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
-				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual.
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private.
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply.
+				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group.
 
-				if ( !empty( $group ) && 'all' === $message_users && 'open' === $message_type && 'new' === $thread_type && 'group' === $message_from ) {
+				if ( ! empty( $group ) && 'all' === $message_users && 'open' === $message_type && 'new' === $thread_type && 'group' === $message_from ) {
 					$previous_thread = null;
 				} else {
 					$previous_thread     = (int) $thread->thread_id;
@@ -242,11 +291,9 @@ function messages_new_message( $args = '' ) {
 					}
 				}
 			}
-
 		} else {
 			$previous_threads = null;
 		}
-
 
 		if ( $previous_thread && $r['append_thread'] ) {
 			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
@@ -261,7 +308,7 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	// check if force friendship is enabled and check recipients
+	// Check if force friendship is enabled and check recipients.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) {
 
 		$error_messages = array(
@@ -274,11 +321,11 @@ function messages_new_message( $args = '' ) {
 		foreach ( (array) $message->recipients as $i => $recipient ) {
 			if ( ! friends_check_friendship( $message->sender_id, $recipient->user_id ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					if ( $new_reply && sizeof( $message->recipients ) == 1 ) {
+					if ( $new_reply && 1 === count( $message->recipients ) ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_reply'] );
-					} elseif ( $new_reply && sizeof( $message->recipients ) > 1 ) {
+					} elseif ( $new_reply && count( $message->recipients ) > 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_reply'] );
-					} elseif ( sizeof( $message->recipients ) > 1 ) {
+					} elseif ( count( $message->recipients ) > 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_message'] );
 					} else {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_message'] );
@@ -290,7 +337,15 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	// preapre to upadte the deleted user's last message if message sending successfull
+	// Check user can send the message.
+	if ( true !== $is_group_thread ) {
+		$has_access = bb_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
+		if ( is_wp_error( $has_access ) ) {
+			return $has_access;
+		}
+	}
+
+	// Prepare to update the deleted user's last message if message sending successful.
 	$last_message_data = BP_Messages_Thread::prepare_last_message_status( $message->thread_id );
 
 	// Bail if message failed to send.
@@ -307,7 +362,7 @@ function messages_new_message( $args = '' ) {
 		return false;
 	}
 
-	// only update after the send()
+	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
 
 	/**
@@ -328,6 +383,7 @@ function messages_new_message( $args = '' ) {
  *
  * @param string $subject Subject of the notice.
  * @param string $message Content of the notice.
+ *
  * @return bool True on success, false on failure.
  */
 function messages_send_notice( $subject, $message ) {
@@ -370,6 +426,7 @@ function messages_send_notice( $subject, $message ) {
  * @param int|array $thread_ids Thread ID or array of thread IDs.
  * @param int       $user_id    ID of the user to delete the threads for. Defaults
  *                              to the current logged-in user.
+ *
  * @return bool True on success, false on failure.
  */
 function messages_delete_thread( $thread_ids, $user_id = 0 ) {
@@ -377,8 +434,8 @@ function messages_delete_thread( $thread_ids, $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
 		$user_id =
 			bp_displayed_user_id() ?
-			bp_displayed_user_id() :
-			bp_loggedin_user_id();
+				bp_displayed_user_id() :
+				bp_loggedin_user_id();
 	}
 
 	/**
@@ -394,7 +451,7 @@ function messages_delete_thread( $thread_ids, $user_id = 0 ) {
 
 	if ( is_array( $thread_ids ) ) {
 		$error = 0;
-		for ( $i = 0, $count = count( $thread_ids ); $i < $count; ++$i ) {
+		for ( $i = 0, $count = count( $thread_ids ); $i < $count; ++ $i ) {
 			if ( ! BP_Messages_Thread::delete( $thread_ids[ $i ], $user_id ) ) {
 				$error = 1;
 			}
@@ -433,6 +490,7 @@ function messages_delete_thread( $thread_ids, $user_id = 0 ) {
  *
  * @param int $thread_id ID of the thread.
  * @param int $user_id   Optional. ID of the user. Default: ID of the logged-in user.
+ *
  * @return int|null Message ID if the user has access, otherwise null.
  */
 function messages_check_thread_access( $thread_id, $user_id = 0 ) {
@@ -497,6 +555,7 @@ function messages_remove_callback_values() {
  * Get the unread messages count for a user.
  *
  * @param int $user_id Optional. ID of the user. Default: ID of the logged-in user.
+ *
  * @return int
  */
 function messages_get_unread_count( $user_id = 0 ) {
@@ -508,6 +567,7 @@ function messages_get_unread_count( $user_id = 0 ) {
  *
  * @param int $user_id    ID of the user.
  * @param int $message_id ID of the message.
+ *
  * @return int|null Returns the ID of the message if the user is the
  *                  sender, otherwise null.
  */
@@ -519,6 +579,7 @@ function messages_is_user_sender( $user_id, $message_id ) {
  * Get the ID of the sender of a message.
  *
  * @param int $message_id ID of the message.
+ *
  * @return int|null The ID of the sender if found, otherwise null.
  */
 function messages_get_message_sender( $message_id ) {
@@ -529,6 +590,7 @@ function messages_get_message_sender( $message_id ) {
  * Check whether a message thread exists.
  *
  * @param int $thread_id ID of the thread.
+ *
  * @return false|int|null The message thread ID on success, null on failure.
  */
 function messages_is_valid_thread( $thread_id ) {
@@ -540,15 +602,21 @@ function messages_is_valid_thread( $thread_id ) {
  *
  * @since BuddyPress 2.3.0
  *
- * @param  int $message_id ID of the message.
+ * @param int $message_id ID of the message.
+ *
  * @return int The ID of the thread if found, otherwise 0.
  */
 function messages_get_message_thread_id( $message_id = 0 ) {
-	global $wpdb;
 
-	$bp = buddypress();
+	$messages = BP_Messages_Message::get(
+		array(
+			'fields'   => 'thread_ids',
+			'include'  => array( $message_id ),
+			'per_page' => 1,
+		)
+	);
 
-	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) );
+	return (int) ( ! empty( $messages['messages'] ) ? current( $messages['messages'] ) : 0 );
 }
 
 /**
@@ -569,14 +637,13 @@ function messages_get_default_subject_length() {
  *
  * @since BuddyPress 2.2.0
  *
- * @see delete_metadata() for full documentation excluding $meta_type variable.
- *
  * @param int         $message_id ID of the message to have meta deleted for.
  * @param string|bool $meta_key   Meta key to delete. Default false.
  * @param string|bool $meta_value Meta value to delete. Default false.
  * @param bool        $delete_all Whether or not to delete all meta data.
  *
  * @return bool True on successful delete, false on failure.
+ * @see   delete_metadata() for full documentation excluding $meta_type variable.
  */
 function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
 	// Legacy - if no meta_key is passed, delete all for the item.
@@ -614,12 +681,12 @@ function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = 
  *
  * @since BuddyPress 2.2.0
  *
- * @see get_metadata() for full documentation excluding $meta_type variable.
- *
  * @param int    $message_id ID of the message to retrieve meta for.
  * @param string $meta_key   Meta key to retrieve. Default empty string.
  * @param bool   $single     Whether or not to fetch all or a single value.
+ *
  * @return mixed
+ * @see   get_metadata() for full documentation excluding $meta_type variable.
  */
 function bp_messages_get_meta( $message_id, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -634,14 +701,14 @@ function bp_messages_get_meta( $message_id, $meta_key = '', $single = true ) {
  *
  * @since BuddyPress 2.2.0
  *
- * @see update_metadata() for full documentation excluding $meta_type variable.
- *
  * @param int         $message_id ID of the message to have meta deleted for.
  * @param string|bool $meta_key   Meta key to update.
  * @param string|bool $meta_value Meta value to update.
  * @param string      $prev_value If specified, only update existing metadata entries with
  *                                the specified value. Otherwise, update all entries.
+ *
  * @return mixed
+ * @see   update_metadata() for full documentation excluding $meta_type variable.
  */
 function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -656,8 +723,6 @@ function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_val
  *
  * @since BuddyPress 2.2.0
  *
- * @see add_metadata() for full documentation excluding $meta_type variable.
- *
  * @param int         $message_id ID of the message to have meta deleted for.
  * @param string|bool $meta_key   Meta key to update.
  * @param string|bool $meta_value Meta value to update.
@@ -665,7 +730,9 @@ function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_val
  *                                unique for the object. If true, and the object
  *                                already has a value for the specified metadata key,
  *                                no change will be made.
+ *
  * @return mixed
+ * @see   add_metadata() for full documentation excluding $meta_type variable.
  */
 function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -682,12 +749,13 @@ function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = fa
  *
  * @since BuddyPress 1.0.0
  *
- * @param array|BP_Messages_Message $raw_args {
- *     Array of arguments. Also accepts a BP_Messages_Message object.
- *     @type array  $recipients    User IDs of recipients.
- *     @type string $email_subject Subject line of message.
- *     @type string $email_content Content of message.
- *     @type int    $sender_id     User ID of sender.
+ * @param array|BP_Messages_Message $raw_args      {
+ *                                                 Array of arguments. Also accepts a BP_Messages_Message object.
+ *
+ * @type array                      $recipients    User IDs of recipients.
+ * @type string                     $email_subject Subject line of message.
+ * @type string                     $email_content Content of message.
+ * @type int                        $sender_id     User ID of sender.
  * }
  */
 function messages_notification_new_message( $raw_args = array() ) {
@@ -753,17 +821,19 @@ function messages_notification_new_message( $raw_args = array() ) {
 	/**
 	 * Fires after the sending of a new message email notification.
 	 *
-	 * @since BuddyPress 1.5.0
-	 * @deprecated 2.5.0 Use the filters in BP_Email.
-	 *                   $email_subject and $email_content arguments unset and deprecated.
+	 * @since            BuddyPress 1.5.0
 	 *
 	 * @param array  $recipients    User IDs of recipients.
 	 * @param string $email_subject Deprecated in 2.5; now an empty string.
 	 * @param string $email_content Deprecated in 2.5; now an empty string.
 	 * @param array  $args          Array of originally provided arguments.
+	 *
+	 * @deprecated       2.5.0 Use the filters in BP_Email.
+	 *                   $email_subject and $email_content arguments unset and deprecated.
 	 */
 	do_action( 'bp_messages_sent_notification_email', $recipients, '', '', $args );
 }
+
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
 /**
@@ -841,14 +911,15 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	/**
 	 * Fires after the sending of a new group message email notification.
 	 *
-	 * @since BuddyPress 1.5.0
-	 * @deprecated 2.5.0 Use the filters in BP_Email.
-	 *                   $email_subject and $email_content arguments unset and deprecated.
+	 * @since            BuddyPress 1.5.0
 	 *
 	 * @param array  $recipients    User IDs of recipients.
 	 * @param string $email_subject Deprecated in 2.5; now an empty string.
 	 * @param string $email_content Deprecated in 2.5; now an empty string.
 	 * @param array  $args          Array of originally provided arguments.
+	 *
+	 * @deprecated       2.5.0 Use the filters in BP_Email.
+	 *                   $email_subject and $email_content arguments unset and deprecated.
 	 */
 	do_action( 'group_messages_notification_new_message', $recipients, '', '', $args );
 }
@@ -896,6 +967,7 @@ function bp_messages_show_sites_notices() {
 		wp_enqueue_script( 'bp-nouveau' );
 	}
 }
+
 add_action( 'wp_footer', 'bp_messages_show_sites_notices' );
 
 /**
@@ -904,7 +976,7 @@ add_action( 'wp_footer', 'bp_messages_show_sites_notices' );
  * @since BuddyBoss 1.4.7
  *
  * @param integer $thread_id Message thread id.
- * @param integer $user_id user id.
+ * @param integer $user_id   user id.
  *
  * @return array
  */
@@ -964,11 +1036,10 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 						)
 					)
 				),
-				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) )
+				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
 			);
 		}
 	}
-
 
 	$first_message    = end( $thread_messages );
 	$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
@@ -993,18 +1064,18 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 							'html'       => false,
 						)
 					),
-					'name' => $group_name
+					'name' => $group_name,
 				);
 			} else {
 
 				/**
-				*
-				* Filters table prefix.
-				*
-				* @param int $wpdb->base_prefix table prefix
-				*
-				* @since BuddyBoss 1.4.7
-				*/
+				 *
+				 * Filters table prefix.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param int $wpdb ->base_prefix table prefix
+				 */
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
@@ -1022,7 +1093,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					if ( '' !== $avatar ) {
 						$group_avatar = array(
 							'url'  => $avatar,
-							'name' => $group_name
+							'name' => $group_name,
 						);
 					}
 				}
@@ -1038,11 +1109,41 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	 *
 	 * Filters the avatar url array to be applied in message thread.
 	 *
-	 * @param array $avatar_urls avatar urls in
-	 * @param int $thread_id Message thread id
-	 * @param int $user_id user id
-	 *
 	 * @since BuddyBoss 1.4.7
+	 *
+	 * @param int   $thread_id   Message thread id
+	 * @param int   $user_id     user id
+	 *
+	 * @param array $avatar_urls avatar urls in
 	 */
 	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
+}
+
+/**
+ * Check whether given thread is group thread or not.
+ *
+ * @param int $thread_id Thread id.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool
+ */
+function bb_messages_is_group_thread( $thread_id ) {
+
+	if ( ! $thread_id || ! bp_is_active( 'messages' ) ) {
+		return false;
+	}
+
+	$is_group_message_thread = false;
+	$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+	$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+	$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+	if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		$is_group_message_thread = true;
+	}
+
+	return $is_group_message_thread;
 }

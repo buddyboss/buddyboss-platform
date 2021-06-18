@@ -294,7 +294,8 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	$group->description = $r['description'];
 
-	if ( $r['parent_id'] ) {
+	// Update the parent ID if necessary.
+	if ( false !== $r['parent_id'] ) {
 		$group->parent_id = $r['parent_id'];
 	}
 
@@ -868,6 +869,7 @@ function groups_get_groups( $args = '' ) {
 		'order'              => 'DESC',         // 'ASC' or 'DESC'
 		'orderby'            => 'date_created', // date_created, last_activity, total_member_count, name, random, meta_id.
 		'user_id'            => false,          // Pass a user_id to limit to only groups that this user is a member of.
+		'creator_id'         => false,          // Pass a creator_id to limit to only groups which created by creator_id.
 		'include'            => false,          // Only include these specific groups (group_ids).
 		'exclude'            => false,          // Do not include these specific groups (group_ids).
 		'parent_id'          => null,           // Get groups that are children of the specified group(s).
@@ -885,6 +887,7 @@ function groups_get_groups( $args = '' ) {
 		'update_meta_cache'  => true,           // Pre-fetch groupmeta for queried groups.
 		'update_admin_cache' => false,
 		'fields'             => 'all',          // Return BP_Groups_Group objects or a list of ids.
+		'moderation_query'   => 'false',        // Remove moderation query.
 	);
 
 	$r = bp_parse_args( $args, $defaults, 'groups_get_groups' );
@@ -893,6 +896,7 @@ function groups_get_groups( $args = '' ) {
 		array(
 			'type'               => $r['type'],
 			'user_id'            => $r['user_id'],
+			'creator_id'         => $r['creator_id'],
 			'include'            => $r['include'],
 			'exclude'            => $r['exclude'],
 			'slug'               => $r['slug'],
@@ -912,6 +916,7 @@ function groups_get_groups( $args = '' ) {
 			'order'              => $r['order'],
 			'orderby'            => $r['orderby'],
 			'fields'             => $r['fields'],
+			'moderation_query'   => $r['moderation_query'],
 		)
 	);
 
@@ -1462,6 +1467,10 @@ function groups_can_user_manage_media( $user_id, $group_id ) {
 		return false;
 	}
 
+	if ( ! bp_is_active( 'media' ) || ! bp_is_group_media_support_enabled() ) {
+		return false;
+	}
+
 	// Site admins always have access.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		return true;
@@ -1499,6 +1508,10 @@ function groups_can_user_manage_albums( $user_id, $group_id ) {
 	$is_allowed = false;
 
 	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( ! bp_is_active( 'media' ) || ! bp_is_group_albums_support_enabled() ) {
 		return false;
 	}
 
@@ -3337,9 +3350,46 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
  *
  * @param int $user_id The user ID.
  * @param int $group_id The group ID.
+ * @return string invitation message.
+ *
  */
 function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
-	return get_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, true );
+	global $groups_template;
+
+	if ( empty( $user_id ) && bp_displayed_user_id() ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( empty( $group_id ) ) {
+		$group =& $groups_template->group;
+	} else {
+		$group = groups_get_group( $group_id );
+	}
+
+	if ( empty( $user_id ) || empty( $group ) ) {
+		return '';
+	}
+
+	//Check invitation is exists or not
+	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
+
+	if ( empty( $invite_id ) ) {
+		return '';
+	}
+
+	//Get invitation by id
+	$member = new BP_Invitation( $invite_id );
+
+	$message  = $member->content;
+	$group_id = $group->id;
+
+	/**
+	 * Filters will give you the invitation text.
+	 *
+	 * @param string $message  invitation message.
+	 * @param int    $group_id group id.
+	 */
+	return apply_filters( 'bp_groups_get_invite_messsage_for_user', $message, $group_id );
 }
 
 /**
@@ -3505,14 +3555,15 @@ function bp_get_active_group_types( $args = array() ) {
 	$bp_active_group_types = array();
 
 	$args = bp_parse_args( $args, array(
-		'posts_per_page' => - 1,
-		'post_type'      => bp_groups_get_group_type_post_type(),
-		'orderby'        => 'menu_order',
-		'order'          => 'ASC',
-		'fields'         => 'ids'
-	), 'group_types' );
+        'posts_per_page' => - 1,
+        'post_type'      => bp_groups_get_group_type_post_type(),
+        'post_status'    => 'publish',
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+        'fields'         => 'ids'
+    ), 'group_types' );
 
-	$bp_active_group_types_query = new \WP_Query( $args );
+    $bp_active_group_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_group_types_query->have_posts() ) {
 		$bp_active_group_types = $bp_active_group_types_query->posts;
@@ -4053,6 +4104,10 @@ function groups_can_user_manage_document( $user_id, $group_id ) {
 	$is_allowed = false;
 
 	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( ! bp_is_active( 'document' ) || ! bp_is_group_document_support_enabled() ) {
 		return false;
 	}
 

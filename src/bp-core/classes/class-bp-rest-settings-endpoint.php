@@ -248,6 +248,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-site-registration'              => bp_enable_site_registration(),
 			'allow-custom-registration'                => bp_allow_custom_registration(),
 			'register-confirm-email'                   => bp_register_confirm_email(),
+			'register-legal-agreement'                 => ( function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false ),
 			'register-confirm-password'                => bp_register_confirm_password(),
 			'bp-disable-account-deletion'              => bp_disable_account_deletion(),
 			'bp-enable-private-network'                => ! bp_enable_private_network(),
@@ -263,16 +264,59 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-member-type-enable-disable'            => bp_member_type_enable_disable(),
 			'bp-member-type-display-on-profile'        => ! empty( bp_member_type_enable_disable() ) && bp_member_type_display_on_profile(),
 			'bp-member-type-default-on-registration'   => bp_member_type_default_on_registration(),
-			'bp-enable-profile-search'                 => bp_disable_advanced_profile_search(),
+			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
 
 		);
 
+		if ( bp_is_active( 'moderation' ) ) {
+			$confirmation = array();
+			if ( bp_is_active( 'activity' ) ) {
+				$confirmation[] = esc_html__( 'See blocked member\'s posts', 'buddyboss' );
+			}
+
+			$confirmation[] = esc_html__( 'Mention this member in posts', 'buddyboss' );
+
+			if ( bp_is_active( 'groups' ) ) {
+				$confirmation[] = esc_html__( 'Invite this member to groups', 'buddyboss' );
+			}
+
+			if ( bp_is_active( 'messages' ) ) {
+				$confirmation[] = esc_html__( 'Message this member', 'buddyboss' );
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$confirmation[] = esc_html__( 'Add this member as a connection', 'buddyboss' );
+			}
+
+			$notes = '';
+			if ( bp_is_active( 'friends' ) ) {
+				$notes .= esc_html__( 'This action will also remove this member from your connections and send a report to the site admin. ', 'buddyboss' );
+			}
+
+			$notes .= esc_html__( 'Please allow a few minutes for this process to complete.', 'buddyboss' );
+
+			// Blocking Settings.
+			$results['bpm_blocking_member_blocking']        = bp_is_moderation_member_blocking_enable( false );
+			$results['bpm_blocking_auto_suspend']           = bp_is_moderation_auto_suspend_enable( false );
+			$results['bpm_blocking_auto_suspend_threshold'] = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
+			$results['bpm_blocking_email_notification']     = bp_is_moderation_blocking_email_notification_enable( false );
+			$results['bpm_blocking_confirmation']           = $confirmation;
+			$results['bpm_blocking_note']                   = $notes;
+
+			// Reporting Settings.
+			$results['bpm_reporting_content_reporting']   = $this->bp_rest_reporting_content_type();
+			$results['bpm_reporting_auto_hide']           = $this->bp_rest_reporting_auto_hide();
+			$results['bpm_reporting_auto_hide_threshold'] = $this->bp_rest_reporting_auto_hide_threshold();
+			$results['bpm_reporting_email_notification']  = bp_is_moderation_reporting_email_notification_enable( false );
+
+		}
+
 		// Groups settings.
 		if ( bp_is_active( 'groups' ) ) {
 			// Group Settings.
-			$results['bp_restrict_group_creation']           = bp_restrict_group_creation();
+			$results['bp_restrict_group_creation']           = ! bp_user_can_create_groups();
 			$results['bp-disable-group-avatar-uploads']      = bp_disable_group_avatar_uploads();
 			$results['bp-disable-group-cover-image-uploads'] = bp_disable_group_cover_image_uploads();
 
@@ -323,19 +367,24 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Group Forums.
 			$results['bbp_enable_group_forums']  = bbp_is_group_forums_active();
 			$results['bbp_group_forums_root_id'] = bbp_get_group_forums_root_id();
+
+			// Check Permalinks for platform forms slugs.
+			$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+			$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
 		}
 
 		// Activity settings.
 		if ( bp_is_active( 'activity' ) ) {
 			// Activity Settings.
 			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
-			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( -1 );
+			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( - 1 );
 			$results['bp_enable_heartbeat_refresh']     = bp_is_activity_heartbeat_active();
 			$results['bp_enable_activity_autoload']     = bp_is_activity_autoload_active();
 			$results['bp_enable_activity_tabs']         = bp_is_activity_tabs_active();
 			$results['bp_enable_activity_follow']       = bp_is_activity_follow_active();
 			$results['bp_enable_activity_like']         = bp_is_activity_like_active();
 			$results['bp_enable_activity_link_preview'] = bp_is_activity_link_preview_active();
+			$results['bp_enable_relevant_feed']         = ( function_exists( 'bp_is_relevant_feed_enabled' ) ? bp_is_relevant_feed_enabled() : false );
 
 			// Posts in Activity Feeds.
 			$results['bp-feed-platform-new_avatar']            = bp_platform_is_feed_enable( 'bp-feed-platform-new_avatar' );
@@ -353,7 +402,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $custom_post_types ) ) {
 				foreach ( $custom_post_types as $single_post ) {
 					// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
-					$enabled = bp_is_post_type_feed_enable( $single_post );
+					$enabled                                               = bp_is_post_type_feed_enable( $single_post );
 					$results[ 'bp-feed-custom-post-type-' . $single_post ] = $enabled;
 				}
 			}
@@ -368,6 +417,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_media_group_albums_support']   = bp_is_group_albums_support_enabled();
 			$results['bp_media_messages_media_support'] = bp_is_messages_media_support_enabled();
 			$results['bp_media_forums_media_support']   = bp_is_forums_media_support_enabled();
+			$results['bp_media_allowed_size']           = bp_media_allowed_upload_media_size();
+			$results['bp_media_allowed_per_batch']      = bp_media_allowed_upload_media_per_batch();
 
 			// Emoji.
 			$results['bp_media_profiles_emoji_support'] = bp_is_profiles_emoji_support_enabled();
@@ -390,6 +441,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_media_group_document_support']       = bp_is_group_document_support_enabled();
 				$results['bp_media_messages_document_support']    = bp_is_messages_document_support_enabled();
 				$results['bp_is_forums_document_support_enabled'] = bp_is_forums_document_support_enabled();
+				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
+				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
 			}
 		}
 
@@ -407,7 +460,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$member_types = bp_get_active_member_types();
 			if ( isset( $member_types ) && ! empty( $member_types ) ) {
 				foreach ( $member_types as $member_type_id ) {
-					$option_name = bp_get_member_type_key( $member_type_id );
+					$option_name                                                    = bp_get_member_type_key( $member_type_id );
 					$results[ 'bp-enable-send-invite-member-type-' . $option_name ] = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false );
 				}
 			}
@@ -422,9 +475,16 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_search_number_of_results'] = get_option( 'bp_search_number_of_results', '5' );
 		}
 
+		$bp_pages = bp_core_get_directory_page_ids();
+		$terms    = isset( $bp_pages['terms'] ) ? $bp_pages['terms'] : '';
+		$privacy  = isset( $bp_pages['privacy'] ) ? $bp_pages['privacy'] : '';
+
 		// Additional.
 		$results['enable_friendship_connections'] = bp_is_active( 'friends' );
 		$results['enable_messages']               = bp_is_active( 'messages' );
+		$results['bp_page_privacy']               = $privacy;
+		$results['bp_page_terms']                 = $terms;
+		$results['wp_page_privacy']               = (int) get_option( 'wp_page_for_privacy_policy' );
 
 		return $results;
 	}
@@ -518,6 +578,103 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bbp_group_forums_root_id'   => bbp_get_group_forums_root_id(),
 		);
 
+		// Check Permalinks for platform forms slugs.
+		$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+		$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
+
 		return $results;
+	}
+
+	/**
+	 * Get Permalinks settings.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_get_forum_slugs_settings() {
+		$results = array(
+			// Single forum slugs.
+			'forum'         => get_option( '_bbp_forum_slug', 'forum' ),
+			'topic'         => get_option( '_bbp_topic_slug', 'discussions' ),
+			'topic_tag'     => get_option( '_bbp_topic_tag_slug', 'topic-tag' ),
+			'view'          => get_option( '_bbp_view_slug', 'view' ),
+			'reply'         => get_option( '_bbp_reply_slug', 'reply' ),
+			'search'        => get_option( '_bbp_search_slug', 'search' ),
+
+			// Forum Profile Slugs.
+			'replies'       => bbp_get_reply_archive_slug(),
+			'favorites'     => bbp_get_user_favorites_slug(),
+			'subscriptions' => bbp_get_user_subscriptions_slug(),
+		);
+
+		return $results;
+	}
+
+	/**
+	 * Get the list of Reporting content types.
+	 *
+	 * @return array|mixed|void
+	 */
+	protected function bp_rest_reporting_content_type() {
+		if ( ! function_exists( 'bp_moderation_content_types' ) ) {
+			return array();
+		}
+
+		$content_types = bp_moderation_content_types();
+
+		if ( class_exists( 'BP_Moderation_Members' ) && array_key_exists( BP_Moderation_Members::$moderation_type, $content_types ) ) {
+			unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+		}
+
+		foreach ( $content_types as $slug => $type ) {
+			$content_types[ $slug ] = bp_is_moderation_content_reporting_enable( false, $slug );
+		}
+
+		return $content_types;
+	}
+
+	/**
+	 * Get the list of Reporting Auto Hide.
+	 *
+	 * @return array|mixed|void
+	 */
+	protected function bp_rest_reporting_auto_hide() {
+		if ( ! function_exists( 'bp_moderation_content_types' ) ) {
+			return array();
+		}
+
+		$content_types = bp_moderation_content_types();
+
+		if ( class_exists( 'BP_Moderation_Members' ) && array_key_exists( BP_Moderation_Members::$moderation_type, $content_types ) ) {
+			unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+		}
+
+		foreach ( $content_types as $slug => $type ) {
+			$content_types[ $slug ] = bp_is_moderation_auto_hide_enable( false, $slug );
+		}
+
+		return $content_types;
+	}
+
+	/**
+	 * Get the list of Reporting Auto Hide threshold.
+	 *
+	 * @return array|mixed|void
+	 */
+	protected function bp_rest_reporting_auto_hide_threshold() {
+		if ( ! function_exists( 'bp_moderation_content_types' ) ) {
+			return array();
+		}
+
+		$content_types = bp_moderation_content_types();
+
+		if ( class_exists( 'BP_Moderation_Members' ) && array_key_exists( BP_Moderation_Members::$moderation_type, $content_types ) ) {
+			unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+		}
+
+		foreach ( $content_types as $slug => $type ) {
+			$content_types[ $slug ] = bp_moderation_reporting_auto_hide_threshold( '5', $slug );
+		}
+
+		return $content_types;
 	}
 }
