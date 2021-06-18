@@ -61,7 +61,7 @@ if ( 'video' === $media_template->media->type ) {
 							if ( $can_edit ) {
 								?>
 								<li class="edit_thumbnail_video">
-									<a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+									<a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?></a>
 								</li>
 								<?php
 							}

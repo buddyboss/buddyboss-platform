@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-18 09:24:31+00:00\n"
+"POT-Creation-Date: 2021-06-18 09:56:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24189,8 +24189,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:52
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1405
-#: bp-templates/bp-nouveau/includes/video/functions.php:150
-msgid "Add Thumbnail"
+msgid "Change Thumbnail"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:70
@@ -26580,6 +26579,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:148
 msgid "Sorry, no videos were found"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/video/functions.php:150
+msgid "Add Thumbnail"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:153

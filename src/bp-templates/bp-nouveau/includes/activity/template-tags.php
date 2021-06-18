@@ -1402,7 +1402,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 			<div class="video-action_list item-action_list">
 				<ul>
 					<li class="edit_thumbnail_video video-action-class">
-						<a href="#" data-action="video" data-parent-activity-id="<?php echo $parent_activity_id; ?>" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php echo $attachment_id; ?>" data-video-id="<?php echo $video_id; ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+						<a href="#" data-action="video" data-parent-activity-id="<?php echo $parent_activity_id; ?>" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php echo $attachment_id; ?>" data-video-id="<?php echo $video_id; ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?></a>
 					</li>
 				</ul>
 			</div>
