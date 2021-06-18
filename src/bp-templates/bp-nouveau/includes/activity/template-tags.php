@@ -319,6 +319,227 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 }
 
 /**
+ * Output the top action buttons inside an Activity Loop.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bb_nouveau_activity_entry_top_buttons( $args = array() ) {
+	$output = join( ' ', bb_nouveau_get_activity_entry_top_buttons( $args ) );
+
+	ob_start();
+
+	/**
+	 * Fires at the end of the activity entry top meta data area.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	do_action( 'bp_activity_entry_top_meta' );
+
+	$output .= ob_get_clean();
+
+	$has_content = trim( $output, ' ' );
+	if ( ! $has_content ) {
+		return;
+	}
+
+	if ( ! $args ) {
+		$args = array( 'container_classes' => array( 'activity_more_options' ) );
+	}
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
+ * Get the action buttons inside an Activity Loop,
+ *
+ * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_nouveau_get_activity_entry_top_buttons( $args ) {
+	$buttons = array();
+	if ( ! isset( $GLOBALS['activities_template'] ) ) {
+		return $buttons;
+	}
+
+	$activity_id    = bp_get_activity_id();
+	$parent_element = '';
+	$button_element = 'a';
+
+	if ( ! $activity_id ) {
+		return $buttons;
+	}
+
+	/*
+	 * If the container is set to 'ul' force the $parent_element to 'li',
+	 * else use parent_element args if set.
+	 *
+	 * This will render li elements around anchors/buttons.
+	 */
+	if ( isset( $args['container'] ) && 'ul' === $args['container'] ) {
+		$parent_element = 'li';
+	} elseif ( ! empty( $args['parent_element'] ) ) {
+		$parent_element = $args['parent_element'];
+	}
+
+	$parent_attr = ( ! empty( $args['parent_attr'] ) ) ? $args['parent_attr'] : array();
+
+	/*
+	 * If we have an arg value for $button_element passed through
+	 * use it to default all the $buttons['button_element'] values
+	 * otherwise default to 'a' (anchor)
+	 * Or override & hardcode the 'element' string on $buttons array.
+	 *
+	 */
+	if ( ! empty( $args['button_element'] ) ) {
+		$button_element = $args['button_element'];
+	}
+
+	// The delete button is always created, and removed later on if needed.
+	$delete_args = array();
+
+	/*
+	 * As the delete link is filterable we need this workaround
+	 * to try to intercept the edits the filter made and build
+	 * a button out of it.
+	 */
+	if ( has_filter( 'bp_get_activity_delete_link' ) ) {
+		preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bp_get_activity_delete_link(), $link );
+
+		if ( ! empty( $link[0] ) && ! empty( $link[1] ) ) {
+			$delete_args['link_text'] = $link[1];
+			$subject                  = str_replace( $delete_args['link_text'], '', $link[0] );
+		}
+
+		preg_match_all( '/([\w\-]+)=([^"\'> ]+|([\'"]?)(?:[^\3]|\3+)+?\3)/', $subject, $attrs );
+
+		if ( ! empty( $attrs[1] ) && ! empty( $attrs[2] ) ) {
+			foreach ( $attrs[1] as $key_attr => $key_value ) {
+				$delete_args[ 'link_' . $key_value ] = trim( $attrs[2][ $key_attr ], '"' );
+			}
+		}
+
+		$delete_args = wp_parse_args(
+			$delete_args,
+			array(
+				'link_text'   => '',
+				'button_attr' => array(
+					'link_id'         => '',
+					'link_href'       => '',
+					'link_class'      => '',
+					'link_rel'        => 'nofollow',
+					'data_bp_tooltip' => '',
+				),
+			)
+		);
+	}
+
+	if ( empty( $delete_args['link_href'] ) ) {
+		$delete_args = array(
+			'button_element'  => $button_element,
+			'link_id'         => '',
+			'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
+			'link_rel'        => 'nofollow',
+			'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
+			'link_text'       => __( 'Delete', 'buddyboss' ),
+			'link_href'       => bp_get_activity_delete_url(),
+		);
+
+		// If button element set add nonce link to data-attr attr.
+		if ( 'button' === $button_element ) {
+			$delete_args['data-attr'] = bp_get_activity_delete_url();
+			$delete_args['link_href'] = '';
+		} else {
+			$delete_args['link_href'] = bp_get_activity_delete_url();
+			$delete_args['data-attr'] = '';
+		}
+	}
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_report'] = bp_activity_get_report_link(
+			array(
+				'position'       => 33,
+				'parent_element' => $parent_element,
+				'parent_attr'    => $parent_attr,
+				'button_element' => $button_element,
+			)
+		);
+	}
+
+	$buttons['activity_delete'] = array(
+		'id'                => 'activity_delete',
+		'position'          => 35,
+		'component'         => 'activity',
+		'parent_element'    => $parent_element,
+		'parent_attr'       => $parent_attr,
+		'must_be_logged_in' => true,
+		'button_element'    => $button_element,
+		'button_attr'       => array(
+			'id'            => $delete_args['link_id'],
+			'href'          => $delete_args['link_href'],
+			'class'         => $delete_args['link_class'],
+			//'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
+			'data-bp-nonce' => $delete_args['data-attr'],
+		),
+		'link_text'         => sprintf(
+			'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+			esc_html( $delete_args['data_bp_tooltip'] ),
+			esc_html( $delete_args['data_bp_tooltip'] )
+		),
+	);
+
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress X.X.X
+	 *
+	 * @param array $buttons     The list of buttons.
+	 * @param int   $activity_id The current activity ID.
+	 */
+	$buttons_group = apply_filters( 'bb_nouveau_get_activity_entry_top_buttons', $buttons, $activity_id );
+
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
+
+	// It's the first entry of the loop, so build the Group and sort it.
+	if ( ! isset( bp_nouveau()->activity->entry_buttons ) || ! is_a( bp_nouveau()->activity->entry_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                                 = true;
+		bp_nouveau()->activity->entry_buttons = new BP_Buttons_Group( $buttons_group );
+
+		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
+	} else {
+		$sort = false;
+		bp_nouveau()->activity->entry_buttons->update( $buttons_group );
+	}
+
+	$return = bp_nouveau()->activity->entry_buttons->get( $sort );
+
+	if ( ! $return ) {
+		return array();
+	}
+
+	// Remove the Delete button if the user can't delete.
+	if ( ! bp_activity_user_can_delete() ) {
+		unset( $return['activity_delete'] );
+	}
+
+	/**
+	 * Leave a chance to adjust the $return
+	 *
+	 * @since BuddyPress X.X.X
+	 *
+	 * @param array $return      The list of buttons ordered.
+	 * @param int   $activity_id The current activity ID.
+	 */
+	do_action_ref_array( 'bb_nouveau_return_activity_entry_top_buttons', array( &$return, $activity_id ) );
+
+	return $return;
+}
+
+/**
  * Get the action buttons inside an Activity Loop,
  *
  * @since BuddyPress 3.0.0
@@ -511,94 +732,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		}
 	}
 
-	// The delete button is always created, and removed later on if needed.
-	$delete_args = array();
-
-	/*
-	 * As the delete link is filterable we need this workaround
-	 * to try to intercept the edits the filter made and build
-	 * a button out of it.
-	 */
-	if ( has_filter( 'bp_get_activity_delete_link' ) ) {
-		preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bp_get_activity_delete_link(), $link );
-
-		if ( ! empty( $link[0] ) && ! empty( $link[1] ) ) {
-			$delete_args['link_text'] = $link[1];
-			$subject                  = str_replace( $delete_args['link_text'], '', $link[0] );
-		}
-
-		preg_match_all( '/([\w\-]+)=([^"\'> ]+|([\'"]?)(?:[^\3]|\3+)+?\3)/', $subject, $attrs );
-
-		if ( ! empty( $attrs[1] ) && ! empty( $attrs[2] ) ) {
-			foreach ( $attrs[1] as $key_attr => $key_value ) {
-				$delete_args[ 'link_' . $key_value ] = trim( $attrs[2][ $key_attr ], '"' );
-			}
-		}
-
-		$delete_args = wp_parse_args( $delete_args, array(
-			'link_text'   => '',
-			'button_attr' => array(
-				'link_id'         => '',
-				'link_href'       => '',
-				'link_class'      => '',
-				'link_rel'        => 'nofollow',
-				'data_bp_tooltip' => '',
-			),
-		) );
-	}
-
-	if ( empty( $delete_args['link_href'] ) ) {
-		$delete_args = array(
-			'button_element'  => $button_element,
-			'link_id'         => '',
-			'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
-			'link_rel'        => 'nofollow',
-			'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
-			'link_text'       => __( 'Delete', 'buddyboss' ),
-			'link_href'       => bp_get_activity_delete_url(),
-		);
-
-		// If button element set add nonce link to data-attr attr
-		if ( 'button' === $button_element ) {
-			$delete_args['data-attr'] = bp_get_activity_delete_url();
-			$delete_args['link_href'] = '';
-		} else {
-			$delete_args['link_href'] = bp_get_activity_delete_url();
-			$delete_args['data-attr'] = '';
-		}
-	}
-
-	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_report'] = bp_activity_get_report_link( array(
-			'position'          => 33,
-			'parent_element' => $parent_element,
-			'parent_attr'    => $parent_attr,
-			'button_element' => $button_element,
-		) );
-	}
-
-	$buttons['activity_delete'] = array(
-			'id'                => 'activity_delete',
-			'position'          => 35,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-			'id'            => $delete_args['link_id'],
-			'href'          => $delete_args['link_href'],
-			'class'         => $delete_args['link_class'],
-			//'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
-			'data-bp-nonce' => $delete_args['data-attr'],
-		),
-		'link_text'         => sprintf(
-			'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-			esc_html( $delete_args['data_bp_tooltip'] ),
-			esc_html( $delete_args['data_bp_tooltip'] )
-		),
-	);
-
 	// Add the Spam Button if supported
 	if ( bp_is_akismet_active() && isset( buddypress()->activity->akismet ) && bp_activity_user_can_mark_spam() ) {
 		$buttons['activity_spam'] = array(
@@ -670,11 +803,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	// Remove the Comment button if the user can't comment
 	if ( ! bp_activity_can_comment() && $activity_type !== 'activity_comment' ) {
 		unset( $return['activity_conversation'] );
-	}
-
-	// Remove the Delete button if the user can't delete
-	if ( ! bp_activity_user_can_delete() ) {
-		unset( $return['activity_delete'] );
 	}
 
 	// Remove the Edit button if the user can't edit
