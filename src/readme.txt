@@ -57,6 +57,43 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.6.3 =
+* Profiles - Fixed issue to handle special character in profile field type - dropdown
+* Profiles - Fixed irrelevant members name issue in private message search
+* Forums - Provided forum discussion first level replies pagination support
+* Forums - Fixed bug by escaping Html in forum discussion and reply
+* Forums - Fixed hidden reply issue on restore
+* Forums - Fixed Organizer and Moderator sync issue with social groups
+* Network Search - Fixed issue with sub-forum discussion not showing in search results
+* REST API - Provided API support for forum replies pagination
+* Compatibility - small improvement for profile and group custom tab screen
+
+= 1.6.2 =
+* Moderation - Improved module to optimize performance
+* Icons - Added new font icons for TikTok, Telegram, and ClubHouse
+
+= 1.6.1 =
+* Activity - Small improvement to stop saving zero width space html entity with post update
+* Activity - Fixed minor button text for edit activity popup
+* Media - Fixed media link embed issue in Activity, Comments, Private message, Forums, etc
+* Messages - Fixed issue to stop triggering multiple messages on frequent clicks
+* REST API - Code refactoring
+
+= 1.6.0 =
+* Profiles - Added validation to restrict duplicate Nicknames in the dashboard
+* Profiles - Fixed issue when trying to search members using courses
+* Media - Fixed media preview issue for specific server configuration
+* Notifications - Fixed notification issue with blog post comments and replies
+* Registration - Small improvement to show relevant validation message on the account activation
+* REST API - Provided customer profile/group tab details in relevant endpoints
+* REST API - Improved caching for menu and settings
+* REST API - Fixed issue with hiding subgroups option not working on groups endpoint
+* REST API - Fixed issue with forum screen in settings endpoint when forum slug updated
+* REST API - Fixed messages issue by providing media objects in the bulk URL details endpoint
+* REST API - Fixed empty profile type issue in the member endpoint
+* REST API - Fixed notification wrong 'from' field parameter issue
+* Translations - Updated German (formal) language files
+
 = 1.5.9 =
 * Profiles - Improvements to reflect uploaded profile and cover photo instantly
 * Profiles - Small bug fix to show only published profile type and group type in the dashboard options
