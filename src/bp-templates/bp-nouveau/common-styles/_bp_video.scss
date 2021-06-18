@@ -916,9 +916,10 @@
 			right: 5px;
 			height: 14px;
 			width: 14px;
+			z-index: 111;
 			border-radius: 50%;
-			background: #fd4343;
-			color: #fff;
+			background: #f8f8f8;
+			color: #9ea8b3;
 			cursor: pointer;
 			text-align: center;
 			display: flex;
@@ -951,6 +952,30 @@
 		padding: 0;
 		position: relative;
 		min-height: 120px;
+
+		.video-thumbnail-custom {
+			border: 3px solid transparent;
+			border-radius: 5px;
+		}
+
+		.bb-custom-check[name="bb-video-thumbnail-select"] + label {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			z-index: 11;
+			opacity: 0;
+		}
+
+		.bb-custom-check[name="bb-video-thumbnail-select"]:checked ~ .video-thumbnail-custom {
+			border-color: $blue;
+
+			img {
+				border-radius: 0;
+			}
+
+		}
 
 		.bb-action-check-wrap {
 			visibility: visible;
@@ -1078,10 +1103,27 @@
 				flex: 0 0 50%;
 				max-width: 50%;
 				height: 100%;
-				padding: 0 0 0 10px;
+				padding: 0 10px 0 0;
 				margin: 0 !important;
 				list-style: none !important;
 				display: flex;
+
+				.bb-custom-check:checked ~ a {
+					border-color: $blue;
+
+					img {
+						border-radius: 0;
+					}
+
+				}
+
+				> div > label {
+					position: absolute;
+					left: 0;
+					right: 0;
+					top: 0;
+					bottom: 0;
+				}
 
 				.bb-action-check-wrap {
 					visibility: visible;
@@ -1116,10 +1158,15 @@
 					position: relative;
 				}
 
+				> div > a {
+					border: 3px solid transparent;
+					border-radius: 5px;
+				}
+
 				img {
 					object-fit: cover;
-					border-radius: 4px;
 					min-height: 120px;
+					border-radius: 5px;
 				}
 
 			}

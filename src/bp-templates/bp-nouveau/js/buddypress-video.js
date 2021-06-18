@@ -819,8 +819,8 @@ window.bp = window.bp || {};
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail:not(.generating_thumb) .video-thumb-list li',
 				function( e ) {
 					e.preventDefault();
-					if( !$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
-						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', true );
+					if( !$( this ).find( 'input.bb-custom-check' ).prop( 'checked' ) ) {
+						$( this ).find( 'input.bb-custom-check' ).prop( 'checked', true );
 						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
 					}
 				}
@@ -993,13 +993,11 @@ window.bp = window.bp || {};
 							if( value.url  !== undefined ) {
 								default_images_html += '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">';
 								default_images_html += '<div class="">';
+								default_images_html += '<input '+checked_str+' id="bb-video-'+value.id+'" class="bb-custom-check" type="radio" value="'+value.id+'" name="bb-video-thumbnail-select" />';
+								default_images_html += '<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-'+value.id+'"><span class="bb-icon bb-icon-check"></span></label>';
 								default_images_html += '<a class="" href="#">';
 								default_images_html += '<img src="'+value.url+'" class=""/>';
 								default_images_html += '</a>';
-								default_images_html += '<div class="bb-action-check-wrap">';
-								default_images_html += '<input '+checked_str+' id="bb-video-'+value.id+'" class="bb-custom-check" type="radio" value="'+value.id+'" name="bb-video-thumbnail-select" />';
-								default_images_html += '<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-'+value.id+'"><span class="bb-icon bb-icon-check"></span></label>';
-								default_images_html += '</div>';
 								default_images_html += '</div>';
 								default_images_html += '</li>';
 							}
@@ -1015,7 +1013,7 @@ window.bp = window.bp || {};
 						if ( typeof videoAttachments.preview.dropzone !== 'undefined' && videoAttachments.preview.dropzone == true ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom').show();
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom img' ).attr( 'src', videoAttachments.preview.url );
-							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content .bb-action-check-wrap' ).show().find( 'input' ).prop( 'checked', true );
+							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content' ).find( 'input' ).prop( 'checked', true );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-uploader-wrapper' ).hide();
 							$( '#custom_image_ele' ).find('input').attr('id', 'bb-video-' + videoAttachments.preview.attachment_id);
 							$( '#custom_image_ele' ).find('label').attr('for', 'bb-video-' + videoAttachments.preview.attachment_id);
