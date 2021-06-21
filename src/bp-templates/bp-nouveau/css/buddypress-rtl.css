@@ -18984,6 +18984,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .vjs-menu-button-popup .vjs-menu-content li,
 .bb-media-section .vjs-menu-button-popup .vjs-menu-content li {
   list-style-type: none !important;
+  margin: 0 !important;
 }
 
 .bb-activity-video-elem .video-js.vjs-has-started ~ .bb-video-duration,
