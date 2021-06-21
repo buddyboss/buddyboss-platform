@@ -8,7 +8,7 @@
  */
 
 ?>
-<div class="bp-video-thumbnail-uploader <?php echo bb_video_is_ffmpeg_installed() ? 'generating_thumb ' : ''; ?>" style="display: none;">
+<div class="bp-video-thumbnail-uploader <?php echo bb_video_is_ffmpeg_installed() ? 'generating_thumb ' : 'no_ffmpeg'; ?>" style="display: none;">
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
 			<div class="modal-wrapper">

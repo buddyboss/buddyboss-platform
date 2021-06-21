@@ -20051,6 +20051,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   animation: spin 3s infinite linear;
 }
 
+.bp-video-thumbnail-uploader.no_ffmpeg .bp-video-thumbnail-auto-generated {
+  display: none;
+}
+
 .bp-video-thumbnail-uploader.generating_thumb .thumbnail_notice {
   display: inline-block;
   margin-left: 10px;
@@ -20060,7 +20064,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bp-video-thumbnail-uploader.generating_thumb .bp-video-thumbnail-auto-generated .video-thumb-list li {
   border-radius: 4px;
   opacity: 0.6;
-  margin: 0 0 0 10px !important;
+  margin: 0 10px 0 0 !important;
   width: calc(50% - 10px);
   padding: 0;
   flex-basis: calc(50% - 10px) !important;

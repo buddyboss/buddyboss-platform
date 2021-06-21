@@ -1219,6 +1219,10 @@
 
 	}
 
+	&.no_ffmpeg .bp-video-thumbnail-auto-generated {
+		display: none;
+	}
+
 	&.generating_thumb {
 
 		.thumbnail_notice {
@@ -1230,7 +1234,7 @@
 		.bp-video-thumbnail-auto-generated .video-thumb-list li {
 			border-radius: 4px;
 			opacity: 0.6;
-			margin: 0 0 0 10px !important;
+			margin: 0 10px 0 0 !important;
 			width: calc(50% - 10px);
 			padding: 0;
 			flex-basis: calc(50% - 10px) !important;
