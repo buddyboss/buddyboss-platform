@@ -1385,16 +1385,16 @@ window.bp = window.bp || {};
 											$( '.activity-list li#activity-' + rootParentActivity + ' .activity-comments ul').remove();
 											var act_comments_text = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
 											if ( act_comments_text.length ) {
-												var label = BP_Nouveau.activity.strings.commentLabel;
-												act_comments_text.text( label.replace( '%d', 0 ) );
+												var commentLabelSingle = BP_Nouveau.activity.strings.commentLabel;
+												act_comments_text.text( commentLabelSingle.replace( '%d', 0 ) );
 											}
 											$( '.activity-list li#activity-' + rootParentActivity + ' .activity-content .activity-state').removeClass( 'has-comments' );
 										} else {
 											var totalLi = parseInt( liCount );
-											var act_comments_text = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
-											if ( act_comments_text.length ) {
-												var label = totalLi > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-												act_comments_text.text( label.replace( '%d', totalLi ) );
+											var actCommentsText = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+											if ( actCommentsText.length ) {
+												var multipleCommentLabel = totalLi > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
+												actCommentsText.text( multipleCommentLabel.replace( '%d', totalLi ) );
 											}
 										}
 									}
