@@ -1055,7 +1055,7 @@ class BP_Video {
 		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $videos Array of video.
-		 * @param array $r          Array of parsed arguments.
+		 * @param array $r      Array of parsed arguments.
 		 */
 		do_action_ref_array( 'bp_video_after_delete', array( $videos, $r ) );
 
@@ -1125,6 +1125,13 @@ class BP_Video {
 
 					// Deleting an activity comment.
 					if ( 'activity_comment' === $activity->type ) {
+
+						// Do not delete the activity if activity type is comment & have a multiple videos attached.
+						$response = bp_video_get_activity_video( $activity_id );
+						if ( 1 === count( $activity_ids ) &&  !empty( $response ) && isset( $response['video_activity_ids'] ) && ! empty( $response['video_activity_ids'] ) ) {
+							return $video_ids;
+						}
+
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );

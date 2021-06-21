@@ -189,7 +189,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed', 'buddyboss' ) );
 		}
 
-		$size = @ getimagesize( $filename );
+		$size = @getimagesize( $filename );
 		if ( ! $size ) {
 			return new WP_Error( 'image_save_error', __( 'Could not read image size.', 'buddyboss' ) );
 		}
@@ -820,7 +820,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 				$return_var = -1;
 				$output     = array();
 				exec( $cmd, $output, $return_var );
-				if ( 0 === $return_var && ( $size = @ getimagesize( $filename ) ) ) {
+				if ( 0 === $return_var && ( $size = @getimagesize( $filename ) ) ) {
 					$this->update_size( $size[0], $size[1] );
 				}
 				@ unlink( $filename );

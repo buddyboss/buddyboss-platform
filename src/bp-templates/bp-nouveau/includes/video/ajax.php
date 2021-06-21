@@ -505,14 +505,26 @@ function bp_nouveau_ajax_video_delete() {
 
 	$video_personal_count = 0;
 	$video_group_count    = 0;
+
 	if ( bp_is_user_video() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
 		$video_personal_count = $GLOBALS['video_template']->total_video_count;
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 	}
+
 	if ( bp_is_group_video() ) {
+
+		// Update the count of photos in groups in navigation menu.
+		wp_cache_flush();
+
 		$video_group_count = bp_video_get_total_group_video_count();
+	}
+
+	if ( bp_is_group_albums() ) {
+
+		// Update the count of photos in groups in navigation menu when you are in single albums page.
+		wp_cache_flush();
 	}
 
 	wp_send_json_success(
