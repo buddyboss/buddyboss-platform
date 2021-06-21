@@ -514,6 +514,43 @@ function bp_nouveau_group_header_buttons( $args = array() ) {
 }
 
 /**
+ * Output the action bubble buttons for the displayed group
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
+	$bp_nouveau = bp_nouveau();
+
+	$output = join( ' ', bb_nouveau_get_groups_bubble_buttons( $args ) );
+
+	// On the group's header we need to reset the group button's global.
+	if ( ! empty( $bp_nouveau->groups->group_buttons ) ) {
+		unset( $bp_nouveau->groups->group_buttons );
+	}
+
+	ob_start();
+	/**
+	 * Fires in the group header actions section.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	do_action( 'bp_group_header_bubble_actions' );
+	$output .= ob_get_clean();
+
+	if ( ! $output ) {
+		return;
+	}
+
+	if ( ! $args ) {
+		$args = array( 'container_classes' => array( 'item-bubble-buttons' ) );
+	}
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
  * Output the action buttons inside the groups loop.
  *
  * @since BuddyPress 3.0.0
@@ -1013,26 +1050,6 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 
 				unset( bp_nouveau()->groups->button_args );
 			}
-
-			if ( bp_is_active( 'moderation' ) && bp_is_group_single() && is_user_logged_in() ) {
-				$buttons['group_report'] = bp_moderation_get_report_button( array(
-					'id'                => 'group_report',
-					'position'          => 50,
-					'component'         => 'moderation',
-					'parent_element'    => $parent_element,
-					'parent_attr'       => array(
-						'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
-						'class' => $parent_class,
-					),
-					'must_be_logged_in' => true,
-					'button_element'    => $button_element,
-					'button_attr'       => array(
-						'data-bp-content-id'   => $group->id,
-						'data-bp-content-type' => BP_Moderation_Groups::$moderation_type,
-					),
-				),
-					false );
-			}
 		}
 
 		// Exclude Kick & Ban button for the site admin.
@@ -1097,6 +1114,137 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 
 		return $return;
 	}
+
+
+/**
+ * Get the action buttons for the current group in the loop,
+ * or the current displayed group.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
+	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
+
+	// @todo Not really sure why BP Legacy needed to do this...
+	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		return;
+	}
+
+	$buttons = array();
+
+	if ( ( 'loop' === $type || 'invite' === $type ) && isset( $GLOBALS['groups_template']->group ) ) {
+		$group = $GLOBALS['groups_template']->group;
+	} else {
+		$group = groups_get_current_group();
+	}
+
+	if ( empty( $group->id ) ) {
+		return $buttons;
+	}
+
+	/*
+	* If the 'container' is set to 'ul' set $parent_element to li,
+	* otherwise simply pass any value found in $args or set var false.
+	*/
+	if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
+		$parent_element = 'li';
+	} elseif ( ! empty( $args['parent_element'] ) ) {
+		$parent_element = $args['parent_element'];
+	} else {
+		$parent_element = false;
+	}
+
+	/*
+	 * If we have an arg value for $button_element passed through
+	 * use it to default all the $buttons['button_element'] values
+	 * otherwise default to 'a' (anchor) o override & hardcode the
+	 * 'element' string on $buttons array.
+	 *
+	 * Icons sets a class for icon display if not using the button element
+	 */
+	$icons = '';
+	if ( ! empty( $args['button_element'] ) ) {
+		$button_element = $args['button_element'];
+	} else {
+		$button_element = 'a';
+		$icons          = ' icons';
+	}
+
+	// If we pass through parent classes add them to $button array.
+	$parent_class = '';
+	if ( ! empty( $args['parent_attr']['class'] ) ) {
+		$parent_class = $args['parent_attr']['class'];
+	}
+
+	if ( bp_is_active( 'moderation' ) && bp_is_group_single() && is_user_logged_in() ) {
+		$buttons['group_report'] = bp_moderation_get_report_button(
+			array(
+				'id'                => 'group_report',
+				'position'          => 50,
+				'component'         => 'moderation',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => array(
+					'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
+					'class' => $parent_class,
+				),
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'data-bp-content-id'   => $group->id,
+					'data-bp-content-type' => BP_Moderation_Groups::$moderation_type,
+				),
+			),
+			false,
+		);
+	}
+
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $buttons The list of buttons.
+	 * @param int    $group   The current group object.
+	 * @param string $type    Whether we're displaying a groups loop or a groups single item.
+	 */
+	$buttons_group = apply_filters( 'bb_nouveau_get_groups_bubble_buttons', $buttons, $group, $type );
+
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
+
+	// It's the first entry of the loop, so build the Group and sort it.
+	if ( ! isset( bp_nouveau()->groups->group_buttons ) || ! is_a( bp_nouveau()->groups->group_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                               = true;
+		bp_nouveau()->groups->group_buttons = new BP_Buttons_Group( $buttons_group );
+
+		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
+	} else {
+		$sort = false;
+		bp_nouveau()->groups->group_buttons->update( $buttons_group );
+	}
+
+	$return = bp_nouveau()->groups->group_buttons->get( $sort );
+
+	if ( ! $return ) {
+		return array();
+	}
+
+	/**
+	 * Leave a chance to adjust the $return
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $return  The list of buttons.
+	 * @param int    $group   The current group object.
+	 * @parem string $type    Whether we're displaying a groups loop or a groups single item.
+	 */
+	do_action_ref_array( 'bb_nouveau_return_groups_bubble_buttons', array( &$return, $group, $type ) );
+
+	return $return;
+}
 
 /**
  * Does the group has metas or a specific meta value.
