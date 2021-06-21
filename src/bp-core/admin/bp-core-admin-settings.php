@@ -1353,7 +1353,6 @@ function bp_admin_moderation_block_setting_tutorial() {
 	<?php
 }
 
-
 /**
  * Link to Moderation Report tutorial
  *
@@ -1373,6 +1372,103 @@ function bp_admin_moderation_report_setting_tutorial() {
 			)
 		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
     </p>
+
+	<?php
+}
+
+
+/**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_on_screen_notifications_enable() {
+	?>
+	<input id="_bp_on_screen_notifications_enable" name="_bp_on_screen_notifications_enable" type="checkbox"
+		   value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 1 ) ); ?> />
+	<label for="_bp_on_screen_notifications_enable"><?php esc_html_e( 'Enable on-screen notifications', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_on_screen_notifications_position() {
+	?>
+	<div>
+		<input id="_bp_on_screen_notifications_position_right" name="_bp_on_screen_notifications_position" type="radio" value="right" <?php checked( 'right' === bp_get_option( '_bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
+		<label for="_bp_on_screen_notifications_position_right"><?php esc_html_e( 'Bottom Right', 'buddyboss' ); ?></label>
+	</div>
+	<div>
+		<input id="_bp_on_screen_notifications_position_left" name="_bp_on_screen_notifications_position" type="radio" value="left" <?php checked( 'left' === bp_get_option( '_bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
+		<label for="_bp_on_screen_notifications_position_left"><?php esc_html_e( 'Bottom Left', 'buddyboss' ); ?></label>
+	</div>
+	<?php
+}
+
+/**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_on_screen_notifications_mobile_support() {
+	?>
+	<input id="_bp_on_screen_notifications_mobile_support" name="_bp_on_screen_notifications_mobile_support" type="checkbox" value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_mobile_support', 1 ) ); ?> />
+	<label for="_bp_on_screen_notifications_mobile_support"><?php esc_html_e( 'Show on-screen notifications on small screens', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_on_screen_notifications_browser_tab() {
+	?>
+	<input id="_bp_on_screen_notifications_browser_tab" name="_bp_on_screen_notifications_browser_tab" type="checkbox" value="1"  <?php checked( bp_get_option( '_bp_on_screen_notifications_browser_tab', 1 ) ); ?> />
+	<label for="_bp_on_screen_notifications_browser_tab"><?php esc_html_e( 'Show new notifications in the title of the browser tab', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Update the page <title> tab when new notifications are received.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Include root slug setting field
+ *
+ * @since bbPress (r2786)
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_admin_setting_callback_on_screen_notifications_visibility() {
+
+	// Options for forum root output
+	$options = array(
+		'never' => __( 'Never Hide', 'buddyboss' ),
+		'5'     => __( '5 Seconds', 'buddyboss' ),
+		'10'    => __( '10 Seconds', 'buddyboss' ),
+		'30'    => __( '30 Seconds', 'buddyboss' ),
+		'60'    => __( '1 Minute', 'buddyboss' ),
+		'120'   => __( '2 Minutes', 'buddyboss' ),
+		'180'   => __( '3 Minutes', 'buddyboss' ),
+		'240'   => __( '4 Minutes', 'buddyboss' ),
+		'300'   => __( '5 Minutes', 'buddyboss' ),
+	);
+	?>
+
+	<select name="_bp_on_screen_notifications_visibility" id="_bp_on_screen_notifications_visibility" >
+
+		<?php foreach ( $options as $option_id => $label ) : ?>
+
+			<option  value="<?php echo esc_attr( $option_id ); ?>" <?php selected( esc_attr( $option_id ) === bp_get_option( '_bp_on_screen_notifications_visibility', 'never' ) ? true : false ); ?>>
+				<?php echo esc_html( $label ); ?>
+			</option>
+
+		<?php endforeach; ?>
+
+	</select>
 
 	<?php
 }
