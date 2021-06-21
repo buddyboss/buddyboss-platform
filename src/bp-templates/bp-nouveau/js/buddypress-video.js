@@ -701,7 +701,7 @@ window.bp = window.bp || {};
 					function( element, file ) {
 
 						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-						
+
 						var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 						var radius = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;
@@ -710,7 +710,7 @@ window.bp = window.bp || {};
 						circle.style.strokeDashoffset = circumference;
 						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 						circle.style.strokeDashoffset = offset;
-						
+
 						if( element.upload.progress === 100 ) {
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
@@ -1298,6 +1298,7 @@ window.bp = window.bp || {};
 			var buddyPressSelector = $( '#buddypress' );
 			var type               = target.attr( 'data-type' );
 			var fromWhere          = target.data( 'item-from' );
+			var rootParentActivity = target.data( 'root-parent-activity-id' );
 			var id                 = '';
 			var activityId         = '';
 
@@ -1377,6 +1378,27 @@ window.bp = window.bp || {};
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
 									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+
+									if ( rootParentActivity && $( '.activity-list' ).length ) {
+										var liCount = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-comments > ul > li').length;
+										if ( 0 === liCount ) {
+											$( '.activity-list li#activity-' + rootParentActivity + ' .activity-comments ul').remove();
+											var act_comments_text = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+											if ( act_comments_text.length ) {
+												var label = BP_Nouveau.activity.strings.commentLabel;
+												act_comments_text.text( label.replace( '%d', 0 ) );
+											}
+											$( '.activity-list li#activity-' + rootParentActivity + ' .activity-content .activity-state').removeClass( 'has-comments' );
+										} else {
+											var totalLi = parseInt( liCount );
+											var act_comments_text = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+											if ( act_comments_text.length ) {
+												var label = totalLi > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
+												act_comments_text.text( label.replace( '%d', totalLi ) );
+											}
+										}
+									}
+
 								} else {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}

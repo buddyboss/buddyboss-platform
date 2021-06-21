@@ -21,13 +21,27 @@ if ( $group_id > 0 ) {
 	$move_type = 'profile';
 }
 
-$more_video     = $video_template->video_count > 3 ? true : false;
-$media_privacy  = bb_media_user_can_access( bp_get_video_id(), 'video' );
-$can_edit       = true === (bool) $media_privacy['can_edit'];
-$can_move       = true === (bool) $media_privacy['can_move'];
-$db_privacy     = bp_get_video_privacy();
-$is_comment_vid = bp_video_is_activity_comment_video( bp_get_video_id() );
-$attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
+$more_video              = $video_template->video_count > 3 ? true : false;
+$media_privacy           = bb_media_user_can_access( bp_get_video_id(), 'video' );
+$can_edit                = true === (bool) $media_privacy['can_edit'];
+$can_move                = true === (bool) $media_privacy['can_move'];
+$db_privacy              = bp_get_video_privacy();
+$is_comment_vid          = bp_video_is_activity_comment_video( bp_get_video_id() );
+$attachment_urls         = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
+$parent_root_activity_id = 0;
+
+if ( $is_comment_vid ) {
+	$hierarchy = bb_get_activity_hierarchy( bp_get_activity_id() );
+	if ( ! empty( $hierarchy ) ) {
+		$main_parent_id = end( $hierarchy );
+		if ( ! empty( $main_parent_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $main_parent_id['id'] );
+			if ( ! empty( $parent_activity->id ) && ! empty( $parent_activity->privacy ) ) {
+				$parent_root_activity_id = $parent_activity->id;
+			}
+		}
+	}
+}
 ?>
 
 <div class="bb-activity-video-elem
@@ -76,9 +90,11 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 								}
 							}
 						}
+
+
 						?>
 						<li class="delete_file video-action-class">
-							<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+							<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-root-parent-activity-id="<?php echo esc_attr( $parent_root_activity_id ); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 						</li>
 					</ul>
 				</div>

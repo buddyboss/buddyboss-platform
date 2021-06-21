@@ -2043,4 +2043,3 @@ function bp_get_video_activity_thumb() {
 	 */
 	return apply_filters( 'bp_get_video_activity_thumb', $video_template->video->attachment_data->video_activity_thumb );
 }
-
