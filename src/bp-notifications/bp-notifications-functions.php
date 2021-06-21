@@ -813,3 +813,14 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 
 	return $retval;
 }
+
+function bb_notifications_options( $localize ) {
+	$localize['on_screen_notifications_enable']         = bp_get_option( '_bp_on_screen_notifications_enable', 1 );
+	$localize['on_screen_notifications_position']       = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
+	$localize['on_screen_notifications_mobile_support'] = bp_get_option( '_bp_on_screen_notifications_mobile_support', 1 );
+	$localize['on_screen_notifications_visibility']     = bp_get_option( '_bp_on_screen_notifications_visibility', 'never' );
+	$localize['on_screen_notifications_browser_tab']    = bp_get_option( '_bp_on_screen_notifications_browser_tab', 1 );
+
+	return $localize;
+}
+add_filter( 'buddyboss-theme-main-js-data', 'bb_notifications_options' );
