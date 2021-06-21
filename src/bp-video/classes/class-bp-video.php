@@ -1128,8 +1128,8 @@ class BP_Video {
 
 						// Do not delete the activity if activity type is comment & have a multiple videos attached.
 						$response = bp_video_get_activity_video( $activity_id );
-						if ( 1 === count( $activity_ids ) &&  !empty( $response ) && isset( $response['video_activity_ids'] ) && ! empty( $response['video_activity_ids'] ) ) {
-							return $video_ids;
+						if ( !empty( $response ) && isset( $response['video_activity_ids'] ) && ! empty( $response['video_activity_ids'] ) ) {
+							continue;
 						}
 
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
