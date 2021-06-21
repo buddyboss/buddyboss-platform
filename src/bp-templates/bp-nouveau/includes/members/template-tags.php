@@ -201,7 +201,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 	/**
 	 * Fires in the member header actions section.
 	 *
-	 * @since BuddyBOss X.X.X
+	 * @since BuddyBoss X.X.X
 	 */
 	do_action( 'bp_member_header_bubble_actions' );
 	$output .= ob_get_clean();
