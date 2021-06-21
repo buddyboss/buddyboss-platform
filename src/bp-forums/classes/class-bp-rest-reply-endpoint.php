@@ -224,15 +224,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$r = bbp_parse_args( $args, $default, 'has_replies' );
 
 		$replies_per_page = $r['posts_per_page'];
-
-		// Set posts_per_page value if replies are threaded.
-		if ( true === $r['hierarchical'] && true === $thread_replies ) {
-			$r['posts_per_page'] = - 1;
-			$replies_per_page    = $r['posts_per_page'];
-		}
+		$page_number      = $r['paged'];
 
 		if ( $r['hierarchical'] && empty( $r['s'] ) && true === $thread_replies ) {
-			$r['page'] = 1;
+			$r['page']           = 1;
+			$r['posts_per_page'] = - 1;
+
 			// Run the query.
 			$replies_query = new WP_Query( $r );
 
@@ -241,6 +238,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					$replies_query->posts[ $k ]->reply_to = (int) get_post_meta( $v->ID, '_bbp_reply_to', true );
 				}
 			}
+
+			// Revert arguments.
+			$r['page']           = $page_number;
+			$r['posts_per_page'] = $replies_per_page;
 
 			// Parse arguments.
 			$walk_arg = bbp_parse_args(
@@ -1084,6 +1085,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Update counts, etc... */
 		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
 
+		if ( ! empty( $topic_id ) && 0 === $reply_to && function_exists( 'bbp_update_total_parent_reply' ) ) {
+			// Update total parent.
+			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
+		}
+
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
 
@@ -1680,13 +1686,18 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$reply = bbp_get_reply( $request['id'] );
+		$reply    = bbp_get_reply( $request['id'] );
+		$topic_id = bbp_get_reply_topic_id( $reply->ID );
 
 		$previous = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $reply, $request )
 		);
 
 		$success = wp_delete_post( $reply->ID );
+		if ( false !== $success && ! is_wp_error( $success ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+			// Update total parent reply count when any parent trashed.
+			bbp_update_total_parent_reply( $reply->ID, $topic_id, '', 'update' );
+		}
 
 		// Build the response.
 		$response = new WP_REST_Response();
