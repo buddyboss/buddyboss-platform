@@ -475,6 +475,11 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
 
+		if ( ! empty( $topic_id ) && 0 === $reply_to ) {
+			// Update total parent
+			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
+		}
+
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
@@ -1684,7 +1689,9 @@ function bbp_toggle_reply_handler( $action = '' ) {
 
 	// No errors
 	if ( ( false !== $success ) && ! is_wp_error( $success ) ) {
-
+		// Update total parent reply count when any parent trashed.
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		/** Redirect */
 
 		// Redirect to
@@ -1910,12 +1917,18 @@ function bbp_trashed_reply( $reply_id = 0 ) {
  * @uses bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_untrashed_reply' with the reply id
  */
-function bbp_untrashed_reply( $reply_id = 0 ) {
+function bbp_untrashed_reply( $reply_id = 0, $previous_status ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
 	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
 		return false;
 	}
+
+	$update_reply = array(
+		'ID'          => $reply_id,
+		'post_status' => $previous_status
+	);
+	wp_update_post($update_reply);
 
 	do_action( 'bbp_untrashed_reply', $reply_id );
 }
@@ -2402,13 +2415,14 @@ function bbp_list_replies( $args = array() ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'walker'       => null,
-			'max_depth'    => bbp_thread_replies_depth(),
-			'style'        => 'ul',
-			'callback'     => null,
-			'end_callback' => null,
-			'page'         => 1,
-			'per_page'     => -1,
+			'walker'         => null,
+			'max_depth'      => bbp_thread_replies_depth(),
+			'style'          => 'ul',
+			'callback'       => null,
+			'end_callback'   => null,
+			'page'           => bbp_get_paged(),
+			'posts_per_page' => bbp_get_replies_per_page(),
+			'per_page'       => bbp_get_replies_per_page(),
 		),
 		'list_replies'
 	);

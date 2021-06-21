@@ -1,9 +1,8 @@
 ---
-name: "\U0001F41E Bug Report"
-about: Report a bug if something isn't working as expected in the core BuddyBoss Platform
-  plugin.
+name: "\U0001F41E Report a Bug"
+about: Submit a new bug found in the BuddyBoss platform.
 title: ''
-labels: 'bug, priority: medium'
+labels: bug, needs validating
 assignees: ''
 
 ---
