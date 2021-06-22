@@ -1,5 +1,45 @@
 define({ "api": [
   {
+    "type": "",
+    "url": "Checks",
+    "title": "wether the given `$pathfile` is considered a valid media file.",
+    "version": "0.0.0",
+    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "name": "Checks"
+  },
+  {
+    "type": "",
+    "url": "Creates",
+    "title": "an FFProbe.",
+    "version": "0.0.0",
+    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "name": "Creates"
+  },
+  {
+    "type": "",
+    "url": "Probes",
+    "title": "the streams contained in a given file.",
+    "version": "0.0.0",
+    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "name": "Probes"
+  },
+  {
+    "type": "",
+    "url": "Probes",
+    "title": "the format of a given file.",
+    "version": "0.0.0",
+    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
+    "name": "Probes"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/account-settings",
     "title": "Account Settings",
@@ -4677,6 +4717,35 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/groups/membership-requests/:request_id",
+    "title": "Get Membership Request",
+    "name": "GetBBGroupsMembershipsRequest",
+    "group": "Groups",
+    "description": "<p>Retrieve group membership request by ID.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "request_id",
+            "description": "<p>A unique numeric ID for the group membership request.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "groupTitle": "Groups"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/groups/membership-requests",
     "title": "Group Membership Requests",
     "name": "GetBBGroupsMembershipsRequest",
@@ -4722,35 +4791,6 @@ define({ "api": [
             "field": "user_id",
             "defaultValue": "0",
             "description": "<p>Return only Membership requests made by a specific user.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
-    "groupTitle": "Groups"
-  },
-  {
-    "type": "GET",
-    "url": "/wp-json/buddyboss/v1/groups/membership-requests/:request_id",
-    "title": "Get Membership Request",
-    "name": "GetBBGroupsMembershipsRequest",
-    "group": "Groups",
-    "description": "<p>Retrieve group membership request by ID.</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "request_id",
-            "description": "<p>A unique numeric ID for the group membership request.</p>"
           }
         ]
       }
@@ -5068,196 +5108,6 @@ define({ "api": [
     },
     "filename": "src/bp-groups/classes/class-bp-rest-group-settings-endpoint.php",
     "groupTitle": "Groups"
-  },
-  {
-    "type": "GET",
-    "url": "/wp-json/buddyboss/v1/learndash/courses",
-    "title": "LearnDash Courses",
-    "name": "GetBBLearndashCourses",
-    "group": "Learndash",
-    "description": "<p>Retrieve courses.</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "page",
-            "defaultValue": "1",
-            "description": "<p>Current page of the collection.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "per_page",
-            "defaultValue": "10",
-            "description": "<p>Maximum number of items to be returned in result set.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "search",
-            "description": "<p>Limit results to those matching a string.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "author",
-            "description": "<p>Limit result set to posts assigned to specific authors.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "author_exclude",
-            "description": "<p>Ensure result set excludes posts assigned to specific authors.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "after",
-            "description": "<p>Limit response to resources published after a given ISO8601 compliant date.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "before",
-            "description": "<p>Limit response to resources published before a given ISO8601 compliant date.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "exclude",
-            "description": "<p>Ensure result set excludes specific IDs.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "include",
-            "description": "<p>Limit result set to specific IDs.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "offset",
-            "description": "<p>Offset the result set by a specific number of items.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "asc",
-              "desc"
-            ],
-            "optional": true,
-            "field": "order",
-            "defaultValue": "asc",
-            "description": "<p>Order sort attribute ascending or descending.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "author",
-              "date",
-              "id",
-              "include",
-              "modified",
-              "parent",
-              "relevance",
-              "slug",
-              "title",
-              "menu_order"
-            ],
-            "optional": true,
-            "field": "orderby",
-            "defaultValue": "date",
-            "description": "<p>Sort collection by object attribute.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "allowedValues": [
-              "publish",
-              "future",
-              "draft",
-              "pending",
-              "private",
-              "trash",
-              "auto-draft",
-              "inherit",
-              "request-pending",
-              "request-confirmed",
-              "request-failed",
-              "request-completed",
-              "closed",
-              "spam",
-              "orphan",
-              "hidden",
-              "graded",
-              "not_graded",
-              "any"
-            ],
-            "optional": true,
-            "field": "status",
-            "defaultValue": "date",
-            "description": "<p>Sort collection by object attribute.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_category",
-            "description": "<p>Limit result set to all items that have the specified term assigned in the ld_course_category taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_category_exclude",
-            "description": "<p>Limit result set to all items except those that have the specified term assigned in the ld_course_category taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_tag",
-            "description": "<p>Limit result set to all items that have the specified term assigned in the ld_course_tag taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_tag_exclude",
-            "description": "<p>Limit result set to all items except those that have the specified term assigned in the ld_course_tag taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "group_id",
-            "description": "<p>Limit response to specific buddypress group.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-core/classes/class-bp-rest-learndash-courses-endpoint.php",
-    "groupTitle": "Learndash"
   },
   {
     "type": "GET",
@@ -9035,6 +8885,35 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/signup/:id",
+    "title": "Signup",
+    "name": "GetBBSignups",
+    "group": "Signups",
+    "description": "<p>Retrieve signup</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "groupTitle": "Signups"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/signup",
     "title": "Signups",
     "name": "GetBBSignups",
@@ -9095,35 +8974,6 @@ define({ "api": [
             "optional": true,
             "field": "offset",
             "description": "<p>'Offset the result set by a specific number of items.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
-    "groupTitle": "Signups"
-  },
-  {
-    "type": "GET",
-    "url": "/wp-json/buddyboss/v1/signup/:id",
-    "title": "Signup",
-    "name": "GetBBSignups",
-    "group": "Signups",
-    "description": "<p>Retrieve signup</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
           }
         ]
       }
