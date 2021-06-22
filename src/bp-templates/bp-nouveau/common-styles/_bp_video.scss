@@ -1006,6 +1006,15 @@
 
 		}
 
+		.bb-field-wrap .dropzone .dz-preview .dz-image {
+			border: 3px solid transparent;
+			border-radius: 5px;
+		}
+
+		.bb-custom-check:checked ~ .bb-field-wrap .dropzone .dz-preview .dz-image {
+			border-color: $blue;
+		}
+
 		.bb-field-wrap {
 			margin-bottom: 0;
 			position: relative;
@@ -1220,7 +1229,7 @@
 
 	}
 
-	&.no_ffmpeg .bp-video-thumbnail-auto-generated {
+	&.no_ffmpeg .bp-video-thumbnail-auto-generated li:not(.js-generated) {
 		display: none;
 	}
 

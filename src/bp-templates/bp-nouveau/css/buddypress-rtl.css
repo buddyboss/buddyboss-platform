@@ -19855,6 +19855,15 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: inline;
 }
 
+.video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone .dz-preview .dz-image {
+  border: 3px solid transparent;
+  border-radius: 5px;
+}
+
+.video-thumbnail-content .bb-dropzone-wrap .bb-custom-check:checked ~ .bb-field-wrap .dropzone .dz-preview .dz-image {
+  border-color: #5087e5;
+}
+
 .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap {
   margin-bottom: 0;
   position: relative;
@@ -20052,7 +20061,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   animation: spin 3s infinite linear;
 }
 
-.bp-video-thumbnail-uploader.no_ffmpeg .bp-video-thumbnail-auto-generated {
+.bp-video-thumbnail-uploader.no_ffmpeg .bp-video-thumbnail-auto-generated li:not(.js-generated) {
   display: none;
 }
 
