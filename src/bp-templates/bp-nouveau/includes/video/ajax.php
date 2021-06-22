@@ -1424,13 +1424,13 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 				?>
 				<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
 					<div class="">
+						<input <?php checked( $preview_thumbnail_id, $auto_generated_thumbnail ); ?> id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
+						<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>">
+							<span class="bb-icon bb-icon-check"></span>
+						</label>
 						<a class="" href="#">
 							<img src="<?php echo esc_url( $attachment_url ); ?>" class=""/>
 						</a>
-						<div class="bb-action-check-wrap">
-							<input <?php checked( $preview_thumbnail_id, $auto_generated_thumbnail ); ?> id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
-							<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>"><span class="bb-icon bb-icon-check"></span></label>
-						</div>
 					</div>
 				</li>
 				<?php

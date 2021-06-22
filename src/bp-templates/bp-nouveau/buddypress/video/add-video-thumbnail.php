@@ -31,8 +31,8 @@
 
 						<div class="bp-video-thumbnail-auto-generated">
 							<ul class="video-thumb-list loading">
-								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3"></li>
-								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3"></li>
+								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"></li>
+								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"></li>
 							</ul>
 						</div>
 

@@ -900,7 +900,7 @@
 /*Video Popups*/
 
 .video-thumbnail-content {
-	display: flex;
+	display: block;
 	padding: 25px 0 0 0;
 
 	.video-thumbnail-custom {
@@ -952,11 +952,13 @@
 		width: 33.333334%;
 		padding: 0;
 		position: relative;
-		min-height: 120px;
+		min-height: 160px;
+		padding-right: 10px;
 
 		.video-thumbnail-custom {
 			border: 3px solid transparent;
 			border-radius: 5px;
+			margin-right: 10px;
 		}
 
 		.bb-custom-check[name="bb-video-thumbnail-select"] + label {
@@ -971,6 +973,7 @@
 
 		.bb-custom-check[name="bb-video-thumbnail-select"]:checked ~ .video-thumbnail-custom {
 			border-color: $blue;
+			overflow: hidden;
 
 			img {
 				border-radius: 0;
@@ -1013,6 +1016,10 @@
 
 		.bb-custom-check:checked ~ .bb-field-wrap .dropzone .dz-preview .dz-image {
 			border-color: $blue;
+
+			img {
+				border-radius: 0;
+			}
 		}
 
 		.bb-field-wrap {
@@ -1022,7 +1029,7 @@
 		}
 
 		.dropzone {
-			max-height: 120px;
+			max-height: 160px;
 			overflow: hidden;
 
 			&.dz-started {
@@ -1033,7 +1040,7 @@
 				margin: 0;
 				padding: 15px 0;
 				min-height: auto;
-				height: 120px;
+				height: 160px;
 
 				.dz-button,
 				.dz-button:hover {
@@ -1051,20 +1058,19 @@
 				z-index: initial;
 
 				.dz-image {
-					height: 120px;
+					height: 160px;
 
 					img {
 						max-width: inherit;
 						object-fit: cover;
 						width: 100%;
 						cursor: pointer;
+						border-radius: 5px;
 					}
 
 				}
 
 				&.dz-complete .dz-remove {
-					background: #fd4343 !important;
-					color: #fff !important;
 					display: -webkit-box;
 					display: -ms-flexbox;
 					display: flex;
@@ -1090,8 +1096,9 @@
 	}
 
 	.bp-video-thumbnail-auto-generated {
-		flex-basis: 66.666667%;
-		width: 66.666667%;
+		flex-basis: 100%;
+		width: 100%;
+		margin-bottom: 15px;
 
 		&.disabled {
 			opacity: 0.7;
@@ -1106,14 +1113,12 @@
 
 			&.loading {
 				text-align: center;
-				align-items: center;
-				justify-content: center;
 			}
 
 			li {
-				width: 50%;
-				flex: 0 0 50%;
-				max-width: 50%;
+				width: 33.333333%;
+				flex: 0 0 33.333333%;
+				max-width: 33.333333%;
 				height: 100%;
 				padding: 0 10px 0 0;
 				margin: 0 !important;
@@ -1177,7 +1182,7 @@
 
 				img {
 					object-fit: cover;
-					min-height: 120px;
+					min-height: 155px;
 					border-radius: 5px;
 				}
 
@@ -1192,6 +1197,10 @@
 
 .bp-video-thumbnail-uploader {
 	word-break: break-word;
+
+	.modal-wrapper {
+		max-width: 800px;
+	}
 
 	.thumbnail_notice {
 		display: none;
@@ -1241,14 +1250,14 @@
 			font-size: 12px;
 		}
 
-		.bp-video-thumbnail-auto-generated .video-thumb-list li {
-			border-radius: 4px;
+		.bp-video-thumbnail-auto-generated .video-thumb-list li.thumb_loader {
 			opacity: 0.6;
 			margin: 0 10px 0 0 !important;
-			width: calc(50% - 10px);
+			width: calc(33.3333% - 10px);
 			padding: 0;
-			flex-basis: calc(50% - 10px) !important;
+			flex-basis: calc(33.3333% - 10px) !important;
 			overflow: hidden;
+			border-radius: 5px;
 
 			&:after {
 				content: "";
@@ -1256,7 +1265,7 @@
 				background: linear-gradient(90deg, #ccc 0%, #ccc 42%, #e5e5e5 50%, #ccc 58%, #ccc 100%);
 				display: inline-block;
 				min-width: 530px;
-				min-height: 120px;
+				min-height: 160px;
 			}
 		}
 
@@ -1295,9 +1304,19 @@
 		flex-flow: column;
 
 		.bb-dropzone-wrap {
-			flex-basis: 100%;
-			width: 100%;
 			margin-bottom: 15px;
+			min-height: 100px;
+
+			.dropzone,
+			.dropzone .dz-default,
+			.video-thumbnail-custom img {
+				min-height: 100px;
+			}
+
+		}
+
+		.bp-video-thumbnail-auto-generated .video-thumb-list li img {
+			min-height: 100px;
 		}
 
 		.bb-action-check-wrap .bb-icon {
@@ -1315,6 +1334,7 @@
 				flex: calc(33.3333334% - 6.66666667px);
 				margin-left: 10px !important;
 				padding-left: 0;
+				padding-right: 0;
 
 				&:first-child {
 					margin-left: 0 !important;
