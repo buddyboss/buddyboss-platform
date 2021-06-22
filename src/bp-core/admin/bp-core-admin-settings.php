@@ -1378,9 +1378,11 @@ function bp_admin_moderation_report_setting_tutorial() {
 
 
 /**
- * Enable relevant activity.
+ * Enable on-screen notification.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
  */
 function bp_admin_setting_callback_on_screen_notifications_enable() {
 	?>
@@ -1392,9 +1394,11 @@ function bp_admin_setting_callback_on_screen_notifications_enable() {
 }
 
 /**
- * Enable relevant activity.
+ * Define on-screen notification position.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
  */
 function bp_admin_setting_callback_on_screen_notifications_position() {
 	?>
@@ -1410,9 +1414,11 @@ function bp_admin_setting_callback_on_screen_notifications_position() {
 }
 
 /**
- * Enable relevant activity.
+ * Enable on-screen notification mobile support.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
  */
 function bp_admin_setting_callback_on_screen_notifications_mobile_support() {
 	?>
@@ -1423,9 +1429,11 @@ function bp_admin_setting_callback_on_screen_notifications_mobile_support() {
 }
 
 /**
- * Enable relevant activity.
+ * Enable on-screen notification browser tab.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
  */
 function bp_admin_setting_callback_on_screen_notifications_browser_tab() {
 	?>
@@ -1436,15 +1444,15 @@ function bp_admin_setting_callback_on_screen_notifications_browser_tab() {
 }
 
 /**
- * Include root slug setting field
+ * Option value for auto remove on-screen single notification.
  *
- * @since bbPress (r2786)
+ * @since BuddyBoss 1.7.0
  *
- * @uses checked() To display the checked attribute
+ * @return void
  */
 function bp_admin_setting_callback_on_screen_notifications_visibility() {
 
-	// Options for forum root output
+	// Options for remove single notification time.
 	$options = array(
 		'never' => __( 'Never Hide', 'buddyboss' ),
 		'5'     => __( '5 Seconds', 'buddyboss' ),
