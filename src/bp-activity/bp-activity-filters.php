@@ -2416,9 +2416,8 @@ add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_featur
  * @since 1.6.4
  */
 function bb_add_feature_image_blog_post_as_activity_content_callback( $content, $blog_post_id ) {
-	$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post_id ), 'full', false );
-	if( isset( $src[0] ) ) {
-		$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+	if ( ! empty( $blog_post_id ) && ! empty( get_post_thumbnail_id( $blog_post_id ) ) ) {
+		$content .= sprintf( ' <img src="%s">', esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
 	}
 	return $content;
 }
