@@ -1,10 +1,10 @@
 <?php
 /**
- * Add admin Activity settings page in Dashboard->BuddyBoss->Settings
+ * Add admin Notification settings page in Dashboard->BuddyBoss->Settings
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.7.0
  */
 
 // Exit if accessed directly.
