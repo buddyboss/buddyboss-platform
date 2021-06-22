@@ -1376,7 +1376,6 @@ function bp_admin_moderation_report_setting_tutorial() {
 	<?php
 }
 
-
 /**
  * Enable on-screen notification.
  *
