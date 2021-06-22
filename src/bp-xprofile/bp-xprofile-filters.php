@@ -114,8 +114,8 @@ add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_cl
 //Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 // Repair repeater field repeated in admin side.
-add_filter( 'bp_repair_list', 'bp_xprofile_repeater_field_repair' );
-add_action( 'admin_init', 'bp_xprofile_repeater_field_repair_with_background' );
+add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
+add_action( 'admin_init', 'bb_xprofile_repeater_field_repair_with_background' );
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1069,13 +1069,13 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
  *
  * @return array Repair list items.
  */
-function bp_xprofile_repeater_field_repair( $repair_list ) {
+function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
 	if ( false === $get_bp_xprofile_migration ) {
 		$repair_list[] = array(
 			'bp-xprofile-repeater-field-repair',
 			__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
-			'bp_xprofile_repeater_field_repair_callback',
+			'bb_xprofile_repeater_field_repair_callback',
 		);
 	}
 	return $repair_list;
@@ -1085,10 +1085,10 @@ function bp_xprofile_repeater_field_repair( $repair_list ) {
  * This function will work as migration process which will remove duplicate repeater field from database by repair tool.
  * Also remove remove unnecessary data that may have remained after the migration process.
  * This function will be called only once.
- * 
- * @uses bp_xprofile_repeater_field_migration
+ *
+ * @uses bb_xprofile_repeater_field_migration
  */
-function bp_xprofile_repeater_field_repair_callback() {
+function bb_xprofile_repeater_field_repair_callback() {
 	$offset = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
 	if ( 1 === $offset ) {
 		$offset = 0;
@@ -1096,7 +1096,7 @@ function bp_xprofile_repeater_field_repair_callback() {
 		$offset = $offset;
 	}
 	// Function will do migrate code for the repeated fields.
-	bp_xprofile_repeater_field_migration( $offset, $callback = true );
+	bb_xprofile_repeater_field_migration( $offset, $callback = true );
 }
 
 /**
@@ -1109,7 +1109,7 @@ function bp_xprofile_repeater_field_repair_callback() {
  *
  * @return array
  */
-function bp_xprofile_repeater_field_migration( $offset, $callback ) {
+function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 	global $wpdb;
 	$bp               = buddypress();
 	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 2 OFFSET $offset ";
@@ -1192,11 +1192,11 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
 	global $wpdb;
 	$bp                = buddypress();
 	$delete_fields_arr = array();
-	
+
 	// It will calculate the total field ID based on the group ID.
 	// This would have to be done after removing the duplicate field order from the DB.
 	$count_total_group_field_ids = $wpdb->get_var( $wpdb->prepare( 'SELECT count(id)FROM ' . $bp->profile->table_name_fields . ' WHERE group_id =%d AND parent_id = 0', $group_id ) );
-	
+
 	// This will Find those fields id which is cloned from main field id.
 	$group_field_ids   = $wpdb->get_results(
 		$wpdb->prepare( 'SELECT gfi.id, gfi.field_order FROM ' . $bp->profile->table_name_fields . ' as gfi
@@ -1206,7 +1206,7 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
 
 	// Calculate the main field ID. The field from which the second field is cloned.
 	$main_fields_count = (int) $count_total_group_field_ids - (int) count( $group_field_ids );
-	
+
 	// Here we need to modify fields count based on main field id.
 	// Issue was generating after 10 number of fields.
 	// So, We passed here 10 to multiply with main fields count.
@@ -1236,21 +1236,21 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
  * Also remove remove unnecessary data that may have remained after the migration process.
  * This function will be called only once.
  *
- * @uses bp_xprofile_repeater_field_migration
+ * @uses bb_xprofile_repeater_field_migration
  */
-function bp_xprofile_repeater_field_repair_with_background() {
+function bb_xprofile_repeater_field_repair_with_background() {
 	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
 	if ( false === $get_bp_xprofile_migration ) {
 		global $wpdb, $bp_background_updater;
 		$bp = buddypress();
 		$recipients_query = "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete=1";
 		$recipients       = $wpdb->get_row( $recipients_query );
-		
+
 		for( $counter = 0; $counter <= $recipients->total_id; $counter ++ ) {
 			if ( (int) $counter !== (int) $recipients->total_id ) {
-				$bp_background_updater->push_to_queue( 
+				$bp_background_updater->push_to_queue(
 					array(
-						'callback' => bp_xprofile_repeater_field_migration( $counter, $callback = false ),
+						'callback' => bb_xprofile_repeater_field_migration( $counter, $callback = false ),
 					)
 				);
 				$bp_background_updater->save()->schedule_event();

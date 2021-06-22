@@ -65,12 +65,12 @@ window.bp = window.bp || {};
         $(this).parents('.repeater_group_outer').toggleClass('active');
     });
 
-    
+
     if (window.location.href.indexOf('#bpxpro') > -1) {
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
     }
-    
+
 	var deleted_field_ids = [];
 
     // Delete button
@@ -146,10 +146,9 @@ window.bp = window.bp || {};
     // Remove attr from button after page successfully load.
     if ( window.location.href.indexOf('#bpxpro') > 0 ) {
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('loaded');
             $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
             $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
-        });    
+        });
     }
 
     // Add repeater set button, on edit profile screens

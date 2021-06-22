@@ -332,14 +332,14 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 	if ( ! $user_id ) {
 		die();
 	}
-	
+
 	$get_count = bp_get_profile_field_set_count( $field_group_id, $user_id );
 	if ( (int) $count !== (int) $get_count ) {
 		return false;
 	}
-	
+
 	$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
-	
+
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
 		$template_field_id = $db_row['id'];
 
@@ -413,7 +413,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 				array( '%d' )
 			) ) {
 				// Delete duplicate field order if exists.
-				bp_delete_duplicate_field_order( $field_group_id, $field_order, $count );
+				bb_delete_duplicate_field_order( $field_group_id, $field_order, $count );
 			}
 			return $new_field_id;
 		}
@@ -942,7 +942,7 @@ function bp_profile_repeaters_search_change_filter( $f ) {
  * @param int $clone_field_order Field order id.
  * @param int $count             Get total count of fields id.
  */
-function bp_delete_duplicate_field_order( $field_group_id, $clone_field_order, $count ) {
+function bb_delete_duplicate_field_order( $field_group_id, $clone_field_order, $count ) {
 	global $wpdb;
 	$bp      = buddypress();
 	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
