@@ -17,12 +17,26 @@ defined( 'ABSPATH' ) || exit;
  */
 class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 
+	/**
+	 * Initial method for this class.
+	 * 
+	 * @since BuddyBoss 1.7.0
+	 * 
+	 * @return void
+	 */
 	public function initialize() {
 		$this->tab_label = __( 'Notifications', 'buddyboss' );
 		$this->tab_name  = 'bp-notifications';
 		$this->tab_order = 40;
 	}
 
+	/**
+	 * Sore on-screen notification settings value.
+	 * 
+	 * @since BuddyBoss 1.7.0
+	 * 
+	 * @return void
+	 */
 	public function settings_save() {
 		parent::settings_save();
 
@@ -39,7 +53,13 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
         bp_update_option( '_bp_on_screen_notifications_browser_tab', $browser_tab );
 
 	}
-	// Register setting fields
+	/**
+	 * Register setting fields
+	 * 
+	 * @since BuddyBoss 1.7.0
+	 * 
+	 * @return void
+	 */ 
 	public function register_fields() {
 
 		$this->add_section( 'bp_notifications', __( 'Notification Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
@@ -62,4 +82,5 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 	}
 }
 
+// Class instance.
 return new BP_Admin_Setting_Notifications();
