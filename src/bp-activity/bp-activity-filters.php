@@ -2406,7 +2406,7 @@ function bb_check_is_activity_content_empty( $data ) {
 
 add_filter( 'bb_add_feature_image_blog_post_as_avtivity_content', 'bb_add_feature_image_blog_post_as_avtivity_content_callback', 10, 2 );
 /**
- * Function will add feature image for blog post in the acitivy feed content.
+ * Function will add feature image for blog post in the activity feed content.
  * 
  * @param string $content
  * @param int    $blog_post_id
