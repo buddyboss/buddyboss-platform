@@ -509,13 +509,16 @@ tr.bp-search-parent-field label {
 	padding: 0;
 }
 
-
 .bp-admin-card.section-bp_media_settings_emoji h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/laugh.svg);
 }
 
 .bp-admin-card.section-bp_media_settings_gifs h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/image.svg);
+}
+
+.bp-admin-card.section-bp_media_settings_symlinks {
+	display: none !important;
 }
 
 .bp-admin-card.section-bp_media_settings_symlinks h2:before {
