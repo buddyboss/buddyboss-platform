@@ -747,9 +747,10 @@ function bp_video_preview_image_by_js( $video ) {
 				update_post_meta( $video['id'], 'bp_video_preview_thumbnail_id', $preview_attachment_id );
 				$auto_generated_thumbnails = get_post_meta( $video['id'], 'video_preview_thumbnails', true );
 				$default_images            = isset( $auto_generated_thumbnails['default_images'] ) && ! empty( $auto_generated_thumbnails['default_images'] ) ? $auto_generated_thumbnails['default_images'] : array();
+				$default_images = array_merge($default_images, array($preview_attachment_id));
 				$thumbnail_images          = array(
 					'default_images' => $default_images,
-					'custom_image'   => $preview_attachment_id,
+					'custom_image'   => isset( $auto_generated_thumbnails['custom_image'] ) && ! empty( $auto_generated_thumbnails['custom_image'] ) ? $auto_generated_thumbnails['custom_image'] : array(),
 				);
 				update_post_meta( $video['id'], 'video_preview_thumbnails', $thumbnail_images );
 			}
@@ -809,7 +810,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		$is_auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 		$is_default_images            = isset( $is_auto_generated_thumbnails['default_images'] ) && ! empty( $is_auto_generated_thumbnails['default_images'] ) ? $is_auto_generated_thumbnails['default_images'] : array();
 
-		if ( empty( $is_default_images ) ) {
+		if ( count( $is_default_images ) < 3 ) {
 
 			$bp_background_updater->push_to_queue(
 				array(
@@ -905,7 +906,7 @@ function bp_video_background_create_thumbnail( $video ) {
 			$is_auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 			$is_default_images            = isset( $is_auto_generated_thumbnails['default_images'] ) && ! empty( $is_auto_generated_thumbnails['default_images'] ) ? $is_auto_generated_thumbnails['default_images'] : array();
 
-			if ( ! empty( $duration ) && empty( $is_default_images ) ) {
+			if ( ! empty( $duration ) && count( $is_default_images ) < 3) {
 
 				/**
 				 * Hook for before background thumbnail create.
@@ -1010,6 +1011,9 @@ function bp_video_background_create_thumbnail( $video ) {
 				if ( is_array( $thumbnail_list ) && ! empty( $thumbnail_list ) ) {
 
 					$thumbnail_images         = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+					if(isset( $thumbnail_images['default_images'] ) && ! empty( $thumbnail_images['default_images'] )) {
+						$thumbnail_list = array_merge($thumbnail_images['default_images'], $thumbnail_list );
+					}
 					$updated_thumbnail_images = array(
 						'default_images' => $thumbnail_list,
 						'custom_image'   => ( isset( $thumbnail_images['custom_image'] ) && ! empty( $thumbnail_images['custom_image'] ) ) ? $thumbnail_images['custom_image'] : ''
