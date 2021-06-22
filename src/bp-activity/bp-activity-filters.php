@@ -2413,12 +2413,12 @@ add_filter( 'bb_add_feature_image_blog_post_as_avtivity_content', 'bb_add_featur
  * 
  * @return string $content
  * 
- * @since x.x.x
+ * @since 1.6.4
  */
 function bb_add_feature_image_blog_post_as_avtivity_content_callback( $content, $blog_post_id ) {
 	$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post_id ), 'full', false );
 	if( isset( $src[0] ) ) {
-		$content .=sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+		$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
 	}
 	return $content;
 }
