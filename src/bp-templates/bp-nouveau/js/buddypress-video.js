@@ -838,8 +838,8 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					if( !$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked' ) ) {
-						$( this ).find( '.bb-action-check-wrap input.bb-custom-check' ).prop( 'checked', true );
+					if( !$( this ).find( 'input.bb-custom-check' ).prop( 'checked' ) ) {
+						$( this ).find( 'input.bb-custom-check' ).prop( 'checked', true );
 						$( this ).closest( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).show();
 					}
 
