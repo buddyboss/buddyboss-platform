@@ -1403,7 +1403,7 @@ function bp_admin_setting_callback_on_screen_notifications_position() {
 	?>
 	<div class="bb-screen-position-outer">		
 		<div class="bb-screen-position bb-bottom-left">
-			<input id="bp_on_screen_notifications_position_left" name="bp_on_screen_notifications_position" type="radio" value="left" <?php checked( 'left' === bp_get_option( 'bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
+			<input id="bp_on_screen_notifications_position_left" name="_bp_on_screen_notifications_position" type="radio" value="left" <?php checked( 'left' === bp_get_option( '_bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
 			<label class="option opt-left" for="bp_on_screen_notifications_position_left">
 				<span>
 					<?php esc_html_e( 'Bottom Left', 'buddyboss' ); ?>
@@ -1411,7 +1411,7 @@ function bp_admin_setting_callback_on_screen_notifications_position() {
 			</label>
 		</div>
 		<div class="bb-screen-position bb-bottom-right">
-			<input id="bp_on_screen_notifications_position_right" name="bp_on_screen_notifications_position" type="radio" value="right" <?php checked( 'right' === bp_get_option( 'bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
+			<input id="bp_on_screen_notifications_position_right" name="_bp_on_screen_notifications_position" type="radio" value="right" <?php checked( 'right' === bp_get_option( '_bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
 			<label class="option opt-right" for="bp_on_screen_notifications_position_right">
 				<span>
 					<?php esc_html_e( 'Bottom Right', 'buddyboss' ); ?>
