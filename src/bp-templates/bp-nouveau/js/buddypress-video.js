@@ -804,6 +804,8 @@ window.bp = window.bp || {};
 
 			$( popupSelector ).find( '.bp-video-thumbnail-uploader' ).addClass( 'opened-edit-thumbnail' ).show();
 
+			$( popupSelector ).find( '.bp-video-thumbnail-uploader' ).removeClass( 'no_generated_thumb' );
+
 			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).html('');
 
 			$( document ).on(
@@ -1011,6 +1013,8 @@ window.bp = window.bp || {};
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">' );
 							}
 						}
+					} else {
+						$( popupSelector ).find( '.bp-video-thumbnail-uploader' ).addClass( 'no_generated_thumb' );
 					}
 
 					if( typeof videoAttachments.preview !== 'undefined') {
@@ -1082,7 +1086,6 @@ window.bp = window.bp || {};
 					);
 				} else {
 					$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
-					$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 				}
 			}
 		},
