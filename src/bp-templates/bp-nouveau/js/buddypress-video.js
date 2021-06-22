@@ -1077,7 +1077,7 @@ window.bp = window.bp || {};
 										}
 										
 									} else if( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
-										$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
+										$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb no_generated_thumb' );
 									}
 
 								}
