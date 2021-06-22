@@ -514,7 +514,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						'data-topic-id'    => $topic_id,
 						'aria-expanded'    => 'false',
 						'href'             => '#new-post',
-						'data-author-name'      => $author,
+						'data-author-name' => $author,
 					),
 				);
 			}
