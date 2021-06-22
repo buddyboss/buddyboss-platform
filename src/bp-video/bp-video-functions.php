@@ -3234,9 +3234,12 @@ function bb_get_video_thumb_id( $video_attachment_id ) {
 	if ( $get_video_thumb_id ) {
 		return $get_video_thumb_id;
 	} elseif ( $get_video_thumb_ids ) {
-		$get_video_thumb_ids_arr = explode( ',', $get_video_thumb_ids );
+		$get_video_thumb_ids_arr = isset( $get_video_thumb_ids['default_images'] ) ? $get_video_thumb_ids['default_images'] : array ();
 		if ( $get_video_thumb_ids_arr ) {
 			return current( $get_video_thumb_ids_arr );
+		}
+		if ( isset( $get_video_thumb_ids['custom_image'] ) && ! empty( $get_video_thumb_ids['custom_image'] ) ) {
+			return $get_video_thumb_ids['custom_image'];
 		}
 	}
 
