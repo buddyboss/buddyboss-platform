@@ -417,9 +417,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			if ( is_user_logged_in() ) {
 				// Print discussion title.
-				echo empty( $buttons['activity_topic_title'] ) ? '' : sprintf( '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">%s</div>', esc_html( $buttons['activity_topic_title'] ) );
+				echo empty( $buttons['activity_topic_title'] ) ? '' : sprintf( '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">%s</div>', $buttons['activity_topic_title'] );
 			} else {
-				echo sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%$1s">%$2s</a></p>', esc_url( $topic_permalink ), esc_html( $topic_title ) );
+				echo sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%$1s">%$2s</a></p>', esc_url( $topic_permalink ), $topic_title );
 			}
 		}
 
@@ -471,6 +471,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Topic title.
 			$forum_id    = bbp_get_topic_forum_id( $topic_id );
 			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
+			$author      = bbp_get_topic_author_display_name( $topic_id );
 
 			// New meta button as 'Join discussion'.
 			$buttons['activity_discussionsss'] = array(
@@ -513,6 +514,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						'data-topic-id'    => $topic_id,
 						'aria-expanded'    => 'false',
 						'href'             => '#new-post',
+						'data-author-name'      => $author,
 					),
 				);
 			}
