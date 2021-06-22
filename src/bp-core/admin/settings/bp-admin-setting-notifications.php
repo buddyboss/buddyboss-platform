@@ -11,9 +11,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main activity settings class.
+ * Main notification settings class.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.7.0
  */
 class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 
@@ -39,7 +39,7 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
         bp_update_option( '_bp_on_screen_notifications_browser_tab', $browser_tab );
 
 	}
-
+	// Register setting fields
 	public function register_fields() {
 
 		$this->add_section( 'bp_notifications', __( 'Notification Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
@@ -52,9 +52,9 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
         $this->add_field( "_bp_on_screen_notification_browser_tab", __( 'Show in Browser Tab', 'buddyboss' ), 'bp_admin_setting_callback_on_screen_notifications_browser_tab', 'intval' );
 
 		/**
-		 * Fires to register Activity tab settings fields and section.
+		 * Fires to register Notifications tab settings fields and section.
 		 *
-		 * @since BuddyBoss 1.2.6
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param Object $this BP_Admin_Setting_Notifications.
 		 */
