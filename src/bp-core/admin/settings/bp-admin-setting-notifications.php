@@ -23,10 +23,6 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$this->tab_order = 40;
 	}
 
-	public function is_active() {
-		return bp_is_active( 'notifications' );
-	}
-
 	public function settings_save() {
 		parent::settings_save();
 
@@ -62,7 +58,7 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		 *
 		 * @param Object $this BP_Admin_Setting_Notifications.
 		 */
-		do_action( 'bp_admin_setting_Notifications_register_fields', $this );
+		do_action( 'bp_admin_setting_notifications_register_fields', $this );
 	}
 }
 
