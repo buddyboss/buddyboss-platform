@@ -5552,26 +5552,51 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 			$key      = 'bb_media_symlink_type';
 			$sym_path = bp_media_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 		case 'document':
 			$key      = 'bb_document_symlink_type';
 			$sym_path = bp_document_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 		case 'document_video':
 			$key      = 'bb_document_video_symlink_type';
 			$sym_path = bp_document_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy );
+			}
 			break;
 		case 'video':
 			$key      = 'bb_video_symlink_type';
 			$sym_path = bb_video_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 		case 'video_thumb':
 			$key      = 'bb_video_thumb_symlink_type';
 			$sym_path = bb_video_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 	}
 

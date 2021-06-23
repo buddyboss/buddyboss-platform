@@ -3332,22 +3332,45 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 	// Delete the thumb symlink.
 	$privacy         = $video->privacy;
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy );
+	if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy );
+	}
 
 	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'medium' );
+	if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy . 'medium' );
+	}
+
 	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'large' );
+	if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy . 'large' );
+	}
+
 	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . 'full' );
+	if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy . 'full' );
+	}
+
 	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
@@ -3357,6 +3380,11 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 		foreach ( $image_sizes as $name => $image_size ) {
 			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
 				$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $privacy . sanitize_key( $name ) );
+				if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object    = groups_get_group( $video->group_id );
+					$group_status    = bp_get_group_status( $group_object );
+					$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $delete_thumb_id . $group_status . $privacy . sanitize_key( $name ) );
+				}
 				if ( file_exists( $attachment_path ) ) {
 					unlink( $attachment_path );
 				}
@@ -3395,6 +3423,11 @@ function bb_video_delete_symlinks( $video ) {
 	// Delete the video symlink.
 	$privacy         = $old_video->privacy;
 	$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy );
+	if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
@@ -3413,16 +3446,33 @@ function bb_video_delete_symlinks( $video ) {
 	// Delete the video main preview link.
 	$attachment_id   = bb_get_video_thumb_id( $old_video->attachment_id );
 	$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'medium' );
+	if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'medium' );
+	}
+
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'large' );
+	if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'large' );
+	}
+
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'full' );
+	if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_video->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'full' );
+	}
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
@@ -3432,6 +3482,11 @@ function bb_video_delete_symlinks( $video ) {
 		foreach ( $image_sizes as $name => $image_size ) {
 			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
 				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . sanitize_key( $name ) );
+				if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object    = groups_get_group( $old_video->group_id );
+					$group_status    = bp_get_group_status( $group_object );
+					$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
+				}
 				if ( file_exists( $attachment_path ) ) {
 					unlink( $attachment_path );
 				}
@@ -3445,16 +3500,33 @@ function bb_video_delete_symlinks( $video ) {
 		foreach ( $extra_preview_ids as $attachment_id ) {
 
 			$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'medium' );
+			if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $old_video->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'medium' );
+			}
+
 			if ( file_exists( $attachment_path ) ) {
 				unlink( $attachment_path );
 			}
 
 			$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'large' );
+			if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $old_video->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'large' );
+			}
+
 			if ( file_exists( $attachment_path ) ) {
 				unlink( $attachment_path );
 			}
 
 			$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . 'full' );
+			if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $old_video->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . 'full' );
+			}
 			if ( file_exists( $attachment_path ) ) {
 				unlink( $attachment_path );
 			}
@@ -3463,6 +3535,13 @@ function bb_video_delete_symlinks( $video ) {
 				foreach ( $image_sizes as $name => $image_size ) {
 					if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
 						$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $privacy . sanitize_key( $name ) );
+
+						if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+							$group_object    = groups_get_group( $old_video->group_id );
+							$group_status    = bp_get_group_status( $group_object );
+							$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
+						}
+
 						if ( file_exists( $attachment_path ) ) {
 							unlink( $attachment_path );
 						}
@@ -3477,6 +3556,13 @@ function bb_video_delete_symlinks( $video ) {
 		foreach ( $image_sizes as $name => $image_size ) {
 			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
 				$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $get_video_thumb_id . $privacy . sanitize_key( $name ) );
+
+				if ( $old_video->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object    = groups_get_group( $old_video->group_id );
+					$group_status    = bp_get_group_status( $group_object );
+					$attachment_path = $video_symlinks_path . '/' . md5( $old_video->id . $get_video_thumb_id . $group_status . $privacy . sanitize_key( $name ) );
+				}
+
 				if ( file_exists( $attachment_path ) ) {
 					unlink( $attachment_path );
 				}
@@ -3559,6 +3645,13 @@ function bb_video_get_symlink( $video, $generate = true ) {
             $upload_directory    = wp_get_upload_dir();
             $time                = time();
             $attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time );
+
+		    if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
+			    $group_object    = groups_get_group( $video->group_id );
+			    $group_status    = bp_get_group_status( $group_object );
+			    $attachment_path = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $group_status . $privacy . $time );
+		    }
+
             if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
                 if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
                     $get_existing = get_post_meta( $video->attachment_id, 'bb_video_symlinks_arr', true );
@@ -3982,7 +4075,14 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 			$privacy             = $video->privacy;
 			$output_file_src     = '';
 			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $size );
-			$file                = image_get_intermediate_size( $attachment_id, $size );
+
+			if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $video->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$attachment_path = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $group_status . $privacy . $size );
+			}
+
+			$file = image_get_intermediate_size( $attachment_id, $size );
 
 			if ( $file && ! empty( $file['path'] ) ) {
 				$output_file_src = $upload_dir . '/' . $file['path'];

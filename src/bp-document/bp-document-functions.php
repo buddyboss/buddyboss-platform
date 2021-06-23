@@ -3693,9 +3693,13 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 
 		if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 			$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy );
+			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $document->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $privacy );
+			}
 			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
 				if ( ! is_link( $attachment_path ) ) {
-
 					// Generate Document Thumb Symlink.
 					bb_core_symlink_generator( 'document', $document, $size, array(), $attached_file, $attachment_path );
 				}
@@ -3704,8 +3708,15 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 
 		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 			if ( '' !== $size ) {
+
 				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . $size );
-				$file            = image_get_intermediate_size( $attachment_id, $size );
+				if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object    = groups_get_group( $document->group_id );
+					$group_status    = bp_get_group_status( $group_object );
+					$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $privacy . $size );
+				}
+
+				$file = image_get_intermediate_size( $attachment_id, $size );
 
 				if ( false === $file ) {
 					bb_document_regenerate_attachment_thumbnails( $attachment_id );
@@ -3792,18 +3803,33 @@ function bp_document_delete_symlinks( $document ) {
 
 	$privacy         = $old_document->privacy;
 	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'medium' );
+	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_document->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'medium' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'large' );
+	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_document->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'large' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'full' );
+	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_document->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'full' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
@@ -3814,6 +3840,11 @@ function bp_document_delete_symlinks( $document ) {
 		foreach ( $image_sizes as $name => $image_size ) {
 			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
 				$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . sanitize_key( $name ) );
+				if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object    = groups_get_group( $old_document->group_id );
+					$group_status    = bp_get_group_status( $group_object );
+					$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
+				}
 				if ( file_exists( $attachment_path ) ) {
 					unlink( $attachment_path );
 				}
@@ -3822,6 +3853,11 @@ function bp_document_delete_symlinks( $document ) {
 	}
 
 	$preview_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $old_document->privacy );
+	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object            = groups_get_group( $old_document->group_id );
+		$group_status            = bp_get_group_status( $group_object );
+		$preview_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $old_document->privacy );
+	}
 
 	if ( file_exists( $preview_attachment_path ) ) {
 		unlink( $preview_attachment_path );

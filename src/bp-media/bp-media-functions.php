@@ -3175,12 +3175,18 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 		$upload_dir = $upload_dir['basedir'];
 
 		// Get media previews symlink directory path.
-		$symlinks_path = bp_media_symlink_path();
-		$attachment_id = $media->attachment_id;
-
+		$symlinks_path   = bp_media_symlink_path();
+		$attachment_id   = $media->attachment_id;
 		$privacy         = $media->privacy;
 		$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . $size );
-		$file            = image_get_intermediate_size( $attachment_id, $size );
+
+		if ( $media->group_id > 0 && bp_is_active( 'groups' ) ) {
+			$group_object    = groups_get_group( $media->group_id );
+			$group_status    = bp_get_group_status( $group_object );
+			$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $group_status . $privacy . $size );
+		}
+
+		$file = image_get_intermediate_size( $attachment_id, $size );
 
 		if ( $file && ! empty( $file['path'] ) ) {
 
@@ -3274,18 +3280,33 @@ function bp_media_delete_symlinks( $media ) {
 
 	$privacy         = $old_media->privacy;
 	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-activity-image' );
+	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_media->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-activity-image' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-album-directory-image' );
+	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_media->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-album-directory-image' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-popup-image' );
+	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_media->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-popup-image' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
@@ -3333,6 +3354,12 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$symlinks_path    = bp_media_symlink_path();
 
 				$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
+				if ( $media->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object            = groups_get_group( $media->group_id );
+					$group_status            = bp_get_group_status( $group_object );
+					$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $group_status . $media->privacy . $size );
+				}
+
 				if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 					bp_media_create_symlinks( $media, $size );
 				}

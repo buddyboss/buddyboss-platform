@@ -271,10 +271,14 @@ function bp_document_offload_get_preview_url( $attachment_url, $document_id, $ex
 			if ( in_array( $extension, array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() ), true ) ) {
 				$document = new BP_Document( $document_id );
 
-				$upload_directory       = wp_get_upload_dir();
-				$document_symlinks_path = bp_document_symlink_path();
-
+				$upload_directory        = wp_get_upload_dir();
+				$document_symlinks_path  = bp_document_symlink_path();
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+				if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object            = groups_get_group( $document->group_id );
+					$group_status            = bp_get_group_status( $group_object );
+					$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
+				}
 				if ( ! file_exists( $preview_attachment_path ) ) {
 					bp_document_create_symlinks( $document );
 				}
