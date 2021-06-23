@@ -2325,7 +2325,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'title'         => bp_get_media_title(),
 						'attachment_id' => bp_get_media_attachment_id(),
 						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
-						'full'          => bp_get_media_attachment_image(),
+						'full'          => bb_get_media_photos_theatre_popup_image(),
 						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'       => bp_get_media_privacy(),
 					);
