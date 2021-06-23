@@ -400,31 +400,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Topic.
 			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
+			$content         = sprintf( '<p class = "bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> %3$s', esc_url( $topic_permalink ), $topic_title, $content );
 
-			// Anchor for discussion title.
-			$buttons['activity_topic_title'] = array(
-				'id'             => 'activity_topic_title',
-				'component'      => 'activity',
-				'button_element' => 'a',
-				'link_text'      => $topic_title,
-				'button_attr'    => array(
-					'class'         => 'button bp-secondary-action',
-					'aria-expanded' => 'false',
-					'href'          => $topic_permalink,
-				),
-			);
-
-			// Set discussion title achor style for theme setting.
-			bp_nouveau()->activity->entry_buttons = new BP_Buttons_Group( $buttons );
-			$buttons                              = bp_nouveau()->activity->entry_buttons->get( false );
-
-			if ( is_user_logged_in() ) {
-				// Print discussion title.
-				$content = empty( $buttons['activity_topic_title'] ) ? '' : sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap">%s</p> %s', $buttons['activity_topic_title'], $content );
-			} else {
-				$content = sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%$1s">%$2s</a></p>', esc_url( $topic_permalink ), $topic_title );
-			}
-			//var_dump( esc_url( $topic_permalink ), $topic_title, $content ); die;
 			return $content;
 		}
 
