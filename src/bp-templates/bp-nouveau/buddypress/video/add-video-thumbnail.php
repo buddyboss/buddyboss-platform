@@ -36,7 +36,7 @@
 							</ul>
 						</div>
 
-						<div class="bb-dropzone-wrap bp-video-thumbnail-upload-tab-content bp-upload-tab-content bp-video-thumbnail-dropzone-content" id="">
+						<div class="bb-dropzone-wrap bp-video-thumbnail-upload-tab-content bp-upload-tab-content bp-video-thumbnail-dropzone-content" id="custom_image_ele">
 							<input id="bb-video-5711" class="bb-custom-check" type="radio" value="5766" name="bb-video-thumbnail-select">
 							<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-5711">
 								<span class="bb-icon bb-icon-check"></span>
