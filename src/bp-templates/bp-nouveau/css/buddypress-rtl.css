@@ -1853,20 +1853,20 @@ div[class*="attached-gif-container"] {
 div[class*="attached-gif-container"] .gif-image-remove {
   border-radius: 10px;
   cursor: pointer;
-  height: 19px;
+  height: 14px;
   left: 2px;
   top: 4px;
-  width: 19px;
+  width: 14px;
 }
 
 div[class*="attached-gif-container"] .gif-image-overlay {
-  color: #fff;
+  color: #9ea8b3;
   margin-top: 0;
   position: absolute;
 }
 
 div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-close {
-  font-size: 20px;
+  font-size: 14px;
   vertical-align: top;
 }
 
