@@ -1576,15 +1576,22 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 
 	if ( ! empty( $attachment_id ) && ! empty( $video_attachment_id ) ) {
 		$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+		$old_preview_thumbnail_id  = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
 		$default_images            = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
 		$thumbnail_images = array(
 			'default_images' => $default_images,
 		);
 		update_post_meta( $attachment_id, 'video_preview_thumbnails', $thumbnail_images );
-		if ( isset( $default_images ) && ! empty( $default_images ) ) {
+		if (
+			isset( $default_images ) && ! empty( $default_images ) &&
+			$old_preview_thumbnail_id == $video_attachment_id
+		) {
 			update_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', $default_images[0] );
 			$thumbnail_id  = $default_images[0];
 			$thumbnail_url = bb_video_get_thumb_url( $video_id, $default_images[0], 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+		} else {
+			$thumbnail_id  = $old_preview_thumbnail_id;
+			$thumbnail_url = bb_video_get_thumb_url( $video_id, $old_preview_thumbnail_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 		}
 		wp_delete_post( $video_attachment_id, true );
 		bb_video_delete_thumb_symlink( $attachment_id, $video_attachment_id );
