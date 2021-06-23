@@ -344,6 +344,10 @@
 	}
 }
 
+.bb-media-section .video-js > video {
+	object-fit: contain;
+}
+
 //Video more option dropdown in theater
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {
 	position: absolute;
@@ -1183,7 +1187,9 @@
 				img {
 					object-fit: cover;
 					min-height: 155px;
+					max-height: 155px;
 					border-radius: 5px;
+					width: 100%;
 				}
 
 			}

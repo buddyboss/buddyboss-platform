@@ -19252,6 +19252,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: "\e8af";
 }
 
+.bb-media-section .video-js > video {
+  object-fit: contain;
+}
+
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {
   position: absolute;
   right: 15px;
@@ -20024,7 +20028,9 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li img {
   object-fit: cover;
   min-height: 155px;
+  max-height: 155px;
   border-radius: 5px;
+  width: 100%;
 }
 
 .bp-video-thumbnail-uploader {
