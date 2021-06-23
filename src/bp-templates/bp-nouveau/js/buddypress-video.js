@@ -2663,7 +2663,7 @@ window.bp = window.bp || {};
 						},0);
 					}
 					//Check if Video has played before and has the same id
-					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == bp.Nouveau.Video.Player.playerID ) {
+					if( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr('id') == 'theatre-' + bp.Nouveau.Video.Player.playerID ) {
 						player[ $(self).parent().attr('id') ].currentTime( bp.Nouveau.Video.Player.playerTime );
 						player[ $(self).parent().attr('id') ].play();
 					} else {
