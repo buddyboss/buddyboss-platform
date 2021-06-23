@@ -142,7 +142,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_action( 'bbp_delete_reply', array( $this, 'reply_delete' ), 10, 1 );
 
 			// Hook between activity title and content
-			add_action( 'bp_before_activity_activity_content', array( $this, 'before_activity_content' ) );
+			//add_action( 'bp_before_activity_activity_content', array( $this, 'before_activity_content' ) );
 
 			// Meta button for activity discussion.
 			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
@@ -180,6 +180,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter for single topic.
 			add_filter( 'bbp_is_single_topic', array( $this, 'set_single_topic' ) );
+
+			// Filter discussion.
+			add_filter( 'bp_get_activity_content_body', array( $this, 'before_activity_content' ), 10, 2 );
 		}
 
 		/**
@@ -362,7 +365,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @return string|void
 		 */
-		public function before_activity_content() {
+		public function before_activity_content( $content, $activity ) {
 			global $activities_template;
 
 			// When the activity type does not match with the topic or reply.
@@ -417,10 +420,12 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			if ( is_user_logged_in() ) {
 				// Print discussion title.
-				echo empty( $buttons['activity_topic_title'] ) ? '' : sprintf( '<div class="bp-generic-meta activity-meta action activity-discussion-title-wrap">%s</div>', $buttons['activity_topic_title'] );
+				$content = empty( $buttons['activity_topic_title'] ) ? '' : sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap">%s</p> %s', $buttons['activity_topic_title'], $content );
 			} else {
-				echo sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%$1s">%$2s</a></p>', esc_url( $topic_permalink ), $topic_title );
+				$content = sprintf( '<p class="bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%$1s">%$2s</a></p>', esc_url( $topic_permalink ), $topic_title );
 			}
+			//var_dump( esc_url( $topic_permalink ), $topic_title, $content ); die;
+			return $content;
 		}
 
 		/**
