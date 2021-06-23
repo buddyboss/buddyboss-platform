@@ -141,9 +141,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_action( 'bbp_delete_topic', array( $this, 'topic_delete' ), 10, 1 );
 			add_action( 'bbp_delete_reply', array( $this, 'reply_delete' ), 10, 1 );
 
-			// Hook between activity title and content
-			//add_action( 'bp_before_activity_activity_content', array( $this, 'before_activity_content' ) );
-
 			// Meta button for activity discussion.
 			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
 
@@ -400,7 +397,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Topic.
 			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$content         = sprintf( '<p class = "bp-generic-meta activity-meta action activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> %3$s', esc_url( $topic_permalink ), $topic_title, $content );
+			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> %3$s', esc_url( $topic_permalink ), $topic_title, $content );
 
 			return $content;
 		}
