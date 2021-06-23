@@ -1509,7 +1509,8 @@ window.bp = window.bp || {};
 			// call ajax to remove attachment video_thumbnail_delete
 			var videoId = $( '.video-edit-thumbnail-hidden-video-id' ).val();
 			var videoAttachmentId = $( '.video-edit-thumbnail-hidden-attachment-id' ).val();
-			var thumbVideoAttachmentId = target.closest( '.video-thumbnail-custom' ).siblings('.bb-action-check-wrap').find( 'input' ).val();
+			var thumbVideoAttachmentId = target.closest( '.bb-dropzone-wrap' ).find( 'input' ).val();
+			
 			$.ajax(
 				{
 					type: 'POST',
