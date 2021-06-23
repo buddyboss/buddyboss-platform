@@ -239,7 +239,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
 	} else {
-		$button_text          = __( 'Report', 'buddyboss' );
+		$button_text          = apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
 		$reported_button_text = __( 'Reported', 'buddyboss' );
 	}
 
