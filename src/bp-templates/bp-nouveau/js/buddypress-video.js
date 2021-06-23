@@ -1049,7 +1049,7 @@ window.bp = window.bp || {};
 						this.thumbnail_xhr.abort();
 					}
 
-					$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
+					$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
 
 					this.thumbnail_xhr = $.ajax(
 						{
@@ -1070,7 +1070,7 @@ window.bp = window.bp || {};
 									}
 									// ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 									if( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
-										$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
+										$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb no_generated_thumb' );
 										if( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
 											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">' );
 											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">' );
