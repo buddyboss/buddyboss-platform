@@ -3625,6 +3625,8 @@ function bb_video_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
+	do_action( 'bb_video_delete_older_symlinks' );
+
 	return $list;
 
 }
