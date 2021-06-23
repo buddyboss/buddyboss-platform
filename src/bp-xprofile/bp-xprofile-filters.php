@@ -1068,6 +1068,8 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
  * @param $repair_list
  *
  * @return array Repair list items.
+ *
+ * @since BuddyBoss 1.6.2
  */
 function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
@@ -1087,6 +1089,8 @@ function bb_xprofile_repeater_field_repair( $repair_list ) {
  * This function will be called only once.
  *
  * @uses bb_xprofile_repeater_field_migration
+ *
+ * @since BuddyBoss 1.6.2
  */
 function bb_xprofile_repeater_field_repair_callback() {
 	$offset = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
@@ -1108,12 +1112,13 @@ function bb_xprofile_repeater_field_repair_callback() {
  * @param boolean $callback
  *
  * @return array
+ *
+ * @since BuddyBoss 1.6.2
  */
 function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 	global $wpdb;
 	$bp               = buddypress();
-	$recipients_query = "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete= 1 LIMIT 2 OFFSET $offset ";
-	$recipients       = $wpdb->get_results( $recipients_query );
+	$recipients       = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete = %d LIMIT %d OFFSET %d", 1, 2, $offset ) );
 	if ( ! empty( $recipients ) ) {
 		foreach ( $recipients as $recipient ) {
 			$check_delete_group_data = array();
@@ -1133,9 +1138,9 @@ function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 								$field_id_arr[] = $field_id_obj->id;
 							}
 						}
-						$delete_field_id = $wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_fields . ' WHERE field_order = ' . $group_field_id->field_order . ' AND group_id = ' . $group_id . ' AND id IN ( ' . implode( ',', $field_id_arr ) . ' )' );
+						$delete_field_id = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $bp->profile->table_name_fields . ' WHERE field_order = %d AND group_id = %d AND id IN ( ' . implode( ',', $field_id_arr ) . ' )', $group_field_id->field_order, $group_id ) );
 						if ( false !== $delete_field_id ) {
-							$delete_meta_qry = $wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_meta . ' WHERE object_id IN ( ' . implode( ',', $field_id_arr ) . ' ) AND object_type="field"' );
+							$delete_meta_qry = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $bp->profile->table_name_meta . ' WHERE object_id IN ( ' . implode( ',', $field_id_arr ) . ' ) AND object_type = "%s" ', 'field' ) );
 							if ( false !== $delete_meta_qry ) {
 								$check_delete_group_data[] = $group_id;
 							}
@@ -1148,7 +1153,7 @@ function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 			// This will remove unnecessary data that may have remained after the above migration process.
 			if ( ! empty( $check_delete_group_data ) ) {
 				$meta_key            = 'field_set_count_' . $group_id;
-				$user_meta_for_group = $wpdb->get_row( 'SELECT MAX( CAST(meta_value AS DECIMAL) ) as max_value FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key =' . "'" . $meta_key . "'" . '' );
+				$user_meta_for_group = $wpdb->get_row( $wpdb->prepare( 'SELECT MAX( CAST(meta_value AS DECIMAL) ) as max_value FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = "%s" ', $meta_key ) );
 				if ( ! empty( $user_meta_for_group ) ) {
 					$max_field_set_count = $user_meta_for_group->max_value;
 					if ( $max_field_set_count >= 10 ) {
@@ -1187,6 +1192,8 @@ function bb_xprofile_repeater_field_migration( $offset, $callback ) {
  * @param int $group_id Group id.
  *
  * @return boolean
+ *
+ * @since BuddyBoss 1.6.2
  */
 function bb_delete_unnecessory_groups_field( $group_id ) {
 	global $wpdb;
@@ -1220,9 +1227,9 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
 			$delete_fields_arr[] = $field_id->id;
 		}
 		if ( ! empty( $delete_fields_arr ) ) {
-			$delete_field_id = $wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_fields . ' WHERE group_id = ' . $group_id . ' AND id IN ( ' . implode( ',', $delete_fields_arr ) . ' )' );
+			$delete_field_id = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $bp->profile->table_name_fields . ' WHERE group_id = %d AND id IN ( ' . implode( ',', $delete_fields_arr ) . ' )', $group_id ) );
 			if ( false !== $delete_field_id ) {
-				$delete_meta_qry = $wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_meta . ' WHERE object_id IN ( ' . implode( ',', $delete_fields_arr ) . ' ) AND object_type="field"' );
+				$delete_meta_qry = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $bp->profile->table_name_meta . ' WHERE object_id IN ( ' . implode( ',', $delete_fields_arr ) . ' ) AND object_type = "%s" ', 'field' ) );
 				if ( false !== $delete_meta_qry ) {
 					return true;
 				}
@@ -1237,14 +1244,15 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
  * This function will be called only once.
  *
  * @uses bb_xprofile_repeater_field_migration
+ *
+ * @since BuddyBoss 1.6.2
  */
 function bb_xprofile_repeater_field_repair_with_background() {
 	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
 	if ( false === $get_bp_xprofile_migration ) {
 		global $wpdb, $bp_background_updater;
 		$bp = buddypress();
-		$recipients_query = "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete=1";
-		$recipients       = $wpdb->get_row( $recipients_query );
+		$recipients = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete = %d", 1 ) );
 
 		for( $counter = 0; $counter <= $recipients->total_id; $counter ++ ) {
 			if ( (int) $counter !== (int) $recipients->total_id ) {

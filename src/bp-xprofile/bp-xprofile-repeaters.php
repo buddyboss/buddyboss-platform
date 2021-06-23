@@ -938,6 +938,8 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 /**
  * Function will delete duplicate field order which inserted last from DB.
  *
+ * @since BuddyBoss 1.6.2
+ *
  * @param int $field_group_id    Current group id.
  * @param int $clone_field_order Field order id.
  * @param int $count             Get total count of fields id.
@@ -964,9 +966,9 @@ function bb_delete_duplicate_field_order( $field_group_id, $clone_field_order, $
 					$field_id_arr[] = $field_id_obj->id;
 				}
 			}
-			$delete_field_id = $wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_fields . ' WHERE field_order = ' . $clone_field_order . ' AND group_id = ' . $field_group_id . ' AND id IN ( ' . implode( ',', $field_id_arr ) . ' )' );
+			$delete_field_id = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $bp->profile->table_name_fields . ' WHERE field_order = %d AND group_id = %d AND id IN ( ' . implode( ',', $field_id_arr ) . ' )', $clone_field_order, $field_group_id ) );
 			if ( $delete_field_id ) {
-				$wpdb->query( 'DELETE FROM ' . $bp->profile->table_name_meta . ' WHERE object_id IN ( ' . implode( ',', $field_id_arr ) . ' )' );
+				$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $bp->profile->table_name_meta . ' WHERE object_id IN ( ' . implode( ',', $field_id_arr ) . ' )' ) );
 				$update_count = (int) $count - (int) count( $field_id_arr );
 				bp_set_profile_field_set_count( $field_group_id, $user_id, $update_count );
 			}
