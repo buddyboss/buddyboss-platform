@@ -39,7 +39,7 @@ if ( bp_is_active( 'media' ) ) {
 }
 
 if ( bp_is_active( 'video' ) ) {
-	new BP_Moderation_Video();
+	// new BP_Moderation_Video(); Temporary Hide Video checkbox from Moderation
 }
 
 if ( bp_is_active( 'messages' ) ) {
