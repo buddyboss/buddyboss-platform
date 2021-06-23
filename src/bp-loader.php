@@ -443,3 +443,17 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	add_action( 'admin_notices', 'bp_duplicate_notice' );
 	add_action( 'network_admin_notices', 'bp_duplicate_notice' );
 }
+
+
+add_action( 'admin_init', function() {
+	register_post_type( 'bb_custom_project',
+		// WordPress CPT Options Start
+		array(
+			'label'               => __( 'Project', 'hrm' ),
+			'has_archive'  => true,
+			'public'       => true,
+			'show_in_rest' => true,
+			'supports'     => array('editor')
+		)
+	);
+} );
