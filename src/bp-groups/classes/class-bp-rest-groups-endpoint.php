@@ -142,6 +142,9 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $request['parent_id'] ) ) {
 			$args['parent_id'] = null;
+			if ( true === (bool) bp_enable_group_hide_subgroups() ) {
+				$args['parent_id'] = 0;
+			}
 		}
 
 		// See if the user can see hidden groups.
@@ -162,6 +165,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			)
 			&& function_exists( 'bp_groups_get_excluded_group_ids_by_type' )
 			&& ! empty( bp_groups_get_excluded_group_ids_by_type() )
+			&& empty( $request['parent_id'] )
 		) {
 			$args['exclude'] = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 		}
