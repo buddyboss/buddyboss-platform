@@ -18931,6 +18931,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   object-fit: cover;
 }
 
+.bb-activity-video-elem .video-js.vjs-playing:not(.vjs-waiting) > video,
+.bb-video-thumb .video-js.vjs-playing:not(.vjs-waiting) > video,
+.bb-media-section .video-js.vjs-playing:not(.vjs-waiting) > video {
+  object-fit: contain;
+}
+
 .bb-activity-video-elem .video-js.vjs-playing ~ .bb-video-play,
 .bb-activity-video-elem .video-js.vjs-playing ~ .bb-video-duration,
 .bb-video-thumb .video-js.vjs-playing ~ .bb-video-play,
@@ -19260,10 +19266,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-media-section .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before {
   content: "\e8af";
-}
-
-.bb-media-section .video-js > video {
-  object-fit: contain;
 }
 
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {

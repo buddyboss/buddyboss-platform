@@ -75,6 +75,10 @@
 		object-fit: cover;
 	}
 
+	.video-js.vjs-playing:not(.vjs-waiting) > video {
+		object-fit: contain;
+	}
+
 	.video-js.vjs-playing {
 
 		~ .bb-video-play,
@@ -342,10 +346,6 @@
 		}
 
 	}
-}
-
-.bb-media-section .video-js > video {
-	object-fit: contain;
 }
 
 //Video more option dropdown in theater
