@@ -3843,6 +3843,8 @@ function bb_media_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
+	do_action( 'bb_media_delete_older_symlinks' );
+
 	return $list;
 
 }
