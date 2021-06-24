@@ -630,11 +630,13 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( 'groups' !== $filter['scope'] ) {
 		// Fetch public groups.
-		$public_groups = groups_get_groups( array(
-			'fields'   => 'ids',
-			'status'   => 'public',
-			'per_page' => - 1,
-		) );
+		$public_groups = groups_get_groups(
+			array(
+				'fields'   => 'ids',
+				'status'   => 'public',
+				'per_page' => - 1,
+			)
+		);
 	}
 	if ( ! empty( $public_groups['groups'] ) ) {
 		$public_groups = $public_groups['groups'];
@@ -694,7 +696,7 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	$retval = array(
 		'relation' => 'OR',
-		$args
+		$args,
 	);
 
 	return $retval;
