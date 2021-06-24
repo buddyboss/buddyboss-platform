@@ -3636,10 +3636,21 @@ function bb_video_get_symlink( $video, $generate = true ) {
 		return;
 	}
 
-	$do_symlink     = apply_filters( 'bb_video_do_symlink', true, $video->id, $video->attachment_id, '' );
 	$attachment_url = '';
 	$video_id       = $video->id;
 	$attachment_id  = $video->attachment_id;
+
+	/**
+	 * Filter here to allow/disallow video symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $video_id      Video id
+	 * @param int    $attachment_id Video attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
+	$do_symlink = apply_filters( 'bb_video_do_symlink', true, $video_id, $attachment_id, '' );
 
 	if ( $do_symlink ) {
 
