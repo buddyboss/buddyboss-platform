@@ -1390,9 +1390,9 @@ function bp_document_upload() {
 }
 
 /**
- * document upload handler
+ * Document upload handler.
  *
- * @param string $file_id
+ * @param string $file_id Index of the `$_FILES` array that the file was sent. Required.
  *
  * @return array|int|null|WP_Error|WP_Post
  * @since BuddyBoss 1.4.0
@@ -1428,7 +1428,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 			'upload_error_strings' => array(
 				false,
 				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size(),
-				__( 'The ubb_document_get_image_sizesploaded file was only partially uploaded.', 'buddyboss' ),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
 				'',
 				__( 'Missing a temporary folder.', 'buddyboss' ),
@@ -1489,7 +1489,7 @@ function bp_document_allowed_mimes( $existing_mimes = array() ) {
 /**
  * Return the extension of the attachment.
  *
- * @param $attachment_id
+ * @param int $attachment_id Attachment id.
  *
  * @return mixed|string
  * @since BuddyBoss 1.4.0
@@ -1512,7 +1512,7 @@ function bp_document_extension( $attachment_id ) {
 /**
  * Return the extension of the attachment.
  *
- * @param $attachment_id
+ * @param int $attachment_id Attachment id.
  *
  * @return mixed|string
  * @since BuddyBoss 1.4.0
@@ -3471,7 +3471,7 @@ function bp_document_get_forum_id( $document_id ) {
 			'post_type'      => bbp_get_forum_post_type(),
 			'fields'         => 'ids',
 			'posts_per_page' => - 1,
-			'meta_query'     => array(
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				array(
 					'key'     => 'bp_document_ids',
 					'value'   => $document_id,
@@ -3501,7 +3501,7 @@ function bp_document_get_forum_id( $document_id ) {
 				'post_type'      => bbp_get_topic_post_type(),
 				'fields'         => 'ids',
 				'posts_per_page' => - 1,
-				'meta_query'     => array(
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					array(
 						'key'     => 'bp_document_ids',
 						'value'   => $document_id,
@@ -3534,7 +3534,7 @@ function bp_document_get_forum_id( $document_id ) {
 				'post_type'      => bbp_get_reply_post_type(),
 				'fields'         => 'ids',
 				'posts_per_page' => - 1,
-				'meta_query'     => array(
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					array(
 						'key'     => 'bp_document_ids',
 						'value'   => $document_id,
@@ -3564,7 +3564,6 @@ function bp_document_get_forum_id( $document_id ) {
 	}
 
 	return apply_filters( 'bp_document_get_forum_id', $forum_id, $document_id );
-
 }
 
 /**
@@ -3602,7 +3601,6 @@ function bp_document_get_thread_id( $document_id ) {
 	}
 
 	return apply_filters( 'bp_document_get_thread_id', $thread_id, $document_id );
-
 }
 
 /**
@@ -3781,7 +3779,6 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 		if ( ! empty( $filetype ) && strstr( $filetype['type'], 'video/' ) ) {
 			bb_document_video_get_symlink( $document );
 		}
-
 	}
 }
 
@@ -3879,7 +3876,8 @@ function bp_document_delete_symlinks( $document ) {
  * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
  *
  * @param array $image_editors image editors.
- * @return void
+ *
+ * @return array
  */
 function bp_document_include_wp_image_editors( $image_editors ) {
 	if ( ! in_array( 'BP_GOPP_Image_Editor_GS', $image_editors, true ) ) {
@@ -3905,8 +3903,8 @@ function bp_document_remove_temp_directory( $dir ) {
 	if ( is_dir( $dir ) ) {
 		$objects = scandir( $dir );
 		foreach ( $objects as $object ) {
-			if ( $object != '.' && $object != '..' ) {
-				if ( filetype( $dir . '/' . $object ) == 'dir' ) {
+			if ( '.' !== $object && '..' !== $object ) {
+				if ( filetype( $dir . '/' . $object ) === 'dir' ) {
 					bp_document_remove_temp_directory( $dir . '/' . $object );
 				} else {
 					unlink( $dir . '/' . $object );
@@ -3972,12 +3970,14 @@ function bp_document_generate_document_previews( $attachment_id ) {
 /**
  * Helper to set the max_execution_time.
  *
+ * @param int $time_limit Time limit.
+ *
  * @since BuddyBoss 1.7.0
  */
 function bp_document_set_time_limits( $time_limit ) {
 	$max_execution_time = ini_get( 'max_execution_time' );
 	if ( $max_execution_time && $time_limit > $max_execution_time ) {
-		return @set_time_limit( $time_limit );
+		return @set_time_limit( $time_limit ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 	}
 	return null;
 }
@@ -3988,8 +3988,11 @@ function bp_document_set_time_limits( $time_limit ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
+	$cnt         = 0;
+	$num_updates = 0;
+	$num_fails   = 0;
+	$time        = 0;
 
-	$cnt = $num_updates = $num_fails = $time = 0;
 	if ( $ids ) {
 		$time = microtime( true );
 		$cnt  = count( $ids );
@@ -4009,21 +4012,24 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 				if ( $old_value && ( ! is_array( $old_value ) || 1 !== count( $old_value ) ) ) {
 					$old_value = null;
 				}
+
 				// Remove old intermediate thumbnails if any.
 				if ( $old_value && ! empty( $old_value[0]['sizes'] ) && is_array( $old_value[0]['sizes'] ) ) {
 					$dirname = dirname( $file ) . '/';
 					foreach ( $old_value[0]['sizes'] as $sizeinfo ) {
 						// Check whether pre WP 4.7.3 lacking PDF marker and if so don't delete so as not to break links to thumbnails in content.
 						if ( false !== strpos( $sizeinfo['file'], '-pdf' ) ) {
-							@ unlink( $dirname . $sizeinfo['file'] );
+							@unlink( $dirname . $sizeinfo['file'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 						}
 					}
 				}
+
 				if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-					require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-					require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-					require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+					require_once ABSPATH . 'wp-admin/includes/image.php';
+					require_once ABSPATH . 'wp-admin/includes/file.php';
+					require_once ABSPATH . 'wp-admin/includes/media.php';
 				}
+
 				// Generate new intermediate thumbnails.
 				$meta = wp_generate_attachment_metadata( $id, $file );
 
@@ -4047,7 +4053,7 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 /**
  * Generate the document code preview.
  *
- * @param $attachment_id
+ * @param int $attachment_id Attachment id.
  *
  * @return false
  *
@@ -4101,7 +4107,7 @@ function bp_document_generate_code_previews( $attachment_id ) {
 /**
  * Get the extension descriptions.
  *
- * @param $extension
+ * @param string $extension File extension.
  *
  * @return mixed|string
  *
@@ -4253,7 +4259,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 /**
  * Give recursive file permission.
  *
- * @param $path
+ * @param string $path File path.
+ *
  * @since BuddyBoss 1.7.0
  */
 function bp_document_chmod_r( $path ) {
@@ -4269,7 +4276,7 @@ function bp_document_chmod_r( $path ) {
 /**
  * Return the preview text for the document files.
  *
- * @param $attachment_id
+ * @param int $attachment_id Attachment id.
  *
  * @return false|mixed|string
  * @since BuddyBoss 1.4.1
@@ -4278,7 +4285,7 @@ function bp_document_mirror_text( $attachment_id ) {
 	$mirror_text = '';
 
 	$extension = bp_document_extension( $attachment_id );
-	if ( isset( $extension ) && ! empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
+	if ( isset( $extension ) && ! empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
 		$words = 8000;
 		$more  = '...';
 		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
@@ -4300,9 +4307,9 @@ function bp_document_mirror_text( $attachment_id ) {
 /**
  * Return the audio url of the file.
  *
- * @param $document_id
- * @param $attachment_id
- * @param $extension
+ * @param int    $document_id   Document id.
+ * @param int    $attachment_id Attachment id.
+ * @param string $extension     File extension name.
  *
  * @return mixed|void
  *
@@ -4329,7 +4336,7 @@ function bp_document_get_preview_audio_url( $document_id, $attachment_id, $exten
 	 *
 	 * @param string $attachment_url Url.
 	 * @param int    $document_id    Document id.
-	 * @param string $extension      Extension.
+	 * @param string $extension      File extension name.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
@@ -4340,6 +4347,8 @@ function bp_document_get_preview_audio_url( $document_id, $attachment_id, $exten
  * Called on 'wp_image_editors' action.
  * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
  *
+ * @param $image_editors
+ *
  * @since BuddyBoss 1.7.0
  */
 function bp_document_wp_image_editors( $image_editors ) {
@@ -4347,6 +4356,7 @@ function bp_document_wp_image_editors( $image_editors ) {
 		bp_document_load_gopp_image_editor_gs();
 		array_unshift( $image_editors, 'BP_GOPP_Image_Editor_GS' );
 	}
+
 	return $image_editors;
 }
 
@@ -4470,13 +4480,10 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 					$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
 				}
-
 			}
-
 		} else {
 			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( 'forbidden_' . $attachment_id ) . '&id1=' . base64_encode( 'forbidden_' . $document_id );
 		}
-
 	}
 
 	/**
@@ -4489,7 +4496,6 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bb_document_video_get_symlink', $attachment_url, $document_id, $attachment_id );
-
 }
 
 /**
@@ -4512,7 +4518,7 @@ function bb_document_get_image_sizes() {
 		'bb-document-image-preview-activity-image' => array(
 			'height' => 250,
 			'width'  => 600,
-		)
+		),
 	);
 
 	return (array) apply_filters( 'bb_document_get_image_sizes', $image_sizes );
@@ -4638,7 +4644,7 @@ function bb_document_fallback_intermediate_image_sizes( $fallback_sizes, $metada
 	return apply_filters( 'bb_document_fallback_intermediate_image_sizes', $fallback_sizes, $metadata );
 }
 
-/*
+/**
  * Add the PDF fallback filter.
  *
  * @since BuddyBoss 1.7.0
@@ -4647,7 +4653,7 @@ function bb_document_add_fallback_intermediate_image_sizes() {
 	add_filter( 'fallback_intermediate_image_sizes', 'bb_document_fallback_intermediate_image_sizes', 9999, 2 );
 }
 
-/*
+/**
  * Remove the PDF fallback filter.
  *
  * @since BuddyBoss 1.7.0
@@ -4691,17 +4697,14 @@ function bb_get_document_attachments( $document ) {
 		$activity_thumb_image  = bp_document_get_preview_url( $document->id, $document->attachment_id, 'bb-document-image-preview-activity-image' );
 		$video_symlink         = bb_document_video_get_symlink( $document );
 
-
 		$attachment_data->full               = $large_pdf_image_popup;
 		$attachment_data->thumb              = $activity_thumb_image;
 		$attachment_data->activity_thumb     = $activity_thumb_image;
 		$attachment_data->activity_thumb_pdf = $activity_thumb_pdf;
 		$attachment_data->video_symlink      = $video_symlink;
-
 	}
 
 	return $attachment_data;
-
 }
 
 /**
@@ -4734,8 +4737,9 @@ function bb_document_delete_older_symlinks() {
 		return;
 	}
 
-	while ( ( $file = readdir( $dh ) ) !== false ) {
-		if ( $file === '.' || $file === '..' ) {
+	$file = readdir( $dh );
+	while ( false !== $file ) {
+		if ( '.' === $file || '..' === $file ) {
 			continue;
 		}
 		$file = $dir . '/' . $file;
@@ -4749,6 +4753,5 @@ function bb_document_delete_older_symlinks() {
 	do_action( 'bb_document_delete_older_symlinks' );
 
 	return $list;
-
 }
 bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks' );
