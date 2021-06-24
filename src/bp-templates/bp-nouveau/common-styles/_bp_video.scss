@@ -1177,6 +1177,7 @@
 					height: 100%;
 					display: flex !important;
 					position: relative;
+					width: 100%;
 				}
 
 				> div > a {
@@ -1349,12 +1350,14 @@
 
 		.bb-dropzone-wrap {
 			margin-bottom: 15px;
-			min-height: 100px;
+			min-height: 106px;
+			vertical-align: top !important;
+			width: 100% !important;
 
 			.dropzone,
 			.dropzone .dz-default,
 			.video-thumbnail-custom img {
-				min-height: 100px;
+				height: 106px !important;
 			}
 
 		}
