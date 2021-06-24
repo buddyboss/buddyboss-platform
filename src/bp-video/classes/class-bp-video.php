@@ -632,6 +632,7 @@ class BP_Video {
 			$attachment_data->thumb_meta                 = array();
 			$attachment_data->video_user_profile_thumb   = $default_thumb;
 			$attachment_data->video_directory_page_thumb = $default_thumb;
+			$attachment_data->media_album_cover          = $default_thumb;
 			$attachment_data->video_album_cover_thumb    = $default_thumb;
 			$attachment_data->video_add_thumbnail_thumb  = $default_thumb;
 			$attachment_data->video_popup_thumb          = $default_thumb;
@@ -652,6 +653,7 @@ class BP_Video {
 				$attachment_data->video_user_profile_thumb   = $video_user_profile_thumb;
 				$attachment_data->video_directory_page_thumb = $video_directory_page_thumb;
 				$attachment_data->video_album_cover_thumb    = $video_album_cover_thumb;
+				$attachment_data->media_album_cover          = $video_album_cover_thumb;
 				$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
 				$attachment_data->video_popup_thumb          = $video_popup_thumb;
 				$attachment_data->video_activity_thumb       = $video_activity_thumb;
