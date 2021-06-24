@@ -28,10 +28,22 @@ function bp_media_upload() {
 		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
 	}
 
+	/**
+	 * Fires before the media upload handler.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 */
 	do_action( 'bb_before_media_upload_handler' );
 
 	$attachment = bp_media_upload_handler();
 
+	/**
+	 * Fires after the media upload handler.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 */
 	do_action( 'bb_after_media_upload_handler' );
 
 	if ( is_wp_error( $attachment ) ) {
@@ -3167,6 +3179,16 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 	    return;
     }
 
+	/**
+	 * Filter here to allow/disallow media symlinks.
+	 *
+	 * @param bool   $do_symlink          Default true.
+	 * @param int    $media_id            Media id
+	 * @param int    $media_attachment_id Media attachment id.
+	 * @param string $size                Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_media_do_symlink', true, $media->id, $media->attachment_id, $size );
 
 	if ( $do_symlink ) {
@@ -3340,6 +3362,16 @@ function bp_media_delete_symlinks( $media ) {
 function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image', $generate = true ) {
 	$attachment_url = '';
 
+	/**
+	 * Filter here to allow/disallow media symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $media_id      Media id
+	 * @param int    $attachment_id Media attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_media_do_symlink', true, $media_id, $attachment_id, $size );
 
 	if ( $do_symlink ) {

@@ -3680,6 +3680,16 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 		return;
 	}
 
+	/**
+	 * Filter here to allow/disallow document symlinks.
+	 *
+	 * @param bool   $do_symlink             Default true.
+	 * @param int    $document_id            Document id
+	 * @param int    $document_attachment_id Document attachment id.
+	 * @param string $size                   Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_document_do_symlink', true, $document->id, $document->attachment_id, 'medium' );
 
 	if ( $do_symlink ) {
@@ -4128,6 +4138,16 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 	$attachment_url = '';
 	$extension      = bp_document_extension( $attachment_id );
 
+	/**
+	 * Filter here to allow/disallow document symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $document_id   Document id
+	 * @param int    $attachment_id Document attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_document_do_symlink', true, $document_id, $attachment_id, $size );
 
 	if ( $do_symlink ) {
@@ -4345,6 +4365,16 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 		return;
 	}
 
+	/**
+	 * Filter here to allow/disallow document symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $document_id   Document id
+	 * @param int    $attachment_id Document attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_document_do_symlink', true, $document->id, $document->attachment_id, '' );
 
 	if ( $do_symlink ) {
