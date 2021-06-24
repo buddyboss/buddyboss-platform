@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-18 12:11:16+00:00\n"
+"POT-Creation-Date: 2021-06-24 11:26:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -592,15 +592,15 @@ msgstr ""
 
 #: bp-activity/bp-activity-filters.php:574
 #: bp-activity/bp-activity-filters.php:2313
-#: bp-activity/bp-activity-filters.php:2348
-#: bp-activity/bp-activity-filters.php:2383
+#: bp-activity/bp-activity-filters.php:2342
+#: bp-activity/bp-activity-filters.php:2377
 msgid " Read more"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:578
 #: bp-activity/bp-activity-filters.php:2311
-#: bp-activity/bp-activity-filters.php:2346
-#: bp-activity/bp-activity-filters.php:2381
+#: bp-activity/bp-activity-filters.php:2340
+#: bp-activity/bp-activity-filters.php:2375
 msgid "&hellip;"
 msgstr ""
 
@@ -27268,7 +27268,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:893
+#: class-buddypress.php:894
 msgid "BuddyPress Nouveau"
 msgstr ""
 
