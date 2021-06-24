@@ -3192,6 +3192,16 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 
     $attachment_url = '';
 
+	/**
+	 * Filter here to allow/disallow video thumb symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $video_id      Video id
+	 * @param int    $attachment_id Document attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video_id, $attachment_id, $size );
 
 	if ( $do_symlink ) {
@@ -3590,6 +3600,16 @@ function bb_video_create_symlinks( $video ) {
 		return;
 	}
 
+	/**
+	 * Filter here to allow/disallow video symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $video_id      Video id
+	 * @param int    $attachment_id Document attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_video_do_symlink', true, $video->id, $video->attachment_id, '' );
 
 	if ( $do_symlink ) {
@@ -4055,6 +4075,16 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 		return;
 	}
 
+	/**
+	 * Filter here to allow/disallow video symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $video_id      Video id
+	 * @param int    $attachment_id Document attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_video_create_thumb_symlinks', true, $video->id, $attachment_id, $size );
 
 	if ( $do_symlink ) {
