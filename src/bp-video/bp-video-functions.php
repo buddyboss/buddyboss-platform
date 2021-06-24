@@ -3738,6 +3738,11 @@ function bb_video_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
+	/**
+	 * Fire the action after delete older symlinks.
+     *
+     * @since BuddyBoss 1.7.0
+	 */
 	do_action( 'bb_video_delete_older_symlinks' );
 
 	return $list;
