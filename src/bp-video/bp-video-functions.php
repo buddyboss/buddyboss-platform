@@ -3692,6 +3692,15 @@ function bb_video_get_symlink( $video, $generate = true ) {
         }
 	}
 
+	/**
+	 * Filter for the video symlink url.
+	 *
+	 * @param string $attachment_url Attachment URL.
+	 * @param int    $video_id       Video id.
+	 * @param int    $attachment_id  Attachment id.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id );
 
 }
