@@ -18933,8 +18933,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-activity-video-elem .video-js.vjs-playing:not(.vjs-waiting) > video,
+.bb-activity-video-elem .video-js.vjs-paused:not(.vjs-waiting) > video,
 .bb-video-thumb .video-js.vjs-playing:not(.vjs-waiting) > video,
-.bb-media-section .video-js.vjs-playing:not(.vjs-waiting) > video {
+.bb-video-thumb .video-js.vjs-paused:not(.vjs-waiting) > video,
+.bb-media-section .video-js.vjs-playing:not(.vjs-waiting) > video,
+.bb-media-section .video-js.vjs-paused:not(.vjs-waiting) > video {
   object-fit: contain;
 }
 
