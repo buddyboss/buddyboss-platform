@@ -207,7 +207,7 @@
 				width: 4em;
 				font-size: 10px;
 				line-height: 1.3;
-				box-shadow: none;
+				box-shadow: none !important;
 				text-shadow: none;
 				font-family: inherit;
 
@@ -1677,6 +1677,11 @@ div.dropzone.dz-started {
 
 #video-uploader.dropzone .dz-preview.dz-file-preview {
 	width: 250px;
+}
+
+body > .open-popup.video-error-popup {
+	position: relative;
+	z-index: 999999;
 }
 
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
