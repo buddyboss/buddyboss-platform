@@ -1857,6 +1857,7 @@ div[class*="attached-gif-container"] .gif-image-remove {
   right: 2px;
   top: 4px;
   width: 14px;
+  background-color: #f8f8f8;
 }
 
 div[class*="attached-gif-container"] .gif-image-overlay {
