@@ -4737,9 +4737,8 @@ function bb_document_delete_older_symlinks() {
 		return;
 	}
 
-	$file = readdir( $dh );
-	while ( false !== $file ) {
-		if ( '.' === $file || '..' === $file ) {
+	while ( ( $file = readdir( $dh ) ) !== false ) {
+		if ( $file === '.' || $file === '..' ) {
 			continue;
 		}
 
