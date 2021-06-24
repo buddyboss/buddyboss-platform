@@ -3894,8 +3894,12 @@ function bb_media_delete_older_symlinks() {
 		if ( $file === '.' || $file === '..' ) {
 			continue;
 		}
-		$file = $dir . '/' . $file;
-		if ( file_exists( $file ) && filemtime( $file ) < $limit ) {
+
+		$file      = $dir . '/' . $file;
+		$file_time = lstat( $file );
+		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
+
+		if ( file_exists( $file ) && $file_time < $limit ) {
 			$list[] = $file;
 			unlink( $file );
 		}
