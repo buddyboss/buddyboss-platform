@@ -1386,7 +1386,7 @@ function bp_admin_moderation_report_setting_tutorial() {
 function bp_admin_setting_callback_on_screen_notifications_enable() {
 	?>
 	<input id="_bp_on_screen_notifications_enable" name="_bp_on_screen_notifications_enable" type="checkbox"
-		   value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 1 ) ); ?> />
+		   value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ); ?> />
 	<label for="_bp_on_screen_notifications_enable"><?php esc_html_e( 'Enable on-screen notifications', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ); ?></p>
 	<?php
@@ -1403,7 +1403,7 @@ function bp_admin_setting_callback_on_screen_notifications_position() {
 	?>
 	<div class="bb-screen-position-outer">		
 		<div class="bb-screen-position bb-bottom-left">
-			<input id="bp_on_screen_notifications_position_left" name="_bp_on_screen_notifications_position" type="radio" value="left" <?php checked( 'left' === bp_get_option( '_bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
+			<input id="bp_on_screen_notifications_position_left" name="_bp_on_screen_notifications_position" type="radio" value="left" <?php checked( 'left' === bp_get_option( '_bp_on_screen_notifications_position', '' ) ? true : false ); ?> />
 			<label class="option opt-left" for="bp_on_screen_notifications_position_left">
 				<span>
 					<?php esc_html_e( 'Bottom Left', 'buddyboss' ); ?>
@@ -1411,7 +1411,7 @@ function bp_admin_setting_callback_on_screen_notifications_position() {
 			</label>
 		</div>
 		<div class="bb-screen-position bb-bottom-right">
-			<input id="bp_on_screen_notifications_position_right" name="_bp_on_screen_notifications_position" type="radio" value="right" <?php checked( 'right' === bp_get_option( '_bp_on_screen_notifications_position', 'right' ) ? true : false ); ?> />
+			<input id="bp_on_screen_notifications_position_right" name="_bp_on_screen_notifications_position" type="radio" value="right" <?php checked( 'right' === bp_get_option( '_bp_on_screen_notifications_position', '' ) ? true : false ); ?> />
 			<label class="option opt-right" for="bp_on_screen_notifications_position_right">
 				<span>
 					<?php esc_html_e( 'Bottom Right', 'buddyboss' ); ?>
@@ -1431,7 +1431,7 @@ function bp_admin_setting_callback_on_screen_notifications_position() {
  */
 function bp_admin_setting_callback_on_screen_notifications_mobile_support() {
 	?>
-	<input id="_bp_on_screen_notifications_mobile_support" name="_bp_on_screen_notifications_mobile_support" type="checkbox" value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_mobile_support', 1 ) ); ?> />
+	<input id="_bp_on_screen_notifications_mobile_support" name="_bp_on_screen_notifications_mobile_support" type="checkbox" value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 ) ); ?> />
 	<label for="_bp_on_screen_notifications_mobile_support"><?php esc_html_e( 'Show on-screen notifications on small screens', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide.', 'buddyboss' ); ?></p>
 	<?php
@@ -1446,7 +1446,7 @@ function bp_admin_setting_callback_on_screen_notifications_mobile_support() {
  */
 function bp_admin_setting_callback_on_screen_notifications_browser_tab() {
 	?>
-	<input id="_bp_on_screen_notifications_browser_tab" name="_bp_on_screen_notifications_browser_tab" type="checkbox" value="1"  <?php checked( bp_get_option( '_bp_on_screen_notifications_browser_tab', 1 ) ); ?> />
+	<input id="_bp_on_screen_notifications_browser_tab" name="_bp_on_screen_notifications_browser_tab" type="checkbox" value="1"  <?php checked( bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 ) ); ?> />
 	<label for="_bp_on_screen_notifications_browser_tab"><?php esc_html_e( 'Show new notifications in the title of the browser tab', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'Update the page <title> tab when new notifications are received.', 'buddyboss' ); ?></p>
 	<?php
@@ -1479,7 +1479,7 @@ function bp_admin_setting_callback_on_screen_notifications_visibility() {
 
 		<?php foreach ( $options as $option_id => $label ) : ?>
 
-			<option  value="<?php echo esc_attr( $option_id ); ?>" <?php selected( esc_attr( $option_id ) === bp_get_option( '_bp_on_screen_notifications_visibility', 'never' ) ? true : false ); ?>>
+			<option  value="<?php echo esc_attr( $option_id ); ?>" <?php selected( esc_attr( $option_id ) === bp_get_option( '_bp_on_screen_notifications_visibility', '' ) ? true : false ); ?>>
 				<?php echo esc_html( $label ); ?>
 			</option>
 
