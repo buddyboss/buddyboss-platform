@@ -327,7 +327,7 @@ function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $val
  */
 function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) {
 	global $wpdb;
-	$bp = buddypress();
+	$bp      = buddypress();
 	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
 	if ( ! $user_id ) {
 		die();
@@ -394,8 +394,11 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 				 * MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
 				 * It will issuing in query.
 				 */
+				$all_clones_list       = implode( ',', $all_clones );
 				$last_max_clone_number = $wpdb->get_var(
-					"SELECT MAX( CAST(meta_value AS DECIMAL) ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
+					$wpdb->prepare(
+						"SELECT MAX( CAST(meta_value AS DECIMAL) ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN ( $all_clones_list )"
+					)
 				); // Changed MAX(met_value) to MAX(CAST(meta_value AS DECIMAL)) - Max(meta_value) return only max 9 value.
 				$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
 				$current_clone_number  = $last_max_clone_number + 1;
