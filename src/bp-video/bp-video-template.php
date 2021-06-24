@@ -269,7 +269,7 @@ function bp_the_video() {
 /**
  * Output the URL for the Load More link.
  *
- * @since BuddyPress 2.1.0
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_load_more_link() {
 	echo esc_url( bp_get_video_load_more_link() );
@@ -279,7 +279,7 @@ function bp_video_load_more_link() {
  * Get the URL for the Load More link.
  *
  * @return string $link
- * @since BuddyPress 2.1.0
+ * @since BuddyBoss 1.7.0
  */
 function bp_get_video_load_more_link() {
 	global $video_template;
@@ -294,7 +294,7 @@ function bp_get_video_load_more_link() {
 	 * @param string $url            The original URL.
 	 * @param object $video_template The video template loop global.
 	 *
-	 * @since BuddyPress 2.1.0
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_get_video_load_more_link', $link, $url, $video_template );
 }
