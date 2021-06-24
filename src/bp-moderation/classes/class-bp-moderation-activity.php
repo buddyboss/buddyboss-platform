@@ -63,6 +63,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Report button text.
 		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Reported button text.
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'reported_button_text' ), 10, 2 );
 	}
 
 	/**
@@ -270,6 +273,49 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) ) {
 			$button_text = __( 'Report Document', 'buddyboss' );
+		}
+
+		return $button_text;
+	}
+
+	/**
+	 * Function to change reported button text.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string|void
+	 */
+	public function reported_button_text( $button_text, $item_id ) {
+
+		$activity = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $activity->id ) ) {
+			return $button_text;
+		}
+
+		switch ( $activity->type ) {
+			case 'bbp_forum_create':
+				$button_text = __( 'Reported Forum', 'buddyboss' );
+				break;
+			case 'bbp_topic_create':
+				$button_text = __( 'Reported Topic', 'buddyboss' );
+				break;
+			case 'bbp_reply_create':
+				$button_text = __( 'Reported Reply', 'buddyboss' );
+				break;
+			default:
+				$button_text = __( 'Reported Post', 'buddyboss' );
+		}
+
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) ) {
+			$button_text = __( 'Reported Photo', 'buddyboss' );
+		}
+
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) ) {
+			$button_text = __( 'Reported Document', 'buddyboss' );
 		}
 
 		return $button_text;

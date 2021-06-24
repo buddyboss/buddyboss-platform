@@ -248,7 +248,15 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		 * @param int    $item_id     Item id.
 		 */
 		$button_text          = apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
-		$reported_button_text = __( 'Reported', 'buddyboss' );
+		/**
+		 * Filter the reported button text for different components
+		 *
+		 * @since BuddyBoss X.X.X
+		 *
+		 * @param string $button_text Button text.
+		 * @param int    $item_id     Item id.
+		 */
+		$reported_button_text = apply_filters( "bb_moderation_{$item_type}_reported_button_text", __( 'Reported', 'buddyboss' ), $item_id );
 	}
 
 	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
