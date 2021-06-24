@@ -88,6 +88,7 @@ $has_cover_image_position = '';
 
 				<?php bp_nouveau_group_header_buttons(); ?>
 
+				<?php bb_nouveau_group_header_bubble_buttons(); ?>
 			</div><!-- #item-header-content -->
 		<?php endif; ?>
 

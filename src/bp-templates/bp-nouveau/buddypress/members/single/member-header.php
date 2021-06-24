@@ -46,6 +46,22 @@
 		<?php echo bp_get_user_social_networks_urls(); ?>
 
 		<?php bp_nouveau_member_header_buttons( array( 'container_classes' => array( 'member-header-actions' ) ) ); ?>
+
+		<div class="bb_more_options">
+
+			<span class="bb_more_options_action" data-balloon-pos="up" data-balloon="More Options">
+				<i class="bb-icon bb-icon-menu-dots-h"></i>
+			</span>
+			<div class="bb_more_options_list">
+				<p>
+					<a href="#content-report" id="report-content-forum_topic-7154" class="button item-button bp-secondary-action outline report-content" data-bp-content-id="7154" data-bp-content-type="forum_topic" data-bp-nonce="c58f593b49">
+						<span class="bp-screen-reader-text">Report</span><span class="report-label">Report</span>
+					</a>
+				</p>
+			</div>
+
+		</div>
+
 	</div><!-- #item-header-content -->
 
 </div><!-- .item-header-wrap -->
