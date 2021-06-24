@@ -1811,19 +1811,18 @@ function bp_media_user_can_edit( $media = false ) {
 		}
 
 		// Users are allowed to edit their own media.
-		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $media->user_id ) && ( bp_loggedin_user_id() === $media->user_id ) ) {
 			$can_edit = true;
 		}
 
 		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
-
 			$manage   = groups_can_user_manage_media( bp_loggedin_user_id(), $media->group_id );
 			$status   = bp_group_get_media_status( $media->group_id );
 			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
 			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
 
 			if ( $manage ) {
-				if ( $media->user_id === bp_loggedin_user_id() ) {
+				if ( bp_loggedin_user_id() === $media->user_id ) {
 					$can_edit = true;
 				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 					$can_edit = true;
