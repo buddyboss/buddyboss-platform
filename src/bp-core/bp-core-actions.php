@@ -212,7 +212,7 @@ function bb_media_symlink_validate( $old_value, $value ) {
 
 		if ( ! empty( $attachment_id ) ) {
 
-			$attachment_url = wp_get_attachment_image_src( $attachment_id );
+			$attachment_url  = wp_get_attachment_image_src( $attachment_id );
 			$attachment_file = get_attached_file( $attachment_id );
 			$symlinks_path   = bp_media_symlink_path();
 			$size            = 'thumbnail';
