@@ -801,7 +801,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		/**
 		 * Hook for before background process create.
 		 *
-		 * @since BuddyBoss 1.5.8
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param BP_Video $video Video details.
 		 */
@@ -826,7 +826,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		/**
 		 * Hook for After background process create.
 		 *
-		 * @since BuddyBoss 1.5.8
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param BP_Video $video video detail.
 		 */
@@ -911,7 +911,7 @@ function bp_video_background_create_thumbnail( $video ) {
 				/**
 				 * Hook for before background thumbnail create.
 				 *
-				 * @since BuddyBoss 1.5.8
+				 * @since BuddyBoss 1.7.0
 				 *
 				 * @param BP_Video $video Video object.
 				 */
@@ -1031,7 +1031,7 @@ function bp_video_background_create_thumbnail( $video ) {
 				/**
 				 * Hook for After background thumbnail create.
 				 *
-				 * @since BuddyBoss 1.5.8
+				 * @since BuddyBoss 1.7.0
 				 *
 				 * @param BP_Video $video_id Video object.
 				 */

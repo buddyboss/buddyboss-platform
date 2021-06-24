@@ -335,7 +335,7 @@ class BP_Video_Album_Template {
 			/**
 			 * Fires if the current album item is the first in the activity loop.
 			 *
-			 * @since BuddyBoss 1.1.0
+			 * @since BuddyBoss 1.7.0
 			 */
 			do_action( 'album_loop_start' );
 		}

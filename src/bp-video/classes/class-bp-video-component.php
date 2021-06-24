@@ -54,7 +54,7 @@ class BP_Video_Component extends BP_Component {
 	 *
 	 * @see bp_video_get_visibility_levels()
 	 *
-	 * @since BuddyBoss 1.2.3
+	 * @since BuddyBoss 1.7.0
 	 * @var array
 	 */
 	public $visibility_levels = array();
@@ -356,7 +356,7 @@ class BP_Video_Component extends BP_Component {
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
 	 *
-	 * @since BuddyBoss 1.3.5
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init(

@@ -307,7 +307,7 @@ class BP_Video_Template {
 			/**
 			 * Fires right before the rewinding of video posts.
 			 *
-			 * @since BuddyBoss 1.1.0
+			 * @since BuddyBoss 1.7.0
 			 */
 			do_action( 'video_loop_end' );
 
