@@ -239,8 +239,25 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
 	} else {
-		$button_text          = __( 'Report', 'buddyboss' );
-		$reported_button_text = __( 'Reported', 'buddyboss' );
+		/**
+		 * Filters the report button text for different components
+		 *
+		 * @since BuddyBoss X.X.X
+		 *
+		 * @param string $button_text Button text.
+		 * @param int    $item_id     Item id.
+		 */
+		$button_text          = apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
+
+		/**
+		 * Filters the reported button text for different components
+		 *
+		 * @since BuddyBoss X.X.X
+		 *
+		 * @param string $button_text Button text.
+		 * @param int    $item_id     Item id.
+		 */
+		$reported_button_text = apply_filters( "bb_moderation_{$item_type}_reported_button_text", __( 'Reported', 'buddyboss' ), $item_id );
 	}
 
 	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
