@@ -1,8 +1,9 @@
 ---
 name: "\U0001F680 New Product Feature (Internal-Use Only)"
-about: For the product team to add scoped and approved features. Feature requests and suggestions will be closed.
+about: For the product team to add scoped and approved features. Feature requests
+  and suggestions will be closed.
 title: ''
-labels: 'feature: major, needs priority'
+labels: 'feature: major'
 assignees: ''
 
 ---
