@@ -367,7 +367,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// When the activity type does not match with the topic or reply.
 			if ( ! in_array( $activities_template->activity->type, array( $this->topic_create, $this->reply_create ), true ) ) {
-				return '';
+				return $content;
 			}
 
 			// Set topic id when activity component is not groups.

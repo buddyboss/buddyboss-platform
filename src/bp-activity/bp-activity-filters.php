@@ -153,7 +153,7 @@ add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
 add_filter( 'bp_get_form_field_attributes', 'bb_set_form_field_attributes', 10, 2 );
 
 // Filter comment form meta button.
-add_filter( 'bp_is_active', 'bb_is_active_comment_form_media_button', 10, 2 );
+add_filter( 'bb_active_comment_media', 'bb_is_active_comment_form_media_button', 10, 2 );
 
 // Filter for enable comment status.
 add_filter( 'bp_force_comment_status', 'bb_activity_blog_post_comment_status', 10, 3 );
@@ -167,7 +167,20 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+add_action( 'bp_activity_before_save', 'bb_skip_blog_post_comment' );
+
 /** Functions *****************************************************************/
+
+function bb_skip_blog_post_comment( $self ) {
+
+	$activity = new BP_Activity_Activity( $self->item_id ); //bp_activity_get_specific( array( 'id' => $self->item_id ) );
+	
+	if( 'blogs' === $activity->component && 'new_blog_post' === $activity->type ) {
+		$self->errors->add( 'error', __( 'Blog post comments are not allow in activity table.', 'buddyboss' ) );
+		$self->error_type = 'wp_error';
+	}
+}
+
 
 /**
  * Types of activity feed items to moderate.
@@ -2526,19 +2539,19 @@ function bb_activity_blog_post_comment_status( $retval, $open, $post_id ) {
  *
  * @return boolean
  */
-function bb_is_active_comment_form_media_button( $retval, $component ) {
+function bb_is_active_comment_form_media_button( $media ) {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity ) ) {
-		return $retval;
+		return $media;
 	}
 
 	// Remove the media meta button.
-	if ( 'media' === $component && 'blogs' === $activities_template->activity->component ) {
+	if ( 'blogs' === $activities_template->activity->component ) {
 		return false;
 	}
 
-	return $retval;
+	return $media;
 }
 
 /**
