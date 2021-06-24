@@ -3908,6 +3908,13 @@ function bb_video_get_image_sizes() {
 		)
 	);
 
+	/**
+	 * Filter here to video image sizes.
+	 *
+	 * @param array $image_sizes Image sizes.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (array) apply_filters( 'bb_video_get_image_sizes', $image_sizes );
 }
 
