@@ -36,7 +36,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		// Report button text.
-		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ) );
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
 
 		/**
 		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
@@ -236,10 +236,11 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @since BuddyBoss X.X.X
 	 *
 	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
-	public function report_button_text( $button_text ) {
+	public function report_button_text( $button_text, $item_id ) {
 		$button_text = __( 'Report Comment', 'buddyboss' );
 
 		return $button_text;

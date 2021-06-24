@@ -60,7 +60,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
 		// Report button text.
-		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ) );
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
 	}
 
 	/**
@@ -183,10 +183,11 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @since BuddyBoss X.X.X
 	 *
 	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
-	public function report_button_text( $button_text ) {
+	public function report_button_text( $button_text, $item_id ) {
 		$button_text = __( 'Report Photo', 'buddyboss' );
 
 		return $button_text;

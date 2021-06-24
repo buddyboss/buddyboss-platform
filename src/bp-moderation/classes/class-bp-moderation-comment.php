@@ -57,7 +57,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
 
 		// Report button text.
-		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ) );
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
 
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -381,12 +381,11 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @since BuddyBoss X.X.X
 	 *
 	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
-	public function report_button_text( $button_text ) {
-		$button_text = __( 'Report Comment', 'buddyboss' );
-
-		return $button_text;
+	public function report_button_text( $button_text, $item_id ) {
+		return __( 'Report Comment', 'buddyboss' );
 	}
 }

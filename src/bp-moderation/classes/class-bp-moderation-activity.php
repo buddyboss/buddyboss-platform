@@ -238,6 +238,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @since BuddyBoss X.X.X
 	 *
 	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
 	 *
 	 * @return string|void
 	 */
