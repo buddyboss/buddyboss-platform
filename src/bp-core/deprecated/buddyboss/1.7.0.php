@@ -11,8 +11,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Check user have a permission to manage the folder.
  *
- * @param int $folder_id
- * @param int $user_id
+ * @param int $folder_id Folder id.
+ * @param int $user_id   User id.
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
@@ -39,8 +39,8 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 /**
  * Check user have a permission to manage the document.
  *
- * @param int $document_id
- * @param int $user_id
+ * @param int $document_id Document id.
+ * @param int $user_id     User id.
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
@@ -67,8 +67,8 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 /**
  * Check user have a permission to manage the album.
  *
- * @param int $album_id
- * @param int $user_id
+ * @param int $album_id Album id.
+ * @param int $user_id  User id.
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.7
@@ -94,10 +94,8 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 /**
  * Check user have a permission to manage the media.
  *
- * @param int $media_id
- * @param int $user_id
- * @param int $thread_id
- * @param int $message_id
+ * @param int $media_id   Media id.
+ * @param int $user_id    User id.
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.4
