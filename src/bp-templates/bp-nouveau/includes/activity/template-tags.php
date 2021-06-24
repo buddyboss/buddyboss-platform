@@ -1037,7 +1037,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	 * otherwise simply pass any value found in args
 	 * or set var false.
 	 */
-	if ( 'ul' === $args['container'] ) {
+	if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
 		$parent_element = 'li';
 	} elseif ( ! empty( $args['parent_element'] ) ) {
 		$parent_element = $args['parent_element'];
