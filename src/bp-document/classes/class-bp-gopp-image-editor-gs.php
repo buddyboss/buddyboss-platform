@@ -817,13 +817,14 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 			$dirname  = untrailingslashit( get_temp_dir() );
 			$filename = $dirname . '/' . wp_unique_filename( $dirname, 'gopp_size.jpg' );
 			if ( $cmd = self::gs_cmd( $this->get_gs_args( $filename ) ) ) {
-				$return_var = -1;
+				$return_var = - 1;
 				$output     = array();
-				exec( $cmd, $output, $return_var );
-				if ( 0 === $return_var && ( $size = @getimagesize( $filename ) ) ) {
+				exec( $cmd, $output, $return_var ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec
+				$size = @getimagesize( $filename ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				if ( 0 === $return_var && $size ) {
 					$this->update_size( $size[0], $size[1] );
 				}
-				@ unlink( $filename );
+				@unlink( $filename ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			}
 		}
 		return $this->size;
