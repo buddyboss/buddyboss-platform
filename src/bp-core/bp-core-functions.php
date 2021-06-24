@@ -5466,8 +5466,9 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
  */
 function bp_core_is_empty_directory( $dir ) {
 	$handle = opendir( $dir );
-	while ( false !== ( $entry = readdir( $handle ) ) ) {
-		if ( $entry != '.' && $entry != '..' ) {
+	$entry  = readdir( $handle );
+	while ( false !== $entry ) {
+		if ( '.' !== $entry && '..' !== $entry ) {
 			closedir( $handle );
 
 			return false;
@@ -5526,7 +5527,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 /**
  * Symlink Generator
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  *
  * @param string $type            Item Type ( media, document, video ).
  * @param object $item            Item Object( Media, Document, Video ).
@@ -5672,10 +5673,15 @@ function bb_core_scaled_attachment_path( $attachment_id ) {
  */
 function bb_check_ios_device() {
 
+	if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+		return false;
+	}
+
 	$is_ios = false;
-	$ipod   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' );
-	$iphone = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' );
-	$ipad   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' );
+
+	$ipod   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$iphone = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$ipad   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 	if ( $ipod || $iphone || $ipad ) {
 		$is_ios = true;
@@ -5797,7 +5803,7 @@ function bb_core_upload_dummy_attachment() {
 		);
 		$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
 		if ( ! is_wp_error( $attachment_id ) ) {
-			require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+			require_once ABSPATH . 'wp-admin/includes/image.php';
 			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
 			wp_update_attachment_metadata( $attachment_id, $attachment_data );
 		}
