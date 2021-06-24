@@ -231,7 +231,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -375,7 +375,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				'bp_rest_required_param_missing',
 				__( 'Required param missing.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -707,23 +707,8 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				/**
 				 * Added support for display name format support from platform.
 				 */
-				// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-				$current_value = bp_get_option( 'bp-display-name-format' );
-
-				// If First Name selected then do not add last name field.
-				if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-						continue;
-					}
-					// If Nick Name selected then do not add first & last name field.
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-						continue;
-					}
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-						continue;
-					}
+				if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+					continue;
 				}
 
 				if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {

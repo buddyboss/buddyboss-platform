@@ -34,7 +34,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	}
 
 	/**
-	 * Custom fetcher to load the assigments from database and setup the pagination
+	 * Custom fetcher to load the assignments from database and setup the pagination
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

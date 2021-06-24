@@ -76,11 +76,16 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_params = array(
-		'user_id'        => bp_loggedin_user_id(),
-		'object'         => 'user',
-		'backcompat'     => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'     => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'excluded_hosts' => array()
+		'user_id'          => bp_loggedin_user_id(),
+		'object'           => 'user',
+		'backcompat'       => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'       => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'excluded_hosts'   => array(),
+		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
+		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
+		'errors'           => array(
+			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' )
+		),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
@@ -185,6 +190,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => __( 'Post Update', 'buddyboss' ),
+		'updatePostButton'    => __( 'Update Post', 'buddyboss' ),
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
 		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
@@ -205,6 +211,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			)
 		);
 	}
+
+	$activity_params['access_control_settings'] = array(
+		'can_create_activity'          => bb_user_can_create_activity(),
+		'can_create_activity_media'    => bb_user_can_create_media(),
+		'can_create_activity_document' => bb_user_can_create_document(),
+	);
 
 	$params['activity'] = array(
 		'params'  => $activity_params,

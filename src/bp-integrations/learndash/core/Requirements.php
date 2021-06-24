@@ -49,7 +49,8 @@ class Requirements
 	public function checkForRequirements()
 	{
 		foreach ($this->requirements as $name => $data) {
-			if (! call_user_func_array('call_user_func_array', $data['callback'])) {
+			$callback = call_user_func_array('call_user_func_array', $data['callback']);
+			if (! $callback ) {
 				continue;
 			}
 

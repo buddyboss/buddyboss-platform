@@ -277,7 +277,7 @@ function bp_core_register_common_scripts() {
 			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
 			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
 			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
-			'dictFileTooBig'               => __( "File is too large ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.", 'buddyboss' ),
+			'dictFileTooBig'               => __( "File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
 			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
 			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
 			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),
@@ -340,12 +340,12 @@ function bp_core_register_common_styles() {
 				'dependencies' => array(),
 			),
 			'bp-select2'              => array(
-				'file'         => "{$url}select2.min.css",
+				'file'         => "{$url}vendor/select2{$min}.css", // select2.min.css was issuing with rtl.
 				'dependencies' => array(),
 			),
 			'jquery-datetimepicker' => array(
-					'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
-					'dependencies' => array(),
+				'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
+				'dependencies' => array(),
 			),
 		)
 	);

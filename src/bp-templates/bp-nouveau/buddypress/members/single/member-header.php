@@ -40,7 +40,7 @@
 				<?php if ( bp_nouveau_member_has_meta() ) : ?>
 					<?php bp_nouveau_member_meta(); ?>
 				<?php endif; ?>
-			</div>	
+			</div>
 		<?php endif; ?>
 
 		<?php echo bp_get_user_social_networks_urls(); ?>

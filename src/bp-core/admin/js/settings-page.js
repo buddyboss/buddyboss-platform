@@ -175,6 +175,22 @@
 					$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-tools"]' ).parent().addClass( 'current' );
 			}
 
+			// Set Moderation selected on Reporting category
+			if ($('body.buddypress.taxonomy-bpm_category').length) {
+				var menus = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu li');
+				var buddyBossMenu = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform');
+				var selectorModeration = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-moderation"]');
+
+				$(menus).removeClass('wp-has-current-submenu');
+				$(menus).removeClass('wp-menu-open');
+				$(buddyBossMenu).addClass('wp-has-current-submenu wp-menu-open');
+
+				$(menuOpen).removeClass('current');
+				$(selectorModeration).addClass('current');
+				$(selectorModeration).attr('aria-current', 'page');
+				$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-moderation"]').parent().addClass('current');
+			}
+
 			if ( $( 'body .section-bp_search_settings_community' ).length ) {
 
 				if ($( 'body .section-bp_search_settings_community table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_community table td input:checkbox' ).length) {
@@ -337,9 +353,9 @@
 					var checkbox = document.getElementById( 'bp-enable-group-hierarchies' );
 
 				if (checkbox.checked) {
-					$( '.bp-enable-group-restrict-invites' ).show();
+					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
 				} else {
-					$( '.bp-enable-group-restrict-invites' ).hide();
+					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
 				}
 
 					$( document ).on(
@@ -347,10 +363,10 @@
 						'#bp-enable-group-hierarchies',
 						function () {
 							if ( true === this.checked ) {
-								$( '.bp-enable-group-restrict-invites' ).show();
+								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
 							} else {
-								$( '.bp-enable-group-restrict-invites' ).hide();
-								$( '#bp-enable-group-restrict-invites' ).prop( 'checked', false );
+								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
+								$( '#bp-enable-group-restrict-invites, #bp-enable-group-hide-subgroups' ).prop( 'checked', false );
 							}
 						}
 					);
@@ -755,6 +771,7 @@
 									'action': 'bp_admin_forum_repair_tools_wrapper_function',
 									'type': BbToolsForumsRepairActions[currentAction],
 									'offset': offset,
+									'site_id': $('body .section-repair_forums #bbp-network-site').val(),
 									'nonce': $( 'body .section-repair_forums .settings fieldset .submit input[name="_wpnonce"]' ).val()
 								},
 								'success': function (response) {
@@ -795,6 +812,12 @@
 						e.preventDefault();
 
 						BbToolsForumsRepairActions = [];
+						var $bbp_network_site = $('body .section-repair_forums #bbp-network-site');
+
+						if ($bbp_network_site.length && '0' === $bbp_network_site.val() ) {
+							alert(BP_ADMIN.tools.repair_forums.validate_site_id_message);
+							return false;
+						}
 
 						setTimeout(
 							function () {
@@ -830,9 +853,11 @@
 					$( '.register-text-box' ).hide();
 					$( '.register-email-checkbox' ).show();
 					$( '.register-password-checkbox' ).show();
+					$( '.register-legal-agreement-checkbox' ).show();
 				} else {
 					$( '.register-email-checkbox' ).hide();
 					$( '.register-password-checkbox' ).hide();
+					$( '.register-legal-agreement-checkbox' ).hide();
 					$( '.register-text-box' ).show();
 				}
 
@@ -843,10 +868,12 @@
 							  $( '.register-text-box' ).hide();
 							  $( '.register-email-checkbox' ).show();
 							  $( '.register-password-checkbox' ).show();
+							  $( '.register-legal-agreement-checkbox' ).show();
 							  $( '.registration-form-main-select p.description' ).show();
 						} else {
 							  $( '.register-email-checkbox' ).hide();
 							  $( '.register-password-checkbox' ).hide();
+							  $( '.register-legal-agreement-checkbox' ).hide();
 							  $( '.register-text-box' ).show();
 							  $( '.registration-form-main-select p.description' ).hide();
 						}
@@ -1063,17 +1090,105 @@
 					var backdrop_click = backdrop.contains( event.target ),
 						modal_close_click  = event.target.classList.contains( 'close-modal' );
 
-					if ( ! modal_close_click && ! backdrop_click ) {
+					if ( !modal_close_click && !backdrop_click ) {
 						return;
 					}
 
-					$( document ).find ( '#bp-document-file-input' ).val( '' );
-					$( document ).find ( '.show-document-mime-type' ).hide();
-					$( document ).find ( '.show-document-mime-type input#mime-type' ).val( '' );
+					$( document ).find( '#bp-document-file-input' ).val( '' );
+					$( document ).find( '.show-document-mime-type' ).hide();
+					$( document ).find( '.show-document-mime-type input#mime-type' ).val( '' );
 				},
 				false
 			);
 
+			// Show the moderation activate popup when admin click spam user link.
+			$( document ).on( 'click', '.bp-show-moderation-alert', function () {
+				var ActionType = $(this).attr('data-action');
+				$( '#bp-hello-backdrop' ).show();
+				$( '#bp-hello-container' ).find( '.bp-spam-action-msg' ).hide();
+				$( '#bp-hello-container' ).find( '.bp-not-spam-action-msg' ).hide();
+				if( 'spam' === ActionType ){
+					$( '#bp-hello-container' ).find( '.bp-spam-action-msg' ).show();
+				}else if( 'not-spam' === ActionType ){
+					$( '#bp-hello-container' ).find( '.bp-not-spam-action-msg' ).show();
+				}
+				$( '#bp-hello-container' ).show().addClass('deactivation-popup');
+			} );
+
+			// Show the confirmation popup when user clicks single BB component disable link.
+			$( document ).on( 'click', '.bp-show-deactivate-popup a', function ( event ) {
+				event.preventDefault();
+				$( '#bp-hello-container' ).find( '.bp-hello-content' ).empty();
+				$( '#bp-hello-backdrop' ).show();
+				$( '#bp-hello-container' ).show().addClass('deactivation-popup');
+				$( '#bp-hello-container' ).find( '.component-deactivate' ).attr( 'data-redirect', $( this ).attr( 'href' ) );
+				$( '#bp-hello-container' ).find( '.bp-hello-content' ).append( $( this ).parent().closest( '.row-actions' ).find( '.component-deactivate-msg' ).text() );
+			} );
+
+			// Close popup.
+			$( document ).on( 'click', '.close-modal', function () {
+				$( '#bp-hello-backdrop' ).hide();
+				$( '#bp-hello-container' ).hide().removeClass('deactivation-popup');
+				$( '#bp-hello-container' ).find( '.component-deactivate' ).removeClass( 'form-submit' );
+			} );
+
+			// Disable the component when click appropriate button in popup.
+			$( document ).on( 'click', '.component-deactivate', function ( event ) {
+				event.preventDefault();
+				if ( $( this ).hasClass( 'form-submit' ) ) {
+					$( 'form#bp-admin-component-form' ).find( 'input[name="bp-admin-component-submit"]' ).trigger( 'click' );
+				} else {
+					window.location = $( this ).attr( 'data-redirect' );
+				}
+			} );
+
+			// Show the confirmation popup when bulk component disabled
+			$( 'form#bp-admin-component-form' ).submit( function ( e ) {
+
+				var action = $( '#bulk-action-selector-top[name="action"]' ).find( ':selected' ).val();
+
+				if ( ! action ) {
+					action = $( '#bulk-action-selector-top[name="action2"]' ).find( ':selected' ).val();
+				}
+
+				var confirmChecked = false;
+				var msg = '';
+				$( '.mass-check-deactivate' ).each( function () {
+					if ( $( this ).prop( 'checked' ) == true ) {
+						confirmChecked = true;
+					}
+					msg = msg + $( this ).parent().find( '.component-deactivate-msg' ).text();
+				} );
+
+				if ( !$( '#bp-hello-container' ).find( '.component-deactivate' ).hasClass( 'form-submit' ) && 'inactive' === action && true === confirmChecked ) {
+					$( '#bp-hello-container' ).find( '.bp-hello-content' ).empty();
+					if ( msg ) {
+						e.preventDefault();
+						$( '#bp-hello-backdrop' ).show();
+						$( '#bp-hello-container' ).show().addClass('deactivation-popup');
+						$( '#bp-hello-container' ).find( '.bp-hello-content' ).html( msg );
+						$( '#bp-hello-container' ).find( '.component-deactivate' ).addClass( 'form-submit' );
+					}
+				}
+			} );
+
+			//Moderation Reporting Block
+			$( document ).on( 'change', '#bp_moderation_settings_reporting .bpm_reporting_content_content_label > input', function () {
+				if ( $( this ).prop( 'checked' ) ) {
+					$( this ).parent().next( 'label' ).removeClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).prop('disabled', false);
+				} else {
+					$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).removeAttr( 'checked' ).prop( 'disabled', 'disabled' );
+				}
+			} );
+
+			$( document ).on ( 'click', '.bp-suspend-user, .bp-unsuspend-user', function () {
+				var DataAction = $( this ).attr('data-action');
+				if ( 'suspend'===DataAction ) {
+					return confirm ( BP_ADMIN.moderation.suspend_confirm_message );
+				} else if ( 'unsuspend'===DataAction ) {
+					return confirm ( BP_ADMIN.moderation.unsuspend_confirm_message );
+				}
+			} );
 		}
 	);
 

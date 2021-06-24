@@ -177,14 +177,15 @@ class BP_Document_Folder {
 		}
 
 		$args = array(
-			'in' => $id,
+			'in'     => $id,
+			'fields'  => 'ids'
 		);
 
 		$folders = self::get( $args );
 
 		$folder_id = false;
 		if ( ! empty( $folders['folders'] ) ) {
-			$folder_id = current( $folders['folders'] )->id;
+			$folder_id = current( $folders['folders'] );
 		}
 
 		return $folder_id;
@@ -230,6 +231,7 @@ class BP_Document_Folder {
 				'fields'       => 'all',           // Fields to include.
 				'sort'         => 'DESC',          // ASC or DESC.
 				'order_by'     => 'date_created',  // Column to order by.
+				'parent'       => null,           // Parent Folder ID.
 				'exclude'      => false,           // Array of ids to exclude.
 				'search_terms' => false,           // Terms to search by.
 				'user_id'      => false,           // user id.
@@ -283,6 +285,7 @@ class BP_Document_Folder {
 			case 'user_id':
 			case 'group_id':
 			case 'title':
+			case 'privacy':
 				break;
 
 			default:
@@ -305,6 +308,10 @@ class BP_Document_Folder {
 
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = "f.user_id = {$r['user_id']}";
+		}
+
+		if ( null !== $r['parent'] ) {
+			$where_conditions['parent'] = "f.parent = {$r['parent']}";
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
@@ -509,7 +516,7 @@ class BP_Document_Folder {
 
 			$group_name = '';
 			$visibility = '';
-			if ( $folder->group_id > 0 ) {
+			if ( bp_is_active( 'groups') && $folder->group_id > 0 ) {
 				$group      = groups_get_group( $folder->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );

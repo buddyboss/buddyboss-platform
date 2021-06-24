@@ -69,7 +69,11 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 					'args'                => array(
 						'value' => array(
 							'description' => __( 'The list of values for the field data.', 'buddyboss' ),
-							'type'        => 'array',
+
+							// @todo Removed to support array and object both.
+
+							/*
+							'type'        => 'object',
 							'items'       => array(
 								'type' => 'string',
 							),
@@ -77,6 +81,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 								'validate_callback' => 'rest_validate_request_arg',
 								'sanitize_callback' => 'rest_sanitize_request_arg',
 							),
+							*/
 						),
 					),
 				),
@@ -142,7 +147,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -220,7 +225,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} field_id The ID of the field the data is from.
 	 * @apiParam {Number} user_id The ID of user the field data is from.
-	 * @apiParam {String} [value] The list of values for the field data.
+	 * @apiParam {Array} [value] The list of values for the field data.
 	 */
 	public function update_item( $request ) {
 		// Setting context.
@@ -245,8 +250,37 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * For field types not supporting multiple values, join values in case
 		 * the submitted value was not an array.
 		 */
-		if ( ! $field->type_obj->supports_multiple_defaults ) {
+		if (
+			! $field->type_obj->supports_multiple_defaults
+			&& is_array( $value )
+			&& ! in_array( $field->type, apply_filters( 'bp_rest_xprofile_mutiple', array( 'socialnetworks' ) ), true )
+		) {
 			$value = implode( ' ', $value );
+		}
+
+		if (
+			$field->type_obj->supports_multiple_defaults
+			&& in_array( $field->type, apply_filters( 'bp_rest_xprofile_serialize', array( 'checkbox', 'multiselectbox' ) ), true )
+		) {
+			if ( is_serialized( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
+			$value = json_decode( $value, true );
+
+			if ( ! is_array( $value ) ) {
+				$value = (array) $value;
+				$value = array_filter( $value );
+			}
+		}
+
+		// Format social network value.
+		if ( 'socialnetworks' === $field->type ) {
+			if ( is_serialized( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
+			$value = $this->bb_rest_format_social_network_value( $value );
 		}
 
 		if ( ! xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
@@ -474,8 +508,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			'field_id'     => $field_data->field_id,
 			'user_id'      => $field_data->user_id,
 			'value'        => array(
-				'raw'          => $field_data->value,
-				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value ),
+				'raw'          => $this->fields_endpoint->get_profile_field_raw_value( $field_data->value, $field_data->field_id ),
+				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value, $field_data->field_id ),
 				'rendered'     => $this->fields_endpoint->get_profile_field_rendered_value( $field_data->value, $field_data->field_id ),
 			),
 			'last_updated' => bp_rest_prepare_date_response( $field_data->last_updated ),
@@ -646,5 +680,51 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param array $schema The endpoint schema.
 		 */
 		return apply_filters( 'bp_rest_xprofile_data_schema', $this->add_additional_fields_schema( $schema ) );
+	}
+
+	/**
+	 * Check is valid json or not.
+	 *
+	 * @param string $string JSON string.
+	 *
+	 * @return bool
+	 */
+	public function is_json( $string ) {
+		json_decode( $string );
+
+		return ( json_last_error() === JSON_ERROR_NONE );
+	}
+
+	/**
+	 * Format social network value.
+	 * - Make value JSON to array.
+	 *
+	 * @param string $value Social network value.
+	 *
+	 * @uses  bp_xprofile_social_network_provider() Default social networks.
+	 *
+	 * @return array
+	 */
+	public function bb_rest_format_social_network_value( $value ) {
+		// Is not a valid JSON string.
+		if ( ! $this->is_json( $value ) ) {
+			return array();
+		}
+
+		$value    = json_decode( $value, true );
+		$networks = bp_xprofile_social_network_provider();
+		$networks = wp_list_pluck( $networks, 'value' );
+
+		// Compare submited social network value with default social network value.
+		foreach ( $value as $network_name => $network_link ) {
+			if ( in_array( $network_name, $networks, true ) ) {
+				continue;
+			}
+
+			// Submited social network value does not match with default social network value.
+			unset( $value[ $network_name ] );
+		}
+
+		return empty( $value ) ? array() : $value;
 	}
 }

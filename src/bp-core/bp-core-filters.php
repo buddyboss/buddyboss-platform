@@ -59,7 +59,12 @@ add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 
-// Avatars
+// Removed Document and Media from WordPress media endpoints.
+add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999 );
+add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
+add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
+
+// Avatars.
 /**
  * Disable gravatars fallback for member avatars.
  *
@@ -68,7 +73,7 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 add_action( 'init', 'bp_enable_gravatar_callback' );
 // add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 function bp_enable_gravatar_callback() {
-	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
+	$avatar = bp_enable_profile_gravatar();
 
 	if ( false === $avatar ) {
 		// Avatars
@@ -702,6 +707,11 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
  * @return WP_Post The modified WP_Post object.
  */
 function bp_setup_nav_menu_item( $menu_item ) {
+
+	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
+		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
+	}
+
 	if ( is_admin() ) {
 		return $menu_item;
 	}
@@ -775,6 +785,25 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			} else {
 				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
 			}
+		} else {
+			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
+				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+					$tab       = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$component = $tab;
+					if ( $component && in_array( $component, array( 'document' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
+						$component = 'xprofile';
+					}
+					if ( bp_is_active( $component ) ) {
+						if ( strpos( $menu_item->url, $tab ) !== false ) {
+							$menu_item->classes   = is_array( $menu_item->classes ) ? $menu_item->classes : array();
+							$menu_item->classes[] = 'current_page_item';
+							$menu_item->classes[] = 'current-menu-item';
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -809,7 +838,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 			'type'       => $type,
 			'url'        => esc_url_raw( $bp_item->guid ),
 			'classes'    => "bp-menu bp-{$bp_item->post_excerpt}-nav",
-			'type_label' => __( 'Custom Link', 'buddyboss' ),
+			'type_label' => __( 'BuddyBoss', 'buddyboss' ),
 			'object'     => $object,
 			'object_id'  => -1,
 		);
@@ -832,12 +861,12 @@ function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 		$item_types,
 		array(
 			'bp_loggedin_nav'  => array(
-				'title'  => __( 'BuddyPress (logged-in)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedin_nav',
 			),
 			'bp_loggedout_nav' => array(
-				'title'  => __( 'BuddyPress (logged-out)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedout_nav',
 			),
@@ -873,7 +902,9 @@ function bp_filter_metaid_column_name( $q ) {
 	preg_match_all( $quoted_regex, $q, $quoted_matches );
 	$q = preg_replace( $quoted_regex, '__QUOTE__', $q );
 
-	$q = str_replace( 'meta_id', 'id', $q );
+	if ( strpos( $q, 'umeta_id' ) === false ) {
+		$q = str_replace( 'meta_id', 'id', $q );
+	}
 
 	// Put quoted content back into the string.
 	if ( ! empty( $quoted_matches[0] ) ) {
@@ -1386,7 +1417,7 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
  */
 function bp_pages_terms_and_privacy_exclude( $pages ) {
 
-	if ( !empty( $pages ) ) {
+	if ( ! empty( $pages ) ) {
 
 		// Removed terms page as non component page.
 		if ( property_exists( $pages, 'terms' ) ) {
@@ -1404,16 +1435,133 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
 
 /**
+ * Filter to change cover image dimensions to original for group and profile.
+ *
+ * @param $wh        array
+ * @param $settings  array
+ * @param $component string
+ *
+ * @return array
+ * @since BuddyBoss 1.5.1
+ */
+function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
+	if ( 'xprofile' === $component || 'groups' === $component ) {
+		return array(
+			'width'  => 1950,
+			'height' => 450,
+		);
+	}
+
+	return $wh;
+}
+
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_image_dimensions', 10, 3 );
+
+/**
  * Admin notice to update to BuddyBoss Theme 1.5.0 to fix fonts issues.
  */
 if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 	function buddyboss_platform_plugin_update_notice() {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
-		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare(  $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
 			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}
 	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
+}
+
+/**
+ * Update attachment rest query argument to hide media/document from media endpoints.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param array $args WP_Query parsed arguments.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_query( $args ) {
+	$meta_query = ( array_key_exists( 'meta_query', $args ) ? $args['meta_query'] : array() );
+
+	// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+	$args['meta_query'] = array(
+		array(
+			'key'     => 'bp_media_upload',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => 'bp_document_upload',
+			'compare' => 'NOT EXISTS',
+		),
+	);
+
+	if ( ! empty( $meta_query ) ) {
+		$args['meta_query'][] = $meta_query;
+	}
+
+	if ( count( $args['meta_query'] ) > 1 ) {
+		$args['meta_query']['relation'] = 'AND';
+	}
+
+	return $args;
+}
+
+/**
+ * Empty response in single WordPress Media endpoint when fetch media/document.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param WP_REST_Response $response The response object.
+ * @param WP_Post          $post     The original attachment post.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_response( $response, $post ) {
+	$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
+	$data          = $response->get_data();
+	if (
+		array_key_exists( 'media_type', $data ) &&
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post->ID )
+		)
+	) {
+		$response = array();
+	}
+
+	return $response;
+}
+
+/**
+ * Restrict users to access media and documents from `/wp-json/oembed/1.0/embed`
+ *
+ * @param int $post_id Current post id.
+ *
+ * @return mixed
+ */
+function bp_rest_restrict_oembed_request_post_id( $post_id ) {
+	$media_meta    = get_post_meta( $post_id, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post_id, 'bp_document_upload', true );
+	if (
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post_id )
+		)
+	) {
+		$post_id = 0;
+	}
+
+	return $post_id;
 }

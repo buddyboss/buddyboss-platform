@@ -189,7 +189,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
  * @since BuddyPress 1.6.0
  * @since BuddyPress 2.6.0 Added $error_type parameter.
  *
- * @todo Why don't we use wp_blacklist_check() for this?
+ * @todo Why don't we use wp_check_comment_disallowed_list() for this?
  *
  * @param int    $user_id    User ID.
  * @param string $title      The title of the content.
@@ -223,9 +223,13 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 
 	/** Blacklist ************************************************************
 	 */
+	$disallowed_keys_option_name = 'blacklist_keys';
+	if ( function_exists( 'wp_check_comment_disallowed_list' ) ) {
+		$disallowed_keys_option_name = 'disallowed_keys';
+ 	}
 
 	// Get the moderation keys.
-	$blacklist = trim( get_option( 'blacklist_keys' ) );
+	$blacklist = trim( get_option( $disallowed_keys_option_name ) );
 
 	// Bail if blacklist is empty.
 	if ( empty( $blacklist ) ) {

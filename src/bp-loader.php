@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.4.6
+ * Version:     1.6.3
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '1.4.6' );
+	define( 'BP_PLATFORM_VERSION', '1.6.3' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
@@ -112,9 +112,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
 		global $bp_is_multisite;
 
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		if ( $bp_is_multisite ) {
-			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
 
@@ -127,14 +127,17 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.0.0
 	 * @return mixed
 	 */
-	function bp_core_set_bbpress_buddypress_active( $value = array(), $option ) {
+	function bp_core_set_bbpress_buddypress_active( $value = array() ) {
 
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite, $buddyboss_platform_plugin_file;
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 
-		$plugins_path = '/wp-admin/plugins.php';
-		$ajax_path    = '/wp-admin/admin-ajax.php';
+		$admin_url    = admin_url();
+		$site_url     = site_url();
+		$root_path    = str_replace( $site_url, '', $admin_url );
+		$plugins_path = $root_path . 'plugins.php';
+		$ajax_path    = $root_path . 'admin-ajax.php';
 
 		// Hide My WP plugin compatibility
 		if ( class_exists( 'HideMyWP' ) ) {
@@ -151,12 +154,42 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			if ( '' !== $new_admin_path ) {
 				$plugins_path = '/' . $new_admin_path . '/plugins.php';
+
+				/**
+				 * Admin plugins directory path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $plugins_path Admin plugins directory path.
+				 *
+				 */
+				$plugins_path = apply_filters( 'bp_admin_plugins_path', $plugins_path );
 			}
 
 			if ( '' !== $new_admin_path && '' !== $replace_admin_ajax ) {
 				$ajax_path = '/' . $new_admin_path . '/' . $replace_admin_ajax;
+
+				/**
+				 * admin-ajax.php path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
+				 */
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			} elseif ( '' !== $new_admin_path && '' === $replace_admin_ajax ) {
 				$ajax_path = '/' . $new_admin_path . '/admin-ajax.php';
+
+				/**
+				 * admin-ajax.php path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
+				 */
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			}
 		}
 
@@ -251,13 +284,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	if ( ! is_network_admin() ) {
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 	}
 	// Filter for setting the spoofing of BuddyPress.
 	add_filter( 'pre_update_option_active_plugins', 'bp_pre_update_option_active_plugins' );
 
 	if ( $bp_is_multisite ) {
-		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 	}

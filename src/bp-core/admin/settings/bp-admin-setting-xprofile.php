@@ -41,10 +41,32 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
 		// Set requirement for last name based on display format
-		if ( isset( $_POST['bp-display-name-format'] ) && $_POST['bp-display-name-format'] == 'first_last_name' ) {
-			if ( $last_name_field = xprofile_get_field( bp_xprofile_lastname_field_id() ) ) {
-				// $last_name_field->is_required = true;
-				$last_name_field->save();
+		if ( isset( $_POST['bp-display-name-format'] ) ) {
+			if ( $_POST['bp-display-name-format'] == 'first_last_name' ){
+				$lastname_field_id = bp_xprofile_lastname_field_id();
+				bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
+
+				$firstname_field_id = bp_xprofile_firstname_field_id();
+				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
+
+				// Make the first name field to required if not in required list.
+				$field              = xprofile_get_field( $firstname_field_id );
+				$field->is_required = true;
+				$field->save();
+			} elseif ( $_POST['bp-display-name-format'] == 'first_name' ){
+				$firstname_field_id = bp_xprofile_firstname_field_id();
+				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
+
+				// Make the first name field to required if not in required list.
+				$field              = xprofile_get_field( $firstname_field_id );
+				$field->is_required = true;
+				$field->save();
+			} elseif ( $_POST['bp-display-name-format'] == 'nickname' ){
+				$nickname_field_id = bp_xprofile_nickname_field_id();
+				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 			}
 		}
 
@@ -65,7 +87,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function register_fields() {
 
 		// Section for Profile Names
-		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ) );
+		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ), '', 'bp_profile_names_tutorial' );
 
 		// Display name format.
 		$this->add_field(
@@ -94,25 +116,21 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
-		// Profile Names Tutorial
-		$this->add_field( 'bp-profile-names-tutorial', '', 'bp_profile_names_tutorial' );
-
 		// Section for Profile Photos
-		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ) );
+		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ), '', 'bp_profile_photos_tutorial' );
 
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
 
-		// Gravatars.
-		$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
+		if ( bp_get_option( 'show_avatars' ) ) {
+			// Gravatars.
+			$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
+		}
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
-
-		// Profile Settings Tutorial
-		$this->add_field( 'bp-profile-setting-tutorial', '', 'bp_profile_photos_tutorial' );
 
 		// @todo will use this later on
 		// Section for profile dashboard.
@@ -126,7 +144,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// $this->add_field( 'bp-enable-member-dashboard-redirect', __( 'Redirect on Login', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard_redirect'], 'intval' );
 
 		// Section for profile types.
-		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
+		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ), '', array( $this, 'bp_profile_types_tutorial' ) );
 
 		// Enable/Disable profile types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_enable_disable' ), 'intval' );
@@ -142,20 +160,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-member-type-default-on-registration', __( 'Default Profile Type', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_default_on_registration' ) );
 		}
 
-		// Profile Types Tutorial
-		$this->add_field( 'bp-profile-types-tutorial', '', array( $this, 'bp_profile_types_tutorial' ) );
-
 		// Section for profile search.
-		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ), '', array( $this, 'bp_profile_search_tutorial' ) );
 
 		// Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_profile_search' ), 'intval' );
 
-		// Profile Search Tutorial
-		$this->add_field( 'bp-profile-search-tutorial', '', array( $this, 'bp_profile_search_tutorial' ) );
-
 		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views
 		$this->add_field(
@@ -168,9 +180,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
-
-		// Profile Directories Tutorial
-		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 		/**
 		 * Fires to register xProfile tab settings fields and section.
@@ -225,7 +234,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			'nickname'        => __( 'Nickname', 'buddyboss' ),
 		);
 
-		$current_value = bp_get_option( 'bp-display-name-format' );
+		$current_value = bp_core_display_name_format();
 
 		printf( '<select name="%1$s" for="%1$s">', 'bp-display-name-format' );
 		foreach ( $options as $key => $value ) {

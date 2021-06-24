@@ -5592,6 +5592,10 @@ MediumEditor.extensions = {};
             pasteBlock.appendChild(this.document.createElement('body'));
 
             fragmentBody = pasteBlock.querySelector('body');
+
+            // Remove html comments while pasting the content.
+            html = html.replace( /<\!--.*?-->/g, '' );
+
             fragmentBody.innerHTML = html;
 
             this.cleanupSpans(fragmentBody);

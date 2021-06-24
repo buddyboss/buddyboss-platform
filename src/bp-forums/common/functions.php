@@ -955,8 +955,13 @@ function bbp_check_for_blacklist( $anonymous_data = false, $author_id = 0, $titl
 
 	/** Blacklist */
 
+	$blacklist_option_name = 'blacklist_keys';
+	if ( function_exists( 'wp_check_comment_disallowed_list' ) ) {
+		$blacklist_option_name = 'disallowed_keys';
+	}
+
 	// Get the moderation keys
-	$blacklist = trim( get_option( 'blacklist_keys' ) );
+	$blacklist = trim( get_option( $blacklist_option_name ) );
 
 	// Bail if blacklist is empty
 	if ( empty( $blacklist ) ) {
@@ -1165,8 +1170,8 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// Get topic subscribers and bail if empty
 	$user_ids = bbp_get_topic_subscribers( $topic_id, true );
 
-	// Dedicated filter to manipulate user ID's to send emails to
-	$user_ids = apply_filters( 'bbp_topic_subscription_user_ids', $user_ids );
+	// Dedicated filter to manipulate user ID's to send emails to.
+	$user_ids = (array) apply_filters( 'bbp_topic_subscription_user_ids', $user_ids, $reply_id, $topic_id );
 	if ( empty( $user_ids ) ) {
 		return false;
 	}
@@ -1180,6 +1185,11 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 		// Don't send notifications to the person who made the post
 		if ( ! empty( $reply_author ) && (int) $user_id === (int) $reply_author ) {
+			continue;
+		}
+
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
 			continue;
 		}
 
@@ -1289,8 +1299,8 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	// Get topic subscribers and bail if empty
 	$user_ids = bbp_get_forum_subscribers( $forum_id, true );
 
-	// Dedicated filter to manipulate user ID's to send emails to
-	$user_ids = apply_filters( 'bbp_forum_subscription_user_ids', $user_ids );
+	// Dedicated filter to manipulate user ID's to send emails to.
+	$user_ids = (array) apply_filters( 'bbp_forum_subscription_user_ids', $user_ids, $topic_id, $forum_id );
 	if ( empty( $user_ids ) ) {
 		return false;
 	}
@@ -1304,6 +1314,11 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 		// Don't send notifications to the person who made the post
 		if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
+			continue;
+		}
+
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
 			continue;
 		}
 
@@ -1512,7 +1527,6 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
-
 		$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_count, 'bbpress_posts' );
 	}
@@ -1599,7 +1613,6 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 		// Join post statuses to specifically exclude together
 		$not_in      = array( 'draft', 'future' );
 		$post_status = "'" . implode( "', '", $not_in ) . "'";
-
 		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}

@@ -128,10 +128,12 @@ function bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = 
 			// Get the topic.
 			$topic = get_posts(
 				array(
-					'name'        => bp_action_variable( 1 ),
-					'post_status' => 'publish',
-					'post_type'   => bbp_get_topic_post_type(),
-					'numberposts' => 1,
+					'name'                   => bp_action_variable( 1 ),
+					'post_status'            => 'publish',
+					'post_type'              => bbp_get_topic_post_type(),
+					'numberposts'            => 1,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 
@@ -793,8 +795,9 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 			}
 		}
 
-		// Update Forums' internal private and forum ID variables.
+		// Update Forums' internal private and forum ID variables
 		bbp_repair_forum_visibility();
+
 	}
 }
 
@@ -924,3 +927,4 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 		)
 	);
 }
+

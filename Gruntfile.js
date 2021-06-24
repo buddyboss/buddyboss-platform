@@ -37,31 +37,7 @@ module.exports = function (grunt) {
 			'!bp-core/css/medium-editor-beagle.css',
 			'!bp-core/css/medium-editor.css',
 			'!**/endpoints/**/*.css'
-		],
-
-		stylelintConfigCss = require('stylelint-config-wordpress/index.js'),
-		stylelintConfigScss = require('stylelint-config-wordpress/scss.js');
-
-	if (typeof stylelintConfigCss.rules !== 'undefined') {
-		stylelintConfigCss.rules = Object.assign(stylelintConfigCss.rules, {
-			'no-descending-specificity': null,
-			'selector-pseudo-element-colon-notation': null,
-			'no-duplicate-selectors': null,
-			'selector-class-pattern': null,
-			'selector-id-pattern': null
-		});
-	}
-	if (typeof stylelintConfigScss.rules !== 'undefined') {
-		stylelintConfigScss.rules = Object.assign(stylelintConfigScss.rules, {
-			'no-descending-specificity': null,
-			'selector-pseudo-element-colon-notation': null,
-			'no-duplicate-selectors': null,
-			'selector-class-pattern': null,
-			'selector-id-pattern': null,
-			'font-family-no-missing-generic-family-keyword': null,
-			'selector-combinator-space-after': null
-		});
-	}
+		];
 
 	require('matchdep').filterDev(['grunt-*', '!grunt-legacy-util']).forEach(grunt.loadNpmTasks);
 	grunt.util = require('grunt-legacy-util');
@@ -259,8 +235,10 @@ module.exports = function (grunt) {
 					'**/bp-groups/**',
 					'**/bp-invites/**',
 					'**/bp-media/**',
+					'**/bp-document/**',
 					'**/bp-members/**',
 					'**/bp-messages/**',
+					'**/bp-moderation/**',
 					'**/bp-notifications/**',
 					'**/bp-settings/**',
 					'**/bp-xprofile/**',
@@ -291,19 +269,43 @@ module.exports = function (grunt) {
 					'!**/bp-groups/**',
 					'!**/bp-invites/**',
 					'!**/bp-media/**',
+					'!**/bp-document/**',
 					'!**/bp-members/**',
 					'!**/bp-messages/**',
+					'!**/bp-moderation/**',
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**',
-					'**/bp-integrations/**'
+					'!**/bp-integrations/**'
 				],
 				options: {
 					process : function( content ) {
 						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 					}
 				}
-			}
+			},
+			bp_rest_performance: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
+				dest: SOURCE_DIR + 'bp-performance/classes/',
+				expand: true,
+				src: '**',
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
+			},
+			bp_rest_mu: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/MuPlugin/',
+				dest: SOURCE_DIR + 'bp-performance/mu-plugins/',
+				expand: true,
+				src: '**',
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
+			},
 		},
 		uglify: {
 			core: {
@@ -326,7 +328,7 @@ module.exports = function (grunt) {
 		stylelint: {
 			css: {
 				options: {
-					config: stylelintConfigCss,
+					configFile: '.stylelintrc',
 					format: 'css'
 				},
 				expand: true,
@@ -342,7 +344,7 @@ module.exports = function (grunt) {
 			},
 			scss: {
 				options: {
-					config: stylelintConfigScss,
+					configFile: '.stylelintrc',
 					format: 'scss'
 				},
 				expand: true,
@@ -388,7 +390,12 @@ module.exports = function (grunt) {
 				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 				cwd: SOURCE_DIR,
 				stdout: false
-			}
+			},
+			rest_performance: {
+				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+				cwd: SOURCE_DIR,
+				stdout: false
+			},
 		},
 		jsvalidate: {
 			options: {
@@ -436,8 +443,10 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
+	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
     grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
+    grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 

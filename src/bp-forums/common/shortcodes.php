@@ -243,8 +243,8 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'content', 'single-forum' );
 
-				// Forum is private and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
 				bbp_get_template_part( 'feedback', 'no-access' );
 			}
 
@@ -359,10 +359,11 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'content', 'single-topic' );
 
-				// Forum is private and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
+
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -416,9 +417,9 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			if ( empty( $forum_id ) || bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'form', 'topic' );
 
-				// Forum is private and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
 			// Return contents of output buffer.
@@ -480,9 +481,9 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'content', 'single-reply' );
 
-				// Forum is private and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+				bbp_get_template_part( 'feedback', 'no-access-reply' );
 			}
 
 			// Return contents of output buffer.

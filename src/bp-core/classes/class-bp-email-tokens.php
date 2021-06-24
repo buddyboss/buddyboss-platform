@@ -159,6 +159,16 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
+		$group_visibility = $group->status;
+		
+		if ( 'public' === $group->status ) {
+			$group_visibility = __( 'Public', 'buddyboss' );
+		} elseif ( 'hidden' === $group->status ) {
+			$group_visibility = __( 'Hidden', 'buddyboss' );
+		} elseif ( 'private' === $group->status ) {
+			$group_visibility = __( 'Private', 'buddyboss' );
+		}
+
 		ob_start();
 		?>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%"
@@ -204,7 +214,7 @@ class BP_Email_Tokens {
 													<td class="mobile-text-center">
 														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;"><?php echo $group->name; ?></div>
 														<div class="spacer" style="font-size: 3px; line-height: 3px; height: 3px;">&nbsp;</div>
-														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo ucfirst( $group->status ) . ' ' . __( 'Group', 'buddyboss' ); ?></p>
+														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo $group_visibility . ' ' . __( 'Group', 'buddyboss' ); ?></p>
 													</td>
 												</tr>
 												<tr>
@@ -550,7 +560,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_attr( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_attr( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -646,6 +656,11 @@ class BP_Email_Tokens {
 														<?php
 														/**
 														 * Display text before activity comment.
+														 * 
+														 * @since BuddyBoss 1.4.7
+														 *
+														 * @param object $activity_comment BP_Activity_Activity object,
+														 * 
 														 */
 														do_action( 'bp_activity_before_email_content', $activity_comment );
 
@@ -656,6 +671,11 @@ class BP_Email_Tokens {
 
                                                         /**
 														 * Display text after activity comment.
+														 * 
+														 * @since BuddyBoss 1.4.7
+														 *
+														 * @param object $activity_comment BP_Activity_Activity object,
+														 * 
 														 */
 														do_action( 'bp_activity_after_email_content', $activity_comment );
 														?>
@@ -679,7 +699,7 @@ class BP_Email_Tokens {
 			</tr>
 
 			<tr>
-				<td><a href="<?php echo esc_attr( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+				<td><a href="<?php echo esc_attr( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -837,7 +857,11 @@ class BP_Email_Tokens {
 															<div class="gif-image-container">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
 																	<span class="bb-icon-play-thin"></span>
-																	<img src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
+																	<?php if( is_int( $gif_data['still'] ) ) { ?>
+																		<img src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
+																	<?php } else { ?>
+																		<img src="<?php echo esc_url( $gif_data['still'] ); ?>" />
+																	<?php } ?>
 																</a>
 																<span class="gif-icon"></span>
 															</div>
@@ -864,7 +888,7 @@ class BP_Email_Tokens {
 			<tr>
 				<td>
 					<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		</table>

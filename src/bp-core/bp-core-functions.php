@@ -488,6 +488,7 @@ function bp_core_get_packaged_component_ids() {
 		'settings',
 		'notifications',
 		'search',
+		'moderation'
 	);
 
 	return $components;
@@ -787,6 +788,7 @@ function bp_core_get_directory_page_default_titles() {
 		'new_forums_page' => __( 'Forums', 'buddyboss' ),
 		'terms'           => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
+		'moderation'      => __( 'Moderation', 'buddyboss' ),
 	);
 
 	/**
@@ -1238,6 +1240,12 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		 */
 	} else {
 
+		/**
+		 * Initializing the count variable to avoid undefined notice
+		 */
+		$count  = 0;
+		$count2 = 0;
+
 		// Step one: the first chunk.
 		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
 			$seconds = $chunks[ $i ];
@@ -1316,7 +1324,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			}
 
 			// No output, so happened right now.
-			if ( ! (int) trim( $output ) ) {
+			if ( ! (int) $count && ! (int) $count2 ) {
 				$output = $right_now_text;
 			}
 		}
@@ -2630,6 +2638,46 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
+		'moderation'    => array(
+			'title'                => __( 'Moderation', 'buddyboss' ),
+			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
+			'settings'             => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-moderation',
+					),
+					'admin.php'
+				)
+			),
+			'default'              => false,
+			'deactivation_confirm' => true,
+			'deactivation_message' => __( '<p>Please confirm you want to deactivate the Moderation component.</p>
+			<h4>On Deactivation:</h4>
+			<ul>
+				<li>All suspended members will regain permission to login and their content will be unhidden</li>
+				<li>Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.</li>
+				<li>All hidden content will be unhidden.</li>
+			</ul>
+			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
+		),
+		// @todo: used for bp-performance will enable in feature.
+		/*
+		'performance'       => array(
+			'title'       => __( 'API Caching', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-performance',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss' ),
+			'default'     => false,
+		),
+		*/
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -2650,6 +2698,22 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => false,
 		),
 	);
+
+	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+		$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ).'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+		$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
+		if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>') ) {
+			$optional_components['messages']['settings'] = bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-messages',
+					),
+					'admin.php'
+				)
+			);
+		}
+	}
 
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
@@ -2738,11 +2802,13 @@ function bp_nav_menu_get_loggedin_pages() {
 
 	foreach ( $bp_menu_items as $bp_item ) {
 
+		$nav_counter = hexdec( uniqid() );
+
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
 		$page_args[ $bp_item['slug'] ] = (object) array(
-			'ID'             => -1,
+			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
 			'post_author'    => 0,
 			'post_date'      => 0,
@@ -2751,7 +2817,157 @@ function bp_nav_menu_get_loggedin_pages() {
 			'post_status'    => 'publish',
 			'comment_status' => 'closed',
 			'guid'           => $bp_item['link'],
+			'post_parent'    => 0,
 		);
+
+		$nav_sub = buddypress()->members->nav->get_secondary(
+			array(
+				'parent_slug' => $bp_item['slug'],
+			)
+		);
+
+		if ( 'messages' === $bp_item['slug'] && bp_is_active( 'messages' ) ) {
+			$page_args['compose-messages'] =
+			(object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'New Messages', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'compose-messages',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose',
+				'post_parent'    => $nav_counter,
+			);
+
+			if ( bp_current_user_can( 'bp_moderate' ) ) {
+				$page_args['site-notice'] = (object) array(
+					'ID'             => hexdec( uniqid() ),
+					'post_title'     => __( 'Site Notices', 'buddyboss' ),
+					'object_id'      => hexdec( uniqid() ),
+					'post_author'    => 0,
+					'post_date'      => 0,
+					'post_excerpt'   => 'site-notice',
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'guid'           => admin_url( '/admin.php?page=bp-notices' ),
+					'post_parent'    => $nav_counter,
+				);
+			}
+		}
+
+		if ( 'groups' === $bp_item['slug'] && bp_is_active( 'groups' ) && bp_user_can_create_groups() ) {
+			$page_args['groups-create'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Create Group', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'groups-create',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_get_groups_directory_permalink() . 'create' ),
+				'post_parent'    => $nav_counter,
+			);
+		}
+
+		if ( 'activity' === $bp_item['slug'] ) {
+			$page_args['activity-posts'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Posts', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'activity-posts',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() ),
+				'post_parent'    => $nav_counter,
+			);
+		}
+
+		if ( ! empty( $nav_sub ) ) {
+			foreach ( $nav_sub as $s_nav ) {
+
+				$sub_name          = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
+				$sub_name          = trim( $sub_name );
+				$nav_counter_child = hexdec( uniqid() );
+
+				$key = $s_nav['slug'];
+
+				if ( in_array( $key, array( 'capabilities', 'delete-account' ), true ) ) {
+					continue;
+				}
+
+				if ( 'settings' === $bp_item['slug'] && 'notifications' === $key ) {
+					$key = 'settings-notifications';
+				}
+
+				if ( 'profile' === $key ) {
+					$key = 'view';
+				} elseif ( 'groups' === $bp_item['slug'] && 'invites' === $key ) {
+					$key = 'group-invites';
+				}
+
+				if ( 'my-friends' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Connections', 'buddyboss' );
+				}
+
+				if ( 'my-document' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Documents', 'buddyboss' );
+				}
+
+				if ( 'my-media' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Photos', 'buddyboss' );
+				}
+
+				if ( 'my-courses' === $s_nav['slug'] ) {
+					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+				}
+
+				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
+					$key = 'group-invites-settings';
+				}
+
+				$link                  = $s_nav['link'];
+				$arr_key               = $key . '-sub';
+				$page_args[ $arr_key ] =
+					(object) array(
+						'ID'             => $nav_counter_child,
+						'post_title'     => $sub_name,
+						'object_id'      => $nav_counter_child,
+						'post_author'    => 0,
+						'post_date'      => 0,
+						'post_excerpt'   => $arr_key,
+						'post_type'      => 'page',
+						'post_status'    => 'publish',
+						'comment_status' => 'closed',
+						'guid'           => $link,
+						'post_parent'    => $nav_counter,
+					);
+			}
+		}
+
+		if ( 'settings' === $bp_item['slug'] && ! bp_disable_account_deletion() ) {
+			$page_args['delete-account'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Delete Account', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'delete-account',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() . '/delete-account' ),
+				'post_parent'    => $nav_counter,
+			);
+		}
 	}
 
 	if ( empty( buddypress()->wp_nav_menu_items ) ) {
@@ -2909,6 +3125,12 @@ function bp_core_get_suggestions( $args ) {
 		return new WP_Error( 'missing_parameter' );
 	}
 
+	//Remove action for remove search against xprofile fields
+	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+
+	//Add action only for xprofile fields First, last and nickname
+	add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+
 	$suggestions = new $class( $args );
 	$validation  = $suggestions->validate();
 
@@ -2918,6 +3140,11 @@ function bp_core_get_suggestions( $args ) {
 		$retval = $suggestions->get_suggestions();
 	}
 
+	//Add action again for search against xprofile fields
+	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+
+	//Removed action only for xprofile fields First, last and nickname
+	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
 	/**
 	 * Filters the available type of at-mentions.
 	 *
@@ -3161,13 +3388,15 @@ function bp_get_email( $email_type ) {
 	}
 
 	$args = array(
-		'no_found_rows'    => true,
-		'numberposts'      => 1,
-		'post_status'      => 'publish',
-		'post_type'        => bp_get_email_post_type(),
-		'suppress_filters' => false,
+		'no_found_rows'          => true,
+		'numberposts'            => 1,
+		'post_status'            => 'publish',
+		'post_type'              => bp_get_email_post_type(),
+		'suppress_filters'       => false,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 
-		'tax_query'        => array(
+		'tax_query'              => array(
 			array(
 				'field'    => 'slug',
 				'taxonomy' => bp_get_email_tax_type(),
@@ -3571,171 +3800,198 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
  * @return array
  */
 function bp_email_get_schema() {
-	return array(
+
+	$schema = array(
 		'activity-comment'                   => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
 		'activity-comment-author'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
 		'activity-at-message'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
 		'groups-at-message'                  => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
 		'core-user-registration'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
+				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
 		),
 		'core-user-registration-with-blog'   => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddyboss' ),
+				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddyboss' ),
-			'args'         => array(
+				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddyboss' ),
+			'args'             => array(
 				'multisite' => true,
 			),
 		),
 		'friends-request'                    => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 		),
 		'friends-request-accepted'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
 		),
 		'groups-details-updated'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-invitation'                  => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 		),
 		'groups-member-promoted'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-membership-request'          => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
 		),
 		'messages-unread'                    => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'post_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
 		'settings-verify-email-change'       => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">click here</a> to confirm the change. \n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
+				'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">click here</a> to confirm the change. \n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
+				'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 		),
 		'groups-membership-request-accepted' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-membership-request-rejected' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'bbp-new-forum-topic'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+				'post_content' => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 		),
 		'bbp-new-forum-reply'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
+				'post_content' => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
 		),
 		'invites-member-invite'              => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
+				'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( 'You have been invited by {{inviter.name}} to join the <a href="{{{site.url}}}">[{{{site.name}}}]</a> community.', 'buddyboss' ),
+				'post_content' => __( 'You have been invited by {{inviter.name}} to join the <a href="{{{site.url}}}">[{{{site.name}}}]</a> community.', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
+				'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
 		'group-message-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+		),
+		'content-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}' style='color: #007CFF;font-size: 14px;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px; display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
+		),
+		'user-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}' style='font-size: 14px;color: #007CFF;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px;display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
 		),
 	);
+
+	/**
+	 * Filters registered email schema.
+	 *
+	 * @param array $schema Email schema.
+	 *
+	 * @returns array $schema Email schema array.
+	 * @since BuddyBoss 1.5.4
+	 */
+	return apply_filters( 'bp_email_get_schema', $schema );
 }
 
 /**
@@ -3886,7 +4142,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$bbp_new_forum_reply = array(
-		'description' => __( 'A member has replied to a forum discussion that the participant is following.', 'buddyboss' ),
+		'description' => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_bbp_new_forum_reply',
 			'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
@@ -3904,6 +4160,16 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_group_messages_new_message',
 			'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
 		),
+	);
+
+	$content_moderation_email = array(
+		'description' => __( 'When content is automatically hidden due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
+	);
+
+	$user_moderation_email = array(
+		'description' => __( 'When a member has been automatically suspended due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
 	);
 
 	$types = array(
@@ -3927,7 +4193,18 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
 		'group-message-email'                => $group_message_email,
+		'content-moderation-email'           => $content_moderation_email,
+		'user-moderation-email'              => $user_moderation_email,
 	);
+
+	/**
+	 * Filters Email type schema
+	 *
+	 * @param array $types Types array.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	$types = apply_filters( 'bp_email_get_type_schema', $types );
 
 	if ( $field !== 'all' ) {
 		return wp_list_pluck( $types, $field );
@@ -4332,10 +4609,13 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 	function bp_core_get_post_id_by_slug( $slug ) {
 		$post_id = array();
 		$args    = array(
-			'posts_per_page' => 1,
-			'post_type'      => 'docs',
-			'name'           => $slug,
-			'post_parent'    => 0,
+			'posts_per_page'         => 1,
+			'post_type'              => 'docs',
+			'name'                   => $slug,
+			'post_parent'            => 0,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$docs    = get_posts( $args );
 		if ( ! empty( $docs ) ) {
@@ -4621,6 +4901,10 @@ function bp_core_parse_url( $url ) {
 
 	$parsed_url_data = array();
 
+	if ( strstr( $url, site_url() ) && ( strstr( $url, 'download_document_file' ) || strstr( $url, 'download_media_file' ) || strstr( $url, 'download_video_file' )) ) {
+		return array();
+	}
+
 	// Fetch the oembed code for URL.
 	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
 	if ( ! empty( $embed_code ) ) {
@@ -4632,7 +4916,12 @@ function bp_core_parse_url( $url ) {
 	} else {
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get( $url );
+		$response = wp_safe_remote_get(
+			$url,
+			array(
+				'user-agent' => '', // Default value being blocked by Cloudflare
+			)
+		);
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty
@@ -4640,7 +4929,7 @@ function bp_core_parse_url( $url ) {
 
 			// Load HTML to DOM Object
 			$dom = new DOMDocument();
-			@$dom->loadHTML( $body );
+			@$dom->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
 
 			$meta_tags   = array();
 			$images      = array();
@@ -4744,13 +5033,12 @@ function bp_core_parse_url( $url ) {
 /**
  * Format file size units
  *
- * @param int $bytes
- * @param bool $unit_label
+ * @param int    $bytes
+ * @param bool   $unit_label
  * @param string $type
  *
  * @return string
  * @since BuddyBoss 1.3.5
- *
  */
 function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 
@@ -4768,11 +5056,11 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 
 	if ( empty( $type ) ) {
 		if ( $bytes >= 1073741824 ) {
-			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
 		} elseif ( $bytes >= 1048576 ) {
-			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
 		} elseif ( $bytes >= 1024 ) {
-			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
 		} elseif ( $bytes > 1 ) {
 			$bytes = $bytes . ' bytes';
 		} elseif ( $bytes == 1 ) {
@@ -4782,11 +5070,11 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 		}
 	} else {
 		if ( 'GB' === $type ) {
-			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
 		} elseif ( 'MB' === $type ) {
-			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
 		} elseif ( 'KB' === $type ) {
-			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
 		} elseif ( 'bytes' === $type ) {
 			$bytes = $bytes . ' bytes';
 		} elseif ( 1 === $bytes ) {
@@ -4797,4 +5085,355 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 	}
 
 	return $bytes;
+}
+
+/**
+ * Whether or not profile field is hidden.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int $field_id ID for the profile field.
+ *
+ * @return bool Whether or not profile field is hidden.
+ */
+function bp_core_hide_display_name_field( $field_id = 0 ) {
+	if (
+		! function_exists( 'bp_is_active' )
+		|| ! bp_is_active( 'xprofile' )
+		|| empty( $field_id )
+	) {
+		return false;
+	}
+
+	$retval = false;
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
+			$retval = true;
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
+			$retval = true;
+		}
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_firstname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
+			$retval = true;
+		}
+	}
+
+	/**
+	 * Filters Hide Display name field.
+	 *
+	 * @since BuddyBoss 1.4.7
+	 *
+	 * @param bool $retval   Return value.
+	 * @param int  $field_id ID for the profile field.
+	 */
+	return (bool) apply_filters( 'bp_core_hide_display_name_field', $retval, $field_id );
+}
+
+/**
+ * Return the file upload max size in bytes.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.8
+ */
+function bp_core_upload_max_size() {
+
+	static $max_size = - 1;
+
+	if ( $max_size < 0 ) {
+		// Start with post_max_size.
+		$size = @ini_get( 'post_max_size' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$post_max_size = round( $size );
+		}
+
+		if ( $post_max_size > 0 ) {
+			$max_size = $post_max_size;
+		}
+
+		// If upload_max_size is less, then reduce. Except if upload_max_size is
+		// zero, which indicates no limit.
+		$size = @ini_get( 'upload_max_filesize' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$upload_max = round( $size );
+		}
+		if ( $upload_max > 0 && $upload_max < $max_size ) {
+			$max_size = $upload_max;
+		}
+	}
+
+	/**
+	 * Filters file upload max limit.
+	 *
+	 * @param mixed $max_size file upload max limit.
+	 *
+	 * @since BuddyBoss 1.4.8
+	 */
+	return apply_filters( 'bp_core_upload_max_size', $max_size );
+
+}
+
+/**
+ * Function will return the default fields groups and avatar/cover is enabled or not.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_core_profile_completion_steps_options() {
+
+	/* Profile Groups and Profile Cover Photo VARS. */
+	$options                              = array();
+	$options['profile_groups']            = bp_xprofile_get_groups();
+	$options['is_profile_photo_disabled'] = bp_disable_avatar_uploads();
+	$options['is_cover_photo_disabled']   = bp_disable_cover_image_uploads();
+
+	/**
+	 * Filters will return the default fields groups and avatar/cover is enabled or not.
+	 *
+	 * @param array $options of default Profile Groups and Profile Cover/Photo enabled.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	return apply_filters( 'bp_core_profile_completion_steps_options', $options );
+}
+
+/**
+ * Function trigger when profile updated. Profile field added/updated/deleted.
+ * Deletes Profile Completion Transient here.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_xprofile_update_profile_completion_user_progress() {
+
+	$user_id            = get_current_user_id();
+	$steps_options      = bp_core_profile_completion_steps_options();
+	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
+	$profile_photo_type = array();
+
+	if ( ! $steps_options['is_profile_photo_disabled'] ) {
+		$profile_photo_type[] = 'profile_photo';
+	}
+	if ( ! $steps_options['is_cover_photo_disabled'] ) {
+		$profile_photo_type[] = 'cover_photo';
+	}
+
+	// Get logged in user Progress.
+	$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_photo_type );
+	bp_update_user_meta( $user_id, 'bp_profile_completion_widgets', $user_progress_arr );
+
+}
+
+/**
+ * Function will return the user progress based on the settings you provided.
+ *
+ * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in
+ *                        progress.
+ *
+ * @return array $response user progress based on widget settings.
+ */
+function bp_xprofile_get_selected_options_user_progress( $settings ) {
+
+	$profile_groups     = $settings['profile_groups'];
+	$profile_photo_type = $settings['profile_photo_type'];
+
+	// Get logged in user Progress.
+	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	if ( ! $get_user_data ) {
+		bp_core_xprofile_update_profile_completion_user_progress();
+		$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	}
+
+	$response                     = array();
+	$response['photo_type']       = array();
+	$response['groups']           = array();
+	$response['total_fields']     = 0;
+	$response['completed_fields'] = 0;
+	$total_count                  = 0;
+	$total_completed_count        = 0;
+
+	if ( ! empty( $profile_photo_type ) ) {
+		foreach ( $profile_photo_type as $option ) {
+			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
+				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
+				$total_count                             = ++ $total_count;
+				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
+					$total_completed_count = ++ $total_completed_count;
+				}
+			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
+				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
+				$total_count                           = ++ $total_count;
+				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
+					$total_completed_count = ++ $total_completed_count;
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $profile_groups ) ) {
+		foreach ( $profile_groups as $group ) {
+			if ( isset( $get_user_data['groups'][ $group ] ) ) {
+				$response['groups'][ $group ] = $get_user_data['groups'][ $group ];
+				$total_count                  = $total_count + (int) $get_user_data['groups'][ $group ]['group_total_fields'];
+				if ( isset( $get_user_data['groups'][ $group ]['group_completed_fields'] ) && (int) $get_user_data['groups'][ $group ]['group_completed_fields'] > 0 ) {
+					$total_completed_count = $total_completed_count + (int) $get_user_data['groups'][ $group ]['group_completed_fields'];
+				}
+			}
+
+		}
+	}
+
+	if ( $total_count > 0 ) {
+		$response['total_fields'] = $total_count;
+	}
+
+	if ( $total_completed_count > 0 ) {
+		$response['completed_fields'] = $total_completed_count;
+	}
+
+	/**
+	 * Filters will return the user progress based on the settings you provided.
+	 *
+	 * @param array $response           user progress array.
+	 * @param array $profile_groups     user profile groups.
+	 * @param array $profile_photo_type user profile photo/cover data.
+	 * @param array $get_user_data      user profile cached data.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 */
+	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
+
+}
+
+/**
+ * Function trigger when admin make an profile field or settings changes on backend.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_core_xprofile_clear_all_user_progress_cache() {
+
+	delete_metadata(
+		'user',        // the meta type.
+		0,             // this doesn't actually matter in this call.
+		'bp_profile_completion_widgets', // the meta key to be removed everywhere.
+		'',            // this also doesn't actually matter in this call.
+		true           // tells the function "yes, please remove them all".
+	);
+
+}
+
+/**
+ * When search_terms are passed to BP_User_Query, search against xprofile fields.
+ *
+ * @since BuddyBoss 1.6.3
+ *
+ * @param array         $sql   Clauses in the user_id SQL query.
+ * @param BP_User_Query $query User query object.
+ * @return array
+ */
+function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_User_Query $query ) {
+
+	global $wpdb;
+	if ( empty( $query->query_vars['search_terms'] ) || empty( $sql['where']['search'] ) ) {
+		return $sql;
+	}
+
+	$bp                 = buddypress();
+	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
+	if ( 'left' === $query->query_vars['search_wildcard'] ) {
+		$search_terms_nospace = '%' . $search_terms_clean;
+		$search_terms_space   = '%' . $search_terms_clean . ' %';
+	} elseif ( 'right' === $query->query_vars['search_wildcard'] ) {
+		$search_terms_nospace = $search_terms_clean . '%';
+		$search_terms_space   = '% ' . $search_terms_clean . '%';
+	} else {
+		$search_terms_nospace = '%' . $search_terms_clean . '%';
+		$search_terms_space   = '%' . $search_terms_clean . '%';
+	}
+
+	// Get the firstname,last and nickname field id.
+	$firstname_field_id = bp_xprofile_firstname_field_id();
+	$last_field_id      = bp_xprofile_lastname_field_id();
+	$nickname_field_id  = bp_xprofile_nickname_field_id();
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value   = bp_get_option( 'bp-display-name-format' );
+	$enabled_fields = array();
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value ) {
+		$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
+		if ( ! empty( bp_hide_last_name() ) ) {
+			$enabled_fields['lastname'] = bp_xprofile_lastname_field_id();
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value ) {
+		$enabled_fields['nickname'] = bp_xprofile_nickname_field_id();
+		if ( ! empty( bp_hide_nickname_first_name() ) ) {
+			$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		}
+		if ( ! empty( bp_hide_last_name() ) ) {
+			$enabled_fields['lastname'] = bp_xprofile_lastname_field_id();
+		}
+	} else {
+		$enabled_fields['first_name'] = bp_xprofile_firstname_field_id();
+		$enabled_fields['lastname']   = bp_xprofile_lastname_field_id();
+		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
+	}
+
+	$where_condition = array();
+	if ( ! empty( $enabled_fields ) ) {
+		foreach ( $enabled_fields as $field_name => $field_id ) {
+			$where_condition[] = " ( ( field_id = " . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+		}
+	}
+	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
+	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+
+	// Checked profile fields based on privacy settings of particular user while searching.
+	if ( ! empty( $matched_user_ids ) ) {
+		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " .  implode( ' OR ', $where_condition ) );
+
+		if ( ! empty( $matched_user_data ) ) {
+			foreach ( $matched_user_data as $k => $user ) {
+				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
+				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
+					$key = array_search( $user->user_id, $matched_user_ids, true );
+					if ( false !== $key ) {
+						unset( $matched_user_ids[ $key ] );
+					}
+				}
+				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
+					$key = array_search( $user->user_id, $matched_user_ids, true );
+					if ( false !== $key ) {
+						unset( $matched_user_ids[ $key ] );
+					}
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $matched_user_ids ) ) {
+		$search_core            = $sql['where']['search'];
+		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
+		$sql['where']['search'] = $search_combined;
+	}
+
+	return $sql;
 }

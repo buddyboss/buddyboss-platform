@@ -179,7 +179,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -223,7 +223,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/groups/:group_id/avatar Create Group Avatar
 	 * @apiName        CreateBBGroupAvatar
 	 * @apiGroup       Groups
-	 * @apiDescription Create group avatar
+	 * @apiDescription Create group avatar. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
@@ -250,6 +250,21 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $avatar ) ) {
 			return $avatar;
 		}
+
+		// Crop args.
+		$r = array(
+			'item_id'       => $request['group_id'],
+			'object'        => 'group',
+			'avatar_dir'    => sanitize_key( 'group' ) . '-avatars',
+			'original_file' => $avatar->full,
+			'crop_w'        => bp_core_avatar_full_width(),
+			'crop_h'        => bp_core_avatar_full_height(),
+			'crop_x'        => 0,
+			'crop_y'        => 0,
+		);
+
+		/** This action is documented in bp-groups/bp-groups-screens.php */
+		do_action( 'groups_avatar_uploaded', (int) $request['group_id'], 'crop', $r );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $avatar, $request )
