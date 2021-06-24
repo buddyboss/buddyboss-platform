@@ -4236,6 +4236,17 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 		}
 	}
 
+	/**
+	 * Filter url here to audio url.
+	 *
+	 * @param string $attachment_url Url.
+	 * @param int    $document_id    Document id.
+	 * @param string $extension      Extension.
+	 * @param string $size           Size.
+	 * @param int    $attachment_id  Attachment id.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id );
 }
 
@@ -4313,6 +4324,15 @@ function bp_document_get_preview_audio_url( $document_id, $attachment_id, $exten
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 	}
 
+	/**
+	 * Filter url here to audio url.
+	 *
+	 * @param string $attachment_url Url.
+	 * @param int    $document_id    Document id.
+	 * @param string $extension      Extension.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );
 }
 
@@ -4365,6 +4385,10 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 		return;
 	}
 
+	$attachment_url = '';
+	$document_id    = $document->id;
+	$attachment_id  = $document->attachment_id;
+
 	/**
 	 * Filter here to allow/disallow document symlinks.
 	 *
@@ -4375,13 +4399,10 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	$do_symlink = apply_filters( 'bb_document_do_symlink', true, $document->id, $document->attachment_id, '' );
+	$do_symlink = apply_filters( 'bb_document_do_symlink', true, $document_id, $attachment_id, '' );
 
 	if ( $do_symlink ) {
 
-		$attachment_url = '';
-		$document_id    = $document->id;
-		$attachment_id  = $document->attachment_id;
 		$existing_mimes = array();
 		$all_extensions = bp_document_extensions_list();
 
@@ -4458,6 +4479,15 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 	}
 
+	/**
+	 * Filter here to video symlink url.
+	 *
+	 * @param string $attachment_url Symlink url.
+	 * @param int    $document_id    Document id.
+	 * @param int    $attachment_id  Attachment id.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bb_document_video_get_symlink', $attachment_url, $document_id, $attachment_id );
 
 }
@@ -4640,6 +4670,16 @@ function bb_get_document_attachments( $document ) {
 		$document = new BP_Document( $document );
 	}
 
+	/**
+	 * Filter here to allow/disallow document symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $document_id   Document id
+	 * @param int    $attachment_id Document attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink      = apply_filters( 'bb_document_do_symlink', true, $document->id, $document->attachment_id, 'bb-document-pdf-image-popup-image' );
 	$attachment_data = new stdClass();
 
