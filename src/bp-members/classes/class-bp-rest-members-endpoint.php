@@ -390,16 +390,16 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! ( is_user_logged_in() && current_user_can( 'bp_moderate' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( ( is_user_logged_in() && current_user_can( 'bp_moderate' ) ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -422,8 +422,17 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
-		$user   = bp_rest_get_user( $request['id'] );
+		$error  = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+		$retval = $error;
+
+		$user             = bp_rest_get_user( $request['id'] );
+		$member_type_edit = isset( $request['member_type'] );
 
 		if ( ! $user instanceof WP_User ) {
 			$retval = new WP_Error(
@@ -433,21 +442,30 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'status' => 404,
 				)
 			);
-		}
+		} else {
+			$action = 'delete';
 
-		$action = 'delete';
-		if ( 'DELETE' !== $request->get_method() ) {
-			$action = 'update';
-		}
+			if ( 'DELETE' !== $request->get_method() ) {
+				$action = 'update';
+			}
 
-		if ( true === $retval && ! $this->can_manage_member( $user, $action ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( get_current_user_id() === $user->ID ) {
+				if ( $member_type_edit && ! bp_current_user_can( 'bp_moderate' ) ) {
+					$retval = $error;
+				} else {
+					$retval = parent::update_item_permissions_check( $request );
+				}
+			} elseif ( ! $this->can_manage_member( $user, $action ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} else {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -543,41 +561,38 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval  = true;
+			$user_id = (int) $request['id'];
+			if ( empty( $user_id ) ) {
+				$user_id = bp_loggedin_user_id();
+			}
 
-		$user_id = (int) $request['id'];
-		if ( empty( $user_id ) ) {
-			$user_id = bp_loggedin_user_id();
-		}
-
-		if ( true === $retval && bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_user_cannot_delete',
-				__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && function_exists( 'bp_disable_account_deletion' ) && bp_disable_account_deletion() ) {
-			$retval = new WP_Error(
-				'bp_rest_user_cannot_delete',
-				__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_user_cannot_delete',
+					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( function_exists( 'bp_disable_account_deletion' ) && bp_disable_account_deletion() ) {
+				$retval = new WP_Error(
+					'bp_rest_user_cannot_delete',
+					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

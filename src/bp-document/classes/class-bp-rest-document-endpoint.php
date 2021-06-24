@@ -198,16 +198,16 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 */
 	public function upload_item_permissions_check( $request ) {
 
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to upload document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to upload document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -366,9 +366,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! empty( $request['group_id'] ) && bp_is_active( 'groups' ) ) {
-			$group       = groups_get_group( $request['group_id'] );
-			$user_id     = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
+		$group_id = $request->get_param( 'group_id' );
+		$user_id  = $request->get_param( 'user_id' );
+
+		if ( true === $retval && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+			$group       = groups_get_group( $group_id );
+			$user_id     = ( ! empty( $user_id ) ? $user_id : bp_loggedin_user_id() );
 			$user_groups = groups_get_user_groups( $user_id );
 
 			if ( empty( $group->id ) ) {
@@ -475,7 +478,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$document = new BP_Document( $request['id'] );
+		$document = new BP_Document( $request->get_param( 'id' ) );
 
 		if ( true === $retval && empty( $document->id ) ) {
 			$retval = new WP_Error(
@@ -622,32 +625,25 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if (
-			! is_user_logged_in() ||
-			(
+		$retval = $error;
+
+		if ( is_user_logged_in() ) {
+			$retval = true;
+
+			if (
 				function_exists( 'bb_document_user_can_upload' ) &&
 				! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			) {
+				$retval = $error;
+			}
 		}
 
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -915,73 +911,62 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to update this document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update this document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		$document = new BP_Document( $request['id'] );
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		if ( true === $retval && empty( $document->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+			$document = new BP_Document( $request->get_param( 'id' ) );
 
-		if (
-			true === $retval &&
-			(
+			if ( empty( $document->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_document_invalid_id',
+					__( 'Invalid document ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
 				! bp_document_user_can_edit( $document ) ||
 				(
 					function_exists( 'bb_document_user_can_upload' ) &&
 					! bb_document_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $document->group_id ) )
 				)
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this document.', 'buddyboss' ),
-				array(
-					'status' => 500,
-				)
-			);
-		}
-
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to edit a document inside this group.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+				$retval = $error;
+			} elseif ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
+				if (
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
+				) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to edit a document inside this group.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
-		}
 
-		if ( true === $retval && isset( $request['folder_id'] ) && ! empty( $request['folder_id'] ) ) {
-			if ( ! bp_folder_user_can_edit( (int) $request['folder_id'] ) ) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			if ( true === $retval && isset( $request['folder_id'] ) && ! empty( $request['folder_id'] ) ) {
+				if ( ! bp_folder_user_can_edit( (int) $request['folder_id'] ) ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -1078,38 +1063,20 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$document = new BP_Document( $request->get_param( 'id' ) );
 
-		$document = new BP_Document( $request['id'] );
-
-		if ( true === $retval && empty( $document->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_document_user_can_delete( $document ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! empty( $document->id ) && bp_document_user_can_delete( $document ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -1321,7 +1288,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bp_rest_document_prepare_links', $links, $document );
 	}
-
 
 	/**
 	 * Prepare object response for the document/folder.
