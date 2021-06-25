@@ -361,10 +361,10 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 	}
 
 	if ( ! $args ) {
-		$args = array( 'container_classes' => array( 'bb-activity-more-options' ) );
+		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="More Options"><i class="bb-icon bb-icon-menu-dots-v"></i></span><div class="bb-activity-more-options">' . $output . '</div></div>' ) ) );
 }
 
 /**
