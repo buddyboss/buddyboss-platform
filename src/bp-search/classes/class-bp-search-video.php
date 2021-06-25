@@ -84,7 +84,6 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 
 				$user_groups = array();
 				if ( is_user_logged_in() ) {
-
 					$groups = groups_get_user_groups( bp_loggedin_user_id() );
 					if ( ! empty( $groups['groups'] ) ) {
 						$user_groups = $groups['groups'];

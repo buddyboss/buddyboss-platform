@@ -793,7 +793,7 @@ function bp_search_settings_callback_albums() {
  *
  * @since BuddyBoss 1.7.0
  *
- * @uses checked() To display the checked attribute
+ * @uses checked() To display the checked attribute.
  */
 function bp_search_settings_callback_videos() {
 	?>
@@ -900,7 +900,7 @@ function bp_is_search_albums_enable( $default = 0 ) {
  *
  * @param int $default whether video search enabled or not.
  *
- * @return bool Is video media search enabled or not
+ * @return bool Is video media search enabled or not.
  */
 function bp_is_search_videos_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_videos_enable', (bool) get_option( 'bp_search_videos', $default ) );
@@ -1038,8 +1038,8 @@ function bp_search_settings_callback_post_type_taxonomy( $args ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string post type name
- * @param $taxonomy string taxonomy name
+ * @param $post_type string post type name.
+ * @param $taxonomy  string taxonomy name.
  *
  * @return bool Is post type Taxonomy search enabled or not
  */

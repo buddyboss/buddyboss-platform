@@ -2,7 +2,7 @@
 /**
  * BP Nouveau Activity Comment form template.
  *
- * @since BuddyPress 3.0.0
+ * @since   BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -31,12 +31,12 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 						<div class="ac-reply-post-default-template" style="display:none;">
 							<div class="dz-preview dz-file-preview">
 								<div class="dz-image">
-									<img data-dz-thumbnail />
+									<img data-dz-thumbnail/>
 								</div>
 								<div class="dz-progress-ring-wrap">
 									<i class="bb-icon bb-icon-camera-fill"></i>
 									<svg class="dz-progress-ring" width="62" height="62">
-										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185";/>
+										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
 								</div>
 								<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -62,7 +62,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 								<div class="dz-progress-ring-wrap">
 									<i class="bb-icon bb-icon-attach-fill"></i>
 									<svg class="dz-progress-ring" width="62" height="62">
-										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185";/>
+										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
 								</div>
 								<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -87,7 +87,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 								<div class="dz-progress-ring-wrap">
 									<i class="bb-icon bb-icon-video-fill"></i>
 									<svg class="dz-progress-ring" width="62" height="62">
-										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182";/>
+										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
 									</svg>
 								</div>
 								<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
@@ -121,7 +121,8 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 				<div id="ac-reply-toolbar-<?php bp_activity_id(); ?>" class="ac-reply-toolbar">
 
 					<?php
-                  if ( bp_is_active( 'media' ) ) : ?>
+					if ( bp_is_active( 'media' ) ) :
+						?>
 
 						<div class="post-elements-buttons-item post-media media-support">
 							<a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
@@ -154,7 +155,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 					<?php endif; ?>
 				</div>
 			</div>
-			<input type="hidden" name="comment_form_id" value="<?php bp_activity_id(); ?>" />
+			<input type="hidden" name="comment_form_id" value="<?php bp_activity_id(); ?>"/>
 
 			<?php
 			bp_nouveau_submit_button( 'activity-new-comment' );
