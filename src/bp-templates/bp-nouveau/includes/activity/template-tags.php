@@ -1481,7 +1481,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-v"></i></span><div class="bb-activity-more-options">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
