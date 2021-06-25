@@ -5,8 +5,8 @@
  * @since BuddyBoss 1.4.0
  * @package BuddyBoss\Core
  */
-
 ?>
+
 <div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
@@ -59,7 +59,6 @@
 									<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>
 								</a>
 							</div>
-							
 						</div>
 					</div>
 					<div class="bb-field-steps bb-field-steps-2">

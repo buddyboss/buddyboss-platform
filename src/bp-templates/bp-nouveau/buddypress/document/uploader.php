@@ -5,8 +5,8 @@
  * @since BuddyBoss 1.4.0
  * @package BuddyBoss\Core
  */
-
 ?>
+
 <div id="bp-media-uploader" style="display: none;">
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
