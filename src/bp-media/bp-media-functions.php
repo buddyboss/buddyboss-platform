@@ -3850,6 +3850,14 @@ function bb_media_user_can_access( $id, $type ) {
 	$data['can_delete']   = $can_delete;
 	$data['can_move']     = $can_move;
 
+	/**
+	 * Filter for the media access for the user.
+	 *
+	 * @param array  $data           Access data array.
+	 * @param int    $id             Media|Document|Video|Folder|Album id.
+	 * @param string $type           Media|Document|Video|Folder|Album type.
+	 * @param int    $media_group_id group id.
+	 */
 	return apply_filters( 'bb_media_user_can_access', $data, $id, $type, $media_group_id );
 }
 

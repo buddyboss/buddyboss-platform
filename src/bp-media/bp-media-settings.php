@@ -1424,6 +1424,13 @@ function bp_document_extensions_list() {
 	$merge   = array_merge( $default, $saved );
 	$final   = array_unique( $merge, SORT_REGULAR );
 
+	/**
+	 * Filter to alllow the document extensions list.
+     *
+     * @param array $final List of extensions.
+     *
+     * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_document_extensions_list', $final );
 }
 
