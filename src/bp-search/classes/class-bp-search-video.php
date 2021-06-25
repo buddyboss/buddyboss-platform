@@ -191,6 +191,12 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 				'search_terms' => false,
 			);
 
+			/**
+			 * Fires before the search videos html.
+			 *
+			 * @since BuddyBoss 1.7.0
+			 *
+			 */
 			do_action( 'bp_before_search_videos_html' );
 
 			if ( bp_has_video( $args ) ) {
@@ -209,6 +215,12 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 				endwhile;
 			}
 
+			/**
+			 * Fires after the search videos html.
+			 *
+			 * @since BuddyBoss 1.7.0
+			 *
+			 */
 			do_action( 'bp_after_search_videos_html' );
 		}
 	}
