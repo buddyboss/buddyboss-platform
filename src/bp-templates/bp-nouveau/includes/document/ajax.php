@@ -402,12 +402,12 @@ function bp_nouveau_ajax_document_get_document_description() {
 
                     <div class="bp-edit-media-activity-description" style="display: none;">
                         <div class="innerWrap">
-                            <textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
+                            <textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
                         </div>
                         <div class="in-profile description-new-submit">
                             <input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-                            <input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-                            <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+                            <input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_attr_e( 'Done Editing', 'buddyboss' ); ?>">
+                            <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>">
                         </div>
                     </div>
                     <?php
@@ -847,24 +847,24 @@ function bp_nouveau_ajax_document_move() {
 				?>
 
 				<div class="document-data-table-head">
-					<span class="data-head-sort-label"><?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+					<span class="data-head-sort-label"><?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 					<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 					</div>
@@ -887,7 +887,7 @@ function bp_nouveau_ajax_document_move() {
 				?>
 				<div class="pager">
 					<div class="dt-more-container load-more">
-						<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+						<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 					</div>
 				</div>
 				<?php
@@ -1172,24 +1172,24 @@ function bp_nouveau_ajax_document_delete() {
 			?>
 
 			<div class="document-data-table-head">
-				<span class="data-head-sort-label"><?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+				<span class="data-head-sort-label"><?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 				<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 				</div>
@@ -1213,7 +1213,7 @@ function bp_nouveau_ajax_document_delete() {
 			?>
 			<div class="pager">
 				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php
@@ -1330,24 +1330,24 @@ function bp_nouveau_ajax_document_folder_move() {
 			?>
 
 			<div class="document-data-table-head">
-				<span class="data-head-sort-label">:<?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+				<span class="data-head-sort-label">:<?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 				<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 				</div>
@@ -1371,7 +1371,7 @@ function bp_nouveau_ajax_document_folder_move() {
 			?>
 			<div class="pager">
 				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php
