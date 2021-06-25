@@ -117,3 +117,55 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_media_user_can_manage_media', $data, $media_id, $user_id );
 }
+
+/**
+ * Return absolute path of the document file.
+ *
+ * @param int $attachment_id Attachment id.
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_scaled_image_path( $attachment_id ) {
+	$is_image = wp_attachment_is_image( $attachment_id );
+	$img_url  = get_attached_file( $attachment_id );
+	$meta             = wp_get_attachment_metadata( $attachment_id );
+	$img_url_basename = wp_basename( $img_url );
+	if ( ! $is_image ) {
+		if ( ! empty( $meta['sizes']['full'] ) ) {
+			$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
+		}
+	}
+
+	return $img_url;
+}
+
+/**
+ * Return the preview url of the file.
+ *
+ * @param $document_id
+ * @param $extension
+ * @param $preview_attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.0
+ */
+function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
+	$attachment_url = '';
+
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		$get_preview            = $preview_attachment_id;
+		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		if ( ! $preview_attachment_id ) {
+			$preview_attachment_id = $get_preview;
+		}
+		$document_id        = 'forbidden_' . $document_id;
+		$attachment_id      = 'forbidden_' . $preview_attachment_id;
+		$output_file_src     = bp_document_scaled_image_path( $preview_attachment_id );
+		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
+			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		}
+	}
+
+	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+}
+
