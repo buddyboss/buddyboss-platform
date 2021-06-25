@@ -5466,8 +5466,7 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
  */
 function bp_core_is_empty_directory( $dir ) {
 	$handle = opendir( $dir );
-	$entry  = readdir( $handle );
-	while ( false !== $entry ) {
+	while ( ( $entry  = readdir( $handle ) ) !== $entry ) {
 		if ( '.' !== $entry && '..' !== $entry ) {
 			closedir( $handle );
 
