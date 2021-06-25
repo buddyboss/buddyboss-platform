@@ -58,8 +58,10 @@ $albums_link = bp_get_album_link();
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
 						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
-						<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
-								<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a></span>
+						<span class="media-album_author">
+							<?php esc_html_e( 'by ', 'buddyboss' ); ?>
+							<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a>
+						</span>
 					</div>
 				</div>
 
@@ -95,30 +97,28 @@ $albums_link = bp_get_album_link();
 							$group_id = bp_get_album_group_id();
 							if ( $group_id > 0 ) {
 								?>
-									<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_album_visibility(); ?>
-									</span>
+								</span>
 								<?php
 							} else {
 								?>
-									<span id="privacy-<?php echo esc_attr( bp_get_album_id() ); ?>">
+								<span id="privacy-<?php echo esc_attr( bp_get_album_id() ); ?>">
 									<?php bp_album_visibility(); ?>
-									</span>
+								</span>
 								<?php
 							}
 						} else {
 							?>
-								<span>
+							<span>
 								<?php bp_album_visibility(); ?>
-								</span>
+							</span>
 							<?php
 						}
 						?>
 					</div>
 				</div>
-
 			</div><!--.media-folder_items-->
-
 		</div>
 	</div>
 </li>
