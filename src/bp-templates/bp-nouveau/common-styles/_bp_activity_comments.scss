@@ -28,6 +28,14 @@
 
 				}
 
+				@media screen and (max-width: 560px) {
+
+					.bb-media-length-1 .bb-activity-media-elem.media-activity {
+						min-width: auto;
+					}
+
+				}
+
 			}
 
 			li:first-child {
