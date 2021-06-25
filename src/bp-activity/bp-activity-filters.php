@@ -169,7 +169,22 @@ add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty'
 
 add_action( 'bp_activity_before_save', 'bb_skip_blog_post_comment' );
 
+add_action( 'bp_activity_get_where_conditions', 'bb_skip_query_blog_comments', 10, 5 );
+
 /** Functions *****************************************************************/
+
+/**
+ * Remove the blog post comment from timeline.
+ * 
+ * @since
+ */
+function bb_skip_query_blog_comments( $where_conditions, $r, $select_sql, $from_sql, $join_sql ) {
+
+	$where_conditions['blog_comments'] = " ( a.type != 'new_blog_comment' ) ";
+
+	return $where_conditions;
+}
+
 
 function bb_skip_blog_post_comment( $self ) {
 
