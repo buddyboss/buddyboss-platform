@@ -124,7 +124,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// flag for adding conditional CSS class.
 		$count       = 0;
 		$description = 0;
-		
+
 		foreach ( bb_feed_post_types() as $key => $post_type ) {
 
 			$fields = array();

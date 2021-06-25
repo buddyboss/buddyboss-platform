@@ -1860,7 +1860,7 @@ function bb_feed_post_types() {
 	$post_types = get_post_types( array( 'public' => true ) );
 
 	// Exclude BP CPT.
-	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+	$bp_exclude_cpt = array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 
 	$bp_excluded_cpt = array();
 
