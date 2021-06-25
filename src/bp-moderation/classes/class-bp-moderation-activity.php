@@ -267,12 +267,32 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = __( 'Report Post', 'buddyboss' );
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) ) {
-			$button_text = __( 'Report Photo', 'buddyboss' );
+		if ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) {
+			if ( ! empty( $media_id ) ) {
+				$button_text = __( 'Report Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$button_text = __( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = __( 'Report Photo', 'buddyboss' );
+				}
+			}
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) ) {
-			$button_text = __( 'Report Document', 'buddyboss' );
+		if ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) {
+			if ( ! empty( $document_id ) ) {
+				$button_text = __( 'Report Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$button_text = __( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = __( 'Report Document', 'buddyboss' );
+				}
+			}
 		}
 
 		return $button_text;
@@ -310,12 +330,32 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = __( 'Reported Post', 'buddyboss' );
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) ) {
-			$button_text = __( 'Reported Photo', 'buddyboss' );
+		if ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) {
+			if ( ! empty( $media_id ) ) {
+				$button_text = __( 'Reported Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$button_text = __( 'Reported Post', 'buddyboss' );
+				} else {
+					$button_text = __( 'Reported Photo', 'buddyboss' );
+				}
+			}
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) ) {
-			$button_text = __( 'Reported Document', 'buddyboss' );
+		if ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) {
+			if ( ! empty( $document_id ) ) {
+				$button_text = __( 'Reported Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$button_text = __( 'Reported Post', 'buddyboss' );
+				} else {
+					$button_text = __( 'Reported Document', 'buddyboss' );
+				}
+			}
 		}
 
 		return $button_text;
