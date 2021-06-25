@@ -931,16 +931,22 @@ fieldset div.avatar {
 		margin-bottom: 10px;
 	}
 
-	.bb-content-inr-wrap > .bb-icon-corner-down-right {
-		float: left;
-		font-size: 25px;
-		color: #939597;
+	.bb-content-inr-wrap {
+		display: table;
+		width: 100%;
 
-		~ p {
-			float: right;
-			width: calc(100% - 35px);
-			text-align: left;
+		> .bb-icon-corner-down-right {
+			float: left;
+			font-size: 25px;
+			color: #939597;
+
+			~ p {
+				float: right;
+				width: calc(100% - 35px);
+				text-align: left;
+			}
 		}
+
 	}
 
 }

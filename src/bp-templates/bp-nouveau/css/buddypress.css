@@ -11204,6 +11204,12 @@ fieldset div.avatar {
   margin-bottom: 10px;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap {
+  display: table;
+  width: 100%;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right,
 .activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right {
   float: left;
