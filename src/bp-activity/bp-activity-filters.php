@@ -141,7 +141,7 @@ add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activ
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
-add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
+add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
 // Filter meta button for blog post comment.
 add_action( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_blog_post_comment_buttons', 10 ,2 );
