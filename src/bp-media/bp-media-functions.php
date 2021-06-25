@@ -3438,9 +3438,6 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 			return;
 		}
 
-		// clean the file url.
-		$file_url = stripslashes( trim( $the_file ) );
-
 		// get filename.
 		$file_name = basename( $the_file );
 

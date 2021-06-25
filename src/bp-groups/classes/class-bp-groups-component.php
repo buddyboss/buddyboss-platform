@@ -833,20 +833,6 @@ class BP_Groups_Component extends BP_Component {
 					'item_css_id'     => 'videos',
 					'no_access_url'   => $group_link,
 				);
-
-				if ( bp_is_group_video_albums_support_enabled() ) {
-					$sub_nav[] = array(
-						'name'            => __( 'Albums', 'buddyboss' ),
-						'slug'            => 'albums',
-						'parent_url'      => $group_link,
-						'parent_slug'     => $this->current_group->slug,
-						'screen_function' => 'groups_screen_group_video_albums',
-						'position'        => 85,
-						'user_has_access' => $this->current_group->user_has_access,
-						'item_css_id'     => 'albums',
-						'no_access_url'   => $group_link,
-					);
-				}
 			}
 
 			$message_status = bp_group_get_message_status( $this->current_group->id );

@@ -1741,6 +1741,9 @@ function bp_video_get_settings_fields_for_section( $section_id = '' ) {
 	/**
 	 * Filter for settings field sections.
 	 *
+	 * @param bool   $retval     Return value.
+	 * @param string $section_id Section id.
+	 *
 	 * @since BuddyBoss 1.7.0
 	 */
 	return (array) apply_filters( 'bp_video_get_settings_fields_for_section', $retval, $section_id );
