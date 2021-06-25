@@ -2882,7 +2882,7 @@ function bp_video_get_activity_video( $activity_id ) {
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 			if ( bp_is_group_video_support_enabled() ) {
 				$args['privacy'] = array( 'grouponly' );
-				if ( ! bp_is_group_video_albums_support_enabled() ) {
+				if ( ! bp_is_group_albums_support_enabled() ) {
 					$args['album_id'] = 'existing-video';
 				}
 			} else {
@@ -2894,7 +2894,7 @@ function bp_video_get_activity_video( $activity_id ) {
 			if ( ! bp_is_profile_video_support_enabled() ) {
 				$args['user_id'] = 'null';
 			}
-			if ( ! bp_is_profile_video_albums_support_enabled() ) {
+			if ( ! bp_is_profile_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-video';
 			}
 		}

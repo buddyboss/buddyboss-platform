@@ -51,25 +51,6 @@ function bp_is_profile_video_support_enabled( $default = 0 ) {
 }
 
 /**
- * Checks if profile albums support is enabled.
- *
- * @param int $default default value.
- *
- * @return bool Is profile albums support enabled or not
- * @since BuddyBoss 1.7.0
- */
-function bp_is_profile_video_albums_support_enabled( $default = 0 ) {
-	/**
-	 * Filters to checks if profile albums video support is enabled.
-	 *
-	 * @param int $default default value.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	return (bool) apply_filters( 'bp_is_profile_video_albums_support_enabled', (bool) get_option( 'bp_video_profile_albums_support', $default ) );
-}
-
-/**
  * Setting > Media > Video > Groups support
  *
  * @since BuddyBoss 1.7.0
@@ -140,25 +121,6 @@ function bp_is_group_video_support_enabled( $default = 0 ) {
 	 * @since BuddyBoss 1.7.0
 	 */
 	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
-}
-
-/**
- * Checks if group album support is enabled.
- *
- * @param int $default default value.
- *
- * @return bool Is group album support enabled or not
- * @since BuddyBoss 1.7.0
- */
-function bp_is_group_video_albums_support_enabled( $default = 0 ) {
-	/**
-	 * Filters to checks if group albums video support is enabled.
-	 *
-	 * @param int $default default value.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	return (bool) apply_filters( 'bp_is_group_video_albums_support_enabled', (bool) get_option( 'bp_video_group_albums_support', $default ) );
 }
 
 /**
