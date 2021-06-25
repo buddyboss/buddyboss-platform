@@ -56,7 +56,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() && $can_edit ) {
 							?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-								<?php _e( 'Add Photos', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
 							</a> 
 							<?php
 						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit ) {
@@ -64,7 +64,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							if ( $manage ) {
 								?>
 								<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-									<?php _e( 'Add Photos', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
 								</a>
 								<?php
 							}
@@ -112,7 +112,6 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				?>
 
 				<div id="media-stream" class="media" data-bp-list="media">
-
 					<div id="bp-ajax-loader">
 					<?php
 					if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit ) {
@@ -124,9 +123,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					}
 					?>
 					</div>
-
 				</div>
-
 			</div>
 		</div>
 		<?php

@@ -7,13 +7,15 @@
 
 bp_nouveau_before_loop();
 
+// phpcs:ignore WordPress.Security.NonceVerification.Missing
 if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
-    bp_get_template_part( 'media/media-move' );
-    bp_get_template_part( 'video/video-move' );
-    bp_get_template_part( 'video/add-video-thumbnail' );
+	bp_get_template_part( 'media/media-move' );
+	bp_get_template_part( 'video/video-move' );
+	bp_get_template_part( 'video/add-video-thumbnail' );
 endif;
 
 if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 		<ul class="media-list item-list bp-list bb-photo-list grid">
 		<?php
@@ -26,14 +28,17 @@ if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 
 	endwhile;
 
-	if ( bp_media_has_more_items() ) : ?>
+	if ( bp_media_has_more_items() ) :
+		?>
 		<li class="load-more">
 			<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 		</li>
-	<?php
+		<?php
 	endif;
 
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+		?>
 		</ul>
 		<?php
 	endif;

@@ -92,7 +92,8 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 													}
 													if ( $can_delete_btn ) {
 														?>
-														<li><a href="#" id="bb-delete-folder">
+														<li>
+															<a href="#" id="bb-delete-folder">
 																<i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
 															</a>
 														</li>
