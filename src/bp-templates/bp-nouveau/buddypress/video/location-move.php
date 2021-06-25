@@ -17,7 +17,7 @@
 			<div class="breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">
-						<span data-id="0"><?php esc_html_e( 'Album', 'buddyboss' ); ?></span>
+						<span data-id="0"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></span>
 					</div>
 				</div>
 			</div>
