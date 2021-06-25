@@ -41,6 +41,13 @@ function bp_video_settings_callback_profile_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_profile_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if profile video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_profile_video_support_enabled', (bool) get_option( 'bp_video_profile_video_support', $default ) );
 }
 
@@ -53,6 +60,13 @@ function bp_is_profile_video_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_profile_video_albums_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if profile albums video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_profile_video_albums_support_enabled', (bool) get_option( 'bp_video_profile_albums_support', $default ) );
 }
 
@@ -119,6 +133,13 @@ function bp_video_settings_callback_group_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_group_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if group video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
 }
 
@@ -131,6 +152,13 @@ function bp_is_group_video_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_group_video_albums_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if group albums video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_group_video_albums_support_enabled', (bool) get_option( 'bp_video_group_albums_support', $default ) );
 }
 
@@ -161,6 +189,13 @@ function bp_video_settings_callback_messages_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_messages_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if message video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_messages_video_support_enabled', (bool) get_option( 'bp_video_messages_video_support', $default ) );
 }
 
@@ -189,6 +224,13 @@ function bp_video_settings_callback_forums_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_forums_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if forums video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_forums_video_support_enabled', (bool) get_option( 'bp_video_forums_video_support', $default ) );
 }
 
@@ -300,6 +342,13 @@ function bp_video_settings_callback_video_allowed_size() {
 function bp_video_allowed_upload_video_size() {
 	$max_size = bp_core_upload_max_size();
 	$default  = bp_video_format_size_units( $max_size, false, 'MB' );
+	/**
+	 * Filters for upload file size for the video.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (int) apply_filters( 'bp_video_allowed_upload_video_size', (int) get_option( 'bp_video_allowed_size', $default ) );
 }
 
@@ -343,6 +392,20 @@ function bp_video_settings_callback_video_allowed_per_batch() {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_allowed_upload_video_per_batch() {
+	/**
+	 * Filters for allowed per batch for the video.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$default = apply_filters( 'bp_video_upload_chunk_limit', 10 );
+	/**
+	 * Filters for allowed per batch for the video.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (int) apply_filters( 'bp_video_allowed_upload_video_per_batch', (int) get_option( 'bp_video_allowed_per_batch', $default ) );
 }
