@@ -1287,6 +1287,10 @@ body.post-type-bp-email .categorydiv label {
 /*------------------------------------------------------------------------------
  * 6.0 Help
  *----------------------------------------------------------------------------*/
+.bp-display-none {
+  display: none;
+}
+
 .wrap .bp-help-doc {
   position: relative;
   margin-top: 20px;
