@@ -335,7 +335,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		}
 	}
 
-	// Check for deprecated hooks :
+	// Check for deprecated hooks.
 	foreach ( $deprecated_hooks as $deprectated_hook ) {
 		list( $hook, $component, $position ) = $deprectated_hook;
 

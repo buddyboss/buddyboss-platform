@@ -388,47 +388,47 @@ function bp_nouveau_ajax_document_get_document_description() {
 					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 				</div>
 			</div>
-		    <div class="activity-media-description">
-			    <div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
-                <?php
-                if ( $can_edit_btn ) {
-                    ?>
-                    <a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-                    href="#">
-                        <span class="bb-icon-edit-thin"></span>
-                        <span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-                        <span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-                    </a>
+			<div class="activity-media-description">
+				<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
+				<?php
+				if ( $can_edit_btn ) {
+					?>
+					<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+					href="#">
+						<span class="bb-icon-edit-thin"></span>
+						<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+						<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+					</a>
 
-                    <div class="bp-edit-media-activity-description" style="display: none;">
-                        <div class="innerWrap">
-                            <textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
-                        </div>
-                        <div class="in-profile description-new-submit">
-                            <input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-                            <input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_attr_e( 'Done Editing', 'buddyboss' ); ?>">
-                            <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>">
-                        </div>
-                    </div>
-                    <?php
-                }
-                ?>
-		    </div>
-            <?php
-            if ( ! empty( $document_id ) ) {
-                $document_privacy = bb_media_user_can_access( $document_id, 'document' );
-                $can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-                if ( $can_download_btn ) {
-                    $download_url = bp_document_download_link( $attachment_id, $document_id );
-                    if ( $download_url ) {
-                        ?>
-                        <a class="download-document" href="<?php echo esc_url( $download_url ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a>
-                        <?php
-                    }
-                }
-            }
-            ?>
-	    </li>
+					<div class="bp-edit-media-activity-description" style="display: none;">
+						<div class="innerWrap">
+							<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
+						</div>
+						<div class="in-profile description-new-submit">
+							<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_attr_e( 'Done Editing', 'buddyboss' ); ?>">
+							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>">
+						</div>
+					</div>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+			if ( ! empty( $document_id ) ) {
+				$document_privacy = bb_media_user_can_access( $document_id, 'document' );
+				$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+				if ( $can_download_btn ) {
+					$download_url = bp_document_download_link( $attachment_id, $document_id );
+					if ( $download_url ) {
+						?>
+						<a class="download-document" href="<?php echo esc_url( $download_url ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a>
+						<?php
+					}
+				}
+			}
+			?>
+		</li>
 		<?php
 		$document_description = ob_get_contents();
 		ob_end_clean();
@@ -1550,7 +1550,7 @@ function bp_nouveau_ajax_document_activity_delete() {
 		ob_start();
 		if ( bp_has_activities(
 			array(
-				'include'     => $activity_id,
+				'include' => $activity_id,
 			)
 		) ) {
 			while ( bp_activities() ) {
@@ -1560,7 +1560,7 @@ function bp_nouveau_ajax_document_activity_delete() {
 		}
 		$activity_content = ob_get_contents();
 		ob_end_clean();
-    }
+	}
 
 	wp_send_json_success(
 		array(

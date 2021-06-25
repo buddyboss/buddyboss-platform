@@ -197,9 +197,9 @@ function bp_nouveau_ajax_messages_send_message() {
 			while ( bp_message_threads() ) {
 				bp_message_thread();
 
-				$last_message_id         = (int) $messages_template->thread->last_message_id;
-				$is_group_thread         = 0;
-				$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+				$last_message_id = (int) $messages_template->thread->last_message_id;
+				$is_group_thread = 0;
+				$first_message   = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
 				if ( isset( $first_message ) && isset( $first_message->id ) ) {
 					$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 					$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
@@ -209,22 +209,22 @@ function bp_nouveau_ajax_messages_send_message() {
 					if ( 'group' === $message_from && bp_get_message_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 						$is_group_thread = 1;
 					}
-                }
+				}
 
 				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
 				$un_access_users = array();
 				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-                    foreach ( (array) $messages_template->thread->recipients as $recipient ) {
-		                if ( bp_loggedin_user_id() !== $recipient->user_id ) {
-			                if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-				                $un_access_users[]  = false;
-			                }
-		                }
-	                }
-                    if ( ! empty( $un_access_users ) ){
-	                    $can_message = false;
-                    }
-                }
+					foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
+							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+								$un_access_users[] = false;
+							}
+						}
+					}
+					if ( ! empty( $un_access_users ) ) {
+						$can_message = false;
+					}
+				}
 
 				$check_recipients = (array) $messages_template->thread->recipients;
 				// Strip the sender from the recipient list, and unset them if they are
@@ -556,14 +556,17 @@ function bp_nouveau_ajax_messages_send_reply() {
 	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
 		$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
 
-		if ( ! empty( $video_ids ) && bp_has_video(
-			array(
-				'include'  => $video_ids,
-				'privacy'  => array( 'message' ),
-				'order_by' => 'menu_order',
-				'sort'     => 'ASC',
+		if (
+			! empty( $video_ids ) &&
+			bp_has_video(
+				array(
+					'include'  => $video_ids,
+					'privacy'  => array( 'message' ),
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				)
 			)
-		) ) {
+		) {
 			$reply['video'] = array();
 			while ( bp_video() ) {
 				bp_the_video();
@@ -573,7 +576,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'title'         => bp_get_video_title(),
 					'message_id'    => bp_get_the_thread_message_id(),
 					'thread_id'     => bp_get_the_thread_id(),
-					'attachment_id' => bp_get_video_attachment_id (),
+					'attachment_id' => bp_get_video_attachment_id(),
 					'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
 					'full'          => bp_get_video_attachment_image(),
 					'meta'          => $video_template->video->attachment_data->meta,
@@ -985,11 +988,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			foreach ( (array) $messages_template->thread->recipients as $recipient ) {
 				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-						$un_access_users[]  = false;
+						$un_access_users[] = false;
 					}
 				}
 			}
-			if ( ! empty( $un_access_users ) ){
+			if ( ! empty( $un_access_users ) ) {
 				$can_message = false;
 			}
 		}
@@ -2005,11 +2008,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
 			if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 				if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-					$un_access_users[]  = false;
+					$un_access_users[] = false;
 				}
 			}
 		}
-		if ( ! empty( $un_access_users ) ){
+		if ( ! empty( $un_access_users ) ) {
 			$can_message = false;
 		}
 	}
@@ -2336,7 +2339,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
 			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
 
-			if ( ! empty( $video_ids ) && bp_has_video(
+			if (
+				! empty( $video_ids ) &&
+				bp_has_video(
 					array(
 						'include'  => $video_ids,
 						'privacy'  => array( 'message' ),
@@ -2344,7 +2349,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'sort'     => 'ASC',
 						'user_id'  => false,
 					)
-				) ) {
+				)
+			) {
 				$thread->messages[ $i ]['video'] = array();
 				while ( bp_video() ) {
 					bp_the_video();

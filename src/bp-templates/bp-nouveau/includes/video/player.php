@@ -35,10 +35,10 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		}
 
 		$fp     = @fopen( $output_file_src, 'rb' );
-		$size   = filesize( $output_file_src ); // File size
-		$length = $size;           // Content length
-		$start  = 0;               // Start byte
-		$end    = $size - 1;       // End byte
+		$size   = filesize( $output_file_src ); // File size.
+		$length = $size;           // Content length.
+		$start  = 0;               // Start byte.
+		$end    = $size - 1;       // End byte.
 		header( "Content-Type: $type" );
 		header( "Accept-Ranges: 0-$length" );
 		header( 'Accept-Ranges: bytes' );

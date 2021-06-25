@@ -149,7 +149,8 @@ class BP_Video_Album_Template {
 			'privacy'      => false,
 			'search_terms' => false,
 		);
-		$r        = wp_parse_args( $args, $defaults );
+
+		$r = wp_parse_args( $args, $defaults );
 		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
