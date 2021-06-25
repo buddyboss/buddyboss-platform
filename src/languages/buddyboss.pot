@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-25 12:51:37+00:00\n"
+"POT-Creation-Date: 2021-06-25 13:56:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -9362,36 +9362,36 @@ msgstr ""
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:464 bp-forums/activity.php:465
-#: bp-forums/activity.php:561 bp-forums/activity.php:562
+#: bp-forums/activity.php:465 bp-forums/activity.php:466
+#: bp-forums/activity.php:562 bp-forums/activity.php:563
 msgid "Join Discussion"
 msgstr ""
 
-#: bp-forums/activity.php:486 bp-forums/activity.php:487
+#: bp-forums/activity.php:487 bp-forums/activity.php:488
 msgid "Quick Reply"
 msgstr ""
 
-#: bp-forums/activity.php:657
+#: bp-forums/activity.php:658
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:811
+#: bp-forums/activity.php:812
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:945
+#: bp-forums/activity.php:946
 msgid "%1$s started a new discussion in the forum %2$s"
 msgstr ""
 
-#: bp-forums/activity.php:986
+#: bp-forums/activity.php:987
 msgid "%1$s replied to a discussion in the forum %2$s"
 msgstr ""
 
-#: bp-forums/activity.php:1016
+#: bp-forums/activity.php:1017
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1048
+#: bp-forums/activity.php:1049
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 

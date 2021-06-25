@@ -2457,7 +2457,7 @@ input.search-query-input {
 
 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options {
   position: absolute;
-  top: 30px;
+  top: 20px;
   right: 4px;
   background: #fff;
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
@@ -2477,7 +2477,7 @@ input.search-query-input {
   position: absolute;
   width: 0;
   height: 0;
-  top: 1px;
+  top: 0;
   margin: 0 auto;
   right: 8px;
   box-sizing: border-box;
@@ -3992,7 +3992,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments ul {
   clear: both;
   list-style: none;
-  margin: 15px 0 0;
+  margin: 0;
   padding: 0;
 }
 
@@ -4000,6 +4000,22 @@ span.dashicons.dashicons-admin-file:before {
   border-top: 1px solid #eee;
   border-bottom: 0;
   padding: 1em 0 0;
+}
+
+.buddypress-wrap .activity-comments ul li:not(.detached-comment-item) {
+  margin-left: 15px;
+}
+
+@media screen and (max-width: 560px) {
+  .buddypress-wrap .activity-comments ul li:not(.detached-comment-item) {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem.media-activity {
+    min-width: auto;
+  }
 }
 
 .buddypress-wrap .activity-comments ul li:first-child {
@@ -4113,6 +4129,16 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .mini .activity-comments {
   clear: both;
   margin-top: 0;
+}
+
+.buddypress-wrap .bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 560px) {
+  .buddypress-wrap .bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
+    margin-left: 0;
+  }
 }
 
 body.activity-permalink .activity-comments {
