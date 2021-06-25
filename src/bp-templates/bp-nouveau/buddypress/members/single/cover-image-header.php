@@ -31,12 +31,12 @@ $cover_image_url          = bp_attachments_get_attachment( 'url', array( 'object
 		}
 		?>
 		<?php if ( bp_is_my_profile() ) { ?>
-			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
+			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e('Change Cover Photo', 'buddyboss'); ?>">
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 
 			<?php if ( ! empty( $cover_image_url ) ) { ?>
-				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
+				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e('Reposition Cover Photo', 'buddyboss'); ?>">
 					<i class="bb-icon-move"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
@@ -53,7 +53,7 @@ $cover_image_url          = bp_attachments_get_attachment( 'url', array( 'object
 	<div id="item-header-cover-image" class="item-header-wrap">
 		<div id="item-header-avatar">
 			<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
-				<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Profile Photo', 'buddyboss'); ?>">
+				<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e('Change Profile Photo', 'buddyboss'); ?>">
 					<i class="bb-icon-edit-thin"></i>
 				</a>
 			<?php } ?>

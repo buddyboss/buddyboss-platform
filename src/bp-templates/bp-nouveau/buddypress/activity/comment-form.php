@@ -125,32 +125,32 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 						?>
 
 						<div class="post-elements-buttons-item post-media media-support">
-							<a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+							<a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
 								<i class="bb-icon bb-icon-camera-small"></i>
 							</a>
 						</div>
 
 						<div class="post-elements-buttons-item post-video video-support">
-							<a href="#" id="ac-reply-video-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+							<a href="#" id="ac-reply-video-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach a video', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
 								<i class="bb-icon bb-icon-video-alt"></i>
 							</a>
 						</div>
 						<div class="post-elements-buttons-item post-media document-support">
-							<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+							<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach a document', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
 								<i class="bb-icon bb-icon-attach"></i>
 							</a>
 						</div>
 
 						<div class="post-elements-buttons-item post-gif">
 							<div class="gif-media-search">
-								<a href="#" id="ac-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Post a GIF', 'buddyboss' ); ?>">
+								<a href="#" id="ac-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Post a GIF', 'buddyboss' ); ?>">
 									<i class="bb-icon bb-icon-gif"></i>
 								</a>
 								<div class="gif-media-search-dropdown"></div>
 							</div>
 						</div>
 
-						<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Insert an emoji', 'buddyboss' ); ?>" id="ac-reply-emoji-button-<?php bp_activity_id(); ?>"></div>
+						<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Insert an emoji', 'buddyboss' ); ?>" id="ac-reply-emoji-button-<?php bp_activity_id(); ?>"></div>
 
 					<?php endif; ?>
 				</div>

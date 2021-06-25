@@ -1680,6 +1680,14 @@ function bp_media_settings_callback_document_allowed_per_batch() {
 function bp_media_allowed_upload_document_per_batch() {
 
 	$default = apply_filters( 'bp_document_upload_chunk_limit', 10 );
+
+	/**
+	 * Filter to allow document upload per batch.
+     *
+     * @param int $default Per batch.
+     *
+     * @since BuddyBoss 1.7.0
+	 */
 	return (int) apply_filters( 'bp_media_allowed_upload_document_per_batch', (int) get_option( 'bp_document_allowed_per_batch', $default ) );
 }
 
