@@ -549,12 +549,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_id = $topic->post_parent;
 			}
 
-			// Remove the delete meta button to set it as the last array key.
-			if ( ! empty( $buttons['activity_delete'] ) ) {
-				$delete = $buttons['activity_delete'];
-				unset( $buttons['activity_delete'] );
-			}
-
 			// New meta button as 'Join discussion'.
 			$buttons['activity_reply_discussionsss'] = array(
 				'id'                => 'activity_reply_discussionsss',
@@ -574,11 +568,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				),
 
 			);
-
-			// Delete button set as the last meta buttion.
-			if ( ! empty( $delete ) ) {
-					$buttons['activity_delete'] = $delete;
-			}
 
 			return $buttons;
 		}

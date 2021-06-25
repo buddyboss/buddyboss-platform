@@ -1633,7 +1633,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 
 .bb-document-privacy-wrap .privacy:before,
 .bb-media-privacy-wrap .privacy:before {
-  content: "\e960";
+  content: "\e819";
   font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
@@ -1757,7 +1757,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .activity-privacy > li.public:before {
-  content: "\e960";
+  content: "\e819";
 }
 
 .activity-privacy > li.onlyme:before {
@@ -2397,6 +2397,178 @@ input.search-query-input {
 .activity-list .comment-item .bp-generic-meta.action a.report-content.button:before,
 .activity-list .comment-item .bp-generic-meta.action a.reported-content.button:before {
   display: none;
+}
+
+.activity-list .bp-activity-head {
+  margin-right: 25px;
+}
+
+.activity-list .bb-activity-more-options-wrap {
+  position: absolute;
+  right: 15px;
+  top: 20px;
+  z-index: 11;
+}
+
+.activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action {
+  padding: 5px;
+  display: flex;
+  cursor: pointer;
+}
+
+.activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action i {
+  font-size: 22px;
+  color: #939597;
+}
+
+.bb-media-model-container .activity-list .bb-activity-more-options-wrap {
+  float: right;
+  position: relative;
+  right: initial;
+  top: initial;
+}
+
+.bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:after {
+  margin-right: 11px;
+  right: 100%;
+  top: 50%;
+  -webkit-transform: translate(10px, -50%);
+  -ms-transform: translate(10px, -50%);
+  transform: translate(10px, -50%);
+  left: inherit;
+  bottom: inherit;
+}
+
+.bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba( 18,43,70,0.95 )%22%20transform%3D%22rotate(90 6 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  /* stylelint-disable-line */
+  background-size: 100% auto;
+  transform: translate(0, -50%) rotate(180deg);
+  left: inherit;
+  bottom: inherit;
+  display: inline-block;
+  width: 6px;
+  height: 18px;
+  margin-right: -5px;
+  right: 100%;
+  top: 100%;
+  margin-top: 3px;
+}
+
+.activity-list .bb-activity-more-options-wrap .bb-activity-more-options {
+  position: absolute;
+  top: 30px;
+  right: 4px;
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border-radius: 4px;
+  width: 168px;
+  padding: 5px 0;
+  display: none;
+  z-index: 11;
+}
+
+.activity-list .bb-activity-more-options-wrap .bb-activity-more-options.is_visible {
+  display: block;
+}
+
+.activity-list .bb-activity-more-options-wrap .bb-activity-more-options:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 1px;
+  margin: 0 auto;
+  right: 8px;
+  box-sizing: border-box;
+  border: 6px solid #000;
+  border-color: #fff #fff transparent transparent;
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+  -webkit-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  z-index: 101;
+}
+
+.activity-list .bb-activity-more-options-wrap .bb-activity-more-options p {
+  margin: 0;
+}
+
+.activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button {
+  width: 100%;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a {
+  margin: 0;
+  display: block;
+  text-align: left;
+  opacity: 1;
+  font-size: 14px;
+  letter-spacing: -0.24px;
+  width: 100%;
+  text-transform: none;
+  font-weight: 400;
+  min-height: auto;
+  border-radius: 0;
+  padding: 8px 14px;
+  color: #7f868f;
+  line-height: 1;
+  border: 0;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a:hover {
+  color: #5087e5;
+  background-color: #f5f5f5;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a:before {
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  width: 20px;
+  text-align: center;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.report-content:before {
+  content: "\e8ea";
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
+  content: "\e937";
+  font-size: 15px;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a span:not(.bp-screen-reader-text) {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@media screen and (max-width: 460px) {
+  .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:after {
+    -webkit-transform: translate(-90%, 0);
+    -ms-transform: translate(-90%, 0);
+    transform: translate(-90%, 0);
+  }
+}
+
+.activity-list .comment-item .acomment-meta {
+  margin-right: 25px;
+}
+
+.activity-list .comment-item .bb-activity-more-options-wrap {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -3814,7 +3986,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments ul {
   clear: both;
   list-style: none;
-  /*margin: 15px 0 0;*/
+  margin: 15px 0 0;
   padding: 0;
 }
 
@@ -10972,9 +11144,15 @@ fieldset div.avatar {
 -------------------------------------------------------------- */
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
-  border-left: 2px solid #eaeaea;
-  margin-left: 5px;
-  padding-left: 10px;
+  border: 1px solid #eaeaea;
+  padding: 10px 12px;
+  border-radius: 4px;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap {
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 /* =User Capabilities
