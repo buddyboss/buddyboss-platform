@@ -1323,11 +1323,10 @@ function bp_nouveau_activity_privacy() {
  *
  * @since BuddyBoss 1.5.0
  *
- * @param bool $echo
+ * @param bool $echo        Whether to print or not.
+ * @param int  $activity_id Activity id.
  *
- * @param int  $activity_id
- *
- * @return mixed
+ * @return string text.
  */
 function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 

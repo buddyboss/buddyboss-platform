@@ -1796,6 +1796,8 @@ function bp_video_get_settings_fields() {
 
 	/**
 	 * Filter for settings fields.
+     *
+     * @param array $fields Fields array.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */

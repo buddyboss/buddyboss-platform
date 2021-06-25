@@ -292,7 +292,7 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 		),
 	);
 
-	if ( ! bp_is_profile_video_support_enabled() ) {
+	if ( ! bp_is_profile_albums_support_enabled() ) {
 		$retval[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',

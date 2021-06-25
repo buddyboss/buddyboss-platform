@@ -4630,8 +4630,8 @@ function bb_document_deregister_image_sizes() {
 /**
  * Add the fallback image sizes for PDF.
  *
- * @param $fallback_sizes
- * @param $metadata
+ * @param array $fallback_sizes Fallback sizes.
+ * @param array $metadata       Meta data array.
  *
  * @return mixed|void
  *
