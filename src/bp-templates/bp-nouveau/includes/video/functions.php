@@ -129,7 +129,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
-		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed()
+		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
 	);
 
 	if ( bp_is_single_video_album() ) {
@@ -141,27 +141,27 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 	}
 
 	$params['video']['i18n_strings'] = array(
-		'select'                => __( 'Select', 'buddyboss' ),
-		'unselect'              => __( 'Unselect', 'buddyboss' ),
-		'selectall'             => __( 'Select All', 'buddyboss' ),
-		'unselectall'           => __( 'Unselect All', 'buddyboss' ),
-		'no_videos_found'       => __( 'Sorry, no videos were found', 'buddyboss' ),
-		'upload'                => __( 'Upload', 'buddyboss' ),
-		'upload_thumb'          => __( 'Add Thumbnail', 'buddyboss' ),
-		'uploading'             => __( 'Uploading', 'buddyboss' ),
-		'upload_status'         => __( '%1$d out of %2$d uploaded', 'buddyboss' ), // phpcs:ignore
-		'album_delete_confirm'  => __( 'Are you sure you want to delete this album? Videos in this album will also be deleted.', 'buddyboss' ),
-		'album_delete_error'    => __( 'There was a problem deleting the album.', 'buddyboss' ),
-		'video_delete_confirm'  => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
-		'video_enlarge_text'    => __( 'Enlarge', 'buddyboss' ),
-		'video_fullscreen_text' => __( 'Enter fullscreen', 'buddyboss' ),
-		'video_play_text'		=> __( 'Play', 'buddyboss' ),
-		'video_pause_text'	    => __( 'Pause', 'buddyboss' ),
-		'video_uploaded_text'	=> __( 'Uploaded', 'buddyboss' ),
-		'video_volume_text'   => __( 'Volume', 'buddyboss' ),
+		'select'                  => __( 'Select', 'buddyboss' ),
+		'unselect'                => __( 'Unselect', 'buddyboss' ),
+		'selectall'               => __( 'Select All', 'buddyboss' ),
+		'unselectall'             => __( 'Unselect All', 'buddyboss' ),
+		'no_videos_found'         => __( 'Sorry, no videos were found', 'buddyboss' ),
+		'upload'                  => __( 'Upload', 'buddyboss' ),
+		'upload_thumb'            => __( 'Add Thumbnail', 'buddyboss' ),
+		'uploading'               => __( 'Uploading', 'buddyboss' ),
+		'upload_status'           => __( '%1$d out of %2$d uploaded', 'buddyboss' ), // phpcs:ignore
+		'album_delete_confirm'    => __( 'Are you sure you want to delete this album? Videos in this album will also be deleted.', 'buddyboss' ),
+		'album_delete_error'      => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'video_delete_confirm'    => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
+		'video_enlarge_text'      => __( 'Enlarge', 'buddyboss' ),
+		'video_fullscreen_text'   => __( 'Enter fullscreen', 'buddyboss' ),
+		'video_play_text'         => __( 'Play', 'buddyboss' ),
+		'video_pause_text'        => __( 'Pause', 'buddyboss' ),
+		'video_uploaded_text'     => __( 'Uploaded', 'buddyboss' ),
+		'video_volume_text'       => __( 'Volume', 'buddyboss' ),
 		'video_miniplayer_text'   => __( 'Miniplayer', 'buddyboss' ),
-		'video_speed_text'   => __( 'Speed', 'buddyboss' ),
-		'video_skip_back_text' => __( 'Step Back (5)', 'buddyboss' ),
+		'video_speed_text'        => __( 'Speed', 'buddyboss' ),
+		'video_skip_back_text'    => __( 'Step Back (5)', 'buddyboss' ),
 		'video_skip_forward_text' => __( 'Step Forward (5)', 'buddyboss' ),
 	);
 
@@ -291,7 +291,7 @@ function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
 function bp_video_allowed_video_type() {
 
 	$extension_lists = array(
-		'bb_vid_1'  => array(
+		'bb_vid_1' => array(
 			'extension'   => '.mp4',
 			'mime_type'   => 'video/mp4',
 			'description' => __( 'MP4', 'buddyboss' ),
@@ -299,7 +299,7 @@ function bp_video_allowed_video_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_vid_2'  => array(
+		'bb_vid_2' => array(
 			'extension'   => '.webm',
 			'mime_type'   => 'video/webm',
 			'description' => __( 'WebM', 'buddyboss' ),
@@ -307,7 +307,7 @@ function bp_video_allowed_video_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_vid_3'  => array(
+		'bb_vid_3' => array(
 			'extension'   => '.ogg',
 			'mime_type'   => 'video/ogg',
 			'description' => __( 'Ogg', 'buddyboss' ),
@@ -315,14 +315,14 @@ function bp_video_allowed_video_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_vid_4'  => array(
+		'bb_vid_4' => array(
 			'extension'   => '.mov',
 			'mime_type'   => 'video/quicktime',
 			'description' => __( 'Quicktime', 'buddyboss' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
-		)
+		),
 	);
 
 	/**
@@ -342,6 +342,6 @@ function bp_video_allowed_video_type() {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_activity_entry_buttons( $buttons ) {
-	unset($buttons['activity_report']);
+	unset( $buttons['activity_report'] );
 	return $buttons;
 }

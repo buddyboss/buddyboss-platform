@@ -18,18 +18,20 @@ if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_
 
 	<?php bp_get_template_part( 'video/create-album' ); ?>
 
-<?php endif; ?>
+	<?php
+endif;
 
-<?php bp_nouveau_video_hook( 'before', 'video_album_content' ); ?>
+bp_nouveau_video_hook( 'before', 'video_album_content' );
 
-<?php if ( bp_has_video_albums( bp_ajax_querystring( 'albums' ) ) ) : ?>
+if ( bp_has_video_albums( bp_ajax_querystring( 'albums' ) ) ) :
+	?>
 
 	<div id="albums-dir-list" class="bb-albums bb-albums-dir-list">
 
-		<?php
-		$paged_page = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
-		if ( empty( $paged_page ) || 1 === $paged_page ) :
-			?>
+	<?php
+	$paged_page = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+	if ( empty( $paged_page ) || 1 === $paged_page ) :
+		?>
 		<ul class="bb-albums-list">
 			<?php endif; ?>
 
@@ -60,8 +62,6 @@ if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_
 
 	<?php bp_nouveau_user_feedback( 'video-album-none' ); ?>
 
-<?php endif; ?>
+<?php endif;
 
-
-<?php
 bp_nouveau_video_hook( 'after', 'video_album_content' );

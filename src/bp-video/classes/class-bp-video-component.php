@@ -17,14 +17,6 @@ defined( 'ABSPATH' ) || exit;
 class BP_Video_Component extends BP_Component {
 
 	/**
-	 * The album being currently accessed.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 * @var BP_Video_Album
-	 */
-	/* public $current_album; */
-
-	/**
 	 * Default video extension.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -261,7 +253,6 @@ class BP_Video_Component extends BP_Component {
 		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
-
 	}
 
 	/**

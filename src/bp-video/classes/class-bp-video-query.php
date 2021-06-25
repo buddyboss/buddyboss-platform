@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.7.0
  */
 class BP_Video_Query extends BP_Recursive_Query {
+
 	/**
 	 * Array of video queries.
 	 *
@@ -117,11 +118,12 @@ class BP_Video_Query extends BP_Recursive_Query {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 *
-	 * @param  array $clause       Array of arguments belonging to the clause.
-	 * @param  array $parent_query Parent query to which the clause belongs.
+	 * @param array $clause       Array of arguments belonging to the clause.
+	 * @param array $parent_query Parent query to which the clause belongs.
+	 *
 	 * @return array {
-	 *     @type array $where Array of subclauses for the WHERE statement.
-	 *     @type array $join  Empty array. Not used.
+	 *    @type array  $where        Array of subclauses for the WHERE statement.
+	 *    @type array  $join         Empty array. Not used.
 	 * }
 	 */
 	protected function get_sql_for_clause( $clause, $parent_query ) {
@@ -243,6 +245,7 @@ class BP_Video_Query extends BP_Recursive_Query {
 	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param array $query Clause to check.
+	 *
 	 * @return bool
 	 */
 	protected function is_first_order_clause( $query ) {
@@ -258,6 +261,7 @@ class BP_Video_Query extends BP_Recursive_Query {
 	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $column The user-supplied column name.
+	 *
 	 * @return string A validated column name value.
 	 */
 	public function validate_column( $column = '' ) {

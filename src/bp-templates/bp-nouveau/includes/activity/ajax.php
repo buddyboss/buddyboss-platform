@@ -272,7 +272,6 @@ function bp_nouveau_ajax_delete_activity() {
 		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
 	}
 
-
 	$activity_html      = '';
 	$parent_activity_id = 0;
 	if ( isset( $activity->secondary_item_id ) && ! empty( $activity->secondary_item_id ) ) {
@@ -652,8 +651,8 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$privacy = 'public';
-	if ( ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ) ) ) {
-		$privacy = $_POST['privacy'];
+	if ( ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ), true ) ) {
+		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {

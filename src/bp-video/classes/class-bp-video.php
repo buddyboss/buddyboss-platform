@@ -612,9 +612,9 @@ class BP_Video {
 				$path = parse_url( $file_url, PHP_URL_PATH );
 				$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 			}
-			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234
-			// https://stackoverflow.com/a/44858204
-			if ( in_array( $filetype['ext'], array( 'mov' ) ) ) {
+			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
+			// https://stackoverflow.com/a/44858204.
+			if ( in_array( $filetype['ext'], array( 'mov' ), true ) ) {
 				$ext = 'mp4';
 			}
 
@@ -689,7 +689,6 @@ class BP_Video {
 			$video->visibility = $visibility;
 			$video->video_link = bb_video_get_symlink( $video );
 			$videos[]          = $video;
-
 		}
 
 		// Then fetch user data.
@@ -779,9 +778,10 @@ class BP_Video {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 *
-	 * @param  mixed $scope  The video scope. Accepts string or array of scopes.
-	 * @param  array $r      Current activity arguments. Same as those of BP_Video::get(),
+	 * @param mixed $scope   The video scope. Accepts string or array of scopes.
+	 * @param array $r       Current activity arguments. Same as those of BP_Video::get(),
 	 *                       but merged with defaults.
+	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' video args.
 	 */
 	public static function get_scope_query_sql( $scope = false, $r = array() ) {
@@ -884,10 +884,11 @@ class BP_Video {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 *
-	 * @see BP_Video::get_filter_sql()
+	 * @see   BP_Video::get_filter_sql()
 	 *
 	 * @param string     $field The database field.
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
+	 *
 	 * @return string|false
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
@@ -1129,8 +1130,8 @@ class BP_Video {
 					if ( 'activity_comment' === $activity->type ) {
 
 						// Do not delete the activity if activity type is comment & have a multiple videos attached.
-						$video_ids = BP_Video::get_activity_video_id( $activity_id );
-						if ( ! empty( $video_ids ) && BP_Video::get_activity_attachment_id( $activity_id ) > 0 ) {
+						$video_ids = self::get_activity_video_id( $activity_id );
+						if ( ! empty( $video_ids ) && self::get_activity_attachment_id( $activity_id ) > 0 ) {
 							continue;
 						}
 
@@ -1180,7 +1181,7 @@ class BP_Video {
 				'user_id'     => $user_id,
 				'privacy'     => $privacy,
 				'count_total' => true,
-				'fields'      => 'ids'
+				'fields'      => 'ids',
 			)
 		);
 

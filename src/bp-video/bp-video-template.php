@@ -172,22 +172,14 @@ function bp_has_video( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'include'      => false,
-			// Pass an video_id or string of IDs comma-separated.
-			'exclude'      => false,
-			// Pass an activity_id or string of IDs comma-separated.
-			'sort'         => 'DESC',
-			// Sort DESC or ASC.
-			'order_by'     => false,
-			// Order by. Default: date_created.
-			'page'         => 1,
-			// Which page to load.
-			'per_page'     => 20,
-			// Number of items per page.
-			'page_arg'     => 'acpage',
-			// See https://buddypress.trac.wordpress.org/ticket/3679.
-			'max'          => false,
-			// Max number to return.
+			'include'      => false,    // Pass an video_id or string of IDs comma-separated.
+			'exclude'      => false,    // Pass an activity_id or string of IDs comma-separated.
+			'sort'         => 'DESC',   // Sort DESC or ASC.
+			'order_by'     => false,    // Order by. Default: date_created.
+			'page'         => 1,        // Which page to load.
+			'per_page'     => 20,       // Number of items per page.
+			'page_arg'     => 'acpage', // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'max'          => false,    // Max number to return.
 			'fields'       => 'all',
 			'count_total'  => false,
 
@@ -195,14 +187,10 @@ function bp_has_video( $args = '' ) {
 			'scope'        => $scope,
 
 			// Filtering.
-			'user_id'      => $user_id,
-			// user_id to filter on.
-			'album_id'     => $album_id,
-			// album_id to filter on.
-			'group_id'     => $group_id,
-			// group_id to filter on.
-			'privacy'      => $privacy,
-			// privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'user_id'      => $user_id,   // user_id to filter on.
+			'album_id'     => $album_id,  // album_id to filter on.
+			'group_id'     => $group_id,  // group_id to filter on.
+			'privacy'      => $privacy,   // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 			// Searching.
 			'search_terms' => $search_terms_default,
@@ -1745,7 +1733,7 @@ function bp_get_video_auto_generated_thumbnail_ids() {
 	global $video_template;
 
 	$thumbnail_ids = get_post_meta( $video_template->video->attachment_id, 'video_preview_thumbnails', true );
-	$thumbnail_ids = isset($thumbnail_ids['default_images']) && !empty($thumbnail_ids['default_images']) ? $thumbnail_ids['default_images'] : '';
+	$thumbnail_ids = isset( $thumbnail_ids['default_images'] ) && ! empty( $thumbnail_ids['default_images'] ) ? $thumbnail_ids['default_images'] : '';
 
 	/**
 	 * Filters the auto generated video thumbnail IDs comma separated.
