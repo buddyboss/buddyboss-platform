@@ -3553,34 +3553,6 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 }
 
 /**
- * Return download link of the album.
- *
- * @param int $album_id album id.
- *
- * @return mixed|void
- * @since BuddyBoss 1.7.0
- */
-function bp_media_album_download_link( $album_id ) {
-
-	if ( empty( $album_id ) ) {
-		return;
-	}
-
-	$link = site_url() . '/?attachment=' . $album_id . '&media_type=album&download_media_file=1&media_file=' . $album_id;
-
-	/**
-	 * Filter for album download link.
-	 *
-	 * @param string $link     Downloadable album link.
-	 * @param int    $album_id Album id.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
-
-}
-
-/**
  * Function which return the access based on the current user.
  *
  * @param int    $id       Media|Document|Video|Folder|Album id.
