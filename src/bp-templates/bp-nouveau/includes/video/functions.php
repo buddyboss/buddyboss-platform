@@ -338,7 +338,9 @@ function bp_video_allowed_video_type() {
 /**
  * Function get video popup buttons.
  *
- * @return array|mixed|string|void
+ * @param array $buttons Buttons array.
+ *
+ * @return array $buttons Buttons array.
  * @since BuddyBoss 1.7.0
  */
 function bp_video_activity_entry_buttons( $buttons ) {
