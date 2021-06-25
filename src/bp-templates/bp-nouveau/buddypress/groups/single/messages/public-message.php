@@ -62,7 +62,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 										<div class="dz-progress-ring-wrap">
 											<i class="bb-icon bb-icon-camera-fill"></i>
 											<svg class="dz-progress-ring" width="62" height="62">
-												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185";/>
+												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
 										</div>
 										<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -89,7 +89,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 										<div class="dz-progress-ring-wrap">
 											<i class="bb-icon bb-icon-video-fill"></i>
 											<svg class="dz-progress-ring" width="62" height="62">
-												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182";/>
+												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
 											</svg>
 										</div>
 										<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
@@ -127,7 +127,7 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 										<div class="dz-progress-ring-wrap">
 											<i class="bb-icon bb-icon-attach-fill"></i>
 											<svg class="dz-progress-ring" width="62" height="62">
-												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185";/>
+												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
 										</div>
 										<div class="dz-error-message"><span data-dz-errormessage></span></div>

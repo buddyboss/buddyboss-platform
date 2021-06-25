@@ -132,9 +132,9 @@ id="div-listing-<?php bp_document_id(); ?>">
 			<?php
 			if ( $attachment_id ) {
 				?>
-				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
 			<?php } else { ?>
-				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 				<?php
 			}
 			if ( wp_is_mobile() ) {
