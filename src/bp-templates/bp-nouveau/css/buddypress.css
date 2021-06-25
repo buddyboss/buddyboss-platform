@@ -11175,50 +11175,64 @@ fieldset div.avatar {
 /* =BuddyBoss Activity Feeds
 -------------------------------------------------------------- */
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
-.activity-list li.bbp_reply_create .activity-content .activity-inner {
+.activity-list li.bbp_reply_create .activity-content .activity-inner,
+.activity-list li.blogs .activity-content .activity-inner {
   border: 1px solid #eaeaea;
   padding: 10px 12px;
   border-radius: 4px;
   max-width: 640px;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner img,
+.activity-list li.bbp_reply_create .activity-content .activity-inner img,
+.activity-list li.blogs .activity-content .activity-inner img {
+  max-width: 100%;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap,
-.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap {
+.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap,
+.activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 10px;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap a,
-.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap a {
+.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap a,
+.activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap a {
   color: #333;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap a:hover,
-.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap a:hover {
+.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap a:hover,
+.activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap a:hover {
   color: #5087e5;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > p,
-.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > p {
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > p,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap > p {
   margin-bottom: 10px;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap,
-.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap {
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap {
   display: table;
   width: 100%;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right,
-.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right {
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right {
   float: left;
   font-size: 25px;
   color: #939597;
 }
 
-.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right ~ p,
-.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right ~ p {
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right ~ p:not(:empty),
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right ~ p:not(:empty),
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right ~ p:not(:empty) {
   float: right;
   width: calc(100% - 35px);
   text-align: left;
