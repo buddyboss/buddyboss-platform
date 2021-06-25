@@ -508,7 +508,7 @@
 					display: block;
 					text-align: left;
 					opacity: 1;
-					font-size: 13px;
+					font-size: 14px;
 					letter-spacing: -0.24px;
 					width: 100%;
 					text-transform: none;
@@ -517,7 +517,7 @@
 					border-radius: 0;
 					padding: 8px 14px;
 					color: #7f868f;
-					line-height: 1.1;
+					line-height: 1;
 					border: 0;
 					background-color: transparent;
 					box-shadow: none;
@@ -542,7 +542,13 @@
 					}
 
 					&.delete-activity:before {
-						content: "\eaea";
+						content: "\e937";
+						font-size: 15px;
+					}
+
+					span:not(.bp-screen-reader-text) {
+						display: inline-block;
+						vertical-align: middle;
 					}
 
 				}

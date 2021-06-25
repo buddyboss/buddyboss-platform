@@ -1633,7 +1633,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 
 .bb-document-privacy-wrap .privacy:before,
 .bb-media-privacy-wrap .privacy:before {
-  content: "\e960";
+  content: "\e819";
   font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
@@ -1757,7 +1757,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .activity-privacy > li.public:before {
-  content: "\e960";
+  content: "\e819";
 }
 
 .activity-privacy > li.onlyme:before {
@@ -2508,7 +2508,7 @@ input.search-query-input {
   display: block;
   text-align: left;
   opacity: 1;
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: -0.24px;
   width: 100%;
   text-transform: none;
@@ -2517,7 +2517,7 @@ input.search-query-input {
   border-radius: 0;
   padding: 8px 14px;
   color: #7f868f;
-  line-height: 1.1;
+  line-height: 1;
   border: 0;
   background-color: transparent;
   box-shadow: none;
@@ -2544,7 +2544,13 @@ input.search-query-input {
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
-  content: "\eaea";
+  content: "\e937";
+  font-size: 15px;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a span:not(.bp-screen-reader-text) {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 460px) {
@@ -11138,9 +11144,15 @@ fieldset div.avatar {
 -------------------------------------------------------------- */
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
-  border-left: 2px solid #eaeaea;
-  margin-left: 5px;
-  padding-left: 10px;
+  border: 1px solid #eaeaea;
+  padding: 10px 12px;
+  border-radius: 4px;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap {
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 /* =User Capabilities

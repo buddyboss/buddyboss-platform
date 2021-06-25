@@ -908,9 +908,15 @@ fieldset div.avatar {
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
-	border-left: 2px solid $light-grey;
-	margin-left: 5px;
-	padding-left: 10px;
+	border: 1px solid $light-grey;
+	padding: 10px 12px;
+	border-radius: 4px;
+
+	.activity-discussion-title-wrap {
+		font-size: 16px;
+		margin-bottom: 10px;
+	}
+
 }
 
 /* =User Capabilities
