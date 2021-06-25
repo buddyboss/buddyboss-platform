@@ -174,8 +174,13 @@ add_action( 'bp_activity_before_save', 'bb_skip_blog_post_comment' );
 function bb_skip_blog_post_comment( $self ) {
 
 	$activity = new BP_Activity_Activity( $self->item_id ); //bp_activity_get_specific( array( 'id' => $self->item_id ) );
-	
+
 	if( 'blogs' === $activity->component && 'new_blog_post' === $activity->type ) {
+		$self->errors->add( 'error', __( 'Blog post comments are not allow in activity table.', 'buddyboss' ) );
+		$self->error_type = 'wp_error';
+	}
+
+	if( 'blogs' === $self->component && 'new_blog_comment' === $self->type ) {
 		$self->errors->add( 'error', __( 'Blog post comments are not allow in activity table.', 'buddyboss' ) );
 		$self->error_type = 'wp_error';
 	}
@@ -2445,7 +2450,7 @@ function bb_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 	if ( 'blogs' !== $activity->component ) {
 		return $buttons;
 	}
-	
+
 	// Get comment post.
 	$post = get_post( $activity->secondary_item_id );
 
