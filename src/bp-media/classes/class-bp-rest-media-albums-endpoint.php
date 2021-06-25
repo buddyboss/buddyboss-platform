@@ -468,23 +468,25 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
-				|| ! bp_is_group_albums_support_enabled()
+				isset( $request['group_id'] ) &&
+				! empty( $request['group_id'] ) &&
+				(
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+					|| ! bp_is_group_albums_support_enabled()
+				)
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -493,24 +495,21 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						'status' => rest_authorization_required_code(),
 					)
 				);
+			} elseif (
+				(
+					! isset( $request['group_id'] ) ||
+					empty( $request['group_id'] )
+				) &&
+				! bp_is_profile_albums_support_enabled()
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to create an album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
 			}
-		}
-
-		if (
-			true === $retval &&
-			(
-				! isset( $request['group_id'] ) ||
-				empty( $request['group_id'] )
-			) &&
-			! bp_is_profile_albums_support_enabled()
-		) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_permission',
-				__( 'You don\'t have a permission to create an album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
 		}
 
 		/**
@@ -627,45 +626,42 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to update this album.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$album  = new BP_Media_Album( $request['id'] );
+
+			if ( empty( $album->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_album_invalid_id',
+					__( 'Invalid Album ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_album_user_can_delete( $album ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif (
+				isset( $request['group_id'] ) &&
+				! empty( $request['group_id'] ) &&
+				(
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+					|| ! bp_is_group_albums_support_enabled()
 				)
-			);
-		}
-
-		$album = new BP_Media_Album( $request['id'] );
-
-		if ( empty( $album->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_album_invalid_id',
-				__( 'Invalid Album ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_album_user_can_delete( $album ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
-				|| ! bp_is_group_albums_support_enabled()
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -674,24 +670,21 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						'status' => rest_authorization_required_code(),
 					)
 				);
+			} elseif (
+				(
+					! isset( $request['group_id'] ) ||
+					empty( $request['group_id'] )
+				) &&
+				! bp_is_profile_albums_support_enabled()
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to update an album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
 			}
-		}
-
-		if (
-			true === $retval &&
-			(
-				! isset( $request['group_id'] ) ||
-				empty( $request['group_id'] )
-			) &&
-			! bp_is_profile_albums_support_enabled()
-		) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_permission',
-				__( 'You don\'t have a permission to update an album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
 		}
 
 		/**
@@ -785,38 +778,35 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this album.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$album  = new BP_Media_Album( $request['id'] );
 
-		$album = new BP_Media_Album( $request['id'] );
-
-		if ( empty( $album->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_album_invalid_id',
-				__( 'Invalid Album ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_album_user_can_delete( $album ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $album->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_album_invalid_id',
+					__( 'Invalid Album ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_album_user_can_delete( $album ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

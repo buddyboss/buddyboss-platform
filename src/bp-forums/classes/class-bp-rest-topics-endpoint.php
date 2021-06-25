@@ -544,7 +544,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$topic = bbp_get_topic( $request['id'] );
+		$topic = bbp_get_topic( $request->get_param( 'id' ) );
 
 		if ( true === $retval && empty( $topic->ID ) ) {
 			$retval = new WP_Error(
@@ -1146,16 +1146,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() && ! bbp_allow_anonymous() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() || bbp_allow_anonymous() ) {
+			$retval = true;
 		}
 
 		/**
@@ -1702,25 +1702,21 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() && ! bbp_allow_anonymous() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update a topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() || bbp_allow_anonymous() ) {
 			$retval = $this->get_item_permissions_check( $request );
 		}
 
 		if ( true === $retval ) {
-			$topic = bbp_get_topic( $request['id'] );
-			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'delete_topic', $request['id'] ) ) {
+			$topic = bbp_get_topic( $request->get_param( 'id' ) );
+			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'delete_topic', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to update this topic.', 'buddyboss' ),
@@ -1800,30 +1796,26 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() ) {
 			$retval = $this->get_item_permissions_check( $request );
-		}
 
-		if ( true === $retval && ! current_user_can( 'delete_topic', $request['id'] ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! current_user_can( 'delete_topic', $request->get_param( 'id' ) ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this topic.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
