@@ -2037,6 +2037,16 @@ function bp_video_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 		$privacy = array( 'grouponly' );
 	}
 
+	/**
+	 * Filter to video query privacy.
+	 *
+	 * @param array  $privacy  proivacy array
+	 * @param int    $user_id  user id
+	 * @param int    $group_id group id
+	 * @param string $scope    scope
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_query_privacy', $privacy, $user_id, $group_id, $scope );
 }
 
@@ -2170,6 +2180,14 @@ function bp_video_get_thread_id( $video_id ) {
 		}
 	}
 
+	/**
+	 * Filter to get video thread id.
+	 *
+	 * @param int $thread_id  user id
+	 * @param int $video_id   video id
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_get_thread_id', $thread_id, $video_id );
 
 }
@@ -2191,6 +2209,14 @@ function bp_video_download_link( $attachment_id, $video_id ) {
 
 	$link = site_url() . '/?attachment_id=' . $attachment_id . '&video_type=video&download_video_file=1&video_file=' . $video_id;
 
+	/**
+	 * Filter to get video download link.
+	 *
+	 * @param string $link  download link
+	 * @param int    $attachment_id   atttachment id
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_download_link', $link, $attachment_id );
 
 }
@@ -2352,6 +2378,14 @@ function bp_video_get_forum_id( $video_id ) {
 		wp_reset_postdata();
 	}
 
+	/**
+	 * Filter to get video forum id.
+	 *
+	 * @param int $forum_id  forum id
+	 * @param int $video_id  video id
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_get_forum_id', $forum_id, $video_id );
 
 }
@@ -2436,6 +2470,14 @@ function bp_video_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) {
 			);
 	}
 
+	/**
+	 * Filter to get video svg icon.
+	 *
+	 * @param string $sbg_type  svg type
+	 * @param string $extension file extension
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_svg_icon', $svg[ $type ], $extension );
 }
 
@@ -2500,6 +2542,13 @@ function bp_video_svg_icon_list() {
 		),
 	);
 
+	/**
+	 * Filter to get svg icon lists.
+	 *
+	 * @param array $icons  svg icon list
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_svg_icon_list', $icons );
 }
 
@@ -2553,6 +2602,13 @@ function bp_video_get_allowed_extension() {
 		}
 	}
 
+	/**
+	 * Filter to get allowed extension.
+	 *
+	 * @param array $extensions  extensions list
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_get_allowed_extension', $extensions );
 }
 
@@ -3057,6 +3113,14 @@ function bp_video_album_download_link( $album_id ) {
 
 	$link = site_url() . '/?attachment=' . $album_id . '&video_type=album&download_video_file=1&video_file=' . $album_id;
 
+	/**
+	 * Filter to get video album download link.
+	 *
+	 * @param string $link  downlod link
+	 * @param int    $album_id  album id
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_video_album_download_link', $link, $album_id );
 
 }
@@ -3296,6 +3360,16 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 		$attachment_url = wp_get_attachment_url( $attachment_id );
 	}
 
+	/**
+	 * Filter to get video thumb url.
+	 *
+	 * @param int    $attachment_url attachment link
+	 * @param int    $video_id       video id
+	 * @param string $size           size
+	 * @param int    $attachment_id  attachment id
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bb_video_get_thumb_url', $attachment_url, $video_id, $size, $attachment_id );
 }
 
