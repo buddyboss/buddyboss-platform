@@ -537,13 +537,20 @@
 						text-align: center;
 					}
 
+					&.reported-content:before,
 					&.report-content:before {
 						content: "\e8ea";
+						font-size: 15px;
 					}
 
 					&.delete-activity:before {
 						content: "\e937";
 						font-size: 15px;
+					}
+
+					&.edit-activity:before {
+						content: "\e80c";
+						font-size: 17px !important;
 					}
 
 					span:not(.bp-screen-reader-text) {

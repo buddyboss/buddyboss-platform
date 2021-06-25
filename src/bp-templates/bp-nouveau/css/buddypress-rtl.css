@@ -2539,13 +2539,19 @@ input.search-query-input {
   text-align: center;
 }
 
-#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.report-content:before {
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.reported-content:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.report-content:before {
   content: "\e8ea";
+  font-size: 15px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
   content: "\e937";
   font-size: 15px;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.edit-activity:before {
+  content: "\e80c";
+  font-size: 17px !important;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a span:not(.bp-screen-reader-text) {
