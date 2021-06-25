@@ -3985,6 +3985,9 @@ function bp_document_set_time_limits( $time_limit ) {
 /**
  * Does the actual PDF preview regenerate.
  *
+ * @param array $ids             Attachment ids.
+ * @param bool  $check_mime_type Whether to check mime type or not.
+ *
  * @since BuddyBoss 1.7.0
  */
 function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
