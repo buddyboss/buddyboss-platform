@@ -14,8 +14,7 @@ $album_privacy = bb_media_user_can_access( $album_id, 'album' );
 $can_edit      = true === (bool) $album_privacy['can_edit'];
 $can_add       = true === (bool) $album_privacy['can_add'];
 
-if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
-	<?php
+if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
 	while ( bp_video_album() ) :
 		bp_the_video_album();
 
@@ -23,7 +22,6 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 		?>
 		<div id="bp-video-single-album">
 			<div class="album-single-view" <?php echo 0 === $total_video ? esc_attr( 'no-videos' ) : ''; ?>>
-
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_video_album_title(); ?></h4>
 					<?php
@@ -47,7 +45,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 								number_format_i18n( $video_album_template->album->video['total'] ) // phpcs:ignore
 							);
 						?>
-								</span>
+						</span>
 					</p>
 				</div>
 
@@ -63,9 +61,9 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 						<?php
 						if ( $can_add ) {
 							?>
-						<a class="bb-add-videos button small outline" id="bp-add-video" href="#" >
-							<?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
-						</a>
+							<a class="bb-add-videos button small outline" id="bp-add-video" href="#" >
+								<?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
+							</a>
 						<?php } ?>
 
 						<?php if ( ( bp_is_my_profile() || bp_is_user_video() ) && ! bp_is_group() ) : ?>
@@ -80,7 +78,6 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 									<option <?php echo esc_attr( $selected ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
 								<?php } ?>
 							</select>
-
 						<?php endif; ?>
 					</div>
 
@@ -94,11 +91,8 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) : ?>
 				?>
 
 				<div id="video-stream" class="video" data-bp-list="video">
-
 					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'album-video-loading' ); ?></div>
-
 				</div>
-
 			</div>
 		</div>
 		<?php

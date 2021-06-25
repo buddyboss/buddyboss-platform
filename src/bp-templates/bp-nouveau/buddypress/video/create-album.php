@@ -14,7 +14,6 @@
 		<div class="modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper">
 				<div id="boss-video-create-album-popup" class="modal-container">
-
 					<header class="bb-model-header">
 						<h4><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-video-create-album-close" href="#"><span class="bb-icon bb-icon-close"></span></a>
@@ -41,7 +40,6 @@
 						<?php endif; ?>
 						<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
 					</footer>
-
 				</div>
 			</div>
 		</div>

@@ -23,18 +23,21 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-activity' => array(
-			'file'         => 'js/buddypress-activity%s.js',
-			'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
-			'footer'       => true,
-		),
-		'bp-nouveau-activity-post-form' => array(
-			'file'         => 'js/buddypress-activity-post-form%s.js',
-			'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-activity'           => array(
+				'file'         => 'js/buddypress-activity%s.js',
+				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
+				'footer'       => true,
+			),
+			'bp-nouveau-activity-post-form' => array(
+				'file'         => 'js/buddypress-activity-post-form%s.js',
+				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
