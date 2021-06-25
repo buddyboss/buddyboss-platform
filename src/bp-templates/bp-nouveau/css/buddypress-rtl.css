@@ -4012,6 +4012,12 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+@media screen and (max-width: 560px) {
+  .buddypress-wrap .activity-comments ul li .bb-media-length-1 .bb-activity-media-elem.media-activity {
+    min-width: auto;
+  }
+}
+
 .buddypress-wrap .activity-comments ul li:first-child {
   border-top: 0;
 }
