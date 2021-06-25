@@ -8,28 +8,28 @@
 
 <div class="bb-media-container group-albums">
 
-	<?php bp_get_template_part( 'media/theatre' ); ?>
 	<?php
+	bp_get_template_part( 'media/theatre' );
+
 	if ( bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
-	if( bp_is_profile_document_support_enabled() ) {
+	if ( bp_is_profile_document_support_enabled() ) {
 		bp_get_template_part( 'document/theatre' );
 	}
-	?>
 
-	<?php
 	switch ( bp_current_action() ) :
 
-		// Home/Media/Albums
+		// Home/Media/Albums.
 		case 'albums':
-			if ( ! bp_is_single_album() )
+			if ( ! bp_is_single_album() ) {
 				bp_get_template_part( 'media/albums' );
-			else
+			} else {
 				bp_get_template_part( 'media/single-album' );
+			}
 			break;
 
-		// Any other
+		// Any other.
 		default:
 			bp_get_template_part( 'groups/single/plugins' );
 			break;
