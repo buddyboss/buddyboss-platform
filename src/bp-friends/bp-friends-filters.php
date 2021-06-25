@@ -165,7 +165,7 @@ function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
 		),
 	);
 
-	if ( ! bp_is_profile_video_support_enabled() ) {
+	if ( ! bp_is_profile_albums_support_enabled() ) {
 		$retval[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
