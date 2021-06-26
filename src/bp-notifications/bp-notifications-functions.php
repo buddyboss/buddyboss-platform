@@ -816,7 +816,7 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 
 function bb_notifications_options( $localize ) {
 	$localize['on_screen_notifications_enable']         = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
-	$localize['on_screen_notifications_position']       = bp_get_option( '_bp_on_screen_notifications_position', '' );
+	$localize['on_screen_notifications_position']       = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
 	$localize['on_screen_notifications_mobile_support'] = bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 );
 	$localize['on_screen_notifications_visibility']     = bp_get_option( '_bp_on_screen_notifications_visibility', '' );
 	$localize['on_screen_notifications_browser_tab']    = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
