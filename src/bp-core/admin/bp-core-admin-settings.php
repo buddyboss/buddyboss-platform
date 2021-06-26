@@ -830,7 +830,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the last option of CPT
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
@@ -844,14 +844,14 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo $post_type === 'post' ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
 
 	// Description for the WordPress Blog Posts
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php _e( 'When users publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php _e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
 		<?php
 	}
 }
@@ -880,7 +880,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		<?php checked( bb_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
-		<?php echo 'post' === $post_type ? esc_html__( 'Show blog post comments', 'buddyboss' ) : sprintf( esc_html__( 'Enable comments in %s activity posts.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
 	</label>
 	<?php
 
