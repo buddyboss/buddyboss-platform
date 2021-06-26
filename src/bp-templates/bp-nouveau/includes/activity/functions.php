@@ -591,3 +591,35 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
+
+function bb_create_blog_post_activity_comment( $params ) {
+	$params  = wp_parse_args(
+		$params,
+		array(
+			'user_id'          => bp_loggedin_user_id(),
+			'parent_id'        => 0,
+			'comment_date'     => current_time( 'mysql' ),
+			'comment_date_gmt' => current_time( 'mysql', 1 )
+		)
+	);
+
+	// Get userdata.
+	$user = bp_core_get_core_userdata( $params['user_id'] );
+	
+	// Comment args.
+	$data = array(
+		'comment_post_ID'  => $params['post_id'], // (int) $_POST['comment_post_id'].
+		'author'           => bp_core_get_user_displayname( (int) $params['user_id'] ),
+		'email'            => $user->user_email,
+		'url'              => bp_core_get_user_domain( (int) $params['user_id'], $user->user_nicename, $user->user_login ),
+		'comment'          => sanitize_text_field( wp_unslash( $params['content'] ) ),
+		'comment_parent'   => (int) $params['parent_id'],
+		'comment_date'     => $params['comment_date'],
+		'comment_date_gmt' => $params['comment_date_gmt']
+	);
+	
+	// Post the comment.
+	$comment = wp_handle_comment_submission( $data );
+
+	return $comment;
+}

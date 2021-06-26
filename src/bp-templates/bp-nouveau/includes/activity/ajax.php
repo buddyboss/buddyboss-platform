@@ -527,35 +527,16 @@ function bb_nouveau_ajax_new_activity_blog_post_comment() {
 		wp_send_json_error( $response );
 	}
 
-	// Get userdata.
-	if ( get_current_user_id() === bp_loggedin_user_id() ) {
-		$user = buddypress()->loggedin_user->userdata;
-	} else {
-		$user = bp_core_get_core_userdata( $params['user_id'] );
-	}
-
 	$activities = bp_activity_get_specific( array( 'activity_ids' => $_POST['form_id'] ) );
 	$activity   = array_shift( $activities['activities'] );
 
-	// Comment args.
-	$args = array(
-		'comment_post_ID' => $activity->secondary_item_id, // (int) $_POST['comment_post_id'].
-		'author'          => bp_core_get_user_displayname( get_current_user_id() ),
-		'email'           => $user->user_email,
-		'url'             => bp_core_get_user_domain( get_current_user_id(), $user->user_nicename, $user->user_login ),
-		'comment'         => sanitize_text_field( wp_unslash( $_POST['content'] ) ),
-		'comment_parent'  => (int) $_POST['comment_id'],
+	$comment = bb_create_blog_post_activity_comment( 
+		array(
+			'post_id'   => $activity->secondary_item_id,
+			'parent_id' => sanitize_text_field( wp_unslash( $_POST['comment_id'] ) ),
+			'content'    => sanitize_text_field( wp_unslash( $_POST['content'] ) ),
+		) 
 	);
-
-	// Prevent separate activity entry being made.
-	remove_action( 'comment_post', 'bp_activity_post_type_comment', 10 );
-
-	// Handle timestamps for the WP comment after we've switched to the blog.
-	$args['comment_date']     = current_time( 'mysql' );
-	$args['comment_date_gmt'] = current_time( 'mysql', 1 );
-
-	// Post the comment.
-	$comment = wp_handle_comment_submission( $args );
 
 	if ( is_wp_error( $comment ) ) {
 		$error_message = $comment->get_error_message();

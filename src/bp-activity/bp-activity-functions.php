@@ -5540,3 +5540,21 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 	 */
 	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
 }
+
+function bp_is_blog_post_activity( $activity ) {
+	if ( 'blogs' !== $activity->component ) {
+		return false;
+	}
+
+	$post = get_post( $activity->secondary_item_id );
+
+	if ( empty( $post ) ) {
+		return false;
+	}
+
+	if ( post_type_exists( $post->post_type ) ) {
+		return true;
+	}
+
+	return false;
+}
