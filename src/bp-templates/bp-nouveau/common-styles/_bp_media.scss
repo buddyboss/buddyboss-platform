@@ -2138,6 +2138,15 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		margin-top: 0;
 	}
 
+	@media screen and (max-width: 420px) {
+
+		.dz-preview.dz-file-preview .dz-details {
+			min-height: 142px;
+			width: 142px;
+		}
+
+	}
+
 }
 
 #buddypress .bp-media-document-uploader {

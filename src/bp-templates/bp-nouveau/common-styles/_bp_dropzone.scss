@@ -649,6 +649,7 @@
 
 			circle {
 				stroke: $blue;
+				transition: all ease 0.3s;
 			}
 
 		}
@@ -713,3 +714,31 @@
 	}
 
 }
+
+@media screen and (max-width: 420px) {
+
+	div.dropzone {
+
+		.dz-preview {
+			min-width: 142px;
+
+			.dz-image {
+				height: 142px;
+
+				img {
+					width: 142px;
+				}
+
+			}
+
+		}
+
+		&.dz-started .dz-default.dz-message {
+			max-width: 142px !important;
+			min-height: 142px !important;
+		}
+
+	}
+
+}
+

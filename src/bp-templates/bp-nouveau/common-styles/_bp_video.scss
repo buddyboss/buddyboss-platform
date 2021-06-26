@@ -1402,8 +1402,10 @@ div.dropzone.dz-started {
 
 	.dz-default.dz-message {
 		flex-basis: 100%;
-		max-width: inherit;
-		min-height: 20vh;
+		max-width: 160px !important;
+		min-height: 160px !important;
+		margin: 0 4px 10px;
+		padding: 0 5px;
 
 		.dz-button {
 			font-size: 16px !important;
@@ -1428,7 +1430,7 @@ div.dropzone.dz-started {
 	.dz-default.dz-message {
 		flex-basis: 100%;
 		max-width: inherit;
-		min-height: 20vh;
+		min-height: 15vh;
 
 		.dz-button {
 			font-size: 16px !important;
@@ -1633,6 +1635,7 @@ div.dropzone.dz-started {
 		left: 0;
 		right: 0;
 		bottom: 0;
+		z-index: 1;
 		border-radius: 4px;
 		overflow: hidden;
 
@@ -1655,6 +1658,12 @@ div.dropzone.dz-started {
 		margin-left: 5px;
 	}
 
+	&.dz-started .dz-default.dz-message {
+		max-width: 260px !important;
+		width: 260px;
+		min-height: 165px !important;
+	}
+
 	@media screen and (max-width: 768px ) {
 
 		.dz-preview.dz-file-preview {
@@ -1667,6 +1676,19 @@ div.dropzone.dz-started {
 
 		}
 
+		&.dz-started .dz-default.dz-message {
+			width: calc(50% - 11.5px);
+			max-width: calc(50% - 11.5px) !important;
+		}
+
+	}
+
+	@media screen and (max-width: 640px ) {
+
+		.dz-default.dz-message {
+			min-height: 18vh;
+		}
+
 	}
 
 	@media screen and (max-width: 480px ) {
@@ -1676,12 +1698,13 @@ div.dropzone.dz-started {
 			margin: 0 5px 10px;
 		}
 
+		&.dz-started .dz-default.dz-message {
+			width: calc(100% - 10px);
+			max-width: calc(100% - 10px) !important;
+		}
+
 	}
 
-}
-
-#video-uploader.dropzone .dz-preview.dz-file-preview {
-	width: 250px;
 }
 
 body > .open-popup.video-error-popup {
@@ -1690,8 +1713,8 @@ body > .open-popup.video-error-popup {
 }
 
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
-	width: 235px;
-	height: 150px;
+	width: 260px;
+	height: 165px;
 
 	&.dz-complete .dz-remove:after {
 		top: -1px;
