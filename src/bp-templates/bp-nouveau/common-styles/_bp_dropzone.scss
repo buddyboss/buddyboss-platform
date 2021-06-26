@@ -88,8 +88,8 @@
 	position: absolute;
 	top: 5px;
 	right: 5px;
-	height: 14px;
-	width: 14px;
+	height: 16px;
+	width: 16px;
 	border-radius: 50%;
 	color: #c3c6c9;
 	z-index: 101;
@@ -99,11 +99,17 @@
 .dropzone .dz-remove {
 
 	&:after {
-		content: "\00d7";
-		position: relative;
-		top: -2px;
-		font-size: 14px;
-		line-height: 1;
+		content: "\e828";
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-family: "bb-icons";/* stylelint-disable-line */
+		font-size: 17px;
+		speak: none;
+		display: inline-block;
+		text-decoration: inherit;
+		text-transform: none;
+		-webkit-font-smoothing: antialiased;
 	}
 }
 

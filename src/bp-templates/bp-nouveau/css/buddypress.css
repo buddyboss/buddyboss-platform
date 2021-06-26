@@ -1853,10 +1853,10 @@ div[class*="attached-gif-container"] {
 div[class*="attached-gif-container"] .gif-image-remove {
   border-radius: 10px;
   cursor: pointer;
-  height: 17px;
+  height: 16px;
   right: 5px;
   top: 5px;
-  width: 17px;
+  width: 16px;
   background-color: #f8f8f8;
 }
 
@@ -1867,7 +1867,7 @@ div[class*="attached-gif-container"] .gif-image-overlay {
 }
 
 div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-close {
-  font-size: 18px;
+  font-size: 17px;
   vertical-align: top;
 }
 
@@ -15643,10 +15643,6 @@ div.dropzone .dz-preview .dz-filename {
   object-fit: contain;
 }
 
-.activity_update .activity-comments .dropzone .dz-complete .dz-remove:after {
-  top: -1px;
-}
-
 #media-stream .document-data-table-head {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -19965,21 +19961,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-radius: 5px;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
-.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview.dz-complete .dz-remove:after {
-  top: -1px;
-  left: -0.5px;
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-remove:after {
+  font-size: 16px;
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated {
@@ -20285,7 +20268,7 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-progress-count,
 #video-uploader.dropzone .dz-progress-count {
   position: absolute;
-  z-index: 1;
+  z-index: 12;
   bottom: 10px;
   left: 50%;
   width: 50%;
@@ -20326,8 +20309,8 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
   transform: translateX(-50%);
   background-color: transparent;
   line-height: 1;
-  height: auto;
-  width: auto;
+  height: 23px;
+  width: 23px;
   box-shadow: none;
 }
 
@@ -20342,7 +20325,6 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
   font-size: 26px;
   color: #fff;
   line-height: 1;
-  position: static;
 }
 
 #activity-post-video-uploader .dz-preview .dz-progress-ring-wrap,
@@ -20451,8 +20433,8 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
   left: inherit;
   right: 5px;
   background-color: #f8f8f8;
-  height: 14px;
-  width: 14px;
+  height: 16px;
+  width: 16px;
   line-height: inherit;
 }
 
@@ -20464,11 +20446,11 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
 #video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
-  font-size: 14px;
+  font-size: 17px;
   color: #9ea8b3;
   line-height: 1;
-  position: relative;
-  top: -2px;
+  position: absolute;
+  top: 0;
   left: 0;
 }
 
@@ -20787,11 +20769,6 @@ body > .open-popup.video-error-popup {
   height: 165px;
 }
 
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview.dz-complete .dz-remove:after {
-  top: -1px;
-  left: 0;
-}
-
 @media screen and (max-width: 768px) {
   .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
     width: calc(50% - 11.5px);
@@ -20921,8 +20898,8 @@ body > .open-popup.video-error-popup {
   position: absolute;
   top: 5px;
   right: 5px;
-  height: 14px;
-  width: 14px;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
   color: #c3c6c9;
   z-index: 101;
@@ -20930,11 +20907,18 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone .dz-remove:after {
-  content: "\00d7";
-  position: relative;
-  top: -2px;
-  font-size: 14px;
-  line-height: 1;
+  content: "\e828";
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 17px;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 .dropzone .dz-remove {

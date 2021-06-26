@@ -1075,22 +1075,8 @@
 
 				}
 
-				&.dz-complete .dz-remove {
-					display: -webkit-box;
-					display: -ms-flexbox;
-					display: flex;
-					-webkit-box-align: center;
-					-ms-flex-align: center;
-					align-items: center;
-					-webkit-box-pack: center;
-					-ms-flex-pack: center;
-					justify-content: center;
-
-					&:after {
-						top: -1px;
-						left: -0.5px;
-					}
-
+				.dz-remove:after {
+					font-size: 16px;
 				}
 
 			}
@@ -1442,7 +1428,7 @@ div.dropzone.dz-started {
 
 	.dz-progress-count {
 		position: absolute;
-		z-index: 1;
+		z-index: 12;
 		bottom: 10px;
 		left: 50%;
 		width: 50%;
@@ -1469,15 +1455,14 @@ div.dropzone.dz-started {
 		transform: translateX(-50%);
 		background-color: transparent;
 		line-height: 1;
-		height: auto;
-		width: auto;
+		height: 23px;
+		width: 23px;
 		box-shadow: none;
 
 		&:after {
 			font-size: 26px;
 			color: #fff;
 			line-height: 1;
-			position: static;
 		}
 	}
 
@@ -1526,16 +1511,16 @@ div.dropzone.dz-started {
 			left: inherit;
 			right: 5px;
 			background-color: #f8f8f8;
-			height: 14px;
-			width: 14px;
+			height: 16px;
+			width: 16px;
 			line-height: inherit;
 
 			&:after {
-				font-size: 14px;
+				font-size: 17px;
 				color: #9ea8b3;
 				line-height: 1;
-				position: relative;
-				top: -2px;
+				position: absolute;
+				top: 0;
 				left: 0;
 			}
 		}
@@ -1715,11 +1700,6 @@ body > .open-popup.video-error-popup {
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
 	width: 260px;
 	height: 165px;
-
-	&.dz-complete .dz-remove:after {
-		top: -1px;
-		left: 0;
-	}
 
 	@media screen and (max-width: 768px ) {
 		width: calc(50% - 11.5px);
