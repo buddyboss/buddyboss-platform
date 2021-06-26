@@ -366,29 +366,29 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			global $activities_template;
 
 			// When the activity type does not match with the topic or reply.
-			if ( ! in_array( $activities_template->activity->type, array( $this->topic_create, $this->reply_create ), true ) ) {
+			if ( ! in_array( $activity->type, array( $this->topic_create, $this->reply_create ), true ) ) {
 				return $content;
 			}
 
 			// Set topic id when activity component is not groups.
-			if ( $this->component === $activities_template->activity->component ) {
+			if ( $this->component === $activity->component ) {
 				// Set topic id when activity type topic.
-				$topic_id = $activities_template->activity->item_id;
+				$topic_id = $activity->item_id;
 
 				// Set topic id when activity type reply.
-				if ( $this->reply_create === $activities_template->activity->type ) {
+				if ( $this->reply_create === $activity->type ) {
 					$topic    = bbp_get_reply( $topic_id );
 					$topic_id = $topic->post_parent;
 				}
 			}
 
 			// Set topic id when activity component is groups.
-			if ( 'groups' === $activities_template->activity->component ) {
+			if ( 'groups' === $activity->component ) {
 				// Set topic id when activity type topic.
-				$topic_id = $activities_template->activity->secondary_item_id;
+				$topic_id = $activity->secondary_item_id;
 
 				// Set topic id when activity type reply.
-				if ( $this->reply_create === $activities_template->activity->type ) {
+				if ( $this->reply_create === $activity->type ) {
 					$topic    = bbp_get_reply( $topic_id );
 					$topic_id = $topic->post_parent;
 				}
