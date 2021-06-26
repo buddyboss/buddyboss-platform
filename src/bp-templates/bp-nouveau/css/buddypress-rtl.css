@@ -20014,6 +20014,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   bottom: 0;
 }
 
+.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li > div > label .bb-icon {
+  display: none;
+}
+
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap {
   visibility: visible;
   opacity: 1;
