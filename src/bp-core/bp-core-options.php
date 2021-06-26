@@ -1860,7 +1860,7 @@ function bb_feed_post_types() {
 	$post_types = get_post_types( array( 'public' => true ) );
 
 	// Exclude BP CPT.
-	$bp_exclude_cpt = array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 
 	$bp_excluded_cpt = array();
 
@@ -1874,4 +1874,16 @@ function bb_feed_post_types() {
 	}
 
 	return $bp_excluded_cpt;
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.6.2
+ *
+ * @return array.
+ */
+function bb_feed_not_allowed_comment_post_types() {
+	// Exclude BP CPT.
+	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 }

@@ -534,9 +534,11 @@ function bb_nouveau_ajax_new_activity_blog_post_comment() {
 		array(
 			'post_id'   => $activity->secondary_item_id,
 			'parent_id' => sanitize_text_field( wp_unslash( $_POST['comment_id'] ) ),
-			'content'    => sanitize_text_field( wp_unslash( $_POST['content'] ) ),
+			'content'   => sanitize_text_field( wp_unslash( $_POST['content'] ) ),
 		) 
 	);
+
+	bp_update_user_last_activity();
 
 	if ( is_wp_error( $comment ) ) {
 		$error_message = $comment->get_error_message();

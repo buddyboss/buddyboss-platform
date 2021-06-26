@@ -869,6 +869,13 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 	$post_type     = $args['post_type'];
 	$option_name   = bb_post_type_feed_comment_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
+
+	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
+		?>
+			<p class="description <?php echo 'bp-feed-post-type-comment-' . esc_attr( $post_type ); ?>"><?php printf( esc_html__( 'Comments are not supported for %s', 'buddyboss' ), esc_html( $post_type  ) ); ?></p>
+		<?php
+		return;	
+	}
 	?>
 
 	<input
