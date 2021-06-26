@@ -1009,8 +1009,8 @@ window.bp = window.bp || {};
 							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 							if( videoAttachments.default_images.length < 2 && BP_Nouveau.video.is_ffpmeg_installed ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
-								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">' );
-								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">' );
+								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>'+ BP_Nouveau.video.generating_thumb +'</span></div></li>' );
+								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>'+ BP_Nouveau.video.generating_thumb +'</span></div></li>' );
 							}
 						}
 					} else {
@@ -1072,8 +1072,8 @@ window.bp = window.bp || {};
 									if( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
 										$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
 										if( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
-											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">' );
-											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">' );
+											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>'+ BP_Nouveau.video.generating_thumb +'</span></div></li>' );
+											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>'+ BP_Nouveau.video.generating_thumb +'</span></div></li>' );
 										}
 										
 									} else if( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {

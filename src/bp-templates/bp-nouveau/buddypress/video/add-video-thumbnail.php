@@ -18,7 +18,6 @@
 						<a href="#" class="bp-video-thumbnail-upload-tab bp-thumbnail-upload-tab selected bp-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content" id="">
 							<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
 						</a>
-						<span class="thumbnail_notice"><?php esc_html_e( '(Generating thumbnails... Please check again in a few minutes.)', 'buddyboss' ); ?></span>
 
 						<span id="bp-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
 
@@ -31,8 +30,18 @@
 
 						<div class="bp-video-thumbnail-auto-generated">
 							<ul class="video-thumb-list loading">
-								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"></li>
-								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"></li>
+								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">
+									<div class="video-thumb-block">
+										<i class="bb-icon-loader animate-spin"></i>
+										<span>Generating thumbnail…</span>
+									</div>
+								</li>
+								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">
+									<div class="video-thumb-block">
+										<i class="bb-icon-loader animate-spin"></i>
+										<span>Generating thumbnail…</span>
+									</div>
+								</li>
 							</ul>
 						</div>
 

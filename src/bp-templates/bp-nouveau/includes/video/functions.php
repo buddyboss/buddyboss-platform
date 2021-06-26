@@ -130,6 +130,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
 		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
+		'generating_thumb'                   => 'Generating thumbnail…',
 	);
 
 	if ( bp_is_single_video_album() ) {
