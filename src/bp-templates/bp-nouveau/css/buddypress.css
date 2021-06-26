@@ -20173,6 +20173,24 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
+.bp-video-thumbnail-uploader .bb-model-footer {
+  border-top: 1px solid #e7e9ec;
+  margin: 30px -30px 0;
+  padding: 0 30px;
+}
+
+.bp-video-thumbnail-uploader .bb-model-footer .bp-video-thumbnail-submit.is-disabled {
+  pointer-events: none;
+  background-color: #9ea8b3 !important;
+  box-shadow: none !important;
+}
+
+@media screen and (max-width: 540px) {
+  .bp-video-thumbnail-uploader .bb-model-footer {
+    margin: 30px -15px 0;
+  }
+}
+
 @media screen and (max-width: 540px) {
   .bp-video-thumbnail-uploader .modal-container {
     padding: 20px 15px 30px;
@@ -20213,6 +20231,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
   .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li img {
     min-height: 100px;
+    max-height: 106px;
   }
   .video-thumbnail-content .bb-action-check-wrap .bb-icon {
     font-size: 11px;
