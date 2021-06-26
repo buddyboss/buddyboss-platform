@@ -397,7 +397,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Topic.
 			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> %3$s', esc_url( $topic_permalink ), $topic_title, $content );
+			$reply_icon      = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? '<i class="bb-icon-corner-down-right"></i>' : '';
+			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s %4$s</div>', esc_url( $topic_permalink ), $topic_title, $reply_icon, $content );
 
 			return $content;
 		}

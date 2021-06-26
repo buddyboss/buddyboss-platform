@@ -253,21 +253,26 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $button_text;
 		}
 
+		$updated = false;
+
 		switch ( $activity->type ) {
 			case 'bbp_forum_create':
 				$button_text = __( 'Report Forum', 'buddyboss' );
+				$updated     = true;
 				break;
 			case 'bbp_topic_create':
 				$button_text = __( 'Report Topic', 'buddyboss' );
+				$updated     = true;
 				break;
 			case 'bbp_reply_create':
 				$button_text = __( 'Report Reply', 'buddyboss' );
+				$updated     = true;
 				break;
 			default:
 				$button_text = __( 'Report Post', 'buddyboss' );
 		}
 
-		if ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) {
+		if ( ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) && false === $updated ) {
 			if ( ! empty( $media_id ) ) {
 				$button_text = __( 'Report Photo', 'buddyboss' );
 			}
@@ -281,7 +286,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) {
+		if ( ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) && false === $updated ) {
 			if ( ! empty( $document_id ) ) {
 				$button_text = __( 'Report Document', 'buddyboss' );
 			}
@@ -316,21 +321,26 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $button_text;
 		}
 
+		$updated = false;
+
 		switch ( $activity->type ) {
 			case 'bbp_forum_create':
 				$button_text = __( 'Reported Forum', 'buddyboss' );
+				$updated     = true;
 				break;
 			case 'bbp_topic_create':
 				$button_text = __( 'Reported Topic', 'buddyboss' );
+				$updated     = true;
 				break;
 			case 'bbp_reply_create':
 				$button_text = __( 'Reported Reply', 'buddyboss' );
+				$updated     = true;
 				break;
 			default:
 				$button_text = __( 'Reported Post', 'buddyboss' );
 		}
 
-		if ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) {
+		if ( ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id' ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids' ) ) ) && false === $updated ) {
 			if ( ! empty( $media_id ) ) {
 				$button_text = __( 'Reported Photo', 'buddyboss' );
 			}
@@ -344,7 +354,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) {
+		if ( ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id' ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids' ) ) ) && false === $updated ) {
 			if ( ! empty( $document_id ) ) {
 				$button_text = __( 'Reported Document', 'buddyboss' );
 			}

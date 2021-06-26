@@ -907,14 +907,51 @@ fieldset div.avatar {
 -------------------------------------------------------------- */
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
-.activity-list li.bbp_reply_create .activity-content .activity-inner {
+.activity-list li.bbp_reply_create .activity-content .activity-inner,
+.activity-list li.blogs .activity-content .activity-inner {
 	border: 1px solid $light-grey;
 	padding: 10px 12px;
 	border-radius: 4px;
+	max-width: 640px;
+
+	img {
+		max-width: 100%;
+	}
 
 	.activity-discussion-title-wrap {
 		font-size: 16px;
+		font-weight: 500;
 		margin-bottom: 10px;
+
+		a {
+			color: #333;
+
+			&:hover {
+				color: $blue;
+			}
+		}
+	}
+
+	.bb-content-inr-wrap > p {
+		margin-bottom: 10px;
+	}
+
+	.bb-content-inr-wrap {
+		display: table;
+		width: 100%;
+
+		> .bb-icon-corner-down-right {
+			float: left;
+			font-size: 25px;
+			color: #939597;
+
+			~ p:not(:empty) {
+				float: right;
+				width: calc(100% - 35px);
+				text-align: left;
+			}
+		}
+
 	}
 
 }
