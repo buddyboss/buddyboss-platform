@@ -806,8 +806,6 @@ window.bp = window.bp || {};
 
 			$( popupSelector ).find( '.bp-video-thumbnail-uploader' ).removeClass( 'no_generated_thumb' );
 
-			$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).html('');
-
 			$( document ).on(
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated .bb-action-check-wrap',
@@ -1090,6 +1088,7 @@ window.bp = window.bp || {};
 					);
 				} else {
 					$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
+					$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 				}
 			}
 		},
