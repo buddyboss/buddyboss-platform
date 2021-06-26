@@ -20178,7 +20178,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
   .video-thumbnail-content .bb-dropzone-wrap .dropzone,
   .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-default,
-  .video-thumbnail-content .bb-dropzone-wrap .video-thumbnail-custom img {
+  .video-thumbnail-content .bb-dropzone-wrap .video-thumbnail-custom img,
+  .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image {
     height: 106px !important;
   }
   .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li img {

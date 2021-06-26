@@ -1357,7 +1357,8 @@
 
 			.dropzone,
 			.dropzone .dz-default,
-			.video-thumbnail-custom img {
+			.video-thumbnail-custom img,
+			.dropzone .dz-preview .dz-image {
 				height: 106px !important;
 			}
 
