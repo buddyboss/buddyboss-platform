@@ -144,7 +144,7 @@ add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
 // Filter meta button for blog post comment.
-add_action( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_blog_post_comment_buttons', 10 ,2 );
+add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_blog_post_comment_buttons', 10 ,2 );
 
 // Obey BuddyBoss commenting rules
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
@@ -190,7 +190,7 @@ function bb_skip_blog_post_comment( $self ) {
 
 	$activity = new BP_Activity_Activity( $self->item_id ); //bp_activity_get_specific( array( 'id' => $self->item_id ) );
 
-	if( 'blogs' === $activity->component && 'new_blog_post' === $activity->type ) {
+	if( bp_is_blog_post_activity( $activity ) ) {
 		$self->errors->add( 'error', __( 'Blog post comments are not allow in activity table.', 'buddyboss' ) );
 		$self->error_type = 'wp_error';
 	}
@@ -2462,7 +2462,7 @@ function bb_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
 	$activity = array_shift( $activities['activities'] );
 
 	// When activity component is not blog.
-	if ( 'blogs' !== $activity->component ) {
+	if ( ! bp_is_blog_post_activity( $activity ) ) {
 		return $buttons;
 	}
 

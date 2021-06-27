@@ -137,18 +137,14 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_action( 'edit_post', array( $this, 'topic_update' ), 10, 2 );
 			add_action( 'edit_post', array( $this, 'reply_update' ), 10, 2 );
 
-			// Hook into topic and reply deletion
+			// Hook into topic and reply delete.
 			add_action( 'bbp_delete_topic', array( $this, 'topic_delete' ), 10, 1 );
 			add_action( 'bbp_delete_reply', array( $this, 'reply_delete' ), 10, 1 );
 
-			// Meta button for activity discussion.
-			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
-
-			// Meta button for activity reply.
-			add_action( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
-
 			// Hook after member activity content in timeline.
 			add_action( 'bp_after_member_activity_content', array( $this, 'activity_quick_reply' ) );
+			add_action( 'bp_after_group_activity_content', array( $this, 'activity_quick_reply' ) );
+			add_action( 'bp_after_directory_activity', array( $this, 'activity_quick_reply' ) );
 		}
 
 		/**
@@ -180,6 +176,12 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter discussion.
 			add_filter( 'bp_get_activity_content_body', array( $this, 'before_activity_content' ), 10, 2 );
+
+			// Meta button for activity discussion.
+			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
+
+			// Meta button for activity reply.
+			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
 		}
 
 		/**
@@ -442,12 +444,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_id = $activity->secondary_item_id;
 			}
 
-			// Remove the delete meta button to set it as the last array key.
-			if ( ! empty( $buttons['activity_delete'] ) ) {
-				$delete = $buttons['activity_delete'];
-				unset( $buttons['activity_delete'] );
-			}
-
 			// Topic title.
 			$forum_id    = bbp_get_topic_forum_id( $topic_id );
 			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
@@ -497,11 +493,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						'data-author-name' => $author,
 					),
 				);
-			}
-
-			// Delete button set as the last meta buttion.
-			if ( ! empty( $delete ) ) {
-					$buttons['activity_delete'] = $delete;
 			}
 
 			return $buttons;
@@ -584,7 +575,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		public function activity_quick_reply() {
 			?>
-			<div id="bbpress-forums" class="bbpress-forums-activity" data-component="activity">
+			<div id="bbpress-forums" class="bbpress-forums-activity buddyboss-quick-reply-form-wrap" data-component="activity" style="display: none;">
 				<?php
 					// Timeline quick reply form template.
 					bbp_get_template_part( 'form', 'reply' );
@@ -693,7 +684,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @uses bp_activity_delete()
 		 */
 		public function topic_delete( $topic_id = 0 ) {
-
 			// Get activity ID, bail if it doesn't exist
 			if ( $activity_id = $this->get_activity_id( $topic_id ) ) {
 				return bp_activity_delete( array( 'id' => $activity_id ) );
