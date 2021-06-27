@@ -5564,6 +5564,10 @@ function bp_is_blog_post_activity( $activity ) {
 }
 
 function bb_create_blog_post_activity_comment( $params ) {
+	if ( ! bp_activity_can_comment() ) {
+		return new WP_Error( 'error', __( 'You are not allow to comment!', 'buddyboss' ) );
+	}
+
 	$params  = wp_parse_args(
 		$params,
 		array(
