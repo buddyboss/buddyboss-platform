@@ -5552,7 +5552,11 @@ function bp_is_blog_post_activity( $activity ) {
 		return false;
 	}
 
-	if ( post_type_exists( $post->post_type ) ) {
+	if ( ! post_type_exists( $post->post_type ) ) {
+		return false;
+	}
+
+	if ( 'new_blog_' . $post->post_type === $activity->type ) {
 		return true;
 	}
 
