@@ -1884,6 +1884,10 @@ function bp_get_activity_is_favorite() {
 function bb_activity_blog_post_comments( $args = array() ) {
     global $activities_template;
 
+    if ( ! bp_activity_can_comment() ) {
+        return '';
+    }
+
     if ( empty( $activities_template->activity ) ) {
         return;
     }
@@ -2022,12 +2026,16 @@ function bp_activity_comments( $args = '' ) {
  */
 function bp_activity_get_comments( $args = '' ) {
     global $activities_template;
-
-    if ( empty( $activities_template->activity->children ) ) {
+    
+    // Checking current activity component.
+    if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) ) {
+        // Render activity post comments.
+        bb_activity_blog_post_comments();
+    } else if ( empty( $activities_template->activity->children ) ) {
         return false;
-    }
-
-    bp_activity_recurse_comments( $activities_template->activity );
+    } else {
+        bp_activity_recurse_comments( $activities_template->activity );
+    } 
 }
 
 /**
