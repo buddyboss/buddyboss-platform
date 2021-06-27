@@ -5542,25 +5542,25 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 }
 
 function bp_is_blog_post_activity( $activity ) {
-	if ( 'blogs' !== $activity->component ) {
-		return false;
-	}
-
-	$post = get_post( $activity->secondary_item_id );
-
-	if ( empty( $post ) ) {
-		return false;
-	}
-
-	if ( ! post_type_exists( $post->post_type ) ) {
-		return false;
-	}
-
-	if ( 'new_blog_' . $post->post_type === $activity->type ) {
+	if ( in_array( $activity->component, array( 'blogs' ) ) ) {
 		return true;
 	}
 
 	return false;
+
+	// $post = get_post( $activity->secondary_item_id );
+
+	// if ( empty( $post ) ) {
+	// 	return false;
+	// }
+
+	// if ( ! post_type_exists( $post->post_type ) ) {
+	// 	return false;
+	// }
+
+	// if ( 'new_blog_' . $post->post_type === $activity->type ) {
+	// 	return true;
+	// }
 }
 
 function bb_create_blog_post_activity_comment( $params ) {

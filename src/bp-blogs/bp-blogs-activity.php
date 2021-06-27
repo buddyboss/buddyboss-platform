@@ -1309,19 +1309,19 @@ function bp_blogs_disable_activity_commenting( $retval ) {
 		// Has post.
 		if ( ! empty( $post ) ) {
 			$open = ( 'open' === $post->comment_status );
-		
-			// Disable comment when the comment not open for individual post.
-			if ( ! $open ) {
-				$retval = false;
-			}
-
+			
 			// Enable comment when the post comment is not opne but has comment count.
 			if ( $post->comment_count ) {
 				$retval = true;
 			}
+
+			// Disable comment when the comment not open for individual post.
+			if ( ! $open ) {
+				$retval = false;
+			}
 		}
 	}
-
+	
 	return $retval;
 }
 add_filter( 'bp_activity_can_comment', 'bp_blogs_disable_activity_commenting' );

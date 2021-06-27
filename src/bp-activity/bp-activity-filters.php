@@ -2488,10 +2488,16 @@ function bb_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
  *
  * @return boolean
  */
-function bb_activity_has_comment_access( $can_comment = true ) {
+function bb_activity_has_comment_access( $retval ) {
+	global $activities_template;
+	
+	if ( bp_is_blog_post_activity( $activities_template->activity ) ) {
+		return bp_blogs_disable_activity_commenting( $retval );
+	}
+	
 	// Already forced off, so comply.
-	if ( false === $can_comment ) {
-		return $can_comment;
+	if ( false === $retval ) {
+		return $retval;
 	}
 
 	// Get the current action name.
@@ -2505,10 +2511,10 @@ function bb_activity_has_comment_access( $can_comment = true ) {
 
 	// Comment is disabled for discussion and reply discussion.
 	if ( in_array( $action_name, $disabled_actions, true ) ) {
-		$can_comment = false;
+		$retval = false;
 	}
 
-	return $can_comment;
+	return $retval;
 }
 
 /**
