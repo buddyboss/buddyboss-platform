@@ -41,5 +41,3 @@ bp_nouveau_before_loop(); ?>
 <?php endif; ?>
 
 <?php bp_nouveau_after_loop(); ?>
-
-
