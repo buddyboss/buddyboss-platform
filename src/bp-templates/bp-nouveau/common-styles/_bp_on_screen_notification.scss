@@ -9,6 +9,15 @@
 .bb-onscreen-notification-enable {
 	position: relative;
 
+	@media screen and (max-width: 500px) {
+		display: none;
+
+		&.bb-onscreen-notification-enable-mobile-support {
+			display: block;
+		}
+
+	}
+
 	.bb-onscreen-notification {
 		position: fixed;
 		bottom: 25px;
@@ -26,7 +35,9 @@
 		}
 
 		.notification-list {
-			margin-bottom: 0;
+			margin: 0;
+			padding: 0;
+			list-style: none;
 
 			.read-item {
 				background: #fff;
@@ -37,6 +48,11 @@
 				transition: all linear 0.2s;
 				padding: 20px;
 				z-index: 4;
+				display: flex;
+
+				.bb-full-link {
+					display: none;
+				}
 
 				&.recent-item {
 					position: relative;
@@ -88,6 +104,17 @@
 
 				.notification-content {
 					align-self: center;
+
+					span {
+						display: flex;
+						flex-direction: column;
+
+						&.bb-full-link {
+							display: none;
+						}
+
+					}
+
 				}
 
 				.actions {
