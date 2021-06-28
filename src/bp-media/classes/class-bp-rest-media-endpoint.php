@@ -542,30 +542,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		if (
-			! is_user_logged_in() ||
+			is_user_logged_in() &&
 			(
-				function_exists( 'bb_media_user_can_upload' ) &&
-				! bb_media_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
+				! function_exists( 'bb_media_user_can_upload' ) ||
+				(
+					function_exists( 'bb_media_user_can_upload' ) &&
+					bb_media_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
+				)
 			)
 		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+			$retval = true;
 
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
-				|| ! function_exists( 'bp_is_group_media_support_enabled' )
-				|| ( function_exists( 'bp_is_group_media_support_enabled' ) && false === bp_is_group_media_support_enabled() )
+				isset( $request['group_id'] ) &&
+				! empty( $request['group_id'] ) &&
+				(
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
+					|| ! function_exists( 'bp_is_group_media_support_enabled' )
+					|| ( function_exists( 'bp_is_group_media_support_enabled' ) && false === bp_is_group_media_support_enabled() )
+				)
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -574,30 +579,28 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						'status' => rest_authorization_required_code(),
 					)
 				);
-			}
-		}
+			} elseif ( isset( $request['album_id'] ) && ! empty( $request['album_id'] ) ) {
+				$parent_album = new BP_Media_Album( $request['album_id'] );
+				if ( empty( $parent_album->id ) ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_album_id',
+						__( 'Invalid Album ID.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
 
-		if ( true === $retval && isset( $request['album_id'] ) && ! empty( $request['album_id'] ) ) {
-			$parent_album = new BP_Media_Album( $request['album_id'] );
-			if ( empty( $parent_album->id ) ) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_album_id',
-					__( 'Invalid Album ID.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			}
-
-			$album_privacy = bp_media_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
-			if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to create a media inside this album.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+				$album_privacy = bp_media_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
+				if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to create a media inside this album.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -614,7 +617,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$retval = new WP_Error(
 						'bp_rest_invalid_upload_id',
 						sprintf(
-							/* translators: Attachment ID. */
+						/* translators: Attachment ID. */
 							__( 'Invalid attachment id: %d', 'buddyboss' ),
 							$attachment_id
 						),
@@ -626,7 +629,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$retval = new WP_Error(
 						'bp_rest_invalid_media_author',
 						sprintf(
-							/* translators: Attachment ID. */
+						/* translators: Attachment ID. */
 							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
 							$attachment_id
 						),
@@ -638,7 +641,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_media_upload_id',
 						sprintf(
-							/* translators: Attachment ID. */
+						/* translators: Attachment ID. */
 							__( 'Media already exists for attachment id: %d', 'buddyboss' ),
 							$attachment_id
 						),
@@ -807,53 +810,47 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to update this media.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update this media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$media  = new BP_Media( $request['id'] );
 
-		$media = new BP_Media( $request['id'] );
-
-		if ( true === $retval && empty( $media->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_media_invalid_id',
-				__( 'Invalid media ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if (
-			true === $retval &&
-			(
+			if ( empty( $media->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_media_invalid_id',
+					__( 'Invalid media ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
 				! bp_media_user_can_edit( $media ) ||
 				(
 					function_exists( 'bb_media_user_can_upload' ) &&
 					! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $media->group_id ) )
 				)
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this media.', 'buddyboss' ),
-				array(
-					'status' => 500,
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this media.', 'buddyboss' ),
+					array(
+						'status' => 500,
+					)
+				);
+			} elseif (
+				isset( $request['group_id'] ) &&
+				! empty( $request['group_id'] ) &&
+				(
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
 				)
-			);
-		}
-
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -989,26 +986,16 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && empty( $request['media_ids'] ) ) {
-			$retval = new WP_Error(
-				'bp_rest_media_invalid_ids',
-				__( 'Invalid media IDs.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+		if ( is_user_logged_in() && ! empty( $request['media_ids'] ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -1104,38 +1091,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$media  = new BP_Media( $request['id'] );
 
-		$media = new BP_Media( $request['id'] );
-
-		if ( true === $retval && empty( $media->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_media_invalid_id',
-				__( 'Invalid media ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_media_user_can_delete( $media ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $media->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_media_invalid_id',
+					__( 'Invalid media ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_media_user_can_delete( $media ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -1245,16 +1229,16 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	public function upload_item_permissions_check( $request ) {
 
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to upload media.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to upload media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
