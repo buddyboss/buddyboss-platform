@@ -916,12 +916,19 @@ fieldset div.avatar {
 
 	img {
 		max-width: 100%;
+		margin-bottom: 15px;
 	}
 
+	a > img {
+		margin-bottom: 0;
+	}
+
+	.bb-post-title,
 	.activity-discussion-title-wrap {
 		font-size: 16px;
 		font-weight: 500;
 		margin-bottom: 10px;
+		display: block;
 
 		a {
 			color: #333;
