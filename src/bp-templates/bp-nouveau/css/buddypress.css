@@ -11187,24 +11187,41 @@ fieldset div.avatar {
 .activity-list li.bbp_reply_create .activity-content .activity-inner img,
 .activity-list li.blogs .activity-content .activity-inner img {
   max-width: 100%;
+  margin-bottom: 15px;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner a > img,
+.activity-list li.bbp_reply_create .activity-content .activity-inner a > img,
+.activity-list li.blogs .activity-content .activity-inner a > img {
+  margin-bottom: 0;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-post-title,
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-post-title,
 .activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap,
+.activity-list li.blogs .activity-content .activity-inner .bb-post-title,
 .activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 10px;
+  display: block;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-post-title a,
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap a,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-post-title a,
 .activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap a,
+.activity-list li.blogs .activity-content .activity-inner .bb-post-title a,
 .activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap a {
   color: #333;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-post-title a:hover,
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap a:hover,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-post-title a:hover,
 .activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap a:hover,
+.activity-list li.blogs .activity-content .activity-inner .bb-post-title a:hover,
 .activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap a:hover {
   color: #5087e5;
 }
