@@ -764,9 +764,9 @@ window.bp = window.bp || {};
 
 			var appendItems = notifications.find( '.read-item' );
 
-			$.each( appendItems, function( index, item ) {
+			appendItems.each( function( index, item ) {
 				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
-				
+
 				if ( '-1' == $.inArray( id, animatedItems ) ) {
 					$( item ).addClass( 'pull-animation' );
 					animatedItems.push( id );
@@ -774,9 +774,9 @@ window.bp = window.bp || {};
 					$( item ).removeClass( 'pull-animation' );
 				}
 			} );
-			
+
 			// Store animated notification id in 'animated-items' data attribute.
-			list.attr( 'data-animated-items', JSON.stringify( animatedItems ) );
+			list.attr( 'animated-items', JSON.stringify( animatedItems ) );
 
 			if ( ! appendItems.length ) {
 				return;
@@ -844,13 +844,7 @@ window.bp = window.bp || {};
 				list         = wrap.find( '.notification-list' ),
 				items        = list.find( '.read-item' ),
 				titleTag     = $('html').find( 'title' ),
-				title        = wrap.data( 'title-tag' ),
-				broserTab = wrap.data( 'broser-tab' );
-
-			// Check notification broser tab settings option.
-			if ( 1 != broserTab ) {
-				return;
-			}
+				title        = wrap.data( 'title-tag' );
 
 			if ( items.length > 0 ) {
 				titleTag.text( '('+items.length+') ' + title );
@@ -865,7 +859,7 @@ window.bp = window.bp || {};
 		browserTabFlashNotification: function() {
 			var wrap = $( '.bb-onscreen-notification' ),
 				broserTab = wrap.data( 'broser-tab' );
-
+			
 			// Check notification broser tab settings option.
 			if ( 1 != broserTab ) {
 				return;
@@ -984,7 +978,7 @@ window.bp = window.bp || {};
 			var list         = $(self).closest( '.notification-list' ),
 				item         = $(self).closest( '.read-item' ),
 				id           = $(self).data( 'notification-id' ),
-				removedItems =  list.data( 'removed-items' );
+				removedItems = list.data( 'removed-items' );
 				
 			item.addClass('close-item');
 			
@@ -1010,7 +1004,7 @@ window.bp = window.bp || {};
 				}
 
 				//items.first().addClass( 'recent-item' );
-				items.slice(0, 2).removeClass( 'bb-more-item' );
+				items.slice(0, 3).removeClass( 'bb-more-item' );
 				
 			}, 500 );
 		},
@@ -1019,7 +1013,6 @@ window.bp = window.bp || {};
 		 * Remove all notifications.
 		 */
 		removeAllNotification: function() {
-
 			$('.bb-onscreen-notification .bb-remove-all-notification').on('click', '.action-close', function(e) {
 				e.preventDefault();
 				
@@ -1040,7 +1033,9 @@ window.bp = window.bp || {};
 				list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
 				items.remove();
 				bp.Nouveau.browserTabCountNotification();
+				bp.Nouveau.visibilityOnScreenClearButton();
 				list.closest( '.bb-onscreen-notification' ).addClass('close-all-items');
+				list.removeClass( 'bb-more-than-3' );
 			});
 		},
 
@@ -1064,6 +1059,7 @@ window.bp = window.bp || {};
 				wrap.find( '.bb-remove-all-notification' ).show();
 			} else {
 				wrap.find( '.bb-remove-all-notification' ).hide();
+				wrap.find( '.bb-remove-all-notification' ).css({ display: 'none' });
 			}
 		},
 
