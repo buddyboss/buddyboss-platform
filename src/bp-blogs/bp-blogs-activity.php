@@ -277,7 +277,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 	}
 
 	// Build the 'post link' part of the activity action string.
-	$post_link = '<a href="' . esc_url( $post_url ) . '">' . $post_title . '</a>';
+	$post_link = '<span class="bb-post-singular">' . $post_title . '</span>';
 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
@@ -1613,7 +1613,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 	}
 
 	// Build the 'post link' part of the activity action string.
-	$post_link = '<a href="' . esc_url( $post_url ) . '">' . $post_title . '</a>';
+	$post_link = '<span class="bb-post-singular">' . $post_title . '</span>';
 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
