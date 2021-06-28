@@ -3673,7 +3673,8 @@ function bb_media_user_can_access( $id, $type ) {
 					$can_download = true;
 					$can_add      = true;
 					$can_delete   = true;
-					if ( $is_admin || 'members' === bp_group_get_video_status() ) {
+					// Use can only do the thing if the user is admin OR status will be a members.
+					if ( $is_admin || ( 'members' === bp_group_get_video_status() || 'members' === bp_group_get_media_status() || 'members' === bp_group_get_document_status() ) ) {
 						$can_edit = true;
                     }
 					$can_move = true;
