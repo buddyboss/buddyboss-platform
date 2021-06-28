@@ -15,7 +15,7 @@
                 <span class="posted"><?php bp_the_notification_time_since(); ?></span>
             </div>  
             <div class="actions">
-                <a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="<?php _e( 'Close', 'buddyboss-theme' ); ?>" data-notification-id="<?php bp_the_notification_id(); ?>">
+                <a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="<?php _e( 'Close', 'buddyboss' ); ?>" data-notification-id="<?php bp_the_notification_id(); ?>">
                     <span class="dashicons dashicons-no" aria-hidden="true"></span>
                 </a>
             </div>

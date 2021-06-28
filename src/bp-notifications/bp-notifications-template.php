@@ -1085,8 +1085,8 @@ function bb_on_screen_notification_template() {
 			</ul>
 			<div class="bb-remove-all-notification">
 				<a class="action-close primary">
-					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss-theme' ); ?></span>
-					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss-theme' ); ?></span>
+					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss' ); ?></span>
+					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss' ); ?></span>
 					<span class="dashicons dashicons-no" aria-hidden="true"></span>
 				</a>
 			</div>
