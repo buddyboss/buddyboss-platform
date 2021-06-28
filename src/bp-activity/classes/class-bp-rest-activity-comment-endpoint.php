@@ -306,28 +306,27 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval   = true;
+			$activity = $this->get_activity_object( $request );
 
-		$activity = $this->get_activity_object( $request );
-
-		if ( empty( $activity ) || empty( $activity->id ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+			if ( empty( $activity ) || empty( $activity->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid activity ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
 		}
 
 		/**

@@ -189,48 +189,34 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_is_active( 'groups' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
-		}
-
-		$group = $this->groups_endpoint->get_group_object( $request );
-		if ( true === $retval && empty( $group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		// If group author does not match logged_in user, block update.
-		if ( true === $retval && ! $this->groups_endpoint->can_see( $group ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_is_active( 'groups' ) ) {
+			$group  = $this->groups_endpoint->get_group_object( $request );
+			$retval = true;
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! $this->groups_endpoint->can_see( $group ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -334,50 +320,35 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		$retval = true;
-
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_is_active( 'groups' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
-		}
-
-		$group = $this->groups_endpoint->get_group_object( $request );
-		if ( true === $retval && empty( $group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		// If group author does not match logged_in user, block update.
-		if ( true === $retval && ! $this->groups_endpoint->can_user_delete_or_update( $group ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_is_active( 'groups' ) ) {
+			$retval = true;
+			$group  = $this->groups_endpoint->get_group_object( $request );
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+				// If group author does not match logged_in user, block update.
+			} elseif ( ! $this->groups_endpoint->can_user_delete_or_update( $group ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

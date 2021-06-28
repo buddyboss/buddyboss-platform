@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.6.4 =
+* Profiles - Fixed profile photo not showing issue when 'Avatar display' not enabled in discussion WordPress settings
+* Profiles - Fixed profile photo cropping issue for RTL languages
+* Activity - Code refactoring and API improvements specific to activity avatar
+* Text Editor - Fixed numbered list formatting issue
+* REST API - API endpoints code refactoring to improve security and fix vulnerabilities
+* REST API - Small improvement for custom profile and group tabs endpoints
 
 = 1.6.3 =
 * Profiles - Fixed issue to handle special character in profile field type - dropdown

@@ -6602,6 +6602,7 @@ MediumEditor.extensions = {};
         // Override tab only for pre nodes
         var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
             tag = node && node.nodeName.toLowerCase();
+            parent = node && node.parentNode.nodeName.toLowerCase();
 
         if (tag === 'pre') {
             event.preventDefault();
@@ -6612,11 +6613,37 @@ MediumEditor.extensions = {};
         if (MediumEditor.util.isListItem(node)) {
             event.preventDefault();
 
+            var elementsContainer = MediumEditor.selection.getSelectionStart(this.options.ownerDocument);
+
             // If Shift is down, outdent, otherwise indent
             if (event.shiftKey) {
-                this.options.ownerDocument.execCommand('outdent', false, null);
+                var elementsContainercontent = elementsContainer.innerHTML.replace('<br>','');
+                var li = this.options.ownerDocument.createElement('li');
+                var newLI = elementsContainer.parentNode.parentNode.parentNode.appendChild(li);
+                MediumEditor.selection.moveCursor(this.options.ownerDocument, newLI);
+
+                //Delete if current list item is blank
+                if( elementsContainercontent === '' ) {
+                    elementsContainer.remove();
+                }
+
             } else {
-                this.options.ownerDocument.execCommand('indent', false, null);
+                var elementsContainercontent = elementsContainer.innerHTML.replace('<br>','');
+                //Do not indent if current list item is blank
+                if( elementsContainercontent === '' || elementsContainer.innerText === '') {
+                    return;
+                }
+                var wrap;
+                if( parent == 'ul' ){
+                    wrap = this.options.ownerDocument.createElement('ul');
+                } else if( parent == 'ol' ) {
+                    wrap = this.options.ownerDocument.createElement('ol');
+                }
+
+                var li = this.options.ownerDocument.createElement('li');
+                var newWrap = wrap.appendChild(li);
+                elementsContainer.appendChild(wrap);
+                MediumEditor.selection.moveCursor(this.options.ownerDocument, newWrap);
             }
         }
     }
@@ -6744,7 +6771,43 @@ MediumEditor.extensions = {};
             MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
 
             event.preventDefault();
-        } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
+        }else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER) &&
+        (MediumEditor.util.getClosestTag(node, 'li') !== false) &&
+        MediumEditor.selection.getCaretOffsets(node).left === 0) {
+
+            // when cursor is at the <li> and is empty,
+            // then pressing enter key should remove li and cursor should be go to parent with new li or p
+            event.preventDefault();
+            if( isEmpty.test(node.innerHTML)){
+                if( node.parentNode.parentNode.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.parentNode.parentNode.tagName.toLowerCase() == 'ol'){
+                    var li = this.options.ownerDocument.createElement('li');
+                    var newLI = node.parentNode.parentNode.parentNode.insertBefore(li, node.parentNode.parentNode.nextSibling);
+                    node.remove();
+                    MediumEditor.selection.moveCursor(this.options.ownerDocument, newLI);
+                    
+                } else {
+                   var  p = this.options.ownerDocument.createElement('p');
+                    p.innerHTML = '<br>';
+                    var newP;
+                    if(node.parentNode.nextSibling){
+                        newP = node.parentNode.parentNode.insertBefore(p, node.parentNode.nextSibling);
+                    }else{
+                        newP = node.parentNode.parentNode.appendChild(p);
+                    }
+                    node.remove();
+                    MediumEditor.selection.moveCursor(this.options.ownerDocument, newP);
+                }
+            }else if( !node.previousElementSibling && node.nextElementSibling){
+                // when cursor is at the first <li>,
+                // then pressing enter key should add <p> above listing
+                if(node.parentNode.parentNode.tagName.toLowerCase() !== 'li'){
+                    var p = this.options.ownerDocument.createElement('p');
+                    p.innerHTML = '<br>';
+                    var newP = node.parentNode.parentNode.prepend(p);
+                    MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
+                }
+            }
+        }else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
                 MediumEditor.util.isMediumEditorElement(node.parentElement) &&
                 !node.previousElementSibling &&
                 node.nextElementSibling &&

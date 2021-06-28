@@ -495,31 +495,21 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function merge_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to merge this topic.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update a topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		if ( true === $retval ) {
+		if ( is_user_logged_in() ) {
 			$retval = $this->get_item_permissions_check( $request );
-		}
 
-		if ( true === $retval ) {
-			if ( ! current_user_can( 'edit_topic', $request['id'] ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to merge this topic.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			if ( true === $retval && ! current_user_can( 'edit_topic', $request->get_param( 'id' ) ) ) {
+				$retval = $error;
 			}
 		}
 
@@ -939,24 +929,18 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function split_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to split a topic.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to split a topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() ) {
 			$retval = $this->get_item_permissions_check( $request );
-		}
 
-		if ( true === $retval ) {
-			if ( ! current_user_can( 'edit_topic', $request['id'] ) ) {
+			if ( true === $retval && ! current_user_can( 'edit_topic', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to split this topic.', 'buddyboss' ),
@@ -1047,19 +1031,15 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function action_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform the action on the topic.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform the action on the topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() ) {
 			$retval = $this->get_item_permissions_check( $request );
 		}
 
@@ -1159,27 +1139,27 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function dropdown_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform the action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform the action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		$topic = bbp_get_topic( $request['id'] );
-		if ( true === $retval && empty( $topic ) ) {
-			$retval = new WP_Error(
-				'bp_rest_topic_invalid_id',
-				__( 'Invalid topic ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+			$topic = bbp_get_topic( $request->get_param( 'id' ) );
+			if ( empty( $topic ) ) {
+				$retval = new WP_Error(
+					'bp_rest_topic_invalid_id',
+					__( 'Invalid topic ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
 		}
 
 		/**
