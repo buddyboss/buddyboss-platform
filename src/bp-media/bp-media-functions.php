@@ -3673,7 +3673,7 @@ function bb_media_user_can_access( $id, $type ) {
 					$can_download = true;
 					$can_add      = true;
 					$can_delete   = true;
-					if ( ! $is_admin && 'members' === bp_group_get_video_status() ) {
+					if ( $is_admin || 'members' === bp_group_get_video_status() ) {
 						$can_edit = true;
                     }
 					$can_move = true;
