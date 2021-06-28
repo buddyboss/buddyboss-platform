@@ -906,61 +906,68 @@ fieldset div.avatar {
 /* =BuddyBoss Activity Feeds
 -------------------------------------------------------------- */
 
-.activity-list li.bbp_topic_create .activity-content .activity-inner,
-.activity-list li.bbp_reply_create .activity-content .activity-inner,
-.activity-list li.blogs .activity-content .activity-inner {
-	border: 1px solid $light-grey;
-	padding: 10px 12px;
-	border-radius: 4px;
-	max-width: 640px;
+.activity-list li.bbp_topic_create,
+.activity-list li.bbp_reply_create,
+.activity-list li.blogs {
 
-	img {
-		max-width: 100%;
-		margin-bottom: 15px;
-	}
-
-	a > img {
-		margin-bottom: 0;
-	}
-
-	.bb-post-title,
-	.activity-discussion-title-wrap {
-		font-size: 16px;
+	.bp-activity-head .bb-post-singular {
 		font-weight: 500;
-		margin-bottom: 10px;
-		display: block;
-
-		a {
-			color: #333;
-
-			&:hover {
-				color: $blue;
-			}
-		}
 	}
 
-	.bb-content-inr-wrap > p {
-		margin-bottom: 10px;
-	}
+	.activity-content .activity-inner {
+		border: 1px solid $light-grey;
+		padding: 10px 12px;
+		border-radius: 4px;
+		max-width: 640px;
 
-	.bb-content-inr-wrap {
-		display: table;
-		width: 100%;
-
-		> .bb-icon-corner-down-right {
-			float: left;
-			font-size: 25px;
-			color: #939597;
-
-			~ p:not(:empty) {
-				float: right;
-				width: calc(100% - 35px);
-				text-align: left;
-			}
+		img {
+			max-width: 100%;
+			margin-bottom: 15px;
 		}
 
-	}
+		a > img {
+			margin-bottom: 0;
+		}
 
+		.bb-post-title,
+		.activity-discussion-title-wrap {
+			font-size: 16px;
+			font-weight: 500;
+			margin-bottom: 10px;
+			display: block;
+
+			a {
+				color: #333;
+
+				&:hover {
+					color: $blue;
+				}
+			}
+		}
+
+		.bb-content-inr-wrap > p {
+			margin-bottom: 10px;
+		}
+
+		.bb-content-inr-wrap {
+			display: table;
+			width: 100%;
+
+			> .bb-icon-corner-down-right {
+				float: left;
+				font-size: 25px;
+				color: #939597;
+
+				~ p:not(:empty) {
+					float: right;
+					width: calc(100% - 35px);
+					text-align: left;
+				}
+			}
+
+		}
+
+	}
 }
 
 /* =User Capabilities

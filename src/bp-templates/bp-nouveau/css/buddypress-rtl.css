@@ -11174,6 +11174,12 @@ fieldset div.avatar {
 
 /* =BuddyBoss Activity Feeds
 -------------------------------------------------------------- */
+.activity-list li.bbp_topic_create .bp-activity-head .bb-post-singular,
+.activity-list li.bbp_reply_create .bp-activity-head .bb-post-singular,
+.activity-list li.blogs .bp-activity-head .bb-post-singular {
+  font-weight: 500;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner,
 .activity-list li.blogs .activity-content .activity-inner {
