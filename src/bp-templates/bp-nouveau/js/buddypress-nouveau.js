@@ -695,6 +695,12 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
+
+			$( document ).on( 'heartbeat-tick', this.bpHeartbeatTick.bind( this ) );
+		},
+
+		bpHeartbeatTick: function() {
+			console.log('its now working fine');
 		},
 
 		/**
