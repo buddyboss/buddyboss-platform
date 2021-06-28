@@ -30,6 +30,8 @@ $is_comment_vid          = bp_video_is_activity_comment_video( bp_get_video_id()
 $attachment_urls         = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
 $parent_root_activity_id = 0;
 
+error_log( print_r( $media_privacy, 1 ) );
+
 if ( $is_comment_vid ) {
 	$hierarchy = bb_get_activity_hierarchy( bp_get_activity_id() );
 	if ( ! empty( $hierarchy ) ) {
@@ -60,7 +62,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 		<?php if ( $can_edit ) { ?>
 			<?php
 			$item_id = 0;
-			if ( bp_loggedin_user_id() === bp_get_video_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
+			if ( bp_loggedin_user_id() === bp_get_video_user_id() || bp_current_user_can( 'bp_moderate' ) || $can_edit ) {
 				?>
 				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
