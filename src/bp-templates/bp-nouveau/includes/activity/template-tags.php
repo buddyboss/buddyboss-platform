@@ -265,22 +265,6 @@ function bp_nouveau_activity_state() {
 	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
 	$comment_count   = bp_activity_get_comment_count();
 	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
-
-	/**
-	 * Filter here to access control in activity state.
-	 *
-	 * @since BuddyBoss 1.6.2
-	 *
-	 * @param bool $value Access status.
-	 * @param int  $activity_id Activity id.
-	 */
-	$has_activity_state = apply_filters( 'bp_nouveau_has_activity_state', true, $activity_id );
-
-	// Return empty when you have no access permission.
-	if ( ! $has_activity_state ) {
-		return;
-	}
-
 	?>
     <div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
         <a href="javascript:void(0);" class="activity-state-likes">

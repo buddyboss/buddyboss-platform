@@ -182,9 +182,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity reply.
 			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
-
-			// Remove commnet button for blog post. When post status is closed.
-			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_remove_blog_post_comment_button' ), 10 ,2 );
 		}
 
 		/**
@@ -210,9 +207,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			bp_activity_set_action( $this->component, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
 			bp_activity_set_action( $this->component, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 
-			// Group activity stream items
-			bp_activity_set_action( 'groups', $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
-			bp_activity_set_action( 'groups', $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
+			if ( bp_is_active( 'groups' ) ) {
+				// Group activity stream items.
+				bp_activity_set_action( 'groups', $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
+				bp_activity_set_action( 'groups', $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
+			}
 		}
 
 		/**
@@ -563,37 +562,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				),
 
 			);
-
-			return $buttons;
-		}
-
-		public function nouveau_remove_blog_post_comment_button( $buttons, $activity_id  ) {
-			// Activity post data.
-			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-
-			if ( empty( $activities['activities'] ) ) {
-				return $buttons;
-			}
-
-			$activity = array_shift( $activities['activities'] );
-
-			if ( ! bp_is_blog_post_activity( $activity ) ) {
-				return $buttons;
-			}
-
-			$post = get_post( $activity->secondary_item_id );
-
-			// Has post.
-			if ( empty( $post ) ) {
-				return $buttons;
-			}
-
-			$open = ( 'open' === $post->comment_status );
-		
-			// Disable comment when the comment not open for individual post.
-			if ( ! $open && ! empty( $buttons['activity_conversation'] ) ) {
-				unset( $buttons['activity_conversation'] );
-			}
 
 			return $buttons;
 		}

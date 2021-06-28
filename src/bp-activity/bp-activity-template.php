@@ -1870,134 +1870,6 @@ function bp_get_activity_is_favorite() {
 }
 
 /**
- * Output the comment markup for an activity blog post item.
- *
- * @since BuddyBoss 1.6.2
- *
- * @param array $args Commet args.
- *
- * @uses bb_activity_get_blog_post_comments()     Get comments.
- * @uses bb_activity_recurse_blog_post_comments() Render comments.
- *
- * @return void
- */
-function bb_activity_blog_post_comments( $args = array() ) {
-    global $activities_template;
-
-    if ( ! bp_activity_can_comment() ) {
-        return '';
-    }
-
-    if ( empty( $activities_template->activity ) ) {
-        return;
-    }
-
-    $activity_id = empty( $activities_template->activity ) ? false : $activities_template->activity->secondary_item_id;
-    $comments    = bb_activity_get_blog_post_comments( $activities_template->activity->secondary_item_id, $args );
-
-    // Render WP list comments.
-    bb_activity_recurse_blog_post_comments( $comments );
-}
-
-/**
- * Get the comment markup for an activity blog post item.
- *
- * @since BuddyBoss 1.6.2
- *
- * @param int   $post_id Blog post id.
- * @param array $args    Meta data.
- *
- * @uses bp_activity_recurse_post_comments() Render WP list comments.
- *
- * @global object $activities_template {@link BP_Activity_Template}
- *
- * @return void
- */
-function bb_activity_get_blog_post_comments( $post_id, $args = array() ) {
-    // Invalid post id.
-    if ( empty( (int) $post_id ) ) {
-        return;
-    }
-
-    $default = array(
-        'order'        => 'ASC',
-        'orderby'      => 'comment_date_gmt',
-        'number'       => 1 === bp_get_option( 'page_comments', false ) ? bp_get_option( 'comments_per_page', '' ) : '',
-        'status'       => 'approve',
-        'paged'        => 1,
-        'parent'       => 0,
-        'post_id'      => $post_id,
-        'hierarchical' => true,
-    );
-
-    if ( is_user_logged_in() ) {
-        $default['include_unapproved'] = array( get_current_user_id() );
-    } else {
-        $unapproved_email = wp_get_unapproved_comment_author_email();
-
-        if ( $unapproved_email ) {
-            $default['include_unapproved'] = array( $unapproved_email );
-        }
-    }
-
-    $r = bp_parse_args( $args, $default );
-
-    // Set required post id.
-    $r['post_id'] = $post_id;
-
-    // Get individual post comments.
-    $comments = get_comments( $r );
-
-    return $comments;
-}
-
-/**
- * Render all comments for singe blog post.
- *
- * @since BuddyBoss 1.6.2
- *
- * @uses buddyboss_activity_blog_post_comment() Render single comment.
- *
- * @param array $comments Post comments.
- *
- * @return void|string
- */
-function bb_activity_recurse_blog_post_comments( $comments ) {
-    // When there is not comments.
-    if ( empty( $comments ) ) {
-        return '';
-    }
-
-    /**
-     * Filters the opening tag for the template that lists activity comments.
-     *
-     * @since BuddyBoss 1.6.2
-     *
-     * @param string $value Opening tag for the HTML markup to use.
-     */
-    echo apply_filters( 'bp_activity_recurse_blog_post_comments_start_ul', '<ul>' );
-
-    // Render comments.
-    wp_list_comments(
-        array(
-            'callback'    => 'buddyboss_activity_blog_post_comment',
-            'short_ping'  => true,
-            'avatar_size' => 80,
-        ),
-        $comments
-    );
-
-    /**
-     * Filters the closing tag for the template that list activity comments.
-     *
-     * @since BuddyBoss  15690
-     *
-     * @param string $value Closing tag for the HTML markup to use.
-     */
-    echo apply_filters( 'bp_activity_recurse_blog_post_comments_end_ul', '</ul>' );
-}
-
-/**
  * Output the comment markup for an activity item.
  *
  * @since BuddyPress 1.2.0
@@ -2025,17 +1897,13 @@ function bp_activity_comments( $args = '' ) {
  * @return bool
  */
 function bp_activity_get_comments( $args = '' ) {
-    global $activities_template;
-    
-    // Checking current activity component.
-    if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) ) {
-        // Render activity post comments.
-        bb_activity_blog_post_comments();
-    } else if ( empty( $activities_template->activity->children ) ) {
-        return false;
-    } else {
-        bp_activity_recurse_comments( $activities_template->activity );
-    } 
+	global $activities_template;
+
+	if ( empty( $activities_template->activity->children ) ) {
+		return false;
+	}
+
+	bp_activity_recurse_comments( $activities_template->activity );
 }
 
 /**

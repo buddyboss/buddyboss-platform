@@ -143,64 +143,16 @@ add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
 add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
-// Filter meta button for blog post comment.
-add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_blog_post_comment_buttons', 10 ,2 );
-
-// Obey BuddyBoss commenting rules
+// Obey BuddyBoss commenting rules.
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
 
-// Filter for set attribute in activity post comment button.
-add_filter( 'bp_get_form_field_attributes', 'bb_set_form_field_attributes', 10, 2 );
-
-// Filter comment form meta button.
-add_filter( 'bb_active_comment_media', 'bb_is_active_comment_form_media_button', 10, 2 );
-
-// Filter for enable comment status.
-add_filter( 'bp_force_comment_status', 'bb_activity_blog_post_comment_status', 10, 3 );
-
-// Hook for access control in activity state.
-add_filter( 'bp_nouveau_has_activity_state', 'bb_has_activity_state', 10, 2 );
-
-// Filter for comment meta button
+// Filter for comment meta button.
 add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_comment_reply_button', 10, 3 );
 
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
-add_action( 'bp_activity_before_save', 'bb_skip_blog_post_comment' );
-
-add_action( 'bp_activity_get_where_conditions', 'bb_skip_query_blog_comments', 10, 5 );
-
 /** Functions *****************************************************************/
-
-/**
- * Remove the blog post comment from timeline.
- * 
- * @since
- */
-function bb_skip_query_blog_comments( $where_conditions, $r, $select_sql, $from_sql, $join_sql ) {
-
-	$where_conditions['blog_comments'] = " ( a.type != 'new_blog_comment' ) ";
-
-	return $where_conditions;
-}
-
-
-function bb_skip_blog_post_comment( $self ) {
-
-	$activity = new BP_Activity_Activity( $self->item_id ); //bp_activity_get_specific( array( 'id' => $self->item_id ) );
-
-	if( bp_is_blog_post_activity( $activity ) ) {
-		$self->errors->add( 'error', __( 'Blog post comments are not allow in activity table.', 'buddyboss' ) );
-		$self->error_type = 'wp_error';
-	}
-
-	if( 'blogs' === $self->component && 'new_blog_comment' === $self->type ) {
-		$self->errors->add( 'error', __( 'Blog post comments are not allow in activity table.', 'buddyboss' ) );
-		$self->error_type = 'wp_error';
-	}
-}
-
 
 /**
  * Types of activity feed items to moderate.
@@ -2358,20 +2310,20 @@ add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read
  */
 function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
-	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
-		if( is_a( $blog_post, 'WP_Post' ) ) {
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
 			$content = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
 			$content .= '<span class="bb-post-title">' . $blog_post->post_title . '</span>';
 			$content .= bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
-			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$iframe  = $matches[0];
 					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
 					$content .= $iframe;
@@ -2380,25 +2332,22 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				$content = strip_tags( $content, '<a><iframe><img><span>' );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
 				}
 			}
 		}
-
-	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
 		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-		if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
 		}
-
 	}
 
 	return $content;
-
 }
 
 add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_read_more', 9999, 2 );
@@ -2414,17 +2363,17 @@ add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_r
  */
 function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
 
-	if( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+	if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
 		// Get activity object.
 		$comment_activity = new BP_Activity_Activity( $activity->item_id );
-		if( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+		if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
 			$comment_post_type = $comment_activity->secondary_item_id;
 			$get_post_type     = get_post_type( $comment_post_type );
 			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
-			if( $comment_id ) {
+			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-				if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
@@ -2437,68 +2386,24 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 }
 
 /**
- * Meta button for activity blog post comment.
- *
- * @since BuddyBoss 1.6.2
- *
- * @param array $buttons     Button content.
- * @param int   $activity_id Activity id.
- *
- * @uses bp_activity_get_specific() Get activity post data.
- *
- * @return array
- */
-function bb_nouveau_get_blog_post_comment_buttons( $buttons, $activity_id ) {
-	// Activity post data.
-	$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-
-	if ( empty( $activities['activities'] ) ) {
-		return $buttons;
-	}
-
-	$activity = array_shift( $activities['activities'] );
-
-	// When activity component is not blog.
-	if ( ! bp_is_blog_post_activity( $activity ) ) {
-		return $buttons;
-	}
-
-	// Get comment post.
-	$post = get_post( $activity->secondary_item_id );
-
-	$buttons['activity_conversation']['link_text'] = sprintf(
-		'<span class="bp-screen-reader-text">%1$s</span><span class="comment-count">%2$s</span><span class="bb-comment-text"> %3$s</span>',
-		__( 'Comments', 'buddyboss' ),
-		esc_attr( $post->comment_count ),
-		__( 'Comments', 'buddyboss' )
-	);
-
-	return $buttons;
-}
-
-/**
  * Disable activity stream comments for discussion and reply.
  *
  * @since BuddyBoss 1.6.2
  *
- * @param boolean $can_comment Has comment permission.
+ * @param boolean $retval Has comment permission.
  *
  * @return boolean
  */
 function bb_activity_has_comment_access( $retval ) {
 	global $activities_template;
-	
-	if ( bp_is_blog_post_activity( $activities_template->activity ) ) {
-		return bp_blogs_disable_activity_commenting( $retval );
-	}
-	
+
 	// Already forced off, so comply.
 	if ( false === $retval ) {
 		return $retval;
 	}
 
 	// Get the current action name.
-	$action_name = bp_get_activity_action_name();
+	$action_name = $activities_template->activity->type;
 
 	// Setup the array of possibly disabled actions.
 	$disabled_actions = array(
@@ -2515,100 +2420,6 @@ function bb_activity_has_comment_access( $retval ) {
 }
 
 /**
- * Enable comment status.
- * More deatial check this method bp_comments_open()
- *
- * @since BuddyBoss 1.6.2
- *
- * @param boolean $retval  Default value.
- * @param boolean $open    Generated value.
- * @param int     $post_id Comment post id.
- *
- * @return boolean
- */
-function bb_activity_blog_post_comment_status( $retval, $open, $post_id ) {
-	// Set true when current component is activity.
-	if ( bp_is_activity_component() ) {
-		return $open;
-	}
-
-	return $retval;
-}
-
-/**
- * Remove the meta button for activity blog post comment form.
- *
- * @since BuddyBoss 1.6.2
- *
- * @param boolean $retval    Is active media button.
- * @param string  $component Comment content.
- *
- * @return boolean
- */
-function bb_is_active_comment_form_media_button( $media ) {
-	global $activities_template;
-
-	if ( empty( $activities_template->activity ) ) {
-		return $media;
-	}
-
-	// Remove the media meta button.
-	if ( 'blogs' === $activities_template->activity->component ) {
-		return false;
-	}
-
-	return $media;
-}
-
-/**
- * Set attribute in activity comment form submit button.
- *
- * @since BuddyBoss 1.6.2
- *
- * @param array  $attributes Activity form field attributes.
- * @param string $name       Field name.
- *
- * @return array
- */
-function bb_set_form_field_attributes( $attributes, $name ) {
-	global $activities_template;
-
-	if ( empty( $activities_template->activity ) ) {
-		return $attributes;
-	}
-
-	// Set comment component attribute in form submit button.
-	$attributes['data-comment_component'] = $activities_template->activity->component;
-
-	return $attributes;
-}
-
-/**
- * Access control for showing activity state.
- *
- * @since BuddyBoss 1.6.2
- *
- * @param boolean $status      Activity status.
- * @param int     $activity_id Activity id.
- *
- * @return boolean
- */
-function bb_has_activity_state( $status, $activity_id ) {
-	global $activities_template;
-
-	if ( empty( $activities_template->activity ) ) {
-		return $status;
-	}
-
-	// Remove the access when activity component is blogs.
-	if ( 'blogs' === $activities_template->activity->component ) {
-		return false;
-	}
-
-	return $status;
-}
-
-/**
  * Access control for showing activity state.
  *
  * @since BuddyBoss 1.6.2
@@ -2620,8 +2431,18 @@ function bb_has_activity_state( $status, $activity_id ) {
  * @return boolean
  */
 function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_id, $activity_id ) {
+	if ( empty( $activity_id ) ) {
+		return $buttons;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $activity->id ) ) {
+		return $buttons;
+	}
+
 	// Get the current action name.
-	$action_name = bp_get_activity_action_name();
+	$action_name = $activity->type;
 
 	// Setup the array of possibly disabled actions.
 	$disabled_actions = array(
@@ -2659,12 +2480,12 @@ function bb_check_is_activity_content_empty( $data ) {
 
 /**
  * Function will add feature image for blog post in the activity feed content.
- * 
+ *
  * @param string $content
  * @param int    $blog_post_id
- * 
+ *
  * @return string $content
- * 
+ *
  * @since 1.6.4
  */
 function bb_add_feature_image_blog_post_as_activity_content_callback( $content, $blog_post_id ) {

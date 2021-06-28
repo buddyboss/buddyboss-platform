@@ -1123,11 +1123,6 @@ window.bp = window.bp || {};
 					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
 				}
 
-				// Change the action for blog post comment
-				if ( is_blog_component ) {
-					comment_data.action = 'new_activity_blog_post_comment';
-				}
-
 				parent.ajax( comment_data, 'activity' ).done(
 					function( response ) {
 						target.removeClass( 'loading' );

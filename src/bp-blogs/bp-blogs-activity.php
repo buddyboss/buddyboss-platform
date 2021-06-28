@@ -1297,31 +1297,38 @@ add_action( 'bp_before_activity_comment', 'bp_blogs_setup_comment_loop_globals_o
 function bp_blogs_disable_activity_commenting( $retval ) {
 	global $activities_template;
 
-	// If activity commenting is disabled,
-	if ( bp_disable_blogforum_comments() ) {
-		$retval = false;
-	} else {
-		/**
-		 * Checking individual post comment status.
-		 **/
-		$post = get_post( $activities_template->activity->secondary_item_id );
+	// If activity commenting is disabled, return current value.
+	if ( bp_disable_blogforum_comments() || ! isset( $activities_template->in_the_loop ) ) {
+		return $retval;
+	}
 
-		// Has post.
-		if ( ! empty( $post ) ) {
-			$open = ( 'open' === $post->comment_status );
-			
-			// Enable comment when the post comment is not opne but has comment count.
-			if ( $post->comment_count ) {
-				$retval = true;
-			}
+	$type = bp_get_activity_type();
 
-			// Disable comment when the comment not open for individual post.
-			if ( ! $open ) {
+	// It's a post type supporting comment tracking.
+	if ( bp_activity_type_supports( $type, 'post-type-comment-tracking' ) ) {
+
+		// The activity type is supporting comments or replies.
+		if ( bp_activity_type_supports( $type, 'post-type-comment-reply' ) ) {
+			// Setup some globals we'll need to reference later.
+			bp_blogs_setup_activity_loop_globals( $activities_template->activity );
+
+			// If comments are closed for the WP blog post, we should disable
+			// activity comments for this activity entry.
+			if ( empty( buddypress()->blogs->allow_comments[ bp_get_activity_id() ] ) ) {
 				$retval = false;
 			}
+
+			// If comments need moderation, disable activity commenting.
+			if ( ! empty( buddypress()->blogs->comment_moderation[ bp_get_activity_id() ] ) ) {
+				$retval = false;
+			}
+
+			// The activity type does not support comments or replies.
+		} else {
+			$retval = false;
 		}
 	}
-	
+
 	return $retval;
 }
 add_filter( 'bp_activity_can_comment', 'bp_blogs_disable_activity_commenting' );
