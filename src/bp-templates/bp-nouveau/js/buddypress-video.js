@@ -792,7 +792,6 @@ window.bp = window.bp || {};
 			var target            = $( event.currentTarget );
 			var videoAttachmentId = target.attr( 'data-video-attachment-id' );
 			var videoAttachments  = target.attr( 'data-video-attachments' );
-			var parentActivityId  = target.attr( 'data-parent-activity-id' );
 			var videoId           = target.attr( 'data-video-id' );
 			var popupSelector     = '';
 
@@ -2430,7 +2429,7 @@ window.bp = window.bp || {};
 		getActivity: function () {
 			var self = this;
 
-			$( '.bb-video-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 
 			if ( typeof BP_Nouveau.activity !== 'undefined' &&
 				self.current_video &&
