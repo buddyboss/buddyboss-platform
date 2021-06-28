@@ -620,30 +620,31 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create activities.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create activities.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		$item_id   = $request['primary_item_id'];
-		$component = $request['component'];
+		if ( is_user_logged_in() ) {
+			$user_id = $request->get_param( 'user_id' );
 
-		if ( true === $retval && bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! is_null( $item_id ) ) {
-			if ( ! $this->show_hidden( $component, $item_id ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to create activities.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			if ( empty( $user_id ) || (int) bp_loggedin_user_id() === (int) $user_id ) {
+				$item_id   = $request->get_param( 'primary_item_id' );
+				$component = $request->get_param( 'component' );
+
+				// The current user can create an activity.
+				$retval = true;
+
+				if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! is_null( $item_id ) ) {
+					if ( ! $this->show_hidden( $component, $item_id ) ) {
+						$retval = $error;
+					}
+				}
 			}
 		}
 
@@ -808,54 +809,41 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$activity = $this->get_activity_object( $request );
 
-		$activity = $this->get_activity_object( $request );
-
-		if ( true === $retval && empty( $activity->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && (
+			if ( empty( $activity->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid activity ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
 				function_exists( 'bp_is_activity_edit_enabled' )
 				&& ! bp_is_activity_edit_enabled()
 				&& function_exists( 'bp_activity_user_can_edit' )
 				&& ! bp_activity_user_can_edit( $activity )
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_activity_user_can_delete( $activity ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( bp_activity_user_can_delete( $activity ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -945,38 +933,28 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$activity = $this->get_activity_object( $request );
 
-		$activity = $this->get_activity_object( $request );
-
-		if ( true === $retval && empty( $activity->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_activity_user_can_delete( $activity ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $activity->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid activity ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( bp_activity_user_can_delete( $activity ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -1100,19 +1078,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_favorite_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update favorites.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		if (
-			! ( is_user_logged_in() && bp_activity_can_favorite() )
-			|| function_exists( 'bp_is_activity_like_active' ) && true !== bp_is_activity_like_active()
+			is_user_logged_in() && bp_activity_can_favorite()
+			&& ( ! function_exists( 'bp_is_activity_like_active' ) || true === bp_is_activity_like_active() )
 		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update favorites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			$retval = true;
 		}
 
 		/**
@@ -1204,6 +1182,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$activities_template                            = new \stdClass();
 		$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 		$activities_template->activity                  = $activity;
+		
+		// Remove feature image from content from the activity feed which added last in the content.
+		$blog_id = '';
+		if ( 'blogs' === $activity->component && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+			$blog_post = get_post( $activity->secondary_item_id );
+			if ( ! empty( $blog_post->ID ) ) {
+				$blog_id = $blog_post->ID;
+				remove_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback' );
+			}
+		}
 
 		$data = array(
 			'user_id'           => $activity->user_id,
@@ -1241,7 +1229,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ) ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
 			'activity_data'     => $this->bp_rest_activitiy_edit_data( $activity ),
+			'feature_media'     => '',
 		);
+
+		// Add feature image as separate object which added last in the content.
+		if ( ! empty( $blog_id ) && ! empty( get_post_thumbnail_id( $blog_id ) ) ) {
+			$data['feature_media'] = wp_get_attachment_image_url( get_post_thumbnail_id( $blog_id ), 'full' );
+		}
 
 		// Get item schema.
 		$schema = $this->get_item_schema();
@@ -1789,6 +1783,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Activity data for allow edit or not.', 'buddyboss' ),
 					'type'        => 'object',
+				),
+				'feature_media'     => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Feature media image which added last in the content for blog post as well as custom post type.', 'buddyboss' ),
+					'type'        => 'string',
+					'format'      => 'uri',
 				),
 			),
 		);

@@ -232,16 +232,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -314,16 +314,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -461,29 +461,19 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
-
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to block member.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to block member.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		$item_id = $request->get_param( 'item_id' );
 		$user    = bp_rest_get_user( $item_id );
 
-		if ( true === $retval && ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_item_id',
-				__( 'Invalid Member Item ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+		if ( is_user_logged_in() && $user instanceof WP_User ) {
+			$retval = true;
 		}
 
 		if ( true === $retval && ! empty( $user->roles ) && in_array( 'administrator', $user->roles, true ) ) {
@@ -624,16 +614,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to unblock member.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to unblock member.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**

@@ -1,45 +1,5 @@
 [
   {
-    "type": "",
-    "url": "Checks",
-    "title": "wether the given `$pathfile` is considered a valid media file.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "name": "Checks"
-  },
-  {
-    "type": "",
-    "url": "Creates",
-    "title": "an FFProbe.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "name": "Creates"
-  },
-  {
-    "type": "",
-    "url": "Probes",
-    "title": "the streams contained in a given file.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "name": "Probes"
-  },
-  {
-    "type": "",
-    "url": "Probes",
-    "title": "the format of a given file.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "groupTitle": "/Applications/MAMP/htdocs/buddyboss-platform/wp-content/plugins/buddyboss-platform/src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "name": "Probes"
-  },
-  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/account-settings",
     "title": "Account Settings",
@@ -4717,35 +4677,6 @@
   },
   {
     "type": "GET",
-    "url": "/wp-json/buddyboss/v1/groups/membership-requests/:request_id",
-    "title": "Get Membership Request",
-    "name": "GetBBGroupsMembershipsRequest",
-    "group": "Groups",
-    "description": "<p>Retrieve group membership request by ID.</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "request_id",
-            "description": "<p>A unique numeric ID for the group membership request.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
-    "groupTitle": "Groups"
-  },
-  {
-    "type": "GET",
     "url": "/wp-json/buddyboss/v1/groups/membership-requests",
     "title": "Group Membership Requests",
     "name": "GetBBGroupsMembershipsRequest",
@@ -4791,6 +4722,35 @@
             "field": "user_id",
             "defaultValue": "0",
             "description": "<p>Return only Membership requests made by a specific user.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "groupTitle": "Groups"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/groups/membership-requests/:request_id",
+    "title": "Get Membership Request",
+    "name": "GetBBGroupsMembershipsRequest",
+    "group": "Groups",
+    "description": "<p>Retrieve group membership request by ID.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "request_id",
+            "description": "<p>A unique numeric ID for the group membership request.</p>"
           }
         ]
       }
@@ -8885,35 +8845,6 @@
   },
   {
     "type": "GET",
-    "url": "/wp-json/buddyboss/v1/signup/:id",
-    "title": "Signup",
-    "name": "GetBBSignups",
-    "group": "Signups",
-    "description": "<p>Retrieve signup</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
-    "groupTitle": "Signups"
-  },
-  {
-    "type": "GET",
     "url": "/wp-json/buddyboss/v1/signup",
     "title": "Signups",
     "name": "GetBBSignups",
@@ -8974,6 +8905,35 @@
             "optional": true,
             "field": "offset",
             "description": "<p>'Offset the result set by a specific number of items.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "groupTitle": "Signups"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/signup/:id",
+    "title": "Signup",
+    "name": "GetBBSignups",
+    "group": "Signups",
+    "description": "<p>Retrieve signup</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
           }
         ]
       }
