@@ -5540,6 +5540,10 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 		return;
 	}
 
+	if ( ! bp_is_active( 'media') ) {
+	    return;
+    }
+
 	$key           = '';
 	$sym_path      = '';
 	$filename      = '';
