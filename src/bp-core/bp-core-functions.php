@@ -5704,6 +5704,10 @@ function bb_core_enable_default_symlink_support() {
 		return;
 	}
 
+	if ( function_exists( 'bp_media_symlink_path' ) && bp_media_symlink_path() ) {
+		return;
+	}
+
 	$upload_dir      = wp_upload_dir();
 	$upload_dir      = $upload_dir['basedir'];
 	$output_file_src = '';
