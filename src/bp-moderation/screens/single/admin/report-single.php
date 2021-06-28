@@ -122,7 +122,7 @@ $admins            = array_map( 'intval', get_users(
 														'<a href="%s" title="%s"> %s </a>',
 														esc_url( bp_moderation_get_permalink( $moderation_request_data->item_id, $moderation_request_data->item_type ) ),
 														esc_attr__( 'View', 'buddyboss' ),
-														esc_html__( 'View Content', 'buddyboss' )
+														esc_html__( 'View Content ss', 'buddyboss' )
 													)
 												);
 												?>
@@ -195,7 +195,7 @@ $admins            = array_map( 'intval', get_users(
 									if ( $is_content_screen ) {
 
 										$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-										
+
 										if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 											?>
                                             <a href="javascript:void(0);"

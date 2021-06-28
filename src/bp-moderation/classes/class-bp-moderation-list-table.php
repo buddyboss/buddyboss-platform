@@ -515,7 +515,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				'<a href="%s" title="%s"> %s </a>',
 				esc_url( $view_content_url ),
 				esc_attr__( 'View', 'buddyboss' ),
-				esc_html__( 'View Content', 'buddyboss' )
+				esc_html__( 'View Content s', 'buddyboss' )
 			);
 		}
 

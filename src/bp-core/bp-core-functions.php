@@ -5708,7 +5708,7 @@ function bb_core_enable_default_symlink_support() {
 		return;
 	}
 
-	if ( function_exists( 'bp_media_symlink_path' ) && bp_media_symlink_path() ) {
+	if ( ! function_exists( 'bp_media_symlink_path' ) ) {
 		return;
 	}
 
