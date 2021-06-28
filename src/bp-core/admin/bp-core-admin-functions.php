@@ -619,16 +619,15 @@ function bb_core_print_directory_protection_admin_notices() {
 
 	if ( ! empty( $directory ) ) {
 		$notice =  sprintf(
-			'%s %s %s <a href="%s">%s</a> %s',
-			esc_html__( 'Please make sure to restrict following directory: ', 'buddyboss' ),
+			'%s <a href="%s">%s</a> %s %s',
+			esc_html__( 'To improve security of uploaded media, please follow ', 'buddyboss' ),
+			esc_url( 'https://www.buddyboss.com/resources/docs/components/media/media-permissions/' ),
+			esc_html__( 'this tutorial', 'buddyboss' ),
+			esc_html__( ' to restrict the following BuddyBoss directories: ', 'buddyboss' ),
 			'<strong>' . implode(
 				'</strong>, <strong>',
 				array_map( 'esc_html', $directory )
-			) . '</strong>',
-			esc_html__( 'using', 'buddyboss' ),
-			esc_url( 'https://www.buddyboss.com/resources/docs/components/media/media-permissions/' ),
-			esc_html__( 'this', 'buddyboss' ),
-			esc_html__( ' link to make your media more secured.', 'buddyboss' )
+			) . '</strong>'
 		);
 
 		$class = 'notice notice-error';
