@@ -716,7 +716,7 @@ window.bp = window.bp || {};
 		 */
 		 bpHeartbeatSend: function( event, data ) {
 			data.onScreenNotifications = true;
-			
+
 			// Add an heartbeat send event to possibly any BuddyPress pages
 			$( '#buddypress' ).trigger( 'bp_heartbeat_send', data );
 		},
@@ -771,12 +771,10 @@ window.bp = window.bp || {};
 				} else {
 					$( item ).removeClass( 'pull-animation' );
 				}
-			} )
+			} );
 			
 			// Store animated notification id in 'animated-items' data attribute.
 			list.attr( 'data-animated-items', JSON.stringify( animatedItems ) );
-
-			var items = notifications.find( '.read-item' );
 
 			if ( ! items.length ) {
 				return;
@@ -845,7 +843,6 @@ window.bp = window.bp || {};
 				items        = list.find( '.read-item' ),
 				titleTag     = $('html').find( 'title' ),
 				title        = wrap.data( 'title-tag' ),
-				pageTitle    = titleTag.text(),
 				broserTab = wrap.data( 'broser-tab' );
 
 			// Check notification broser tab settings option.
@@ -892,7 +889,6 @@ window.bp = window.bp || {};
 				notification = items.first().find('.notification-content .bb-full-link a').text(),
 				titleTag     = $('html').find( 'title' ),
 				title        = wrap.data( 'title-tag' ),
-				pageTitle    = titleTag.text(),
 				flashStatus  = wrap.data( 'flash-status' ),
 				flashItems   = list.data( 'flash-items' );
 			
