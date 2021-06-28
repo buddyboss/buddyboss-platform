@@ -72,7 +72,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 */
 	public static function get_permalink( $video_id ) {
 		$video = new BP_Video( $video_id );
-		return wp_get_attachment_url( $video->attachment_id );
+		return bb_video_get_symlink( $video );
 	}
 
 	/**
