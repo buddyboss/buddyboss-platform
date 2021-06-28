@@ -30,8 +30,6 @@ $is_comment_vid          = bp_video_is_activity_comment_video( bp_get_video_id()
 $attachment_urls         = bb_video_get_attachments_symlinks( bp_get_video_attachment_id(), bp_get_video_id() );
 $parent_root_activity_id = 0;
 
-error_log( print_r( $media_privacy, 1 ) );
-
 if ( $is_comment_vid ) {
 	$hierarchy = bb_get_activity_hierarchy( bp_get_activity_id() );
 	if ( ! empty( $hierarchy ) ) {
