@@ -830,7 +830,7 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( '#buddypress #activity-stream ul.activity-list li#activity-' +  response.data.parent_activity_id ).replaceWith( response.data.activity );
+								$( '#buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
 							}
 
 							if ( activity_comment_id ) {
@@ -1435,7 +1435,7 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentDefaultTemplate = document.getElementsByClassName('ac-reply-post-default-template').length ? document.getElementsByClassName('ac-reply-post-default-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
@@ -1483,14 +1483,14 @@ window.bp = window.bp || {};
 					self.dropzone_obj.on(
 						'uploadprogress',
 						function( element ) {
-							
-							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
-							var radius = circle.r.baseVal.value;
+
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
-							circle.style.strokeDasharray = circumference + ' ' + circumference;
+
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
 						}
 					);
@@ -1615,7 +1615,7 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentDocumentTemplate = document.getElementsByClassName('ac-reply-post-document-template').length ? document.getElementsByClassName('ac-reply-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
@@ -1666,14 +1666,14 @@ window.bp = window.bp || {};
 					self.dropzone_document_obj.on(
 						'uploadprogress',
 						function( element ) {
-							
-							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
-							var radius = circle.r.baseVal.value;
+
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
-							circle.style.strokeDasharray = circumference + ' ' + circumference;
+
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
 						}
 					);
@@ -1798,7 +1798,7 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentVideoTemplate = document.getElementsByClassName('ac-reply-post-video-template').length ? document.getElementsByClassName('ac-reply-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
@@ -1861,17 +1861,16 @@ window.bp = window.bp || {};
 						'addedfile',
 						function ( file ) {
 
-							if(file.dataURL) {
+							if (file.dataURL) {
 								// Get Thumbnail image from response.
 							} else {
 
-								if( bp.Nouveau.getVideoThumb ) {
+								if ( bp.Nouveau.getVideoThumb ) {
 									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 								}
 
 							}
 						}
-
 					);
 
 					self.dropzone_video_obj.on(
@@ -1879,17 +1878,17 @@ window.bp = window.bp || {};
 						function( element, file ) {
 
 							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-							
-							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
-							var radius = circle.r.baseVal.value;
+
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
-							circle.style.strokeDasharray = circumference + ' ' + circumference;
+
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
-							
-							if( element.upload.progress === 100 ) {
+
+							if ( element.upload.progress === 100 ) {
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 						}
@@ -1905,7 +1904,7 @@ window.bp = window.bp || {};
 								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
 								response.data.group_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 								response.data.saved      = false;
-								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
@@ -2028,15 +2027,15 @@ window.bp = window.bp || {};
 		},
 
 		toggleMultiMediaOptions: function(form,target) {
-			if ( !_.isUndefined( BP_Nouveau.media ) ) {
+			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
 				var parent_activity = target.closest( '.activity-item' );
-				var activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+				var activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
 
 				if ( target.closest( 'li' ).hasClass( 'groups' ) || parent_activity.hasClass( 'groups' ) ) {
 
 					// check media is enable in groups or not.
-					if ( !_.isUndefined( activity_data.group_media ) ) {
+					if ( ! _.isUndefined( activity_data.group_media ) ) {
 						if ( activity_data.group_media === true ) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2049,7 +2048,7 @@ window.bp = window.bp || {};
 					}
 
 					// check media is enable in groups or not.
-					if ( !_.isUndefined( activity_data.group_document ) ) {
+					if ( ! _.isUndefined( activity_data.group_document ) ) {
 						if ( activity_data.group_document === true ) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2062,7 +2061,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in groups or not.
-					if ( !_.isUndefined( activity_data.group_video ) ) {
+					if ( ! _.isUndefined( activity_data.group_video ) ) {
 						if ( activity_data.group_video === true ) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
@@ -2090,7 +2089,7 @@ window.bp = window.bp || {};
 				} else {
 
 					// check media is enable in groups or not.
-					if ( !_.isUndefined( activity_data.profile_media ) ) {
+					if ( ! _.isUndefined( activity_data.profile_media ) ) {
 						if ( activity_data.profile_media === true ) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2103,7 +2102,7 @@ window.bp = window.bp || {};
 					}
 
 					// check document is enable in groups or not.
-					if ( !_.isUndefined( activity_data.profile_document ) ) {
+					if ( ! _.isUndefined( activity_data.profile_document ) ) {
 						if ( activity_data.profile_document === true ) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2116,7 +2115,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in profile or not.
-					if ( !_.isUndefined( activity_data.profile_video ) ) {
+					if ( ! _.isUndefined( activity_data.profile_video ) ) {
 						if ( activity_data.profile_video === true ) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {

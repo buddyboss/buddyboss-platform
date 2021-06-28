@@ -174,9 +174,7 @@ window.bp = window.bp || {};
 			$( window ).on(
 				'scroll resize',
 				function () {
-
 					bp.Nouveau.Media.documentCodeMirror();
-
 				}
 			);
 		},

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-26 13:27:16+00:00\n"
+"POT-Creation-Date: 2021-06-28 05:50:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16577,6 +16577,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-list-table.php:836
 #: bp-members/classes/class-bp-members-admin.php:2564
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:24
+#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:70
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:441
 #. translators: field visibility level, e.g. "public".
 msgid "Change"
@@ -23802,7 +23803,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:99
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:141
-#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:70
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:121
 msgid "Done"
 msgstr ""
@@ -24197,6 +24197,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:51
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1408
+#: bp-templates/bp-nouveau/includes/video/functions.php:151
 msgid "Change Thumbnail"
 msgstr ""
 
@@ -26582,10 +26583,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:149
 msgid "Sorry, no videos were found"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/video/functions.php:151
-msgid "Add Thumbnail"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:154

@@ -42,31 +42,31 @@ window.bp = window.bp || {};
 			// Listen to events ("Add hooks!").
 			this.addListeners();
 
-			// Toggle Grid/List View
+			// Toggle Grid/List View.
 			this.switchGridList();
 
-			// Email Invites popup revoke access
+			// Email Invites popup revoke access.
 			this.sendInvitesRevokeAccess();
 
 			this.sentInvitesFormValidate();
 
-			// Privacy Policy & Terms Popup on Register page
+			// Privacy Policy & Terms Popup on Register page.
 			this.registerPopUp();
 
-			// Privacy Policy Popup on Login page and Lost Password page
+			// Privacy Policy Popup on Login page and Lost Password page.
 			this.loginPopUp();
 
-			// Report content popup
+			// Report content popup.
 			this.reportPopUp();
 			this.reportActions();
 
-			// Toggle password text
+			// Toggle password text.
 			this.togglePassword();
 
-			// Legal agreement enable/disabled submit button
+			// Legal agreement enable/disabled submit button.
 			this.enableSubmitOnLegalAgreement();
 
-			// Check for lazy images and load them also register scroll event to load on scroll
+			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
 				'scroll resize',
@@ -85,7 +85,7 @@ window.bp = window.bp || {};
 
 			this.ajax_request = null;
 
-			// Object Globals
+			// Object Globals.
 			this.objects         = $.map(
 				BP_Nouveau.objects,
 				function ( value ) {
@@ -94,10 +94,10 @@ window.bp = window.bp || {};
 			);
 			this.objectNavParent = BP_Nouveau.object_nav_parent;
 
-			// HeartBeat Global
+			// HeartBeat Global.
 			this.heartbeat = wp.heartbeat || false;
 
-			// An object containing each query var
+			// An object containing each query var.
 			this.querystring = this.getLinkParams();
 		},
 
@@ -108,12 +108,12 @@ window.bp = window.bp || {};
 		 */
 		prepareDocument: function () {
 
-			// Remove the no-js class and add the js one
+			// Remove the no-js class and add the js one.
 			if ( $( 'body' ).hasClass( 'no-js' ) ) {
 				$( 'body' ).removeClass( 'no-js' ).addClass( 'js' );
 			}
 
-			// Log Warnings into the console instead of the screen
+			// Log Warnings into the console instead of the screen.
 			if ( BP_Nouveau.warnings && 'undefined' !== typeof console && console.warn ) {
 				$.each(
 					BP_Nouveau.warnings,
@@ -123,7 +123,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Remove the directory title if there's a widget containing it
+			// Remove the directory title if there's a widget containing it.
 			if ( $( '.buddypress_object_nav .widget-title' ).length ) {
 				var text = $( '.buddypress_object_nav .widget-title' ).html();
 
@@ -258,7 +258,7 @@ window.bp = window.bp || {};
 				this.ajax_request.abort();
 			}
 
-			// Extend posted data with stored data and object nonce
+			// Extend posted data with stored data and object nonce.
 			var postData = $.extend( {}, bp.Nouveau.getStorage( 'bp-' + object ), { nonce: BP_Nouveau.nonces[ object ] }, post_data );
 
 			if ( undefined !== BP_Nouveau.customizer_settings ) {
@@ -286,7 +286,7 @@ window.bp = window.bp || {};
 			/**
 			 * How the content should be injected in the selector
 			 *
-			 * possible methods are
+			 * possible methods are.
 			 * - reset: the selector will be reset with the content
 			 * - append:  the content will be added after selector's content
 			 * - prepend: the content will be added before selector's content
@@ -374,27 +374,27 @@ window.bp = window.bp || {};
 				data
 			);
 
-			// Do not request if we don't have the object or the target to inject results into
+			// Do not request if we don't have the object or the target to inject results into.
 			if ( ! data.object || ! data.target ) {
 				return;
 			}
 
-			// prevent activity response to append to media model activity list element
+			// prevent activity response to append to media model activity list element.
 			if ( data.object == 'activity' && data.target == '#buddypress [data-bp-list] ul.bp-list' ) {
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
-			// if object is members, activity, media, document and object nav does not exists fallback to scope = all
+			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
 			if ( [ 'members', 'activity', 'media', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
 			}
 
-			// Prepare the search terms for the request
+			// Prepare the search terms for the request.
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
 			}
 
-			// Set session's data
+			// Set session's data.
 			if ( null !== data.scope ) {
 				this.setStorage( 'bp-' + data.object, 'scope', data.scope );
 			}
@@ -495,10 +495,10 @@ window.bp = window.bp || {};
 											// Inform other scripts the list of objects has been refreshed.
 											$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
 
-											// Lazy Load Images
+											// Lazy Load Images.
 											if ( bp.Nouveau.lazyLoad ) {
 												setTimeout(
-													function () { // Waiting to load dummy image
+													function () { // Waiting to load dummy image.
 														bp.Nouveau.lazyLoad( '.lazy' );
 													},
 													1000
@@ -519,10 +519,10 @@ window.bp = window.bp || {};
 									// Inform other scripts the list of objects has been refreshed.
 									$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
 
-									// Lazy Load Images
+									// Lazy Load Images.
 									if ( bp.Nouveau.lazyLoad ) {
 										setTimeout(
-											function () { // Waiting to load dummy image
+											function () { // Waiting to load dummy image.
 												bp.Nouveau.lazyLoad( '.lazy' );
 											},
 											1000
@@ -533,7 +533,7 @@ window.bp = window.bp || {};
 						}
 					}
 					setTimeout(
-						function () { // Waiting to load dummy image
+						function () { // Waiting to load dummy image.
 							self.reportPopUp();
 						},
 						1000
@@ -568,7 +568,7 @@ window.bp = window.bp || {};
 						scope = objectData.scope;
 					}
 
-					// Notifications always need to start with Newest ones
+					// Notifications always need to start with Newest ones.
 					if ( undefined !== objectData.extras && 'notifications' !== object ) {
 						extras = objectData.extras;
 					}
@@ -592,7 +592,7 @@ window.bp = window.bp || {};
 						$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
 					}
 
-					// Check the querystring to eventually include the search terms
+					// Check the querystring to eventually include the search terms.
 					if ( null !== self.querystring ) {
 						if ( undefined !== self.querystring[ object + '_search' ] ) {
 							search_terms = self.querystring[ object + '_search' ];
@@ -620,7 +620,7 @@ window.bp = window.bp || {};
 							queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
 						}
 
-						// Populate the object list
+						// Populate the object list.
 						self.objectRequest( queryData );
 					}
 				}
@@ -637,7 +637,7 @@ window.bp = window.bp || {};
 
 			this.heartbeat.interval( Number( BP_Nouveau.pulse ) );
 
-			// Extend "send" with BuddyPress namespace
+			// Extend "send" with BuddyPress namespace.
 			$.fn.extend(
 				{
 					'heartbeat-send': function () {
@@ -646,7 +646,7 @@ window.bp = window.bp || {};
 				}
 			);
 
-			// Extend "tick" with BuddyPress namespace
+			// Extend "tick" with BuddyPress namespace.
 			$.fn.extend(
 				{
 					'heartbeat-tick': function () {
@@ -662,34 +662,34 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
-			// Disabled inputs
+			// Disabled inputs.
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
 
-			// Refreshing
+			// Refreshing.
 			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
 
-			// Filtering
+			// Filtering.
 			$( document ).on( 'change', '#buddypress [data-bp-filter]', this, this.filterQuery );
 
-			// Group Type & Member Type Filter
+			// Group Type & Member Type Filter.
 			$( document ).on( 'change', '#buddypress [data-bp-group-type-filter]', this, this.typeGroupFilterQuery );
 			$( document ).on( 'change', '#buddypress [data-bp-member-type-filter]', this, this.typeMemberFilterQuery );
 
-			// Searching
+			// Searching.
 			$( '#buddypress [data-bp-search]' ).on( 'submit', 'form', this, this.searchQuery );
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
-			// Buttons
+			// Buttons.
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
-			// Close notice
+			// Close notice.
 			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
 
-			// Pagination
+			// Pagination.
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
 
 			$( document ).on( 'click', this.closePickersOnClick );
@@ -974,8 +974,8 @@ window.bp = window.bp || {};
 		 */
 		toggleDisabledInput: function () {
 
-			// Fetch the data attr value (id)
-			// This a pro tem approach due to current conditions see
+			// Fetch the data attr value (id).
+			// This a pro tem approach due to current conditions see.
 			// https://github.com/buddypress/next-template-packs/issues/180.
 			var disabledControl = $( this ).attr( 'data-bp-disable-input' );
 
@@ -998,7 +998,7 @@ window.bp = window.bp || {};
 		 */
 		keyUp: function ( event ) {
 			var self = event.data;
-			if ( event.keyCode === 27 ) { // escape key
+			if ( event.keyCode === 27 ) { // escape key.
 				self.buttonRevertAll();
 			}
 		},
@@ -1024,12 +1024,12 @@ window.bp = window.bp || {};
 				return event;
 			}
 
-			// Stop event propagation
+			// Stop event propagation.
 			event.preventDefault();
 
 			var objectData = self.getStorage( 'bp-' + object );
 
-			// Notifications always need to start with Newest ones
+			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
 			}
@@ -1040,7 +1040,7 @@ window.bp = window.bp || {};
 				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
 			}
 
-			// Remove the New count on dynamic tabs
+			// Remove the New count on dynamic tabs.
 			if ( target.hasClass( 'dynamic' ) ) {
 				target.find( 'a span' ).html( '' );
 			}
@@ -1091,7 +1091,7 @@ window.bp = window.bp || {};
 
 			var objectData = self.getStorage( 'bp-' + object );
 
-			// Notifications always need to start with Newest ones
+			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
 			}
@@ -1154,7 +1154,7 @@ window.bp = window.bp || {};
 
 			objectData = self.getStorage( 'bp-' + object );
 
-			// Notifications always need to start with Newest ones
+			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
 			}
@@ -1210,7 +1210,7 @@ window.bp = window.bp || {};
 
 			objectData = self.getStorage( 'bp-' + object );
 
-			// Notifications always need to start with Newest ones
+			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
 			}
@@ -1260,7 +1260,7 @@ window.bp = window.bp || {};
 				return event;
 			}
 
-			// Stop event propagation
+			// Stop event propagation.
 			event.preventDefault();
 
 			object       = $( event.delegateTarget ).data( 'bp-search' );
@@ -1273,7 +1273,7 @@ window.bp = window.bp || {};
 
 			var objectData = self.getStorage( 'bp-' + object );
 
-			// Notifications always need to start with Newest ones
+			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
 			}
@@ -1331,17 +1331,17 @@ window.bp = window.bp || {};
 				item_inner = target.closest( '.list-wrap' ),
 				object     = item.data( 'bp-item-component' ), nonce = '';
 
-			// Simply let the event fire if we don't have needed values
+			// Simply let the event fire if we don't have needed values.
 			if ( ! action || ! item_id || ! object ) {
 				return event;
 			}
 
-			// Stop event propagation
+			// Stop event propagation.
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
 
-				// support for buddyboss theme for button actions and icons and texts
+				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data( 'title' ) );
 				} else {
@@ -1353,7 +1353,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			// check if only admin trying to leave the group
+			// check if only admin trying to leave the group.
 			if ( typeof target.data( 'only-admin' ) !== 'undefined' ) {
 				if ( undefined !== BP_Nouveau.only_admin_notice ) {
 					window.alert( BP_Nouveau.only_admin_notice );
@@ -1366,8 +1366,8 @@ window.bp = window.bp || {};
 			}
 
 			// Find the required wpnonce string.
-			// if  button element set we'll have our nonce set on a data attr
-			// Check the value & if exists split the string to obtain the nonce string
+			// if  button element set we'll have our nonce set on a data attr.
+			// Check the value & if exists split the string to obtain the nonce string.
 			// if no value, i.e false, null then the href attr is used.
 			if ( nonceUrl ) {
 				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
@@ -1375,8 +1375,8 @@ window.bp = window.bp || {};
 				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
 			}
 
-			// Unfortunately unlike groups
-			// Connections actions does not match the wpnonce
+			// Unfortunately unlike groups.
+			// Connections actions does not match the wpnonce.
 			var friends_actions_map = {
 				is_friend: 'remove_friend',
 				not_friends: 'add_friend',
@@ -1400,7 +1400,7 @@ window.bp = window.bp || {};
 				object = 'follow';
 			}
 
-			// Add a pending class to prevent queries while we're processing the action
+			// Add a pending class to prevent queries while we're processing the action.
 			target.addClass( 'pending loading' );
 
 			self.ajax(
@@ -1427,10 +1427,10 @@ window.bp = window.bp || {};
 						}
 
 					} else {
-						// Specific cases for groups
+						// Specific cases for groups.
 						if ( 'groups' === object ) {
 
-							// Group's header button
+							// Group's header button.
 							if ( undefined !== response.data.is_group && response.data.is_group ) {
 								if ( undefined !== response.data.group_url && response.data.group_url ) {
 									return window.location = response.data.group_url;
@@ -1440,43 +1440,43 @@ window.bp = window.bp || {};
 							}
 						}
 
-						// User main nav update friends counts
+						// User main nav update friends counts.
 						if ( $( '#friends-personal-li' ).length ) {
 							var friend_with_count    = $( '#friends-personal-li a span' );
 							var friend_without_count = $( '#friends-personal-li a' );
 
-							// Check friend count set
+							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
-								// Check friend count > 0 then show the count span
+								// Check friend count > 0 then show the count span.
 								if ( response.data.friend_count > 0 ) {
 									if ( ( friend_with_count ).length ) {
-										// Update count span
+										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
 									} else {
-										// If no friend then add count span
+										// If no friend then add count span.
 										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
 									}
 								} else {
-									// If no friend then hide count span
+									// If no friend then hide count span.
 									$( friend_with_count ).hide();
 								}
 							} else if ( undefined !== response.data.friend_count ) {
 								if ( response.data.friend_count > 0 ) {
 									if ( ( friend_with_count ).length ) {
-										// Update count span
+										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
 									} else {
-										// If no friend then add count span
+										// If no friend then add count span.
 										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
 									}
 								} else {
-									// If no friend then hide count span
+									// If no friend then hide count span.
 									$( friend_with_count ).hide();
 								}
 							}
 						}
 
-						// User's groups invitations screen & User's friend screens
+						// User's groups invitations screen & User's friend screens.
 						if ( undefined !== response.data.is_user && response.data.is_user ) {
 							target.parent().html( response.data.feedback );
 							item.fadeOut( 1500 );
@@ -1488,7 +1488,7 @@ window.bp = window.bp || {};
 							return window.location = response.data.group_url;
 						}
 
-						// Update count
+						// Update count.
 						if ( $( self.objectNavParent + ' [data-bp-scope="personal"]' ).length ) {
 							var personal_count = Number( $( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html() ) || 0;
 
@@ -1522,15 +1522,15 @@ window.bp = window.bp || {};
 
 			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
 
-				// support for buddyboss theme for button actions and icons and texts
+				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
 				} else {
-					target.text( target.data( 'title-displayed' ) ); // change text to displayed context
+					target.text( target.data( 'title-displayed' ) ); // change text to displayed context.
 				}
 
-				target.removeClass( 'bp-toggle-action-button-clicked' ); // remove class to detect event
-				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm
+				target.removeClass( 'bp-toggle-action-button-clicked' ); // remove class to detect event.
+				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
 		},
 
@@ -1545,15 +1545,15 @@ window.bp = window.bp || {};
 				function () {
 					if ( $( this ).hasClass( 'bp-toggle-action-button-clicked' ) && ! $( this ).hasClass( 'loading' ) ) {
 
-						// support for buddyboss theme for button actions and icons and texts
+						// support for buddyboss theme for button actions and icons and texts.
 						if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof $( this ).data( 'balloon' ) !== 'undefined' ) {
 							$( this ).attr( 'data-balloon', $( this ).data( 'title-displayed' ) );
 						} else {
-							$( this ).text( $( this ).data( 'title-displayed' ) ); // change text to displayed context
+							$( this ).text( $( this ).data( 'title-displayed' ) ); // change text to displayed context.
 						}
 
-						$( this ).removeClass( 'bp-toggle-action-button-clicked' ); // remove class to detect event
-						$( this ).addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm
+						$( this ).removeClass( 'bp-toggle-action-button-clicked' ); // remove class to detect event.
+						$( this ).addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 						$( this ).trigger( 'blur' );
 					}
 				}
@@ -1588,7 +1588,7 @@ window.bp = window.bp || {};
 
 					var prev_data_row = $( this ).closest( 'tr' ).prev( 'tr' ).html();
 					$( '<tr>' + prev_data_row + '</tr>' ).insertBefore( $( this ).closest( 'tr' ) );
-					currentDataTable.find( 'tr' ).length > 20 ? $( currentTarget ).addClass( 'disabled' ) : ''; // Add Limit of 20
+					currentDataTable.find( 'tr' ).length > 20 ? $( currentTarget ).addClass( 'disabled' ) : ''; // Add Limit of 20.
 
 				} else {
 
@@ -1598,7 +1598,7 @@ window.bp = window.bp || {};
 
 			}
 
-			// reset the id of all inputs
+			// reset the id of all inputs.
 			var data_rows = currentDataTable.find( 'tr:not(:last-child)' );
 			$.each(
 				data_rows,
@@ -1624,7 +1624,7 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			// Make sure cookies are removed
+			// Make sure cookies are removed.
 			if ( 'clear' === closeBtn.data( 'bp-close' ) ) {
 				if ( undefined !== $.cookie( 'bp-message' ) ) {
 					$.removeCookie( 'bp-message' );
@@ -1646,7 +1646,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Remove the notice
+			// Remove the notice.
 			closeBtn.closest( '.bp-feedback' ).remove();
 		},
 
@@ -1664,7 +1664,7 @@ window.bp = window.bp || {};
 
 			object = $( event.delegateTarget ).data( 'bp-list' ) || null;
 
-			// Set the scope & filter for local storage
+			// Set the scope & filter for local storage.
 			if ( null !== object ) {
 				objectData = self.getStorage( 'bp-' + object );
 
@@ -1695,7 +1695,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			// Set the search terms
+			// Set the search terms.
 			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
 				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
 			}
@@ -1724,19 +1724,23 @@ window.bp = window.bp || {};
 				/* jshint ignore:end */
 			}
 
-			// Request the page
+			// Request the page.
 			self.objectRequest( queryData );
 		},
 		enableSubmitOnLegalAgreement: function () {
 			if ( $( 'body #buddypress #register-page #signup-form #legal_agreement' ).length ) {
-				$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true);
-				$( document ).on( 'change', 'body #buddypress #register-page #signup-form #legal_agreement', function () {
-					if ( $( this ).prop( 'checked' ) ) {
-						$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', false);
-					} else {
-						$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true);
+				$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true );
+				$( document ).on(
+					'change',
+					'body #buddypress #register-page #signup-form #legal_agreement',
+					function () {
+						if ( $( this ).prop( 'checked' ) ) {
+							$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', false );
+						} else {
+							$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true );
+						}
 					}
-				});
+				);
 			}
 		},
 		registerPopUp: function () {
@@ -1813,7 +1817,7 @@ window.bp = window.bp || {};
 										var contentType = _self.currItem.el.data( 'bp-content-type' );
 										var nonce       = _self.currItem.el.data( 'bp-nonce' );
 										if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
-											   _this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+											_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
 										}
 									},
 									1
@@ -1873,13 +1877,13 @@ window.bp = window.bp || {};
 						data,
 						function ( response ) {
 							if ( response.success ) {
-								  _this.resetReportPopup();
-								  _this.changeReportButtonStatus( response.data );
-								  $( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
-								  $( '.mfp-close' ).trigger( 'click' );
+								_this.resetReportPopup();
+								_this.changeReportButtonStatus( response.data );
+								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
+								$( '.mfp-close' ).trigger( 'click' );
 							} else {
-								 $( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
-								 _this.handleReportError( response.data.message.errors, e.currentTarget );
+								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
+								_this.handleReportError( response.data.message.errors, e.currentTarget );
 							}
 						}
 					);
@@ -1908,16 +1912,16 @@ window.bp = window.bp || {};
 						data,
 						function ( response ) {
 							if ( response.success ) {
-								  _this.resetReportPopup();
-								  _this.changeReportButtonStatus( response.data );
-								  $( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
-								  $( '.mfp-close' ).trigger( 'click' );
+								_this.resetReportPopup();
+								_this.changeReportButtonStatus( response.data );
+								$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+								$( '.mfp-close' ).trigger( 'click' );
 								if ( response.data.redirect ) {
 									location.href = response.data.redirect;
 								}
 							} else {
-								 $( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
-								 _this.handleReportError( response.data.message.errors, e.currentTarget );
+								$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+								_this.handleReportError( response.data.message.errors, e.currentTarget );
 							}
 						}
 					);
@@ -2109,10 +2113,10 @@ window.bp = window.bp || {};
 				).done(
 					function ( $response ) {
 						if ( $response.success && $response.data && '' !== $response.data.content ) {
-							  saveButton.removeClass( 'loading' );
-							  saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
-							  saveButton.closest( '#header-cover-image:not(.has-position)' ).addClass( 'has-position' );
-							  coverImage.css( { 'top': $response.data.content + 'px' } );
+							saveButton.removeClass( 'loading' );
+							saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+							saveButton.closest( '#header-cover-image:not(.has-position)' ).addClass( 'has-position' );
+							coverImage.css( { 'top': $response.data.content + 'px' } );
 						} else {
 							saveButton.removeClass( 'loading' );
 							saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
@@ -2153,80 +2157,83 @@ window.bp = window.bp || {};
 			// Load Video Thumbnail.
 			var fileReader    = new FileReader();
 			fileReader.onload = function () {
-				var blob       			= new Blob( [ fileReader.result ], { type: file.type } );
-				var url        			= URL.createObjectURL( blob );
-				var video 				= document.createElement( 'video' );
-				var videoDuration 		= null;
-				video.src 				= url;
-				var timer 				= setInterval(function () {
-					if (video.readyState === 4){
-						videoDuration = video.duration.toFixed(2);
-						var timeupdate = function () {
-							if ( snapImage() ) {
-								video.removeEventListener( 'timeupdate', timeupdate );
-								video.pause();
-							}
-						};
-						
-						video.addEventListener(
-							'loadeddata',
-							function () {
+				var blob          = new Blob( [ fileReader.result ], { type: file.type } );
+				var url           = URL.createObjectURL( blob );
+				var video         = document.createElement( 'video' );
+				var videoDuration = null;
+				video.src         = url;
+				var timer         = setInterval(
+					function () {
+						if (video.readyState === 4) {
+							videoDuration  = video.duration.toFixed( 2 );
+							var timeupdate = function () {
 								if ( snapImage() ) {
 									video.removeEventListener( 'timeupdate', timeupdate );
+									video.pause();
 								}
-							}
-						);
-						var snapImage = function () {
-							var canvas    = document.createElement( 'canvas' );
-							canvas.width  = video.videoWidth;
-							canvas.height = video.videoHeight;
-							canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
-							var image   = canvas.toDataURL();
-							var success = image.length > 100000;
-							if ( success ) {
-								var img = document.createElement( 'img' );
-								img.src = image;
-		
-								if ( file.previewElement ) {
-									if ( $( file.previewElement ).find( target ).find( 'img' ).length ) {
-										$( file.previewElement ).find( target ).find( 'img' ).attr( 'src', image );
+							};
+
+							video.addEventListener(
+								'loadeddata',
+								function () {
+									if ( snapImage() ) {
+										video.removeEventListener( 'timeupdate', timeupdate );
+									}
+								}
+							);
+							var snapImage = function () {
+								var canvas    = document.createElement( 'canvas' );
+								canvas.width  = video.videoWidth;
+								canvas.height = video.videoHeight;
+								canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
+								var image   = canvas.toDataURL();
+								var success = image.length > 100000;
+								if ( success ) {
+									var img = document.createElement( 'img' );
+									img.src = image;
+
+									if ( file.previewElement ) {
+										if ( $( file.previewElement ).find( target ).find( 'img' ).length ) {
+											$( file.previewElement ).find( target ).find( 'img' ).attr( 'src', image );
+										} else {
+											$( file.previewElement ).find( target ).append( img );
+										}
+
+										$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 									} else {
-										$( file.previewElement ).find( target ).append( img );
+										if ( $( target ).find( 'img' ).length ) {
+											$( target ).find( 'img' ).attr( 'src', image );
+										} else {
+											$( target ).append( img );
+										}
 									}
 
-									$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
-								} else {
-									if ( $( target ).find( 'img' ).length ) {
-										$( target ).find( 'img' ).attr( 'src', image );
-									} else {
-										$( target ).append( img );
-									}
+									URL.revokeObjectURL( url );
 								}
-		
-								URL.revokeObjectURL( url );
+								return success;
+							};
+							video.addEventListener( 'timeupdate', timeupdate );
+							video.preload     = 'metadata';
+							video.src         = url;
+							video.muted       = true;
+							video.playsInline = true;
+							if ( videoDuration != null ) {
+								video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail
 							}
-							return success;
-						};
-						video.addEventListener( 'timeupdate', timeupdate );
-						video.preload     = 'metadata';
-						video.src         = url;
-						video.muted       = true;
-						video.playsInline = true;
-						if( videoDuration != null ) {
-							video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); //Seek random second before capturing thumbnail
+							video.play();
+							clearInterval( timer );
 						}
-						video.play();
-						clearInterval(timer);
-					}
-				}, 500);
+					},
+					500
+				);
 
 			};
 
-			if( file.dataURL ) { //If file is already uploaded then convert to blob from file URL
+			if ( file.dataURL ) { // If file is already uploaded then convert to blob from file URL.
 				var xhr = new XMLHttpRequest();
-				xhr.open('GET', file.dataURL, true);
+				xhr.open( 'GET', file.dataURL, true );
 				xhr.responseType = 'blob';
-				xhr.onload = function() {
+				xhr.onload       = function() {
 					if (this.status == 200) {
 						var myBlob = this.response;
 						fileReader.readAsArrayBuffer( myBlob );
