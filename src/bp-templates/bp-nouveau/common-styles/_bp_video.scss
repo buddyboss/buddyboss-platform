@@ -1684,13 +1684,6 @@ div.dropzone.dz-started {
 		display: none;
 	}
 
-	.dz-error-message {
-		top: 150px;
-		left: 50%;
-		transform: translateX(-50%);
-		margin-left: 5px;
-	}
-
 	&.dz-started .dz-default.dz-message {
 		max-width: 260px !important;
 		width: 260px;
