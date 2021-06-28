@@ -19512,6 +19512,15 @@ span.icons:before {
   position: relative;
 }
 
+@media screen and (max-width: 500px) {
+  .bb-onscreen-notification-enable {
+    display: none;
+  }
+  .bb-onscreen-notification-enable.bb-onscreen-notification-enable-mobile-support {
+    display: block;
+  }
+}
+
 .bb-onscreen-notification-enable .bb-onscreen-notification {
   position: fixed;
   bottom: 25px;
@@ -19526,7 +19535,9 @@ span.icons:before {
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list {
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
@@ -19538,6 +19549,11 @@ span.icons:before {
   transition: all linear 0.2s;
   padding: 20px;
   z-index: 4;
+  display: flex;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .bb-full-link {
+  display: none;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item.recent-item {
@@ -19584,6 +19600,15 @@ span.icons:before {
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content {
   align-self: center;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content span {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content span.bb-full-link {
+  display: none;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions {
