@@ -483,7 +483,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'capabilities'        => bbp_get_topic_caps(),
 						'capability_type'     => array( 'topic', 'topics' ),
 						'menu_position'       => 555555,
-						'has_archive'         => ( 'forums' === bbp_show_on_root() ) ? bbp_get_topic_archive_slug() : false,
+						'has_archive'         => true,
 						'exclude_from_search' => true,
 						'show_in_nav_menus'   => false,
 						'public'              => true,
