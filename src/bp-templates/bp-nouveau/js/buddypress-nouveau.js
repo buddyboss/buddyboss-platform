@@ -762,7 +762,9 @@ window.bp = window.bp || {};
 				}
 			} );
 
-			$.each( items, function( index, item ) {
+			var appendItems = notifications.find( '.read-item' );
+
+			$.each( appendItems, function( index, item ) {
 				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 				
 				if ( '-1' == $.inArray( id, animatedItems ) ) {
@@ -776,21 +778,21 @@ window.bp = window.bp || {};
 			// Store animated notification id in 'animated-items' data attribute.
 			list.attr( 'data-animated-items', JSON.stringify( animatedItems ) );
 
-			if ( ! items.length ) {
+			if ( ! appendItems.length ) {
 				return;
 			}
 
 			// Set class 'bb-more-item' in item when more than three notifications.
-			items.eq(2).nextAll().addClass( 'bb-more-item' );
+			appendItems.eq(2).nextAll().addClass( 'bb-more-item' );
 			
-			if ( items.length > 3 ) {
+			if ( appendItems.length > 3 ) {
 				list.addClass( 'bb-more-than-3' );
 			} else {
 				list.removeClass( 'bb-more-than-3' );
 			}
 
 			wrap.show();
-			list.empty().html( items );
+			list.empty().html( appendItems );
 
 			// Clear all button visibility status.
 			bp.Nouveau.visibilityOnScreenClearButton();
@@ -807,7 +809,7 @@ window.bp = window.bp || {};
 		/**
 		 * Remove notification border.
 		 */
-			notificationBorder: function() {
+		notificationBorder: function() {
 			var wrap         = $( '.bb-onscreen-notification' ),
 				list         = wrap.find( '.notification-list' ),
 				borderItems  = list.data( 'border-items' );
@@ -868,7 +870,7 @@ window.bp = window.bp || {};
 			if ( 1 != broserTab ) {
 				return;
 			}
-			
+
 			if ( window.bbFlashNotification ) {
 				clearInterval( window.bbFlashNotification );
 			}
@@ -888,10 +890,10 @@ window.bp = window.bp || {};
 			var items        = list.find( '.read-item' ),
 				notification = items.first().find('.notification-content .bb-full-link a').text(),
 				titleTag     = $('html').find( 'title' ),
-				title        = wrap.data( 'title-tag' ),
-				flashStatus  = wrap.data( 'flash-status' ),
+				title        = wrap.attr( 'data-title-tag' ),
+				flashStatus  = wrap.attr( 'data-flash-status' ),
 				flashItems   = list.data( 'flash-items' );
-			
+
 			if ( ! document.hidden ) {
 				items.each( function( index, item ) {
 					var id = $( item ).find( '.actions .action-close' ).attr( 'data-notification-id' );
@@ -910,7 +912,7 @@ window.bp = window.bp || {};
 				titleTag.text( title );
 				return;
 			}
-
+			
 			if ( 'default_title' === flashStatus ) {
 				titleTag.text( '('+items.length+') ' + title );
 				var id = items.first().find( '.actions .action-close' ).attr( 'data-notification-id' );
