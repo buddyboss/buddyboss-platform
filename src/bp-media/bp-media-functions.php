@@ -3673,8 +3673,10 @@ function bb_media_user_can_access( $id, $type ) {
 					$can_download = true;
 					$can_add      = true;
 					$can_delete   = true;
-					$can_edit     = true;
-					$can_move     = true;
+					if ( ! $is_admin && 'members' === bp_group_get_video_status() ) {
+						$can_edit = true;
+                    }
+					$can_move = true;
 				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_view     = true;
 					$can_download = true;
