@@ -13,6 +13,7 @@
 		bp_get_template_part( 'document/theatre' );
 		bp_get_template_part( 'video/theatre' );
 		bp_get_template_part( 'media/theatre' );
+		bp_get_template_part( 'video/add-video-thumbnail' );
 
 	switch ( bp_current_action() ) :
 

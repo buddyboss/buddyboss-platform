@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-28 06:23:20+00:00\n"
+"POT-Creation-Date: 2021-06-28 09:33:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -416,9 +416,9 @@ msgstr ""
 #: bp-invites/bp-invites-admin.php:268
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:809
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:510
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1396
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1479
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1553
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1397
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1488
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1562
 #: bp-templates/bp-nouveau/includes/document/ajax.php:400
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1122
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1212
@@ -563,9 +563,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:24
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:24
 #: bp-templates/bp-nouveau/includes/activity/functions.php:197
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1423
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1493
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1569
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1432
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1502
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1578
 #: bp-templates/bp-nouveau/includes/document/ajax.php:410
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1132
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1222
@@ -1022,7 +1022,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:84
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:182
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:38
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:95
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:97
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:80
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:561
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:562
@@ -2164,8 +2164,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:312
 #: bp-templates/bp-nouveau/buddypress/common/search/search-form.php:20
 #: bp-templates/bp-nouveau/buddypress/document/single-folder.php:40
-#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:43
-#: bp-templates/bp-nouveau/buddypress/members/single/document.php:34
+#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:44
+#: bp-templates/bp-nouveau/buddypress/members/single/document.php:35
 #: bp-templates/bp-nouveau/buddypress/search/search-form.php:26
 msgid "Search"
 msgstr ""
@@ -3506,8 +3506,8 @@ msgstr ""
 #: bp-performance/classes/class-settings.php:147
 #: bp-search/bp-search-settings.php:830
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:30
-#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:32
-#: bp-templates/bp-nouveau/buddypress/members/single/document.php:24
+#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:33
+#: bp-templates/bp-nouveau/buddypress/members/single/document.php:25
 #: bp-templates/bp-nouveau/includes/customizer.php:208
 #: bp-templates/bp-nouveau/includes/document/functions.php:92
 #: bp-templates/bp-nouveau/includes/groups/classes.php:377
@@ -3520,7 +3520,7 @@ msgstr ""
 #: bp-media/bp-media-settings.php:36 bp-media/bp-media-settings.php:1725
 #: bp-moderation/classes/class-bp-moderation-video.php:103
 #: bp-search/bp-search-settings.php:808
-#: bp-templates/bp-nouveau/buddypress/groups/single/videos.php:30
+#: bp-templates/bp-nouveau/buddypress/groups/single/videos.php:31
 #: bp-templates/bp-nouveau/buddypress/video/add-video.php:13
 #: bp-templates/bp-nouveau/buddypress/video/add-video.php:25
 #: bp-templates/bp-nouveau/includes/customizer.php:211
@@ -8830,9 +8830,9 @@ msgstr ""
 #: bp-document/bp-document-filters.php:300
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:31
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:248
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1438
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1510
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1586
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1447
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1519
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1595
 #: bp-templates/bp-nouveau/includes/document/ajax.php:425
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
 #: bp-templates/bp-nouveau/includes/document/functions.php:105
@@ -13886,8 +13886,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:160
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:166
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:81
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:87
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:83
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:89
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:58
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:64
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:25
@@ -22256,7 +22256,8 @@ msgid "View Reports"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:518
-msgid "View Content s"
+#: bp-moderation/screens/single/admin/report-single.php:125
+msgid "View Content"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:620
@@ -22597,10 +22598,6 @@ msgstr ""
 #: bp-moderation/screens/single/admin/report-single.php:114
 #. translators: accessibility text
 msgid "Permalink"
-msgstr ""
-
-#: bp-moderation/screens/single/admin/report-single.php:125
-msgid "View Content ss"
 msgstr ""
 
 #: bp-moderation/screens/single/admin/report-single.php:136
@@ -23627,9 +23624,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:50
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:55
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:151
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:65
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:67
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:42
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1401
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1404
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:702
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2488
 msgid "More actions"
@@ -23804,10 +23801,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/single-folder.php:42
 #: bp-templates/bp-nouveau/buddypress/document/single-folder.php:43
-#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:45
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:46
-#: bp-templates/bp-nouveau/buddypress/members/single/document.php:36
+#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:47
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:37
+#: bp-templates/bp-nouveau/buddypress/members/single/document.php:38
 msgid "Search Documents…"
 msgstr ""
 
@@ -24169,16 +24166,16 @@ msgid "Enter Album Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:64
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:72
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:74
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:19
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:51
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1408
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1415
 #: bp-templates/bp-nouveau/includes/video/functions.php:151
 msgid "Change Thumbnail"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:70
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:80
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:82
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:57
 msgid "Video inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
@@ -24623,8 +24620,8 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:119
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:134
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:121
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:136
 msgid "More Videos"
 msgstr ""
 
@@ -24840,14 +24837,14 @@ msgstr ""
 msgid "(edited)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1395
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1418
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1478
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1484
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1396
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1427
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1487
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1552
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1558
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1493
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1496
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1561
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1567
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1570
 #: bp-templates/bp-nouveau/includes/document/ajax.php:399
 #: bp-templates/bp-nouveau/includes/document/ajax.php:405
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1121
@@ -24857,9 +24854,9 @@ msgstr ""
 msgid "Add a description"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1422
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1492
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1567
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1431
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1501
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1576
 #: bp-templates/bp-nouveau/includes/document/ajax.php:409
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1131
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1221
