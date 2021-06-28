@@ -877,6 +877,10 @@ window.bp = window.bp || {};
 				$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-edit-thumbnail-hidden-video-id' ).val( videoId );
 				$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-edit-thumbnail-hidden-attachment-id' ).val( videoAttachmentId );
 
+				var VideoThumbnailTemplate = document.getElementsByClassName('uploader-post-video-thumbnail-template').length ? document.getElementsByClassName('uploader-post-video-thumbnail-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
+				self.videoThumbnailOptions.previewTemplate = VideoThumbnailTemplate;
+
 				self.video_thumb_dropzone_obj = new Dropzone( 'div.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-uploader-dropzone-select', self.videoThumbnailOptions );
 
 				self.video_thumb_dropzone_obj.on(
@@ -906,6 +910,20 @@ window.bp = window.bp || {};
 								1000
 							);
 						}
+					}
+				);
+
+				self.video_thumb_dropzone_obj.on(
+					'uploadprogress',
+					function( element ) {
+						var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+						var radius = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 

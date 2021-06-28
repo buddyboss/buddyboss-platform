@@ -61,7 +61,7 @@
 	border-radius: 4px;
 	position: relative;
 	overflow: hidden;
-	padding-top: 100%;
+	padding-top: 0;
 	display: block;
 	background: #f0f3f7;
 
@@ -71,7 +71,6 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		margin: auto;
 		z-index: 0;
 		width: auto;
 		min-width: 100%;
@@ -281,10 +280,10 @@
 	-ms-transition: opacity 0.3s ease;
 	-o-transition: opacity 0.3s ease;
 	transition: opacity 0.3s ease;
-	border-radius: 8px;
-	top: 130px;
-	left: -10px;
-	width: 140px;
+	border-radius: 4px;
+	top: 75%;
+	left: 10px;
+	right: 10px;
 	background: #be2626;
 	background: linear-gradient(to bottom, #be2626, #a92222);
 	padding: 7px 10px;
@@ -297,7 +296,7 @@
 	content: " ";
 	position: absolute;
 	top: -6px;
-	left: 64px;
+	left: 50%;
 	width: 0;
 	height: 0;
 	border-left: 6px solid transparent;

@@ -2387,7 +2387,7 @@ div.dropzone .dz-preview {
 	.dz-success-mark,
 	.dz-progress,
 	.dz-error-mark {
-		top: 70%;
+		top: 50%;
 	}
 
 	.dz-filename {
@@ -2401,7 +2401,7 @@ div.dropzone .dz-preview {
 
 	img {
 		max-width: 160px;
-		height: 100%;
+		height: 155px;
 		object-fit: contain;
 	}
 }

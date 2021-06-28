@@ -15626,7 +15626,7 @@ div.dropzone .dz-preview {
 div.dropzone .dz-preview .dz-success-mark,
 div.dropzone .dz-preview .dz-progress,
 div.dropzone .dz-preview .dz-error-mark {
-  top: 70%;
+  top: 50%;
 }
 
 div.dropzone .dz-preview .dz-filename {
@@ -15639,7 +15639,7 @@ div.dropzone .dz-preview .dz-filename {
 
 .dz-preview .dz-image img {
   max-width: 160px;
-  height: 100%;
+  height: 155px;
   object-fit: contain;
 }
 
@@ -20702,20 +20702,6 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
   display: none;
 }
 
-#activity-post-video-uploader .dz-error-message,
-#bp-video-dropzone-content .dz-error-message,
-#forums-post-video-uploader .dz-error-message,
-#messages-post-video-uploader .dz-error-message,
-#bp-group-messages-post-video-uploader .dz-error-message,
-#boss-video-create-album-popup .dz-error-message,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-error-message,
-#video-uploader.dropzone .dz-error-message {
-  top: 150px;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-left: 5px;
-}
-
 #activity-post-video-uploader.dz-started .dz-default.dz-message,
 #bp-video-dropzone-content.dz-started .dz-default.dz-message,
 #forums-post-video-uploader.dz-started .dz-default.dz-message,
@@ -20914,7 +20900,7 @@ body > .open-popup.video-error-popup {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  padding-top: 100%;
+  padding-top: 0;
   display: block;
   background: #f0f3f7;
 }
@@ -20925,7 +20911,6 @@ body > .open-popup.video-error-popup {
   bottom: 0;
   left: 0;
   right: 0;
-  margin: auto;
   z-index: 0;
   width: auto;
   min-width: 100%;
@@ -21132,10 +21117,10 @@ body > .open-popup.video-error-popup {
   -ms-transition: opacity 0.3s ease;
   -o-transition: opacity 0.3s ease;
   transition: opacity 0.3s ease;
-  border-radius: 8px;
-  top: 130px;
-  left: -10px;
-  width: 140px;
+  border-radius: 4px;
+  top: 75%;
+  left: 10px;
+  right: 10px;
   background: #be2626;
   background: linear-gradient(to bottom, #be2626, #a92222);
   padding: 7px 10px;
@@ -21148,7 +21133,7 @@ body > .open-popup.video-error-popup {
   content: " ";
   position: absolute;
   top: -6px;
-  left: 64px;
+  left: 50%;
   width: 0;
   height: 0;
   border-left: 6px solid transparent;

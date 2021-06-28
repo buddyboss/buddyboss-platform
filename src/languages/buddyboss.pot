@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-28 09:33:31+00:00\n"
+"POT-Creation-Date: 2021-06-28 11:51:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16561,7 +16561,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-list-table.php:836
 #: bp-members/classes/class-bp-members-admin.php:2564
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:24
-#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:70
+#: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:93
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:441
 #. translators: field visibility level, e.g. "public".
 msgid "Change"
