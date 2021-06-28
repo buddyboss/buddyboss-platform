@@ -750,8 +750,7 @@ window.bp = window.bp || {};
 			    list          = wrap.find( '.notification-list' ),
 			    removedItems  = list.data('removed-items'),
 				animatedItems = list.data('animated-items'),
-			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) ),
-				items         = notifications.find( '.read-item' );
+			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) );
 			
 			// Ignore all view notifications.
 			$.each( removedItems, function( index, id ) {
