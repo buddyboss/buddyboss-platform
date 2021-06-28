@@ -201,8 +201,6 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_uploading_tutorial() {
-	/*
-	 Commented out during Beta period
 	?>
 	<p>
 		<a class="button" href="
@@ -220,7 +218,6 @@ function bp_video_uploading_tutorial() {
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 	<?php
-	*/
 }
 
 /**

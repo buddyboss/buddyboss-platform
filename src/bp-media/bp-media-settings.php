@@ -35,6 +35,7 @@ function bp_media_get_settings_sections() {
 			'page'     => 'video',
 			'title'    => __( 'Videos', 'buddyboss' ),
 			'callback' => 'bp_video_admin_setting_callback_video_section',
+			'tutorial_callback' => 'bp_video_uploading_tutorial',
 		),
 		'bp_media_settings_emoji'     => array(
 			'page'              => 'media',
@@ -326,31 +327,6 @@ function bp_media_get_settings_fields() {
 	$fields['bp_media_settings_videos']['bp_video_extension_video_support'] = array(
 		'title'    => __( 'File Extensions', 'buddyboss' ),
 		'callback' => 'bp_video_settings_callback_extension_link',
-	);
-
-	$fields['bp_media_settings_documents']['bp_document_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_document_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_videos']['bp_video_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_video_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_photo_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_emoji']['bp_emoji_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_emoji_tutorial',
-	);
-
-	$fields['bp_media_settings_gifs']['bp_animated_gifs_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_animated_gifs_tutorial',
 	);
 
 	$fields['bp_media_settings_symlinks']['bp_media_symlink_support'] = array(
