@@ -3739,13 +3739,6 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 					$file_path = $file_path . '/' . $file['file'];
 				}
 
-				if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
-					// Regenerate attachment thumbnails.
-					bb_document_regenerate_attachment_thumbnails( $attachment_id );
-					$file      = image_get_intermediate_size( $attachment_id, $size );
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
 				if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
 					if ( ! is_link( $attachment_path ) ) {
 
@@ -4168,6 +4161,12 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$document_symlinks_path = bp_document_symlink_path();
 
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
+			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $document->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $document->privacy . $size );
+			}
+
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 				bp_document_create_symlinks( $document, $size );
 			}
