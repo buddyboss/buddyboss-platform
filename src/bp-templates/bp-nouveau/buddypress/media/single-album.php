@@ -57,9 +57,9 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
 								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
-							</a> 
+							</a>
 							<?php
-						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit ) {
+						} elseif ( bp_is_active( 'groups' ) && bp_is_group() ) {
 							$manage = groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() );
 							if ( $manage ) {
 								?>
@@ -74,7 +74,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							?>
 							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 							<?php
-						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit && bp_is_group_video_support_enabled() ) {
+						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_video_support_enabled() ) {
 							$manage = groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() );
 							if ( $manage ) {
 								?>

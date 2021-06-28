@@ -48,7 +48,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit_btn ) {
+									if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 										$manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
 										if ( $manage ) {
 											?>
