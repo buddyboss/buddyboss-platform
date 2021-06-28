@@ -2378,7 +2378,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				}
 			} else {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
-				$content = strip_tags( $content, '<a><iframe>' );
+				$content = strip_tags( $content, '<a><iframe><img><span>' );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
 				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
@@ -2657,7 +2657,6 @@ function bb_check_is_activity_content_empty( $data ) {
 	}
 }
 
-add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback', 10, 2 );
 /**
  * Function will add feature image for blog post in the activity feed content.
  * 
@@ -2672,5 +2671,8 @@ function bb_add_feature_image_blog_post_as_activity_content_callback( $content, 
 	if ( ! empty( $blog_post_id ) && ! empty( get_post_thumbnail_id( $blog_post_id ) ) ) {
 		$content .= sprintf( ' <img src="%s">', esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
 	}
+
 	return $content;
 }
+
+add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback', 10, 2 );
