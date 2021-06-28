@@ -193,13 +193,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'login_head', array( $this, 'platform_login_scripts' ) );
 
-		// No-Screen notification template.
-		add_action( 'wp_footer', array( $this, 'on_screen_notification_template' ) );
-
-		// Heartbeat receive for on-screen notification.
-		add_filter( 'heartbeat_received', array( $this, 'heartbeat_on_screen_notifications' ), 11, 2 );
-		add_filter( 'heartbeat_nopriv_received', array( $this, 'heartbeat_on_screen_notifications' ), 11, 2 );
-
 		// Body no-js class
 		add_filter( 'body_class', array( $this, 'add_nojs_body_class' ), 20, 1 );
 
@@ -228,84 +221,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param BP_Nouveau $this Current BP_Nouveau instance.
 		 */
 		do_action_ref_array( 'bp_theme_compat_actions', array( &$this ) );
-	}
-
-	/**
-	 * Get on-screen notifications.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @return void
-	 */
-	public function heartbeat_on_screen_notifications( $response = array(), $data = array() ) {
-		if ( ! bp_loggedin_user_id() ) {
-			return $response;
-		}
-
-		ob_start();
-		bp_get_template_part( 'notifications/on-screen' );
-		$response['on_screen_notifications'] = ob_get_clean();
-		$response['total_notifications']  = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
-	
-		return $response;
-	}
-
-	// $localize['on_screen_notifications_enable']         = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
-	// $localize['on_screen_notifications_position']       = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
-	// $localize['on_screen_notifications_mobile_support'] = bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 );
-	// $localize['on_screen_notifications_visibility']     = bp_get_option( '_bp_on_screen_notifications_visibility', '' );
-	// $localize['on_screen_notifications_browser_tab']    = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
-
-	/**
-	 * Set on-screen notification template.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @return void
-	 */
-	public function on_screen_notification_template() {
-		$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 1 );
-
-		if ( empty( $is_on_screen_notification_enable ) ) {
-			return;
-		}
-
-		$user_unread_notification     = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
-		$user_unread_notification_ids = wp_list_pluck( $user_unread_notification, 'id' );
-		$position                     = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
-		$has_mobile_support           = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );
-		$browser_tab                  = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
-		$visibility                  = bp_get_option( '_bp_on_screen_notifications_visibility', 0 );
-
-		?>
-		<div class="bb-onscreen-notification-enable <?php echo '1' === $has_mobile_support ? 'bb-onscreen-notification-enable-mobile-support' : '';  ?>">
-			<div 
-				class="bb-onscreen-notification bb-position-<?php echo esc_attr( $position ); ?>" 
-				style="display: none;" 
-				data-title-tag="" 
-				data-flash-status="default_title"
-				data-broser-tab="<?php echo esc_attr( $browser_tab ); ?>"
-				data-visibility="<?php echo esc_attr( $visibility ); ?>"
-			> 
-				<ul 
-					class="notification-list bb-nouveau-list" 
-					data-removed-items="<?php echo esc_attr( json_encode( $user_unread_notification_ids ) ); ?>"
-					data-auto-removed-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-					data-border-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-					data-flash-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-					data-animated-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-				>	
-				</ul>
-				<div class="bb-remove-all-notification">
-					<a class="action-close primary">
-						<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss-theme' ); ?></span>
-						<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss-theme' ); ?></span>
-						<span class="dashicons dashicons-no" aria-hidden="true"></span>
-					</a>
-				</div>
-			</div>
-		</div>
-		<?php
 	}
 
 	/**

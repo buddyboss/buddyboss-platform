@@ -715,12 +715,10 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		 bpHeartbeatSend: function( event, data ) {
-			data.onScreenNotifications = true
-			;
-			//if ( ( typeof bs_data.show_notifications !== 'undefined' && bs_data.show_notifications == '1' ) || ( typeof bs_data.show_messages !== 'undefined' && bs_data.show_messages == '1' ) ) {
-				// Add an heartbeat send event to possibly any BuddyPress pages
-				$( '#buddypress' ).trigger( 'bp_heartbeat_send', data );
-			//}
+			data.onScreenNotifications = true;
+			
+			// Add an heartbeat send event to possibly any BuddyPress pages
+			$( '#buddypress' ).trigger( 'bp_heartbeat_send', data );
 		},
 
 		/**
@@ -739,13 +737,10 @@ window.bp = window.bp || {};
 		 * Injects all unread notifications
 		 */
 		bpInjectOnScreenNotifications: function( event, data ) {
-			// if ( 
-			// 	( typeof bs_data.show_notifications === 'undefined' && bs_data.show_notifications != '1' ) 
-			// 	|| 
-			// 	( typeof bs_data.show_messages === 'undefined' && bs_data.show_messages != '1' ) 
-			// ) {
-			// 	return;
-			// }
+			var enable = $( '.bb-onscreen-notification' ).data( 'enable' );
+			if (  enable != '1' ) {
+				return;
+			}
 
 			if ( typeof data.unread_notifications === 'undefined' && data.unread_notifications === '') {
 				return;
@@ -755,7 +750,7 @@ window.bp = window.bp || {};
 			    list          = wrap.find( '.notification-list' ),
 			    removedItems  = list.data('removed-items'),
 				animatedItems = list.data('animated-items'),
-			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) )
+			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) ),
 				items         = notifications.find( '.read-item' );
 			
 			// Ignore all view notifications.

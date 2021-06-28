@@ -814,13 +814,24 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 	return $retval;
 }
 
-function bb_notifications_options( $localize ) {
-	$localize['on_screen_notifications_enable']         = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
-	$localize['on_screen_notifications_position']       = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
-	$localize['on_screen_notifications_mobile_support'] = bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 );
-	$localize['on_screen_notifications_visibility']     = bp_get_option( '_bp_on_screen_notifications_visibility', '' );
-	$localize['on_screen_notifications_browser_tab']    = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
+/**
+ * Get on-screen notifications.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return void
+ */
+function bb_heartbeat_on_screen_notifications( $response = array(), $data = array() ) {
 
-	return $localize;
+	if ( bp_loggedin_user_id() && bp_is_active( 'notifications' ) ) {
+		ob_start();
+		bp_get_template_part( 'notifications/on-screen' );
+		$response['on_screen_notifications'] = ob_get_clean();
+		$response['total_notifications']  = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+	}
+
+	return $response;
 }
-add_filter( 'buddyboss-theme-main-js-data', 'bb_notifications_options' );
+// Heartbeat receive for on-screen notification.
+add_filter( 'heartbeat_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
+add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
