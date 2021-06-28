@@ -2214,7 +2214,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .bb-screen-position-outer {
   display: flex;
-  width: 200px;
+  width: 180px;
   justify-content: space-between;
 }
 
@@ -2222,6 +2222,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   display: flex;
   width: 85px;
   flex-direction: column;
+  text-align: center;
 }
 
 .bb-screen-position-outer .bb-screen-position input[type="radio"] {

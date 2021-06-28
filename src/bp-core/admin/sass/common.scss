@@ -2341,13 +2341,14 @@ h2.has_tutorial_btn {
 
 .bb-screen-position-outer {
 	display: flex;
-	width: 200px;
+	width: 180px;
 	justify-content: space-between;
 
 	.bb-screen-position {
 		display: flex;
 		width: 85px;
 		flex-direction: column;
+		text-align: center;
 
 		input[type="radio"] {
 			opacity: 0;
