@@ -1044,7 +1044,7 @@ function bp_notifications_bulk_management_dropdown() {
 /**
  * Set on-screen notification template.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.7.0
  *
  * @return void
  */

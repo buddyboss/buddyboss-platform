@@ -815,9 +815,9 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 }
 
 /**
- * Get on-screen notifications.
+ * Get on-screen notification content.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.7.0
  *
  * @return void
  */
