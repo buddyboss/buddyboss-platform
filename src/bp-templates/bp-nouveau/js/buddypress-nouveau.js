@@ -698,6 +698,13 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'heartbeat-send', this.bpHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bpHeartbeatTick.bind( this ) );
+
+			// Create event for remove single notification.
+			bp.Nouveau.notificationRemovedAction();
+			// Remove all notifications.
+			bp.Nouveau.removeAllNotification();
+			// Set title tag.
+			bp.Nouveau.setTitle();
 		},
 
 		/**
