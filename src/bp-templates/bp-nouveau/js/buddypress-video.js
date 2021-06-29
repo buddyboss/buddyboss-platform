@@ -790,6 +790,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var target            = $( event.currentTarget );
+			var parentActivityId  = target.attr( 'data-parent-activity-id' );
 			var videoAttachmentId = target.attr( 'data-video-attachment-id' );
 			var videoAttachments  = target.attr( 'data-video-attachments' );
 			var videoId           = target.attr( 'data-video-id' );
@@ -805,6 +806,8 @@ window.bp = window.bp || {};
 				popupSelector = $( event.currentTarget ).closest( '.bb-media-model-wrapper.video-theatre' ).parent();
 			} else if ( $( event.currentTarget ).closest( '#video-stream.video' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '#video-stream.video' ).parent();
+			} else if ( $( event.currentTarget ).closest( '#bb-media-model-container' ).length > 0 ) {
+				popupSelector = $( 'ul.activity-list li#activity-' + parentActivityId ).find( '.activity-inner' );
 			} else if ( $( event.currentTarget ).closest( '#media-stream.media' ).length > 0 ) {
 				popupSelector = $( event.currentTarget ).closest( '#media-stream.media' ).parent();
 			} else if ( $( event.currentTarget ).closest( '.forums-video-wrap' ).length > 0 ) {
