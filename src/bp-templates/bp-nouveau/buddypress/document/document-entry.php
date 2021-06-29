@@ -111,6 +111,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
 		data-activity-id="<?php bp_document_activity_id(); ?>" data-author="<?php bp_document_user_id(); ?>"
 		data-preview="<?php bp_document_attachment_url(); ?>"
+		data-full-preview="<?php bp_document_attachment_url(); ?>"
 		data-text-preview="<?php bp_document_attachment_url(); ?>"
 		data-mp3-preview="<?php bp_document_attachment_url(); ?>"
 		data-video-preview="<?php echo $video_url ? esc_url( $video_url ) : ''; ?>"
