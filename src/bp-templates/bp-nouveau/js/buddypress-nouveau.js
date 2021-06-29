@@ -750,6 +750,7 @@ window.bp = window.bp || {};
 			    list          = wrap.find( '.notification-list' ),
 			    removedItems  = list.data('removed-items'),
 				animatedItems = list.data('animated-items'),
+				newItems      = [],
 			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) );
 			
 			// Ignore all view notifications.
@@ -769,13 +770,28 @@ window.bp = window.bp || {};
 				if ( '-1' == $.inArray( id, animatedItems ) ) {
 					$( item ).addClass( 'pull-animation' );
 					animatedItems.push( id );
+					newItems.push( id );
 				} else {
 					$( item ).removeClass( 'pull-animation' );
 				}
 			} );
 
+			// Remove brder when new item is appear.
+			if ( newItems.length ) {
+				appendItems.each( function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+					if ( '-1' == $.inArray( id, newItems ) ) {
+						$( item ).removeClass( 'recent-item' );
+						var borderItems  = list.data( 'border-items' );
+						borderItems.push( id );
+						list.attr( 'data-border-items', JSON.stringify( borderItems ) );
+
+					} 
+				} );
+			}
+
 			// Store animated notification id in 'animated-items' data attribute.
-			list.attr( 'animated-items', JSON.stringify( animatedItems ) );
+			list.attr( 'data-animated-items', JSON.stringify( animatedItems ) );
 
 			if ( ! appendItems.length ) {
 				return;
@@ -812,6 +828,7 @@ window.bp = window.bp || {};
 			var wrap         = $( '.bb-onscreen-notification' ),
 				list         = wrap.find( '.notification-list' ),
 				borderItems  = list.data( 'border-items' );
+				//newItems     = [];
 
 			// Remove border for single notificaiton after 30s later.
 			list.find( '.read-item' ).each( function( index, item ) {
@@ -822,6 +839,7 @@ window.bp = window.bp || {};
 				}
 
 				$( item ).addClass( 'recent-item' );
+				//newItems.push( id );
 
 				setTimeout( function() {
 					if ( list.find( '.actions .action-close[data-notification-id='+id+']' ).length ) {
@@ -830,7 +848,7 @@ window.bp = window.bp || {};
 					}
 				}, 30000 );
 			} );
-
+			
 			// Store removed notification id in 'auto-removed-items' data attribute.
 			list.attr( 'data-border-items', JSON.stringify( borderItems ) );
 		},
