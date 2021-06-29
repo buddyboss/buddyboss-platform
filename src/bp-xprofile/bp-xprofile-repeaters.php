@@ -383,7 +383,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 			$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				foreach ( $metas as $meta ) {
-					bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					bp_xprofile_add_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 				}
 			}
 			$current_clone_number = 1;
@@ -473,15 +473,20 @@ function xprofile_update_clones_on_template_update( $field ) {
 
 		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field' AND object_type = 'field'", ARRAY_A );
 		if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
-			$field_member_types = array();
 			foreach ( $clone_ids as $clone_id ) {
 				foreach ( $metas as $meta ) {
 					if ( $meta['meta_key'] != 'member_type' ) {
 						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					} else {
-						$field_member_types[] = $meta;
 						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
 					}
+				}
+			}
+
+			$field_member_types = array();
+			foreach ( $metas as $meta ) {
+				if ( $meta['meta_key'] == 'member_type' ) {
+					$field_member_types[] = $meta;
 				}
 			}
 
