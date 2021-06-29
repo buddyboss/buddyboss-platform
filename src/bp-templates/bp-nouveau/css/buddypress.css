@@ -11184,7 +11184,7 @@ fieldset div.avatar {
 .activity-list li.bbp_reply_create .activity-content .activity-inner,
 .activity-list li.blogs .activity-content .activity-inner {
   border: 1px solid #eaeaea;
-  padding: 10px 12px;
+  padding: 12px;
   border-radius: 4px;
   max-width: 640px;
 }
@@ -11193,12 +11193,12 @@ fieldset div.avatar {
 .activity-list li.bbp_reply_create .activity-content .activity-inner img,
 .activity-list li.blogs .activity-content .activity-inner img {
   max-width: 100%;
-  margin-bottom: 15px;
+  margin: 0 0 15px;
 }
 
-.activity-list li.bbp_topic_create .activity-content .activity-inner a > img,
-.activity-list li.bbp_reply_create .activity-content .activity-inner a > img,
-.activity-list li.blogs .activity-content .activity-inner a > img {
+.activity-list li.bbp_topic_create .activity-content .activity-inner a.entry-img > img,
+.activity-list li.bbp_reply_create .activity-content .activity-inner a.entry-img > img,
+.activity-list li.blogs .activity-content .activity-inner a.entry-img > img {
   margin-bottom: 0;
 }
 

@@ -916,16 +916,16 @@ fieldset div.avatar {
 
 	.activity-content .activity-inner {
 		border: 1px solid $light-grey;
-		padding: 10px 12px;
+		padding: 12px;
 		border-radius: 4px;
 		max-width: 640px;
 
 		img {
 			max-width: 100%;
-			margin-bottom: 15px;
+			margin: 0 0 15px;
 		}
 
-		a > img {
+		a.entry-img > img {
 			margin-bottom: 0;
 		}
 
