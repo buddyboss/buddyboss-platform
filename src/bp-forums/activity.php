@@ -359,7 +359,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * Take the "discussion" name out of the activity title.
 		 * Put it underneath for both Discussion and Replies.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @uses bbp_get_reply()           Get reply post data.
 		 * @uses bbp_get_topic_permalink() Get discussion permalink.
@@ -410,7 +410,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Meta button for activity discussion.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $buttons
 		 * @param int   $activity_id
@@ -448,8 +448,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Topic title.
 			$forum_id    = bbp_get_topic_forum_id( $topic_id );
+			//bbp_get_topic_author_id
 			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
-			$author      = bbp_get_topic_author_display_name( $topic_id );
+			$user_id     = bbp_get_topic_author_id( $topic_id );
+			$author      = bp_core_get_user_displayname( $user_id );
 
 			// New meta button as 'Join discussion'.
 			$buttons['activity_discussionsss'] = array(
@@ -503,7 +505,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Meta button for activity reply.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $buttons
 		 * @param int   $activity_id
@@ -569,7 +571,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Reply form for member timeline.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @uses bbp_get_template_part() Load required template.
 		 *
@@ -896,7 +898,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the topic title from user timeline.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param obj $action
 		 * @param obj $activity
@@ -944,7 +946,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the reply title from user timeline.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param obj $action
 		 * @param obj $activity
@@ -1115,7 +1117,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Remove the group icon from the discussion and reply title.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param string $avatar
 		 *
@@ -1140,7 +1142,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Generate "bb-modal bb-modal-box" class for quick reply form.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param boolean $single_topic
 		 *

@@ -931,7 +931,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 /**
  * Get the action buttons for the activity blog post comments
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.0
  *
  * @param object $comment Blog post comment.
  * @param array  $args    Comment meta.
