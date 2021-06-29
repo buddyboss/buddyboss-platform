@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-25 16:12:12+00:00\n"
+"POT-Creation-Date: 2021-06-29 15:35:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,7 +25,7 @@ msgstr ""
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
 #: bp-activity/actions/delete.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:278
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:272
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:710
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:558
 msgid "Please enter some content to post."
 msgstr ""
 
@@ -124,8 +124,7 @@ msgstr ""
 
 #: bp-activity/actions/reply.php:43
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:186
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:389
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:520
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:383
 msgid "Please do not leave the comment area blank."
 msgstr ""
 
@@ -155,7 +154,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
 #: bp-core/bp-core-cssjs.php:259
-#: bp-moderation/classes/class-bp-moderation-activity.php:111
+#: bp-moderation/classes/class-bp-moderation-activity.php:105
 #: bp-search/bp-search-functions.php:376 bp-search/bp-search-settings.php:908
 msgid "Activity"
 msgstr ""
@@ -390,9 +389,9 @@ msgstr ""
 #: bp-forums/admin/replies.php:806 bp-forums/admin/topics.php:899
 #: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2332
 #: bp-forums/topics/functions.php:2093 bp-forums/topics/template.php:3186
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:526
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:527
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:855
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:511
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:512
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:840
 msgid "Spam"
 msgstr ""
 
@@ -415,9 +414,9 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-list-table.php:570
 #: bp-invites/bp-invites-admin.php:268
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:809
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1299
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1377
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1555
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1284
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1362
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1540
 #: bp-templates/bp-nouveau/includes/document/ajax.php:405
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1105
 #: bp-xprofile/bp-xprofile-admin.php:915
@@ -533,8 +532,8 @@ msgstr ""
 #: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1764
 #: bp-forums/replies/template.php:1807 bp-forums/topics/template.php:3295
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:401
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:806
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:979
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:791
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:964
 #. translators: accessibility text
 msgid "Reply"
 msgstr ""
@@ -558,8 +557,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:25
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:43
 #: bp-templates/bp-nouveau/includes/activity/functions.php:194
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1316
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1394
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1301
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1379
 #: bp-templates/bp-nouveau/includes/document/ajax.php:422
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1115
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
@@ -569,8 +568,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-adminbar.php:46
 #: bp-core/admin/settings/bp-admin-setting-activity.php:80
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1550
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1554
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1535
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1539
 msgid "Edit Activity"
 msgstr ""
 
@@ -592,46 +591,35 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:194
-#: bp-activity/bp-activity-filters.php:199
-msgid "Blog post comments are not allow in activity table."
-msgstr ""
-
-#: bp-activity/bp-activity-filters.php:629
-#: bp-activity/bp-activity-filters.php:2368
-#: bp-activity/bp-activity-filters.php:2397
-#: bp-activity/bp-activity-filters.php:2432
+#: bp-activity/bp-activity-filters.php:581
+#: bp-activity/bp-activity-filters.php:2322
+#: bp-activity/bp-activity-filters.php:2347
+#: bp-activity/bp-activity-filters.php:2380
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:633
-#: bp-activity/bp-activity-filters.php:2366
-#: bp-activity/bp-activity-filters.php:2395
-#: bp-activity/bp-activity-filters.php:2430
+#: bp-activity/bp-activity-filters.php:585
+#: bp-activity/bp-activity-filters.php:2320
+#: bp-activity/bp-activity-filters.php:2345
+#: bp-activity/bp-activity-filters.php:2378
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:689
+#: bp-activity/bp-activity-filters.php:641
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:947
+#: bp-activity/bp-activity-filters.php:899
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1727
-#: bp-activity/bp-activity-filters.php:1901
-#: bp-activity/bp-activity-filters.php:2051
-#: bp-activity/bp-activity-filters.php:2224
+#: bp-activity/bp-activity-filters.php:1679
+#: bp-activity/bp-activity-filters.php:1853
+#: bp-activity/bp-activity-filters.php:2003
+#: bp-activity/bp-activity-filters.php:2176
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1681
 #: cli/components/activity.php:763
 msgid "%1$s posted an update in the group %2$s"
-msgstr ""
-
-#: bp-activity/bp-activity-filters.php:2474
-#: bp-activity/bp-activity-filters.php:2476 bp-blogs/bp-blogs-activity.php:154
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:294
-msgid "Comments"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:508
@@ -789,8 +777,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:2990
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:362
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:497
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:356
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
@@ -994,13 +981,13 @@ msgstr ""
 msgid "Profile photo of the author of the site %s"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2414
+#: bp-activity/bp-activity-template.php:2290
 msgid ""
 "%1$s no longer accepts arguments. See the inline documentation at %2$s for "
 "more details."
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2909
+#: bp-activity/bp-activity-template.php:2785
 #: bp-core/bp-core-attachments.php:810 bp-forums/replies/template.php:2224
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
@@ -1021,9 +1008,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:12
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:85
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:74
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:829
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1606
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1607
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:814
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1591
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1592
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:920
@@ -1037,7 +1024,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3013
+#: bp-activity/bp-activity-template.php:2889
 #: bp-core/admin/bp-core-admin-functions.php:1562
 #: bp-core/admin/bp-core-admin-pages.php:346
 #: bp-core/admin/bp-core-admin-pages.php:380
@@ -1059,31 +1046,31 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3124
+#: bp-activity/bp-activity-template.php:3000
 msgid "Clear Filter"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3412
+#: bp-activity/bp-activity-template.php:3288
 msgid "a user"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4007
+#: bp-activity/bp-activity-template.php:3883
 msgid "Site Wide Activity RSS Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4236
-#: bp-activity/bp-activity-template.php:4242
+#: bp-activity/bp-activity-template.php:4112
+#: bp-activity/bp-activity-template.php:4118
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:958
 #: bp-templates/bp-nouveau/includes/activity/functions.php:327
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
 msgid "Following"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4241
+#: bp-activity/bp-activity-template.php:4117
 msgid "Unfollow"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4258
+#: bp-activity/bp-activity-template.php:4134
 #: bp-core/admin/settings/bp-admin-setting-activity.php:95
 #: bp-templates/bp-nouveau/includes/customizer.php:324
 msgid "Follow"
@@ -1969,36 +1956,41 @@ msgstr ""
 msgid "New post comment posted"
 msgstr ""
 
+#: bp-blogs/bp-blogs-activity.php:154
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:279
+msgid "Comments"
+msgstr ""
+
 #: bp-blogs/bp-blogs-activity.php:177 cli/components/activity.php:835
 msgid "%1$s created the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:259 bp-blogs/bp-blogs-activity.php:1595
+#: bp-blogs/bp-blogs-activity.php:259 bp-blogs/bp-blogs-activity.php:1599
 msgid "(no title)"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:286 bp-blogs/bp-blogs-activity.php:1647
-msgid "%1$s posted a new post, %2$s, on the site %3$s"
+#: bp-blogs/bp-blogs-activity.php:283 bp-blogs/bp-blogs-activity.php:1651
+msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:288 bp-blogs/bp-blogs-activity.php:1649
-msgid "%1$s posted a new post, %2$s"
+#: bp-blogs/bp-blogs-activity.php:285 bp-blogs/bp-blogs-activity.php:1653
+msgid "%1$s posted a new post."
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:412
+#: bp-blogs/bp-blogs-activity.php:409
 msgid "%1$s commented on the post, %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:414 cli/components/activity.php:882
+#: bp-blogs/bp-blogs-activity.php:411 cli/components/activity.php:882
 msgid "%1$s commented on the post, %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1640
-msgid "%1$s posted a new %2$s, %3$s, on the site %4$s"
+#: bp-blogs/bp-blogs-activity.php:1644
+msgid "%1$s posted a new %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1642
-msgid "%1$s posted a new %2$s, %3$s"
+#: bp-blogs/bp-blogs-activity.php:1646
+msgid "%1$s posted a new %2$s."
 msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:241
@@ -3069,12 +3061,12 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:490
 #: bp-core/admin/bp-core-admin-settings.php:577
 #: bp-core/admin/bp-core-admin-settings.php:639
-#: bp-core/admin/bp-core-admin-settings.php:998
-#: bp-core/admin/bp-core-admin-settings.php:1114
-#: bp-core/admin/bp-core-admin-settings.php:1284
-#: bp-core/admin/bp-core-admin-settings.php:1349
-#: bp-core/admin/bp-core-admin-settings.php:1386
-#: bp-core/admin/bp-core-admin-settings.php:1410
+#: bp-core/admin/bp-core-admin-settings.php:1005
+#: bp-core/admin/bp-core-admin-settings.php:1121
+#: bp-core/admin/bp-core-admin-settings.php:1291
+#: bp-core/admin/bp-core-admin-settings.php:1356
+#: bp-core/admin/bp-core-admin-settings.php:1393
+#: bp-core/admin/bp-core-admin-settings.php:1417
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
@@ -3096,7 +3088,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:273
-#: bp-core/admin/bp-core-admin-settings.php:929
+#: bp-core/admin/bp-core-admin-settings.php:936
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
@@ -3126,25 +3118,25 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:449
-#: bp-core/admin/bp-core-admin-settings.php:1013
-#: bp-core/admin/bp-core-admin-settings.php:1041
-#: bp-core/admin/bp-core-admin-settings.php:1069
+#: bp-core/admin/bp-core-admin-settings.php:1020
+#: bp-core/admin/bp-core-admin-settings.php:1048
+#: bp-core/admin/bp-core-admin-settings.php:1076
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:232
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:453
-#: bp-core/admin/bp-core-admin-settings.php:1018
-#: bp-core/admin/bp-core-admin-settings.php:1046
-#: bp-core/admin/bp-core-admin-settings.php:1083 bp-core/bp-core-options.php:40
+#: bp-core/admin/bp-core-admin-settings.php:1025
+#: bp-core/admin/bp-core-admin-settings.php:1053
+#: bp-core/admin/bp-core-admin-settings.php:1090 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:457
-#: bp-core/admin/bp-core-admin-settings.php:1023
-#: bp-core/admin/bp-core-admin-settings.php:1051
-#: bp-core/admin/bp-core-admin-settings.php:1088
+#: bp-core/admin/bp-core-admin-settings.php:1030
+#: bp-core/admin/bp-core-admin-settings.php:1058
+#: bp-core/admin/bp-core-admin-settings.php:1095
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:234
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
@@ -3340,137 +3332,140 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:833
 msgid ""
-"Select which Custom Post Types (coming from your plugins) should be shown "
-"in the activity feed. For example, if using WooCommerce it could post into "
-"the activity feed every time someone creates a new product."
+"Select which custom post types show in the activity feed when members "
+"publish them. For each custom post type, you can select whether or not to "
+"show comments in these activity posts (if comments are supported)."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:847
-#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:656
-msgid "Blog Posts"
+msgid "WordPress Posts"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:854
-msgid "When users publish new blog posts, show them in the activity feed."
+msgid "When members publish new blog posts, show them in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:883
-msgid "Show blog post comments"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:883
-msgid "Enable comments in %s activity posts."
+#: bp-core/admin/bp-core-admin-settings.php:875
+msgid "Comments are not supported for %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:890
+msgid "Enable WordPress Post comments in the activity feed"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:890
+msgid "Enable %s comments in the activity feed."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:897
 msgid ""
 "Allow members to view and create comments to blog posts in the activity "
 "feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:923
+#: bp-core/admin/bp-core-admin-settings.php:930
 msgid "Allow non-members to register new accounts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:960
+#: bp-core/admin/bp-core-admin-settings.php:967
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:977
+#: bp-core/admin/bp-core-admin-settings.php:984
 msgid ""
 "Allow members to use <a href=\"https://gravatar.com/\">gravatars</a> for "
 "profile avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1018
-#: bp-core/admin/bp-core-admin-settings.php:1069
-#: bp-core/admin/bp-core-admin-settings.php:1083
+#: bp-core/admin/bp-core-admin-settings.php:1025
+#: bp-core/admin/bp-core-admin-settings.php:1076
+#: bp-core/admin/bp-core-admin-settings.php:1090
 msgid "(can be disabled)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1027
+#: bp-core/admin/bp-core-admin-settings.php:1034
 msgid ""
 "If you disable \"Last Name\" field, it will not appear anywhere in the "
 "network."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1055
+#: bp-core/admin/bp-core-admin-settings.php:1062
 msgid ""
 "All name fields are required with this format. Best used for professional "
 "networks."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1092
+#: bp-core/admin/bp-core-admin-settings.php:1099
 msgid ""
 "If you disable \"First Name\" and \"Last Name\" fields, they will not "
 "appear anywhere in the network. This allows your members to be fully "
 "anonymous (if they use a pseudonym for their nickname)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1174
+#: bp-core/admin/bp-core-admin-settings.php:1181
 msgid "Add Email confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1189
+#: bp-core/admin/bp-core-admin-settings.php:1196
 msgid "Add Legal Agreement checkbox to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1193
+#: bp-core/admin/bp-core-admin-settings.php:1200
 msgid ""
 "Require non-members to explicitly agree to your Terms of Service and "
 "Privacy Policy before registering."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1206
+#: bp-core/admin/bp-core-admin-settings.php:1213
 msgid "Add Password confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1218
+#: bp-core/admin/bp-core-admin-settings.php:1225
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:461
 msgid "Grid and List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1219
-#: bp-core/admin/bp-core-admin-settings.php:1250
+#: bp-core/admin/bp-core-admin-settings.php:1226
+#: bp-core/admin/bp-core-admin-settings.php:1257
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:462
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:493
 msgid "Grid"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1220
-#: bp-core/admin/bp-core-admin-settings.php:1251
+#: bp-core/admin/bp-core-admin-settings.php:1227
+#: bp-core/admin/bp-core-admin-settings.php:1258
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:494
 msgid "List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1237
+#: bp-core/admin/bp-core-admin-settings.php:1244
 msgid ""
 "Display group directories in Grid View, List View, or allow toggling "
 "between both views."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1302
+#: bp-core/admin/bp-core-admin-settings.php:1309
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1303
+#: bp-core/admin/bp-core-admin-settings.php:1310
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1308
+#: bp-core/admin/bp-core-admin-settings.php:1315
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1328
+#: bp-core/admin/bp-core-admin-settings.php:1335
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1363
+#: bp-core/admin/bp-core-admin-settings.php:1370
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
@@ -3941,7 +3936,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:98
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:922
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:133
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:127
 #: bp-templates/bp-nouveau/includes/activity/functions.php:270
 msgid "Likes"
 msgstr ""
@@ -6280,23 +6275,23 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1030
+#: bp-core/bp-core-options.php:1034
 msgid "30 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1031
+#: bp-core/bp-core-options.php:1035
 msgid "7 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1032
+#: bp-core/bp-core-options.php:1036
 msgid "1 Day"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1033
+#: bp-core/bp-core-options.php:1037
 msgid "1 Hour"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1034
+#: bp-core/bp-core-options.php:1038
 msgid "10 Minutes"
 msgstr ""
 
@@ -7968,9 +7963,9 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-activity-export.php:70
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:22
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:296
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:493
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:494
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:281
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:478
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:479
 msgid "Comment"
 msgstr ""
 
@@ -8683,8 +8678,8 @@ msgstr ""
 #: bp-document/bp-document-filters.php:255
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:120
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:243
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1333
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1411
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1318
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1396
 #: bp-templates/bp-nouveau/includes/document/ajax.php:439
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
 #: bp-templates/bp-nouveau/includes/document/functions.php:105
@@ -9354,44 +9349,44 @@ msgstr ""
 msgid "You do not have access to that folder."
 msgstr ""
 
-#: bp-forums/activity.php:205 bp-forums/activity.php:209
+#: bp-forums/activity.php:199 bp-forums/activity.php:204
 msgid "New forum discussion"
 msgstr ""
 
-#: bp-forums/activity.php:206 bp-forums/activity.php:210
+#: bp-forums/activity.php:200 bp-forums/activity.php:205
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:465 bp-forums/activity.php:466
-#: bp-forums/activity.php:562 bp-forums/activity.php:563
+#: bp-forums/activity.php:396
+msgid "Reply to"
+msgstr ""
+
+#: bp-forums/activity.php:448 bp-forums/activity.php:449
+#: bp-forums/activity.php:485 bp-forums/activity.php:486
 msgid "Join Discussion"
 msgstr ""
 
-#: bp-forums/activity.php:487 bp-forums/activity.php:488
-msgid "Quick Reply"
-msgstr ""
-
-#: bp-forums/activity.php:658
+#: bp-forums/activity.php:558
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:812
+#: bp-forums/activity.php:711
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:946
+#: bp-forums/activity.php:845
 msgid "%1$s started a new discussion in the forum %2$s"
 msgstr ""
 
-#: bp-forums/activity.php:987
+#: bp-forums/activity.php:886
 msgid "%1$s replied to a discussion in the forum %2$s"
 msgstr ""
 
-#: bp-forums/activity.php:1017
+#: bp-forums/activity.php:916
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1049
+#: bp-forums/activity.php:948
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
@@ -21847,62 +21842,6 @@ msgstr ""
 msgid "Moderation not enabled."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:260
-msgid "Report Forum"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:264
-msgid "Report Topic"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:268
-msgid "Report Reply"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:272
-#: bp-moderation/classes/class-bp-moderation-activity.php:282
-#: bp-moderation/classes/class-bp-moderation-activity.php:296
-msgid "Report Post"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:277
-#: bp-moderation/classes/class-bp-moderation-activity.php:284
-msgid "Report Photo"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:291
-#: bp-moderation/classes/class-bp-moderation-activity.php:298
-msgid "Report Document"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:328
-msgid "Reported Forum"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:332
-msgid "Reported Topic"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:336
-msgid "Reported Reply"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:340
-#: bp-moderation/classes/class-bp-moderation-activity.php:350
-#: bp-moderation/classes/class-bp-moderation-activity.php:364
-msgid "Reported Post"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:345
-#: bp-moderation/classes/class-bp-moderation-activity.php:352
-msgid "Reported Photo"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-activity.php:359
-#: bp-moderation/classes/class-bp-moderation-activity.php:366
-msgid "Reported Document"
-msgstr ""
-
 #: bp-moderation/classes/class-bp-moderation-comment.php:92
 msgid "Blog Comments"
 msgstr ""
@@ -22745,6 +22684,10 @@ msgstr ""
 msgid "Viewing %1$d - %2$d of %3$d results"
 msgstr ""
 
+#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:656
+msgid "Blog Posts"
+msgstr ""
+
 #: bp-search/bp-search-functions.php:363
 msgid "Post Comments"
 msgstr ""
@@ -23562,8 +23505,8 @@ msgid "Edit Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:266
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1170
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1192
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1155
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1177
 msgid "Edit Post Privacy"
 msgstr ""
 
@@ -24332,8 +24275,8 @@ msgid "and you."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/message.php:19
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:455
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:460
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:440
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:445
 msgid "View Conversation"
 msgstr ""
 
@@ -24421,26 +24364,26 @@ msgstr ""
 msgid "New Field"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:122
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:412
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:116
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:397
 msgid "Unlike"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:166
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:400
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:160
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:385
 msgid "Like"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:175
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:169
 #: bp-templates/bp-nouveau/includes/functions.php:830
 msgid "Sorry, there was no activity found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:219
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:213
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:296
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:290
 #: bp-templates/bp-nouveau/includes/document/ajax.php:261
 #: bp-templates/bp-nouveau/includes/document/ajax.php:340
 #: bp-templates/bp-nouveau/includes/document/ajax.php:468
@@ -24451,54 +24394,54 @@ msgstr ""
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:673
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:521
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:751
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:774
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:599
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:622
 #. translators: 1: string or media and medias. 2: group text.
 msgid "You don't have access to upload %1$s%2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:752
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:600
 msgid "media"
 msgid_plural "medias"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:753
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:776
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:601
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:624
 msgid " inside group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:775
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:623
 msgid "document"
 msgid_plural "documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:793
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:641
 msgid "You don't have access to do a activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:845
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:693
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:868
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:716
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:868
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:716
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:899
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:747
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:948
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:796
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
@@ -24562,7 +24505,7 @@ msgstr ""
 msgid "New update comment replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:696
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:681
 #. translators: 1: user profile link, 2: user name, 3: activity permalink, 4:
 #. activity recorded date, 5: activity timestamp, 6: activity human time since
 msgid ""
@@ -24571,24 +24514,24 @@ msgid ""
 "data-bp-timestamp=\"%5$d\">%6$s</time></a>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1165
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1150
 msgid "Edit Album Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1187
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1172
 msgid "Edit Folder Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1248
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1233
 msgid "(edited)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1298
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1304
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1307
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1376
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1382
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1385
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1283
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1289
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1292
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1361
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1367
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1370
 #: bp-templates/bp-nouveau/includes/document/ajax.php:404
 #: bp-templates/bp-nouveau/includes/document/ajax.php:411
 #: bp-templates/bp-nouveau/includes/document/ajax.php:414
@@ -24597,14 +24540,14 @@ msgstr ""
 msgid "Add a description"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1314
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1392
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1299
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1377
 #: bp-templates/bp-nouveau/includes/document/ajax.php:420
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1114
 msgid "Done Editing"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1484
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1469
 msgid "More Options"
 msgstr ""
 

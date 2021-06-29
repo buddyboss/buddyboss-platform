@@ -935,6 +935,12 @@ fieldset div.avatar {
 			font-weight: 500;
 			margin-bottom: 10px;
 			display: block;
+			color: #333;
+
+			.bb-reply-lable {
+				color: #7f868f;
+				font-weight: 400;
+			}
 
 			a {
 				color: #333;
@@ -945,7 +951,7 @@ fieldset div.avatar {
 			}
 		}
 
-		.bb-content-inr-wrap > p {
+		.bb-content-inr-wrap > p:not(:last-child) {
 			margin-bottom: 10px;
 		}
 
@@ -968,6 +974,80 @@ fieldset div.avatar {
 		}
 
 	}
+}
+
+.activity-list li.bbp_topic_create,
+.activity-list li.bbp_reply_create {
+
+	.activity-content .activity-inner {
+		padding: 0;
+
+		.activity-discussion-title-wrap {
+			border-bottom: 1px solid #eaeaea;
+			padding: 12px;
+			margin-bottom: 0;
+		}
+
+	}
+
+	.bb-content-inr-wrap {
+		padding: 12px;
+		background-color: #fafafa;
+	}
+
+	.bb-activity-media-wrap {
+		margin: 0;
+
+		.bb-activity-media-elem {
+			padding: 0;
+
+			.entry-img {
+				border-radius: 0 0 4px 4px;
+
+				img {
+					margin-bottom: 0;
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+.activity-list li.blogs {
+
+	.activity-content .activity-inner {
+		padding: 0;
+		position: relative;
+
+		.bb-post-img-link {
+
+			&:before {
+				content: "";
+				display: block;
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+			}
+
+			img {
+				border-radius: 3px 3px 0 0;
+				margin-bottom: 0;
+			}
+		}
+
+		.bb-content-wrp {
+			display: block;
+			padding: 12px;
+			background-color: #fafafa;
+		}
+
+	}
+
 }
 
 /* =User Capabilities
