@@ -1055,10 +1055,10 @@ window.bp = window.bp || {};
 				items = list.find( '.read-item' );
 
 			if ( items.length > 1 ) {
-				wrap.find( '.bb-remove-all-notification' ).show();
+				wrap.find( '.bb-remove-all-notification .action-close' ).show();
 			} else {
-				wrap.find( '.bb-remove-all-notification' ).hide();
-				wrap.find( '.bb-remove-all-notification' ).css({ display: 'none' });
+				wrap.find( '.bb-remove-all-notification .action-close' ).hide();
+				wrap.find( '.bb-remove-all-notification .action-close' ).css({ display: 'none' });
 			}
 		},
 
