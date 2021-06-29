@@ -742,7 +742,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			if ( typeof data.unread_notifications === 'undefined' && data.unread_notifications === '') {
+			if ( typeof data.on_screen_notifications === 'undefined' && data.on_screen_notifications === '') {
 				return;
 			}
 

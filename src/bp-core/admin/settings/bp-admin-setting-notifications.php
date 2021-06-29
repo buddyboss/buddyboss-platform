@@ -30,6 +30,10 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$this->tab_order = 40;
 	}
 
+	public function is_active() {
+		return bp_is_active( 'notifications' );
+	}
+
 	/**
 	 * Sore on-screen notification settings value.
 	 * 
