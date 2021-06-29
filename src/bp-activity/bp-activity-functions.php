@@ -2988,7 +2988,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
-	
+
 	// Filter to skip comment content check for comment notification.
 	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
 
@@ -5397,6 +5397,11 @@ function bp_activity_default_scope( $scope = 'all' ) {
  * @return array|bool The Activity edit data or false otherwise.
  */
 function bp_activity_get_edit_data( $activity_id = 0 ) {
+
+	if ( ! bp_is_activity_edit_enabled() ) {
+		return;
+	}
+
 	global $activities_template;
 
 	// check activity empty or not.
