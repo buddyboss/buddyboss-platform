@@ -632,7 +632,8 @@ function bb_core_print_directory_protection_admin_notices() {
 
 		$class = 'notice notice-error';
 
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $notice );
+		// TODO: temporary commented, will update soon once finilize
+		//printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $notice );
     }
 
 }

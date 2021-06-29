@@ -498,7 +498,7 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card.section-bp_media_settings_symlinks {
-  display: none !important;
+  display: block !important;
 }
 
 .bp-admin-card.section-bp_media_settings_symlinks h2:before {
@@ -2222,4 +2222,36 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
     top: inherit;
     bottom: -55px;
   }
+}
+
+.bp-messages-feedback .bp-feedback.error {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback {
+  box-shadow: none;
+  padding-top: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback .bp-icon {
+  border-radius: 0 4px 4px 0;
+  margin: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback > p {
+  color: #666 !important;
+  margin-top: 0 !important;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  border-right: 0;
+  width: 100%;
+}
+
+.bp-messages-feedback .bp-feedback.warning .bp-icon::before {
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  content: "\e855";
 }

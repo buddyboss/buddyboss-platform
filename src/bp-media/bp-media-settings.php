@@ -47,11 +47,6 @@ function bp_media_get_settings_sections() {
 			'title'             => __( 'Animated GIFs', 'buddyboss' ),
 			'tutorial_callback' => 'bp_animated_gifs_tutorial',
 		),
-		'bp_media_settings_symlinks'  => array(
-			'page'              => 'media',
-			'title'             => __( 'Media Security & Performance', 'buddyboss' ),
-			'callback'          => 'bb_admin_setting_callback_symlinks_section',
-		),
 	);
 
 	return (array) apply_filters( 'bp_media_get_settings_sections', $settings );
@@ -328,15 +323,36 @@ function bp_media_get_settings_fields() {
 		'callback' => 'bp_video_settings_callback_extension_link',
 	);
 
-	$fields['bp_media_settings_symlinks']['bp_media_symlink_support'] = array(
-		'title'             => __( 'Symlinks', 'buddyboss' ),
-		'callback'          => 'bb_media_settings_callback_symlink_support',
-		'sanitize_callback' => 'absint',
-		'args'              => array(),
-	);
-
 	return (array) apply_filters( 'bp_media_get_settings_fields', $fields );
 }
+
+/**
+ * Register the settings field.
+ *
+ * @param array $setting settings field.
+ *
+ * @since 1.1.0
+ */
+function bb_admin_setting_media_access_control_register_fields( $setting ) {
+	$setting->add_section(
+		'bp_media_settings_symlinks',
+		__( 'Media Security & Performance', 'buddyboss' ),
+		'bb_admin_setting_callback_symlinks_section'
+	);
+	$setting->add_field(
+		'bp_media_symlink_support',
+		__( 'Symbolic Links', 'buddyboss' ),
+		'bb_media_settings_callback_symlink_support',
+		'absint'
+	);
+	$setting->add_field(
+		'bp_media_symlink_direct_access',
+		__( 'Direct Access', 'buddyboss' ),
+		'bb_media_settings_callback_symlink_direct_access',
+		'absint'
+	);
+}
+add_action( 'bp_admin_setting_media_register_fields', 'bb_admin_setting_media_access_control_register_fields' );
 
 /** General Section **************************************************************/
 
@@ -1895,10 +1911,72 @@ function bb_admin_setting_callback_symlinks_section() {
  */
 function bb_media_settings_callback_symlink_support() {
 	?>
-    <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
-    <label for="bp_media_symlink_support">
-		<?php _e( 'Enable symlinks in <strong>Photos, Documents,</strong> and <strong>Videos</strong>', 'buddyboss' ); ?>
-    </label>
-	<p class="description">symbolic link (symlink) improves performance by not loading media using PHP script instead it create an original file shortcut which improves security and performance.</p>
+	<div class="bp-messages-feedback">
+		<div class="bp-feedback success">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php _e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
+		</div>
+	</div>
+	<?php //TODO: Above meesages need to be conditional and input will be alway hidden it only for support, will update it soon. ?>
+	<div class="bp-messages-feedback" style="display:none">
+		<div class="bp-feedback warning">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php _e( 'Symbolic links are not supported on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+		</div>
+	</div>
+	<p class="description">Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.</p>
+    <div style="display:none;">
+		<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
+		<label for="bp_media_symlink_support">
+			<strong>
+				<?php _e( 'Disable symbolic links for photos, documents and videos', 'buddyboss' ); ?>
+			</strong>
+		</label>
+	</div>
+	<?php //TODO: Above meesages need to be conditional and input will be alway hidden it only for support, will update it soon ?>
 	<?php
+}
+
+/**
+ * Setting > Media > Media Miscellaneous
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_media_settings_callback_symlink_direct_access() {
+	?>
+	<div class="bp-messages-feedback">
+		<div class="bp-feedback success">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php _e( 'Direct access to your media files and folders is blocked', 'buddyboss' ); ?></p>
+		</div>
+	</div>
+	<?php
+	$get_sample_ids = bp_get_option( 'bb_directory_get_test_ids', array() );
+
+    $directory = array();
+	foreach ( $get_sample_ids as $id => $v ) {
+		$fetch = wp_remote_get( wp_get_attachment_image_url( $v ) );
+		if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 == $fetch['response']['code'] ) {
+			$directory[] = $id;
+		}
+	}
+
+	if ( ! empty( $directory ) ) {
+		$message =  sprintf(
+			'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+			esc_html__( 'Direct access to your media files and folders is blocked', 'buddyboss' ),
+		);
+
+		printf( $message );
+    }
+
+	$notice =  sprintf(
+		'%s <a href="%s">%s</a> %s',
+		esc_html__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our ', 'buddyboss' ),
+		esc_url( 'https://www.buddyboss.com/resources/docs/components/media/media-permissions/' ),
+		esc_html__( 'Media Permissions', 'buddyboss' ),
+		esc_html__( ' tutorial to configure your server.', 'buddyboss' )
+	);
+
+	printf( '<p class="description">%s</p>', $notice);
 }
