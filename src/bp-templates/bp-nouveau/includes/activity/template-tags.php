@@ -1439,7 +1439,7 @@ function bp_nouveau_get_edit_activity_data() {
 /**
  * Output the top action buttons inside an Activity Loop.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -1451,7 +1451,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 	/**
 	 * Fires at the end of the activity entry top meta data area.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.0
 	 */
 	do_action( 'bp_activity_entry_top_meta' );
 
@@ -1476,7 +1476,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  */
 function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	$buttons = array();
