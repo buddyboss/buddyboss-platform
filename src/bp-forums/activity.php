@@ -471,7 +471,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			);
 
 			// Current users has access for quick reply.
-			if ( bbp_current_user_can_access_create_reply_form() ) {
+			//if ( bbp_current_user_can_access_create_reply_form() ) {
 
 				// New meta button as 'Quick Reply'.
 				$buttons['quick_reply'] = array(
@@ -495,7 +495,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						'data-author-name' => $author,
 					),
 				);
-			}
+			//}
 
 			return $buttons;
 		}
