@@ -152,68 +152,8 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
-// Hook for access control in activity state.
-add_filter( 'bp_nouveau_has_activity_state', 'bb_has_activity_state', 10, 2 );
-
-add_filter( 'bb_activity_view_comment', 'bb_has_comment_view_permission', 10, 2 );
-
 /** Functions *****************************************************************/
 
-/**
- * Access control for view comments.
- *
- * @since BuddyBoss 1.7.0
- *
- * @param boolean $retval  Comment view status.
- * @param array   $args    
- *
- * @return boolean
- */
-function bb_has_comment_view_permission( $retval, $args ) {
-	global $activities_template;
-
-    if ( 'blogs' !== $activities_template->activity->component ) {
-		return $retval;
-    }
-
-	if ( ! bp_activity_can_comment() ) {
-		$retval = false;
-	}
-
-	return $retval;
-}
-
-/**
- * Access control for showing activity state.
- *
- * @since BuddyBoss 1.7.0
- *
- * @param boolean $status      Activity status.
- * @param int     $activity_id Activity id.
- *
- * @return boolean
- */
-function bb_has_activity_state( $status, $activity_id ) {
-	// Activity post data.
-	$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-
-	if ( empty( $activities['activities'] ) ) {
-		return $buttons;
-	}
-
-	$activity = array_shift( $activities['activities'] );
-
-	// Remove the access when activity component is blogs.
-	if ( 'blogs' !== $activity->component ) {
-		return $status;
-	}
-
-	if ( ! bp_activity_can_comment() ) {
-		return false;
-	}
-
-	return $status;
-}
 /**
  * Types of activity feed items to moderate.
  *
@@ -2448,7 +2388,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 /**
  * Disable activity stream comments for discussion and reply.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.6.2
  *
  * @param boolean $retval Has comment permission.
  *
@@ -2459,35 +2399,6 @@ function bb_activity_has_comment_access( $retval ) {
 
 	// Already forced off, so comply.
 	if ( false === $retval ) {
-		return $retval;
-	}
-
-	if ( 'blogs' === $activities_template->activity->component ) {
-		// If activity commenting is disabled,
-		if ( bp_disable_blogforum_comments() ) {
-			$retval = false;
-		} else {
-			/**
-			 * Checking individual post comment status.
-			 **/
-			$post = get_post( $activity->secondary_item_id );
-
-			// Has post.
-			if ( ! empty( $post ) ) {
-				$open = ( 'open' === $post->comment_status );
-				
-				// Enable comment when the post comment is not opne but has comment count.
-				if ( $post->comment_count ) {
-					$retval = true;
-				}
-
-				// Disable comment when the comment not open for individual post.
-				if ( ! $open ) {
-					$retval = false;
-				}
-			}
-		}
-
 		return $retval;
 	}
 
@@ -2511,7 +2422,7 @@ function bb_activity_has_comment_access( $retval ) {
 /**
  * Access control for showing activity state.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.6.2
  *
  * @param array $buttons             The list of buttons.
  * @param int   $activity_comment_id The current activity comment ID.
