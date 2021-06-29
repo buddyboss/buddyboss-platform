@@ -1398,28 +1398,31 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		</a>
 
 		<?php
-		if ( $can_edit ) {
-			?>
-            <div class="video-action-wrap item-action-wrap">
-                <a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-                    <i class="bb-icon-menu-dots-v"></i>
-                </a>
-                <div class="video-action_list item-action_list">
-                    <ul>
-                        <li class="edit_thumbnail_video video-action-class">
-                            <a href="#" data-action="video"
-                               data-parent-activity-id="<?php echo esc_attr( $parent_activity_id ); ?>"
-                               data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
-                               data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
-                               data-video-id="<?php echo esc_attr( $video_id ); ?>" class="ac-video-thumbnail-edit">
-								<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div><!-- .video-action-wrap -->
-			<?php
-		}
+    }
+
+    if ( $can_edit ) {
+        ?>
+        <div class="video-action-wrap item-action-wrap">
+            <a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+                <i class="bb-icon-menu-dots-v"></i>
+            </a>
+            <div class="video-action_list item-action_list">
+                <ul>
+                    <li class="edit_thumbnail_video video-action-class">
+                        <a href="#" data-action="video"
+                           data-parent-activity-id="<?php echo esc_attr( $parent_activity_id ); ?>"
+                           data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
+                           data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
+                           data-video-id="<?php echo esc_attr( $video_id ); ?>" class="ac-video-thumbnail-edit">
+                            <?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- .video-action-wrap -->
+        <?php
+    }
+	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<div class="bp-edit-media-activity-description" style="display: none;">
