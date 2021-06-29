@@ -2217,7 +2217,7 @@ window.bp = window.bp || {};
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
+
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
 							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
@@ -2421,7 +2421,7 @@ window.bp = window.bp || {};
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
+
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
 							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
@@ -2557,7 +2557,7 @@ window.bp = window.bp || {};
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
+
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
 							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
@@ -2753,16 +2753,16 @@ window.bp = window.bp || {};
 						function( element, file ) {
 
 							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-							
+
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
+
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
 							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
-							
+
 							if( element.upload.progress === 100 ) {
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
@@ -2902,7 +2902,7 @@ window.bp = window.bp || {};
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
+
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
 							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
@@ -3184,16 +3184,16 @@ window.bp = window.bp || {};
 						function( element, file ) {
 
 							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-							
+
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
-	
+
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
 							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
-							
+
 							if( element.upload.progress === 100 ) {
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
@@ -6474,6 +6474,7 @@ window.bp = window.bp || {};
 							extension         : document_element.data('extension'),
 							target_text       : document_element.data('document-title'),
 							preview           : document_element.data('preview'),
+							full_preview      : document_element.data('full-preview'),
 							text_preview      : document_element.data('text-preview'),
 							mirror_text       : document_element.data('mirror-text'),
 							target_icon_class : document_element.data('icon-class'),
@@ -6604,10 +6605,10 @@ window.bp = window.bp || {};
 				$( window ).scroll();
 
 			} else {
-				if ( self.current_document.preview ) {
+				if ( self.current_document.full_preview ) {
 					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /></div></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.full_preview + '" /></div></div>' );
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );

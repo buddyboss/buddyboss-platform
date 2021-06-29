@@ -639,7 +639,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 					</div>
 					<?php
 				}
-				$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+
+				$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+				$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
+
 				if ( $attachment_url ) {
 					?>
 					<div class="document-preview-wrap">
@@ -703,6 +706,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'privacy'               => bp_get_db_document_privacy(),
 					'author'                => bp_get_document_user_id(),
 					'preview'               => $attachment_url,
+					'full_preview'          => ( '' !== $full_attachment_url ) ? $full_attachment_url : $attachment_url,
 					'msg_preview'           => $output,
 					'text_preview'          => $text_attachment_url ? esc_url( $text_attachment_url ) : '',
 					'mp3_preview'           => $audio_url ? $audio_url : '',
@@ -2425,7 +2429,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						<?php
 					}
 
-					$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+					$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+					$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
+
 					if ( '' !== $attachment_url ) {
 						?>
 						<div class="document-preview-wrap">
@@ -2487,6 +2493,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
 						'more_action'           => __( 'More actions', 'buddyboss' ),
 						'preview'               => $attachment_url,
+						'full_preview'          => ( '' !== $full_attachment_url ) ? $full_attachment_url : $attachment_url,
 						'msg_preview'           => $output,
 						'privacy'               => bp_get_db_document_privacy(),
 						'author'                => bp_get_document_user_id(),

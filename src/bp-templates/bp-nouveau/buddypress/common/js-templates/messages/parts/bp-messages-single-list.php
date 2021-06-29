@@ -125,6 +125,7 @@
 							   data-extension="{{data.document[i].extension}}"
 							   data-author="{{data.document[i].author}}"
 							   data-preview="{{data.document[i].preview}}"
+							   data-full-preview="{{data.document[i].full_preview}}"
 							   data-text-preview="{{data.document[i].text_preview}}"
 							   data-mp3-preview="{{data.document[i].mp3_preview}}"
 							   data-document-title="{{data.document[i].document_title}}"
