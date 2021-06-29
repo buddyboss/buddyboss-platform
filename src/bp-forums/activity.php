@@ -448,8 +448,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Topic title.
 			$forum_id    = bbp_get_topic_forum_id( $topic_id );
+			//bbp_get_topic_author_id
 			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
-			$author      = bbp_get_topic_author_display_name( $topic_id );
+			$user_id     = bbp_get_topic_author_id( $topic_id );
+			$author      = bp_core_get_user_displayname( $user_id );
 
 			// New meta button as 'Join discussion'.
 			$buttons['activity_discussionsss'] = array(
