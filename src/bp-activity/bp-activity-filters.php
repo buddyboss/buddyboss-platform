@@ -2314,9 +2314,10 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $blog_post, 'WP_Post' ) ) {
-			$content = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
-			$content .= sprintf( '<a href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
-			$content .= bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
+			$content      = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
+			$post_title   = sprintf( '<a href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
+			$post_excerpt = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
+			$content      .= sprintf( '<span class="bb-post-inr-wrp">%1$s %2$s</span>', $post_title, $post_excerpt );
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
@@ -2330,7 +2331,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				}
 			} else {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
-				$content = strip_tags( $content, '<a><iframe><img><span>' );
+				$content = strip_tags( $content, '<a><iframe><img><span><div>' );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
 				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
@@ -2490,7 +2491,7 @@ function bb_check_is_activity_content_empty( $data ) {
  */
 function bb_add_feature_image_blog_post_as_activity_content_callback( $content, $blog_post_id ) {
 	if ( ! empty( $blog_post_id ) && ! empty( get_post_thumbnail_id( $blog_post_id ) ) ) {
-		$content .= sprintf( ' <a href="%s"><img src="%s"></a>', get_permalink( $blog_post_id ), esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
+		$content .= sprintf( ' <a class="bb-post-img-link" href="%s"><img src="%s"></a>', get_permalink( $blog_post_id ), esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
 	}
 
 	return $content;
