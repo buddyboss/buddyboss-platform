@@ -276,16 +276,13 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 		restore_current_blog();
 	}
 
-	// Build the 'post link' part of the activity action string.
-	$post_link = '<span class="bb-post-singular">' . $post_title . '</span>';
-
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
-		$action = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
-		$action = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
+		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
 	}
 
 	// Legacy filter - requires the post object.
@@ -1644,16 +1641,16 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
-			$action = sprintf( __( '%1$s posted a new %2$s, %3$s, on the site %4$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+			$action = sprintf( __( '%1$s posted a new %2$s, on the site %3$s', 'buddyboss' ), $user_link, $singular_label_name, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
-			$action = sprintf( __( '%1$s posted a new %2$s, %3$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link );
+			$action = sprintf( __( '%1$s posted a new %2$s.', 'buddyboss' ), $user_link, $singular_label_name );
 		}
 	} else {
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
-			$action = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+			$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
-			$action = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
+			$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
 		}
 	}
 
