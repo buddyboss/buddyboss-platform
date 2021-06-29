@@ -2388,7 +2388,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 /**
  * Disable activity stream comments for discussion and reply.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.0
  *
  * @param boolean $retval Has comment permission.
  *
@@ -2422,7 +2422,7 @@ function bb_activity_has_comment_access( $retval ) {
 /**
  * Access control for showing activity state.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.0
  *
  * @param array $buttons             The list of buttons.
  * @param int   $activity_comment_id The current activity comment ID.
