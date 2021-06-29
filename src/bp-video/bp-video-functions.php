@@ -860,7 +860,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		$is_auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 		$is_default_images            = isset( $is_auto_generated_thumbnails['default_images'] ) && ! empty( $is_auto_generated_thumbnails['default_images'] ) ? $is_auto_generated_thumbnails['default_images'] : array();
 
-		if ( count( $is_default_images ) < 3 ) {
+		if ( count( $is_default_images ) <= 1 ) {
 
 			$bp_background_updater->push_to_queue(
 				array(
@@ -961,7 +961,7 @@ function bp_video_background_create_thumbnail( $video ) {
 			$is_auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 			$is_default_images            = isset( $is_auto_generated_thumbnails['default_images'] ) && ! empty( $is_auto_generated_thumbnails['default_images'] ) ? $is_auto_generated_thumbnails['default_images'] : array();
 
-			if ( ! empty( $duration ) && count( $is_default_images ) < 3 ) {
+			if ( ! empty( $duration ) && count( $is_default_images ) <= 1 ) {
 
 				/**
 				 * Hook for before background thumbnail create.
