@@ -28,7 +28,8 @@
 
 		&.close-all-items {
 
-			.bb-remove-all-notification {
+			.bb-remove-all-notification,
+			.notification-list {
 				display: none;
 			}
 
