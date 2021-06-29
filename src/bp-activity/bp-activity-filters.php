@@ -155,7 +155,7 @@ add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty'
 // Hook for access control in activity state.
 add_filter( 'bp_nouveau_has_activity_state', 'bb_has_activity_state', 10, 2 );
 
-add_filter( 'bb_activity_viwe_comment', 'bb_has_comment_view_permission', 10, 2 );
+add_filter( 'bb_activity_view_comment', 'bb_has_comment_view_permission', 10, 2 );
 
 /** Functions *****************************************************************/
 

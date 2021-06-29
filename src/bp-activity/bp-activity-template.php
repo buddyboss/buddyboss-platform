@@ -1899,7 +1899,7 @@ function bp_activity_comments( $args = '' ) {
 function bp_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
-    if ( ! apply_filters( 'bb_activity_viwe_comment', true, $args ) ) {
+    if ( ! apply_filters( 'bb_activity_view_comment', true, $args ) ) {
         return '';
     }
 
