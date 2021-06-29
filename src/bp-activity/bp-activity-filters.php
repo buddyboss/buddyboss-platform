@@ -141,10 +141,17 @@ add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activ
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
-add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
+add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
+
+// Obey BuddyBoss commenting rules.
+add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
+
+// Filter for comment meta button.
+add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_comment_reply_button', 10, 3 );
 
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -2310,50 +2317,44 @@ add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read
  */
 function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
-	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
-		if( is_a( $blog_post, 'WP_Post' ) ) {
-			$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
-			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
+			$content = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
+			$content .= sprintf( '<a href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
+			$content .= bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
+			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$iframe  = $matches[0];
 					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
 					$content .= $iframe;
-				} else {
-					$content = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
 				}
-
 			} else {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
-				$content = strip_tags( $content, '<a><iframe>' );
+				$content = strip_tags( $content, '<a><iframe><img><span>' );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
-				} else {
-					$content = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
 				}
 			}
 		}
-
-	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
 		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-		if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
 		}
-
 	}
 
 	return $content;
-
 }
 
 add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_read_more', 9999, 2 );
@@ -2369,17 +2370,17 @@ add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_r
  */
 function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
 
-	if( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+	if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
 		// Get activity object.
 		$comment_activity = new BP_Activity_Activity( $activity->item_id );
-		if( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+		if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
 			$comment_post_type = $comment_activity->secondary_item_id;
 			$get_post_type     = get_post_type( $comment_post_type );
 			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
-			if( $comment_id ) {
+			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-				if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
@@ -2389,6 +2390,79 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 	}
 
 	return $content;
+}
+
+/**
+ * Disable activity stream comments for discussion and reply.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param boolean $retval Has comment permission.
+ *
+ * @return boolean
+ */
+function bb_activity_has_comment_access( $retval ) {
+	global $activities_template;
+
+	// Already forced off, so comply.
+	if ( false === $retval ) {
+		return $retval;
+	}
+
+	// Get the current action name.
+	$action_name = $activities_template->activity->type;
+
+	// Setup the array of possibly disabled actions.
+	$disabled_actions = array(
+		'bbp_topic_create',
+		'bbp_reply_create',
+	);
+
+	// Comment is disabled for discussion and reply discussion.
+	if ( in_array( $action_name, $disabled_actions, true ) ) {
+		$retval = false;
+	}
+
+	return $retval;
+}
+
+/**
+ * Access control for showing activity state.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param array $buttons             The list of buttons.
+ * @param int   $activity_comment_id The current activity comment ID.
+ * @param int   $activity_id         The current activity ID.
+ *
+ * @return boolean
+ */
+function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_id, $activity_id ) {
+	if ( empty( $activity_id ) ) {
+		return $buttons;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $activity->id ) ) {
+		return $buttons;
+	}
+
+	// Get the current action name.
+	$action_name = $activity->type;
+
+	// Setup the array of possibly disabled actions.
+	$disabled_actions = array(
+		'bbp_topic_create',
+		'bbp_reply_create',
+	);
+
+	// Comment is disabled for discussion and reply discussion.
+	if ( ! empty( $buttons['activity_comment_reply'] ) && in_array( $action_name, $disabled_actions, true ) ) {
+		unset( $buttons['activity_comment_reply'] );
+	}
+
+	return $buttons;
 }
 
 /**
@@ -2411,20 +2485,22 @@ function bb_check_is_activity_content_empty( $data ) {
 	}
 }
 
-add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback', 10, 2 );
 /**
  * Function will add feature image for blog post in the activity feed content.
- * 
+ *
  * @param string $content
  * @param int    $blog_post_id
- * 
+ *
  * @return string $content
- * 
+ *
  * @since 1.6.4
  */
 function bb_add_feature_image_blog_post_as_activity_content_callback( $content, $blog_post_id ) {
 	if ( ! empty( $blog_post_id ) && ! empty( get_post_thumbnail_id( $blog_post_id ) ) ) {
-		$content .= sprintf( ' <img src="%s">', esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
+		$content .= sprintf( ' <a href="%s"><img src="%s"></a>', get_permalink( $blog_post_id ), esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
 	}
+
 	return $content;
 }
+
+add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback', 10, 2 );

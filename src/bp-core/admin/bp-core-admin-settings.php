@@ -823,19 +823,20 @@ function bp_admin_setting_callback_member_invite_member_type() {
  */
 function bp_feed_settings_callback_post_type( $args ) {
 
-	$post_type   = $args['post_type'];
-	$option_name = 'bp-feed-custom-post-type-' . $post_type;
-
+	$post_type     = $args['post_type'];
+	$option_name   = bb_post_type_feed_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
 
 	// Description for the last option of CPT
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
 	<input
+		class="bp-feed-post-type-checkbox <?php echo 'bp-feed-post-type-' . esc_attr( $post_type ); ?>"
+		data-post_type="<?php echo esc_attr( $post_type ); ?>"
 		name="<?php echo $option_name; ?>"
 		id="<?php echo $option_name; ?>"
 		type="checkbox"
@@ -843,17 +844,59 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo $post_type === 'post' ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
 
 	// Description for the WordPress Blog Posts
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php _e( 'When users publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php _e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
 		<?php
 	}
+}
 
+/**
+ * Allow activity comments on posts and comments.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param array $args Feed settings.
+ *
+ * @return void
+ */
+function bb_feed_settings_callback_post_type_comments( $args ) {
+	$post_type     = $args['post_type'];
+	$option_name   = bb_post_type_feed_comment_option_name( $post_type );
+	$post_type_obj = get_post_type_object( $post_type );
+
+	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
+		?>
+			<p class="description <?php echo 'bp-feed-post-type-comment-' . esc_attr( $post_type ); ?>"><?php printf( esc_html__( 'Comments are not supported for %s', 'buddyboss' ), esc_html( $post_type  ) ); ?></p>
+		<?php
+		return;	
+	}
+	?>
+
+	<input
+		class="bp-feed-post-type-commenet-checkbox <?php echo 'bp-feed-post-type-comment-' . esc_attr( $post_type ); ?>"
+		name="<?php echo esc_attr( $option_name ); ?>"
+		id="<?php echo esc_attr( $option_name ); ?>"
+		type="checkbox"
+		value="1"
+		<?php checked( bb_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
+	/>
+	<label for="<?php echo esc_attr( $option_name ); ?>">
+		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
+	</label>
+	<?php
+
+	// Description for the WordPress Blog Posts.
+	if ( 'post' === $post_type ) {
+		?>
+		<p class="description"><?php esc_html_e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ); ?></p>
+		<?php
+	}
 }
 
 /**
@@ -1376,3 +1419,40 @@ function bp_admin_moderation_report_setting_tutorial() {
 
 	<?php
 }
+
+/**
+ * After update activity setting
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param string $tab_name  Settings tab name.
+ * @param object $class_obj Tab property.
+ *
+ * @uses bb_feed_post_types()                    Get all post type name.
+ * @uses bb_post_type_feed_option_name()         Settings option name for post type.
+ * @uses bb_post_type_feed_comment_option_name() Settings option name for post type comment.
+ *
+ * @return void
+ */
+function bb_after_update_activity_settings( $tab_name, $class_obj ) {
+	if ( 'bp-activity' !== $tab_name ) {
+		return;
+	}
+
+	foreach ( bb_feed_post_types() as $key => $post_type ) {
+		// Post type option name.
+		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
+
+		// Post type comment option name.
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+
+		// Get the post type activity status.
+		$opt_value = bp_get_option( $pt_opt_name, '' );
+
+		// If the post type activity disable then its comment also make disable.
+		if ( empty( $opt_value ) ) {
+			bp_update_option( $ptc_opt_name, 0 );
+		}
+	}
+}
+add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 2 );

@@ -5540,3 +5540,4 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 	 */
 	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
 }
+
