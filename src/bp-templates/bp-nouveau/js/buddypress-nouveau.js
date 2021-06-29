@@ -1055,6 +1055,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.browserTabCountNotification();
 				bp.Nouveau.visibilityOnScreenClearButton();
 				list.closest( '.bb-onscreen-notification' ).addClass('close-all-items');
+				$('.bb-onscreen-notification').fadeOut(200);
 				list.removeClass( 'bb-more-than-3' );
 			});
 		},
@@ -1076,10 +1077,9 @@ window.bp = window.bp || {};
 				items = list.find( '.read-item' );
 
 			if ( items.length > 1 ) {
-				wrap.find( '.bb-remove-all-notification .action-close' ).show();
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn(600);
 			} else {
-				wrap.find( '.bb-remove-all-notification .action-close' ).hide();
-				wrap.find( '.bb-remove-all-notification .action-close' ).css({ display: 'none' });
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut(200);
 			}
 		},
 
