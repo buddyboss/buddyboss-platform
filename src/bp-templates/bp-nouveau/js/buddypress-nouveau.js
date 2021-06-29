@@ -797,6 +797,9 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// Show all notificaitons.
+			wrap.removeClass( 'close-all-items' );
+
 			// Set class 'bb-more-item' in item when more than three notifications.
 			appendItems.eq(2).nextAll().addClass( 'bb-more-item' );
 			
@@ -848,7 +851,7 @@ window.bp = window.bp || {};
 					}
 				}, 30000 );
 			} );
-			
+
 			// Store removed notification id in 'auto-removed-items' data attribute.
 			list.attr( 'data-border-items', JSON.stringify( borderItems ) );
 		},
