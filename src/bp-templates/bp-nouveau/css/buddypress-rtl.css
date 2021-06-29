@@ -19726,9 +19726,10 @@ span.icons:before {
   .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
     margin: 0;
     padding: 12px;
-  }
-  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item:not(.recent-item) {
     display: none;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item:first-child {
+    display: flex;
   }
   .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar {
     margin-left: 10px;
