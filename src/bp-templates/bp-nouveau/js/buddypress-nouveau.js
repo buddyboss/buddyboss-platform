@@ -844,12 +844,12 @@ window.bp = window.bp || {};
 				$( item ).addClass( 'recent-item' );
 				//newItems.push( id );
 
-				setTimeout( function() {
-					if ( list.find( '.actions .action-close[data-notification-id='+id+']' ).length ) {
-						list.find( '.actions .action-close[data-notification-id='+id+']' ).closest( '.read-item' ).removeClass( 'recent-item' );
-						borderItems.push( id );
-					}
-				}, 30000 );
+				// setTimeout( function() {
+				// 	if ( list.find( '.actions .action-close[data-notification-id='+id+']' ).length ) {
+				// 		list.find( '.actions .action-close[data-notification-id='+id+']' ).closest( '.read-item' ).removeClass( 'recent-item' );
+				// 		borderItems.push( id );
+				// 	}
+				// }, 30000 );
 			} );
 
 			// Store removed notification id in 'auto-removed-items' data attribute.
