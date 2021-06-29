@@ -1144,7 +1144,6 @@ window.bp = window.bp || {};
 									}
 									
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
-
 									$( form ).find( '.ac-input' ).first().html( '' );
 
 									activity_comments.parent().addClass( 'has-comments' );
