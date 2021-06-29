@@ -1506,14 +1506,21 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 				$thumb        = '';
-				if ( $get_existing ) {
+
+				$attachment_thumb_id = bb_get_video_thumb_id( $video->attachment_id );
+
+				if ( $get_existing && $attachment_thumb_id ) {
+					$thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-poster-popup-image' );
+                }
+
+				if ( $get_existing && '' === $thumb ) {
 					$file = get_attached_file( $get_existing );
 					if ( file_exists( $file ) ) {
 						$type  = pathinfo( $file, PATHINFO_EXTENSION );
 						$data  = file_get_contents( $file ); // phpcs:ignore
 						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
 					}
-				}
+                }
 
 				$activity['video'][] = array(
 					'id'          => $video_id,
