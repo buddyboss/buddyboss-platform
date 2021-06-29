@@ -28,7 +28,8 @@
 
 		&.close-all-items {
 
-			.bb-remove-all-notification {
+			.bb-remove-all-notification,
+			.notification-list {
 				display: none;
 			}
 
@@ -255,9 +256,10 @@
 				.read-item {
 					margin: 0;
 					padding: 12px;
+					display: none;
 
-					&:not(.recent-item) {
-						display: none;
+					&:first-child {
+						display: flex;
 					}
 
 					.notification-avatar {

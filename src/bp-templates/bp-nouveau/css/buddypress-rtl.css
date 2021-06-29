@@ -19530,7 +19530,8 @@ span.icons:before {
   z-index: 1099;
 }
 
-.bb-onscreen-notification-enable .bb-onscreen-notification.close-all-items .bb-remove-all-notification {
+.bb-onscreen-notification-enable .bb-onscreen-notification.close-all-items .bb-remove-all-notification,
+.bb-onscreen-notification-enable .bb-onscreen-notification.close-all-items .notification-list {
   display: none;
 }
 
@@ -19725,9 +19726,10 @@ span.icons:before {
   .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
     margin: 0;
     padding: 12px;
-  }
-  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item:not(.recent-item) {
     display: none;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item:first-child {
+    display: flex;
   }
   .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar {
     margin-left: 10px;
