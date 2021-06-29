@@ -5704,7 +5704,7 @@ function bb_core_enable_default_symlink_support() {
 		return;
 	}
 
-	if ( function_exists( 'bb_enable_symlinks' ) && bb_enable_symlinks() ) {
+	if ( (bool) get_option( 'bp_media_symlink_support', false ) ) {
 		return;
 	}
 
@@ -5763,6 +5763,7 @@ function bb_core_enable_default_symlink_support() {
 				unlink( $attachment_path );
 
 				if ( bb_enable_symlinks() ) {
+					bb_media_symlink_validate( 0, 1 );
 					return;
 				}
 
