@@ -191,6 +191,7 @@ function bp_restrict_single_attachment() {
  * @since BuddyBoss 1.7.0
  */
 function bb_media_symlink_validate( $old_value, $value ) {
+
 	if ( $old_value === $value || ! bp_is_active( 'media' ) ) {
 		return;
 	}
@@ -206,6 +207,18 @@ function bb_media_symlink_validate( $old_value, $value ) {
 	$upload_dir = wp_upload_dir();
 	$upload_dir = $upload_dir['basedir'];
 
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 );
+	}
+
+	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
+	if ( ! is_dir( $media_symlinks_path ) ) {
+		wp_mkdir_p( $media_symlinks_path );
+		chmod( $media_symlinks_path, 0755 );
+	}
+
 	if ( ! empty( $value ) ) {
 
 		$attachment_id = bb_core_upload_dummy_attachment();
@@ -214,7 +227,7 @@ function bb_media_symlink_validate( $old_value, $value ) {
 
 			$attachment_url  = wp_get_attachment_image_src( $attachment_id );
 			$attachment_file = get_attached_file( $attachment_id );
-			$symlinks_path   = bp_media_symlink_path();
+			$symlinks_path   = $media_symlinks_path;
 			$size            = 'thumbnail';
 			$symlink_name    = md5( 'testsymlink' . $attachment_id . $size );
 			$attachment_path = $symlinks_path . '/' . $symlink_name;
