@@ -1057,9 +1057,6 @@ window.bp = window.bp || {};
 				form    = target.closest( 'form' );
 				item_id = activity_id;
 
-				// Is the current reply from blog post 
-				var is_blog_component = form.find('input[type="submit"][data-comment_component="blogs"]').length;
-
 				// Stop event propagation.
 				event.preventDefault();
 
@@ -1145,31 +1142,8 @@ window.bp = window.bp || {};
 											activity_comments.append( '<ul></ul>' );
 										}
 									}
-
-									if ( is_blog_component ) {
-										// Update comment count
-										activity_comments.closest( '.activity-item' )
-											.find( '.acomment-reply' )
-											.find( '.comment-count' )
-											.html( response.data.comment_count );
-
-										// Placement for new comment.
-										if ( 'desc' === response.data.comment_order && 0 === response.data.comment_reply ) {
-											if ( activity_comments.children('ul').find( '.show-all' ).length ) {
-												activity_comments.children('ul').find( '.show-all' ).after( $( the_comment ).hide().fadeIn( 200 ) );
-											} else {
-												activity_comments.children('ul').prepend( $( the_comment ).hide().fadeIn( 200 ) );
-											}
-											
-										} else if ( 1 === response.data.comment_reply ) {
-											activity_comments.closest('li').children('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
-										} else {
-											activity_comments.children('ul').append( $( the_comment ).hide().fadeIn( 200 ) );
-										}
-
-									} else {
-										activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
-									}
+									
+									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 
 									$( form ).find( '.ac-input' ).first().html( '' );
 
