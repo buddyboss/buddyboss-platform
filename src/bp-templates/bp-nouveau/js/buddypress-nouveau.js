@@ -1077,8 +1077,12 @@ window.bp = window.bp || {};
 				items = list.find( '.read-item' );
 
 			if ( items.length > 1 ) {
+				wrap.removeClass('single-notification');
+				wrap.addClass('active-button');				
 				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn(600);
 			} else {
+				wrap.addClass('single-notification');
+				wrap.removeClass('active-button');				
 				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut(200);
 			}
 		},

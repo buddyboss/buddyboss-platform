@@ -172,17 +172,20 @@
 			.action-close {
 				background: #7e8b99;
 				border-radius: 30px;
-				padding: 4px 15px;
+				padding: 4px 35px 4px 15px;
 				color: #fff;
 				align-items: center;
 				justify-content: center;
 				cursor: pointer;
 				box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 				display: none;
+				position: relative;
 
 				.dashicons {
-					margin-left: 5px;
-					margin-top: 3px;
+					position: absolute;
+					right: 10px;
+					top: 50%;
+					transform: translate(0, -50%);
 				}
 
 				.bb-for-mobile {
@@ -248,6 +251,7 @@
 				flex-direction: column;
 				width: 100%;
 				margin: 0 10px 0 0;
+				flex: 0 0 calc(100% - 80px);
 
 				&.bb-more-than-3 {
 					width: calc(100% - 15px);
@@ -272,16 +276,41 @@
 			}
 
 			.bb-remove-all-notification {
-				width: 70px;
 
 				.action-close {
-					width: 100%;
 					border-radius: 5px;
-					padding: 12px 14px;
+					padding: 12px 10px;
 					text-align: center;
+					width: 70px;
 
 					.dashicons {
 						display: none;
+					}
+
+				}
+
+			}
+
+			&.single-notification {
+
+				.notification-list {
+					width: 100%;
+					margin: 0;
+					flex: 0 0 100%;
+				}
+
+				.bb-remove-all-notification {
+					display: none;
+				}
+
+			}
+
+			&.active-button {
+
+				.bb-remove-all-notification {
+
+					.action-close {
+						display: flex !important;
 					}
 
 				}
