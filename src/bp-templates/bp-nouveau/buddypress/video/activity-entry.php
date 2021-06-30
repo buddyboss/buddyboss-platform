@@ -116,7 +116,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 			if ( $video_template->video_count > 3 && 2 === $video_template->current_video ) {
 				$count = $video_template->video_count - 3;
 				?>
-				<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
+				<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
 				<?php
 			}
 			?>
@@ -130,9 +130,15 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 			<?php
 			if ( $video_template->video_count > 3 && 2 === $video_template->current_video ) {
 				$count = $video_template->video_count - 3;
-				?>
-				<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
-				<?php
+				if ( 1 === $count ) {
+					?>
+                    <span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
+					<?php
+				} else {
+					?>
+                    <span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
+					<?php
+				}
 			}
 			?>
 			<?php if ( ! empty( bp_get_video_length() ) ) { ?>
