@@ -2375,7 +2375,12 @@ h2.has_tutorial_btn {
 	width: 100%;
 }
 
-.bp-messages-feedback .bp-feedback.warning .bp-icon::before {
-	font-family: "bb-icons"; /* stylelint-disable-line */
-	content: "\e855";
+.bp-messages-feedback .bp-feedback.warning .bp-icon {
+	background-color: #f7ba45;
+
+	&:before {
+		font-family: "bb-icons"; /* stylelint-disable-line */
+		content: "\e855";
+	}
+
 }
