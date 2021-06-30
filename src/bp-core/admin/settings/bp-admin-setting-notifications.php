@@ -69,11 +69,11 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$this->add_section( 'bp_notifications', __( 'On-screen Notifications', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
 
         // Allow Activity edit setting.
-		$this->add_field( '_bp_on_screen_notification_enable', __( 'On-screen notifications', 'buddyboss' ), 'bp_admin_setting_callback_on_screen_notifications_enable', 'intval' );
-		$this->add_field( "_bp_on_screen_notification_position", __( 'Position on Screen', 'buddyboss' ), 'bp_admin_setting_callback_on_screen_notifications_position', 'intval' );
-		$this->add_field( "_bp_on_screen_notification_mobile_support", __( 'Mobile Support', 'buddyboss' ), 'bp_admin_setting_callback_on_screen_notifications_mobile_support', 'intval' );
-		$this->add_field( "_bp_on_screen_notification_visibility", __( 'Automatically Hide', 'buddyboss' ), 'bp_admin_setting_callback_on_screen_notifications_visibility', 'intval' );
-		$this->add_field( "_bp_on_screen_notification_browser_tab", __( 'Show in Browser Tab', 'buddyboss' ), 'bp_admin_setting_callback_on_screen_notifications_browser_tab', 'intval' );
+		$this->add_field( '_bp_on_screen_notification_enable', __( 'On-screen notifications', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_enable', 'intval' );
+		$this->add_field( "_bp_on_screen_notification_position", __( 'Position on Screen', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_position', 'intval' );
+		$this->add_field( "_bp_on_screen_notification_mobile_support", __( 'Mobile Support', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_mobile_support', 'intval' );
+		$this->add_field( "_bp_on_screen_notification_visibility", __( 'Automatically Hide', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_visibility', 'intval' );
+		$this->add_field( "_bp_on_screen_notification_browser_tab", __( 'Show in Browser Tab', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_browser_tab', 'intval' );
 
 		/**
 		 * Fires to register Notifications tab settings fields and section.
