@@ -698,6 +698,388 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
+
+			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
+			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
+
+			// Create event for remove single notification.
+			bp.Nouveau.notificationRemovedAction();
+			// Remove all notifications.
+			bp.Nouveau.removeAllNotification();
+			// Set title tag.
+			bp.Nouveau.setTitle();
+		},
+
+		/**
+		 * [heartbeatSend description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @param  {[type]} data  [description]
+		 * @return {[type]}       [description]
+		 */
+		 bbHeartbeatSend: function( event, data ) {
+			data.onScreenNotifications = true;
+
+			// Add an heartbeat send event to possibly any BuddyPress pages
+			$( '#buddypress' ).trigger( 'bb_heartbeat_send', data );
+		},
+
+		/**
+		 * [heartbeatTick description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @param  {[type]} data  [description]
+		 * @return {[type]}       [description]
+		 */
+		bbHeartbeatTick: function(  event, data ) {
+            // Inject on-screen notification. 
+			bp.Nouveau.bbInjectOnScreenNotifications(  event, data );
+		},
+
+		/**
+		 * Injects all unread notifications
+		 */
+		bbInjectOnScreenNotifications: function( event, data ) {
+			var enable = $( '.bb-onscreen-notification' ).data( 'enable' );
+			if (  enable != '1' ) {
+				return;
+			}
+
+			if ( typeof data.on_screen_notifications === 'undefined' && data.on_screen_notifications === '') {
+				return;
+			}
+
+			var wrap          = $( '.bb-onscreen-notification' ),
+			    list          = wrap.find( '.notification-list' ),
+			    removedItems  = list.data('removed-items'),
+				animatedItems = list.data('animated-items'),
+				newItems      = [],
+			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) );
+			
+			// Ignore all view notifications.
+			$.each( removedItems, function( index, id ) {
+				var removedItem = notifications.find( '[data-notification-id='+id+']' );
+
+				if ( removedItem.length ) {
+					removedItem.closest( '.read-item' ).remove();
+				}
+			} );
+
+			var appendItems = notifications.find( '.read-item' );
+
+			appendItems.each( function( index, item ) {
+				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+
+				if ( '-1' == $.inArray( id, animatedItems ) ) {
+					$( item ).addClass( 'pull-animation' );
+					animatedItems.push( id );
+					newItems.push( id );
+				} else {
+					$( item ).removeClass( 'pull-animation' );
+				}
+			} );
+
+			// Remove brder when new item is appear.
+			if ( newItems.length ) {
+				appendItems.each( function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+					if ( '-1' == $.inArray( id, newItems ) ) {
+						$( item ).removeClass( 'recent-item' );
+						var borderItems  = list.data( 'border-items' );
+						borderItems.push( id );
+						list.attr( 'data-border-items', JSON.stringify( borderItems ) );
+
+					} 
+				} );
+			}
+
+			// Store animated notification id in 'animated-items' data attribute.
+			list.attr( 'data-animated-items', JSON.stringify( animatedItems ) );
+
+			if ( ! appendItems.length ) {
+				return;
+			}
+
+			// Show all notificaitons.
+			wrap.removeClass( 'close-all-items' );
+
+			// Set class 'bb-more-item' in item when more than three notifications.
+			appendItems.eq(2).nextAll().addClass( 'bb-more-item' );
+			
+			if ( appendItems.length > 3 ) {
+				list.addClass( 'bb-more-than-3' );
+			} else {
+				list.removeClass( 'bb-more-than-3' );
+			}
+
+			wrap.show();
+			list.empty().html( appendItems );
+
+			// Clear all button visibility status.
+			bp.Nouveau.visibilityOnScreenClearButton();
+			// Remove notification border.
+			bp.Nouveau.notificationBorder();
+			// Notification auto hide.
+			bp.Nouveau.notificationAutoHide();
+			// Notification on broser tab.
+			bp.Nouveau.browserTabFlashNotification();
+			// Browser tab notification count.
+			bp.Nouveau.browserTabCountNotification();
+		},
+
+		/**
+		 * Remove notification border.
+		 */
+		notificationBorder: function() {
+			var wrap         = $( '.bb-onscreen-notification' ),
+				list         = wrap.find( '.notification-list' ),
+				borderItems  = list.data( 'border-items' );
+				//newItems     = [];
+
+			// Remove border for single notificaiton after 30s later.
+			list.find( '.read-item' ).each( function( index, item ) {
+				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+				
+				if ( '-1' != $.inArray( id, borderItems ) ) {
+					return;
+				}
+
+				$( item ).addClass( 'recent-item' );
+			} );
+
+			// Store removed notification id in 'auto-removed-items' data attribute.
+			list.attr( 'data-border-items', JSON.stringify( borderItems ) );
+		},
+
+		/**
+		 * Notification count in browser tab.
+		 */
+		browserTabCountNotification: function() {
+			var wrap         = $( '.bb-onscreen-notification' ),
+				list         = wrap.find( '.notification-list' ),
+				items        = list.find( '.read-item' ),
+				titleTag     = $('html').find( 'title' ),
+				title        = wrap.data( 'title-tag' );
+
+			if ( items.length > 0 ) {
+				titleTag.text( '('+items.length+') ' + title );
+			} else {
+				titleTag.text( title );
+			}
+		},
+
+		/**
+		 * Inject notification on browser tab.
+		 */
+		browserTabFlashNotification: function() {
+			var wrap = $( '.bb-onscreen-notification' ),
+				broserTab = wrap.data( 'broser-tab' );
+			
+			// Check notification broser tab settings option.
+			if ( 1 != broserTab ) {
+				return;
+			}
+
+			if ( window.bbFlashNotification ) {
+				clearInterval( window.bbFlashNotification );
+			}
+
+			if ( document.hidden ) {
+				window.bbFlashNotification = setInterval( bp.Nouveau.flashTitle, 2000 );
+			} 
+		},
+
+		/**
+		 * Flash browser tab notification title.
+		 */
+		flashTitle: function() {
+			var wrap = $( '.bb-onscreen-notification' ),
+				list = wrap.find( '.notification-list' );
+
+			var items        = list.find( '.read-item' ),
+				notification = items.first().find('.notification-content .bb-full-link a').text(),
+				titleTag     = $('html').find( 'title' ),
+				title        = wrap.attr( 'data-title-tag' ),
+				flashStatus  = wrap.attr( 'data-flash-status' ),
+				flashItems   = list.data( 'flash-items' );
+
+			if ( ! document.hidden ) {
+				items.each( function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).attr( 'data-notification-id' );
+
+					if ( '-1' == $.inArray( id, flashItems ) ) {
+						flashItems.push( id );
+					}
+				} );
+
+				list.attr( 'data-flash-items', JSON.stringify( flashItems ) );
+			}
+
+			if ( ( ! document.hidden && window.bbFlashNotification ) || items.length <= 0 ) {
+				clearInterval( window.bbFlashNotification );
+				wrap.attr( 'data-flash-status', 'default_title' );
+				titleTag.text( title );
+				return;
+			}
+			
+			if ( 'default_title' === flashStatus ) {
+				titleTag.text( '('+items.length+') ' + title );
+				var id = items.first().find( '.actions .action-close' ).attr( 'data-notification-id' );
+
+				if ( '-1' == $.inArray( id, flashItems ) ) {
+					wrap.attr( 'data-flash-status', 'notification' );
+				}
+			} else if ( 'notification' === flashStatus ) {
+				titleTag.text( notification );
+				wrap.attr( 'data-flash-status', 'default_title' );
+			}
+		},
+
+		/**
+		 * Inject notification autohide.
+		 */
+		notificationAutoHide: function() {
+			var wrap         = $( '.bb-onscreen-notification' ),
+				list         = wrap.find( '.notification-list' ),
+				removedItems = list.data('auto-removed-items'),
+				visibility   = wrap.data( 'visibility' );
+
+			// Check notification autohide settings option.
+			if ( visibility === 'never' ) {
+				return;
+			}
+
+			var hideAfter = parseInt( visibility );
+
+			if ( hideAfter <= 0 ) {
+				return;
+			}
+
+			// Remove single notification according setting option time.
+			list.find( '.read-item' ).each( function( index, item ) {
+				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+				
+				if ( '-1' != $.inArray( id, removedItems ) ) {
+					return;
+				}
+
+				removedItems.push( id );
+
+				setTimeout( function() {
+					if ( list.find( '.actions .action-close[data-notification-id='+id+']' ).length ) {
+						list.find( '.actions .action-close[data-notification-id='+id+']' ).trigger( 'click' );
+					}
+				}, 1000*hideAfter );
+			} );
+
+			// Store removed notification id in 'auto-removed-items' data attribute.
+			list.attr( 'data-auto-removed-items', JSON.stringify( removedItems ) );
+		},
+
+		/**
+		 * Click event for remove single notification.
+		 */
+		notificationRemovedAction: function() {
+			$('.bb-onscreen-notification .notification-list').on('click', '.action-close', function(e) {
+				e.preventDefault();
+				bp.Nouveau.removeOnScreenNotification( this );
+			});
+		},
+
+		/**
+		 * Remove single notification.
+		 */
+		removeOnScreenNotification: function( self ) {
+			var list         = $(self).closest( '.notification-list' ),
+				item         = $(self).closest( '.read-item' ),
+				id           = $(self).data( 'notification-id' ),
+				removedItems = list.data( 'removed-items' );
+				
+			item.addClass('close-item');
+			
+			setTimeout(function() {
+				removedItems.push(id);
+
+				// Set the removed notification id in data-removed-items attribute. 
+				list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
+				item.remove();
+				bp.Nouveau.browserTabCountNotification();
+				bp.Nouveau.visibilityOnScreenClearButton();
+
+				// After removed get, rest of the notification.
+				var items = list.find( '.read-item' );
+
+				if ( ! items.length ) {
+					list.closest( '.bb-onscreen-notification' ).hide();
+					return;
+				}
+
+				if ( items.length < 4 ) {
+					list.removeClass( 'bb-more-than-3' );
+				}
+
+				//items.first().addClass( 'recent-item' );
+				items.slice(0, 3).removeClass( 'bb-more-item' );
+				
+			}, 500 );
+		},
+
+		/**
+		 * Remove all notifications.
+		 */
+		removeAllNotification: function() {
+			$('.bb-onscreen-notification .bb-remove-all-notification').on('click', '.action-close', function(e) {
+				e.preventDefault();
+				
+				var list         = $(this).closest( '.bb-onscreen-notification' ).find( '.notification-list' ),
+					items        = list.find( '.read-item' ),
+					removedItems = list.data( 'removed-items' );   	
+				
+				// Collect all removed notification ids. 
+				items.each( function( index, item ) {
+					var id = $(item).find('.actions .action-close').data( 'notification-id' );
+					
+					if ( id ) {
+						removedItems.push( id );
+					}
+				} );
+
+				// Set all removed notification ids in data-removed-items attribute. 
+				list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
+				items.remove();
+				bp.Nouveau.browserTabCountNotification();
+				bp.Nouveau.visibilityOnScreenClearButton();
+				list.closest( '.bb-onscreen-notification' ).addClass('close-all-items');
+				$('.bb-onscreen-notification').fadeOut(200);
+				list.removeClass( 'bb-more-than-3' );
+			});
+		},
+
+		/**
+		 * Set title tag in notification data attribute.
+		 */
+		setTitle: function() {
+			var title = $('html').find( 'title' ).text();
+			$('.bb-onscreen-notification').attr( 'data-title-tag', title );
+		},
+
+		/**
+		 * Set title tag in notification data attribute.
+		 */
+		visibilityOnScreenClearButton: function() {
+			var wrap  = $( '.bb-onscreen-notification' ),
+				list  = wrap.find( '.notification-list' ),
+				items = list.find( '.read-item' );
+
+			if ( items.length > 1 ) {
+				wrap.removeClass('single-notification');
+				wrap.addClass('active-button');				
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn(600);
+			} else {
+				wrap.addClass('single-notification');
+				wrap.removeClass('active-button');				
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut(200);
+			}
 		},
 
 		/**
