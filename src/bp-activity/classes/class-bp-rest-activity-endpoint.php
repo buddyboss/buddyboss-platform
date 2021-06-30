@@ -2139,7 +2139,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $edit_activity_data ) ) {
 			// Removed unwanted data.
-			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document' );
+			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document', 'video' );
 			foreach ( $unset_keys as $key ) {
 				if ( array_key_exists( $key, $edit_activity_data ) ) {
 					unset( $edit_activity_data[ $key ] );
@@ -2147,14 +2147,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( array_key_exists( 'group_media', $edit_activity_data ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		if ( isset( $edit_activity_data['group_media'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
 				$edit_activity_data['group_media'] = bp_is_group_media_support_enabled() && ( ! function_exists( 'bb_media_user_can_upload' ) || bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );
 			}
 		}
 
-		if ( array_key_exists( 'group_document', $edit_activity_data ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		if ( isset( $edit_activity_data['group_document'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
 				$edit_activity_data['group_document'] = bp_is_group_document_support_enabled() && ( ! function_exists( 'bb_document_user_can_upload' ) || bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );
