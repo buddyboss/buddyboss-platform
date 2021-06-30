@@ -2497,10 +2497,9 @@ function bb_check_is_activity_content_empty( $data ) {
  */
 function bb_add_feature_image_blog_post_as_activity_content_callback( $content, $blog_post_id ) {
 	if ( ! empty( $blog_post_id ) && ! empty( get_post_thumbnail_id( $blog_post_id ) ) ) {
-		$content .= sprintf( ' <a href="%s"><img src="%s"></a>', get_permalink( $blog_post_id ), esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
+		$content .= sprintf( ' <a href="%s"><img src="%s" /></a>', esc_url( get_permalink( $blog_post_id ) ), esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
 	}
 
 	return $content;
 }
-
 add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback', 10, 2 );
