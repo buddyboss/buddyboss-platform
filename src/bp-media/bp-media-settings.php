@@ -1964,30 +1964,24 @@ function bb_media_settings_callback_symlink_direct_access() {
 
 	if ( ! empty( $directory ) ) {
 
-		$message = sprintf(
+		printf(
 			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-			esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' ),
+			esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' )
 		);
-
-		printf( $message );
 
 	} else {
-		$message = sprintf(
+		printf(
 			'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
-			esc_html__( 'Direct access to your media files and folders is blocked', 'buddyboss' ),
+			esc_html__( 'Direct access to your media files and folders is blocked', 'buddyboss' )
 		);
-
-		printf( $message );
 	}
 
-	$notice = sprintf(
-		'<p>%s <a href="%s">%s</a> %s</p>',
+	printf(
+		'<p class="description"><p>%s <a href="%s">%s</a> %s</p></p>',
 		esc_html__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our ', 'buddyboss' ),
 		esc_url( 'https://www.buddyboss.com/resources/docs/components/media/media-permissions/' ),
 		esc_html__( 'Media Permissions', 'buddyboss' ),
 		esc_html__( ' tutorial to configure your server.', 'buddyboss' )
 	);
-
-	printf( '<p class="description">%s</p>', $notice );
 
 }
