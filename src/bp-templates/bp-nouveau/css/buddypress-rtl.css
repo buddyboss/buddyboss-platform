@@ -19684,6 +19684,7 @@ span.icons:before {
   }
   .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .bb-for-mobile {
     display: inline-block;
+    line-height: 1.3;
   }
 }
 
