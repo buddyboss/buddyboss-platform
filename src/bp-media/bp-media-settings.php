@@ -1913,7 +1913,7 @@ function bb_media_settings_callback_symlink_support() {
 
 	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
 		?>
-        <div class="bp-messages-feedback" style="display:none">
+        <div class="bp-messages-feedback">
             <div class="bp-feedback warning">
                 <span class="bp-icon" aria-hidden="true"></span>
                 <p><?php _e( 'Symbolic links are not supported on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
@@ -1963,15 +1963,14 @@ function bb_media_settings_callback_symlink_direct_access() {
 	}
 
 	if ( ! empty( $directory ) ) {
-		$notice = sprintf(
-			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s <a href="%s">%s</a> %s</p></div></div>',
-			esc_html__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our ', 'buddyboss' ),
-			esc_url( 'https://www.buddyboss.com/resources/docs/components/media/media-permissions/' ),
-			esc_html__( 'Media Permissions', 'buddyboss' ),
-			esc_html__( ' tutorial to configure your server.', 'buddyboss' )
+
+		$message = sprintf(
+			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+			esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' ),
 		);
 
-		printf( '<p class="description">%s</p>', $notice );
+		printf( $message );
+
 	} else {
 		$message = sprintf(
 			'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
@@ -1980,5 +1979,15 @@ function bb_media_settings_callback_symlink_direct_access() {
 
 		printf( $message );
 	}
+
+	$notice = sprintf(
+		'<p>%s <a href="%s">%s</a> %s</p>',
+		esc_html__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our ', 'buddyboss' ),
+		esc_url( 'https://www.buddyboss.com/resources/docs/components/media/media-permissions/' ),
+		esc_html__( 'Media Permissions', 'buddyboss' ),
+		esc_html__( ' tutorial to configure your server.', 'buddyboss' )
+	);
+
+	printf( '<p class="description">%s</p>', $notice );
 
 }
