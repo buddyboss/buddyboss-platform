@@ -1383,7 +1383,7 @@ function bp_admin_moderation_report_setting_tutorial() {
  * 
  * @return void
  */
-function bp_admin_setting_callback_on_screen_notifications_enable() {
+function bb_admin_setting_callback_on_screen_notifications_enable() {
 	?>
 	<input id="_bp_on_screen_notifications_enable" name="_bp_on_screen_notifications_enable" type="checkbox"
 		   value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ); ?> />
@@ -1399,7 +1399,7 @@ function bp_admin_setting_callback_on_screen_notifications_enable() {
  * 
  * @return void
  */
-function bp_admin_setting_callback_on_screen_notifications_position() {
+function bb_admin_setting_callback_on_screen_notifications_position() {
 	?>
 	<div class="bb-screen-position-outer">		
 		<div class="bb-screen-position bb-bottom-left">
@@ -1429,7 +1429,7 @@ function bp_admin_setting_callback_on_screen_notifications_position() {
  * 
  * @return void
  */
-function bp_admin_setting_callback_on_screen_notifications_mobile_support() {
+function bb_admin_setting_callback_on_screen_notifications_mobile_support() {
 	?>
 	<input id="_bp_on_screen_notifications_mobile_support" name="_bp_on_screen_notifications_mobile_support" type="checkbox" value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 ) ); ?> />
 	<label for="_bp_on_screen_notifications_mobile_support"><?php esc_html_e( 'Show on-screen notifications on small screens', 'buddyboss' ); ?></label>
@@ -1444,7 +1444,7 @@ function bp_admin_setting_callback_on_screen_notifications_mobile_support() {
  * 
  * @return void
  */
-function bp_admin_setting_callback_on_screen_notifications_browser_tab() {
+function bb_admin_setting_callback_on_screen_notifications_browser_tab() {
 	?>
 	<input id="_bp_on_screen_notifications_browser_tab" name="_bp_on_screen_notifications_browser_tab" type="checkbox" value="1"  <?php checked( bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 ) ); ?> />
 	<label for="_bp_on_screen_notifications_browser_tab"><?php esc_html_e( 'Show new notifications in the title of the browser tab', 'buddyboss' ); ?></label>
@@ -1459,7 +1459,7 @@ function bp_admin_setting_callback_on_screen_notifications_browser_tab() {
  *
  * @return void
  */
-function bp_admin_setting_callback_on_screen_notifications_visibility() {
+function bb_admin_setting_callback_on_screen_notifications_visibility() {
 
 	// Options for remove single notification time.
 	$options = array(

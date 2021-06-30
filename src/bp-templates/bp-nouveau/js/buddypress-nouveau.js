@@ -699,8 +699,8 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
 
-			$( document ).on( 'heartbeat-send', this.bpHeartbeatSend.bind( this ) );
-			$( document ).on( 'heartbeat-tick', this.bpHeartbeatTick.bind( this ) );
+			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
+			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 
 			// Create event for remove single notification.
 			bp.Nouveau.notificationRemovedAction();
@@ -717,11 +717,11 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data  [description]
 		 * @return {[type]}       [description]
 		 */
-		 bpHeartbeatSend: function( event, data ) {
+		 bbHeartbeatSend: function( event, data ) {
 			data.onScreenNotifications = true;
 
 			// Add an heartbeat send event to possibly any BuddyPress pages
-			$( '#buddypress' ).trigger( 'bp_heartbeat_send', data );
+			$( '#buddypress' ).trigger( 'bb_heartbeat_send', data );
 		},
 
 		/**
@@ -731,15 +731,15 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data  [description]
 		 * @return {[type]}       [description]
 		 */
-		bpHeartbeatTick: function(  event, data ) {
+		bbHeartbeatTick: function(  event, data ) {
             // Inject on-screen notification. 
-			bp.Nouveau.bpInjectOnScreenNotifications(  event, data );
+			bp.Nouveau.bbInjectOnScreenNotifications(  event, data );
 		},
 
 		/**
 		 * Injects all unread notifications
 		 */
-		bpInjectOnScreenNotifications: function( event, data ) {
+		bbInjectOnScreenNotifications: function( event, data ) {
 			var enable = $( '.bb-onscreen-notification' ).data( 'enable' );
 			if (  enable != '1' ) {
 				return;
@@ -845,14 +845,6 @@ window.bp = window.bp || {};
 				}
 
 				$( item ).addClass( 'recent-item' );
-				//newItems.push( id );
-
-				// setTimeout( function() {
-				// 	if ( list.find( '.actions .action-close[data-notification-id='+id+']' ).length ) {
-				// 		list.find( '.actions .action-close[data-notification-id='+id+']' ).closest( '.read-item' ).removeClass( 'recent-item' );
-				// 		borderItems.push( id );
-				// 	}
-				// }, 30000 );
 			} );
 
 			// Store removed notification id in 'auto-removed-items' data attribute.

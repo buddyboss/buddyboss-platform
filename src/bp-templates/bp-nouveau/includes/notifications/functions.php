@@ -246,6 +246,13 @@ function bp_nouveau_notifications_delete_link( $link = '' ) {
 	);
 }
 
+/**
+ * Get avatar for notification user.
+ *
+ * @since BuddyPress 1.7.0
+ *
+ * @return void
+ */
 function bb_notification_avatar() {
 	$notification = buddypress()->notifications->query_loop->notification;
 	$component    = $notification->component_name;
@@ -304,12 +311,30 @@ function bb_notification_avatar() {
 	}
 }
 
+/**
+ * Current user online status.
+ *
+ * @since BuddyPress 1.7.0
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
 function bb_current_user_status( $user_id ) {
 	if ( bb_is_online_user( $user_id ) ) {
 		echo '<span class="member-status online"></span>';
 	}
 }
 
+/**
+ * Current user online activity time. 
+ *
+ * @since BuddyPress 1.7.0
+ *
+ * @param int $user_id User id.
+ *
+ * @return string
+ */
 function bb_is_online_user( $user_id ) {
 
 	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
