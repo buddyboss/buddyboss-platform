@@ -66,7 +66,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 	 */ 
 	public function register_fields() {
 
-		$this->add_section( 'bp_notifications', __( 'On-screen Notifications', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
+		$this->add_section( 'bp_notifications', __( 'On-screen Notifications', 'buddyboss' ), '', 'bp_admin_on_screen_notification_setting_tutorial' );
 
         // Allow Activity edit setting.
 		$this->add_field( '_bp_on_screen_notification_enable', __( 'On-screen notifications', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_enable', 'intval' );

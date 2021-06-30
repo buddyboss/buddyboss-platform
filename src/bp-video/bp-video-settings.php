@@ -209,7 +209,7 @@ function bp_video_uploading_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => 62826,
+					'article' => 124807,
 				),
 				'admin.php'
 			)
