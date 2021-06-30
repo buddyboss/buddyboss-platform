@@ -620,7 +620,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Photos', 'buddyboss' ),
 				'name'        => 'group-media-status',
-				'description' => esc_html__( 'Which members of this group are allowed to manage photos?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to upload photos?', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_media_status( $group_id ),
 				'options'     => array(
@@ -650,7 +650,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Albums', 'buddyboss' ),
 				'name'        => 'group-album-status',
-				'description' => esc_html__( 'Which members of this group are allowed to manage albums?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to create albums?', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_album_status( $group_id ),
 				'options'     => array(
@@ -680,7 +680,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Documents', 'buddyboss' ),
 				'name'        => 'group-document-status',
-				'description' => esc_html__( 'Which members of this group are allowed to manage documents?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to upload documents?', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_document_status( $group_id ),
 				'options'     => array(

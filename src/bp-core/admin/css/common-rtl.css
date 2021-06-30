@@ -34,6 +34,7 @@ TABLE OF CONTENTS:
 8.0 BuddyBoss App page
 9.0 Miscellaneous
 10.0 On-screen Notifications
+11.0 Notices UI
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -480,8 +481,14 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/folder-open.svg);
 }
 
+.section-bp_video_settings_extensions table.form-table tbody tr.video-extensions-listing > th,
+.bp-admin-card.section-bp_video_settings_extensions h2:before,
 .bp-admin-card.section-bp_document_settings_extensions h2:before {
   display: none;
+}
+
+.section-bp_video_settings_extensions table.form-table tbody tr.video-extensions-listing > td {
+  padding: 0;
 }
 
 .bp-admin-card.section-bp_media_settings_emoji h2:before {
@@ -490,6 +497,14 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_media_settings_gifs h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/image.svg);
+}
+
+.bp-admin-card.section-bp_media_settings_symlinks {
+  display: block !important;
+}
+
+.bp-admin-card.section-bp_media_settings_symlinks h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/server.svg);
 }
 
 /* Connections */
@@ -531,6 +546,12 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bp_search_settings_community th[scope="row"],
 .bp-admin-card.section-bp_search_settings_post_types th[scope="row"] {
   width: 1px;
+}
+
+/* Video */
+.bp-admin-card.section-bp_media_settings_videos h2:before,
+.bp-admin-card.section-bp_video_settings_extensions h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/video.svg);
 }
 
 /* Pages */
@@ -675,6 +696,7 @@ table.extension-listing tbody tr.custom-extension td input.extension-mime[type="
 }
 
 table.extension-listing tfoot td #btn-add-extensions,
+table.extension-listing tfoot td #btn-add-video-extensions,
 table.extension-listing tfoot td #btn-check-mime-type {
   cursor: pointer;
   float: left;
@@ -2275,4 +2297,43 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 .bb-screen-position-outer .bb-screen-position #bp_on_screen_notifications_position_left:checked:checked + .option:before,
 .bb-screen-position-outer .bb-screen-position #bp_on_screen_notifications_position_right:checked:checked + .option:before {
   border-color: #2370b1;
+}
+
+/*------------------------------------------------------------------------------
+ * 11.0 Notices UI
+ *----------------------------------------------------------------------------*/
+.bp-messages-feedback .bp-feedback.error {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback {
+  box-shadow: none;
+  padding-top: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback .bp-icon {
+  border-radius: 0 4px 4px 0;
+  margin: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback > p {
+  color: #666 !important;
+  margin-top: 0 !important;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  border-right: 0;
+  width: 100%;
+}
+
+.bp-messages-feedback .bp-feedback.warning .bp-icon {
+  background-color: #f7ba45;
+}
+
+.bp-messages-feedback .bp-feedback.warning .bp-icon:before {
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  content: "\e855";
 }
