@@ -1049,14 +1049,14 @@ function bp_get_activity_avatar( $args = '' ) {
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->height ) || isset( $bp->avatar->thumb->height ) ) {
-			$height = ( 'full' == $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
+			$height = ( 'full' === $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
 		} else {
 			$height = 20;
 		}
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->width ) || isset( $bp->avatar->thumb->width ) ) {
-			$width = ( 'full' == $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
+			$width = ( 'full' === $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
 		} else {
 			$width = 20;
 		}
@@ -1086,7 +1086,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	$item_id = apply_filters( 'bp_get_activity_avatar_item_id', $item_id );
 
 	// If this is a user object pass the users' email address for Gravatar so we don't have to prefetch it.
-	if ( 'user' == $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
+	if ( 'user' === $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
 		$email = $current_activity_item->user_email;
 	}
 
@@ -1699,7 +1699,7 @@ function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 		$activity_edit_expire_time = strtotime( $activity->date_recorded ) + $activity_edit_time;
 
 		// Checking if expire time still greater than current time.
-		if ( $activity_edit_time !== - 1 && $activity_edit_expire_time <= $bp_dd_get_time ) {
+		if ( - 1 !== $activity_edit_time && $activity_edit_expire_time <= $bp_dd_get_time ) {
 			$can_edit = false;
 		}
 	}
@@ -2721,11 +2721,11 @@ function bp_get_activity_css_class() {
 }
 
 /**
-  *
-  * Output the activity comment CSS class.
-  *
-  * @since BuddyBoss 1.0.0
-  */
+ *
+ * Output the activity comment CSS class.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_activity_comment_css_class() {
 	echo bp_get_activity_comment_css_class();
 }
@@ -2947,11 +2947,11 @@ function bp_get_activity_filter_links( $args = false ) {
 	foreach ( (array) $components as $component ) {
 
 		// Skip the activity comment filter.
-		if ( 'activity' == $component ) {
+		if ( 'activity' === $component ) {
 			continue;
 		}
 
-		if ( isset( $_GET['afilter'] ) && $component == $_GET['afilter'] ) {
+		if ( isset( $_GET['afilter'] ) && $component === $_GET['afilter'] ) {
 			$selected = ' class="selected"';
 		} else {
 			$selected = '';
