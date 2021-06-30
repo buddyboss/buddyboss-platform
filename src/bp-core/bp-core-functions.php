@@ -5822,7 +5822,9 @@ function bb_core_upload_dummy_attachment() {
 		);
 		$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
 		if ( ! is_wp_error( $attachment_id ) ) {
-			require_once ABSPATH . 'wp-admin/includes/image.php';
+			if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+			}
 			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
 			wp_update_attachment_metadata( $attachment_id, $attachment_data );
 		}
