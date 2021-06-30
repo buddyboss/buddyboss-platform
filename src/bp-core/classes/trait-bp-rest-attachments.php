@@ -351,7 +351,7 @@ trait BP_REST_Attachments {
 	 * @return array|WP_Error
 	 */
 	protected function crop_image( $image_file ) {
-		$image          = getimagesize( $image_file );
+		$image          = @getimagesize( $image_file );
 		$avatar_to_crop = str_replace( bp_core_avatar_upload_path(), '', $image_file );
 
 		// Get avatar full width and height.
