@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
-class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
+class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 
 	/**
 	 * Initial method for this class.
@@ -80,11 +80,11 @@ class BP_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		 *
 		 * @since BuddyBoss 1.7.0
 		 *
-		 * @param Object $this BP_Admin_Setting_Notifications.
+		 * @param Object $this BB_Admin_Setting_Notifications.
 		 */
-		do_action( 'bp_admin_setting_notifications_register_fields', $this );
+		do_action( 'bb_admin_setting_notifications_register_fields', $this );
 	}
 }
 
 // Class instance.
-return new BP_Admin_Setting_Notifications();
+return new BB_Admin_Setting_Notifications();
