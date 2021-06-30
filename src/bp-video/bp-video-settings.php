@@ -248,14 +248,14 @@ function bp_video_admin_setting_callback_video_section() {
 				echo sprintf(
 				/* translators: %1$s FFmpeg status, %2$s FFMPEG Binary Path, %3$s FFPROBE Binary Path, %34$s wp-config.php file. */
 					_x(
-						'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host. 
-					<br/><br/>If FFmpeg is already installed on your server and you still see the above warning, then BuddyBoss Platform is unable to auto-detect the binary path for FFmpeg. 
-					<br/>You need to add these FFmpeg binary files absolute path constants %2$s & %3$s in %4$s file. 
-					<br/>Ask your web host to provide the binary files absolute path.', 'extension notification', 'buddyboss' ), //phpcs:ignore
+						'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host.
+					<br/><br/>If FFmpeg is already installed on your server and you still see the above warning, this means BuddyBoss Platform is unable to auto-detect the binary file path for FFmpeg. You will need to add the below FFmpeg absolute path constants into your %2$s file, replacing PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. Ask your web host to provide the absolute path for the FFmpeg binary file.
+					<br /><br />%3$s
+					<br />%4$s', 'extension notification', 'buddyboss' ), //phpcs:ignore
 					'<code><a href="https://ffmpeg.org/" target="_blank">FFmpeg</a></code>',
+					'<code>wp-config.php</code>',
 					'<code>define( "BB_FFMPEG_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>',
-					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>',
-					'<code>wp-config.php</code>'
+					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>'
 				);
 				?>
 			</p>
