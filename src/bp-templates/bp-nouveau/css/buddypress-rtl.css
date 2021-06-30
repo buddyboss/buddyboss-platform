@@ -19530,13 +19530,6 @@ span.icons:before {
   z-index: 1099;
 }
 
-.bb-onscreen-notification-enable .bb-onscreen-notification.close-all-items {
-  /* .bb-remove-all-notification,
-			.notification-list {
-				display: none;
-			} */
-}
-
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list {
   margin: 0;
   padding: 0;
@@ -19645,6 +19638,12 @@ span.icons:before {
   background: #fff;
 }
 
+@media screen and (max-width: 500px) {
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3:after {
+    display: none;
+  }
+}
+
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3 .read-item.bb-more-item {
   display: none;
 }
@@ -19725,10 +19724,10 @@ span.icons:before {
     width: 100%;
     margin: 0 0 0 10px;
     flex: 0 0 calc(100% - 80px);
-  }
-  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3 {
-    width: calc(100% - 15px);
-    margin: 0 0 14px 10px;
+    /* &.bb-more-than-3 {
+					width: calc(100% - 15px);
+					margin: 0 10px 14px 0;
+				} */
   }
   .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
     margin: 0;
@@ -19757,6 +19756,25 @@ span.icons:before {
   }
   .bb-onscreen-notification-enable .bb-onscreen-notification.single-notification .bb-remove-all-notification {
     display: none;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .notification-list {
+    margin-bottom: 14px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .notification-list:before {
+    content: " ";
+    height: 20px;
+    width: calc(100% - 80px);
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: #fff;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .notification-list.bb-more-than-3:before {
+    width: 100%;
+    bottom: -14px;
   }
   .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .bb-remove-all-notification .action-close {
     display: flex !important;
