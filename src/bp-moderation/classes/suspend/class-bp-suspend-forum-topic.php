@@ -30,6 +30,10 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 */
 	public function __construct() {
 
+		if ( ! bp_is_active( 'forums' ) ) {
+			return;
+		}
+
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -372,6 +376,10 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'media' ) ) {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $topic_id );
+		}
+
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $topic_id );
 		}
 
 		return $related_contents;
