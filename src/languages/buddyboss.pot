@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.6.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-29 18:20:10+00:00\n"
+"POT-Creation-Date: 2021-06-30 12:53:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2476,7 +2476,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:658
 #: bp-core/classes/class-bp-admin.php:334
 #: bp-core/classes/class-bp-admin.php:482
-#: bp-core/classes/class-bp-admin.php:750
+#: bp-core/classes/class-bp-admin.php:751
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:427
 #: bp-groups/bp-groups-admin.php:166
@@ -3113,7 +3113,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1248
 #: bp-core/admin/bp-core-admin-settings.php:1313
 #: bp-core/admin/bp-core-admin-settings.php:1350
-#: bp-core/admin/bp-core-admin-settings.php:1374
+#: bp-core/admin/bp-core-admin-settings.php:1373
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
@@ -3497,6 +3497,76 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1327
 msgid "Allow for sending group messages to group members"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1390
+msgid "Enable on-screen notifications"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1391
+msgid "Show members new notifications received while on a page on-screen."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1409
+msgid "Bottom Left"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1417
+msgid "Bottom Right"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1435
+msgid "Show on-screen notifications on small screens"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1436
+msgid ""
+"Enable this option to show on-screen notifications at the bottom of the "
+"screen smaller than 500px wide."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1450
+msgid "Show new notifications in the title of the browser tab"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1451
+msgid "Update the page <title> tab when new notifications are received."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1466
+msgid "Never Hide"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1467
+msgid "5 Seconds"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1468
+msgid "10 Seconds"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1469
+msgid "30 Seconds"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1470
+msgid "1 Minute"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1471
+msgid "2 Minutes"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1472
+msgid "3 Minutes"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1473
+msgid "4 Minutes"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1474
+msgid "5 Minutes"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -4214,6 +4284,44 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-notifications.php:28
+#: bp-core/bp-core-functions.php:2536 bp-core/deprecated/buddypress/2.1.php:538
+#: bp-core/gdpr/class-bp-notification-export.php:27
+#: bp-core/gdpr/class-bp-notification-export.php:57
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:975
+#: bp-notifications/classes/class-bp-notifications-component.php:27
+#: bp-notifications/classes/class-bp-notifications-component.php:159
+#: bp-notifications/classes/class-bp-notifications-component.php:166
+#: bp-notifications/classes/class-bp-notifications-component.php:238
+#: bp-notifications/classes/class-bp-notifications-component.php:284
+#: bp-performance/classes/class-settings.php:133
+msgid "Notifications"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-notifications.php:69
+msgid "On-screen Notifications"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-notifications.php:72
+msgid "On-screen notifications"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-notifications.php:73
+msgid "Position on Screen"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-notifications.php:74
+msgid "Mobile Support"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-notifications.php:75
+msgid "Automatically Hide"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-notifications.php:76
+msgid "Show in Browser Tab"
+msgstr ""
+
 #: bp-core/admin/settings/bp-admin-setting-performance.php:27
 msgid "Performance"
 msgstr ""
@@ -4394,6 +4502,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:12
 #: bp-templates/bp-nouveau/buddypress/media/theatre.php:10
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:35
+#: bp-templates/bp-nouveau/buddypress/notifications/on-screen.php:18
 #: bp-templates/bp-nouveau/buddypress/video/theatre.php:13
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:455
 msgid "Close"
@@ -5256,19 +5365,6 @@ msgid ""
 "their profile."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2536 bp-core/deprecated/buddypress/2.1.php:538
-#: bp-core/gdpr/class-bp-notification-export.php:27
-#: bp-core/gdpr/class-bp-notification-export.php:57
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:975
-#: bp-notifications/classes/class-bp-notifications-component.php:27
-#: bp-notifications/classes/class-bp-notifications-component.php:159
-#: bp-notifications/classes/class-bp-notifications-component.php:166
-#: bp-notifications/classes/class-bp-notifications-component.php:238
-#: bp-notifications/classes/class-bp-notifications-component.php:284
-#: bp-performance/classes/class-settings.php:133
-msgid "Notifications"
-msgstr ""
-
 #: bp-core/bp-core-functions.php:2537
 msgid ""
 "Notify members of relevant activity with a toolbar bubble and/or via email "
@@ -5576,7 +5672,7 @@ msgstr ""
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3373 bp-core/classes/class-bp-admin.php:902
+#: bp-core/bp-core-functions.php:3373 bp-core/classes/class-bp-admin.php:903
 msgid "Situations"
 msgstr ""
 
@@ -7086,15 +7182,15 @@ msgstr ""
 msgid "Available Tools"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:751 bp-forums/admin/admin.php:432
+#: bp-core/classes/class-bp-admin.php:752 bp-forums/admin/admin.php:432
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:830
+#: bp-core/classes/class-bp-admin.php:831
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:831
+#: bp-core/classes/class-bp-admin.php:832
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -7930,13 +8026,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8796,6 +8892,7 @@ msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-filters.php:34
 #: bp-core/profile-search/templates/members/bps-form-default.php:199
+#: bp-notifications/bp-notifications-template.php:1088
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:110
 #: bp-xprofile/classes/class-bp-xprofile-field-type-radiobutton.php:93
 #: bp-xprofile/classes/class-bp-xprofile-field-type-radiobutton.php:189
@@ -19369,35 +19466,46 @@ msgstr ""
 msgid "Symlink not working into your system. Please disable it."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1917
-msgid "Symbolic links are activated"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:1924
+#: bp-media/bp-media-settings.php:1919
 msgid ""
 "Symbolic links are not supported on your server. Please contact BuddyBoss "
 "for support."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1932
+#: bp-media/bp-media-settings.php:1928
+msgid "Symbolic links are activated"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1939
 msgid "Disable symbolic links for photos, documents and videos"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1950 bp-media/bp-media-settings.php:1967
+#: bp-media/bp-media-settings.php:1943
+msgid ""
+"Symbolic links are used to create \"shortcuts\" to media files uploaded by "
+"members, providing optimal security and performance. If symbolic links are "
+"disabled, a fallback method will be used to protect your media files."
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1969
+msgid "Direct access to your media files and folders is not blocked"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1977
 msgid "Direct access to your media files and folders is blocked"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1975
+#: bp-media/bp-media-settings.php:1985
 msgid ""
 "If our plugin is unable to automatically block direct access to your media "
 "files and folders, please follow the steps in our "
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1977
+#: bp-media/bp-media-settings.php:1987
 msgid "Media Permissions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1978
+#: bp-media/bp-media-settings.php:1988
 msgid " tutorial to configure your server."
 msgstr ""
 
@@ -22698,6 +22806,10 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
+#: bp-notifications/bp-notifications-template.php:1089
+msgid "Clear All"
+msgstr ""
+
 #: bp-notifications/classes/class-bp-notifications-component.php:120
 msgid "Search Notifications..."
 msgstr ""
@@ -24658,7 +24770,11 @@ msgid "Try different keywords&hellip;"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:119
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:134
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:135
+msgid "More Video"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:139
 msgid "More Videos"
 msgstr ""
 
@@ -28144,13 +28260,16 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host. \n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
-"still see the above warning, then BuddyBoss Platform is unable to "
-"auto-detect the binary path for FFmpeg. \n"
-"\t\t\t\t\t<br/>You need to add these FFmpeg binary files absolute path "
-"constants %2$s & %3$s in %4$s file. \n"
-"\t\t\t\t\t<br/>Ask your web host to provide the binary files absolute path."
+"still see the above warning, this means BuddyBoss Platform is unable to "
+"auto-detect the binary file path for FFmpeg. You will need to add the below "
+"FFmpeg absolute path constants into your %2$s file, replacing "
+"PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
+"\t\t\t\t\t<br />%4$s"
 msgstr ""
 
 #: bp-members/bp-members-template.php:123
