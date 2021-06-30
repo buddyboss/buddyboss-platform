@@ -9066,7 +9066,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9095,7 +9095,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9131,7 +9131,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-poster-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9160,7 +9160,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9176,7 +9176,7 @@
         "name": "LoggedInUser if the site is in Private Network."
       }
     ],
-    "filename": "src/bp-core/classes/class-bp-rest-video-details-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-details-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9205,7 +9205,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-poster-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9357,7 +9357,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9421,7 +9421,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9457,7 +9457,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-poster-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9486,7 +9486,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
     "groupTitle": "Video"
   },
   {
@@ -9515,7 +9515,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-video-poster-endpoint.php",
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
     "groupTitle": "Video"
   }
 ]
