@@ -35,5 +35,5 @@ if ( ! defined( 'BP_PLUGIN_URL' ) ) {
 // Include BuddyBoss Platform
 include( $bp_loader );
 
-// Unset the loader, since it's loaded in global scopee
+// Unset the loader, since it's loaded in global scope
 unset( $bp_loader );
