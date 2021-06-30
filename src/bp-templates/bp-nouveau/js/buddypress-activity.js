@@ -2089,7 +2089,7 @@ window.bp = window.bp || {};
 				} else {
 
 					// check media is enable in groups or not.
-					if ( ! _.isUndefined( activity_data.profile_media ) ) {
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_media ) ) {
 						if ( activity_data.profile_media === true ) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2102,7 +2102,7 @@ window.bp = window.bp || {};
 					}
 
 					// check document is enable in groups or not.
-					if ( ! _.isUndefined( activity_data.profile_document ) ) {
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_document ) ) {
 						if ( activity_data.profile_document === true ) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2115,7 +2115,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in profile or not.
-					if ( ! _.isUndefined( activity_data.profile_video ) ) {
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_video ) ) {
 						if ( activity_data.profile_video === true ) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
