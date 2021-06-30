@@ -465,7 +465,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 */
 	protected function get_activity_object( $request ) {
 		$activity_id      = is_numeric( $request ) ? $request : (int) $request['id'];
-		$display_comments = ( array_key_exists( 'display_comments', $request ) ? $request['display_comments'] : true );
+		$display_comments = ( property_exists( $request, 'display_comments' ) ? $request['display_comments'] : true );
 		$activity         = bp_activity_get_specific(
 			array(
 				'activity_ids'     => array( $activity_id ),

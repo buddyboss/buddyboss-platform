@@ -477,6 +477,43 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$request['message'] = '&nbsp;';
 		}
 
+		if (
+			empty( $request['message'] )
+			&& ! (
+				(
+					function_exists( 'bp_is_messages_media_support_enabled' )
+					&& false !== bp_is_messages_media_support_enabled()
+					&& ! empty( $request['bp_media_ids'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_gif_support_enabled' )
+					&& false !== bp_is_messages_gif_support_enabled()
+					&& ! empty( $request['media_gif']['url'] )
+					&& ! empty( $request['media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_document_support_enabled' )
+					&& false !== bp_is_messages_document_support_enabled()
+					&& ! empty( $request['bp_documents'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_video_support_enabled' )
+					&& false !== bp_is_messages_video_support_enabled()
+					&& ! empty( $request['bp_videos'] )
+				)
+			)
+		) {
+			return new WP_Error(
+				'bp_rest_messages_empty_message',
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else if ( empty( $request['message'] ) ) {
+			$request['message'] = '&nbsp;';
+		}
+
 		$message_object = $this->prepare_item_for_database( $request );
 		// Create the message or the reply.
 		$thread_id = messages_new_message( $message_object );

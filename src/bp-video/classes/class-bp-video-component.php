@@ -352,8 +352,9 @@ class BP_Video_Component extends BP_Component {
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init(
 			array(
-				'BP_RESTBP_Video_Template_Endpoint',
-				'BP_RESTBP_Video_Template_Details_Endpoint',
+				'BP_REST_Video_Endpoint',
+				'BP_REST_Video_Poster_Endpoint',
+				'BP_REST_Video_Details_Endpoint',
 			)
 		);
 	}
