@@ -1952,7 +1952,6 @@ function bb_media_settings_callback_symlink_support() {
  */
 function bb_media_settings_callback_symlink_direct_access() {
 
-
 	$get_sample_ids = bp_get_option( 'bb_directory_get_test_ids', array() );
 
 	if ( empty( $get_sample_ids ) ) {
