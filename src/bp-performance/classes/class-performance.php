@@ -19,6 +19,7 @@ use BuddyBoss\Performance\Integration\BB_Messages;
 use BuddyBoss\Performance\Integration\BB_Notifications;
 use BuddyBoss\Performance\Integration\BB_Replies;
 use BuddyBoss\Performance\Integration\BB_Topics;
+use BuddyBoss\Performance\Integration\BB_Videos;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -157,6 +158,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					if ( self::mu_is_component_active( 'document' ) && file_exists( $documents_integration ) ) {
 						require_once $documents_integration;
 						BB_Documents::instance();
+					}
+
+					$videos_integration = dirname( __FILE__ ) . '/integrations/class-bb-videos.php';
+					if ( self::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
+						require_once $videos_integration;
+						BB_Videos::instance();
 					}
 				}
 

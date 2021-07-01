@@ -699,6 +699,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-groups.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-friends.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-notifications.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-search.php';

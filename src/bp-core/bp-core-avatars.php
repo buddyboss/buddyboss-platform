@@ -2193,8 +2193,8 @@ function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
 		}
 
 		// Add `loading` attribute.
-		$extra_attr = $args['extra_attr'];
-		$loading    = $args['loading'];
+		$extra_attr = isset( $args['extra_attr'] ) ? $args['extra_attr'] : '';
+		$loading    = isset( $args['loading'] ) ? $args['loading'] : '';
 		if ( in_array( $loading, array( 'lazy', 'eager' ), true ) && ! preg_match( '/\bloading\s*=/', $extra_attr ) ) {
 			if ( ! empty( $extra_attr ) ) {
 				$extra_attr .= ' ';

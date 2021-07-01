@@ -32,6 +32,8 @@ TABLE OF CONTENTS:
 7.0 Plugins page
 8.0 BuddyBoss App page
 9.0 Miscellaneous
+10.0 On-screen Notifications
+11.0 Notices UI
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -2362,6 +2364,98 @@ h2.has_tutorial_btn {
 	}
 
 }
+
+
+/*------------------------------------------------------------------------------
+ * 10.0 On-screen Notifications
+ *----------------------------------------------------------------------------*/
+
+.bp-admin-card.section-bp_notifications h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/regular/bells.svg);
+	background-size: auto;
+}
+
+.bb-screen-position-outer {
+	display: flex;
+	width: 180px;
+	justify-content: space-between;
+
+	.bb-screen-position {
+		display: flex;
+		width: 85px;
+		flex-direction: column;
+		text-align: center;
+
+		input[type="radio"] {
+			opacity: 0;
+			visibility: hidden;
+			height: 0;
+		}
+
+		.option {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+
+			&:before {
+				content: " ";
+				height: 80px;
+				width: 80px;
+				background: #f0f0f1;
+				display: flex;
+				border-radius: 5px;
+				border: 2px solid #ccd0d4;
+				transition: all 0.3s ease;
+			}
+
+			&:after {
+				content: " ";
+				width: 40px;
+				height: 20px;
+				border-radius: 2px;
+				background: #c3c4c7;
+				position: absolute;
+				top: 55px;
+			}
+
+			&.opt-right {
+
+				&:after {
+					right: 8px;
+				}
+
+			}
+
+			&.opt-left {
+
+				&:after {
+					left: 8px;
+				}
+
+			}
+
+			span {
+				font-size: 14px;
+				color: #999;
+				line-height: 2;
+			}
+
+		}
+
+		#bp_on_screen_notifications_position_left:checked:checked + .option,
+		#bp_on_screen_notifications_position_right:checked:checked + .option {
+
+			&:before {
+				border-color: #2370b1;
+			}
+
+		}
+	}
+}
+
+/*------------------------------------------------------------------------------
+ * 11.0 Notices UI
+ *----------------------------------------------------------------------------*/
 
 .bp-messages-feedback .bp-feedback.error {
 	margin: 0;
