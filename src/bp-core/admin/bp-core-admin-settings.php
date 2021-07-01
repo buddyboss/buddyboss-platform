@@ -830,7 +830,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the last option of CPT
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
@@ -851,7 +851,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the WordPress Blog Posts
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php _e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
 		<?php
 	}
 }
