@@ -1825,6 +1825,28 @@ function bp_rest_enable_private_network() {
 }
 
 /**
+ * Is the symlink is enabled in Media, Document & Video?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the symlink is enabled in Media, Document & Video enable,
+ *              otherwise false.
+ */
+function bb_enable_symlinks( $default = false ) {
+
+	/**
+	 * Filters whether or not the symlink is enabled in Media, Document & Video.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
+	 */
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
+}
+
+/**
  * Option name for custom post type.
  * From the activity settings whether any custom post enable or disable for timeline feed.
  *
@@ -1890,26 +1912,4 @@ function bb_feed_post_types() {
 function bb_feed_not_allowed_comment_post_types() {
 	// Exclude BP CPT.
 	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
-}
-
-/**
- * Is the symlink is enabled in Media, Document & Video?
- *
- * @since BuddyBoss 1.7.0
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
- * @return bool True if the symlink is enabled in Media, Document & Video enable,
- *              otherwise false.
- */
-function bb_enable_symlinks( $default = false ) {
-
-	/**
-	 * Filters whether or not the symlink is enabled in Media, Document & Video.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 *
-	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
-	 */
-	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
 }

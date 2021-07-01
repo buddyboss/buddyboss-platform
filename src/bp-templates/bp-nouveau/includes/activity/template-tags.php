@@ -1808,7 +1808,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		return array();
 	}
 
-	// Remove the Edit button if the user can't edit
+	// Remove the Edit button if the user can't edit.
 	if ( ! bp_activity_user_can_edit() ) {
 		unset( $return['activity_edit'] );
 	}
