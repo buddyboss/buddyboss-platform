@@ -1032,6 +1032,9 @@ fieldset div.avatar {
 		position: relative;
 
 		.bb-post-img-link {
+			background-color: #333;
+			display: block;
+			border-radius: 3px 3px 0 0;
 
 			&:before {
 				content: "";
@@ -1044,8 +1047,8 @@ fieldset div.avatar {
 			}
 
 			img {
-				border-radius: 3px 3px 0 0;
-				margin-bottom: 0;
+				border-radius: 0;
+				margin: 0 auto;
 			}
 		}
 
