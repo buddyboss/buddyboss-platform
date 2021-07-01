@@ -493,6 +493,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if (
 			true === $retval
 			&& 'public' !== $document->privacy
+			&& ! bp_current_user_can( 'bp_moderate' )
 			&& true === $this->bp_rest_check_privacy_restriction( $document )
 		) {
 			$retval = new WP_Error(
@@ -790,6 +791,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'activity_id'   => $document->activity_id,
 			'folder_id'     => $document->folder_id,
 			'title'         => $document->title,
+			'user_id'       => $document->user_id,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -799,8 +801,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['folder_id'] ) && ( (int) $args['folder_id'] !== (int) $request['folder_id'] ) ) {
 			$parent_folder     = new BP_Document_Folder( $request['folder_id'] );
-			$args['privacy'] = ( ! empty( $parent_folder ) ? $parent_folder->privacy : $document->privacy );
-			$args['group_id'] = ( ! empty( $parent_folder ) ? $parent_folder->group_id : $document->group_id );
+			$args['privacy']   = ( ! empty( $parent_folder ) ? $parent_folder->privacy : $document->privacy );
+			$args['group_id']  = ( ! empty( $parent_folder ) ? $parent_folder->group_id : $document->group_id );
 			$moved_document_id = bp_document_move_document_to_folder( $args['id'], $request['folder_id'], $args['group_id'] );
 			if ( empty( (int) $moved_document_id ) || is_wp_error( $moved_document_id ) ) {
 				return new WP_Error(
@@ -1352,7 +1354,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			ob_start();
 
 			if ( in_array( $data['extension'], bp_get_document_preview_music_extensions(), true ) ) {
-				$audio_url = bp_document_get_preview_audio_url( $document->id, $data['extension'], $document->attachment_id );
+				$audio_url = bp_document_get_preview_audio_url( $document->id, $document->attachment_id, $data['extension'] );
 
 				echo '<div class="document-audio-wrap">' .
 					'<audio controls controlsList="nodownload">' .
@@ -1362,7 +1364,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'</div>';
 
 			}
-			$attachment_url = bp_document_get_preview_image_url( $document->id, $data['extension'], $document->attachment_id );
+
+			if ( function_exists( 'bp_document_get_preview_url' ) ) {
+				$attachment_url = bp_document_get_preview_url( $document->id, $document->attachment_id );
+			} else {
+				$attachment_url = bp_document_get_preview_image_url( $document->id, $data['extension'], $document->attachment_id );
+			}
+
 			if ( $attachment_url ) {
 				echo '<div class="document-preview-wrap">' .
 					'<img src="' . esc_url_raw( $attachment_url ) . '" alt="" />' .
@@ -1454,7 +1462,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'description'     => array(
+				'description'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The Document description.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1529,7 +1537,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'count'            => array(
+				'count'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Count of the child documents and folders of the folder.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1776,6 +1784,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'copy_download_link' => 0,
 			'edit_privacy'       => 0,
 			'edit_post_privacy'  => 0,
+			'edit_description'   => 0,
 			'rename'             => 0,
 			'move'               => 0,
 			'delete'             => 0,
@@ -1784,9 +1793,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$document_privacy = array();
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$document_privacy = bp_document_user_can_manage_document( $document->id, bp_loggedin_user_id() );
+			$document_privacy = bb_media_user_can_access( $document->id, 'document' );
 		} else {
-			$document_privacy = bp_document_user_can_manage_folder( $document->id, bp_loggedin_user_id() );
+			$document_privacy = bb_media_user_can_access( $document->id, 'folder' );
 		}
 
 		if ( ! empty( $document_privacy ) ) {
@@ -1795,9 +1804,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				$retval['copy_download_link'] = 1;
 			}
 
-			if ( isset( $document_privacy['can_manage'] ) && true === (bool) $document_privacy['can_manage'] ) {
-				$retval['rename'] = 1;
-				$retval['delete'] = 1;
+			if ( isset( $document_privacy['can_edit'] ) && true === (bool) $document_privacy['can_edit'] ) {
+				$retval['rename']           = 1;
+				$retval['edit_description'] = 1;
 
 				if ( 0 === (int) $document->group_id && 0 === (int) $document->parent ) {
 					if ( ! empty( $document->attachment_id ) && bp_is_active( 'activity' ) ) {
@@ -1813,7 +1822,11 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( isset( $document_privacy['can_add'] ) && true === (bool) $document_privacy['can_add'] ) {
+			if ( isset( $document_privacy['can_delete'] ) && true === (bool) $document_privacy['can_delete'] ) {
+				$retval['delete'] = 1;
+			}
+
+			if ( isset( $document_privacy['can_move'] ) && true === (bool) $document_privacy['can_move'] ) {
 				$retval['move'] = 1;
 			}
 		}
@@ -1893,6 +1906,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 			$document_activity_id = $activity_id;
 
+			$parent_activity = get_post_meta( $wp_attachment_id, 'bp_document_parent_activity_id', true );
+			if ( ! empty( $parent_activity ) && bp_is_active( 'activity' ) ) {
+				$activity_id   = $parent_activity;
+				$all_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+				$all_documents = explode( ',', $all_documents );
+				$key           = array_search( $id, $all_documents, true );
+				if ( false !== $key ) {
+					unset( $all_documents[ $key ] );
+				}
+			}
+
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
@@ -1929,6 +1953,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 				$created_document_ids[] = $document_id;
 
+			}
+
+			if ( ! empty( $all_documents ) ) {
+				foreach ( $all_documents as $d_id ) {
+					$document = new BP_Document( $d_id );
+					if ( ! empty( $document->id ) ) {
+						$created_document_ids[] = $document->id;
+						$document->privacy      = $document_privacy;
+						$document->save();
+					}
+				}
 			}
 		}
 
@@ -1977,15 +2012,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		// Link all uploaded document to main activity.
-		if ( ! empty( $activity_id ) && empty( $id ) ) {
-			$created_document_ids_joined = implode( ',', $created_document_ids );
-			bp_activity_update_meta( $activity_id, 'bp_document_ids', $created_document_ids_joined );
-
+		// Link all uploaded video to main activity.
+		if ( ! empty( $activity_id ) ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
-			if ( ! empty( $main_activity ) && empty( $group_id ) ) {
-				$main_activity->privacy = $document_privacy;
-				$main_activity->save();
+			if ( ! empty( $main_activity->id ) && 'document' !== $main_activity->privacy ) {
+				$created_document_ids_joined = implode( ',', $created_document_ids );
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', $created_document_ids_joined );
+
+				if ( empty( $group_id ) ) {
+					$main_activity->privacy = $document_privacy;
+					$main_activity->save();
+				}
 			}
 		}
 
@@ -2279,7 +2316,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_documents_update_rest_field_callback( $object, $value, $attribute ) {
 
-		global $bp_activity_edit, $bp_activity_post_update_id, $bp_activity_post_update;
+		global $bp_activity_edit, $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
 
 		$group_id = 0;
 		if ( 'groups' === $value->component ) {
@@ -2313,6 +2350,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( false === $bp_activity_edit && empty( $object ) ) {
 			return $value;
 		}
+
+		$bp_new_activity_comment = ( 'activity_comment' === $value->type ? $value->id : 0 );
 
 		$activity_id = $value->id;
 		$privacy     = $value->privacy;
@@ -2385,6 +2424,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				}
 			}
 		}
+
+		$bp_document_upload_count = count( $new_documents );
 
 		remove_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 		remove_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -2926,7 +2967,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function bp_document_get_folder_children_ids( $folder_id ) {
 		global $wpdb, $bp;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name_folder} WHERE parent = %d", $folder_id ) ) );
 	}
 }

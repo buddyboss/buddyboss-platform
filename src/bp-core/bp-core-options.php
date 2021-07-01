@@ -829,7 +829,7 @@ function bp_enable_private_network( $default = false ) {
  */
 function bp_disable_blogforum_comments( $default = false ) {
 	global $activities_template;
-	
+
 	// When here is not activity.
 	if ( empty( $activities_template->activity ) ) {
 		return $default;
@@ -838,7 +838,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 	if ( 'blogs' !== $activities_template->activity->component ) {
 		return $default;
 	}
-	
+
 	$post = get_post( $activities_template->activity->secondary_item_id );
 
 	if ( ! isset( $post->post_type ) ) {
@@ -849,7 +849,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 	if ( 'product' === $post->post_type ) {
 		return true;
 	}
-	
+
 	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
 	$disable = (bool) bb_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
@@ -1822,6 +1822,28 @@ function bp_rest_enable_private_network() {
 	 * @param bool $value Whether private REST APIs is enabled.
 	 */
 	return apply_filters( 'bp_rest_enable_private_network', $retval );
+}
+
+/**
+ * Is the symlink is enabled in Media, Document & Video?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the symlink is enabled in Media, Document & Video enable,
+ *              otherwise false.
+ */
+function bb_enable_symlinks( $default = false ) {
+
+	/**
+	 * Filters whether or not the symlink is enabled in Media, Document & Video.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
+	 */
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
 }
 
 /**

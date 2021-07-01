@@ -732,6 +732,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
 			'can_post'           => $this->bp_rest_user_can_post( $item ),
 			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
+			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
 			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
 		);
 
@@ -1408,6 +1409,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'create_media'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user has permission to upload media to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'create_video'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to upload video to the group or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
