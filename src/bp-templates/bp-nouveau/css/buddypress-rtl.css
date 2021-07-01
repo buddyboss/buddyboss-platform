@@ -12049,7 +12049,12 @@ fieldset div.avatar {
   border-radius: 3px 3px 0 0;
 }
 
-.activity-list li.blogs .activity-content .activity-inner .bb-post-img-link:before {
+.activity-list li.blogs .activity-content .activity-inner .bb-post-img-link img {
+  border-radius: 0;
+  margin: 0 auto;
+}
+
+.activity-list li.blogs .activity-content .activity-inner .bb-post-title-link:before {
   content: "";
   display: block;
   position: absolute;
@@ -12057,11 +12062,6 @@ fieldset div.avatar {
   left: 0;
   top: 0;
   bottom: 0;
-}
-
-.activity-list li.blogs .activity-content .activity-inner .bb-post-img-link img {
-  border-radius: 0;
-  margin: 0 auto;
 }
 
 .activity-list li.blogs .activity-content .activity-inner .bb-content-wrp {
