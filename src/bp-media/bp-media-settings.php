@@ -1911,7 +1911,7 @@ function bb_admin_setting_callback_symlinks_section() {
  */
 function bb_media_settings_callback_symlink_support() {
 
-	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+	if ( empty( bb_enable_symlinks() ) || empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
 		?>
         <div class="bp-messages-feedback">
             <div class="bp-feedback warning">
