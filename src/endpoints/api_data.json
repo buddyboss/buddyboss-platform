@@ -910,46 +910,6 @@
     "groupTitle": "Blogs"
   },
   {
-    "type": "",
-    "url": "Checks",
-    "title": "wether the given `$pathfile` is considered a valid media file.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "groupTitle": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "name": "Checks"
-  },
-  {
-    "type": "",
-    "url": "Creates",
-    "title": "an FFProbe.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "groupTitle": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "name": "Creates"
-  },
-  {
-    "type": "",
-    "url": "Probes",
-    "title": "the format of a given file.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "groupTitle": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "name": "Probes"
-  },
-  {
-    "type": "",
-    "url": "Probes",
-    "title": "the streams contained in a given file.",
-    "version": "0.0.0",
-    "filename": "src/vendor/php-ffmpeg/php-ffmpeg/src/FFMpeg/FFProbe.php",
-    "group": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "groupTitle": "C:\\V\\www\\platform-site\\public_html\\wp-content\\plugins\\buddyboss-platform\\src\\vendor\\php-ffmpeg\\php-ffmpeg\\src\\FFMpeg\\FFProbe.php",
-    "name": "Probes"
-  },
-  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/components",
     "title": "Components",
