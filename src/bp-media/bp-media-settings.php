@@ -1917,9 +1917,7 @@ function bb_media_settings_callback_symlink_support() {
 
     <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
     <label for="bp_media_symlink_support">
-        <strong>
-            <?php _e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
-        </strong>
+        <?php _e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
     </label>
 
     <?php
