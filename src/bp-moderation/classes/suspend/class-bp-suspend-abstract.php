@@ -323,7 +323,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Return whitelisted keys from array arguments.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.1
 	 *
 	 * @param int    $item_id   Item ID.
 	 * @param string $item_type Item type.
