@@ -50,6 +50,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
+		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -140,6 +143,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
 
+		if ( apply_filters( 'bb_moderation_restrict_single_item_' . self::$moderation_type, false, $activity ) ) {
+			return $restrict;
+		}
+
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( ! empty( $username_visible ) ) {
@@ -193,13 +200,53 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 				break;
 			case 'bbp_topic_create':
-				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-				$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
+				if ( bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Topics::$moderation_type ) ) {
+					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
+					$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
 				break;
 			case 'bbp_reply_create':
-				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-				$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
+				if ( bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Replies::$moderation_type ) ) {
+					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
+					$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
 				break;
+		}
+
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) ) || ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) && 1 === count( explode( ',', bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) ) ) {
+			if ( bp_is_active( 'media' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+				$media_id       = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+				$explode_medias = explode( ',', bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) );
+				if ( 1 === count( $explode_medias ) && ! empty( $explode_medias[0] ) ) {
+					$media_id = $explode_medias[0];
+				}
+				$sub_items['id']   = $media_id;
+				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
+		}
+
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_activity', true ) ) ) {
+			if ( bp_is_active( 'document' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+				$document_id       = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+				$explode_documents = explode( ',', bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) );
+				if ( 1 === count( $explode_documents ) && ! empty( $explode_documents[0] ) ) {
+					$document_id = $explode_documents[0];
+				}
+				$sub_items['id']   = $document_id;
+				$sub_items['type'] = BP_Moderation_Document::$moderation_type;
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
 		}
 
 		return $sub_items;
@@ -227,5 +274,23 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Remove Pre-validate check.
+	 *
+	 * @since BuddyBoss 1.7.1
+	 */
+	public function remove_pre_validate_check() {
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+	}
+
+	/**
+	 * Add Pre-validate check.
+	 *
+	 * @since BuddyBoss 1.7.1
+	 */
+	public function add_pre_validate_check() {
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 }

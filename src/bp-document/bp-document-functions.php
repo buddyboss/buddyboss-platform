@@ -634,7 +634,6 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
-						'error_type'    => 'wp_error',
 					)
 				);
 

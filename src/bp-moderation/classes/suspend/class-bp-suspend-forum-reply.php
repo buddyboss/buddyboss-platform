@@ -64,6 +64,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		// Blocked template.
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
+
+		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
 	}
 
 	/**
@@ -71,11 +73,12 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_reply_ids( $member_id ) {
+	public static function get_member_reply_ids( $member_id, $action = '' ) {
 		$reply_ids = array();
 
 		$reply_query = new WP_Query(
@@ -94,6 +97,14 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		if ( $reply_query->have_posts() ) {
 			$reply_ids = $reply_query->posts;
+		}
+
+		if ( 'hide' === $action && ! empty( $reply_ids ) ) {
+			foreach ( $reply_ids as $k => $reply_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
+					unset( $reply_ids[ $k ] );
+				}
+			}
 		}
 
 		return $reply_ids;
@@ -341,7 +352,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$reply_id = bbp_get_reply_id();
 
-		if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
@@ -365,6 +376,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $reply_id, $args = array() ) {
 		$related_contents = array();
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 
 		// related activity comment only hide if parent activity hide or comment's/parent activity's author blocked or suspended.
 		if ( ! empty( $args ) && ( isset( $args['blocked_user'] ) || isset( $args['user_suspended'] ) || isset( $args['hide_parent'] ) ) ) {
@@ -377,11 +390,11 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $reply_id );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $reply_id, 'get_post_meta', $action );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $reply_id );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $reply_id, 'get_post_meta', $action );
 		}
 
 		if ( bp_is_active( 'video' ) ) {
@@ -442,5 +455,23 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
+	}
+
+	/**
+	 * Function to un-restrict activity data while deleting the activity.
+	 *
+	 * @since BuddyBoss 1.7.1
+	 *
+	 * @param boolean $restrict restrict single item or not.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_single_item( $restrict ) {
+
+		if ( empty( $restrict ) && ( did_action( 'bbp_delete_reply' ) || did_action( 'bbp_trash_reply' ) ) ) {
+			$restrict = true;
+		}
+
+		return $restrict;
 	}
 }
