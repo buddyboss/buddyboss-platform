@@ -2988,7 +2988,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
-	
+
 	// Filter to skip comment content check for comment notification.
 	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
 
@@ -5397,6 +5397,11 @@ function bp_activity_default_scope( $scope = 'all' ) {
  * @return array|bool The Activity edit data or false otherwise.
  */
 function bp_activity_get_edit_data( $activity_id = 0 ) {
+
+	if ( ! bp_is_activity_edit_enabled() ) {
+		return;
+	}
+
 	global $activities_template;
 
 	// check activity empty or not.
@@ -5524,7 +5529,7 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 		array(
 			'id'                => 'activity_comment_report',
 			'component'         => 'moderation',
-			'position'          => 50,
+			'position'          => 10,
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
 				'data-bp-content-id'   => bp_get_activity_comment_id(),
@@ -5539,4 +5544,27 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 	 * @since BuddyBoss 1.5.6
 	 */
 	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_get_activity_hierarchy( $activity_id ) {
+
+	global $wpdb, $bp;
+
+	$activity_table = $bp->activity->table_name;
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$activity_query = $wpdb->prepare( "SELECT c.id FROM ( SELECT @r AS _id, (SELECT @r := secondary_item_id FROM {$activity_table} WHERE id = _id) AS secondary_item_id, @l := @l + 1 AS level FROM (SELECT @r := %d, @l := 0) vars, {$activity_table} m WHERE @r <> 0) d JOIN {$activity_table} c ON d._id = c.id ORDER BY d.level ASC", $activity_id );
+
+	$data = $wpdb->get_results( $activity_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	return array_filter( $data );
 }

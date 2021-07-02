@@ -197,9 +197,9 @@ function bp_nouveau_ajax_messages_send_message() {
 			while ( bp_message_threads() ) {
 				bp_message_thread();
 
-				$last_message_id         = (int) $messages_template->thread->last_message_id;
-				$is_group_thread         = 0;
-				$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+				$last_message_id = (int) $messages_template->thread->last_message_id;
+				$is_group_thread = 0;
+				$first_message   = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
 				if ( isset( $first_message ) && isset( $first_message->id ) ) {
 					$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 					$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
@@ -209,22 +209,22 @@ function bp_nouveau_ajax_messages_send_message() {
 					if ( 'group' === $message_from && bp_get_message_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 						$is_group_thread = 1;
 					}
-                }
+				}
 
 				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
 				$un_access_users = array();
 				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-                    foreach ( (array) $messages_template->thread->recipients as $recipient ) {
-		                if ( bp_loggedin_user_id() !== $recipient->user_id ) {
-			                if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-				                $un_access_users[]  = false;
-			                }
-		                }
-	                }
-                    if ( ! empty( $un_access_users ) ){
-	                    $can_message = false;
-                    }
-                }
+					foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
+							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+								$un_access_users[] = false;
+							}
+						}
+					}
+					if ( ! empty( $un_access_users ) ) {
+						$can_message = false;
+					}
+				}
 
 				$check_recipients = (array) $messages_template->thread->recipients;
 				// Strip the sender from the recipient list, and unset them if they are
@@ -454,7 +454,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	// Get the message by pretending we're in the message loop.
-	global $thread_template, $media_template, $document_template;
+	global $thread_template, $media_template, $document_template, $video_template;
 
 	$bp           = buddypress();
 	$reset_action = $bp->current_action;
@@ -553,6 +553,39 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
+	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+		$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
+
+		if (
+			! empty( $video_ids ) &&
+			bp_has_video(
+				array(
+					'include'  => $video_ids,
+					'privacy'  => array( 'message' ),
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				)
+			)
+		) {
+			$reply['video'] = array();
+			while ( bp_video() ) {
+				bp_the_video();
+
+				$reply['video'][] = array(
+					'id'            => bp_get_video_id(),
+					'title'         => bp_get_video_title(),
+					'message_id'    => bp_get_the_thread_message_id(),
+					'thread_id'     => bp_get_the_thread_id(),
+					'attachment_id' => bp_get_video_attachment_id(),
+					'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
+					'full'          => bp_get_video_attachment_image(),
+					'meta'          => $video_template->video->attachment_data->meta,
+					'privacy'       => bp_get_video_privacy(),
+				);
+			}
+		}
+	}
+
 	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 		$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
 
@@ -577,7 +610,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$extension_description = '';
 				$extension_lists       = bp_document_extensions_list();
 				$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-				$attachment_url        = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 				$mirror_text           = bp_document_mirror_text( $attachment_id );
 				$audio_url             = '';
 
@@ -590,14 +622,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 				}
 
 				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+					$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 				}
 
 				$output = '';
 				ob_start();
 
 				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+					$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 					?>
 					<div class="document-audio-wrap">
 						<audio controls controlsList="nodownload">
@@ -607,7 +639,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 					</div>
 					<?php
 				}
-				$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+
+				$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+				$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
+
 				if ( $attachment_url ) {
 					?>
 					<div class="document-preview-wrap">
@@ -671,6 +706,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'privacy'               => bp_get_db_document_privacy(),
 					'author'                => bp_get_document_user_id(),
 					'preview'               => $attachment_url,
+					'full_preview'          => ( '' !== $full_attachment_url ) ? $full_attachment_url : $attachment_url,
 					'msg_preview'           => $output,
 					'text_preview'          => $text_attachment_url ? esc_url( $text_attachment_url ) : '',
 					'mp3_preview'           => $audio_url ? $audio_url : '',
@@ -956,11 +992,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			foreach ( (array) $messages_template->thread->recipients as $recipient ) {
 				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-						$un_access_users[]  = false;
+						$un_access_users[] = false;
 					}
 				}
 			}
-			if ( ! empty( $un_access_users ) ){
+			if ( ! empty( $un_access_users ) ) {
 				$can_message = false;
 			}
 		}
@@ -1097,6 +1133,19 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent a photo', 'buddyboss' );
 				} else {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+			$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
+
+			if ( ! empty( $video_ids ) ) {
+				$video_ids = explode( ',', $video_ids );
+				if ( sizeof( $video_ids ) < 2 ) {
+					$threads->threads[ $i ]['excerpt'] = __( 'sent a video', 'buddyboss' );
+				} else {
+					$threads->threads[ $i ]['excerpt'] = __( 'sent some videos', 'buddyboss' );
 				}
 			}
 		}
@@ -1724,7 +1773,7 @@ add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients
  * @return stdClass|void
  */
 function bp_nouveau_get_thread_messages( $thread_id, $post ) {
-	global $thread_template, $media_template, $wpdb, $document_template;
+	global $thread_template, $media_template, $wpdb, $document_template, $video_template;
 
 	if ( ! $thread_id ) {
 		return;
@@ -1963,11 +2012,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
 			if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 				if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-					$un_access_users[]  = false;
+					$un_access_users[] = false;
 				}
 			}
 		}
-		if ( ! empty( $un_access_users ) ){
+		if ( ! empty( $un_access_users ) ) {
 			$can_message = false;
 		}
 	}
@@ -2136,7 +2185,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 			}
 
-			$content = '';
 			if ( $message_left && 'yes' === $message_left ) {
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
@@ -2194,7 +2242,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$message_unbanned = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
 			$message_deleted  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
 
-			$content = '';
 			if ( $message_left && 'yes' === $message_left ) {
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
@@ -2285,9 +2332,43 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'title'         => bp_get_media_title(),
 						'attachment_id' => bp_get_media_attachment_id(),
 						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
-						'full'          => bp_get_media_attachment_image(),
+						'full'          => bb_get_media_photos_theatre_popup_image(),
 						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'       => bp_get_media_privacy(),
+					);
+				}
+			}
+		}
+
+		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
+
+			if (
+				! empty( $video_ids ) &&
+				bp_has_video(
+					array(
+						'include'  => $video_ids,
+						'privacy'  => array( 'message' ),
+						'order_by' => 'menu_order',
+						'sort'     => 'ASC',
+						'user_id'  => false,
+					)
+				)
+			) {
+				$thread->messages[ $i ]['video'] = array();
+				while ( bp_video() ) {
+					bp_the_video();
+
+					$thread->messages[ $i ]['video'][] = array(
+						'id'            => bp_get_video_id(),
+						'message_id'    => bp_get_the_thread_message_id(),
+						'thread_id'     => bp_get_the_thread_id(),
+						'title'         => bp_get_video_title(),
+						'attachment_id' => bp_get_video_attachment_id(),
+						'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
+						'full'          => bp_get_video_attachment_image(),
+						'meta'          => $video_template->video->attachment_data->meta,
+						'privacy'       => bp_get_video_privacy(),
 					);
 				}
 			}
@@ -2318,15 +2399,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$url                   = wp_get_attachment_url( $attachment_id );
 					$extension_lists       = bp_document_extensions_list();
 					$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-					$attachment_url        = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 					$mirror_text           = bp_document_mirror_text( $attachment_id );
 					$audio_url             = '';
-					if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-						$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
-					}
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 					}
 
 					if ( ! empty( $extension_lists ) ) {
@@ -2341,7 +2418,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					ob_start();
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 						?>
 						<div class="document-audio-wrap">
 							<audio controls controlsList="nodownload">
@@ -2351,8 +2428,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						</div>
 						<?php
 					}
-					$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
-					if ( $attachment_url ) {
+
+					$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+					$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
+
+					if ( '' !== $attachment_url ) {
 						?>
 						<div class="document-preview-wrap">
 							<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
@@ -2413,6 +2493,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
 						'more_action'           => __( 'More actions', 'buddyboss' ),
 						'preview'               => $attachment_url,
+						'full_preview'          => ( '' !== $full_attachment_url ) ? $full_attachment_url : $attachment_url,
 						'msg_preview'           => $output,
 						'privacy'               => bp_get_db_document_privacy(),
 						'author'                => bp_get_document_user_id(),
@@ -2469,6 +2550,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
 	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 	$thread->user_can_upload_gif             = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 	$thread->user_can_upload_emoji           = bb_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 

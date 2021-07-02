@@ -427,6 +427,10 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			}
 		}
 
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta' );
+		}
+
 		return $related_content_hide;
 	}
 

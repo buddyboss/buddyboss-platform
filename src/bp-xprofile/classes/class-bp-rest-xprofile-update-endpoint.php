@@ -229,28 +229,27 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval  = true;
+			$user_id = bp_loggedin_user_id();
 
-		$user_id = bp_loggedin_user_id();
-
-		if ( empty( $user_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_login_required',
-				__( 'Sorry, you are not logged in to update fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $user_id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_login_required',
+					__( 'Sorry, you are not logged in to update fields.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
