@@ -1913,6 +1913,16 @@ function bb_admin_setting_callback_symlinks_section() {
  */
 function bb_media_settings_callback_symlink_support() {
 
+    ?>
+
+    <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
+    <label for="bp_media_symlink_support">
+        <strong>
+            <?php _e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+        </strong>
+    </label>
+
+    <?php
 	if ( empty( bb_enable_symlinks() ) || empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
 		?>
 		<div class="bp-messages-feedback">
@@ -1933,15 +1943,7 @@ function bb_media_settings_callback_symlink_support() {
 		<?php
 	}
 	?>
-	<div style="display:none;">
-		<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox"
-			   value="1" <?php checked( bb_enable_symlinks() ); ?> />
-		<label for="bp_media_symlink_support">
-			<strong>
-				<?php _e( 'Enable symbolic links for photos, documents and videos', 'buddyboss' ); ?>
-			</strong>
-		</label>
-	</div>
+
 	<p class="description"><?php _e( 'Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.', 'buddyboss' ); ?></p>
 
 	<?php
