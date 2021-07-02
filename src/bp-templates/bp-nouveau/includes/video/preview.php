@@ -25,7 +25,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 
 	$id               = (int) $explode_arr[ 1 ];
 	$id1              = (int) $explode_arr1[ 1 ];
 	$document_privacy = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'video' ) : true;
-	$can_view         = true === (bool) $document_privacy[ 'can_view' ];
+	$can_view         = isset( $document_privacy[ 'can_view' ] ) && true === (bool) $document_privacy[ 'can_view' ];
 	if ( $can_view ) {
 
 		if ( '' !== $size ) {
@@ -64,4 +64,3 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 
 	echo '// Silence is golden.';
 	exit();
 }
-

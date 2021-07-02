@@ -1334,8 +1334,6 @@ function bp_nouveau_get_nav_count() {
 		$count = bp_media_get_total_group_album_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
 		$count = bp_video_get_total_group_video_count();
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'video' ) && bp_is_group_video_albums_support_enabled() && 'albums' === $nav_item->slug ) {
-		$count = bp_video_get_total_group_album_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
 		$group  = groups_get_current_group();
 		$admins = groups_get_group_admins( $group->id );

@@ -836,19 +836,20 @@ div[class*="attached-gif-container"] {
 	.gif-image-remove {
 		border-radius: 10px;
 		cursor: pointer;
-		height: 19px;
-		right: 2px;
-		top: 4px;
-		width: 19px;
+		height: 16px;
+		right: 5px;
+		top: 5px;
+		width: 16px;
+		background-color: #f8f8f8;
 	}
 
 	.gif-image-overlay {
-		color: #fff;
+		color: #9ea8b3;
 		margin-top: 0;
 		position: absolute;
 
 		.bb-icon-close {
-			font-size: 20px;
+			font-size: 17px;
 			vertical-align: top;
 		}
 	}

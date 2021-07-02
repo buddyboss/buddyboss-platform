@@ -9,6 +9,7 @@
 
 bp_nouveau_before_loop();
 
+// phpcs:ignore WordPress.Security.NonceVerification.Missing
 if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
 	bp_get_template_part( 'video/add-video-thumbnail' );
 	bp_get_template_part( 'video/video-move' );

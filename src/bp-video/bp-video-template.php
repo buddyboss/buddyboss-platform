@@ -172,22 +172,14 @@ function bp_has_video( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'include'      => false,
-			// Pass an video_id or string of IDs comma-separated.
-			'exclude'      => false,
-			// Pass an activity_id or string of IDs comma-separated.
-			'sort'         => 'DESC',
-			// Sort DESC or ASC.
-			'order_by'     => false,
-			// Order by. Default: date_created.
-			'page'         => 1,
-			// Which page to load.
-			'per_page'     => 20,
-			// Number of items per page.
-			'page_arg'     => 'acpage',
-			// See https://buddypress.trac.wordpress.org/ticket/3679.
-			'max'          => false,
-			// Max number to return.
+			'include'      => false,    // Pass an video_id or string of IDs comma-separated.
+			'exclude'      => false,    // Pass an activity_id or string of IDs comma-separated.
+			'sort'         => 'DESC',   // Sort DESC or ASC.
+			'order_by'     => false,    // Order by. Default: date_created.
+			'page'         => 1,        // Which page to load.
+			'per_page'     => 20,       // Number of items per page.
+			'page_arg'     => 'acpage', // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'max'          => false,    // Max number to return.
 			'fields'       => 'all',
 			'count_total'  => false,
 
@@ -195,14 +187,10 @@ function bp_has_video( $args = '' ) {
 			'scope'        => $scope,
 
 			// Filtering.
-			'user_id'      => $user_id,
-			// user_id to filter on.
-			'album_id'     => $album_id,
-			// album_id to filter on.
-			'group_id'     => $group_id,
-			// group_id to filter on.
-			'privacy'      => $privacy,
-			// privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'user_id'      => $user_id,   // user_id to filter on.
+			'album_id'     => $album_id,  // album_id to filter on.
+			'group_id'     => $group_id,  // group_id to filter on.
+			'privacy'      => $privacy,   // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 			// Searching.
 			'search_terms' => $search_terms_default,
@@ -269,7 +257,7 @@ function bp_the_video() {
 /**
  * Output the URL for the Load More link.
  *
- * @since BuddyPress 2.1.0
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_load_more_link() {
 	echo esc_url( bp_get_video_load_more_link() );
@@ -279,7 +267,7 @@ function bp_video_load_more_link() {
  * Get the URL for the Load More link.
  *
  * @return string $link
- * @since BuddyPress 2.1.0
+ * @since BuddyBoss 1.7.0
  */
 function bp_get_video_load_more_link() {
 	global $video_template;
@@ -294,7 +282,7 @@ function bp_get_video_load_more_link() {
 	 * @param string $url            The original URL.
 	 * @param object $video_template The video template loop global.
 	 *
-	 * @since BuddyPress 2.1.0
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_get_video_load_more_link', $link, $url, $video_template );
 }
@@ -760,7 +748,7 @@ function bp_get_video_album_id() {
 /**
  * Output the video group ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_group_id() {
 	echo bp_get_video_group_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -772,7 +760,7 @@ function bp_video_group_id() {
  * @return int The video group ID.
  * @global object $video_template {@link BP_Video_Template}
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.7.0
  */
 function bp_get_video_group_id() {
 	global $video_template;
@@ -782,7 +770,7 @@ function bp_get_video_group_id() {
 	 *
 	 * @param int $id The video group ID.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_get_video_group_id', $video_template->video->group_id );
 }
@@ -967,7 +955,7 @@ function bp_get_video_directory_permalink() {
 /**
  * Output the video privacy.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.7.0
  */
 function bp_video_privacy() {
 	echo esc_html( bp_get_video_privacy() );
@@ -979,7 +967,7 @@ function bp_video_privacy() {
  * @return string The video privacy.
  * @global object $video_template {@link BP_Video_Template}
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.7.0
  */
 function bp_get_video_privacy() {
 	global $video_template;
@@ -989,7 +977,7 @@ function bp_get_video_privacy() {
 	 *
 	 * @param string $id The video privacy.
 	 *
-	 * @since BuddyBoss 1.2.3
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_get_video_privacy', $video_template->video->privacy );
 }
@@ -1745,7 +1733,7 @@ function bp_get_video_auto_generated_thumbnail_ids() {
 	global $video_template;
 
 	$thumbnail_ids = get_post_meta( $video_template->video->attachment_id, 'video_preview_thumbnails', true );
-	$thumbnail_ids = isset($thumbnail_ids['default_images']) && !empty($thumbnail_ids['default_images']) ? $thumbnail_ids['default_images'] : '';
+	$thumbnail_ids = isset( $thumbnail_ids['default_images'] ) && ! empty( $thumbnail_ids['default_images'] ) ? $thumbnail_ids['default_images'] : '';
 
 	/**
 	 * Filters the auto generated video thumbnail IDs comma separated.
@@ -2043,4 +2031,3 @@ function bp_get_video_activity_thumb() {
 	 */
 	return apply_filters( 'bp_get_video_activity_thumb', $video_template->video->attachment_data->video_activity_thumb );
 }
-

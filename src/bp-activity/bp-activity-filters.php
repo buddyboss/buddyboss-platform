@@ -1571,7 +1571,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 
 	if ( ! empty( $activities->activities ) ) {
 		foreach ( $activities->activities as $key => $activity ) {
-			if ( in_array( $activity->privacy, array( 'media', 'document' ) ) ) {
+			if ( in_array( $activity->privacy, array( 'media', 'document' ), true ) ) {
 				$parent_activity_id = false;
 				if ( ! empty( $activity->secondary_item_id ) ) {
 					$parent_activity_id = $activity->secondary_item_id;
@@ -2339,52 +2339,44 @@ add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read
  */
 function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
-	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
-		if( is_a( $blog_post, 'WP_Post' ) ) {
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
 			$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
-			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$iframe  = $matches[0];
 					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
+
 					$content .= $iframe;
 				} else {
-					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
-					if( isset( $src[0] ) ) {
-						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
-					}
+					$content = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
 				}
-
 			} else {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				$content = strip_tags( $content, '<a><iframe>' );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
 				} else {
-					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
-					if( isset( $src[0] ) ) {
-						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
-					}
+					$content = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', $content, $blog_post->ID );
 				}
 			}
 		}
-
-	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
 		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-		if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
 		}
-
 	}
 
 	return $content;
@@ -2446,6 +2438,24 @@ function bb_check_is_activity_content_empty( $data ) {
 	}
 }
 
+add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback', 10, 2 );
+/**
+ * Function will add feature image for blog post in the activity feed content.
+ *
+ * @param string $content
+ * @param int    $blog_post_id
+ *
+ * @return string $content
+ *
+ * @since 1.6.4
+ */
+function bb_add_feature_image_blog_post_as_activity_content_callback( $content, $blog_post_id ) {
+	if ( ! empty( $blog_post_id ) && ! empty( get_post_thumbnail_id( $blog_post_id ) ) ) {
+		$content .= sprintf( ' <img src="%s">', esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $blog_post_id ), 'full' ) ) );
+	}
+	return $content;
+}
+
 /**
  * Create video activity for each video uploaded
  *
@@ -2477,7 +2487,7 @@ function bp_activity_video_add( $video ) {
 				}
 			}
 
-			// Check when new activity coment is empty then set privacy comment - - 2121
+			// Check when new activity coment is empty then set privacy comment - 2121.
 			if ( ! empty( $bp_new_activity_comment ) ) {
 				$activity_id     = $bp_new_activity_comment;
 				$video->privacy  = 'comment';
@@ -2495,7 +2505,7 @@ function bp_activity_video_add( $video ) {
 					$args['type']    = 'activity_update';
 					$current_group   = groups_get_group( $video->group_id );
 					$args['action']  = sprintf(
-					/* translators: 1. User Link. 2. Group link. */
+						/* translators: 1. User Link. 2. Group link. */
 						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 						bp_core_get_userlink( $video->user_id ),
 						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
@@ -2521,7 +2531,7 @@ function bp_activity_video_add( $video ) {
 
 				if ( $parent_activity_id ) {
 
-					// If new activity comment is empty - 2121
+					// If new activity comment is empty - 2121.
 					if ( empty( $bp_new_activity_comment ) ) {
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $parent_activity_id;
@@ -2536,7 +2546,7 @@ function bp_activity_video_add( $video ) {
 
 			if ( $parent_activity_id ) {
 
-				// If the video posted in activity comment then set the activity id to comment id.- 2121
+				// If the video posted in activity comment then set the activity id to comment id.- 2121.
 				if ( ! empty( $bp_new_activity_comment ) ) {
 					$parent_activity_id = $bp_new_activity_comment;
 					$video->privacy     = 'comment';

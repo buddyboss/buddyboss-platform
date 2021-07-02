@@ -612,9 +612,9 @@ class BP_Video {
 				$path = parse_url( $file_url, PHP_URL_PATH );
 				$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 			}
-			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234
-			// https://stackoverflow.com/a/44858204
-			if ( in_array( $filetype['ext'], array( 'mov' ) ) ) {
+			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
+			// https://stackoverflow.com/a/44858204.
+			if ( in_array( $filetype['ext'], array( 'mov' ), true ) ) {
 				$ext = 'mp4';
 			}
 
@@ -632,6 +632,7 @@ class BP_Video {
 			$attachment_data->thumb_meta                 = array();
 			$attachment_data->video_user_profile_thumb   = $default_thumb;
 			$attachment_data->video_directory_page_thumb = $default_thumb;
+			$attachment_data->media_album_cover          = $default_thumb;
 			$attachment_data->video_album_cover_thumb    = $default_thumb;
 			$attachment_data->video_add_thumbnail_thumb  = $default_thumb;
 			$attachment_data->video_popup_thumb          = $default_thumb;
@@ -652,6 +653,7 @@ class BP_Video {
 				$attachment_data->video_user_profile_thumb   = $video_user_profile_thumb;
 				$attachment_data->video_directory_page_thumb = $video_directory_page_thumb;
 				$attachment_data->video_album_cover_thumb    = $video_album_cover_thumb;
+				$attachment_data->media_album_cover          = $video_album_cover_thumb;
 				$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
 				$attachment_data->video_popup_thumb          = $video_popup_thumb;
 				$attachment_data->video_activity_thumb       = $video_activity_thumb;
@@ -687,7 +689,6 @@ class BP_Video {
 			$video->visibility = $visibility;
 			$video->video_link = bb_video_get_symlink( $video );
 			$videos[]          = $video;
-
 		}
 
 		// Then fetch user data.
@@ -777,9 +778,10 @@ class BP_Video {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 *
-	 * @param  mixed $scope  The video scope. Accepts string or array of scopes.
-	 * @param  array $r      Current activity arguments. Same as those of BP_Video::get(),
+	 * @param mixed $scope   The video scope. Accepts string or array of scopes.
+	 * @param array $r       Current activity arguments. Same as those of BP_Video::get(),
 	 *                       but merged with defaults.
+	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' video args.
 	 */
 	public static function get_scope_query_sql( $scope = false, $r = array() ) {
@@ -882,10 +884,11 @@ class BP_Video {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 *
-	 * @see BP_Video::get_filter_sql()
+	 * @see   BP_Video::get_filter_sql()
 	 *
 	 * @param string     $field The database field.
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
+	 *
 	 * @return string|false
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
@@ -1055,7 +1058,7 @@ class BP_Video {
 		 * @since BuddyBoss 1.7.0
 		 *
 		 * @param array $videos Array of video.
-		 * @param array $r          Array of parsed arguments.
+		 * @param array $r      Array of parsed arguments.
 		 */
 		do_action_ref_array( 'bp_video_after_delete', array( $videos, $r ) );
 
@@ -1125,6 +1128,13 @@ class BP_Video {
 
 					// Deleting an activity comment.
 					if ( 'activity_comment' === $activity->type ) {
+
+						// Do not delete the activity if activity type is comment & have a multiple videos attached.
+						$video_ids = self::get_activity_video_id( $activity_id );
+						if ( ! empty( $video_ids ) && self::get_activity_attachment_id( $activity_id ) > 0 ) {
+							continue;
+						}
+
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -1171,7 +1181,7 @@ class BP_Video {
 				'user_id'     => $user_id,
 				'privacy'     => $privacy,
 				'count_total' => true,
-				'fields'      => 'ids'
+				'fields'      => 'ids',
 			)
 		);
 

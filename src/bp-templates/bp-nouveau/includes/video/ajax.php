@@ -340,6 +340,15 @@ function bp_nouveau_ajax_video_save() {
 		wp_send_json_error( $response );
 	}
 
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+
+	if (
+		( ( bp_is_my_profile() || bp_is_user_media() ) && empty( bb_user_can_create_video() ) ) ||
+		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ! groups_can_user_manage_video( bp_loggedin_user_id(), $group_id ) )
+	) {
+		wp_send_json_error( $response );
+	}
+
 	$videos = filter_input( INPUT_POST, 'videos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $videos ) ) {
@@ -505,14 +514,26 @@ function bp_nouveau_ajax_video_delete() {
 
 	$video_personal_count = 0;
 	$video_group_count    = 0;
+
 	if ( bp_is_user_video() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 		bp_has_video( bp_ajax_querystring( 'video' ) );
 		$video_personal_count = $GLOBALS['video_template']->total_video_count;
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
 	}
+
 	if ( bp_is_group_video() ) {
+
+		// Update the count of photos in groups in navigation menu.
+		wp_cache_flush();
+
 		$video_group_count = bp_video_get_total_group_video_count();
+	}
+
+	if ( bp_is_group_albums() ) {
+
+		// Update the count of photos in groups in navigation menu when you are in single albums page.
+		wp_cache_flush();
 	}
 
 	wp_send_json_success(
@@ -1412,13 +1433,13 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 				?>
 				<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
 					<div class="">
+						<input <?php checked( $preview_thumbnail_id, $auto_generated_thumbnail ); ?> id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
+						<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>">
+							<span class="bb-icon bb-icon-check"></span>
+						</label>
 						<a class="" href="#">
 							<img src="<?php echo esc_url( $attachment_url ); ?>" class=""/>
 						</a>
-						<div class="bb-action-check-wrap">
-							<input <?php checked( $preview_thumbnail_id, $auto_generated_thumbnail ); ?> id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
-							<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>"><span class="bb-icon bb-icon-check"></span></label>
-						</div>
 					</div>
 				</li>
 				<?php
@@ -1564,15 +1585,22 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 
 	if ( ! empty( $attachment_id ) && ! empty( $video_attachment_id ) ) {
 		$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+		$old_preview_thumbnail_id  = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
 		$default_images            = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
 		$thumbnail_images = array(
 			'default_images' => $default_images,
 		);
 		update_post_meta( $attachment_id, 'video_preview_thumbnails', $thumbnail_images );
-		if ( isset( $default_images ) && ! empty( $default_images ) ) {
+		if (
+			isset( $default_images ) && ! empty( $default_images ) &&
+			$old_preview_thumbnail_id == $video_attachment_id
+		) {
 			update_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', $default_images[0] );
 			$thumbnail_id  = $default_images[0];
 			$thumbnail_url = bb_video_get_thumb_url( $video_id, $default_images[0], 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+		} else {
+			$thumbnail_id  = $old_preview_thumbnail_id;
+			$thumbnail_url = bb_video_get_thumb_url( $video_id, $old_preview_thumbnail_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 		}
 		wp_delete_post( $video_attachment_id, true );
 		bb_video_delete_thumb_symlink( $attachment_id, $video_attachment_id );

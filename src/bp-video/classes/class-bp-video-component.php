@@ -17,14 +17,6 @@ defined( 'ABSPATH' ) || exit;
 class BP_Video_Component extends BP_Component {
 
 	/**
-	 * The album being currently accessed.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 * @var BP_Video_Album
-	 */
-	/* public $current_album; */
-
-	/**
 	 * Default video extension.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -54,7 +46,7 @@ class BP_Video_Component extends BP_Component {
 	 *
 	 * @see bp_video_get_visibility_levels()
 	 *
-	 * @since BuddyBoss 1.2.3
+	 * @since BuddyBoss 1.7.0
 	 * @var array
 	 */
 	public $visibility_levels = array();
@@ -261,7 +253,6 @@ class BP_Video_Component extends BP_Component {
 		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
-
 	}
 
 	/**
@@ -356,13 +347,14 @@ class BP_Video_Component extends BP_Component {
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
 	 *
-	 * @since BuddyBoss 1.3.5
+	 * @since BuddyBoss 1.7.0
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init(
 			array(
-				'BP_RESTBP_Video_Template_Endpoint',
-				'BP_RESTBP_Video_Template_Details_Endpoint',
+				'BP_REST_Video_Endpoint',
+				'BP_REST_Video_Poster_Endpoint',
+				'BP_REST_Video_Details_Endpoint',
 			)
 		);
 	}

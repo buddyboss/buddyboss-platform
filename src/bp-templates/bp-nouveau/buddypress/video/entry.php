@@ -33,7 +33,6 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_video_id(); ?>" data-date-created="<?php bp_video_date_created(); ?>">
-
 	<div class="bb-video-thumb bb-item-thumb">
 		<div class="video-action-wrap item-action-wrap">
 			<?php
@@ -45,27 +44,27 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 				</a>
 				<div class="video-action_list item-action_list">
 					<ul>
-                        <?php
-                        if ( $can_edit ) {
-                            ?>
-                            <li class="edit_thumbnail_video">
-                                <a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
-                            </li>
-						    <?php
-                        }
-                        if ( $is_comment_vid ) {
-                            ?>
-                            <li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-                                <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                            </li>
-                            <?php
-                        } elseif ( $can_move ) {
-                            ?>
-                            <li class="move_video">
-                                <a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                            </li>
-                            <?php
-                        }
+						<?php
+						if ( $can_edit ) {
+							?>
+							<li class="edit_thumbnail_video">
+								<a href="#" data-action="video" data-video-attachments="<?php echo esc_html( json_encode( $attachment_urls ) ); ?>" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						}
+						if ( $is_comment_vid ) {
+							?>
+							<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+								<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						} elseif ( $can_move ) {
+							?>
+							<li class="move_video">
+								<a href="#" data-action="video" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-video-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						}
 
 						if ( $report_btn ) {
 							?>
@@ -75,23 +74,27 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 							<?php
 						}
 
-						if ( $can_delete ) { ?>
+						if ( $can_delete ) {
+							?>
 							<li class="delete_file">
 								<a class="video-file-delete" data-video-id="<?php bp_video_id(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-item-activity-id="<?php bp_video_activity_id(); ?>" data-item-from="video" data-item-id="<?php bp_video_id(); ?>" data-type="video" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 							</li>
-						    <?php
-						} ?>
-
+							<?php
+						}
+						?>
 					</ul>
 				</div>
 			<?php } ?>
 		</div>
+
 		<?php if ( ! empty( bp_get_video_length() ) ) { ?>
 		<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 		<?php } ?>
+
 		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
 			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php bp_video_directory_page_thumb(); ?>" alt="<?php bp_video_title(); ?>" class="lazy"/>
 		</a>
+
 		<?php
 		$video_privacy = bb_media_user_can_access( bp_get_video_id(), 'video' );
 		$can_delete    = true === (bool) $video_privacy['can_delete'];
@@ -99,9 +102,8 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 			?>
 			<div class="bb-video-check-wrap bb-action-check-wrap">
 				<input id="bb-video-<?php bp_video_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_video_id(); ?>" name="bb-video-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php bp_video_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php bp_video_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>
-
 </li>

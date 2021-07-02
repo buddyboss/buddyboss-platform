@@ -699,6 +699,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-groups.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-friends.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-notifications.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-search.php';
@@ -779,23 +780,25 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
-			// Hello BuddyBoss
+			// Hello BuddyBoss.
 			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-			// Hello BuddyBoss App
+			// Hello BuddyBoss App.
 			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' === $_GET['tab'] ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
@@ -840,7 +843,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0 Now outputs Hello BuddyBoss template.
 		 */
 		public function about_buddyboss_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || 'buddyboss' !== $_GET['hello'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 
@@ -877,7 +880,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0 Output the Hello BuddyBoss App template.
 		 */
 		public function about_buddyboss_app_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss-app' ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || 'buddyboss-app' !== $_GET['hello'] ) {
 				return;
 			}
 

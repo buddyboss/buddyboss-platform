@@ -103,6 +103,13 @@ function bp_document_clear_document_symlinks_on_delete( $documents ) {
 	}
 }
 
+/**
+ * Document search label.
+ *
+ * @param string $type Search label.
+ *
+ * @return mixed|string|void
+ */
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
@@ -1812,9 +1819,9 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 		if ( ! empty( $document_ids ) ) {
 
 			$document_ids = explode( ',', $document_ids );
-			$count     = count( $document_ids );
+			$count        = count( $document_ids );
 			if ( 1 === $count ) {
-				$document    = new BP_Document( (int) current( $document_ids ) );
+				$document = new BP_Document( (int) current( $document_ids ) );
 				$file_url = wp_get_attachment_url( $document->attachment_id );
 				$filetype = wp_check_filetype( $file_url );
 				$ext      = $filetype['ext'];
@@ -1831,8 +1838,6 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 					$response['video_link_update'] = true;
 					$response['video_js_id']       = 'video-' . (int) current( $document_ids ) . '_html5_api';
 				}
-
-
 			}
 		}
 	}

@@ -724,7 +724,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Extend wp.Backbone.View with .prepare() and .inject()
+	// Extend wp.Backbone.View with .prepare() and .inject().
 	bp.Nouveau.Messages.View = bp.Backbone.View.extend(
 		{
 			inject: function( selector ) {
@@ -851,11 +851,11 @@ window.bp = window.bp || {};
 						! _.isUndefined( BP_Nouveau.media.emoji ) &&
 						(
 							(
-								!_.isUndefined( BP_Nouveau.media.emoji.messages ) &&
+								! _.isUndefined( BP_Nouveau.media.emoji.messages ) &&
 								BP_Nouveau.media.emoji.messages
 							) ||
 							(
-								!_.isUndefined( BP_Nouveau.media.emoji.groups ) &&
+								! _.isUndefined( BP_Nouveau.media.emoji.groups ) &&
 								BP_Nouveau.media.emoji.groups
 							)
 						)
@@ -941,6 +941,9 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
+				var messageMediaTemplate                             = document.getElementsByClassName( 'message-post-media-template' ).length ? document.getElementsByClassName( 'message-post-media-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+				bp.Nouveau.Messages.dropzone_options.previewTemplate = messageMediaTemplate;
+
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-media-uploader', bp.Nouveau.Messages.dropzone_options );
 
 				bp.Nouveau.Messages.dropzone.on(
@@ -962,6 +965,20 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#messages-media-button' ) ) {
 							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'uploadprogress',
+					function( element ) {
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -1088,6 +1105,9 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
+				var messageDocumentTemplate                                   = document.getElementsByClassName( 'message-post-document-template' ).length ? document.getElementsByClassName( 'message-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+				bp.Nouveau.Messages.dropzone_document_options.previewTemplate = messageDocumentTemplate;
+
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-document-uploader', bp.Nouveau.Messages.dropzone_document_options );
 
 				bp.Nouveau.Messages.dropzone.on(
@@ -1136,6 +1156,20 @@ window.bp = window.bp || {};
 							}
 							return _results;
 						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'uploadprogress',
+					function( element ) {
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -1253,7 +1287,7 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
-				var messageVideoTemplate = document.getElementsByClassName('message-post-video-template').length ? document.getElementsByClassName('message-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+				var messageVideoTemplate                                   = document.getElementsByClassName( 'message-post-video-template' ).length ? document.getElementsByClassName( 'message-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 				bp.Nouveau.Messages.dropzone_video_options.previewTemplate = messageVideoTemplate;
 
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-video-uploader', bp.Nouveau.Messages.dropzone_video_options );
@@ -1284,28 +1318,36 @@ window.bp = window.bp || {};
 					'addedfile',
 					function ( file ) {
 
-						if(file.dataURL) {
+						if (file.dataURL) {
 							// Get Thumbnail image from response.
 						} else {
 
-							if( bp.Nouveau.getVideoThumb ) {
+							if ( bp.Nouveau.getVideoThumb ) {
 								bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 							}
 
 						}
 					}
-
 				);
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
 					function( element, file ) {
-						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 
-						if( element.upload.progress === 100 ) {
+						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
+
+						if ( element.upload.progress === 100 ) {
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
-
 					}
 				);
 
@@ -1318,7 +1360,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							response.data.saved 	 = false;
 							response.data.privacy 	 = 'message';
-							response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							self.video.push( response.data );
 							self.model.set( 'video', self.video );
 						} else {
@@ -1328,7 +1370,7 @@ window.bp = window.bp || {};
 							_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 							_results = [];
 							for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-								node                            = _ref[_i];
+								node = _ref[_i];
 								_results.push( node.textContent = message );
 							}
 							return _results;
@@ -1992,7 +2034,7 @@ window.bp = window.bp || {};
 									$.each(
 										ArrayData,
 										function( index, value ) {
-											for (var i = 0;i < data.data.results.length;i++) {
+											for ( var i = 0; i < data.data.results.length; i++ ) {
 												if (data.data.results[i].id === value) {
 													data.data.results.splice( i,1 );
 												}
@@ -2226,9 +2268,10 @@ window.bp = window.bp || {};
 				).fail(
 					function( response ) {
 						if ( response.feedback ) {
-							   bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 						}
-							$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );
+
+						$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );
 					}
 				);
 			},
@@ -2490,7 +2533,7 @@ window.bp = window.bp || {};
 
 				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) || true === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-send-msg';
-				} else if( 0 === this.model.get( 'can_user_send_message_in_thread' ) || false === this.model.get( 'can_user_send_message_in_thread' ) ) {
+				} else if ( 0 === this.model.get( 'can_user_send_message_in_thread' ) || false === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-not-send-msg';
 				}
 
@@ -2991,9 +3034,9 @@ window.bp = window.bp || {};
 				if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
 					// hide reply form.
-					this.$( '#send-reply' ).hide().parent().addClass('is_restricted');
+					this.$( '#send-reply' ).hide().parent().addClass( 'is_restricted' );
 					if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
-						this.$( '#send-reply' ).show().parent().removeClass('is_restricted');
+						this.$( '#send-reply' ).show().parent().removeClass( 'is_restricted' );
 						$( '#send-reply' ).find( '.message-box' ).show();
 					}
 				} else {
@@ -3111,17 +3154,17 @@ window.bp = window.bp || {};
 					jQuery( tinyMCE.activeEditor.formElement ).addClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
 					if ( bp.Nouveau.Messages.mediumEditor.getContent() ) {
-						//Before send make sure that medium editor is focus.
+						// Before send make sure that medium editor is focus.
 						$( bp.Nouveau.Messages.mediumEditor.elements[0] ).focus();
 
 						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
 							function ( index, Obj ) {
-							$( Obj ).addClass( 'emojioneemoji' );
-							var emojis = $( Obj ).attr( 'alt' );
-							$( Obj ).attr( 'data-emoji-char', emojis );
-							$( Obj ).removeClass( 'emoji' );
-						}
-					);
+								$( Obj ).addClass( 'emojioneemoji' );
+								var emojis = $( Obj ).attr( 'alt' );
+								$( Obj ).attr( 'data-emoji-char', emojis );
+								$( Obj ).removeClass( 'emoji' );
+							}
+						);
 						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emojioneemoji' ).replaceWith(
 							function () {
 								return this.dataset.emojiChar;
@@ -3252,7 +3295,7 @@ window.bp = window.bp || {};
 			composeMessage: function() {
 				bp.Nouveau.Messages.composeView();
 
-				if ( !_.isUndefined( BP_Nouveau.media ) ) {
+				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
 					if ( BP_Nouveau.media.messages_document === false ) {
 						$( '#whats-new-messages-toolbar .post-media-document-support' ).hide();

@@ -292,7 +292,7 @@ class BP_Document {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort !== 'ASC' && $sort !== 'DESC' ) {
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
 
@@ -436,7 +436,7 @@ class BP_Document {
 
 		$cached = bp_core_get_incremented_cache( $document_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$document_ids = $wpdb->get_col( $document_ids_sql );
+			$document_ids = $wpdb->get_col( $document_ids_sql ); // phpcs:ignore
 			bp_core_set_incremented_cache( $document_ids_sql, $cache_group, $document_ids );
 		} else {
 			$document_ids = $cached;
@@ -457,9 +457,6 @@ class BP_Document {
 		}
 
 		if ( 'ids' !== $r['fields'] ) {
-			// Get the fullnames of users so we don't have to query in the loop.
-			// $documents = self::append_user_fullnames( $documents );
-
 			// Pre-fetch data associated with document users and other objects.
 			$documents = self::prefetch_object_data( $documents );
 		}
@@ -481,7 +478,7 @@ class BP_Document {
 			$total_documents_sql = apply_filters( 'bp_document_total_documents_sql', "SELECT count(DISTINCT d.id) FROM {$bp->document->table_name} d {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached              = bp_core_get_incremented_cache( $total_documents_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_documents = $wpdb->get_var( $total_documents_sql );
+				$total_documents = $wpdb->get_var( $total_documents_sql ); // phpcs:ignore
 				bp_core_set_incremented_cache( $total_documents_sql, $cache_group, $total_documents );
 			} else {
 				$total_documents = $cached;
@@ -655,9 +652,7 @@ class BP_Document {
 				$document->group_id      = (int) $document->group_id;
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
-
-				// Get document extension.
-				$document->extension     = bp_document_extension( $document->attachment_id );
+				$document->extension     = bp_document_extension( $document->attachment_id ); // Get document extension.
 			}
 
 			$group_name = '';
@@ -794,7 +789,9 @@ class BP_Document {
 	}
 
 	/**
-	 * @param array $args
+	 * Get document/folder items, as specified by parameters.
+	 *
+	 * @param array $args Array of arguments.
 	 *
 	 * @return null[]
 	 */
@@ -987,8 +984,8 @@ class BP_Document {
 		// Join the where conditions together for document.
 		if ( ! empty( $scope_query_document['sql'] ) ) {
 			$where_sql_document = 'WHERE ' .
-								  ( ! empty( $where_conditions_document ) ? '( ' . join( ' AND ', $where_conditions_document ) . ' ) AND ' : '' ) .
-								  ' ( ' . $scope_query_document['sql'] . ' )';
+								( ! empty( $where_conditions_document ) ? '( ' . join( ' AND ', $where_conditions_document ) . ' ) AND ' : '' ) .
+								' ( ' . $scope_query_document['sql'] . ' )';
 		} else {
 			$where_sql_document = 'WHERE ' . ( ! empty( $where_conditions_document ) ? join( ' AND ', $where_conditions_document ) : '' );
 		}
@@ -1068,9 +1065,6 @@ class BP_Document {
 		}
 
 		if ( 'ids' !== $r['fields'] ) {
-			// Get the fullnames of users so we don't have to query in the loop.
-			// $documents = self::append_user_fullnames( $documents );
-
 			// Pre-fetch data associated with document users and other objects.
 			$documents = self::prefetch_object_data( $documents );
 		}
@@ -1447,7 +1441,7 @@ class BP_Document {
 	 */
 	public static function array_msort( $array, $cols ) {
 
-		$array = json_decode( json_encode( $array ), true );
+		$array = json_decode( wp_json_encode( $array ), true );
 
 		$colarr = array();
 		foreach ( $cols as $col => $order ) {
@@ -1484,34 +1478,6 @@ class BP_Document {
 		}
 
 		return $arr;
-
-	}
-
-	/**
-	 * Sort by column.
-	 *
-	 * @param     $array
-	 * @param     $column
-	 * @param int    $direction
-	 *
-	 * @since BuddyBoss 1.4.0
-	 */
-	public static function array_sort_by_column( $array, $column, $direction = SORT_DESC ) {
-
-		$new_array = json_decode( json_encode( $array ), true );
-
-		if ( 'date_created' === $column ) {
-			$mapping_arr = array_map( 'strtotime', array_column( $new_array, $column ) );
-			array_multisort( $mapping_arr, $direction );
-		} else {
-			$reference_array = array();
-
-			foreach ( $array as $key => $row ) {
-				$reference_array[ $key ] = $row[ $column ];
-			}
-
-			array_multisort( $reference_array, $direction, $array );
-		}
 
 	}
 
@@ -1792,7 +1758,7 @@ class BP_Document {
 	/**
 	 * Count total document for the given user.
 	 *
-	 * @param int $user_id
+	 * @param int $user_id User ID.
 	 *
 	 * @return array|bool|int
 	 * @since BuddyBoss 1.4.0
@@ -1822,7 +1788,7 @@ class BP_Document {
 	/**
 	 * Count total document for the given group.
 	 *
-	 * @param int $group_id
+	 * @param int $group_id Group ID.
 	 *
 	 * @return array|bool|int
 	 * @since BuddyBoss 1.4.0
@@ -1840,12 +1806,12 @@ class BP_Document {
 	/**
 	 * Get all document ids for the folder.
 	 *
-	 * @param bool $folder_id
+	 * @param int $folder_id Folder ID.
 	 *
 	 * @return array|bool
 	 * @since BuddyBoss 1.4.0
 	 */
-	public static function get_folder_document_ids( $folder_id = false ) {
+	public static function get_folder_document_ids( $folder_id = 0 ) {
 		global $bp, $wpdb;
 
 		if ( ! $folder_id ) {
@@ -1869,12 +1835,12 @@ class BP_Document {
 	/**
 	 * Get document id for the activity.
 	 *
-	 * @param bool $activity_id
+	 * @param int $activity_id Activity ID.
 	 *
 	 * @return array|bool
 	 * @since BuddyBoss 1.1.6
 	 */
-	public static function get_activity_document_id( $activity_id = false ) {
+	public static function get_activity_document_id( $activity_id = 0 ) {
 		global $bp, $wpdb;
 
 		if ( ! $activity_id ) {
@@ -1900,34 +1866,6 @@ class BP_Document {
 		}
 
 		return $activity_document_id;
-	}
-
-	/**
-	 * Append xProfile fullnames to an document array.
-	 *
-	 * @param array $documents Documents array.
-	 *
-	 * @return array
-	 * @since BuddyBoss 1.4.0
-	 */
-	protected static function append_user_fullnames( $documents ) {
-
-		if ( bp_is_active( 'xprofile' ) && ! empty( $documents ) ) {
-			$document_user_ids = wp_list_pluck( $documents, 'user_id' );
-
-			if ( ! empty( $document_user_ids ) ) {
-				$fullnames = bp_core_get_user_displaynames( $document_user_ids );
-				if ( ! empty( $fullnames ) ) {
-					foreach ( (array) $documents as $i => $document ) {
-						if ( ! empty( $fullnames[ $document->user_id ] ) ) {
-							$documents[ $i ]->user_fullname = $fullnames[ $document->user_id ];
-						}
-					}
-				}
-			}
-		}
-
-		return $documents;
 	}
 
 	/**
@@ -2021,17 +1959,6 @@ class BP_Document {
 	}
 
 	/**
-	 * Helper to set the max_execution_time.
-	 */
-	static function bp_document_set_time_limit( $time_limit ) {
-		$max_execution_time = ini_get( 'max_execution_time' );
-		if ( $max_execution_time && $time_limit > $max_execution_time ) {
-			return @ set_time_limit( $time_limit );
-		}
-		return null;
-	}
-
-	/**
 	 * Get the SQL for the 'meta_query' param in BP_Document::get().
 	 *
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
@@ -2114,7 +2041,7 @@ class BP_Document {
 	/**
 	 * Get document attachment id for the activity.
 	 *
-	 * @param integer $activity_id Activity ID
+	 * @param int $activity_id Activity ID.
 	 *
 	 * @return integer|bool
 	 * @since BuddyBoss 1.4.0

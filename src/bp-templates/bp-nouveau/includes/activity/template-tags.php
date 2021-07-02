@@ -267,8 +267,9 @@ function bp_nouveau_activity_state() {
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<a href="javascript:void(0);" class="activity-state-likes">
-			<span class="like-text hint--bottom hint--medium hint--multiline"
-				  data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>"><?php echo $like_text ?: ''; ?></span>
+			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>">
+				<?php echo $like_text ?: ''; ?>
+			</span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
 		<a href="#" class="activity-state-comments">
@@ -573,8 +574,9 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	}
 
 	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_report'] = bp_activity_get_report_link( array(
-			    'position'          => 33,
+		$buttons['activity_report'] = bp_activity_get_report_link(
+			array(
+				'position'       => 33,
 				'parent_element' => $parent_element,
 				'parent_attr'    => $parent_attr,
 				'button_element' => $button_element,
@@ -1261,7 +1263,8 @@ function bp_nouveau_activity_privacy() {
 					</li>
 				<?php endif; ?>
 			</ul>
-            </div><?php
+			</div>
+			<?php
 		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink && bb_user_can_create_activity() ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
 			?>
 			<div class="bb-media-privacy-wrap">
@@ -1284,7 +1287,8 @@ function bp_nouveau_activity_privacy() {
 					</li>
 				<?php endif; ?>
 			</ul>
-            </div><?php
+			</div>
+			<?php
 		} elseif ( bb_user_can_create_activity() ) {
 			?>
 			<div class="bb-media-privacy-wrap">
@@ -1303,9 +1307,8 @@ function bp_nouveau_activity_privacy() {
 				<?php
 				foreach ( $privacy_items as $item_key => $privacy_item ) {
 					?>
-					<li data-value="<?php echo $item_key; ?>"
-						class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li>
-										  <?php
+					<li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li>
+					<?php
 				}
 				?>
 			</ul>
@@ -1320,11 +1323,10 @@ function bp_nouveau_activity_privacy() {
  *
  * @since BuddyBoss 1.5.0
  *
- * @param bool $echo
+ * @param bool $echo        Whether to print or not.
+ * @param int  $activity_id Activity id.
  *
- * @param int  $activity_id
- *
- * @return mixed
+ * @return string text.
  */
 function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 
@@ -1377,10 +1379,11 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
-
+	$content            = get_post_field( 'post_content', $attachment_id );
 	$attachment_urls    = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 	$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
+	$video_privacy      = bb_media_user_can_access( $video_id, 'video' );
+	$can_edit           = true === (bool) $video_privacy['can_edit'];
 
 	echo '<div class="activity-media-description">' .
 		 '<div class="bp-media-activity-description">' . $content . '</div>'; // phpcs:ignore
@@ -1394,20 +1397,33 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 
-		<div class="video-action-wrap item-action-wrap">
+		<?php
+    }
 
-			<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-				<i class="bb-icon-menu-dots-v"></i>
-			</a>
-			<div class="video-action_list item-action_list">
-				<ul>
-					<li class="edit_thumbnail_video video-action-class">
-						<a href="#" data-action="video" data-parent-activity-id="<?php echo $parent_activity_id; ?>" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php echo $attachment_id; ?>" data-video-id="<?php echo $video_id; ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
-					</li>
-				</ul>
-			</div>
-
-		</div><!-- .video-action-wrap -->
+    if ( $can_edit ) {
+        ?>
+        <div class="video-action-wrap item-action-wrap">
+            <a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+                <i class="bb-icon-menu-dots-v"></i>
+            </a>
+            <div class="video-action_list item-action_list">
+                <ul>
+                    <li class="edit_thumbnail_video video-action-class">
+                        <a href="#" data-action="video"
+                           data-parent-activity-id="<?php echo esc_attr( $parent_activity_id ); ?>"
+                           data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
+                           data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
+                           data-video-id="<?php echo esc_attr( $video_id ); ?>" class="ac-video-thumbnail-edit">
+                            <?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- .video-action-wrap -->
+        <?php
+    }
+	if ( bp_activity_user_can_edit( false, true ) ) {
+		?>
 
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
@@ -1469,27 +1485,24 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
-		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-		   href="#">
-			   <span class="bb-icon-edit-thin"></span>
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
+			<span class="bb-icon-edit-thin"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-						<textarea id="add-activity-description"
-								  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-								  class="textInput"
-								  name="caption_text"
-								  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-								  role="textbox"><?php echo $content; ?></textarea>
+				<textarea id="add-activity-description"
+					  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+					  class="textInput"
+					  name="caption_text"
+					  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+					  role="textbox"><?php echo $content; ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
-								<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-				<input type="submit" id="bp-activity-description-new-submit" class="button small"
-					   name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-				<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
-					   value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
 		</div>
 
@@ -1498,7 +1511,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 
 	echo '</div>';
 	if ( ! empty( $media_id ) ) {
-		$media_privacy    = bb_media_user_can_access( $media_id,'photo' );
+		$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
 		$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 		if ( $can_download_btn ) {
 			$download_url = bp_media_download_link( $attachment_id, $media_id );

@@ -56,15 +56,15 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() && $can_edit ) {
 							?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-								<?php _e( 'Add Photos', 'buddyboss' ); ?>
-							</a> 
+								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+							</a>
 							<?php
-						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit ) {
+						} elseif ( bp_is_active( 'groups' ) && bp_is_group() ) {
 							$manage = groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() );
 							if ( $manage ) {
 								?>
 								<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-									<?php _e( 'Add Photos', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
 								</a>
 								<?php
 							}
@@ -74,7 +74,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							?>
 							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 							<?php
-						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit && bp_is_group_video_support_enabled() ) {
+						} elseif ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_video_support_enabled() ) {
 							$manage = groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() );
 							if ( $manage ) {
 								?>
@@ -83,7 +83,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							}
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() && $can_edit ) { ?>
+						if ( ( bp_is_my_profile() || bp_is_user_media() ) && ! bp_is_group() && $can_edit ) {
+							?>
 							<select id="bb-album-privacy">
 								<?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
 									<?php
@@ -111,11 +112,18 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				?>
 
 				<div id="media-stream" class="media" data-bp-list="media">
-
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'album-media-loading' ); ?></div>
-
+					<div id="bp-ajax-loader">
+					<?php
+					if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit ) {
+						bp_nouveau_user_feedback( 'album-media-video-loading' );
+					} elseif ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit && bp_is_group_video_support_enabled() ) {
+						bp_nouveau_user_feedback( 'album-media-video-loading' );
+					} else {
+						bp_nouveau_user_feedback( 'album-media-loading' );
+					}
+					?>
+					</div>
 				</div>
-
 			</div>
 		</div>
 		<?php

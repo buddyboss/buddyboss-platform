@@ -11,6 +11,13 @@
 $attachment_id            = bp_get_document_attachment_id();
 $download_url             = bp_document_download_link( $attachment_id, bp_get_document_id() );
 $extension                = bp_get_document_extension();
+/**
+ * Filters the document text preview.
+ *
+ * @param boolen Wheher document text preview.
+ *
+ * @since BuddyBoss 1.7.0
+ */
 $bp_document_text_preview = apply_filters( 'bp_document_text_preview', true );
 $sizes                    = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
 

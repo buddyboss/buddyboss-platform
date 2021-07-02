@@ -154,6 +154,7 @@ function bp_has_document( $args = '' ) {
 	}
 
 	// The default scope should recognize custom slugs.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Recommended
 	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
 	$scope = ( isset( $args['scope'] ) && ! empty( $args['scope'] ) ? $args['scope'] : $scope );
 	$scope = bp_document_default_scope( $scope );
@@ -844,18 +845,28 @@ function bp_document_user_can_edit( $document = false ) {
 		}
 
 		// Users are allowed to edit their own document.
-		if ( isset( $document->user_id ) && ( $document->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $document->user_id ) && ( bp_loggedin_user_id() === $document->user_id ) ) {
 			$can_edit = true;
 		}
 
 		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
-			$manage = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
+			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
+			$status   = bp_group_get_document_status( $document->group_id );
+			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $document->group_id );
+			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $document->group_id );
+
 			if ( $manage ) {
-				$can_edit = true;
+				if ( bp_loggedin_user_id() === $document->user_id ) {
+					$can_edit = true;
+				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'admins' === $status && $is_admin ) {
+					$can_edit = true;
+				}
 			}
-
 		}
-
 	}
 
 	/**
@@ -1041,6 +1052,7 @@ function bp_get_document_attachment_image_activity_thumbnail() {
 	} elseif ( is_object( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data->activity_thumb ) ) {
 		$activity_thumbnail = $document_template->document->attachment_data->activity_thumb;
 	}
+
 	if ( 'pdf' === bp_get_document_extension() ) {
 		if ( is_array( $document_template->document->attachment_data ) && isset( $document_template->document->attachment_data['activity_thumb_pdf'] ) ) {
 			$activity_thumbnail = $document_template->document->attachment_data['activity_thumb_pdf'];
@@ -1048,7 +1060,6 @@ function bp_get_document_attachment_image_activity_thumbnail() {
 			$activity_thumbnail = $document_template->document->attachment_data->activity_thumb_pdf;
 		}
 	}
-
 
 	/**
 	 * Filters the document activity thumbnail being displayed.
@@ -1798,18 +1809,25 @@ function bp_folder_user_can_delete( $folder = false ) {
 	// Only logged in users can delete folder.
 	if ( is_user_logged_in() ) {
 
-		// Groups documents have their own access.
-		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
-			$can_delete = true;
-
-		// Users are allowed to delete their own folder.
-		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
-			$can_delete = true;
-		}
-
 		// Community moderators can always delete folder (at least for now).
 		if ( bp_current_user_can( 'bp_moderate' ) ) {
 			$can_delete = true;
+		}
+
+		// Users are allowed to delete their own folder.
+		if ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
+			$can_delete = true;
+		}
+
+		if ( bp_is_active( 'groups' ) && $folder->group_id > 0 ) {
+			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id );
+			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $folder->group_id );
+			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $folder->group_id );
+			if ( $manage ) {
+				$can_delete = true;
+			} elseif ( $is_mod || $is_admin ) {
+				$can_delete = true;
+			}
 		}
 	}
 
@@ -1852,17 +1870,34 @@ function bp_folder_user_can_edit( $folder = false ) {
 	// Only logged in users can edit folder.
 	if ( is_user_logged_in() ) {
 
-		// Users are allowed to edit their own folder.
-		if ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
-			$can_edit = true;
-		// Community moderators can always edit folder (at least for now).
-		} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-			$can_edit = true;
-		// Groups documents have their own access.
-		} elseif ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
+		// Community moderators can always edit document (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
 			$can_edit = true;
 		}
 
+		// Users are allowed to edit their own folder.
+		if ( isset( $folder->user_id ) && ( bp_loggedin_user_id() === $folder->user_id ) ) {
+			$can_edit = true;
+		}
+
+		if ( bp_is_active( 'groups' ) && $folder->group_id > 0 ) {
+			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id );
+			$status   = bp_group_get_document_status( $folder->group_id );
+			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $folder->group_id );
+			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $folder->group_id );
+
+			if ( $manage ) {
+				if ( bp_loggedin_user_id() === $folder->user_id ) {
+					$can_edit = true;
+				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'admins' === $status && $is_admin ) {
+					$can_edit = true;
+				}
+			}
+		}
 	}
 
 	/**

@@ -48,18 +48,18 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_edit_btn ) {
+									if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 										$manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
 										if ( $manage ) {
 											?>
-                                            <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-                                                <i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
-                                            </a>
-                                            <a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
-                                                <i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
-                                            </a>
+											<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
+												<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+											</a>
+											<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
+												<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+											</a>
 											<?php
-                                        }
+										}
 									} elseif ( ! bp_is_group() && $can_edit_btn && bb_user_can_create_document() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
@@ -80,25 +80,26 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											</a>
 											<div class="media-folder_action__list">
 												<ul>
-                                                    <?php
-                                                    if ( $can_edit_btn ) {
-	                                                    ?>
-                                                        <li>
-                                                            <a id="bp-edit-folder-open" href="#">
-                                                                <i class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
-                                                            </a>
-                                                        </li>
-	                                                    <?php
-                                                    }
-                                                    if ( $can_delete_btn ) {
-                                                        ?>
-                                                        <li><a href="#" id="bb-delete-folder">
-                                                                <i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
-                                                            </a>
-                                                        </li>
-                                                        <?php
-                                                    }
-                                                    ?>
+													<?php
+													if ( $can_edit_btn ) {
+														?>
+														<li>
+															<a id="bp-edit-folder-open" href="#">
+																<i class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
+															</a>
+														</li>
+														<?php
+													}
+													if ( $can_delete_btn ) {
+														?>
+														<li>
+															<a href="#" id="bb-delete-folder">
+																<i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
+															</a>
+														</li>
+														<?php
+													}
+													?>
 												</ul>
 											</div>
 										</div>

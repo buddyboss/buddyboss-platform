@@ -56,10 +56,12 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		/**
 		 * Prepare SQL query for media search.
 		 *
-		 * @param string $search_term Search terms.
+		 * @param string $search_term         Search terms.
 		 * @param false  $only_totalrow_count Total row count.
 		 *
 		 * @return mixed|void
+		 *
+		 * @since BuddyBoss 1.4.0
 		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
 

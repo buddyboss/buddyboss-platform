@@ -830,7 +830,7 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( '#buddypress #activity-stream ul.activity-list li#activity-' +  response.data.parent_activity_id ).replaceWith( response.data.activity );
+								$( '#buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
 							}
 
 							if ( activity_comment_id ) {
@@ -1435,12 +1435,28 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
+			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
+					var dropzone_options = {
+						url                 : BP_Nouveau.ajaxurl,
+						timeout             : 3 * 60 * 60 * 1000,
+						dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+						acceptedFiles       : 'image/*',
+						autoProcessQueue    : true,
+						addRemoveLinks      : true,
+						uploadMultiple      : false,
+						maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+						maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+						previewTemplate		 : acCommentDefaultTemplate,
+					};
+
 					// init dropzone.
-					self.dropzone_obj = new Dropzone( '#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), self.dropzone_options );
+					self.dropzone_obj = new Dropzone( '#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_obj.on(
 						'sending',
@@ -1461,6 +1477,21 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+						}
+					);
+
+					self.dropzone_obj.on(
+						'uploadprogress',
+						function( element ) {
+
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
 						}
 					);
 
@@ -1584,6 +1615,8 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
+			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
@@ -1602,6 +1635,7 @@ window.bp = window.bp || {};
 						maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 						dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
 						dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
+						previewTemplate		 : acCommentDocumentTemplate,
 					};
 
 					// init dropzone.
@@ -1626,6 +1660,21 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
 								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+						}
+					);
+
+					self.dropzone_document_obj.on(
+						'uploadprogress',
+						function( element ) {
+
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
 						}
 					);
 
@@ -1749,7 +1798,7 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentVideoTemplate = document.getElementsByClassName('ac-reply-post-video-template').length ? document.getElementsByClassName('ac-reply-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
@@ -1812,28 +1861,36 @@ window.bp = window.bp || {};
 						'addedfile',
 						function ( file ) {
 
-							if(file.dataURL) {
+							if (file.dataURL) {
 								// Get Thumbnail image from response.
 							} else {
 
-								if( bp.Nouveau.getVideoThumb ) {
+								if ( bp.Nouveau.getVideoThumb ) {
 									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 								}
 
 							}
 						}
-
 					);
 
 					self.dropzone_video_obj.on(
 						'uploadprogress',
 						function( element, file ) {
-							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 
-							if( element.upload.progress === 100 ) {
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
+
+							if ( element.upload.progress === 100 ) {
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
-
 						}
 					);
 
@@ -1847,7 +1904,7 @@ window.bp = window.bp || {};
 								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
 								response.data.group_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 								response.data.saved      = false;
-								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
@@ -1970,15 +2027,15 @@ window.bp = window.bp || {};
 		},
 
 		toggleMultiMediaOptions: function(form,target) {
-			if ( !_.isUndefined( BP_Nouveau.media ) ) {
+			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
 				var parent_activity = target.closest( '.activity-item' );
-				var activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+				var activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
 
 				if ( target.closest( 'li' ).hasClass( 'groups' ) || parent_activity.hasClass( 'groups' ) ) {
 
 					// check media is enable in groups or not.
-					if ( !_.isUndefined( activity_data.group_media ) ) {
+					if ( ! _.isUndefined( activity_data.group_media ) ) {
 						if ( activity_data.group_media === true ) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -1991,7 +2048,7 @@ window.bp = window.bp || {};
 					}
 
 					// check media is enable in groups or not.
-					if ( !_.isUndefined( activity_data.group_document ) ) {
+					if ( ! _.isUndefined( activity_data.group_document ) ) {
 						if ( activity_data.group_document === true ) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2004,7 +2061,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in groups or not.
-					if ( !_.isUndefined( activity_data.group_video ) ) {
+					if ( ! _.isUndefined( activity_data.group_video ) ) {
 						if ( activity_data.group_video === true ) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
@@ -2032,7 +2089,7 @@ window.bp = window.bp || {};
 				} else {
 
 					// check media is enable in groups or not.
-					if ( !_.isUndefined( activity_data.profile_media ) ) {
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_media ) ) {
 						if ( activity_data.profile_media === true ) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2045,7 +2102,7 @@ window.bp = window.bp || {};
 					}
 
 					// check document is enable in groups or not.
-					if ( !_.isUndefined( activity_data.profile_document ) ) {
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_document ) ) {
 						if ( activity_data.profile_document === true ) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
@@ -2058,7 +2115,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in profile or not.
-					if ( !_.isUndefined( activity_data.profile_video ) ) {
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_video ) ) {
 						if ( activity_data.profile_video === true ) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {

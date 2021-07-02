@@ -28,10 +28,22 @@ function bp_media_upload() {
 		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
 	}
 
+	/**
+	 * Fires before the media upload handler.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 */
 	do_action( 'bb_before_media_upload_handler' );
 
 	$attachment = bp_media_upload_handler();
 
+	/**
+	 * Fires after the media upload handler.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 */
 	do_action( 'bb_after_media_upload_handler' );
 
 	if ( is_wp_error( $attachment ) ) {
@@ -2602,6 +2614,9 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 	}
 
 	$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+	if ( $group_id > 0 ) {
+		$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
+    }
 
 	// db call ok; no-cache ok;
 	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
@@ -3077,15 +3092,14 @@ function bb_media_user_can_upload( $user_id = 0, $group_id = 0 ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_media_upload_dir( $pathdata ) {
-	if ( isset( $_POST['action'] ) && 'media_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
-
+    // phpcs:ignore WordPress.Security.NonceVerification.DeprecatedWhitelistCommentFound,WordPress.Security.NonceVerification.Missing
+	if ( isset( $_POST['action'] ) && 'media_upload' === $_POST['action'] ) {
 		if ( empty( $pathdata['subdir'] ) ) {
 			$pathdata['path']   = $pathdata['path'] . '/bb_medias';
 			$pathdata['url']    = $pathdata['url'] . '/bb_medias';
 			$pathdata['subdir'] = '/bb_medias';
 		} else {
-			$new_subdir = '/bb_medias' . $pathdata['subdir'];
-
+			$new_subdir         = '/bb_medias' . $pathdata['subdir'];
 			$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
 			$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
 			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
@@ -3110,8 +3124,7 @@ function bp_media_upload_dir_script( $pathdata ) {
 		$pathdata['url']    = $pathdata['url'] . '/bb_medias';
 		$pathdata['subdir'] = '/bb_medias';
 	} else {
-		$new_subdir = '/bb_medias' . $pathdata['subdir'];
-
+		$new_subdir         = '/bb_medias' . $pathdata['subdir'];
 		$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
 		$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
 		$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
@@ -3164,9 +3177,19 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 	}
 
 	if ( '' === $size ) {
-	    return;
-    }
+		return;
+	}
 
+	/**
+	 * Filter here to allow/disallow media symlinks.
+	 *
+	 * @param bool   $do_symlink          Default true.
+	 * @param int    $media_id            Media id
+	 * @param int    $media_attachment_id Media attachment id.
+	 * @param string $size                Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_media_do_symlink', true, $media->id, $media->attachment_id, $size );
 
 	if ( $do_symlink ) {
@@ -3175,12 +3198,18 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 		$upload_dir = $upload_dir['basedir'];
 
 		// Get media previews symlink directory path.
-		$symlinks_path = bp_media_symlink_path();
-		$attachment_id = $media->attachment_id;
-
+		$symlinks_path   = bp_media_symlink_path();
+		$attachment_id   = $media->attachment_id;
 		$privacy         = $media->privacy;
 		$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $privacy . $size );
-		$file            = image_get_intermediate_size( $attachment_id, $size );
+
+		if ( $media->group_id > 0 && bp_is_active( 'groups' ) ) {
+			$group_object    = groups_get_group( $media->group_id );
+			$group_status    = bp_get_group_status( $group_object );
+			$attachment_path = $symlinks_path . '/' . md5( $media->id . $attachment_id . $group_status . $privacy . $size );
+		}
+
+		$file = image_get_intermediate_size( $attachment_id, $size );
 
 		if ( $file && ! empty( $file['path'] ) ) {
 
@@ -3190,7 +3219,6 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 			if ( ! file_exists( $output_file_src ) ) {
 				bp_media_regenerate_attachment_thumbnails( $attachment_id );
 			}
-
 		} elseif ( ! $file ) {
 
 			bp_media_regenerate_attachment_thumbnails( $attachment_id );
@@ -3232,6 +3260,7 @@ function bp_media_create_symlinks( $media, $size = '' ) {
 		 * @param int    $attachment_id Attachment ID.
 		 * @param object $media         BP_Media Object.
 		 * @param string $symlinks_path Path to symlinks directory.
+		 * @param string $size          Media size.
 		 *
 		 * @since BuddyBoss 1.7.0
 		 */
@@ -3274,18 +3303,33 @@ function bp_media_delete_symlinks( $media ) {
 
 	$privacy         = $old_media->privacy;
 	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-activity-image' );
+	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_media->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-activity-image' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-album-directory-image' );
+	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_media->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-album-directory-image' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
 	}
 
 	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-popup-image' );
+	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object    = groups_get_group( $old_media->group_id );
+		$group_status    = bp_get_group_status( $group_object );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-popup-image' );
+	}
 
 	if ( file_exists( $attachment_path ) ) {
 		unlink( $attachment_path );
@@ -3296,7 +3340,7 @@ function bp_media_delete_symlinks( $media ) {
 	 *
 	 * @param int    $media_id      Media ID.
 	 * @param int    $attachment_id Attachment ID.
-	 * @param object $old_media     BP_Media Object.
+	 * @param object $media         BP_Media Object.
 	 * @param string $symlinks_path Path to symlinks directory.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -3319,6 +3363,16 @@ function bp_media_delete_symlinks( $media ) {
 function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-media-activity-image', $generate = true ) {
 	$attachment_url = '';
 
+	/**
+	 * Filter here to allow/disallow media symlinks.
+	 *
+	 * @param bool   $do_symlink    Default true.
+	 * @param int    $media_id      Media id
+	 * @param int    $attachment_id Media attachment id.
+	 * @param string $size          Size.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$do_symlink = apply_filters( 'bb_media_do_symlink', true, $media_id, $attachment_id, $size );
 
 	if ( $do_symlink ) {
@@ -3333,6 +3387,12 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$symlinks_path    = bp_media_symlink_path();
 
 				$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $media->privacy . $size );
+				if ( $media->group_id > 0 && bp_is_active( 'groups' ) ) {
+					$group_object            = groups_get_group( $media->group_id );
+					$group_status            = bp_get_group_status( $group_object );
+					$preview_attachment_path = $symlinks_path . '/' . md5( $media_id . $attachment_id . $group_status . $media->privacy . $size );
+				}
+
 				if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 					bp_media_create_symlinks( $media, $size );
 				}
@@ -3344,7 +3404,6 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$attachment_id  = 'forbidden_' . $attachment_id;
 				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . $size;
             }
-
 		}
 	}
 
@@ -3382,9 +3441,6 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 			return;
 		}
 
-		// clean the file url.
-		$file_url = stripslashes( trim( $the_file ) );
-
 		// get filename.
 		$file_name = basename( $the_file );
 
@@ -3413,7 +3469,7 @@ function bp_media_get_image_sizes() {
 		'bb-media-photos-popup-image'           => array(
 			'height' => 900,
 			'width'  => 1500,
-		)
+		),
 	);
 
 	return (array) apply_filters( 'bp_media_add_image_sizes', $image_sizes );
@@ -3500,34 +3556,6 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 }
 
 /**
- * Return download link of the album.
- *
- * @param int $album_id album id.
- *
- * @return mixed|void
- * @since BuddyBoss 1.7.0
- */
-function bp_media_album_download_link( $album_id ) {
-
-	if ( empty( $album_id ) ) {
-		return;
-	}
-
-	$link = site_url() . '/?attachment=' . $album_id . '&media_type=album&download_media_file=1&media_file=' . $album_id;
-
-	/**
-	 * Filter for album download link.
-	 *
-	 * @param string $link     Downloadable album link.
-	 * @param int    $album_id Album id.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	return apply_filters( 'bp_media_album_download_link', $link, $album_id );
-
-}
-
-/**
  * Function which return the access based on the current user.
  *
  * @param int    $id       Media|Document|Video|Folder|Album id.
@@ -3608,10 +3636,10 @@ function bb_media_user_can_access( $id, $type ) {
 				$parent_activity = new BP_Activity_Activity( $activity->item_id );
 				if ( ! empty( $parent_activity->id ) && ! empty( $parent_activity->privacy ) ) {
 					$media_privacy = $parent_activity->privacy;
-				} else if ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
+				} elseif ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
 					$media_privacy = $activity->privacy;
 				}
-			} else if ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
+			} elseif ( ! empty( $activity->id ) && ! empty( $activity->privacy ) ) {
 				$media_privacy = $activity->privacy;
 			}
 		}
@@ -3648,8 +3676,17 @@ function bb_media_user_can_access( $id, $type ) {
 					$can_download = true;
 					$can_add      = true;
 					$can_delete   = true;
-					$can_edit     = true;
-					$can_move     = true;
+					// Use can only do the thing if the user is admin OR status will be a members.
+					if ( 'photo' === $type && ( $is_admin  || 'members' === bp_group_get_media_status( $media_group_id ) ) ) {
+						$can_edit = true;
+					}
+					if ( 'document' === $type && ( $is_admin  || 'members' === bp_group_get_document_status( $media_group_id) ) ) {
+						$can_edit = true;
+					}
+					if ( 'video' === $type && ( $is_admin  || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
+						$can_edit = true;
+                    }
+					$can_move = true;
 				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_view     = true;
 					$can_download = true;
@@ -3797,8 +3834,15 @@ function bb_media_user_can_access( $id, $type ) {
 	$data['can_delete']   = $can_delete;
 	$data['can_move']     = $can_move;
 
+	/**
+	 * Filter for the media access for the user.
+	 *
+	 * @param array  $data           Access data array.
+	 * @param int    $id             Media|Document|Video|Folder|Album id.
+	 * @param string $type           Media|Document|Video|Folder|Album type.
+	 * @param int    $media_group_id group id.
+	 */
 	return apply_filters( 'bb_media_user_can_access', $data, $id, $type, $media_group_id );
-
 }
 
 /**
@@ -3811,9 +3855,9 @@ function bb_media_user_can_access( $id, $type ) {
  */
 function bb_media_delete_older_symlinks() {
 
-    if ( ! bb_enable_symlinks() ) {
-        return;
-    }
+	if ( ! bb_enable_symlinks() ) {
+		return;
+	}
 
 	// Get documents previews symlink directory path.
 	$dir     = bp_media_symlink_path();
@@ -3835,13 +3879,19 @@ function bb_media_delete_older_symlinks() {
 		if ( $file === '.' || $file === '..' ) {
 			continue;
 		}
-		$file = $dir . '/' . $file;
-		if ( file_exists( $file ) && filemtime( $file ) < $limit ) {
+
+		$file      = $dir . '/' . $file;
+		$file_time = lstat( $file );
+		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
+
+		if ( file_exists( $file ) && $file_time < $limit ) {
 			$list[] = $file;
 			unlink( $file );
 		}
 	}
 	closedir( $dh );
+
+	do_action( 'bb_media_delete_older_symlinks' );
 
 	return $list;
 

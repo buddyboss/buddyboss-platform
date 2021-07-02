@@ -60,6 +60,8 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 			}
 
+			var ForumDocumentTemplates = document.getElementsByClassName('forum-post-document-template').length ? document.getElementsByClassName('forum-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
 			this.documentOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
@@ -74,6 +76,7 @@ window.bp = window.bp || {};
 				maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
+				previewTemplate: ForumDocumentTemplates,
 			};
 
 			var ForumVideoTemplate = document.getElementsByClassName('forum-post-video-template').length ? document.getElementsByClassName('forum-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
@@ -91,10 +94,11 @@ window.bp = window.bp || {};
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
-				previewTemplate: ForumVideoTemplate
+				previewTemplate: ForumVideoTemplate,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
+				var ForumDocumentTemplate = document.getElementsByClassName('forum-post-document-template').length ? document.getElementsByClassName('forum-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
@@ -109,8 +113,10 @@ window.bp = window.bp || {};
 					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 					dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
+					previewTemplate: ForumDocumentTemplate,
 				};
 			} else {
+				var ForumMediaTemplate = document.getElementsByClassName('forum-post-media-template').length ? document.getElementsByClassName('forum-post-media-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
@@ -123,6 +129,7 @@ window.bp = window.bp || {};
 					maxFiles: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+					previewTemplate: ForumMediaTemplate,
 				};
 			}
 
@@ -167,9 +174,7 @@ window.bp = window.bp || {};
 			$( window ).on(
 				'scroll resize',
 				function () {
-
 					bp.Nouveau.Media.documentCodeMirror();
-
 				}
 			);
 		},
@@ -2207,6 +2212,20 @@ window.bp = window.bp || {};
 					);
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
+						'uploadprogress',
+						function( element ) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
+						}
+					);
+
+					self.dropzone_obj[ dropzone_obj_key ].on(
 						'error',
 						function ( file, response ) {
 							if ( file.accepted ) {
@@ -2397,6 +2416,20 @@ window.bp = window.bp || {};
 					);
 
 					self.dropzone_obj.on(
+						'uploadprogress',
+						function( element ) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
+						}
+					);
+
+					self.dropzone_obj.on(
 						'error',
 						function ( file, response ) {
 							if ( file.accepted ) {
@@ -2515,6 +2548,20 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#bp-group-messages-document-button' ) ) {
 								tool_box.find( '#bp-group-messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+						}
+					);
+
+					self.document_dropzone_obj.on(
+						'uploadprogress',
+						function( element ) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
 						}
 					);
 
@@ -2704,12 +2751,21 @@ window.bp = window.bp || {};
 					self.video_dropzone_obj.on(
 						'uploadprogress',
 						function( element, file ) {
-							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
 
 							if( element.upload.progress === 100 ) {
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
-
 						}
 					);
 
@@ -2837,6 +2893,20 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#forums-document-button' ) ) {
 								tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
+						}
+					);
+
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'uploadprogress',
+						function( element ) {
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
 						}
 					);
 
@@ -3111,9 +3181,23 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'uploadprogress',
-						function( element ) {
-							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-						  }
+						function( element, file ) {
+
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
+							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+							var radius = circle.r.baseVal.value;
+							var circumference = radius * 2 * Math.PI;
+
+							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDashoffset = circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							circle.style.strokeDashoffset = offset;
+
+							if( element.upload.progress === 100 ) {
+								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+							}
+						}
 					);
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
@@ -3430,6 +3514,10 @@ window.bp = window.bp || {};
 
 				} );
 
+				var uploaderMediaTemplate = document.getElementsByClassName('uploader-post-media-template').length ? document.getElementsByClassName('uploader-post-media-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
+				self.options.previewTemplate = uploaderMediaTemplate;
+
 				self.dropzone_obj = new Dropzone( 'div#media-uploader', self.options );
 
 				self.dropzone_obj.on(
@@ -3437,6 +3525,19 @@ window.bp = window.bp || {};
 					function ( file, xhr, formData ) {
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+					}
+				);
+
+				self.dropzone_obj.on(
+					'uploadprogress',
+					function( element ) {var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+						var radius = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -3670,6 +3771,10 @@ window.bp = window.bp || {};
 					}
 				} );
 
+				var uploaderdocumentTemplate = document.getElementsByClassName('uploader-post-document-template').length ? document.getElementsByClassName('uploader-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+
+				self.options.previewTemplate = uploaderdocumentTemplate;
+
 				self.dropzone_obj = new Dropzone( 'div#media-uploader', self.options );
 
 				self.dropzone_obj.on(
@@ -3677,6 +3782,19 @@ window.bp = window.bp || {};
 					function ( file, xhr, formData ) {
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+					}
+				);
+
+				self.dropzone_obj.on(
+					'uploadprogress',
+					function( element ) {var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
+						var radius = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -6356,6 +6474,7 @@ window.bp = window.bp || {};
 							extension         : document_element.data('extension'),
 							target_text       : document_element.data('document-title'),
 							preview           : document_element.data('preview'),
+							full_preview      : document_element.data('full-preview'),
 							text_preview      : document_element.data('text-preview'),
 							mirror_text       : document_element.data('mirror-text'),
 							target_icon_class : document_element.data('icon-class'),
@@ -6481,15 +6600,15 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
 				//fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();
 				$( window ).scroll();
 
 			} else {
-				if ( self.current_document.preview ) {
+				if ( self.current_document.full_preview ) {
 					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /></div></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.full_preview + '" /></div></div>' );
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );

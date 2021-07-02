@@ -47,5 +47,8 @@
 		"lint-js": "grunt jsvalidate jshint",
 		"lint-css": "grunt stylelint",
 		"lint": ["@lint-php", "@lint-js", "@lint-css"]
+	},
+	"config": {
+		"platform-check": false
 	}
 }

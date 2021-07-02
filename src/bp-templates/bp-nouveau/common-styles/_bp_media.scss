@@ -297,7 +297,7 @@
 }
 
 .modal-wrapper {
-	max-width: 600px;
+	max-width: 615px;
 	margin: 50px auto;
 	vertical-align: middle;
 	width: 90%;
@@ -2117,8 +2117,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		background: #f0f3f7;
 		text-align: center;
 		height: 100%;
-		min-height: 120px;
-		width: 120px;
+		min-height: 160px;
+		width: 160px;
 		flex-flow: column;
 		align-items: center;
 		justify-content: center;
@@ -2136,6 +2136,15 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	.dz-preview.dz-file-preview .dz-details .dz-filename span {
 		margin-top: 0;
+	}
+
+	@media screen and (max-width: 420px) {
+
+		.dz-preview.dz-file-preview .dz-details {
+			min-height: 142px;
+			width: 142px;
+		}
+
 	}
 
 }
@@ -2373,12 +2382,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 }
 
 div.dropzone .dz-preview {
-	min-width: 120px;
+	min-width: 160px;
 
 	.dz-success-mark,
 	.dz-progress,
 	.dz-error-mark {
-		top: 70%;
+		top: 50%;
 	}
 
 	.dz-filename {
@@ -2387,18 +2396,14 @@ div.dropzone .dz-preview {
 
 }
 
-.dz-preview.dz-image-preview .dz-image {
-	height: 120px;
+.dz-preview .dz-image {
+	height: 160px;
 
 	img {
-		max-width: 120px;
-		height: 100%;
+		max-width: 160px;
+		height: 155px;
 		object-fit: contain;
 	}
-}
-
-.activity_update .activity-comments .dropzone .dz-complete .dz-remove:after {
-	top: -1px;
 }
 
 #media-stream .document-data-table-head {

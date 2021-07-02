@@ -425,13 +425,11 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
 function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 
 	// Allow Mods to delete activity of group
-	if ( ! $can_delete && is_user_logged_in() && 'groups' == $activity->component ) {
+	if ( ! $can_delete && is_user_logged_in() && 'groups' === $activity->component ) {
 		$group = groups_get_group( $activity->item_id );
 
-		if ( ! empty( $group ) &&
-			 ! groups_is_user_admin( $activity->user_id, $activity->item_id ) &&
-			 groups_is_user_mod( apply_filters( 'bp_loggedin_user_id', get_current_user_id() ), $activity->item_id )
-		) {
+		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
+		if ( ! empty( $group ) && groups_is_user_mod( get_current_user_id(), $activity->item_id ) ) {
 			$can_delete = true;
 		}
 	}
@@ -630,11 +628,13 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( 'groups' !== $filter['scope'] ) {
 		// Fetch public groups.
-		$public_groups = groups_get_groups( array(
-			'fields'   => 'ids',
-			'status'   => 'public',
-			'per_page' => - 1,
-		) );
+		$public_groups = groups_get_groups(
+			array(
+				'fields'   => 'ids',
+				'status'   => 'public',
+				'per_page' => - 1,
+			)
+		);
 	}
 	if ( ! empty( $public_groups['groups'] ) ) {
 		$public_groups = $public_groups['groups'];
@@ -694,7 +694,7 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	$retval = array(
 		'relation' => 'OR',
-		$args
+		$args,
 	);
 
 	return $retval;

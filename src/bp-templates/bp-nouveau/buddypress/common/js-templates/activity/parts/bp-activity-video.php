@@ -2,8 +2,16 @@
     <div class="dropzone closed" id="activity-post-video-uploader"></div>
     <div class="activity-post-video-template" style="display:none;">
         <div class="dz-preview dz-file-preview well" id="dz-preview-template">
-            <div class="dz-video-icon"></span></div>
-            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+            <div class="dz-details">
+				<div class="dz-filename"><span data-dz-name></span></div>
+			</div>
+            <div class="dz-progress-ring-wrap">
+				<i class="bb-icon bb-icon-video-fill"></i>
+				<svg class="dz-progress-ring" width="62" height="62">
+					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
+				</svg>
+			</div>
+            <!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
             <div class="dz-error-message"><span data-dz-errormessage></span></div>
             <div class="dz-success-mark">
                 <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Check</title>

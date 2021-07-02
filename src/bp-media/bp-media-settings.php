@@ -35,6 +35,7 @@ function bp_media_get_settings_sections() {
 			'page'     => 'video',
 			'title'    => __( 'Videos', 'buddyboss' ),
 			'callback' => 'bp_video_admin_setting_callback_video_section',
+			'tutorial_callback' => 'bp_video_uploading_tutorial',
 		),
 		'bp_media_settings_emoji'     => array(
 			'page'              => 'media',
@@ -45,12 +46,6 @@ function bp_media_get_settings_sections() {
 			'page'              => 'media',
 			'title'             => __( 'Animated GIFs', 'buddyboss' ),
 			'tutorial_callback' => 'bp_animated_gifs_tutorial',
-		),
-		'bp_media_settings_symlinks'  => array(
-			'page'              => 'media',
-			'title'             => __( 'Media Miscellaneous', 'buddyboss' ),
-			'tutorial_callback' => 'bb_symlinks_tutorial',
-			'callback'          => 'bb_admin_setting_callback_symlinks_section',
 		),
 	);
 
@@ -328,45 +323,36 @@ function bp_media_get_settings_fields() {
 		'callback' => 'bp_video_settings_callback_extension_link',
 	);
 
-	$fields['bp_media_settings_documents']['bp_document_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_document_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_videos']['bp_video_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_video_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_photo_uploading_tutorial',
-	);
-
-	$fields['bp_media_settings_emoji']['bp_emoji_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_emoji_tutorial',
-	);
-
-	$fields['bp_media_settings_gifs']['bp_animated_gifs_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bp_animated_gifs_tutorial',
-	);
-
-	$fields['bp_media_settings_symlinks']['bp_media_symlink_support'] = array(
-		'title'             => __( 'Symlinks', 'buddyboss' ),
-		'callback'          => 'bb_media_settings_callback_symlink_support',
-		'sanitize_callback' => 'absint',
-		'args'              => array(),
-	);
-
-	$fields['bp_media_settings_symlinks']['bb_symlinks_tutorial'] = array(
-		'title'    => __( '&#160;', 'buddyboss' ),
-		'callback' => 'bb_symlinks_tutorial',
-	);
-
 	return (array) apply_filters( 'bp_media_get_settings_fields', $fields );
 }
+
+/**
+ * Register the settings field.
+ *
+ * @param array $setting settings field.
+ *
+ * @since 1.1.0
+ */
+function bb_admin_setting_media_access_control_register_fields( $setting ) {
+	$setting->add_section(
+		'bp_media_settings_symlinks',
+		__( 'Media Security & Performance', 'buddyboss' ),
+		'bb_admin_setting_callback_symlinks_section'
+	);
+	$setting->add_field(
+		'bp_media_symlink_support',
+		__( 'Symbolic Links', 'buddyboss' ),
+		'bb_media_settings_callback_symlink_support',
+		'absint'
+	);
+	$setting->add_field(
+		'bp_media_symlink_direct_access',
+		__( 'Direct Access', 'buddyboss' ),
+		'bb_media_settings_callback_symlink_direct_access',
+		'absint'
+	);
+}
+add_action( 'bp_admin_setting_media_register_fields', 'bb_admin_setting_media_access_control_register_fields' );
 
 /** General Section **************************************************************/
 
@@ -1299,14 +1285,14 @@ function bp_media_settings_callback_extension_document_support() {
 				<td>
 					<input class="extension-check" name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php ( isset( $extension['is_active'] ) ) ? checked( (int) $extension['is_active'], 1 ) : ''; ?> />
 				</td>
-				<td data-colname="<?php echo esc_html__( 'Extension', 'buddyboss' ); ?>">
+				<td data-colname="<?php esc_attr_e( 'Extension', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-extension" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo ( isset( $extension['extension'] ) ) ? esc_attr( $extension['extension'] ) : ''; ?>" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
 					<input <?php echo esc_attr( $edit ); ?> class="<?php echo esc_attr( $class ); ?> extension-hidden" name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo $is_default; ?>"/>
 				</td>
-				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
+				<td data-colname="<?php esc_attr_e( 'Description', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-desc" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
 				</td>
-				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
+				<td data-colname="<?php esc_attr_e( 'Icon', 'buddyboss' ); ?>">
 					<?php
 					if ( $is_default ) {
 						?>
@@ -1333,7 +1319,7 @@ function bp_media_settings_callback_extension_document_support() {
 					}
 					?>
 				</td>
-				<td data-colname="<?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?>">
+				<td data-colname="<?php esc_attr_e( 'MIME Type', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-mime" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
 					<?php
 					if ( ! $is_default ) {
@@ -1424,6 +1410,13 @@ function bp_document_extensions_list() {
 	$merge   = array_merge( $default, $saved );
 	$final   = array_unique( $merge, SORT_REGULAR );
 
+	/**
+	 * Filter to alllow the document extensions list.
+     *
+     * @param array $final List of extensions.
+     *
+     * @since BuddyBoss 1.7.0
+	 */
 	return apply_filters( 'bp_document_extensions_list', $final );
 }
 
@@ -1672,7 +1665,22 @@ function bp_media_settings_callback_document_allowed_per_batch() {
  */
 function bp_media_allowed_upload_document_per_batch() {
 
+	/**
+	 * Filter to allow document upload per batch.
+	 *
+	 * @param int $default Per batch.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$default = apply_filters( 'bp_document_upload_chunk_limit', 10 );
+
+	/**
+	 * Filter to allow document upload per batch.
+     *
+     * @param int $default Per batch.
+     *
+     * @since BuddyBoss 1.7.0
+	 */
 	return (int) apply_filters( 'bp_media_allowed_upload_document_per_batch', (int) get_option( 'bp_document_allowed_per_batch', $default ) );
 }
 
@@ -1741,6 +1749,9 @@ function bp_video_get_settings_fields_for_section( $section_id = '' ) {
 	/**
 	 * Filter for settings field sections.
 	 *
+	 * @param bool   $retval     Return value.
+	 * @param string $section_id Section id.
+	 *
 	 * @since BuddyBoss 1.7.0
 	 */
 	return (array) apply_filters( 'bp_video_get_settings_fields_for_section', $retval, $section_id );
@@ -1771,6 +1782,8 @@ function bp_video_get_settings_fields() {
 
 	/**
 	 * Filter for settings fields.
+     *
+     * @param array $fields Fields array.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
@@ -1823,14 +1836,14 @@ function bp_media_settings_callback_extension_video_support() {
 				<td>
 					<input class="extension-check" name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php ( isset( $extension['is_active'] ) ) ? checked( (int) $extension['is_active'], 1 ) : ''; ?> />
 				</td>
-				<td data-colname="<?php echo esc_html__( 'Extension', 'buddyboss' ); ?>">
+				<td data-colname="<?php esc_attr_e( 'Extension', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-extension" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo ( isset( $extension['extension'] ) ) ? esc_attr( $extension['extension'] ) : ''; ?>" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
 					<input <?php echo esc_attr( $edit ); ?> class="<?php echo esc_attr( $class ); ?> extension-hidden" name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo esc_attr( $is_default ); ?>"/>
 				</td>
-				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
+				<td data-colname="<?php esc_attr_e( 'Description', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-desc" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
 				</td>
-				<td data-colname="<?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?>">
+				<td data-colname="<?php esc_attr_e( 'MIME Type', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-mime" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
 					<?php
 					if ( ! $is_default ) {
@@ -1877,32 +1890,6 @@ function bp_media_settings_callback_extension_video_support() {
 	<?php
 }
 
-/**
- * Link to Media Miscellaneous tutorial
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_symlinks_tutorial() {
-	?>
-
-    <p>
-        <a class="button" href="
-		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62829,
-				),
-				'admin.php'
-			)
-		);
-		?>
-		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-    </p>
-
-	<?php
-}
 
 /**
  *  Print the Symlinks notice.
@@ -1923,10 +1910,161 @@ function bb_admin_setting_callback_symlinks_section() {
  * @since BuddyBoss 1.7.0
  */
 function bb_media_settings_callback_symlink_support() {
+
+	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+		?>
+        <div class="bp-messages-feedback">
+            <div class="bp-feedback warning">
+                <span class="bp-icon" aria-hidden="true"></span>
+                <p><?php _e( 'Symbolic links are not supported on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+            </div>
+        </div>
+		<?php
+	} else {
+		?>
+        <div class="bp-messages-feedback">
+            <div class="bp-feedback success">
+                <span class="bp-icon" aria-hidden="true"></span>
+                <p><?php _e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
+            </div>
+        </div>
+		<?php
+	}
 	?>
-    <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
-    <label for="bp_media_symlink_support">
-		<?php _e( 'Allow symlinks in <strong>photos, documents</strong> and <strong>videos</strong>', 'buddyboss' ); ?>
-    </label>
+    <div style="display:none;">
+        <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox"
+               value="1" <?php checked( bb_enable_symlinks() ); ?> />
+        <label for="bp_media_symlink_support">
+            <strong>
+				<?php _e( 'Disable symbolic links for photos, documents and videos', 'buddyboss' ); ?>
+            </strong>
+        </label>
+    </div>
+    <p class="description"><?php _e( 'Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.', 'buddyboss' ); ?></p>
+
 	<?php
+}
+
+/**
+ * Setting > Media > Media Miscellaneous
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_media_settings_callback_symlink_direct_access() {
+
+	$get_sample_ids = bp_get_option( 'bb_directory_get_test_ids', array() );
+
+	if ( empty( $get_sample_ids ) ) {
+
+		// Add upload filters.
+		add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+
+		$file                = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename            = basename( $file );
+		$upload_file         = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		$video_attachment_id = 0;
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype         = wp_check_filetype( $filename, null );
+			$attachment          = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$video_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $video_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
+				$get_sample_ids['bb_videos'] = $video_attachment_id;
+			}
+		}
+
+		// Remove upload filters.
+		remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+
+		add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+
+		$file                = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename            = basename( $file );
+		$upload_file         = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		$media_attachment_id = 0;
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype         = wp_check_filetype( $filename, null );
+			$attachment          = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$media_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $media_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
+				$get_sample_ids['bb_medias'] = $media_attachment_id;
+			}
+		}
+
+		remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+
+		add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+
+		$file                   = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+		$filename               = basename( $file );
+		$upload_file            = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+		$document_attachment_id = 0;
+		if ( ! $upload_file['error'] ) {
+			$wp_filetype            = wp_check_filetype( $filename, null );
+			$attachment             = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$document_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+			if ( ! is_wp_error( $document_attachment_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
+				wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
+				$get_sample_ids['bb_documents'] = $document_attachment_id;
+			}
+		}
+
+		remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+
+		bp_update_option( 'bb_directory_get_test_ids', $get_sample_ids );
+
+	}
+
+	$directory = array();
+	foreach ( $get_sample_ids as $id => $v ) {
+		$fetch = wp_remote_get( wp_get_attachment_image_url( $v ) );
+		if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 == $fetch['response']['code'] ) {
+			$directory[] = $id;
+		}
+	}
+
+	if ( ! empty( $directory ) ) {
+
+		printf(
+			'<div class="bp-messages-feedback"><div class="bp-feedback warning"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+			esc_html__( 'Direct access to your media files and folders is not blocked', 'buddyboss' )
+		);
+
+	} else {
+		printf(
+			'<div class="bp-messages-feedback"><div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div></div>',
+			esc_html__( 'Direct access to your media files and folders is blocked', 'buddyboss' )
+		);
+	}
+
+	printf(
+		'<p class="description"><p>%s <a href="%s">%s</a> %s</p></p>',
+		esc_html__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our ', 'buddyboss' ),
+		esc_url( 'https://www.buddyboss.com/resources/docs/components/media/media-permissions/' ),
+		esc_html__( 'Media Permissions', 'buddyboss' ),
+		esc_html__( ' tutorial to configure your server.', 'buddyboss' )
+	);
+
 }

@@ -111,13 +111,14 @@ id="div-listing-<?php bp_document_id(); ?>">
 		data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
 		data-activity-id="<?php bp_document_activity_id(); ?>" data-author="<?php bp_document_user_id(); ?>"
 		data-preview="<?php bp_document_attachment_url(); ?>"
+		data-full-preview="<?php bp_document_attachment_url(); ?>"
 		data-text-preview="<?php bp_document_attachment_url(); ?>"
 		data-mp3-preview="<?php bp_document_attachment_url(); ?>"
 		data-video-preview="<?php echo $video_url ? esc_url( $video_url ) : ''; ?>"
 		data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>"
 		data-document-title="<?php echo esc_html( $filename ); ?>"
 		data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
-        data-can-edit="<?php echo esc_attr( bp_document_user_can_edit( bp_get_document_id() ) ); ?>"
+		data-can-edit="<?php echo esc_attr( bp_document_user_can_edit( bp_get_document_id() ) ); ?>"
 		data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>"
@@ -132,9 +133,9 @@ id="div-listing-<?php bp_document_id(); ?>">
 			<?php
 			if ( $attachment_id ) {
 				?>
-				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
 			<?php } else { ?>
-				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 				<?php
 			}
 			if ( wp_is_mobile() ) {
@@ -196,8 +197,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 				$group_id = bp_get_document_group_id();
 				if ( $group_id > 0 ) {
 					?>
-					<span class="bp-tooltip" data-bp-tooltip-pos="down"
-					data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>"><?php bp_document_privacy(); ?></span>
+					<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>"><?php bp_document_privacy(); ?></span>
 					<?php
 				} else {
 					?>

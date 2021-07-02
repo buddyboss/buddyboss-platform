@@ -153,7 +153,8 @@ class BP_Video_Template {
 			'group_id'     => false,
 			'privacy'      => false,
 		);
-		$r        = wp_parse_args( $args, $defaults );
+
+		$r = wp_parse_args( $args, $defaults );
 		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
@@ -307,7 +308,7 @@ class BP_Video_Template {
 			/**
 			 * Fires right before the rewinding of video posts.
 			 *
-			 * @since BuddyBoss 1.1.0
+			 * @since BuddyBoss 1.7.0
 			 */
 			do_action( 'video_loop_end' );
 

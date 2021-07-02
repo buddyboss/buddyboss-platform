@@ -884,17 +884,17 @@
 					function () {
 							currentSettings = parseInt( $( this ).val() );
 						if ( 0 === currentSettings ) {
-							  $( '.register-text-box' ).hide();
-							  $( '.register-email-checkbox' ).show();
-							  $( '.register-password-checkbox' ).show();
-							  $( '.register-legal-agreement-checkbox' ).show();
-							  $( '.registration-form-main-select p.description' ).show();
+							$( '.register-text-box' ).hide();
+							$( '.register-email-checkbox' ).show();
+							$( '.register-password-checkbox' ).show();
+							$( '.register-legal-agreement-checkbox' ).show();
+							$( '.registration-form-main-select p.description' ).show();
 						} else {
-							  $( '.register-email-checkbox' ).hide();
-							  $( '.register-password-checkbox' ).hide();
-							  $( '.register-legal-agreement-checkbox' ).hide();
-							  $( '.register-text-box' ).show();
-							  $( '.registration-form-main-select p.description' ).hide();
+							$( '.register-email-checkbox' ).hide();
+							$( '.register-password-checkbox' ).hide();
+							$( '.register-legal-agreement-checkbox' ).hide();
+							$( '.register-text-box' ).show();
+							$( '.registration-form-main-select p.description' ).hide();
 						}
 
 					}
@@ -979,7 +979,7 @@
 					function() {
 
 						if ( $( this ).closest( 'td' ).find( '.icon-select-main' ).length === 0 ) {
-							  var iconsArray = [];
+							var iconsArray = [];
 							$( this ).closest( 'td' ).find( 'select.extension-icon option' ).each(
 								function(){
 									var iconClass = $( this ).val();
@@ -989,12 +989,12 @@
 								}
 							);
 
-							  $( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray + '</ul></div></div>' );
+							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray + '</ul></div></div>' );
 
-							  // Set the button value to the first el of the array by default.
-							  var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon' ).val();
-							  var currentSelectedIconText = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).text();
-							  $( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( '<li><i class="' + currentSelectedIcon + '"></i><span>' + currentSelectedIconText + '</span></li>' );
+							// Set the button value to the first el of the array by default.
+							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon' ).val();
+							var currentSelectedIconText = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).text();
+							$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( '<li><i class="' + currentSelectedIcon + '"></i><span>' + currentSelectedIconText + '</span></li>' );
 						}
 
 					}

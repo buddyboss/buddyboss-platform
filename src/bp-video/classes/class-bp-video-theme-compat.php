@@ -50,7 +50,6 @@ class BP_Video_Theme_Compat {
 			add_filter( 'bp_get_buddypress_template', array( $this, 'directory_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'directory_dummy_post' ) );
 			add_filter( 'bp_replace_the_content', array( $this, 'directory_content' ) );
-
 		}
 	}
 
@@ -64,6 +63,7 @@ class BP_Video_Theme_Compat {
 	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 *
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function directory_template_hierarchy( $templates ) {
@@ -129,6 +129,7 @@ class BP_Video_Theme_Compat {
 	 * @since BuddyBoss 1.7.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 *
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function single_template_hierarchy( $templates ) {

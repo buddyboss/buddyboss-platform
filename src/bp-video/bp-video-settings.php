@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Setting > Media > Video > Profile support
  *
@@ -41,19 +40,14 @@ function bp_video_settings_callback_profile_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_profile_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if profile video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_profile_video_support_enabled', (bool) get_option( 'bp_video_profile_video_support', $default ) );
-}
-
-/**
- * Checks if profile albums support is enabled.
- *
- * @param int $default default value.
- *
- * @return bool Is profile albums support enabled or not
- * @since BuddyBoss 1.7.0
- */
-function bp_is_profile_video_albums_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_profile_video_albums_support_enabled', (bool) get_option( 'bp_video_profile_albums_support', $default ) );
 }
 
 /**
@@ -119,19 +113,14 @@ function bp_video_settings_callback_group_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_group_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if group video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
-}
-
-/**
- * Checks if group album support is enabled.
- *
- * @param int $default default value.
- *
- * @return bool Is group album support enabled or not
- * @since BuddyBoss 1.7.0
- */
-function bp_is_group_video_albums_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_group_video_albums_support_enabled', (bool) get_option( 'bp_video_group_albums_support', $default ) );
 }
 
 /**
@@ -161,6 +150,13 @@ function bp_video_settings_callback_messages_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_messages_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if message video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_messages_video_support_enabled', (bool) get_option( 'bp_video_messages_video_support', $default ) );
 }
 
@@ -189,6 +185,13 @@ function bp_video_settings_callback_forums_video_support() {
  * @since BuddyBoss 1.7.0
  */
 function bp_is_forums_video_support_enabled( $default = 0 ) {
+	/**
+	 * Filters to checks if forums video support is enabled.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (bool) apply_filters( 'bp_is_forums_video_support_enabled', (bool) get_option( 'bp_video_forums_video_support', $default ) );
 }
 
@@ -198,7 +201,6 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_uploading_tutorial() {
-	/* Commented out during Beta period
 	?>
 	<p>
 		<a class="button" href="
@@ -207,7 +209,7 @@ function bp_video_uploading_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => 62827,
+					'article' => 124807,
 				),
 				'admin.php'
 			)
@@ -216,18 +218,13 @@ function bp_video_uploading_tutorial() {
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 	<?php
-	*/
 }
 
 /**
  * Print the FFMPEG notice.
  */
 function bp_video_admin_setting_callback_video_section() {
-
 	?>
-    <p class="alert">
-		<?php esc_html_e( 'Video uploading is not yet supported in BuddyBoss App.', 'buddyboss' ); ?>
-    </p>
 	<?php
 
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
@@ -250,14 +247,15 @@ function bp_video_admin_setting_callback_video_section() {
 				<?php
 				echo sprintf(
 				/* translators: %1$s FFmpeg status, %2$s FFMPEG Binary Path, %3$s FFPROBE Binary Path, %34$s wp-config.php file. */
-					_x( 'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host. 
-					<br/><br/>If FFmpeg is already installed on your server and you still see the above warning, then BuddyBoss Platform is unable to auto-detect the binary path for FFmpeg. 
-					<br/>You need to add these FFmpeg binary files absolute path constants %2$s & %3$s in %4$s file. 
-					<br/>Ask your web host to provide the binary files absolute path.', 'extension notification', 'buddyboss' ), //phpcs:ignore
+					_x(
+						'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host.
+					<br/><br/>If FFmpeg is already installed on your server and you still see the above warning, this means BuddyBoss Platform is unable to auto-detect the binary file path for FFmpeg. You will need to add the below FFmpeg absolute path constants into your %2$s file, replacing PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. Ask your web host to provide the absolute path for the FFmpeg binary file.
+					<br /><br />%3$s
+					<br />%4$s', 'extension notification', 'buddyboss' ), //phpcs:ignore
 					'<code><a href="https://ffmpeg.org/" target="_blank">FFmpeg</a></code>',
+					'<code>wp-config.php</code>',
 					'<code>define( "BB_FFMPEG_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>',
-					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>',
-					'<code>wp-config.php</code>'
+					'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>'
 				);
 				?>
 			</p>
@@ -275,8 +273,7 @@ function bp_video_settings_callback_video_allowed_size() {
 	$max_size    = bp_core_upload_max_size();
 	$max_size_mb = bp_video_format_size_units( $max_size, false, 'MB' );
 	?>
-	<input type="number" name="bp_video_allowed_size" id="bp_video_allowed_size" class="regular-text" min="1" step="1" max="<?php echo esc_attr( $max_size_mb ); ?>" required value="<?php echo esc_attr( bp_video_allowed_upload_video_size() ); ?>" style="width: 70px;"
-	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
+	<input type="number" name="bp_video_allowed_size" id="bp_video_allowed_size" class="regular-text" min="1" step="1" max="<?php echo esc_attr( $max_size_mb ); ?>" required value="<?php echo esc_attr( bp_video_allowed_upload_video_size() ); ?>" style="width: 70px;" /> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
@@ -300,6 +297,13 @@ function bp_video_settings_callback_video_allowed_size() {
 function bp_video_allowed_upload_video_size() {
 	$max_size = bp_core_upload_max_size();
 	$default  = bp_video_format_size_units( $max_size, false, 'MB' );
+	/**
+	 * Filters for upload file size for the video.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (int) apply_filters( 'bp_video_allowed_upload_video_size', (int) get_option( 'bp_video_allowed_size', $default ) );
 }
 
@@ -343,6 +347,22 @@ function bp_video_settings_callback_video_allowed_per_batch() {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_allowed_upload_video_per_batch() {
+
+	/**
+	 * Filters for allowed per batch for the video.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	$default = apply_filters( 'bp_video_upload_chunk_limit', 10 );
+
+	/**
+	 * Filters for allowed per batch for the video.
+	 *
+	 * @param int $default default value.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
 	return (int) apply_filters( 'bp_video_allowed_upload_video_per_batch', (int) get_option( 'bp_video_allowed_per_batch', $default ) );
 }

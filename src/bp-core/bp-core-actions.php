@@ -185,12 +185,13 @@ function bp_restrict_single_attachment() {
 /**
  * Validate and update symlink option value.
  *
- * @param boolean $old_value Previous value.
- * @param boolean $value     Updated value.
+ * @param bool $old_value Previous value.
+ * @param bool $value     Updated value.
  *
  * @since BuddyBoss 1.7.0
  */
 function bb_media_symlink_validate( $old_value, $value ) {
+
 	if ( $old_value === $value || ! bp_is_active( 'media' ) ) {
 		return;
 	}
@@ -206,27 +207,27 @@ function bb_media_symlink_validate( $old_value, $value ) {
 	$upload_dir = wp_upload_dir();
 	$upload_dir = $upload_dir['basedir'];
 
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 );
+	}
+
+	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
+	if ( ! is_dir( $media_symlinks_path ) ) {
+		wp_mkdir_p( $media_symlinks_path );
+		chmod( $media_symlinks_path, 0755 );
+	}
+
 	if ( ! empty( $value ) ) {
 
-		$media = get_posts(
-			array(
-				'post_type'      => 'attachment',
-				'posts_per_page' => 1,
-				'order'          => 'ASC',
-				'orderby'        => 'rand',
-				'meta_key'       => 'bp_media_saved',
-				'meta_value'     => '1',
-			)
-		);
+		$attachment_id = bb_core_upload_dummy_attachment();
 
-		if ( ! empty( $media ) ) {
+		if ( ! empty( $attachment_id ) ) {
 
-			$attachment_id  = current( $media )->ID;
-			$attachment_url = wp_get_attachment_image_src( $attachment_id );
-			$attchment_file = get_attached_file( $attachment_id );
-
-			// Get media previews symlink directory path.
-			$symlinks_path   = bp_media_symlink_path();
+			$attachment_url  = wp_get_attachment_image_src( $attachment_id );
+			$attachment_file = get_attached_file( $attachment_id );
+			$symlinks_path   = $media_symlinks_path;
 			$size            = 'thumbnail';
 			$symlink_name    = md5( 'testsymlink' . $attachment_id . $size );
 			$attachment_path = $symlinks_path . '/' . $symlink_name;
@@ -234,7 +235,7 @@ function bb_media_symlink_validate( $old_value, $value ) {
 			if ( $file && ! empty( $file['path'] ) ) {
 				$output_file_src = $upload_dir . '/' . $file['path'];
 			} elseif ( $attachment_url ) {
-				$output_file_src = $attchment_file;
+				$output_file_src = $attachment_file;
 			}
 
 			$upload_directory        = wp_get_upload_dir();
@@ -311,6 +312,7 @@ function bb_media_symlink_validate( $old_value, $value ) {
 					}
 				}
 			}
+			wp_delete_post( $attachment_id, true );
 		} else {
 			foreach ( $keys as $k ) {
 				bp_delete_option( $k );

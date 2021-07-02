@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Activity Document Preview Main
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Core
  */
 

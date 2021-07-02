@@ -61,7 +61,7 @@ if ( 'video' === $media_template->media->type ) {
 							if ( $can_edit ) {
 								?>
 								<li class="edit_thumbnail_video">
-									<a href="#" data-action="video" data-video-attachments="<?php echo esc_html(json_encode( $attachment_urls )); ?>" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Add Thumbnail', 'buddyboss' ); ?></a>
+									<a href="#" data-action="video" data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?></a>
 								</li>
 								<?php
 							}
@@ -154,19 +154,19 @@ if ( 'video' === $media_template->media->type ) {
 				<div class="media-action_list">
 					<ul>
 						<?php
-                        if ( $is_comment_pic ) {
-                            ?>
-                            <li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-                                <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                            </li>
-                            <?php
-                        } elseif ( $can_move ) {
-                            ?>
-                            <li class="move_file">
-                                <a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                            </li>
-                            <?php
-                        }
+						if ( $is_comment_pic ) {
+							?>
+							<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+								<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						} elseif ( $can_move ) {
+							?>
+							<li class="move_file">
+								<a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						}
 
 						if ( $report_btn ) {
 							?>
@@ -176,12 +176,14 @@ if ( 'video' === $media_template->media->type ) {
 							<?php
 						}
 
-						if ( $can_delete ) { ?>
+						if ( $can_delete ) {
+							?>
 							<li class="delete_file">
 								<a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 							</li>
-						    <?php
-						} ?>
+							<?php
+						}
+						?>
 					</ul>
 				</div>
 			<?php } ?>

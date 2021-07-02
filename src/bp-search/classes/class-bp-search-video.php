@@ -56,10 +56,12 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 		/**
 		 * Prepare SQL query for video search.
 		 *
-		 * @param string $search_term Search terms.
+		 * @param string $search_term         Search terms.
 		 * @param false  $only_totalrow_count Total row count.
 		 *
 		 * @return mixed|void
+		 *
+		 * @since BuddyBoss 1.7.0
 		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
@@ -84,7 +86,6 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 
 				$user_groups = array();
 				if ( is_user_logged_in() ) {
-
 					$groups = groups_get_user_groups( bp_loggedin_user_id() );
 					if ( ! empty( $groups['groups'] ) ) {
 						$user_groups = $groups['groups'];
@@ -174,9 +175,11 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 		}
 
 		/**
-		 * Generate Html for video search
+		 * Generate Html for video search.
 		 *
 		 * @param string $template_type Template type.
+		 *
+		 * @since BuddyBoss 1.7.0
 		 */
 		protected function generate_html( $template_type = '' ) {
 			$video_ids = array();
@@ -192,6 +195,12 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 				'search_terms' => false,
 			);
 
+			/**
+			 * Fires before the search videos html.
+			 *
+			 * @since BuddyBoss 1.7.0
+			 *
+			 */
 			do_action( 'bp_before_search_videos_html' );
 
 			if ( bp_has_video( $args ) ) {
@@ -210,6 +219,12 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 				endwhile;
 			}
 
+			/**
+			 * Fires after the search videos html.
+			 *
+			 * @since BuddyBoss 1.7.0
+			 *
+			 */
 			do_action( 'bp_after_search_videos_html' );
 		}
 	}

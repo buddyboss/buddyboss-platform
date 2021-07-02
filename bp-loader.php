@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: BuddyBoss Platform (Beta)
+ * Plugin Name: BuddyBoss Platform
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.7.0.2
+ * Version:     1.7.0
  * Text Domain: buddyboss
  * Domain Path: /bp-languages/
  * License:     GPLv2 or later (license.txt)
@@ -14,7 +14,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 

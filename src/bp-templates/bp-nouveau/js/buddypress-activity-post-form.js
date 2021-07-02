@@ -94,6 +94,7 @@ window.bp = window.bp || {};
 				maxFiles            : ! _.isUndefined( BP_Nouveau.media.maxFiles ) ? BP_Nouveau.media.maxFiles : 10,
 				maxFilesize         : ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
 				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+				// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
 			};
 
 			// if defined, add custom dropzone options.
@@ -219,7 +220,6 @@ window.bp = window.bp || {};
 								self.dropzone.emit( 'addedfile', mock_file );
 								self.createThumbnailFromUrl( mock_file );
 							}
-
 						}
 					}
 
@@ -282,7 +282,6 @@ window.bp = window.bp || {};
 							}
 						}
 					}
-
 
 					/**
 					 * Display Video for editing.
@@ -768,7 +767,22 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
-				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-media-uploader', bp.Nouveau.Activity.postForm.dropzone_options );
+				this.dropzone_options = {
+					url                 : BP_Nouveau.ajaxurl,
+					timeout             : 3 * 60 * 60 * 1000,
+					dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
+					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       : 'image/*',
+					autoProcessQueue    : true,
+					addRemoveLinks      : true,
+					uploadMultiple      : false,
+					maxFiles            : ! _.isUndefined( BP_Nouveau.media.maxFiles ) ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize         : ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
+					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+					previewTemplate : document.getElementsByClassName( 'activity-post-default-template' )[0].innerHTML
+				};
+
+				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-media-uploader', this.dropzone_options );
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'addedfile',
@@ -777,6 +791,21 @@ window.bp = window.bp || {};
 							self.media.push( file.media_edit_data );
 							self.model.set( 'media', self.media );
 						}
+					}
+				);
+
+				bp.Nouveau.Activity.postForm.dropzone.on(
+					'uploadprogress',
+					function( element ) {
+
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -949,6 +978,7 @@ window.bp = window.bp || {};
 					maxFilesize          : ! _.isUndefined( BP_Nouveau.document.max_upload_size ) ? BP_Nouveau.document.max_upload_size : 2,
 					dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
 					dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
+					previewTemplate : document.getElementsByClassName( 'activity-post-document-template' )[0].innerHTML
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-document-uploader', dropzone_options );
@@ -960,6 +990,21 @@ window.bp = window.bp || {};
 							self.document.push( file.document_edit_data );
 							self.model.set( 'document', self.document );
 						}
+					}
+				);
+
+				bp.Nouveau.Activity.postForm.dropzone.on(
+					'uploadprogress',
+					function( element ) {
+
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -1165,7 +1210,7 @@ window.bp = window.bp || {};
 
 						if ( file.dataURL && file.video_edit_data.thumb.length ) {
 							// Get Thumbnail image from response.
-							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend('<img src=" ' + file.video_edit_data.thumb + ' " />');
+							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' " />' );
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 						} else {
 
@@ -1202,12 +1247,21 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'uploadprogress',
 					function( element, file ) {
+
 						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 
-						if( element.upload.progress === 100 ) {
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
+
+						if ( element.upload.progress === 100 ) {
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
-
 					}
 				);
 
@@ -3346,7 +3400,7 @@ window.bp = window.bp || {};
 					);
 				}
 
-				// check if edit activity
+				// check if edit activity.
 				if ( self.model.get( 'id' ) > 0 ) {
 					edit      = true;
 					data.edit = 1;

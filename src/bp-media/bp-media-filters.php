@@ -2487,6 +2487,31 @@ function bp_media_check_download_album_protection() {
 			'content' => '',
 		),
 		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews',
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-media' ),
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-videos' ),
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-documents' ),
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews',
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
 			'base'    => $upload_dir['basedir'] . '/bb_medias',
 			'file'    => '.htaccess',
 			'content' => 'deny from all

@@ -1033,6 +1033,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 				'type'    => 'loading',
 				'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss' ),
 			),
+			'album-media-video-loading'               => array(
+				'type'    => 'loading',
+				'message' => __( 'Loading photos and videos from the album. Please wait.', 'buddyboss' ),
+			),
 			'album-video-loading'               => array(
 				'type'    => 'loading',
 				'message' => __( 'Loading videos from the album. Please wait.', 'buddyboss' ),

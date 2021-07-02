@@ -489,7 +489,7 @@ function bp_core_get_packaged_component_ids() {
 		'settings',
 		'notifications',
 		'search',
-		'moderation'
+		'moderation',
 	);
 
 	return $components;
@@ -2607,7 +2607,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'video'      => array(
+		'video'         => array(
 			'title'       => __( 'Video Uploading', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
 				add_query_arg(
@@ -2668,14 +2668,14 @@ function bp_core_get_components( $type = 'all' ) {
 			),
 			'default'              => false,
 			'deactivation_confirm' => true,
-			'deactivation_message' => __( '<p>Please confirm you want to deactivate the Moderation component.</p>
-			<h4>On Deactivation:</h4>
-			<ul>
-				<li>All suspended members will regain permission to login and their content will be unhidden</li>
-				<li>Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.</li>
-				<li>All hidden content will be unhidden.</li>
-			</ul>
-			<p>Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.</p>', 'buddyboss' ),
+			'deactivation_message' => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss' ) . '</p>' .
+										'<h4>' . __( 'On Deactivation:', 'buddyboss' ) . '</h4>' .
+										'<ul>' .
+											'<li>' . __( 'All suspended members will regain permission to login and their content will be unhidden', 'buddyboss' ) . '</li>' .
+											'<li>' . __( 'Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.', 'buddyboss' ) . '</li>' .
+											'<li>' . __( 'All hidden content will be unhidden', 'buddyboss' ) . '</li>' .
+										'</ul>' .
+										'<p>' . __( 'Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.', 'buddyboss' ) . '</p>',
 		),
 		// @todo: used for bp-performance will enable in feature.
 		/*
@@ -2716,9 +2716,9 @@ function bp_core_get_components( $type = 'all' ) {
 	);
 
 	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
-		$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ).'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+		$plugin_data    = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php' );
 		$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
-		if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>') ) {
+		if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
 			$optional_components['messages']['settings'] = bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -3118,7 +3118,7 @@ function bp_core_get_suggestions( $args ) {
 	}
 
 	// Members @name suggestions.
-	if ( $args['type'] === 'members' ) {
+	if ( 'members' === $args['type'] ) {
 		$class = 'BP_Members_Suggestions';
 
 		// Members @name suggestions for users in a specific Group.
@@ -3145,10 +3145,10 @@ function bp_core_get_suggestions( $args ) {
 		return new WP_Error( 'missing_parameter' );
 	}
 
-	//Remove action for remove search against xprofile fields
+	// Remove action for remove search against xprofile fields.
 	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
-	//Add action only for xprofile fields First, last and nickname
+	// Add action only for xprofile fields First, last and nickname.
 	add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
 
 	$suggestions = new $class( $args );
@@ -3160,10 +3160,10 @@ function bp_core_get_suggestions( $args ) {
 		$retval = $suggestions->get_suggestions();
 	}
 
-	//Add action again for search against xprofile fields
+	// Add action again for search against xprofile fields.
 	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
-	//Removed action only for xprofile fields First, last and nickname
+	// Removed action only for xprofile fields First, last and nickname.
 	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
 	/**
 	 * Filters the available type of at-mentions.
@@ -3985,7 +3985,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
-		'content-moderation-email'                => array(
+		'content-moderation-email'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3993,7 +3993,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
 		),
-		'user-moderation-email'                => array(
+		'user-moderation-email'              => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -4183,12 +4183,12 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$content_moderation_email = array(
-		'description' => __( 'When content is automatically hidden due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'description' => __( 'When content is automatically hidden due to reaching the reporting threshold.', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
 	$user_moderation_email = array(
-		'description' => __( 'When a member has been automatically suspended due to reaching the reporting threshold.', 'buddyboss' ), //Todo: Add proper description of email.
+		'description' => __( 'When a member has been automatically suspended due to reaching the reporting threshold.', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
@@ -4921,7 +4921,7 @@ function bp_core_parse_url( $url ) {
 
 	$parsed_url_data = array();
 
-	if ( strstr( $url, site_url() ) && ( strstr( $url, 'download_document_file' ) || strstr( $url, 'download_media_file' ) || strstr( $url, 'download_video_file' )) ) {
+	if ( strstr( $url, site_url() ) && ( strstr( $url, 'download_document_file' ) || strstr( $url, 'download_media_file' ) || strstr( $url, 'download_video_file' ) ) ) {
 		return array();
 	}
 
@@ -5313,7 +5313,6 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 					$total_completed_count = $total_completed_count + (int) $get_user_data['groups'][ $group ]['group_completed_fields'];
 				}
 			}
-
 		}
 	}
 
@@ -5334,7 +5333,6 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	 * @param array $get_user_data      user profile cached data.
 	 *
 	 * @since BuddyBoss 1.5.4
-	 *
 	 */
 	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
 
@@ -5392,7 +5390,7 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	$nickname_field_id  = bp_xprofile_nickname_field_id();
 
 	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-	$current_value   = bp_get_option( 'bp-display-name-format' );
+	$current_value  = bp_get_option( 'bp-display-name-format' );
 	$enabled_fields = array();
 
 	// If First Name selected then do not add last name field.
@@ -5420,7 +5418,7 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	$where_condition = array();
 	if ( ! empty( $enabled_fields ) ) {
 		foreach ( $enabled_fields as $field_name => $field_id ) {
-			$where_condition[] = " ( ( field_id = " . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+			$where_condition[] = ' ( ( field_id = ' . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
 		}
 	}
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
@@ -5428,7 +5426,7 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " .  implode( ' OR ', $where_condition ) );
+		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
 
 		if ( ! empty( $matched_user_data ) ) {
 			foreach ( $matched_user_data as $k => $user ) {
@@ -5468,8 +5466,8 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
  */
 function bp_core_is_empty_directory( $dir ) {
 	$handle = opendir( $dir );
-	while( false !== ( $entry = readdir( $handle ) ) ) {
-		if( $entry != "." && $entry != ".." ) {
+	while ( ( $entry  = readdir( $handle ) ) !== $entry ) {
+		if ( '.' !== $entry && '..' !== $entry ) {
 			closedir( $handle );
 
 			return false;
@@ -5528,7 +5526,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 /**
  * Symlink Generator
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.0
  *
  * @param string $type            Item Type ( media, document, video ).
  * @param object $item            Item Object( Media, Document, Video ).
@@ -5542,6 +5540,10 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 		return;
 	}
 
+	if ( ! bp_is_active( 'media') ) {
+	    return;
+    }
+
 	$key           = '';
 	$sym_path      = '';
 	$filename      = '';
@@ -5552,26 +5554,51 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 			$key      = 'bb_media_symlink_type';
 			$sym_path = bp_media_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 		case 'document':
 			$key      = 'bb_document_symlink_type';
 			$sym_path = bp_document_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 		case 'document_video':
 			$key      = 'bb_document_video_symlink_type';
 			$sym_path = bp_document_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy );
+			}
 			break;
 		case 'video':
 			$key      = 'bb_video_symlink_type';
 			$sym_path = bb_video_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 		case 'video_thumb':
 			$key      = 'bb_video_thumb_symlink_type';
 			$sym_path = bb_video_symlink_path();
 			$filename = md5( $item->id . $attachment_id . $item->privacy . $size );
+			if ( $item->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object = groups_get_group( $item->group_id );
+				$group_status = bp_get_group_status( $group_object );
+				$filename     = md5( $item->id . $attachment_id . $group_status . $item->privacy . $size );
+			}
 			break;
 	}
 
@@ -5649,14 +5676,159 @@ function bb_core_scaled_attachment_path( $attachment_id ) {
  */
 function bb_check_ios_device() {
 
-    $is_ios = false;
-	$ipod   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' );
-	$iphone = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' );
-	$ipad   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' );
+	if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+		return false;
+	}
+
+	$is_ios = false;
+
+	$ipod   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$iphone = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$ipad   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 	if ( $ipod || $iphone || $ipad ) {
 		$is_ios = true;
 	}
 
 	return $is_ios;
+}
+
+/**
+ * Enable symlink automatically.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_core_enable_default_symlink_support() {
+
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
+
+	if ( (bool) get_option( 'bp_media_symlink_support', false ) ) {
+		return;
+	}
+
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
+
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 );
+	}
+
+	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
+	if ( ! is_dir( $media_symlinks_path ) ) {
+		wp_mkdir_p( $media_symlinks_path );
+		chmod( $media_symlinks_path, 0755 );
+	}
+
+	$upload_dir      = wp_upload_dir();
+	$upload_dir      = $upload_dir['basedir'];
+	$output_file_src = '';
+	$attachment_id   = bb_core_upload_dummy_attachment();
+
+	if ( ! empty( $attachment_id ) ) {
+
+		$attachment_url          = wp_get_attachment_image_src( $attachment_id );
+		$attachment_file         = get_attached_file( $attachment_id );
+		$symlinks_path           = $media_symlinks_path;
+		$size                    = 'thumbnail';
+		$symlink_name            = md5( 'testsymlink' . $attachment_id . $size );
+		$attachment_path         = $symlinks_path . '/' . $symlink_name;
+		$file                    = image_get_intermediate_size( $attachment_id, $size );
+		$upload_directory        = wp_get_upload_dir();
+		$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
+		$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
+
+		if ( $file && ! empty( $file['path'] ) ) {
+			$output_file_src = $upload_dir . '/' . $file['path'];
+		} elseif ( $attachment_url ) {
+			$output_file_src = $attachment_file;
+		}
+
+		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+
+			if ( ! is_link( $attachment_path ) ) {
+
+				symlink( $output_file_src, $attachment_path );
+
+				if ( ! empty( $symlink_url ) ) {
+					$fetch = wp_remote_get( $symlink_url );
+
+					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+						bp_update_option( 'bp_media_symlink_support', 1 );
+					}
+				}
+				unlink( $attachment_path );
+
+				if ( bb_enable_symlinks() ) {
+					bb_media_symlink_validate( 0, 1 );
+					return;
+				}
+
+				$tmp = getcwd();
+				chdir( wp_normalize_path( ABSPATH ) );
+				$sym_path   = explode( '/', $symlinks_path );
+				$search_key = array_search( 'wp-content', $sym_path, true );
+				if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
+					$sym_path = array_slice( array_filter( $sym_path ), $search_key );
+					$sym_path = implode( '/', $sym_path );
+				}
+				if ( is_dir( 'wp-content/' . $sym_path ) ) {
+					chdir( 'wp-content/' . $sym_path );
+					if ( empty( $file['path'] ) ) {
+						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+					}
+					$output_file_src = '../../' . $file['path'];
+					if ( file_exists( $output_file_src ) ) {
+						symlink( $output_file_src, $symlink_name );
+					}
+				}
+				chdir( $tmp );
+
+				if ( ! empty( $symlink_url ) ) {
+					$fetch = wp_remote_get( $symlink_url );
+					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+						bp_update_option( 'bp_media_symlink_support', 1 );
+					}
+				}
+			}
+		}
+		wp_delete_post( $attachment_id, true );
+	}
+}
+
+/**
+ * Create a dummy attachment and return the id.
+ *
+ * @return int|WP_Error
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_core_upload_dummy_attachment() {
+
+	$file          = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+	$filename      = basename( $file );
+	$upload_file   = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+	$attachment_id = 0;
+	if ( ! $upload_file['error'] ) {
+		$wp_filetype   = wp_check_filetype( $filename, null );
+		$attachment    = array(
+			'post_mime_type' => $wp_filetype['type'],
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+			'post_content'   => '',
+			'post_status'    => 'inherit',
+		);
+		$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+		if ( ! is_wp_error( $attachment_id ) ) {
+			if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+			}
+			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
+			wp_update_attachment_metadata( $attachment_id, $attachment_data );
+		}
+	}
+
+	return $attachment_id;
 }

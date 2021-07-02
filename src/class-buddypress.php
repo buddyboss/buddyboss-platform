@@ -583,6 +583,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.6.4.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.7.0.php';
 		}
 
@@ -714,6 +715,9 @@ class BuddyPress {
 			'BP_REST_Media_Endpoint'                       => 'media',
 			'BP_REST_Media_Albums_Endpoint'                => 'media',
 			'BP_REST_Media_Details_Endpoint'               => 'media',
+			'BP_REST_Video_Endpoint'                       => 'video',
+			'BP_REST_Video_Poster_Endpoint'                => 'video',
+			'BP_REST_Video_Details_Endpoint'               => 'video',
 			'BP_REST_Document_Endpoint'                    => 'document',
 			'BP_REST_Document_Folder_Endpoint'             => 'document',
 			'BP_REST_Document_Details_Endpoint'            => 'document',
