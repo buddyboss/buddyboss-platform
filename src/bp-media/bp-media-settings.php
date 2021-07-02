@@ -1938,7 +1938,7 @@ function bb_media_settings_callback_symlink_support() {
 			   value="1" <?php checked( bb_enable_symlinks() ); ?> />
 		<label for="bp_media_symlink_support">
 			<strong>
-				<?php _e( 'Disable symbolic links for photos, documents and videos', 'buddyboss' ); ?>
+				<?php _e( 'Enable symbolic links for photos, documents and videos', 'buddyboss' ); ?>
 			</strong>
 		</label>
 	</div>
