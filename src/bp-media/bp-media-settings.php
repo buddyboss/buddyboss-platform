@@ -1913,6 +1913,17 @@ function bb_admin_setting_callback_symlinks_section() {
  */
 function bb_media_settings_callback_symlink_support() {
 
+
+	if ( empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+	    ?>
+        <div class="bp-messages-feedback">
+            <div class="bp-feedback warning">
+                <span class="bp-icon" aria-hidden="true"></span>
+                <p><?php _e( 'Symbolic links are not supported on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+            </div>
+        </div>
+        <?php
+	}
     ?>
 
     <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
@@ -1921,14 +1932,14 @@ function bb_media_settings_callback_symlink_support() {
     </label>
 
     <?php
-	if ( empty( bb_enable_symlinks() ) || empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+	if ( empty( bb_enable_symlinks() ) ) {
 		?>
-		<div class="bp-messages-feedback">
-			<div class="bp-feedback warning">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php _e( 'Symbolic links are not supported on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
-			</div>
-		</div>
+        <div class="bp-messages-feedback">
+            <div class="bp-feedback warning">
+                <span class="bp-icon" aria-hidden="true"></span>
+                <p><?php _e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
+            </div>
+        </div>
 		<?php
 	} else {
 		?>
