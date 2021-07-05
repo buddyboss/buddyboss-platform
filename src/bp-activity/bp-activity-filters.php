@@ -2436,9 +2436,9 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 function bb_activity_has_comment_access( $retval ) {
 	global $activities_template;
 
-	// Already forced off, so comply.
-	if ( false === $retval ) {
-		return $retval;
+	// Check blog post activity comment status.
+	if ( bb_activity_blog_post_acivity( $activities_template->activity ) ) {
+		return bp_blogs_disable_activity_commenting( $retval );
 	}
 
 	// Get the current action name.

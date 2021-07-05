@@ -5414,7 +5414,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	} else {
 		$activity = new BP_Activity_Activity( $activity_id );
 	}
-
+	
 	// check activity exists.
 	if ( empty( $activity->id ) ) {
 		return false;
@@ -5567,4 +5567,169 @@ function bb_get_activity_hierarchy( $activity_id ) {
 	$data = $wpdb->get_results( $activity_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	return array_filter( $data );
+}
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_activity_blog_post_acivity( $activity ) {
+	if ( 'blogs' ===  $activity->component ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_activity_has_comments( $comments, $activity_id ) {
+	$activity = new BP_Activity_Activity( $activity_id );
+	if ( empty( $activity ) ) {
+		return $comments;
+	}
+	global $activities_template;
+	$activities_template                            = new \stdClass();
+	$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
+	$activities_template->activity                  = $activity;
+	$activities_template->in_the_loop               = true;
+
+	if ( ! bb_activity_blog_post_acivity( $activity ) ) {
+		return $comments;
+	}
+
+	if ( ! bp_activity_can_comment() ) {
+		$comments = false;
+	}
+
+	return $comments;
+}
+add_filter( 'bb_activity_get_comments', 'bb_activity_has_comments', 10, 2 );
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_activity_topic_acivity( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+	
+	// When the activity type does not match with the topic.
+	if ( in_array( $activity->type, array( 'bbp_topic_create' ), true ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_activity_topic_id( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+	
+	// When the activity type does not match with the topic.
+	if ( ! bb_activity_topic_acivity( $activity ) ) {
+		return false;
+	}
+
+	$topic_id = false;
+
+	// Set topic id when activity component is not groups.
+	if ( 'bbpress' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->item_id;
+	}
+
+	// Set topic id when activity component is groups.
+	if ( 'groups' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->secondary_item_id;
+	}
+
+	return $topic_id;
+}
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_activity_topic_reply_acivity( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+	
+	// When the activity type does not match with the topic.
+	if ( in_array( $activity->type, array( 'bbp_reply_create' ), true ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_activity_reply_topic_id( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// When the activity type does not match with the topic or reply.
+	if ( ! bb_activity_topic_reply_acivity( $activity ) ) {
+		return false;
+	}
+
+	$topic_id = false;
+
+	// Set topic id when activity component is not groups.
+	if ( 'bbpress' === $activity->component ) {
+		// Set topic id when activity type reply.
+		$topic_id = bbp_get_reply_topic_id( $activity->item_id );
+	}
+
+	// Set topic id when activity component is groups.
+	if ( 'groups' === $activity->component ) {
+		// Set topic id when activity type reply.
+		$topic_id = bbp_get_reply_topic_id( $activity->secondary_item_id );
+	}
+
+	return $topic_id;
 }
