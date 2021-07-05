@@ -19077,7 +19077,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-media-section .video-js .vjs-control-bar:before {
   content: "";
   position: absolute;
-  bottom: -5px;
+  bottom: -10px;
   top: 0;
   width: 100%;
   background: #333;
