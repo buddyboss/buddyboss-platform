@@ -18919,7 +18919,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .bb-video-duration,
 .bb-media-section .bb-video-duration {
   font-size: 13px;
-  margin: 0;
+  margin: 0 !important;
   background-color: #000;
   color: #fff;
   display: inline-block;
