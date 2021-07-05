@@ -491,7 +491,7 @@ class BP_Groups_Component extends BP_Component {
 			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
 		}
 
-		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab ) {
+		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab || 'videos' === $default_tab) {
 			$default_tab = bp_is_active( 'media' ) ? $default_tab : 'members';
 		} else {
 			$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
