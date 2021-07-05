@@ -134,3 +134,40 @@ function bp_blogs_register_custom_site_icon_size( $sizes ) {
 	return $sizes;
 }
 add_filter( 'site_icon_image_sizes', 'bp_blogs_register_custom_site_icon_size' );
+
+
+function bb_nouveau_get_activity_inner_blogs_buttons( $buttons, $activity_id ) {
+	global $activities_template;
+
+	if ( 
+		( 'blogs' === $activities_template->activity->component ) 
+		&& 
+		isset( $activities_template->activity->secondary_item_id ) 
+		&& 
+		'new_blog_' . get_post_type( $activities_template->activity->secondary_item_id ) === $activities_template->activity->type
+	) {
+		$blog_post = get_post( $activities_template->activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if ( is_a( $blog_post, 'WP_Post' ) && ! has_post_thumbnail( $blog_post ) ) {
+			$post_link  = sprintf( '<div class="view-post-link"><a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a></div>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( 'View Post', 'buddyboss-theme' ) );
+		}
+	}
+
+	if ( ! empty( $post_link ) ) {
+		$buttons['activity_post'] = array(
+			'id'                => 'activity_post_link_wrap',
+			'position'          => 4,
+			'component'         => 'activity',
+			'button_element'    => 'a',
+			'link_text'         => sprintf( '<span class="text">%1$s</span>', esc_html( 'View Post', 'buddyboss-theme' ) ),
+			'button_attr'       => array(
+				'href'          => esc_url( get_permalink( $blog_post->ID ) ),
+				'class'             => 'button bb-icon-chat bp-secondary-action',
+			),
+		);
+	}
+
+	return $buttons;
+}
+
+add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_inner_blogs_buttons', 10, 2 );

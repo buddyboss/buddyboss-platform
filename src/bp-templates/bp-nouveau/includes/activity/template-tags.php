@@ -312,6 +312,92 @@ function bp_nouveau_activity_state() {
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
+function bp_nouveau_activity_inner_buttons( $args = array() ) {
+
+	$output = join( ' ', bp_nouveau_get_activity_inner_buttons( $args ) );
+
+	ob_start();
+
+	/**
+	 * Fires at the end of the activity entry meta data area.
+	 *
+	 * @since BuddyPress 1.2.0
+	 */
+	do_action( 'bp_activity_inner_meta' );
+
+	$output .= ob_get_clean();
+
+	$has_content = trim( $output, ' ' );
+	if ( ! $has_content ) {
+		return;
+	}
+
+	if ( empty( $args ) ) {
+		$args = array( 'container_classes' => array( 'activity-inner-meta' ) );
+	}
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
+ * Get the action buttons inside an Activity Loop,
+ *
+ * @since BuddyPress 3.0.0
+ * @todo  This function is too large and needs refactoring and reviewing.
+ */
+function bp_nouveau_get_activity_inner_buttons( $args ) {
+	global $activities_template;
+
+	$buttons = array();
+
+	if ( empty( $activities_template ) ) {
+		return $buttons;
+	}
+
+	$activity_id    = bp_get_activity_id();
+	$activity_type  = bp_get_activity_type();
+
+	if ( ! $activity_id ) {
+		return $buttons;
+	}
+
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array $buttons     The list of buttons.
+	 * @param int   $activity_id The current activity ID.
+	 */
+	$buttons_group = apply_filters( 'bb_nouveau_get_activity_inner_buttons', $buttons, $activity_id, $args );
+
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
+
+	// It's the first entry of the loop, so build the Group and sort it.
+	if ( ! isset( bp_nouveau()->activity->inner_buttons ) || ! is_a( bp_nouveau()->activity->inner_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                                 = true;
+		bp_nouveau()->activity->inner_buttons = new BP_Buttons_Group( $buttons_group );
+
+		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
+	} else {
+		$sort = false;
+		bp_nouveau()->activity->inner_buttons->update( $buttons_group );
+	}
+
+	$return = bp_nouveau()->activity->inner_buttons->get( $sort );
+	
+	return $return;
+}
+
+/**
+ * Output the action buttons inside an Activity Loop.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ */
 function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$output = join( ' ', bp_nouveau_get_activity_entry_buttons( $args ) );
 

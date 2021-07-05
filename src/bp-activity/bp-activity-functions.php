@@ -5579,8 +5579,18 @@ function bb_get_activity_hierarchy( $activity_id ) {
  * @return bool
  */
 function bb_activity_blog_post_acivity( $activity ) {
-	if ( 'blogs' ===  $activity->component ) {
-		return true;
+	if ( 
+		( 'blogs' === $activity->component ) 
+		&& 
+		! empty( $activity->secondary_item_id ) 
+		&& 
+		'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type
+	) {
+		$blog_post = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
+			return true;
+		}
 	}
 
 	return false;
