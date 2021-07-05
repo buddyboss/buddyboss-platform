@@ -273,17 +273,34 @@ function bp_nouveau_activity_state() {
 			</span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
-		<a href="#" class="activity-state-comments">
-			<span class="comments-count">
-				<?php
-				if ( $comment_count > 1 ) {
-					echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
-				} else {
-					echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
-				}
-				?>
-			</span>
-		</a>
+		<?php if ( bp_activity_can_comment() ) : ?>
+			<a href="#" class="activity-state-comments">
+				<span class="comments-count">
+					<?php
+					if ( $comment_count > 1 ) {
+						echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
+					} else {
+						echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
+					}
+					?>
+				</span>
+			</a>
+		<?php endif; ?>
+
+		<?php if ( ! bp_activity_can_comment() ) : ?>
+			<div href="#" class="activity-state-comments">
+				<span class="comments-count">
+					<?php
+					if ( $comment_count > 1 ) {
+						echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
+					} else {
+						echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
+					}
+					?>
+				</span>
+			</div>
+		<?php endif; ?>
+		
 	</div>
 	<?php
 }
