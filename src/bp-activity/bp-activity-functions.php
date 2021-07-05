@@ -5572,7 +5572,7 @@ function bb_get_activity_hierarchy( $activity_id ) {
 /**
  * Is it blog post activity.
  *
-* @param object $activity Blog post activity data.
+ * @param object $activity Blog post activity data.
  *
  * @since BuddyBoss 1.7.1
  *
@@ -5702,7 +5702,7 @@ function bb_activity_topic_reply_acivity( $activity ) {
 /**
  * This function will give the reply topic id from reply activity.
  *
- * @param object $$activity Reply activity data.
+ * @param object $activity Reply activity data.
  *
  * @since BuddyBoss 1.7.1
  *
@@ -5733,4 +5733,37 @@ function bb_activity_reply_topic_id( $activity ) {
 	}
 
 	return $topic_id;
+}
+
+/**
+ * This function will give the comment is from topc or not.
+ *
+ * @param int $activity id.
+ *
+ * @since BuddyBoss 1.7.1
+ *
+ * @return bool
+ */
+function bb_acivity_topic_comment( $activity_id ) {
+	$item_activity = new BP_Activity_Activity( $activity_id);
+	
+	if ( empty( $item_activity ) ) {
+		return false;
+	}
+
+	// Get the current action name.
+	$action_name = $item_activity->type;
+
+	// Setup the array of possibly disabled actions.
+	$disabled_actions = array(
+		'bbp_topic_create',
+		'bbp_reply_create',
+	);
+ 
+	// Comment is disabled for discussion and reply discussion.
+	if ( in_array( $action_name, $disabled_actions, true ) ) {
+		return true;
+	}
+
+	return false;
 }

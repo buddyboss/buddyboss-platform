@@ -1295,8 +1295,12 @@ function bp_blogs_disable_activity_commenting( $retval ) {
 	global $activities_template;
 
 	// If activity commenting is disabled, return current value.
-	if ( bp_disable_blogforum_comments() || ! isset( $activities_template->in_the_loop ) ) {
+	if ( ! isset( $activities_template->in_the_loop ) ) {
 		return $retval;
+	}
+
+	if ( bp_disable_blogforum_comments() ) {
+		$retval = false;
 	}
 
 	$type = bp_get_activity_type();

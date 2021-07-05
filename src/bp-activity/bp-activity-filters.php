@@ -149,6 +149,8 @@ add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_e
 
 // Obey BuddyBoss commenting rules.
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
+// Obey BuddyBoss comment reply rules.
+add_filter( 'bp_activity_can_comment_reply', 'bb_activity_has_comment_reply_access', 10, 2 );
 
 // Filter for comment meta button.
 add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_comment_reply_button', 10, 3 );
@@ -2427,7 +2429,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 /**
  * Disable activity stream comments for discussion and reply.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  *
  * @param boolean $retval Has comment permission.
  *
@@ -2449,13 +2451,43 @@ function bb_activity_has_comment_access( $retval ) {
 		'bbp_topic_create',
 		'bbp_reply_create',
 	);
-
+ 
 	// Comment is disabled for discussion and reply discussion.
 	if ( in_array( $action_name, $disabled_actions, true ) ) {
 		$retval = false;
 	}
 
 	return $retval;
+}
+
+/**
+ * Disable activity stream comment reply for discussion and reply.
+ *
+ * @since BuddyBoss 1.7.1
+ *
+ * @param boolean $retval Has comment reply permission.
+ *
+ * @return boolean
+ */
+function bb_activity_has_comment_reply_access( $can_comment, $comment ) { 
+	if ( empty( $comment ) ) {
+		return $can_comment;
+	}
+
+	// Get the current action name.
+	$action_name = $comment->type;
+
+	// Setup the array of possibly disabled actions.
+	$comment_actions = array(
+		'activity_comment',
+	);
+	
+	// Comment is disabled for discussion and reply discussion.
+	if ( in_array( $action_name, $comment_actions, true ) && bb_acivity_topic_comment( $comment->item_id ) ) {
+		$can_comment = false;
+	}
+
+	return $can_comment;
 }
 
 /**
