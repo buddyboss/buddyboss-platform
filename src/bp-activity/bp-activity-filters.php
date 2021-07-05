@@ -2483,7 +2483,7 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	);
 	
 	// Comment is disabled for discussion and reply discussion.
-	if ( in_array( $action_name, $comment_actions, true ) && bb_acivity_topic_comment( $comment->item_id ) ) {
+	if ( in_array( $action_name, $comment_actions, true ) && bb_acivity_is_topic_comment( $comment->item_id ) ) {
 		$can_comment = false;
 	}
 

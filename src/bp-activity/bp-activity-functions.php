@@ -5744,8 +5744,8 @@ function bb_activity_reply_topic_id( $activity ) {
  *
  * @return bool
  */
-function bb_acivity_topic_comment( $activity_id ) {
-	$item_activity = new BP_Activity_Activity( $activity_id);
+function bb_acivity_is_topic_comment( $activity_id ) {
+	$item_activity = new BP_Activity_Activity( $activity_id );
 	
 	if ( empty( $item_activity ) ) {
 		return false;
