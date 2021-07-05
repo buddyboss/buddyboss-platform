@@ -5570,13 +5570,13 @@ function bb_get_activity_hierarchy( $activity_id ) {
 }
 
 /**
- * This function will give the activity hierarchy
+ * Is it blog post activity.
  *
- * @param int $activity_id Activity ID.
+* @param object $activity Blog post activity data.
  *
- * @return array
+ * @since BuddyBoss 1.7.1
  *
- * @since BuddyBoss 1.7.0
+ * @return bool
  */
 function bb_activity_blog_post_acivity( $activity ) {
 	if ( 'blogs' ===  $activity->component ) {
@@ -5587,13 +5587,14 @@ function bb_activity_blog_post_acivity( $activity ) {
 }
 
 /**
- * This function will give the activity hierarchy
+ * Is the blog post activity has comment fetch permission.
  *
- * @param int $activity_id Activity ID.
+ * @param bool $comments   Has permission.
+ * @param int $activity_id Bolg post activity id.
  *
- * @return array
+ * @since BuddyBoss 1.7.1
  *
- * @since BuddyBoss 1.7.0
+ * @return bool
  */
 function bb_activity_has_comments( $comments, $activity_id ) {
 	$activity = new BP_Activity_Activity( $activity_id );
@@ -5619,13 +5620,13 @@ function bb_activity_has_comments( $comments, $activity_id ) {
 add_filter( 'bb_activity_get_comments', 'bb_activity_has_comments', 10, 2 );
 
 /**
- * This function will give the activity hierarchy
+ * Is it topic activity.
  *
- * @param int $activity_id Activity ID.
+ * @param object $activity Topic activity data.
  *
- * @return array
+ * @since BuddyBoss 1.7.1
  *
- * @since BuddyBoss 1.7.0
+ * @return bool
  */
 function bb_activity_topic_acivity( $activity ) {
 	if ( empty( $activity ) ) {
@@ -5641,13 +5642,13 @@ function bb_activity_topic_acivity( $activity ) {
 }
 
 /**
- * This function will give the activity hierarchy
+ * This function will give the topic id from topic activity.
  *
- * @param int $activity_id Activity ID.
+ * @param object $activity Topic activity data.
  *
- * @return array
+ * @since BuddyBoss 1.7.1
  *
- * @since BuddyBoss 1.7.0
+ * @return int
  */
 function bb_activity_topic_id( $activity ) {
 	if ( empty( $activity ) ) {
@@ -5677,13 +5678,13 @@ function bb_activity_topic_id( $activity ) {
 }
 
 /**
- * This function will give the activity hierarchy
+ * Is it topic reply activity.
  *
- * @param int $activity_id Activity ID.
+ * @param object $activity Reply activity data.
  *
- * @return array
+ * @since BuddyBoss 1.7.1
  *
- * @since BuddyBoss 1.7.0
+ * @return bool
  */
 function bb_activity_topic_reply_acivity( $activity ) {
 	if ( empty( $activity ) ) {
@@ -5699,13 +5700,13 @@ function bb_activity_topic_reply_acivity( $activity ) {
 }
 
 /**
- * This function will give the activity hierarchy
+ * This function will give the reply topic id from reply activity.
  *
- * @param int $activity_id Activity ID.
+ * @param object $$activity Reply activity data.
  *
- * @return array
+ * @since BuddyBoss 1.7.1
  *
- * @since BuddyBoss 1.7.0
+ * @return int
  */
 function bb_activity_reply_topic_id( $activity ) {
 	if ( empty( $activity ) ) {
