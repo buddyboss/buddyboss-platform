@@ -1913,8 +1913,26 @@ function bb_admin_setting_callback_symlinks_section() {
  */
 function bb_media_settings_callback_symlink_support() {
 
+    $has_error = false;
+	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
 
-	if ( empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+		$disabled = explode( ',', ini_get( 'disable_functions' ) );
+
+		if ( in_array( 'symlink', $disabled, true ) ) {
+			$has_error = true;
+			?>
+            <div class="bp-messages-feedback">
+                <div class="bp-feedback warning">
+                    <span class="bp-icon" aria-hidden="true"></span>
+                    <p><?php _e( 'symlink function is disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+                </div>
+            </div>
+			<?php
+		}
+
+	}
+
+	if ( empty( $has_error ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
 	    ?>
         <div class="bp-messages-feedback">
             <div class="bp-feedback warning">
