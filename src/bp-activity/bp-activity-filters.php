@@ -2427,11 +2427,11 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
  * @return bool
  */
 function bb_check_is_activity_content_empty( $data ) {
-	if ( empty( $data['content'] ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
+	if ( empty( trim( str_replace( "<br>", "", html_entity_decode( $data['content'] ) ), " \t\n\r\0\x0B\xC2\xA0" ) ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
 		return true;
-	} elseif ( empty( $data['content'] ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
+	} elseif ( empty( trim( str_replace( "<br>", "", html_entity_decode( $data['content'] ) ), " \t\n\r\0\x0B\xC2\xA0" ) ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
 		return true;
-	} elseif ( ! empty( $data['content'] ) ) {
+	} elseif ( empty( trim( str_replace( "<br>", "", html_entity_decode( $data['content'] ) ), " \t\n\r\0\x0B\xC2\xA0" ) ) ) {
 		return true;
 	} else {
 		return false;

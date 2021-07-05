@@ -396,7 +396,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	// If content will empty then return true and allow empty content in DB for the media, document and gif.
 	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
 	
-	if ( false === $content ) { // Check if $content will false then content would be empty.
+	if ( true === $content ) { // Check if $content will false then content would be empty.
 		wp_send_json_error(
 			array(
 				'feedback' => sprintf(
