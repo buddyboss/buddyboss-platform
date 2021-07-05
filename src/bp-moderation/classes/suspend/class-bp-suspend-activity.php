@@ -400,6 +400,10 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta' );
+		}
+
 		$related_content_hide = array();
 
 		if ( ! empty( $related_contents ) ) {
@@ -425,10 +429,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 					}
 				}
 			}
-		}
-
-		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta' );
 		}
 
 		return $related_content_hide;
