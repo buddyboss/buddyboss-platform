@@ -5673,6 +5673,8 @@ function bb_core_scaled_attachment_path( $attachment_id ) {
  * Check is device is IOS.
  *
  * @return bool
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bb_check_ios_device() {
 
@@ -5681,7 +5683,6 @@ function bb_check_ios_device() {
 	}
 
 	$is_ios = false;
-
 	$ipod   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$iphone = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$ipad   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
@@ -5690,7 +5691,12 @@ function bb_check_ios_device() {
 		$is_ios = true;
 	}
 
-	return $is_ios;
+	/**
+	 * Filter for the check if it's ios devices or not.
+     *
+     * @since BuddyBoss 1.7.0.1
+	 */
+	return apply_filters( 'bb_check_ios_device', $is_ios );
 }
 
 /**
