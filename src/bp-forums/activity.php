@@ -473,6 +473,12 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					$topic    = bbp_get_reply( $reply_id );
 					$topic_id = $topic->post_parent;
 				}
+				
+				// Redirect to.
+				$redirect_to = bbp_get_redirect_to();
+		
+				// Get the reply URL.
+				$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
 
 				// New meta button as 'Join discussion'.
 				$buttons['activity_reply_discussion'] = array(
@@ -489,7 +495,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					'button_attr'       => array(
 						'class'         => 'button bb-icon-discussion bp-secondary-action',
 						'aria-expanded' => 'false',
-						'href'          => bbp_get_topic_permalink( $topic_id ) . '#post-' . $reply_id,
+						'href'          => $reply_url,
 					),
 				);
 			}
