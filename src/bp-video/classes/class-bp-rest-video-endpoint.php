@@ -692,7 +692,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					);
 				}
 
-				$album_privacy = bp_video_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
+				if ( function_exists( 'bb_media_user_can_access' ) ) {
+					$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
+				} else {
+					$album_privacy = bp_media_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
+				}
+
 				if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',

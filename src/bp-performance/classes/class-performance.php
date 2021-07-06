@@ -241,7 +241,9 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$charset_collate = $wpdb->get_charset_collate();
 
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			if ( ! function_exists( 'dbDelta' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
 
 			$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
 	            id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,

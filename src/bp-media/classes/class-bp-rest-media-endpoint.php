@@ -961,7 +961,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				} else {
 					$status[ $media->id ] = bp_media_delete( array( 'id' => $media->id ), true );
 				}
-
 			} else {
 				if ( ! bp_video_user_can_delete( $media->id ) ) {
 					$status[ $media->id ] = new WP_Error(
@@ -1204,7 +1203,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-
 		add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
 
 		/**
@@ -1385,7 +1383,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response
 	 * @since 0.1.0
 	 */
-	public function prepare_item_for_response( $media, $request ) {	
+	public function prepare_item_for_response( $media, $request ) {
 		$data = array(
 			'id'               => $media->id,
 			'blog_id'          => $media->blog_id,
@@ -1405,11 +1403,17 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'user_nicename'    => $media->user_nicename,
 			'user_login'       => $media->user_login,
 			'display_name'     => $media->display_name,
-			'url'              => wp_get_attachment_url( $media->attachment_id ),
+			'url'              => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'full' ),
 			'download_url'     => bp_media_download_link( $media->attachment_id, $media->id ),
 			'user_permissions' => $this->get_media_current_user_permissions( $media ),
 			'type'             => $media->type,
 		);
+
+		if ( 'video' === $media->type ) {
+			add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
+			$data['url'] = bb_video_get_symlink( $media->id );
+			remove_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
+		}
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
 
@@ -3475,5 +3479,16 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Disabled symlink for the video api.
+	 *
+	 * @param bool $retval Return value.
+	 *
+	 * @return bool
+	 */
+	public function bb_rest_disable_symlink( $retval ) {
+		return true;
 	}
 }
