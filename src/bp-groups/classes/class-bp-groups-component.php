@@ -555,9 +555,7 @@ class BP_Groups_Component extends BP_Component {
 		$bp = buddypress();
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
+		if ( bp_loggedin_user_domain() ) {
 			$user_domain = bp_loggedin_user_domain();
 		} else {
 			$user_domain = false;
