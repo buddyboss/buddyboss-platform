@@ -4184,7 +4184,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			 *
 			 * @since BuddyBoss 1.7.0.1
 			 */
-			$attachment_url = apply_filters( 'bp_document_after_get_preview_url_symlink', $attachment_url, $document );
+			$attachment_url = apply_filters( 'bb_document_after_get_preview_url_symlink', $attachment_url, $document );
 
 		} elseif ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) && ! bb_enable_symlinks() ) {
 

@@ -3407,7 +3407,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				 *
 				 * @since BuddyBoss 1.7.0.1
 				 */
-				$attachment_url = apply_filters( 'bp_media_after_get_preview_image_url_symlink', $attachment_url, $media );
+				$attachment_url = apply_filters( 'bb_media_after_get_preview_image_url_symlink', $attachment_url, $media );
 
 			} else {
 				$media_id       = 'forbidden_' . $media_id;
