@@ -864,9 +864,9 @@ function bp_disable_blogforum_comments( $default = false ) {
 }
 
 /**
- * Are any post type/comment activity feed comments enable?
+ * Describe the activity comment is enable or not for custom post type.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  *
  * @param bool $post_type custom post type.
  * @param bool $default   Optional. Fallback value if not found in the database.
