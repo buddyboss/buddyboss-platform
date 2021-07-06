@@ -1692,7 +1692,7 @@ function bb_video_safari_popup_video_play( $is_ios ) {
 
 		if ( $is_safari && 'video_get_activity' === $action ) {
 			$is_ios = true;
-        }
+		}
 
 	}
 
