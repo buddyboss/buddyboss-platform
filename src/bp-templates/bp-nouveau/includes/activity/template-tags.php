@@ -306,15 +306,15 @@ function bp_nouveau_activity_state() {
 }
 
 /**
- * Output the action buttons inside an Activity Loop.
+ * Output the action buttons inside an Activity inner content.
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.7.1
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
 function bp_nouveau_activity_inner_buttons( $args = array() ) {
 
-	$output = join( ' ', bp_nouveau_get_activity_inner_buttons( $args ) );
+	$output = join( ' ', bb_nouveau_get_activity_inner_buttons( $args ) );
 
 	ob_start();
 
@@ -340,12 +340,15 @@ function bp_nouveau_activity_inner_buttons( $args = array() ) {
 }
 
 /**
- * Get the action buttons inside an Activity Loop,
+ * Get the action buttons inside an Activity inner content,
  *
- * @since BuddyPress 3.0.0
- * @todo  This function is too large and needs refactoring and reviewing.
+ * @since BuddyBoss 1.7.1
+ *
+ * @param array $args Button attributes.
+ * 
+ * @return array
  */
-function bp_nouveau_get_activity_inner_buttons( $args ) {
+function bb_nouveau_get_activity_inner_buttons( $args ) {
 	global $activities_template;
 
 	$buttons = array();
@@ -1044,7 +1047,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 /**
  * Get the action buttons for the activity blog post comments
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  *
  * @param object $comment Blog post comment.
  * @param array  $args    Comment meta.
@@ -1684,7 +1687,7 @@ function bp_nouveau_get_edit_activity_data() {
 /**
  * Output the top action buttons inside an Activity Loop.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -1721,7 +1724,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  */
 function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	$buttons = array();
