@@ -1901,7 +1901,7 @@ function bp_media_settings_callback_extension_video_support() {
 function bb_admin_setting_callback_symlinks_section() {
 	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
 		?>
-		<p class="alert"><?php _e( 'Symlink not working into your system. Please disable it.', 'buddyboss' ); ?></p>
+		<p class="alert"><?php esc_html_e( 'Symlink not working into your system. Please disable it.', 'buddyboss' ); ?></p>
 		<?php
 	}
 }
@@ -1924,7 +1924,7 @@ function bb_media_settings_callback_symlink_support() {
             <div class="bp-messages-feedback">
                 <div class="bp-feedback warning">
                     <span class="bp-icon" aria-hidden="true"></span>
-                    <p><?php _e( 'symlink function is disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+                    <p><?php esc_html_e( 'symlink function is disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
                 </div>
             </div>
 			<?php
