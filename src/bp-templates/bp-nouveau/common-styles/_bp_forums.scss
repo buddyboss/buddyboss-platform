@@ -992,16 +992,25 @@ fieldset div.avatar {
 		padding: 0;
 
 		.activity-discussion-title-wrap {
-			border-bottom: 1px solid #eaeaea;
-			padding: 12px;
+			padding: 12px 12px 6px 12px;
 			margin-bottom: 0;
+			background-color: #fafafa;
 		}
 
 	}
 
 	.bb-content-inr-wrap {
-		padding: 12px;
+		padding: 6px 12px 12px 12px;
 		background-color: #fafafa;
+
+		.activity-read-more {
+
+			a {
+				text-transform: capitalize;
+			}
+
+		}
+
 	}
 
 	.bb-activity-media-wrap {
