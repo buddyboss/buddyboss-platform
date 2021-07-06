@@ -158,6 +158,7 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+
 /** Functions *****************************************************************/
 
 /**
