@@ -1910,7 +1910,7 @@ function bb_media_settings_callback_symlink_support() {
             <div class="bp-messages-feedback">
                 <div class="bp-feedback warning">
                     <span class="bp-icon" aria-hidden="true"></span>
-                    <p><?php esc_html_e( 'symlink function is disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+					<p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
                 </div>
             </div>
 			<?php
