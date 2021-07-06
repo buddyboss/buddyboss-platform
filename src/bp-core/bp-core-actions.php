@@ -193,7 +193,7 @@ function bb_media_symlink_validate() {
 	$type = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 	$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 
-	if ( isset( $_GET ) && isset( $type ) && 'bp-media' ===$type && 'bp-settings' === $page ) {
+	if ( isset( $_GET ) && isset( $type ) && 'bp-media' === $type && 'bp-settings' === $page ) {
 
 
 		$keys = array(
