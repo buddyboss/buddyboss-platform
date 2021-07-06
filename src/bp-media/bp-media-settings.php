@@ -1937,7 +1937,7 @@ function bb_media_settings_callback_symlink_support() {
         <div class="bp-messages-feedback">
             <div class="bp-feedback warning">
                 <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php esc_html_e( 'Symbolic links are not supported on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+                <p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
             </div>
         </div>
         <?php
