@@ -1945,7 +1945,7 @@ function bb_media_settings_callback_symlink_support() {
             </div>
         </div>
 		<?php
-	} else {
+	} elseif ( ! $has_error && bb_enable_symlinks() ) {
 		?>
 		<div class="bp-messages-feedback">
 			<div class="bp-feedback success">
