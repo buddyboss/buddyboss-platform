@@ -19,6 +19,8 @@ $encode_id1   = base64_decode( $_REQUEST['id1'] );
 $size         = ( isset( $_REQUEST['size'] ) && ! empty( $_REQUEST['size'] ) ? base64_decode( $_REQUEST['size'] ) : '' );
 $explode_arr  = explode( 'forbidden_', $encode_id );
 $explode_arr1 = explode( 'forbidden_', $encode_id1 );
+$upload_dir   = wp_upload_dir();
+$upload_dir   = $upload_dir['basedir'];
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 ] ) && (int) $explode_arr[ 1 ] > 0 &&
      isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[ 1 ] ) && (int) $explode_arr1[ 1 ] > 0 ) {
@@ -43,6 +45,15 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 
 		}
 
 		$type = get_post_mime_type( $id );
+
+		if ( ! file_exists( $output_file_src ) ) {
+			$file = image_get_intermediate_size( $id, 'full' );
+			if ( $file && ! empty( $file['path'] ) ) {
+				$output_file_src = $upload_dir . '/' . $file['path'];
+			} else {
+				$output_file_src = bb_core_scaled_attachment_path( $id );
+			}
+		}
 
 		if ( ! file_exists( $output_file_src ) ) {
 			echo '// Silence is golden.';
