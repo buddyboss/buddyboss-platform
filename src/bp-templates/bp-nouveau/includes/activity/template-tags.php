@@ -597,43 +597,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		}
 	}
 
-	// Add the Spam Button if supported.
-	if ( bp_is_akismet_active() && isset( buddypress()->activity->akismet ) && bp_activity_user_can_mark_spam() ) {
-		$buttons['activity_spam'] = array(
-			'id'                => 'activity_spam',
-			'position'          => 45,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'class'               => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
-				'id'                  => 'activity_make_spam_' . $activity_id,
-				// 'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
-				'data-bp-tooltip-pos' => 'up',
-			),
-			'link_text'         => sprintf(
-			/** @todo: use a specific css rule for this ************************************************************ */
-				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-				esc_html__( 'Spam', 'buddyboss' ),
-				esc_html__( 'Spam', 'buddyboss' )
-			),
-		);
-
-		// If button element, add nonce link to data attribute.
-		if ( 'button' === $button_element ) {
-			$data_element = 'data-bp-nonce';
-		} else {
-			$data_element = 'href';
-		}
-
-		$buttons['activity_spam']['button_attr'][ $data_element ] = wp_nonce_url(
-			bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . $activity_id . '/',
-			'bp_activity_akismet_spam_' . $activity_id
-		);
-	}
-
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
@@ -668,10 +631,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	// Remove the Comment button if the user can't comment.
 	if ( ! bp_activity_can_comment() && $activity_type !== 'activity_comment' ) {
 		unset( $return['activity_conversation'] );
-	}
-
-	if ( isset( $return['activity_spam'] ) && ! in_array( $activity_type, BP_Akismet::get_activity_types() ) ) {
-		unset( $return['activity_spam'] );
 	}
 
 	/**
