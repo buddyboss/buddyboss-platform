@@ -337,7 +337,7 @@ function bb_admin_setting_media_access_control_register_fields( $setting ) {
 	$setting->add_section(
 		'bp_media_settings_symlinks',
 		__( 'Media Security & Performance', 'buddyboss' ),
-		'bb_admin_setting_callback_symlinks_section'
+		''
 	);
 	$setting->add_field(
 		'bp_media_symlink_support',
@@ -1890,20 +1890,6 @@ function bp_media_settings_callback_extension_video_support() {
 		</tfoot>
 	</table>
 	<?php
-}
-
-
-/**
- *  Print the Symlinks notice.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_admin_setting_callback_symlinks_section() {
-	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
-		?>
-		<p class="alert"><?php esc_html_e( 'Symlink not working into your system. Please disable it.', 'buddyboss' ); ?></p>
-		<?php
-	}
 }
 
 /**
