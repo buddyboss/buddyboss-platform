@@ -162,7 +162,7 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons, $activity_id ) {
 			'link_text'         => sprintf( '<span class="text">%1$s</span>', esc_html( 'View Post', 'buddyboss-theme' ) ),
 			'button_attr'       => array(
 				'href'          => esc_url( get_permalink( $blog_post->ID ) ),
-				'class'             => 'button bb-icon-chat bp-secondary-action',
+				'class'             => 'button bb-icon-arrow-circle bp-secondary-action',
 			),
 		);
 	}
