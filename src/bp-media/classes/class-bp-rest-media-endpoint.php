@@ -1403,7 +1403,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'user_nicename'    => $media->user_nicename,
 			'user_login'       => $media->user_login,
 			'display_name'     => $media->display_name,
-			'url'              => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'full' ),
+			'url'              => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
 			'download_url'     => bp_media_download_link( $media->attachment_id, $media->id ),
 			'user_permissions' => $this->get_media_current_user_permissions( $media ),
 			'type'             => $media->type,
