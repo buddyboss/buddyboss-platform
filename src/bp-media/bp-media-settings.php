@@ -1946,7 +1946,7 @@ function bb_media_settings_callback_symlink_support() {
 
     <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
     <label for="bp_media_symlink_support">
-        <?php _e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+        <?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
     </label>
 
     <?php
@@ -1955,7 +1955,7 @@ function bb_media_settings_callback_symlink_support() {
         <div class="bp-messages-feedback">
             <div class="bp-feedback warning">
                 <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php _e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
+                <p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
             </div>
         </div>
 		<?php
@@ -1964,14 +1964,14 @@ function bb_media_settings_callback_symlink_support() {
 		<div class="bp-messages-feedback">
 			<div class="bp-feedback success">
 				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php _e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
+				<p><?php esc_html_e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
 			</div>
 		</div>
 		<?php
 	}
 	?>
 
-	<p class="description"><?php _e( 'Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.', 'buddyboss' ); ?></p>
 
 	<?php
 }
