@@ -2427,7 +2427,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 }
 
 /**
- * Disable activity comments access for discussion and reply.
+ * Describe activity commnet asscess rules.
  *
  * @since BuddyBoss 1.7.1
  *
@@ -2461,7 +2461,7 @@ function bb_activity_has_comment_access( $retval ) {
 }
 
 /**
- * Disable activity stream comment reply for discussion and reply.
+ * Describe activity comment reply access rules.
  *
  * @since BuddyBoss 1.7.1
  *
