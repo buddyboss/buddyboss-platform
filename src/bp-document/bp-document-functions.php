@@ -3726,9 +3726,25 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 
 				$file = image_get_intermediate_size( $attachment_id, $size );
 
-				if ( false === $file ) {
+				if ( false === $file && 'pdf' !== $extension ) {
 					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					$file = image_get_intermediate_size( $attachment_id, $size );
+				} elseif ( false === $file && 'pdf' === $extension ) {
+					bp_document_generate_document_previews( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, $size );
+				}
+
+				// If the given size is not found then use the full image.
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'full' );
+				}
+
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'original' );
+				}
+
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'thumbnail' );
 				}
 
 				$attached_file_info = pathinfo( $attached_file );
@@ -4191,9 +4207,25 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$file          = image_get_intermediate_size( $attachment_id, $size );
 			$attached_file = get_attached_file( $attachment_id );
 
-			if ( false === $file ) {
+			if ( false === $file && 'pdf' !== $extension ) {
 				bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				$file = image_get_intermediate_size( $attachment_id, $size );
+			} elseif ( false === $file && 'pdf' === $extension ) {
+				bp_document_generate_document_previews( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
+			}
+
+			// If the given size is not found then use the full image.
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'full' );
+			}
+
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'original' );
+			}
+
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'thumbnail' );
 			}
 
 			$attached_file_info = pathinfo( $attached_file );
@@ -4204,10 +4236,14 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
-			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
+			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' !== $extension ) {
 				// Regenerate attachment thumbnails.
 				bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				$file      = image_get_intermediate_size( $attachment_id, $size );
+				$file_path = $file_path . '/' . $file['file'];
+			} elseif ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' === $extension ) {
+				bp_document_generate_document_previews( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
