@@ -98,11 +98,12 @@ function bp_media_allowed_mimes( $mime_types ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_media_remove_default_image_sizes( $sizes ) {
-	if ( isset( $sizes['bb-media-activity-image'] ) && isset( $sizes['bb-media-photos-album-directory-image'] ) && isset( $sizes['bb-media-photos-popup-image'] ) ) {
+	if ( isset( $sizes['bb-media-activity-image'] ) && isset( $sizes['bb-media-photos-album-directory-image'] ) && isset( $sizes['bb-media-photos-album-directory-image-new'] ) && isset( $sizes['bb-media-photos-popup-image'] ) ) {
 		return array(
-			'bb-media-activity-image'               => $sizes['bb-media-activity-image'],
-			'bb-media-photos-album-directory-image' => $sizes['bb-media-photos-album-directory-image'],
-			'bb-media-photos-popup-image'           => $sizes['bb-media-photos-popup-image'],
+			'bb-media-activity-image'                   => $sizes['bb-media-activity-image'],
+			'bb-media-photos-album-directory-image'     => $sizes['bb-media-photos-album-directory-image'],
+			'bb-media-photos-album-directory-image-new' => $sizes['bb-media-photos-album-directory-image-new'],
+			'bb-media-photos-popup-image'               => $sizes['bb-media-photos-popup-image'],
 		);
 	}
 
@@ -3313,11 +3314,11 @@ function bp_media_delete_symlinks( $media ) {
 		unlink( $attachment_path );
 	}
 
-	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-album-directory-image' );
+	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-album-directory-image-new' );
 	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
 		$group_object    = groups_get_group( $old_media->group_id );
 		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-album-directory-image' );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-album-directory-image-new' );
 	}
 
 	if ( file_exists( $attachment_path ) ) {
@@ -3465,6 +3466,10 @@ function bp_media_get_image_sizes() {
 		'bb-media-photos-album-directory-image' => array(
 			'height' => 267,
 			'width'  => 400,
+		),
+		'bb-media-photos-album-directory-image-new' => array(
+			'height' => 534,
+			'width'  => 800,
 		),
 		'bb-media-photos-popup-image'           => array(
 			'height' => 900,
