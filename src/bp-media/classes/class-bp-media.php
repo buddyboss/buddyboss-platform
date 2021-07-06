@@ -656,7 +656,7 @@ class BP_Media {
 			// fetch attachment data.
 			$attachment_data                              = new stdClass();
 			$activity_thumb                               = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' );
-			$media_album_cover_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image-new' );
+			$media_album_cover_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image-medium' );
 			$media_photos_page_thumb                      = $media_album_cover_thumb;
 			$media_theatre_popup                          = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' );
 			$attachment_data->full                        = $activity_thumb;
@@ -804,8 +804,8 @@ class BP_Media {
 		if ( isset( $metadata['sizes']['bb-media-photos-album-directory-image'] ) ) {
 			$meta['sizes']['bb-media-photos-album-directory-image'] = $metadata['sizes']['bb-media-photos-album-directory-image'];
 		}
-		if ( isset( $metadata['sizes']['bb-media-photos-album-directory-image-new'] ) ) {
-			$meta['sizes']['bb-media-photos-album-directory-image-new'] = $metadata['sizes']['bb-media-photos-album-directory-image-new'];
+		if ( isset( $metadata['sizes']['bb-media-photos-album-directory-image-medium'] ) ) {
+			$meta['sizes']['bb-media-photos-album-directory-image-medium'] = $metadata['sizes']['bb-media-photos-album-directory-image-medium'];
 		}
 
 		if ( isset( $metadata['sizes']['bb-media-photos-popup-image'] ) ) {
