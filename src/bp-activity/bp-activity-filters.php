@@ -2491,9 +2491,9 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 }
 
 /**
- * Access control for showing activity state.
+ * Remove comment reply button for discussion.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  *
  * @param array $buttons             The list of buttons.
  * @param int   $activity_comment_id The current activity comment ID.

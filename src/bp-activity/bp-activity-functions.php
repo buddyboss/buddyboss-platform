@@ -5414,7 +5414,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	} else {
 		$activity = new BP_Activity_Activity( $activity_id );
 	}
-	
+
 	// check activity exists.
 	if ( empty( $activity->id ) ) {
 		return false;
@@ -5746,7 +5746,7 @@ function bb_activity_reply_topic_id( $activity ) {
 }
 
 /**
- * This function will give the comment is from topc or not.
+ * Is it topic comment.
  *
  * @param int $activity id.
  *
