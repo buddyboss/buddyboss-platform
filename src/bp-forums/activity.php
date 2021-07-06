@@ -489,7 +489,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					'button_attr'       => array(
 						'class'         => 'button bb-icon-discussion bp-secondary-action',
 						'aria-expanded' => 'false',
-						'href'          => bbp_get_topic_permalink( $topic_id ),
+						'href'          => bbp_get_topic_permalink( $topic_id ) . '#post-' . $reply_id,
 					),
 				);
 			}
