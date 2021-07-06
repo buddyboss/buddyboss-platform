@@ -1373,18 +1373,22 @@ function bp_get_activity_action( $args = array() ) {
 }
 
 /**
- * Output the Activity content link.
+ * Output the activity post lik.
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.7.1
+ * 
+ * @return void
  */
 function bb_activity_viwe_post_link() {
 	echo bb_activity_get_viwe_post_link(); 
 }
 
 /**
- * Output the Activity content link.
+ * The activity post link.
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.7.1
+ * 
+ * @return string
  */
 function bb_activity_get_viwe_post_link() {
 	global $activities_template;

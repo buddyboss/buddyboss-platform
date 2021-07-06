@@ -1307,7 +1307,6 @@ function bp_blogs_disable_activity_commenting( $retval ) {
 
 	// It's a post type supporting comment tracking.
 	if ( bp_activity_type_supports( $type, 'post-type-comment-tracking' ) ) {
-
 		// The activity type is supporting comments or replies.
 		if ( bp_activity_type_supports( $type, 'post-type-comment-reply' ) ) {
 			// Setup some globals we'll need to reference later.
@@ -1323,7 +1322,6 @@ function bp_blogs_disable_activity_commenting( $retval ) {
 			if ( ! empty( buddypress()->blogs->comment_moderation[ bp_get_activity_id() ] ) ) {
 				$retval = false;
 			}
-
 			// The activity type does not support comments or replies.
 		} else {
 			$retval = false;

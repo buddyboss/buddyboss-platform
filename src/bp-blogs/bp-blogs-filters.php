@@ -135,7 +135,16 @@ function bp_blogs_register_custom_site_icon_size( $sizes ) {
 }
 add_filter( 'site_icon_image_sizes', 'bp_blogs_register_custom_site_icon_size' );
 
-
+/**
+ * Set view post button for activit post content.
+ *
+ * @since BuddyBoss 1.7.1
+ *
+ * @param array $buttons     Group buttons.
+ * @param int   $activity_id Activity id.
+ * 
+ * @return array
+ */
 function bb_nouveau_get_activity_inner_blogs_buttons( $buttons, $activity_id ) {
 	global $activities_template;
 
@@ -169,5 +178,4 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons, $activity_id ) {
 
 	return $buttons;
 }
-
 add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_inner_blogs_buttons', 10, 2 );
