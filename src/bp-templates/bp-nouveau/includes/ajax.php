@@ -137,9 +137,9 @@ function bp_nouveau_ajax_object_template_loader() {
 	ob_end_clean();
 
 	if ( 'members' === $object && ! empty( $GLOBALS['members_template'] ) ) {
-		$result['count'] = $GLOBALS['members_template']->total_member_count;
+		$result['count'] = number_format_i18n($GLOBALS['members_template']->total_member_count);
 	} elseif ( 'groups' === $object && ! empty( $GLOBALS['groups_template'] ) ) {
-		$result['count'] = $GLOBALS['groups_template']->group_count;
+		$result['count'] = number_format_i18n($GLOBALS['groups_template']->group_count);
 	} elseif ( 'activity' === $object ) {
 		// $result['count'] = $GLOBALS["activities_template"]->activity_count;
 	}
@@ -165,12 +165,12 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 
 	add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['all'] = $GLOBALS['members_template']->total_member_count;
+	$results['scopes']['all'] = number_format_i18n($GLOBALS['members_template']->total_member_count);
 	remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
 	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['personal'] = $GLOBALS['members_template']->total_member_count;
+	$results['scopes']['personal'] = number_format_i18n($GLOBALS['members_template']->total_member_count);
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
@@ -178,7 +178,7 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		if ( ! empty( $counts['following'] ) ) {
 			add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
 			bp_has_members( bp_ajax_querystring( 'members' ) );
-			$results['scopes']['following'] = $GLOBALS['members_template']->total_member_count;
+			$results['scopes']['following'] = number_format_i18n($GLOBALS['members_template']->total_member_count);
 			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
 		}
 	}
@@ -201,12 +201,12 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 
 	add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );
-	$results['scopes']['all'] = $GLOBALS['groups_template']->total_group_count;
+	$results['scopes']['all'] = number_format_i18n($GLOBALS['groups_template']->total_group_count);
 	remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );
-	$results['scopes']['personal'] = $GLOBALS['groups_template']->total_group_count;
+	$results['scopes']['personal'] = number_format_i18n($GLOBALS['groups_template']->total_group_count);
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
 
 	return $results;
