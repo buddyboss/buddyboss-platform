@@ -32,9 +32,9 @@ function bp_media_get_settings_sections() {
 			'tutorial_callback' => 'bp_document_uploading_tutorial',
 		),
 		'bp_media_settings_videos'    => array(
-			'page'     => 'video',
-			'title'    => __( 'Videos', 'buddyboss' ),
-			'callback' => 'bp_video_admin_setting_callback_video_section',
+			'page'              => 'video',
+			'title'             => __( 'Videos', 'buddyboss' ),
+			'callback'          => 'bp_video_admin_setting_callback_video_section',
 			'tutorial_callback' => 'bp_video_uploading_tutorial',
 		),
 		'bp_media_settings_emoji'     => array(
@@ -337,7 +337,7 @@ function bb_admin_setting_media_access_control_register_fields( $setting ) {
 	$setting->add_section(
 		'bp_media_settings_symlinks',
 		__( 'Media Security & Performance', 'buddyboss' ),
-		'bb_admin_setting_callback_symlinks_section'
+		''
 	);
 	$setting->add_field(
 		'bp_media_symlink_support',
@@ -743,11 +743,13 @@ function bp_media_settings_callback_groups_emoji_support() {
 	?>
 	<input name="bp_media_groups_emoji_support" id="bp_media_groups_emoji_support" type="checkbox" value="1" <?php checked( bp_is_groups_emoji_support_enabled() ); ?> />
 	<label for="bp_media_groups_emoji_support">
-		<?php printf(
+		<?php
+		printf(
 			'%1$s <strong>%2$s</strong>',
 			__( 'Allow members to use emoji in', 'buddyboss' ),
 			$display_string
-		); ?>
+		);
+		?>
 	</label>
 	<?php
 }
@@ -762,7 +764,7 @@ function bp_media_settings_callback_messages_emoji_support() {
 	<input name="bp_media_messages_emoji_support" id="bp_media_messages_emoji_support" type="checkbox" value="1" <?php checked( bp_is_messages_emoji_support_enabled() ); ?> />
 	<label for="bp_media_messages_emoji_support">
 		<?php
-        _e( 'Allow members to use emoji in <strong>private messages</strong>', 'buddyboss' );
+		_e( 'Allow members to use emoji in <strong>private messages</strong>', 'buddyboss' );
 		?>
 	</label>
 	<?php
@@ -961,7 +963,7 @@ function bp_media_settings_callback_groups_gif_support() {
 			__( 'Allow members to use animated GIFs in', 'buddyboss' ),
 			$display_string
 		);
-        ?>
+		?>
 	</label>
 	<?php
 }
@@ -1412,10 +1414,10 @@ function bp_document_extensions_list() {
 
 	/**
 	 * Filter to alllow the document extensions list.
-     *
-     * @param array $final List of extensions.
-     *
-     * @since BuddyBoss 1.7.0
+	 *
+	 * @param array $final List of extensions.
+	 *
+	 * @since BuddyBoss 1.7.0
 	 */
 	return apply_filters( 'bp_document_extensions_list', $final );
 }
@@ -1676,10 +1678,10 @@ function bp_media_allowed_upload_document_per_batch() {
 
 	/**
 	 * Filter to allow document upload per batch.
-     *
-     * @param int $default Per batch.
-     *
-     * @since BuddyBoss 1.7.0
+	 *
+	 * @param int $default Per batch.
+	 *
+	 * @since BuddyBoss 1.7.0
 	 */
 	return (int) apply_filters( 'bp_media_allowed_upload_document_per_batch', (int) get_option( 'bp_document_allowed_per_batch', $default ) );
 }
@@ -1782,8 +1784,8 @@ function bp_video_get_settings_fields() {
 
 	/**
 	 * Filter for settings fields.
-     *
-     * @param array $fields Fields array.
+	 *
+	 * @param array $fields Fields array.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
@@ -1890,20 +1892,6 @@ function bp_media_settings_callback_extension_video_support() {
 	<?php
 }
 
-
-/**
- *  Print the Symlinks notice.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_admin_setting_callback_symlinks_section() {
-	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
-		?>
-        <p class="alert"><?php _e( 'Symlink not working into your system. Please disable it.', 'buddyboss' ); ?></p>
-		<?php
-	}
-}
-
 /**
  * Setting > Media > Media Miscellaneous
  *
@@ -1911,36 +1899,67 @@ function bb_admin_setting_callback_symlinks_section() {
  */
 function bb_media_settings_callback_symlink_support() {
 
-	if ( ! empty( bb_enable_symlinks() ) && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+    ?>
+    <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
+    <label for="bp_media_symlink_support">
+        <?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+    </label>
+
+    <?php
+
+	$has_error = false;
+	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
+
+		$disabled = explode( ',', ini_get( 'disable_functions' ) );
+
+		if ( in_array( 'symlink', $disabled, true ) ) {
+			$has_error = true;
+			?>
+			<div class="bp-messages-feedback">
+				<div class="bp-feedback warning">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+				</div>
+			</div>
+			<?php
+		}
+
+	}
+
+	if ( empty( $has_error ) && bb_enable_symlinks() && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
+		?>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback warning">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+			</div>
+		</div>
+		<?php
+	}
+
+	
+	if ( empty( bb_enable_symlinks() ) ) {
 		?>
         <div class="bp-messages-feedback">
             <div class="bp-feedback warning">
                 <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php _e( 'Symbolic links are not supported on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+                <p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
             </div>
         </div>
 		<?php
-	} else {
+	} elseif ( ! $has_error && bb_enable_symlinks() ) {
 		?>
-        <div class="bp-messages-feedback">
-            <div class="bp-feedback success">
-                <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php _e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
-            </div>
-        </div>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback success">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic links are activated', 'buddyboss' ); ?></p>
+			</div>
+		</div>
 		<?php
 	}
 	?>
-    <div style="display:none;">
-        <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox"
-               value="1" <?php checked( bb_enable_symlinks() ); ?> />
-        <label for="bp_media_symlink_support">
-            <strong>
-				<?php _e( 'Disable symbolic links for photos, documents and videos', 'buddyboss' ); ?>
-            </strong>
-        </label>
-    </div>
-    <p class="description"><?php _e( 'Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.', 'buddyboss' ); ?></p>
+
+	<p class="description"><?php esc_html_e( 'Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.', 'buddyboss' ); ?></p>
 
 	<?php
 }

@@ -40,20 +40,19 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 
 		if ( '' !== $size && $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
 
-			$file_path       = $file_path . '/' . $file['file'];
-			$output_file_src = $file_path;
+			$file_path_org   = $file_path . '/' . $file['file'];
+			$output_file_src = $file_path_org;
 
 			if ( ! file_exists( $output_file_src ) ) {
 				bp_media_regenerate_attachment_thumbnails( $id );
 				$file = image_get_intermediate_size( $id, $size );
 
 				if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
-					$file_path       = $file_path . '/' . $file['file'];
-					$output_file_src = $file_path;
+					$file_path_org   = $file_path . '/' . $file['file'];
+					$output_file_src = $file_path_org;
 				} else {
 					$output_file_src = bb_core_scaled_attachment_path( $id );
 				}
-
 			}
 
 		} elseif ( ! $file ) {
@@ -84,6 +83,15 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 			}
 		} else {
 			$output_file_src = bb_core_scaled_attachment_path( $id );
+		}
+
+		if ( ! file_exists( $output_file_src ) ) {
+			$file = image_get_intermediate_size( $id, 'full' );
+			if ( $file && ! empty( $file['path'] ) ) {
+				$output_file_src = $upload_dir . '/' . $file['path'];
+			} else {
+				$output_file_src = bb_core_scaled_attachment_path( $id );
+			}
 		}
 
 		if ( ! file_exists( $output_file_src ) ) {

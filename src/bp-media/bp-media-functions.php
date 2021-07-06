@@ -3400,6 +3400,16 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 
 				$attachment_url = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 
+				/**
+				 * Filter for the after thumb symlink generate.
+				 *
+				 * @param string $attachment_url Attachment URL.
+				 * @param object $media          Media Object.
+				 *
+				 * @since BuddyBoss 1.7.0.1
+				 */
+				$attachment_url = apply_filters( 'bb_media_after_get_preview_image_url_symlink', $attachment_url, $media );
+
 			} else {
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
