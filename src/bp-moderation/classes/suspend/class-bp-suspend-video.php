@@ -52,12 +52,12 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$this->alias = $this->alias . 'v'; // v = Video.
 
 		// modify in videos count for album.
-		add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_media_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_media_sql' ), 10, 2 );
 
 		// modify in group videos count for album.
-		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_media_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_media_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_where_count_conditions', array( $this, 'update_where_media_sql' ), 10, 2 );
 
 		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
@@ -156,6 +156,41 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Prepare video Join SQL query to filter blocked Video for Album only.
+	 *
+	 * @since BuddyBoss 1.7.0.1
+	 *
+	 * @param string $join_sql Video Join sql.
+	 * @param array  $args     Query arguments.
+	 *
+	 * @return string Join sql
+	 */
+	public function update_join_media_sql( $join_sql, $args = array() ) {
+
+		if ( empty( $args['album_id'] ) ) {
+			return $join_sql;
+		}
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $join_sql;
+		}
+
+		$join_sql .= $this->exclude_joint_query( 'm.id' );
+
+		/**
+		 * Filters the hidden Video Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.7.0
+		 *
+		 * @param array $join_sql Join sql query
+		 * @param array $class    current class object.
+		 */
+		$join_sql = apply_filters( 'bp_suspend_video_get_join', $join_sql, $this );
+
+		return $join_sql;
+	}
+
+	/**
 	 * Prepare video Join SQL query to filter blocked Video
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -184,6 +219,45 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$join_sql = apply_filters( 'bp_suspend_video_get_join', $join_sql, $this );
 
 		return $join_sql;
+	}
+
+	/**
+	 * Prepare video Where SQL query to filter blocked Video for Album only.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param array $where_conditions Video Where sql.
+	 * @param array $args             Query arguments.
+	 *
+	 * @return mixed Where SQL
+	 */
+	public function update_where_media_sql( $where_conditions, $args = array() ) {
+		if ( empty( $args['album_id'] ) ) {
+			return $where_conditions;
+		}
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $where_conditions;
+		}
+
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
+
+		/**
+		 * Filters the hidden video Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.7.0
+		 *
+		 * @param array $where Query to hide suspended user's video.
+		 * @param array $class current class object.
+		 */
+		$where = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_conditions;
 	}
 
 	/**
