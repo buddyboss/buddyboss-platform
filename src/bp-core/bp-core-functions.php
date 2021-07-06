@@ -5694,7 +5694,7 @@ function bb_check_ios_device() {
 	/**
 	 * Filter for the check if it's ios devices or not.
      *
-     * @since BuddyBoss 1.7.1
+     * @since BuddyBoss 1.7.0.1
 	 */
 	return apply_filters( 'bb_check_ios_device', $is_ios );
 }
