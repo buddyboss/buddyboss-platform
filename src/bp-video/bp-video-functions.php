@@ -3843,7 +3843,18 @@ function bb_video_get_symlink( $video, $generate = true ) {
 					}
 				}
 			}
+
 			$attachment_url = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
+
+			/**
+			 * Filter for the after thumb symlink generate.
+			 *
+			 * @param string $attachment_url Attachment URL.
+			 * @param object $video          Video Object.
+			 *
+			 * @since BuddyBoss 1.7.0.1
+			 */
+			$attachment_url = apply_filters( 'bb_video_after_get_symlink', $attachment_url, $video );
 		}
 	}
 
@@ -4342,6 +4353,16 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 
 			$upload_directory = wp_get_upload_dir();
 			$attachment_url   = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
+
+			/**
+			 * Filter for the after thumb symlink generate.
+			 *
+			 * @param string $attachment_url Attachment URL.
+			 * @param object $video          Video Object.
+			 *
+			 * @since BuddyBoss 1.7.0.1
+			 */
+			$attachment_url = apply_filters( 'bb_video_after_get_attachment_symlink', $attachment_url, $video );
 		}
 	} else {
 		$attachment_url = wp_get_attachment_url( $attachment_id );

@@ -65,6 +65,9 @@ add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
 
 add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 99, 2 );
 
+
+add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -1670,4 +1673,27 @@ function bb_video_update_video_symlink( $response, $post_data ) {
 
 	return $response;
 
+}
+
+/**
+ * Pass the true if the browser is safari and video need to play in popup.
+ *
+ * @param bool $is_ios whether a device is a ios.
+ *
+ * @return bool|mixed
+ *
+ * @since BuddyBoss 1.7.0.1
+ */
+function bb_video_safari_popup_video_play( $is_ios ) {
+
+	if ( false === $is_ios && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+		$is_safari = stripos( $_SERVER['HTTP_USER_AGENT'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$action    = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+
+		if ( $is_safari && 'video_get_activity' === $action ) {
+			$is_ios = true;
+		}
+	}
+
+	return $is_ios;
 }
