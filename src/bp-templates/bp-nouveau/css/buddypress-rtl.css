@@ -12071,6 +12071,7 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .bb-post-img-link img {
   border-radius: 0;
   margin: 0 auto;
+  max-height: 640px;
 }
 
 .activity-list li.blogs .activity-content .activity-inner .bb-post-title-link:before {

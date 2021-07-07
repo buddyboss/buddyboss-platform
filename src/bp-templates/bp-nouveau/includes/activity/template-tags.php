@@ -288,7 +288,7 @@ function bp_nouveau_activity_state() {
 		<?php endif; ?>
 
 		<?php if ( ! bp_activity_can_comment() ) : ?>
-			<div href="#" class="activity-state-comments">
+			<div class="activity-state-comments">
 				<span class="comments-count">
 					<?php
 					if ( $comment_count > 1 ) {
@@ -312,7 +312,7 @@ function bp_nouveau_activity_state() {
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_activity_inner_buttons( $args = array() ) {
+function bb_nouveau_activity_inner_buttons( $args = array() ) {
 
 	$output = join( ' ', bb_nouveau_get_activity_inner_buttons( $args ) );
 
