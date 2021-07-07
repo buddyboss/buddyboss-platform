@@ -330,7 +330,7 @@ function bp_version_updater() {
 		}
 
 		// Version 1.7.1.
-		if ( $raw_db_version < 16801 ) {
+		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_1();
 		}
 	}
@@ -1213,7 +1213,7 @@ add_filter(
  * @since BuddyBoss 1.7.1
  */
 function bb_update_to_1_7_1() {
-	bb_update_to_1_7_1_ativity_setting_feed_comments_migration();
+	bb_update_to_1_7_1_activity_setting_feed_comments_migration();
 }
 
 /**
@@ -1229,7 +1229,7 @@ function bb_update_to_1_7_1() {
  *
  * @return void
  */
-function bb_update_to_1_7_1_ativity_setting_feed_comments_migration() {
+function bb_update_to_1_7_1_activity_setting_feed_comments_migration() {
 	$custom_post_types = bb_feed_post_types();
 
 	// Run over all custom post type.
