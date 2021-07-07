@@ -448,7 +448,7 @@ module.exports = function (grunt) {
 					dest: SOURCE_DIR + 'endpoints/',
 					options : {
 						includeFilters: ['.*\\.php$'],
-						excludeFilters : ['assets/', 'bin/','languages/', 'node_modules/', 'src/bp-core/admin/js/lib/'],
+						excludeFilters : ['assets/', 'bin/','languages/', 'node_modules/', 'vendor/', 'src/vendor/', 'src/bp-core/admin/js/lib/'],
 					},
 				}
 			},

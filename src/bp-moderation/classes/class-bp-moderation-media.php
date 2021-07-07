@@ -72,7 +72,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public static function get_permalink( $media_id ) {
 		$media = new BP_Media( $media_id );
-		return bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image' );
+		return bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image-medium' );
 	}
 
 	/**

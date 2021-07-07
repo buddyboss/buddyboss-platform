@@ -1384,11 +1384,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$content            = get_post_field( 'post_content', $attachment_id );
-	$attachment_urls    = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
-	$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
-	$video_privacy      = bb_media_user_can_access( $video_id, 'video' );
-	$can_edit           = true === (bool) $video_privacy['can_edit'];
+	$content = get_post_field( 'post_content', $attachment_id );
 
 	echo '<div class="activity-media-description">' .
 		 '<div class="bp-media-activity-description">' . $content . '</div>'; // phpcs:ignore
@@ -1405,28 +1401,6 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		<?php
     }
 
-    if ( $can_edit ) {
-        ?>
-        <div class="video-action-wrap item-action-wrap">
-            <a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-                <i class="bb-icon-menu-dots-v"></i>
-            </a>
-            <div class="video-action_list item-action_list">
-                <ul>
-                    <li class="edit_thumbnail_video video-action-class">
-                        <a href="#" data-action="video"
-                           data-parent-activity-id="<?php echo esc_attr( $parent_activity_id ); ?>"
-                           data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
-                           data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
-                           data-video-id="<?php echo esc_attr( $video_id ); ?>" class="ac-video-thumbnail-edit">
-                            <?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div><!-- .video-action-wrap -->
-        <?php
-    }
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
@@ -1819,6 +1793,43 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				'button_element' => $button_element,
 			)
 		);
+	}
+
+	if ( $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
+		$video_id = BP_Video::get_activity_video_id( $activity_id );
+		if ( ! empty( $video_id ) ) {
+			$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
+			if ( ! empty( $attachment_id ) ) {
+				$video_privacy = bb_media_user_can_access( $video_id, 'video' );
+				$can_edit      = true === (bool) $video_privacy['can_edit'];
+				if ( $can_edit ) {
+					$parent_activity_id          = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
+					$attachment_urls             = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
+					$buttons['change_thumbnail'] = array(
+						'id'                => 'change_thumbnail',
+						'component'         => 'video',
+						'position'          => 10,
+						'must_be_logged_in' => true,
+						'parent_element'    => $parent_element,
+						'parent_attr'       => $parent_attr,
+						'button_element'    => $button_element,
+						'link_text'         => sprintf(
+							'<span class="bp-screen-reader-text">%1$s</span><span class="change-label">%2$s</span>',
+							esc_html__( 'Change Thumbnail', 'buddyboss' ),
+							esc_html__( 'Change Thumbnail', 'buddyboss' )
+						),
+						'button_attr'       => array(
+							'data-action'              => 'video',
+							'data-parent-activity-id'  => $parent_activity_id,
+							'data-video-attachments'   => wp_json_encode( $attachment_urls ),
+							'data-video-attachment-id' => $attachment_id,
+							'data-video-id'            => $video_id,
+							'class'                    => 'ac-video-thumbnail-edit'
+						),
+					);
+				}
+			}
+		}
 	}
 
 	$buttons['activity_delete'] = array(
