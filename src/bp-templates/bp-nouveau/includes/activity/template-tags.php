@@ -312,7 +312,7 @@ function bp_nouveau_activity_state() {
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_activity_inner_buttons( $args = array() ) {
+function bb_nouveau_activity_inner_buttons( $args = array() ) {
 
 	$output = join( ' ', bb_nouveau_get_activity_inner_buttons( $args ) );
 
