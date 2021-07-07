@@ -461,7 +461,7 @@
 			background: #fff;
 			box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 			border-radius: 4px;
-			width: 168px;
+			width: 198px;
 			padding: 5px 0;
 			display: none;
 			z-index: 11;
@@ -546,6 +546,15 @@
 					&.delete-activity:before {
 						content: "\e937";
 						font-size: 15px;
+					}
+
+					&.ac-video-thumbnail-edit:before {
+						content: "\e9cb";
+						font-size: 20px;
+						display: inline-block;
+						vertical-align: middle;
+						max-height: 15px;
+						margin-top: -6px;
 					}
 
 					&.edit-activity:before {
