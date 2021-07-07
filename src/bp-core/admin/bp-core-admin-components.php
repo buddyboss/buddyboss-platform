@@ -69,8 +69,9 @@ function bp_core_admin_components_options() {
 	// Merge optional and required together.
 	$all_components = $required_components + $optional_components;
 
-	// We are not displaying document component in listing it's automatically active if media component is active.
+	// We are not displaying document & video component in listing it's automatically active if media component is active.
 	unset( $all_components['document'] );
+	unset( $all_components['video'] );
 
 	// If this is an upgrade from before BuddyPress 1.5, we'll have to convert
 	// deactivated components into activated ones.
@@ -243,32 +244,57 @@ function bp_core_admin_components_options() {
 
 			<?php if ( ! empty( $current_components ) ) : ?>
 
-				<?php foreach ( $current_components as $name => $labels ) : ?>
+				<?php
+				foreach ( $current_components as $name => $labels ) :
+					$deactivate_confirm = ( isset( $labels['deactivation_confirm'] ) && true === $labels['deactivation_confirm'] ) ? true : false;
+					?>
 
 					<?php
 					if ( in_array( $name, array( 'blogs' ) ) ) :
 						$class = isset( $active_components[ esc_attr( $name ) ] ) ? 'active hidden' : 'inactive hidden';
-						elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
-							$class = isset( $active_components[ esc_attr( $name ) ] ) ? 'active' : 'inactive';
-						else :
-							$class = 'active';
-						endif;
-						?>
+					elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
+						$class = isset( $active_components[ esc_attr( $name ) ] ) ? 'active' : 'inactive';
+					else :
+						$class = 'active';
+					endif;
+					?>
 
-					<tr id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
+					<tr id="<?php echo esc_attr( $name ); ?>"
+						class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
 						<th scope="row" class="check-column">
-
-							<?php if ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-
-								<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text">
-																	  <?php
-																		/* translators: accessibility text */
-																		printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) );
-																		?>
-									</label>
-
+							<?php
+							if ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
+								if ( isset( $active_components[ esc_attr( $name ) ] ) ) {
+									?>
+									<input class="<?php echo esc_attr( ( true === $deactivate_confirm ) ? 'mass-check-deactivate' : '' ); ?>"
+										   type="checkbox"
+										   id="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+										   name="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+										   value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
+									<?php
+								} else {
+									?>
+									<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+										   name="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+										   value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
+									<?php
+								}
+								?>
+								<label for="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+									   class="screen-reader-text">
+									<?php
+									/* translators: accessibility text */
+									printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) );
+									?>
+								</label>
+								<div class="component-deactivate-msg" style="display: none;">
+									<?php
+									if ( ! empty( $labels['deactivation_message'] ) ) {
+										echo esc_html( $labels['deactivation_message'] );
+									}
+									?>
+								</div>
 							<?php endif; ?>
-
 						</th>
 						<td class="plugin-title column-primary">
 							<label for="<?php echo esc_attr( "bp_components[$name]" ); ?>">
@@ -282,7 +308,8 @@ function bp_core_admin_components_options() {
 									</span>
 								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 									<?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>
-										<span class="deactivate">
+										<span class="deactivate <?php echo esc_attr( ( true === $deactivate_confirm ) ? 'bp-show-deactivate-popup' : '' ); ?>"
+											  data-confirm="<?php echo esc_attr( $deactivate_confirm ); ?>">
 											<a href="
 											<?php
 											echo wp_nonce_url(
@@ -300,10 +327,17 @@ function bp_core_admin_components_options() {
 												'bp-admin-component-activation'
 											);
 											?>
-														">
+											">
 												<?php _e( 'Deactivate', 'buddyboss' ); ?>
 											</a>
 										</span>
+										<div class="component-deactivate-msg" style="display: none;">
+											<?php
+											if ( ! empty( $labels['deactivation_message'] ) ) {
+												echo esc_html( $labels['deactivation_message'] );
+											}
+											?>
+										</div>
 									<?php else : ?>
 										<span class="activate">
 											<a href="
@@ -501,7 +535,7 @@ function bp_core_admin_components_settings_handler() {
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			$slug    = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}
 
@@ -611,7 +645,7 @@ function bp_core_admin_components_activation_handler() {
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			$slug    = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}
 

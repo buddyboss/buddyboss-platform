@@ -78,8 +78,10 @@ add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
 // Exclude Forums if group type hide.
 add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
+
 // media scope filter.
 add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
+add_filter( 'bp_video_set_groups_scope_args', 'bp_groups_filter_video_scope', 10, 2 );
 add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
 add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
 
@@ -423,13 +425,11 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
 function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 
 	// Allow Mods to delete activity of group
-	if ( ! $can_delete && is_user_logged_in() && 'groups' == $activity->component ) {
+	if ( ! $can_delete && is_user_logged_in() && 'groups' === $activity->component ) {
 		$group = groups_get_group( $activity->item_id );
 
-		if ( ! empty( $group ) &&
-			 ! groups_is_user_admin( $activity->user_id, $activity->item_id ) &&
-			 groups_is_user_mod( apply_filters( 'bp_loggedin_user_id', get_current_user_id() ), $activity->item_id )
-		) {
+		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
+		if ( ! empty( $group ) && groups_is_user_mod( get_current_user_id(), $activity->item_id ) ) {
 			$can_delete = true;
 		}
 	}
@@ -601,6 +601,100 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	$retval = array(
 		'relation' => 'OR',
 		$args
+	);
+
+	return $retval;
+}
+
+/**
+ * Set up video arguments for use with the 'groups' scope.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	if ( 'groups' !== $filter['scope'] ) {
+		// Fetch public groups.
+		$public_groups = groups_get_groups(
+			array(
+				'fields'   => 'ids',
+				'status'   => 'public',
+				'per_page' => - 1,
+			)
+		);
+	}
+	if ( ! empty( $public_groups['groups'] ) ) {
+		$public_groups = $public_groups['groups'];
+	} else {
+		$public_groups = array();
+	}
+
+	// Determine groups of user.
+	$groups = groups_get_user_groups( $user_id );
+	if ( ! empty( $groups['groups'] ) ) {
+		$groups = $groups['groups'];
+	} else {
+		$groups = array();
+	}
+
+	$group_ids = false;
+	if ( ! empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => array_unique( array_merge( $groups, $public_groups ) ) );
+	} elseif ( empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $public_groups );
+	} elseif ( ! empty( $groups ) && empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $groups );
+	}
+
+	if ( empty( $group_ids ) ) {
+		$group_ids = array( 'groups' => 0 );
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'group_id',
+			'compare' => 'IN',
+			'value'   => (array) $group_ids['groups'],
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'grouponly',
+		),
+	);
+
+	if ( ! bp_is_group_video_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args,
 	);
 
 	return $retval;
@@ -843,3 +937,49 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
 	return $args;
 }
+
+/**
+ * Filters the member IDs for the current group member query.
+ *
+ * Use this filter to build a custom query (such as when you've
+ * defined a custom 'type').
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param array                 $group_member_ids          Array of associated member IDs.
+ * @param BP_Group_Member_Query $group_member_query_object Current BP_Group_Member_Query instance.
+ */
+function bb_group_member_query_group_message_member_ids( $group_member_ids, $group_member_query_object ) {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group_single() && bp_is_group_messages() && 'private-message' === bb_get_group_current_messages_tab() ) {
+
+		$can_send_arr  = array();
+		$cant_send_arr = array();
+
+		// Check if force friendship is enabled and check recipients.
+		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+			foreach ( $group_member_ids as $member_id ) {
+				if ( friends_check_friendship( bp_loggedin_user_id(), $member_id ) ) {
+					$can_send_arr[] = $member_id;
+				} else {
+					$cant_send_arr[] = $member_id;
+				}
+			}
+			$group_member_ids = array_merge( $can_send_arr, $cant_send_arr );
+		}
+	}
+
+	/**
+	 * Filters the member IDs for the current group member query.
+	 *
+	 * Use this filter to build a custom query (such as when you've
+	 * defined a custom 'type').
+	 *
+	 * @since BuddyBoss 1.5.8
+	 *
+	 * @param array                 $group_member_ids          Array of associated member IDs.
+	 * @param BP_Group_Member_Query $group_member_query_object Current BP_Group_Member_Query instance.
+	 */
+	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
+}
+add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );

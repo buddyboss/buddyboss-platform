@@ -23,18 +23,21 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-activity' => array(
-			'file'         => 'js/buddypress-activity%s.js',
-			'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
-			'footer'       => true,
-		),
-		'bp-nouveau-activity-post-form' => array(
-			'file'         => 'js/buddypress-activity-post-form%s.js',
-			'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-activity'           => array(
+				'file'         => 'js/buddypress-activity%s.js',
+				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
+				'footer'       => true,
+			),
+			'bp-nouveau-activity-post-form' => array(
+				'file'         => 'js/buddypress-activity-post-form%s.js',
+				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -43,7 +46,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_enqueue_scripts() {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_albums() && ! bp_is_group_folders() && ! bp_is_messages_component() ) { // media popup overlay needs activity scripts
+	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_video_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_video_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_video() && ! bp_is_group_albums() && ! bp_is_group_folders() && ! bp_is_messages_component() ) { // media popup overlay needs activity scripts.
 		return;
 	}
 
@@ -81,6 +84,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'backcompat'       => (bool) has_action( 'bp_activity_post_form_options' ),
 		'post_nonce'       => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
 		'excluded_hosts'   => array(),
+		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
 		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
 		'errors'           => array(
 			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' )
@@ -189,6 +193,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => __( 'Post Update', 'buddyboss' ),
+		'updatePostButton'    => __( 'Update Post', 'buddyboss' ),
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
 		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
@@ -209,6 +214,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			)
 		);
 	}
+
+	$activity_params['access_control_settings'] = array(
+		'can_create_activity'          => bb_user_can_create_activity(),
+		'can_create_activity_media'    => bb_user_can_create_media(),
+		'can_create_activity_document' => bb_user_can_create_document(),
+	);
 
 	$params['activity'] = array(
 		'params'  => $activity_params,
@@ -324,7 +335,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		}
 	}
 
-	// Check for deprecated hooks :
+	// Check for deprecated hooks.
 	foreach ( $deprecated_hooks as $deprectated_hook ) {
 		list( $hook, $component, $position ) = $deprectated_hook;
 

@@ -1574,6 +1574,27 @@ function bp_register_confirm_email( $default = false ) {
 }
 
 /**
+ * Display legal agreement field in registrations.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Whether or not display legal agreement field in registrations.
+ */
+function bb_register_legal_agreement( $default = false ) {
+
+	/**
+	 * Filters whether or not display legal agreement field in registrations.
+	 *
+	 * @since BuddyBoss 1.5.8.3
+	 *
+	 * @param bool $value whether or not display legal agreement field in registrations.
+	 */
+	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
+}
+
+/**
  * Display password confirmation field in registrations.
  *
  * @since BuddyBoss 1.1.6
@@ -1721,4 +1742,58 @@ function bp_core_display_name_format( $default = 'first_name' ) {
 	 * @param string $value Default display name format.
 	 */
 	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
+}
+
+/**
+ * Enable private REST APIs.
+ * - Wrapper function to check settings with BuddyBoss APP and Platform both.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool True if  private REST APIs is enabled, otherwise false.
+ */
+function bp_rest_enable_private_network() {
+
+	$retval = (
+		function_exists( 'bp_enable_private_network' ) &&
+		true !== bp_enable_private_network() &&
+		(
+			! function_exists( 'bbapp_is_private_app_enabled' ) ||
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled() // Check for buddyboss app private network.
+			)
+		)
+	);
+
+	/**
+	 * Filters whether private private REST APIs is enabled.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param bool $value Whether private REST APIs is enabled.
+	 */
+	return apply_filters( 'bp_rest_enable_private_network', $retval );
+}
+
+/**
+ * Is the symlink is enabled in Media, Document & Video?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the symlink is enabled in Media, Document & Video enable,
+ *              otherwise false.
+ */
+function bb_enable_symlinks( $default = false ) {
+
+	/**
+	 * Filters whether or not the symlink is enabled in Media, Document & Video.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
+	 */
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
 }

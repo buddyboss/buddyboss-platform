@@ -62,8 +62,43 @@
 	padding: 0;
 	width: 100%;
 
+	li a.close-conversation {
+		right: 35px;
+	}
+
 	&:empty {
 		display: none;
+	}
+
+	.can-not-send-msg {
+		opacity: 0.5;
+
+		.bp-message-link .thread-content.bp-suspended-content,
+		.bp-message-link .thread-avatar.bp-suspended-avatar {
+			opacity: 1;
+		}
+
+		&.unread .thread-to:after {
+			opacity: 0.85;
+		}
+
+		.thread-to:after {
+			content: "\e8c9";
+			font-size: 14px;
+			color: #122b46;
+			line-height: 1;
+			font-family: "bb-icons";/* stylelint-disable-line */
+			display: inline-block;
+			vertical-align: middle;
+			position: absolute;
+			right: 36px;
+			bottom: 10px;
+		}
+
+		&:hover .thread-to:after {
+			display: none;
+		}
+
 	}
 
 	// The primary list elements
@@ -359,6 +394,24 @@
 			li.delete_thread a:before {
 				content: "\e937";
 			}
+
+			li.reported-content a,
+			li.reported_thread a,
+			li.report_thread a {
+
+				&:before {
+					content: "\e8c9";
+					vertical-align: middle;
+				}
+
+			}
+
+			li.reported-content,
+			li.reported_thread {
+				pointer-events: none;
+				opacity: 0.9;
+			}
+
 		}
 	}
 
@@ -881,6 +934,31 @@ input#send-to-input {
 			}
 		}
 	}
+
+	.bb-activity-video-wrap .bb-activity-media-elem.video-activity {
+
+		.video-action-wrap .video-action_list li {
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		&:last-child {
+
+			.video-action-wrap .video-action_list {
+				top: initial;
+				bottom: 36px;
+
+				&:after {
+					top: inherit;
+					bottom: -12px;
+					right: -3px;
+					-webkit-transform: rotate(137deg);
+					-ms-transform: rotate(137deg);
+					transform: rotate(137deg);
+				}
+			}
+		}
+	}
 }
 
 .bp-messages-content-wrapper {
@@ -891,6 +969,7 @@ input#send-to-input {
 	height: calc(69vh + 130px);
 
 	#messages-post-document-uploader.open,
+	#messages-post-video-uploader.open,
 	#messages-post-media-uploader.open {
 		height: calc(100% - 145px);
 		left: 0;
@@ -898,6 +977,7 @@ input#send-to-input {
 	}
 
 	#messages-post-document-uploader.open,
+	#messages-post-video-uploader.open,
 	#messages-post-media-uploader.open {
 		position: absolute;
 		top: 0;

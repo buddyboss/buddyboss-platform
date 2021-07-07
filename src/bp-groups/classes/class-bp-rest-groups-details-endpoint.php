@@ -119,16 +119,16 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
+		if ( bp_is_active( 'groups' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -289,6 +289,8 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 					$parent_slug .= '_media';
 				} elseif ( 'members' === $nav['slug'] ) {
 					$parent_slug .= '_members';
+				} elseif ( 'messages' === $nav['slug'] ) {
+					$parent_slug .= '_messages';
 				}
 
 				$sub_navs = array();
@@ -331,7 +333,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$retval['tabs'] = $navigation;
+		$retval['tabs'] = apply_filters( 'bp_rest_group_tabs', $navigation );
 
 		// Fixes for the phpunit.
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
@@ -371,7 +373,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -472,6 +474,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			'type' => array(
 				'description'       => __( 'Filter by.. active(Last Active), popular(Most Members), newest(Newly Created), alphabetical(Alphabetical)', 'buddyboss' ),
 				'type'              => 'string',
+				'default'           => 'active',
 				'enum'              => array( 'active', 'popular', 'newest', 'alphabetical' ),
 				'validate_callback' => 'rest_validate_request_arg',
 			),
@@ -566,7 +569,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		switch ( $slug ) {
 			case 'all':
 				$args = array( 'type' => $type );
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
+				if ( is_user_logged_in() ) {
 					$args['show_hidden'] = true;
 				}
 				$groups = groups_get_groups( $args );
