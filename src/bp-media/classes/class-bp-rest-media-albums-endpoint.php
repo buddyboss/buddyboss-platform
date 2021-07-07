@@ -74,6 +74,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
 				),
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
@@ -123,7 +124,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'page'        => $request['page'],
 			'per_page'    => $request['per_page'],
-			'sort'        => $request['order'],
+			'sort'        => strtoupper( $request['order'] ),
 			'order_by'    => $request['orderby'],
 			'count_total' => $request['count_total'],
 			'fields'      => 'all',
@@ -156,6 +157,43 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $request['include'] ) ) {
 			$args['album_ids'] = $request['include'];
 		}
+
+		if ( ! empty( $request['all'] ) ) {
+			$args['per_page'] = 0;
+		}
+
+		$privacy   = array();
+		$privacy[] = $args['privacy'];
+		if ( is_user_logged_in() ) {
+			$privacy[]       = 'loggedin';
+			$current_user_id = ( isset( $args['user_id'] ) && ! empty( $args['user_id'] ) ? $args['user_id'] : 0 );
+			if ( bp_is_active( 'friends' ) ) {
+
+				// get the login user id.
+
+				// check if the login user is friends of the display user.
+				$is_friend = friends_check_friendship( $current_user_id, bp_loggedin_user_id() );
+
+				/**
+				 * Check if the login user is friends of the display user
+				 * OR check if the login user and the display user is the same
+				 */
+				if ( $is_friend || ! empty( $current_user_id ) && bp_loggedin_user_id() === $current_user_id ) {
+					$privacy[] = 'friends';
+				}
+			}
+
+			if ( bp_loggedin_user_id() === $current_user_id ) {
+				$privacy[] = 'onlyme';
+			}
+		}
+
+		if ( isset( $args['group_id'] ) && ! empty( $args['group_id'] ) ) {
+			$args['user_id'] = false;
+			$privacy         = array( 'grouponly' );
+		}
+
+		$args['privacy'] = $privacy;
 
 		/**
 		 * Filter the query arguments for the request.
@@ -204,7 +242,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -240,6 +278,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the Album.
+	 * @apiParam {Number} [media_page=1] Current page of Album Medias.
+	 * @apiParam {Number} [media_per_page=10] A unique numeric ID for the Album.
 	 */
 	public function get_item( $request ) {
 
@@ -255,17 +295,34 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$media_args = array(
+			'album_id'    => $request['id'],
+			'count_total' => true,
+			'video'       => true,
+		);
+
+		if ( ! empty( $request['media_page'] ) ) {
+			$media_args['page'] = $request['media_page'];
+		}
+
+		if ( ! empty( $request['media_per_page'] ) ) {
+			$media_args['per_page'] = $request['media_per_page'];
+		}
+
+		$album_media = bp_media_get( $media_args );
+
 		$retval = '';
 		foreach ( $medias['albums'] as $album ) {
 			$retval = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $album, $request )
+				$this->prepare_item_for_response( $album, $request, $album_media )
 			);
 		}
 
 		$response = rest_ensure_response( $retval );
+		$response = bp_rest_response_add_total_headers( $response, $album_media['total'], $request['media_per_page'] );
 
 		/**
-		 * Fires after a album is fetched via the REST API.
+		 * Fires after an album is fetched via the REST API.
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
@@ -288,7 +345,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -306,6 +363,20 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 				__( 'Invalid Album ID.', 'buddyboss' ),
 				array(
 					'status' => 404,
+				)
+			);
+		}
+
+		if (
+			true === $retval
+			&& 'public' !== $album->privacy
+			&& true === $this->bp_rest_check_album_privacy_restriction( $album )
+		) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to view this Album.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -417,16 +488,48 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
+		if ( is_user_logged_in() ) {
+			$retval = true;
+
+			if (
+				isset( $request['group_id'] ) &&
+				! empty( $request['group_id'] ) &&
+				(
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+					|| ! bp_is_group_albums_support_enabled()
 				)
-			);
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to create an album inside this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif (
+				(
+					! isset( $request['group_id'] ) ||
+					empty( $request['group_id'] )
+				) &&
+				! bp_is_profile_albums_support_enabled()
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to create an album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -543,38 +646,65 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to update this album.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$album  = new BP_Media_Album( $request['id'] );
+
+			if ( empty( $album->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_album_invalid_id',
+					__( 'Invalid Album ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_album_user_can_delete( $album ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif (
+				isset( $request['group_id'] ) &&
+				! empty( $request['group_id'] ) &&
+				(
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+					|| ! bp_is_group_albums_support_enabled()
 				)
-			);
-		}
-
-		$album = new BP_Media_Album( $request['id'] );
-
-		if ( empty( $album->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_album_invalid_id',
-				__( 'Invalid Album ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_album_user_can_delete( $album ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to edit an album inside this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif (
+				(
+					! isset( $request['group_id'] ) ||
+					empty( $request['group_id'] )
+				) &&
+				! bp_is_profile_albums_support_enabled()
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to update an album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -668,38 +798,35 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this album.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$album  = new BP_Media_Album( $request['id'] );
 
-		$album = new BP_Media_Album( $request['id'] );
-
-		if ( empty( $album->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_album_invalid_id',
-				__( 'Invalid Album ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_album_user_can_delete( $album ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this album.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $album->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_album_invalid_id',
+					__( 'Invalid Album ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_album_user_can_delete( $album ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -761,6 +888,41 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
+		if ( WP_REST_Server::READABLE === $method ) {
+			$key          = 'get';
+			$args['id']   = array(
+				'description' => __( 'A unique numeric ID for the album.', 'buddyboss' ),
+				'type'        => 'integer',
+				'required'    => true,
+			);
+			$args['media_page'] = array(
+				'description'       => __( 'Current page of Album Medias.', 'buddyboss' ),
+				'type'              => 'integer',
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+				'minimum'           => 1,
+			);
+
+			$args['media_per_page'] = array(
+				'description'       => __( 'Maximum number of medias to be returned in result set.', 'buddyboss' ),
+				'type'              => 'integer',
+				'default'           => 10,
+				'minimum'           => 1,
+				'maximum'           => 100,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			if ( array_key_exists( 'title', $args ) ) {
+				unset( $args['title'] );
+			}
+
+			if ( array_key_exists( 'privacy', $args ) ) {
+				unset( $args['privacy'] );
+			}
+		}
+
 		if ( WP_REST_Server::EDITABLE === $method ) {
 			$args['id']                  = array(
 				'description' => __( 'A unique numeric ID for the album.', 'buddyboss' ),
@@ -819,7 +981,28 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response
 	 * @since 0.1.0
 	 */
-	public function prepare_item_for_response( $album, $request ) {
+	public function prepare_item_for_response( $album, $request, $album_media = array() ) {
+		if ( ! empty( $album_media ) ) {
+			$album->media = $album_media;
+		}
+
+		$medias = array(
+			'medias'         => array(),
+			'total_media'    => ( isset( $album->media['total'] ) ? $album->media['total'] : 0 ),
+			'total_video'    => ( isset( $album->media['total_video'] ) ? $album->media['total_video'] : 0 ),
+			'has_more_items' => ( isset( $album->media['has_more_items'] ) ? $album->media['has_more_items'] : false ),
+		);
+
+		$medias['total'] = ( (int) $medias['total_media'] + (int) $medias['total_video'] );
+
+		if ( ! empty( $album->media['medias'] ) ) {
+			foreach ( $album->media['medias'] as $media ) {
+				$medias['medias'][] = $this->prepare_response_for_collection(
+					$this->media_endpoint->prepare_item_for_response( $media, $request )
+				);
+			}
+		}
+
 		$data = array(
 			'id'            => $album->id,
 			'user_id'       => $album->user_id,
@@ -827,8 +1010,9 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'date_created'  => $album->date_created,
 			'title'         => $album->title,
 			'privacy'       => $album->privacy,
-			'media'         => $album->media,
-			'user_email'    => $album->user_email,
+			'media'         => $medias,
+			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
+			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
 			'user_nicename' => $album->user_nicename,
 			'user_login'    => $album->user_login,
 			'display_name'  => $album->display_name,
@@ -837,11 +1021,11 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$response = rest_ensure_response( $data );
 
 		/**
-		 * Filter an activity value returned from the API.
+		 * Filter a media album value returned from the API.
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BP_Media         $media    The Media object.
+		 * @param BP_Media_Album   $album    The Album object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -913,9 +1097,15 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'user_email'    => array(
+				'group_name'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The user\'s email id to create a media.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the Album.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
+				'visibility'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Visibility of the Album.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1001,6 +1191,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 
 		$params['privacy'] = array(
 			'description'       => __( 'The privacy of album.', 'buddyboss' ),
+			'default'           => 'public',
 			'enum'              => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -1105,6 +1296,42 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		}
 
 		return $relval;
+	}
+
+	/**
+	 * Check user access based on the privacy for the single album.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param BP_Media_Album $album Media Album object.
+	 *
+	 * @return bool
+	 */
+	protected function bp_rest_check_album_privacy_restriction( $album ) {
+		return (
+				'onlyme' === $album->privacy
+				&& bp_loggedin_user_id() !== $album->user_id
+			)
+			|| (
+				'loggedin' === $album->privacy
+				&& empty( bp_loggedin_user_id() )
+			)
+			|| (
+				bp_is_active( 'groups' )
+				&& 'grouponly' === $album->privacy
+				&& ! empty( $album->group_id )
+				&& 'public' !== bp_get_group_status( groups_get_group( $album->group_id ) )
+				&& empty( groups_is_user_admin( bp_loggedin_user_id(), $album->group_id ) )
+				&& empty( groups_is_user_mod( bp_loggedin_user_id(), $album->group_id ) )
+				&& empty( groups_is_user_member( bp_loggedin_user_id(), $album->group_id ) )
+			)
+			|| (
+				bp_is_active( 'friends' )
+				&& 'friends' === $album->privacy
+				&& ! empty( $album->user_id )
+				&& bp_loggedin_user_id() !== $album->user_id
+				&& 'is_friend' !== friends_check_friendship_status( $album->user_id, bp_loggedin_user_id() )
+			);
 	}
 }
 

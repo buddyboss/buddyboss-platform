@@ -158,7 +158,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -202,7 +202,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/members/:user_id/cover Create Member Cover
 	 * @apiName        CreateBBMemberCover
 	 * @apiGroup       Members
-	 * @apiDescription Create member cover
+	 * @apiDescription Create member cover. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} user_id A unique numeric ID for the User.
@@ -324,6 +324,18 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		/**
+		 * Fires if the cover photo was successfully deleted.
+		 *
+		 * The dynamic portion of the hook will be xprofile in case of a user's
+		 * cover photo, groups in case of a group's cover photo. For instance:
+		 * Use add_action( 'xprofile_cover_image_deleted' ) to run your specific
+		 * code once the user has deleted his cover photo.
+		 *
+		 * @param int $item_id Inform about the item id the cover photo was deleted for.
+		 */
+		do_action( 'xprofile_cover_image_deleted', (int) $this->user->ID );
+
 		// Build the response.
 		$response = new WP_REST_Response();
 		$response->set_data(
@@ -408,7 +420,8 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $cover_url, $request ) {
 		$data = array(
-			'image' => $cover_url,
+			'image'   => ( is_array( $cover_url ) ? $cover_url['cover'] : $cover_url ),
+			'warning' => ( is_array( $cover_url ) && isset( $cover_url['warning'] ) ? $cover_url['warning'] : '' ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -441,11 +454,17 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_attachments_member_cover',
 			'type'       => 'object',
 			'properties' => array(
-				'image' => array(
+				'image'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Full size of the image file.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'uri',
+					'readonly'    => true,
+				),
+				'warning' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Warning while uploading the cover photo.', 'buddyboss' ),
+					'type'        => 'string',
 					'readonly'    => true,
 				),
 			),

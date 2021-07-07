@@ -1938,6 +1938,7 @@ function bp_core_activate_signup( $key ) {
 	} else {
 		$signups = BP_Signup::get(
 			array(
+				'exclude_active' => false,
 				'activation_key' => $key,
 			)
 		);
@@ -2004,7 +2005,7 @@ function bp_core_activate_signup( $key ) {
 		// Set up data to pass to the legacy filter.
 		$user = array(
 			'user_id'  => $user_id,
-			'password' => $signup->meta['password'],
+			'password' => isset( $signup->meta['password'] ) ? $signup->meta['password'] : '',
 			'meta'     => $signup->meta,
 		);
 
@@ -2789,6 +2790,12 @@ function bp_remove_member_type( $user_id, $member_type ) {
 		return false;
 	}
 
+	// No need to continue if the member doesn't have the type.
+	$existing_types = bp_get_member_type( $user_id, false );
+	if ( ! in_array( $member_type, $existing_types, true ) ) {
+		return false;
+	}
+
 	$deleted = bp_remove_object_terms( $user_id, $member_type, bp_get_member_type_tax_name() );
 
 	// Bust the cache if the type has been removed.
@@ -2823,7 +2830,7 @@ function bp_remove_member_type( $user_id, $member_type ) {
 function bp_get_member_type( $user_id, $single = true ) {
 	$types = wp_cache_get( $user_id, 'bp_member_member_type' );
 
-	if ( false === $types ) {
+	if ( empty( $types ) ) {
 		$raw_types = bp_get_object_terms( $user_id, bp_get_member_type_tax_name() );
 
 		if ( ! is_wp_error( $raw_types ) ) {
@@ -3344,12 +3351,13 @@ function bp_get_active_member_types( $args = array() ) {
 	$args = bp_parse_args( $args, array(
 		'posts_per_page' => - 1,
 		'post_type'      => bp_get_member_type_post_type(),
+		'post_status'    => 'publish',
 		'orderby'        => 'menu_order',
 		'order'          => 'ASC',
 		'fields'         => 'ids'
 	), 'member_types' );
 
-	$bp_active_member_types_query = new \WP_Query( $args );
+    $bp_active_member_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_member_types_query->have_posts() ) {
 		$bp_active_member_types = $bp_active_member_types_query->posts;
@@ -4640,3 +4648,73 @@ function bp_register_page_content() {
 	}
 }
 add_action( 'bp_before_register_page', 'bp_register_page_content' );
+
+/**
+ * Return the link to report Member
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args Arguments.
+ *
+ * @return string|false Link for a report a Member.
+ */
+function bp_member_get_report_link( $args = array() ) {
+
+	// Restricted Report link for admin user.
+	$displayed_user_roles = bb_get_member_roles( bp_displayed_user_id() );
+	if ( in_array( 'administrator', $displayed_user_roles, true ) ) {
+		return false;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'id'                => 'member_report',
+			'component'         => 'moderation',
+			'position'          => 50,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_displayed_user_id(),
+				'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Filter to update Member report link
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	return apply_filters( 'bp_member_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}
+
+/**
+ * Get member roles.
+ *
+ * @param int $user_id User ID.
+ *
+ * @return array|false List of user roles or false otherwise.
+ */
+function bb_get_member_roles( $user_id = 0 ) {
+
+	// Default return value.
+	$roles = array();
+
+	// Bail if cannot query the user.
+	if ( ! class_exists( 'WP_User' ) || empty( $user_id ) ) {
+		return $roles;
+	}
+
+	// User ID.
+	$user = new WP_User( $user_id );
+	if ( isset( $user->roles ) ) {
+		$roles = (array) $user->roles;
+	}
+
+	// Super admin.
+	if ( is_multisite() && is_super_admin( $user_id ) ) {
+		$roles[] = 'super_admin';
+	}
+
+	return $roles;
+}

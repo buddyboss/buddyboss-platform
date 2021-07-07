@@ -122,10 +122,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		public function load_search_helpers() {
 			global $bp;
 
-			// load the helper type parent class
+			// load the helper type parent class.
 			require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-types.php';
 
-			// load and associate helpers one by one
+			// load and associate helpers one by one.
 			if ( bp_is_search_post_type_enable( 'post' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
 				$this->search_helpers['posts'] = new Bp_Search_Posts( 'post', 'posts' );
@@ -135,25 +135,26 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			if ( bp_is_search_post_type_enable( 'page' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
 				$this->search_helpers['pages'] = new Bp_Search_Posts( 'page', 'pages' );
+				$this->searchable_items[]      = 'pages';
 			}
 
-			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( 'forum' ) ) {
+			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ) {
 
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress.php';
 
-				if ( bp_is_search_post_type_enable( 'forum' ) ) {
+				if ( bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums.php';
 					$this->search_helpers['forum'] = Bp_Search_bbPress_Forums::instance();
 					$this->searchable_items[]      = 'forum';
 				}
 
-				if ( bp_is_search_post_type_enable( 'topic' ) ) {
+				if ( bp_is_search_post_type_enable( bbp_get_topic_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-topics.php';
 					$this->search_helpers['topic'] = Bp_Search_bbPress_Topics::instance();
 					$this->searchable_items[]      = 'topic';
 				}
 
-				if ( bp_is_search_post_type_enable( 'reply' ) ) {
+				if ( bp_is_search_post_type_enable( bbp_get_reply_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-replies.php';
 					$this->search_helpers['reply'] = Bp_Search_bbPress_Replies::instance();
 					$this->searchable_items[]      = 'reply';
@@ -173,16 +174,34 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items[]       = 'groups';
 			}
 
+			if ( bp_is_active( 'media' ) && bp_is_search_photos_enable() ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-media.php';
+				$this->search_helpers['photos'] = Bp_Search_Media::instance();
+				$this->searchable_items[]       = 'photos';
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_search_albums_enable() ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-albums.php';
+				$this->search_helpers['albums'] = Bp_Search_Albums::instance();
+				$this->searchable_items[]       = 'albums';
+			}
+
 			if ( bp_is_active( 'media' ) && bp_is_search_documents_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-documents.php';
-				$this->search_helpers['documents']  = Bp_Search_Documents::instance();
-				$this->searchable_items[]           = 'documents';
+				$this->search_helpers['documents'] = Bp_Search_Documents::instance();
+				$this->searchable_items[]          = 'documents';
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_active( 'video' ) && bp_is_search_videos_enable() && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-video.php';
+				$this->search_helpers['videos'] = Bp_Search_Video::instance();
+				$this->searchable_items[]       = 'videos';
 			}
 
 			if ( bp_is_active( 'media' ) && bp_is_search_folders_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-folders.php';
-				$this->search_helpers['folders']  = Bp_Search_Folders::instance();
-				$this->searchable_items[]         = 'folders';
+				$this->search_helpers['folders'] = Bp_Search_Folders::instance();
+				$this->searchable_items[]        = 'folders';
 			}
 
 			if ( bp_is_active( 'activity' ) && bp_is_search_activity_enable() ) {
@@ -342,7 +361,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$search_results[] = $new_row;
 				}
 
-				// Show "View All" link
+				// Show "View All" link.
 				if ( absint( $this->search_results['all']['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
 						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . '</a></div>',
@@ -354,7 +373,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			} else {
 				// @todo give a settings screen for this field
 				$search_results[] = array(
-					'value' => '<div class="bp-search-ajax-item noresult">' . sprintf( __( "Nothing found for '%s'", 'buddyboss' ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
+					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
+						sprintf(
+							/* translators: %s: search term */
+							__( "Nothing found for '%s'", 'buddyboss' ),
+							stripslashes( $this->search_args['search_term'] )
+						) .
+					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
 			}

@@ -152,6 +152,7 @@ class BP_Media_Template {
 			'album_id'     => false,
 			'group_id'     => false,
 			'privacy'      => false,
+			'video'        => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
 		extract( $r );
@@ -197,6 +198,7 @@ class BP_Media_Template {
 					'group_id'     => $group_id,
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
+					'video'        => $video,
 				)
 			);
 		}
@@ -209,6 +211,11 @@ class BP_Media_Template {
 			} else {
 				$this->total_media_count = (int) $max;
 			}
+		}
+
+		// Video count compatibility if album have only single video.
+		if ( isset( $this->medias['total_video'] ) && ! is_null( $this->medias['total_video'] ) && $video ) {
+			$this->total_media_count = $this->total_media_count + (int) $this->medias['total_video'];
 		}
 
 		$this->has_more_items = $this->medias['has_more_items'];

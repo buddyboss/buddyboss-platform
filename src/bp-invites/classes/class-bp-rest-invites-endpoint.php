@@ -154,26 +154,26 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to view invites.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view invites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		if ( true === $retval && ! ( bp_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you don\'t have permission to view invites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you don\'t have permission to view invites.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -258,7 +258,9 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		$query_string = array();
 		if ( ! empty( $invite_correct_array ) ) {
 
-			require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
+			if ( ! function_exists( 'bp_invites_kses_allowed_tags' ) ) {
+				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
+			}
 
 			foreach ( $invite_correct_array as $key => $value ) {
 
@@ -363,33 +365,36 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( empty( $invitations_ids ) ) {
-			return new WP_Error(
-				'bp_rest_no_invitation_send',
-				__( 'Sorry, No any invitation has been send.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
-		}
-
-		$send_invitations = get_posts(
-			array(
-				'post_type' => bp_get_invite_post_type(),
-				'include'   => $invitations_ids,
-			)
-		);
-
 		$retval = array(
 			'data'   => array(),
-			'exists' => $invite_exists_array,
-			'failed' => wp_list_pluck( array_filter( $failed_invite ), 'email' ),
+			'exists' => '',
+			'failed' => '',
 		);
 
-		foreach ( $send_invitations as $invite ) {
-			$retval['data'][] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $invite, $request )
+		if ( ! empty( $invite_exists_array ) ) {
+			$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' ) . ' ' . implode( ', ', $invite_exists_array ) );
+		}
+
+		if ( ! empty( $failed_invite ) ) {
+			$retval['failed'] = trim( __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' ) . ' ' . implode( ', ', wp_list_pluck( array_filter( $failed_invite ), 'email' ) ) );
+		}
+
+		if ( ! empty( $invitations_ids ) ) {
+			$send_invitations = get_posts(
+				array(
+					'post_type'              => bp_get_invite_post_type(),
+					'include'                => $invitations_ids,
+					'suppress_filters'       => false,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				)
 			);
+
+			foreach ( $send_invitations as $invite ) {
+				$retval['data'][] = $this->prepare_response_for_collection(
+					$this->prepare_item_for_response( $invite, $request )
+				);
+			}
 		}
 
 		$response = rest_ensure_response( $retval );
@@ -416,26 +421,26 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to create invites.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to create invites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		if ( true === $retval && ! ( bp_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you don\'t have permission to create invites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you don\'t have permission to create invites.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -509,48 +514,43 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to revoke invite.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to revoke invite.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$invite = get_post( $request['id'] );
 
-		if ( true === $retval && ! ( bp_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		$invite = get_post( $request['id'] );
-
-		if ( true === $retval && empty( $invite->ID ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invite_invalid_id',
-				__( 'Invalid invite ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ( ! isset( $invite->post_type ) || 'bp-invite' !== $invite->post_type ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invite_invalid_id',
-				__( 'Invalid invite ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( empty( $invite->ID ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invite_invalid_id',
+					__( 'Invalid invite ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! isset( $invite->post_type ) || 'bp-invite' !== $invite->post_type ) {
+				$retval = new WP_Error(
+					'bp_rest_invite_invalid_id',
+					__( 'Invalid invite ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
 		}
 
 		/**
@@ -636,26 +636,26 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_invite_profile_type_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to view invites profile type.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view invites profile type.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		if ( true === $retval && ! ( bp_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

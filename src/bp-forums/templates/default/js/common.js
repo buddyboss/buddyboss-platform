@@ -110,13 +110,13 @@ jQuery( document ).ready(
 							events: {
 								ready: function () {
 									if (typeof window.forums_medium_topic_editor !== 'undefined' && typeof window.forums_medium_topic_editor[key] !== 'undefined') {
-										window.forums_medium_topic_editor[key].setContent( jQuery('#'+elem_id).closest('form').find( '#bbp_topic_content' ).val() );
+										window.forums_medium_topic_editor[key].resetContent();
 									}
 									if (typeof window.forums_medium_reply_editor !== 'undefined' && typeof window.forums_medium_reply_editor[key] !== 'undefined') {
-										window.forums_medium_reply_editor[key].setContent( jQuery('#'+elem_id).closest('form').find( '#bbp_reply_content' ).val() );
+										window.forums_medium_reply_editor[key].resetContent();
 									}
 									if (typeof window.forums_medium_forum_editor !== 'undefined' && typeof window.forums_medium_forum_editor[key] !== 'undefined') {
-										window.forums_medium_forum_editor[key].setContent( jQuery('#'+elem_id).closest('form').find( '#bbp_forum_content' ).val() );
+										window.forums_medium_forum_editor[key].resetContent();
 									}
 								},
 								emojibtn_click: function () {
@@ -137,26 +137,5 @@ jQuery( document ).ready(
 				});
 			}
 		}
-
-		//Add Click event to show / hide text formatting Toolbar
-
-		jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .show-toolbar, .bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
-			e.preventDefault();
-			var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
-			jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
-			if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
-				jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
-			} else {
-				jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
-			}
-			medium_editor.toggleClass('active');
-
-		});
-
-		jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar-actions, .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
-			e.preventDefault();
-			jQuery( e.currentTarget ).closest( 'form' ).find( '.bbp-the-content-wrapper .bbp-the-content' ).focus();
-		});
-
 	}
 );

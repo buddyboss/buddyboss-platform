@@ -461,7 +461,7 @@ class BP_Media_Album {
 	 * @param array $album_ids Array of media IDs.
 	 * @return array
 	 */
-	protected static function get_album_data( $album_ids = array() ) {
+	public static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
 
 		// Bail if no media ID's passed.
@@ -471,6 +471,9 @@ class BP_Media_Album {
 
 		// Get BuddyPress.
 		$bp = buddypress();
+
+		// Media Privacy array.
+		$media_privacy = bp_media_get_visibility_levels();
 
 		$albums       = array();
 		$uncached_ids = bp_get_non_cached_ids( $album_ids, 'bp_media_album' );
@@ -500,10 +503,29 @@ class BP_Media_Album {
 				$album->group_id = (int) $album->group_id;
 			}
 
-			$album->media = bp_media_get( array(
+			$album->media = bp_media_get(
+				array(
 					'album_id'    => $album->id,
 					'count_total' => true,
-				) );
+					'video'       => true,
+				)
+			);
+
+			$group_name = '';
+			if ( bp_is_active( 'groups' ) && $album->group_id > 0 ) {
+				$group      = groups_get_group( $album->group_id );
+				$group_name = bp_get_group_name( $group );
+				$status     = bp_get_group_status( $group );
+				if ( 'hidden' === $status || 'private' === $status ) {
+					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				} else {
+					$visibility = ucfirst( $status );
+				}
+			} else {
+				$visibility = $media_privacy[ $album->privacy ];
+			}
+			$album->group_name = $group_name;
+			$album->visibility = $visibility;
 
 			$albums[] = $album;
 		}
@@ -547,7 +569,7 @@ class BP_Media_Album {
 		}
 
 		$args = array(
-			'in'   => $id,
+			'in' => $id,
 		);
 
 		$albums = self::get( $args );
@@ -727,10 +749,17 @@ class BP_Media_Album {
 		// Pluck the media albums IDs out of the $albums array.
 		$album_ids = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
 
-		// delete the media associated with album
+		// delete the media associated with album.
 		if ( ! empty( $album_ids ) ) {
-			foreach( $album_ids as $album_id ) {
+			foreach ( $album_ids as $album_id ) {
 				bp_media_delete( array( 'album_id' => $album_id ) );
+			}
+		}
+
+		// delete the video associated with album.
+		if ( ! empty( $album_ids ) && function_exists( 'bp_video_delete' ) ) {
+			foreach ( $album_ids as $album_id ) {
+				bp_video_delete( array( 'album_id' => $album_id ) );
 			}
 		}
 

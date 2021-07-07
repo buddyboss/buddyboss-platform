@@ -512,10 +512,12 @@ function bbp_admin_repair_group_forum_relationship() {
 	// Try to get the group root forum
 	$posts = get_posts(
 		array(
-			'post_type'   => bbp_get_forum_post_type(),
-			'meta_key'    => '_bbp_old_forum_id',
-			'meta_value'  => $old_default_forum_id,
-			'numberposts' => 1,
+			'post_type'              => bbp_get_forum_post_type(),
+			'meta_key'               => '_bbp_old_forum_id',
+			'meta_value'             => $old_default_forum_id,
+			'numberposts'            => 1,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 
@@ -584,8 +586,10 @@ function bbp_admin_repair_forum_topic_count() {
 
 	$forums = get_posts(
 		array(
-			'post_type'   => bbp_get_forum_post_type(),
-			'numberposts' => -1,
+			'post_type'              => bbp_get_forum_post_type(),
+			'numberposts'            => - 1,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 	if ( ! empty( $forums ) ) {
@@ -649,8 +653,10 @@ function bbp_admin_repair_forum_reply_count() {
 	// Recalculate the metas key _bbp_reply_count and _bbp_total_reply_count for each forum
 	$forums = get_posts(
 		array(
-			'post_type'   => bbp_get_forum_post_type(),
-			'numberposts' => -1,
+			'post_type'              => bbp_get_forum_post_type(),
+			'numberposts'            => - 1,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 	if ( ! empty( $forums ) ) {

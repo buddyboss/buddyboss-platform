@@ -145,10 +145,6 @@ function bp_nouveau_ajax_document_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response, 500 );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -158,12 +154,8 @@ function bp_nouveau_ajax_document_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_document_upload_dir' );
-
 	// Upload file.
 	$result = bp_document_upload();
-
-	remove_filter( 'upload_dir', 'bp_document_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 
@@ -201,10 +193,6 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -214,7 +202,9 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['folder_id'] ) ) {
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+
+	if ( empty( $folder_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide ID of folder to delete.', 'buddyboss' )
@@ -223,7 +213,6 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 	if ( ! bp_folder_user_can_delete( $folder_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -240,7 +229,7 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
@@ -275,9 +264,8 @@ function bp_nouveau_ajax_document_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$author_id 	= filter_input( INPUT_POST, 'author', FILTER_VALIDATE_INT );
+	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	// check activity is document or not.
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
@@ -294,7 +282,7 @@ function bp_nouveau_ajax_document_get_activity() {
 			'scope'       => 'document',
 		);
 	} else {
-		if ( $group_id > 0 ) {
+		if ( $group_id > 0 && bp_is_active( 'groups' ) ) {
 			$args = array(
 				'include'     => $post_id,
 				'object'      => buddypress()->groups->id,
@@ -355,8 +343,8 @@ function bp_nouveau_ajax_document_get_document_description() {
 		wp_send_json_error( $response );
 	}
 
-	$document_id	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$attachment_id 	= filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
+	$document_id   = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
 
 	if ( empty( $document_id ) || empty( $attachment_id ) ) {
 		wp_send_json_error( $response );
@@ -366,22 +354,23 @@ function bp_nouveau_ajax_document_get_document_description() {
 		wp_send_json_error( $response );
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
-
-	$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-	$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-	$can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
-	$can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+	$content          = get_post_field( 'post_content', $attachment_id );
+	$document_privacy = bb_media_user_can_access( $document_id, 'document' );
+	$can_download_btn = true === (bool) $document_privacy['can_download'];
+	$can_edit_btn     = true === (bool) $document_privacy['can_edit'];
+	$can_view         = true === (bool) $document_privacy['can_view'];
 
 	$document     = new BP_Document( $document_id );
 	$user_domain  = bp_core_get_user_domain( $document->user_id );
 	$display_name = bp_core_get_user_displayname( $document->user_id );
 	$time_since   = bp_core_time_since( $document->date_created );
-	$avatar       = bp_core_fetch_avatar( array(
-					'item_id' => $document->user_id,
-					'object'  => 'user',
-					'type'    => 'full',
-			) );
+	$avatar       = bp_core_fetch_avatar(
+		array(
+			'item_id' => $document->user_id,
+			'object'  => 'user',
+			'type'    => 'full',
+		)
+	);
 
 	ob_start();
 
@@ -399,58 +388,47 @@ function bp_nouveau_ajax_document_get_document_description() {
 					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 				</div>
 			</div>
-		<div class="activity-media-description">
-			<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
-			<?php
-			if ( $can_manage_btn ) {
-				?>
-				<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-				href="#">
-					<span class="bb-icon-edit-thin"></span>
-					<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-					<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-				</a>
-
-				<div class="bp-edit-media-activity-description" style="display: none;">
-					<div class="innerWrap">
-								<textarea id="add-activity-description"
-										title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-										class="textInput"
-										name="caption_text"
-										placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-										role="textbox"><?php echo $content; ?></textarea>
-					</div>
-					<div class="in-profile description-new-submit">
-						<?php ?>
-						<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-						<input type="submit" id="bp-activity-description-new-submit" class="button small"
-							name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-						<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
-							value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
-					</div>
-				</div>
+			<div class="activity-media-description">
+				<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
 				<?php
-			}
-			?>
-		</div>
-		<?php
+				if ( $can_edit_btn ) {
+					?>
+					<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+					href="#">
+						<span class="bb-icon-edit-thin"></span>
+						<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+						<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+					</a>
+
+					<div class="bp-edit-media-activity-description" style="display: none;">
+						<div class="innerWrap">
+							<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
+						</div>
+						<div class="in-profile description-new-submit">
+							<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_attr_e( 'Done Editing', 'buddyboss' ); ?>">
+							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>">
+						</div>
+					</div>
+					<?php
+				}
+				?>
+			</div>
+			<?php
 			if ( ! empty( $document_id ) ) {
-				$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-				$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+				$document_privacy = bb_media_user_can_access( $document_id, 'document' );
+				$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 				if ( $can_download_btn ) {
-					$download_url      = bp_document_download_link( $attachment_id, $document_id );
+					$download_url = bp_document_download_link( $attachment_id, $document_id );
 					if ( $download_url ) {
 						?>
-						<a class="download-document"
-							href="<?php echo esc_url( $download_url ); ?>">
-							<?php _e( 'Download', 'buddyboss' ); ?>
-						</a>
+						<a class="download-document" href="<?php echo esc_url( $download_url ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a>
 						<?php
 					}
 				}
 			}
-		?>
-	</li>
+			?>
+		</li>
 		<?php
 		$document_description = ob_get_contents();
 		ob_end_clean();
@@ -503,7 +481,7 @@ function bp_nouveau_ajax_document_delete_attachment() {
 }
 
 /**
- * Save media
+ * Save document
  *
  * @since BuddyBoss 1.4.0
  */
@@ -520,10 +498,6 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -533,7 +507,8 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['documents'] ) ) {
+	$documents = filter_input( INPUT_POST, 'documents', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	if ( empty( $documents ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please upload a document before saving.', 'buddyboss' )
@@ -544,27 +519,30 @@ function bp_nouveau_ajax_document_document_save() {
 
 	if ( ! is_user_logged_in() ) {
 		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'Please login to upload a document.', 'buddyboss' )
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please login to upload a document.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $_POST['documents'] ) && ! empty( $_POST['documents'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
-		$documents = $_POST['documents'];
-		$folder_id  = (int) $_POST['folder_id'];
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+
+	if ( isset( $documents ) && ! empty( $documents ) && $folder_id > 0 ) {
 		if ( ! empty( $documents ) && is_array( $documents ) ) {
 			// set folder id for document.
 			foreach ( $documents as $key => $document ) {
 				if ( 0 === (int) $document['folder_id'] ) {
-					$_POST['documents'][ $key ]['folder_id'] = $folder_id;
+					$documents[ $key ]['folder_id'] = $folder_id;
 				}
 			}
 		}
 	}
 
-	// handle media uploaded.
-	$document_ids = bp_document_add_handler( $_POST['documents'] );
+	$privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+
+	// handle document uploaded.
+	$document_ids = bp_document_add_handler( $documents, $privacy, $content );
 	$document     = '';
 	if ( ! empty( $document_ids ) ) {
 		ob_start();
@@ -596,10 +574,6 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -614,24 +588,27 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['title'] ) ) {
+	$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+
+	if ( empty( $title ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
-		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+	if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
+		$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
-	// save media.
-	$id        = ! empty( $_POST['folder_id'] ) ? filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : false;
-	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = wp_strip_all_tags( $_POST['title'] );
-	$privacy   = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
-	$parent    = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
-	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
+	// save document.
+	$id        = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+	$group_id  = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$title     = wp_strip_all_tags( $title );
+	$privacy   = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$privacy   = ! empty( $privacy ) ? $privacy : 'public';
+	$parent    = filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT );
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 
 	if ( $parent > 0 ) {
 		$id = false;
@@ -668,6 +645,9 @@ function bp_nouveau_ajax_document_folder_save() {
 		$response['feedback'] = esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
+
+	// Flush the cache.
+	wp_cache_flush();
 
 	$folder = new BP_Document_Folder( $folder_id );
 
@@ -709,10 +689,6 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -722,7 +698,9 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['title'] ) ) {
+	$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+
+	if ( empty( $title ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
@@ -732,16 +710,15 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
-		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+	if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
+		$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
 	// save folder.
-	$id        = 0;
-	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = wp_strip_all_tags( $_POST['title'] );
-	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
+	$group_id  = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$title     = wp_strip_all_tags( $title );
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 	$privacy   = '';
 
 	if ( $folder_id > 0 ) {
@@ -818,10 +795,6 @@ function bp_nouveau_ajax_document_move() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -832,9 +805,9 @@ function bp_nouveau_ajax_document_move() {
 	}
 
 	// Move document.
-	$folder_id   = ! empty( $_POST['folder_id'] ) ? (int) $_POST['folder_id'] : 0;
-	$document_id = ! empty( $_POST['document_id'] ) ? (int) $_POST['document_id'] : 0;
-	$group_id    = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$folder_id   = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+	$document_id = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
+	$group_id    = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $document_id ) {
 		wp_send_json_error( $response );
@@ -858,35 +831,40 @@ function bp_nouveau_ajax_document_move() {
 
 	$document = bp_document_move_document_to_folder( $document_id, $folder_id, $group_id );
 
+	// Flush the cache.
+	wp_cache_flush();
+
+	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+
 	if ( $document > 0 ) {
 
 		$content = '';
 		ob_start();
 
-		if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
+		if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) {
 
-			if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+			if ( empty( $page ) || 1 === $page ) {
 				?>
 
 				<div class="document-data-table-head">
-					<span class="data-head-sort-label"><?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+					<span class="data-head-sort-label"><?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 					<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 					</div>
@@ -896,37 +874,33 @@ function bp_nouveau_ajax_document_move() {
 				<?php
 				bp_get_template_part( 'document/activity-document-move' );
 				bp_get_template_part( 'document/activity-document-folder-move' );
+			}
 
-			endif;
-
-			while ( bp_document() ) :
+			while ( bp_document() ) {
 				bp_the_document();
 
 				bp_get_template_part( 'document/document-entry' );
 
-			endwhile;
+			}
 
-			if ( bp_document_has_more_items() ) :
+			if ( bp_document_has_more_items() ) {
 				?>
 				<div class="pager">
 					<div class="dt-more-container load-more">
-						<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+						<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 					</div>
 				</div>
 				<?php
-			endif;
+			}
 
-			if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+			if ( empty( $page ) || 1 === $page ) {
 				?>
 				</div> <!-- #media-folder-document-data-table -->
 				<?php
-			endif;
-
-		else :
-
+			}
+		} else {
 			bp_nouveau_user_feedback( 'media-loop-document-none' );
-
-		endif;
+		}
 
 		$content .= ob_get_clean();
 
@@ -940,7 +914,6 @@ function bp_nouveau_ajax_document_move() {
 	} else {
 		wp_send_json_error( $response );
 	}
-
 }
 
 /**
@@ -959,10 +932,19 @@ function bp_nouveau_ajax_document_update_file_name() {
 		wp_send_json_error( $response );
 	}
 
-	$document_id            = ! empty( $_POST['document_id'] ) ? (int) filter_input( INPUT_POST, 'document_id', FILTER_SANITIZE_STRING ) : 0;
-	$attachment_document_id = ! empty( $_POST['attachment_document_id'] ) ? (int) filter_input( INPUT_POST, 'attachment_document_id', FILTER_SANITIZE_STRING ) : 0;
-	$title                  = ! empty( $_POST['name'] ) ? filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING ) : '';
-	$type                   = ! empty( $_POST['document_type'] ) ? filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING ) : '';
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$document_id            = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
+	$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
+	$title                  = filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING );
+	$type                   = filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING );
 
 	if ( 'document' === $type ) {
 		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
@@ -991,7 +973,7 @@ function bp_nouveau_ajax_document_update_file_name() {
 				wp_send_json_error( $response );
 			} else {
 				$response = array(
-						'feedback' => $document,
+					'feedback' => $document,
 				);
 				wp_send_json_error( $response );
 			}
@@ -1001,8 +983,8 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 
-		if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
-			$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+		if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
+			$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 
@@ -1032,7 +1014,6 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 	}
-
 }
 
 /**
@@ -1053,10 +1034,6 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -1066,7 +1043,9 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['title'] ) ) {
+	$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+
+	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please enter title of folder.', 'buddyboss' )
@@ -1075,18 +1054,18 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+	if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
 		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'Invalid folder name', 'buddyboss' )
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Invalid folder name', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
 
 	// save folder.
-	$title    = $_POST['title'];
-	$id       = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$id       = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$privacy  = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
 
 	if ( (int) $id > 0 ) {
 		$has_access = bp_folder_user_can_edit( $id );
@@ -1096,10 +1075,8 @@ function bp_nouveau_ajax_document_edit_folder() {
 		}
 	}
 
-	if ( ! empty( $_POST['privacy'] ) ) {
-		$privacy = $_POST['privacy'];
-	} else {
-		$folder_id = bp_document_get_root_parent_id( $_POST['id'] );
+	if ( empty( $privacy ) ) {
+		$folder_id = bp_document_get_root_parent_id( $id );
 		$folder    = new BP_Document_Folder( $folder_id );
 		$privacy   = $folder->privacy;
 	}
@@ -1144,10 +1121,19 @@ function bp_nouveau_ajax_document_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$id            = ! empty( $_POST['id'] ) ? (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) : 0;
-	$attachment_id = ! empty( $_POST['attachment_id'] ) ? (int) filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) : 0;
-	$type          = ! empty( $_POST['type'] ) ? filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) : '';
-	$scope         = ! empty( $_POST['scope'] ) ? filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING ) : '';
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$id            = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
+	$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$scope         = filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING );
 
 	if ( '' === $type ) {
 		wp_send_json_error( $response );
@@ -1167,6 +1153,9 @@ function bp_nouveau_ajax_document_delete() {
 		}
 	}
 
+	// Flush the cache.
+	wp_cache_flush();
+
 	$content = '';
 	ob_start();
 
@@ -1175,30 +1164,32 @@ function bp_nouveau_ajax_document_delete() {
 		$string = '&scope=' . $scope;
 	}
 
+	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+
 	if ( bp_has_document( bp_ajax_querystring( 'document' ) . $string ) ) :
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 
 			<div class="document-data-table-head">
-				<span class="data-head-sort-label"><?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+				<span class="data-head-sort-label"><?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 				<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 				</div>
@@ -1222,13 +1213,13 @@ function bp_nouveau_ajax_document_delete() {
 			?>
 			<div class="pager">
 				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php
 		endif;
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 			</div> <!-- #media-folder-document-data-table -->
 			<?php
@@ -1270,9 +1261,18 @@ function bp_nouveau_ajax_document_folder_move() {
 		wp_send_json_error( $response );
 	}
 
-	$destination_folder_id = ! empty( $_POST['folderMoveToId'] ) ? (int) filter_input( INPUT_POST, 'folderMoveToId', FILTER_VALIDATE_INT ) : 0;
-	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
-	$group_id              = ! empty( $_POST['group'] ) ? (int) filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ) : 0;
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$destination_folder_id = filter_input( INPUT_POST, 'folder_move_to_id', FILTER_VALIDATE_INT );
+	$folder_id             = filter_input( INPUT_POST, 'current_folder_id', FILTER_VALIDATE_INT );
+	$group_id              = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	if ( (int) $folder_id > 0 ) {
 		$has_access = bp_folder_user_can_edit( $folder_id );
@@ -1319,33 +1319,35 @@ function bp_nouveau_ajax_document_folder_move() {
 
 	bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, $group_id );
 
+	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+
 	$content = '';
 	ob_start();
 
 	if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 
 			<div class="document-data-table-head">
-				<span class="data-head-sort-label">:<?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+				<span class="data-head-sort-label">:<?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 				<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 				</div>
@@ -1369,13 +1371,13 @@ function bp_nouveau_ajax_document_folder_move() {
 			?>
 			<div class="pager">
 				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php
 		endif;
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 			</div> <!-- #media-folder-document-data-table -->
 			<?php
@@ -1400,8 +1402,8 @@ function bp_nouveau_ajax_document_folder_move() {
 
 function bp_nouveau_ajax_document_get_folder_view() {
 
-	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
+	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 'profile' === $type ) {
 		$ul = bp_document_user_document_folder_tree_view_li_html( $id, 0 );
@@ -1413,7 +1415,7 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	if ( 'profile' === $type ) {
 		$first_text = esc_html__( ' Documents', 'buddyboss' );
 	} else {
-		if ( bp_is_active( 'groups') ) {
+		if ( bp_is_active( 'groups' ) ) {
 			$group      = groups_get_group( (int) $id );
 			$first_text = bp_get_group_name( $group );
 		}
@@ -1429,14 +1431,33 @@ function bp_nouveau_ajax_document_get_folder_view() {
 }
 
 function bp_nouveau_ajax_document_save_privacy() {
-	global $wpdb, $bp;
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
 
 	if ( ! is_user_logged_in() ) {
 		$response['feedback'] = esc_html__( 'Please login to edit a privacy.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
-	$id      = filter_input( INPUT_POST, 'itemId', FILTER_VALIDATE_INT );
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$id      = filter_input( INPUT_POST, 'item_id', FILTER_VALIDATE_INT );
 	$type    = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	$privacy = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
 
@@ -1466,10 +1487,13 @@ function bp_nouveau_ajax_document_save_privacy() {
 	// Update document privacy with nested level.
 	bp_document_update_privacy( $id, $privacy, $type );
 
+	$document = ( 'document' === $type ? bb_get_document_attachments( $id ) : '' );
+
 	wp_send_json_success(
 		array(
-			'message' => 'success',
-			'html'    => $type,
+			'message'  => 'success',
+			'html'     => $type,
+			'document' => $document,
 		)
 	);
 
@@ -1489,10 +1513,19 @@ function bp_nouveau_ajax_document_activity_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$id            = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-	$attachment_id = ! empty( $_POST['attachment_id'] ) ? (int) $_POST['attachment_id'] : 0;
-	$type          = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
-	$activity_id   = ! empty( $_POST['activity_id'] ) ? $_POST['activity_id'] : 0;
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$id            = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
+	$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$activity_id   = filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT );
 
 	if ( '' === $type ) {
 		wp_send_json_error( $response );
@@ -1509,15 +1542,31 @@ function bp_nouveau_ajax_document_activity_delete() {
 	$delete_box = false;
 
 	// Get activity object.
-	$activity = new BP_Activity_Activity( $activity_id );
+	$activity         = new BP_Activity_Activity( $activity_id );
+	$activity_content = '';
 	if ( empty( $activity->id ) ) {
 		$delete_box = true;
+	} else {
+		ob_start();
+		if ( bp_has_activities(
+			array(
+				'include' => $activity_id,
+			)
+		) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				bp_get_template_part( 'activity/entry' );
+			}
+		}
+		$activity_content = ob_get_contents();
+		ob_end_clean();
 	}
 
 	wp_send_json_success(
 		array(
-			'message'         => 'success',
-			'delete_activity' => $delete_box,
+			'message'          => 'success',
+			'delete_activity'  => $delete_box,
+			'activity_content' => $activity_content,
 		)
 	);
 }

@@ -102,6 +102,8 @@ class BP_Walker_Nav_Menu_Checklist extends Walker_Nav_Menu {
 			$item->classes[] = 'bp-' . $item->post_excerpt . '-nav';
 		}
 
+		$item->type_label = __( 'BuddyBoss', 'buddyboss' );
+
 		// Menu item hidden fields.
 		$output .= '<input type="hidden" class="menu-item-db-id" name="menu-item[' . $possible_object_id . '][menu-item-db-id]" value="' . $possible_db_id . '" />';
 		$output .= '<input type="hidden" class="menu-item-object" name="menu-item[' . $possible_object_id . '][menu-item-object]" value="' . esc_attr( $item->object ) . '" />';

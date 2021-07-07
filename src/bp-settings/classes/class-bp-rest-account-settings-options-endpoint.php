@@ -153,28 +153,27 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$nav    = $request->get_param( 'nav' );
 
-		$nav = $request->get_param( 'nav' );
-
-		if ( true === $retval && empty( $nav ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_setting_nav',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
+			if ( empty( $nav ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_setting_nav',
+					__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		/**
@@ -262,6 +261,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		$retval = array(
 			'error'   => ( isset( $updated['error'] ) ? $updated['error'] : false ),
+			'success' => ( empty( $updated['error'] ) ? __( 'Your settings has been successfully updated.', 'buddyboss' ) : false ),
 			'notices' => ( isset( $updated['notice'] ) ? $updated['notice'] : false ),
 			'data'    => $data,
 		);
@@ -290,28 +290,27 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$nav    = $request->get_param( 'nav' );
 
-		$nav = $request->get_param( 'nav' );
-
-		if ( true === $retval && empty( $nav ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_setting_nav',
-				__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
+			if ( empty( $nav ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_setting_nav',
+					__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		/**
@@ -378,12 +377,13 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $field, $request ) {
 		$data = array(
-			'name'     => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
-			'label'    => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
-			'type'     => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
-			'value'    => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
-			'options'  => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
-			'headline' => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
+			'name'        => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
+			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
+			'type'        => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
+			'value'       => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
+			'placeholder' => ( isset( $field['placeholder'] ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : '' ),
+			'options'     => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
+			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -520,6 +520,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				'label'       => __( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ),
 				'field'       => 'password',
 				'value'       => '',
+				'placeholder' => __( 'Enter password', 'buddyboss' ),
 				'options'     => array(),
 				'group_label' => '',
 			);
@@ -530,6 +531,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'label'       => __( 'Account Email', 'buddyboss' ),
 			'field'       => 'email',
 			'value'       => esc_attr( bp_core_get_user_email( bp_loggedin_user_id() ) ),
+			'placeholder' => __( 'Enter email', 'buddyboss' ),
 			'options'     => array(),
 			'group_label' => '',
 		);
@@ -538,6 +540,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'name'        => 'pass1',
 			'label'       => __( 'Add Your New Password', 'buddyboss' ),
 			'field'       => 'password',
+			'placeholder' => __( 'Enter password', 'buddyboss' ),
 			'value'       => '',
 			'options'     => array(),
 			'group_label' => '',
@@ -547,6 +550,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'name'        => 'pass2',
 			'label'       => __( 'Repeat Your New Password', 'buddyboss' ),
 			'field'       => 'password',
+			'placeholder' => __( 'Enter password', 'buddyboss' ),
 			'value'       => '',
 			'options'     => array(),
 			'group_label' => '',
@@ -709,7 +713,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 				$fields_groups[] = array(
 					'name'        => 'notification_group_messages_new_message',
-					'label'       => __( 'Group Message', 'buddyboss' ),
+					'label'       => __( 'A group sends you a new message', 'buddyboss' ),
 					'field'       => 'radio',
 					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
 					'options'     => array(
@@ -722,6 +726,44 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			$fields_groups = apply_filters( 'bp_rest_account_settings_notifications_groups', $fields_groups );
 			$fields        = array_merge( $fields, $fields_groups );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$fields_forums[] = array(
+				'name'        => '',
+				'label'       => '',
+				'field'       => '',
+				'value'       => '',
+				'options'     => array(),
+				'group_label' => __( 'Forums', 'buddyboss' ),
+			);
+
+			$fields_forums[] = array(
+				'name'        => 'notification_forums_following_reply',
+				'label'       => __( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
+				'options'     => array(
+					'yes' => 'Yes',
+					'no'  => 'No',
+				),
+				'group_label' => '',
+			);
+
+			$fields_forums[] = array(
+				'name'        => 'notification_forums_following_topic',
+				'label'       => __( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
+				'options'     => array(
+					'yes' => 'Yes',
+					'no'  => 'No',
+				),
+				'group_label' => '',
+			);
+
+			$fields_forums = apply_filters( 'bp_rest_account_settings_notifications_forums', $fields_forums );
+			$fields        = array_merge( $fields, $fields_forums );
 		}
 
 		if ( bp_is_active( 'friends' ) ) {
@@ -796,10 +838,16 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 				if ( isset( $group->fields ) && ! empty( $group->fields ) ) {
 					foreach ( $group->fields as $field ) {
+
+						// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+						if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+							continue;
+						}
+
 						$fields[] = array(
 							'name'        => 'field_' . $field->id,
 							'label'       => $field->name,
-							'field'       => ( ! empty( $field->__get( 'allow_custom_visibility' ) ) && 'allowed' === $field->__get( 'allow_custom_visibility' ) ) ? 'select' : '',
+							'field'       => ( ! empty( $this->bp_rest_get_xprofile_field_visibility( $field ) ) && 'allowed' === $this->bp_rest_get_xprofile_field_visibility( $field ) ) ? 'select' : '',
 							'value'       => xprofile_get_field_visibility_level( $field->id, bp_loggedin_user_id() ),
 							'options'     => array_column( bp_xprofile_get_visibility_levels(), 'label', 'id' ),
 							'group_label' => '',
@@ -1376,6 +1424,37 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			__( 'There is a pending change of your email address to %1$s. Check your email (%2$s) for the verification link.', 'buddyboss' ),
 			'<strong>' . esc_html( $pending_email['newemail'] ) . '</strong>',
 			'<strong>' . esc_html( bp_get_displayed_user_email() ) . '</strong>'
+		);
+	}
+
+	/**
+	 * Check current user can edit the visibility or not.
+	 *
+	 * @param BP_XProfile_Field $field_object Field Object.
+	 *
+	 * @return string
+	 */
+	public function bp_rest_get_xprofile_field_visibility( $field_object ) {
+		global $field;
+
+		// Get the field id into for user check.
+		$GLOBALS['profile_template']              = new stdClass();
+		$GLOBALS['profile_template']->in_the_loop = true;
+
+		// Setup current user id into global.
+		$field = $field_object;
+
+		return (
+		! bp_current_user_can( 'bp_xprofile_change_field_visibility' )
+			? 'disabled'
+			: (
+		(
+			! empty( $field->__get( 'allow_custom_visibility' ) )
+			&& 'allowed' === $field->__get( 'allow_custom_visibility' )
+			)
+			? $field->__get( 'allow_custom_visibility' )
+			: 'disabled'
+		)
 		);
 	}
 }
