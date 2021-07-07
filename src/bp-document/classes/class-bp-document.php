@@ -1938,7 +1938,22 @@ class BP_Document {
 			$this->id = $wpdb->insert_id;
 		}
 
+
+		/**
+		 * Fire before documents preview generate.
+		 *
+		 * @since BuddyBoss 1.7.0.1
+		 */
+		do_action( 'bb_document_before_generate_document_previews' );
+
 		bp_document_generate_document_previews( $this->attachment_id );
+
+		/**
+		 * Fire after documents preview generate.
+		 *
+		 * @since BuddyBoss 1.7.0.1
+		 */
+		do_action( 'bb_document_after_generate_document_previews' );
 
 		// Update folder modified date.
 		$folder = (int) $this->folder_id;

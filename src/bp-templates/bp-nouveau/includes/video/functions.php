@@ -250,7 +250,7 @@ function bp_video_download_file( $attachment_id, $type = 'video' ) {
 		// get filename.
 		$file_name = basename( $the_file );
 
-		bp_video_download_file_force( $the_file, $file_name );
+		bp_video_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	}
 
 }
