@@ -3725,9 +3725,25 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 
 				$file = image_get_intermediate_size( $attachment_id, $size );
 
-				if ( false === $file ) {
+				if ( false === $file && 'pdf' !== $extension ) {
 					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					$file = image_get_intermediate_size( $attachment_id, $size );
+				} elseif ( false === $file && 'pdf' === $extension ) {
+					bp_document_generate_document_previews( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, $size );
+				}
+
+				// If the given size is not found then use the full image.
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'full' );
+				}
+
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'original' );
+				}
+
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'thumbnail' );
 				}
 
 				$attached_file_info = pathinfo( $attached_file );
@@ -4174,14 +4190,41 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			} else {
 				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 			}
+
+			/**
+			 * Filter for the after thumb symlink generate.
+			 *
+			 * @param string $attachment_url Attachment URL.
+			 * @param object $document       Document Object.
+			 *
+			 * @since BuddyBoss 1.7.0.1
+			 */
+			$attachment_url = apply_filters( 'bb_document_after_get_preview_url_symlink', $attachment_url, $document );
+
 		} elseif ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) && ! bb_enable_symlinks() ) {
 
 			$file          = image_get_intermediate_size( $attachment_id, $size );
 			$attached_file = get_attached_file( $attachment_id );
 
-			if ( false === $file ) {
+			if ( false === $file && 'pdf' !== $extension ) {
 				bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				$file = image_get_intermediate_size( $attachment_id, $size );
+			} elseif ( false === $file && 'pdf' === $extension ) {
+				bp_document_generate_document_previews( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
+			}
+
+			// If the given size is not found then use the full image.
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'full' );
+			}
+
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'original' );
+			}
+
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'thumbnail' );
 			}
 
 			$attached_file_info = pathinfo( $attached_file );
@@ -4192,10 +4235,14 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
-			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
+			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' !== $extension ) {
 				// Regenerate attachment thumbnails.
 				bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				$file      = image_get_intermediate_size( $attachment_id, $size );
+				$file_path = $file_path . '/' . $file['file'];
+			} elseif ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' === $extension ) {
+				bp_document_generate_document_previews( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
@@ -4480,6 +4527,16 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 					}
 
 					$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
+
+					/**
+					 * Filter for the after document video symlink generate.
+					 *
+					 * @param string $attachment_url Attachment URL.
+					 * @param object $document       Document Object.
+					 *
+					 * @since BuddyBoss 1.7.0.1
+					 */
+					$attachment_url = apply_filters( 'bb_document_after_video_get_symlink', $attachment_url, $document );
 				}
 			}
 		} else {

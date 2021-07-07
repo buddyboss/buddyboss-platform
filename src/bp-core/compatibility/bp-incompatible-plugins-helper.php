@@ -215,16 +215,19 @@ function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file
  * @since BuddyBoss 1.7.0
  */
 function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+
+    if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-				$get_metadata = wp_get_attachment_metadata( $attachment_id );
+
+		    if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		        $get_metadata = wp_get_attachment_metadata( $attachment_id );
 				if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
 					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
 				} else {
 					$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
 				}
+
 				if ( ! $attachment_url ) {
 					if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
 						add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
@@ -240,7 +243,11 @@ function bp_document_offload_get_preview_url( $attachment_url, $document_id, $ex
 							$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
 						}
 					} else {
+						add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+						add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
 						bp_document_generate_document_previews( $attachment_id );
+						remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+						remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
 						if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
 							$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
 						} else {
@@ -293,6 +300,7 @@ add_action( 'bb_before_video_upload_handler', 'bb_offload_media_set_private' );
 add_action( 'bb_before_video_preview_image_by_js', 'bb_offload_media_set_private' );
 add_action( 'bb_video_before_preview_generate', 'bb_offload_media_set_private' );
 add_action( 'bb_before_bp_video_thumbnail_upload_handler', 'bb_offload_media_set_private' );
+add_action( 'bb_document_before_generate_document_previews', 'bb_offload_media_set_private' );
 
 /**
  * Remove the private URL generate document preview.
@@ -314,6 +322,7 @@ add_action( 'bb_after_video_upload_handler', 'bb_offload_media_unset_private' );
 add_action( 'bb_after_video_preview_image_by_js', 'bb_offload_media_unset_private' );
 add_action( 'bb_video_after_preview_generate', 'bb_offload_media_unset_private' );
 add_action( 'bb_after_bp_video_thumbnail_upload_handler', 'bb_offload_media_unset_private' );
+add_action( 'bb_document_after_generate_document_previews', 'bb_offload_media_unset_private' );
 
 /**
  * Return the offload media plugin attachment url.
