@@ -288,7 +288,7 @@ function bp_nouveau_activity_state() {
 		<?php endif; ?>
 
 		<?php if ( ! bp_activity_can_comment() ) : ?>
-			<div href="#" class="activity-state-comments">
+			<div class="activity-state-comments">
 				<span class="comments-count">
 					<?php
 					if ( $comment_count > 1 ) {
