@@ -173,7 +173,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_filter( 'bp_get_activity_content_body', array( $this, 'before_activity_content' ), 10, 2 );
 
 			// Meta button for activity discussion.
-			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
+			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
+			//add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
 		}
 
 		/**
@@ -351,7 +352,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * Take the "discussion" name out of the activity title.
 		 * Put it underneath for both Discussion and Replies.
 		 *
-		 * @since BuddyBoss 1.7.0
+		 * @since BuddyBoss 1.7.1
 		 *
 		 * @uses bbp_get_reply()           Get reply post data.
 		 * @uses bbp_get_topic_permalink() Get discussion permalink.
@@ -402,7 +403,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Meta button for activity discussion.
 		 *
-		 * @since BuddyBoss 1.7.0
+		 * @since BuddyBoss 1.7.1
 		 *
 		 * @param array $buttons     Array of buttons.
 		 * @param int   $activity_id Activity ID.
@@ -472,6 +473,12 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					$topic    = bbp_get_reply( $reply_id );
 					$topic_id = $topic->post_parent;
 				}
+				
+				// Redirect to.
+				$redirect_to = bbp_get_redirect_to();
+		
+				// Get the reply URL.
+				$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
 
 				// New meta button as 'Join discussion'.
 				$buttons['activity_reply_discussion'] = array(
@@ -488,7 +495,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					'button_attr'       => array(
 						'class'         => 'button bb-icon-discussion bp-secondary-action',
 						'aria-expanded' => 'false',
-						'href'          => bbp_get_topic_permalink( $topic_id ),
+						'href'          => $reply_url,
 					),
 				);
 			}
@@ -803,7 +810,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the topic title from user timeline.
 		 *
-		 * @since BuddyBoss 1.7.0
+		 * @since BuddyBoss 1.7.1
 		 *
 		 * @param obj $action
 		 * @param obj $activity
@@ -851,7 +858,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the reply title from user timeline.
 		 *
-		 * @since BuddyBoss 1.7.0
+		 * @since BuddyBoss 1.7.1
 		 *
 		 * @param obj $action
 		 * @param obj $activity
@@ -1022,7 +1029,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Remove the group icon from the discussion and reply title.
 		 *
-		 * @since BuddyBoss 1.7.0
+		 * @since BuddyBoss 1.7.1
 		 *
 		 * @param string $avatar
 		 *
@@ -1047,7 +1054,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Generate "bb-modal bb-modal-box" class for quick reply form.
 		 *
-		 * @since BuddyBoss 1.7.0
+		 * @since BuddyBoss 1.7.1
 		 *
 		 * @param boolean $single_topic
 		 *

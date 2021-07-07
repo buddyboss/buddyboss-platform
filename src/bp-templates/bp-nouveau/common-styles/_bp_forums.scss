@@ -992,16 +992,25 @@ fieldset div.avatar {
 		padding: 0;
 
 		.activity-discussion-title-wrap {
-			border-bottom: 1px solid #eaeaea;
-			padding: 12px;
+			padding: 12px 12px 6px 12px;
 			margin-bottom: 0;
+			background-color: #fafafa;
 		}
 
 	}
 
 	.bb-content-inr-wrap {
-		padding: 12px;
+		padding: 6px 12px 12px 12px;
 		background-color: #fafafa;
+
+		.activity-read-more {
+
+			a {
+				text-transform: capitalize;
+			}
+
+		}
+
 	}
 
 	.bb-activity-media-wrap {
@@ -1032,21 +1041,24 @@ fieldset div.avatar {
 		position: relative;
 
 		.bb-post-img-link {
-
-			&:before {
-				content: "";
-				display: block;
-				position: absolute;
-				left: 0;
-				right: 0;
-				top: 0;
-				bottom: 0;
-			}
+			background-color: #333;
+			display: block;
+			border-radius: 3px 3px 0 0;
 
 			img {
-				border-radius: 3px 3px 0 0;
-				margin-bottom: 0;
+				border-radius: 0;
+				margin: 0 auto;
 			}
+		}
+
+		.bb-post-title-link:before {
+			content: "";
+			display: block;
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
 		}
 
 		.bb-content-wrp {

@@ -273,19 +273,125 @@ function bp_nouveau_activity_state() {
 			</span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
-		<a href="#" class="activity-state-comments">
-			<span class="comments-count">
-				<?php
-				if ( $comment_count > 1 ) {
-					echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
-				} else {
-					echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
-				}
-				?>
-			</span>
-		</a>
+		<?php if ( bp_activity_can_comment() ) : ?>
+			<a href="#" class="activity-state-comments">
+				<span class="comments-count">
+					<?php
+					if ( $comment_count > 1 ) {
+						echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
+					} else {
+						echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
+					}
+					?>
+				</span>
+			</a>
+		<?php endif; ?>
+
+		<?php if ( ! bp_activity_can_comment() ) : ?>
+			<div href="#" class="activity-state-comments">
+				<span class="comments-count">
+					<?php
+					if ( $comment_count > 1 ) {
+						echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
+					} else {
+						echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
+					}
+					?>
+				</span>
+			</div>
+		<?php endif; ?>
+		
 	</div>
 	<?php
+}
+
+/**
+ * Output the action buttons inside an Activity inner content.
+ *
+ * @since BuddyBoss 1.7.1
+ *
+ * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bp_nouveau_activity_inner_buttons( $args = array() ) {
+
+	$output = join( ' ', bb_nouveau_get_activity_inner_buttons( $args ) );
+
+	ob_start();
+
+	/**
+	 * Fires at the end of the activity entry meta data area.
+	 *
+	 * @since BuddyPress 1.2.0
+	 */
+	do_action( 'bp_activity_inner_meta' );
+
+	$output .= ob_get_clean();
+
+	$has_content = trim( $output, ' ' );
+	if ( ! $has_content ) {
+		return;
+	}
+
+	if ( empty( $args ) ) {
+		$args = array( 'container_classes' => array( 'activity-inner-meta' ) );
+	}
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
+ * Get the action buttons inside an Activity inner content,
+ *
+ * @since BuddyBoss 1.7.1
+ *
+ * @param array $args Button attributes.
+ * 
+ * @return array
+ */
+function bb_nouveau_get_activity_inner_buttons( $args ) {
+	global $activities_template;
+
+	$buttons = array();
+
+	if ( empty( $activities_template ) ) {
+		return $buttons;
+	}
+
+	$activity_id    = bp_get_activity_id();
+	$activity_type  = bp_get_activity_type();
+
+	if ( ! $activity_id ) {
+		return $buttons;
+	}
+
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array $buttons     The list of buttons.
+	 * @param int   $activity_id The current activity ID.
+	 */
+	$buttons_group = apply_filters( 'bb_nouveau_get_activity_inner_buttons', $buttons, $activity_id, $args );
+
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
+
+	// It's the first entry of the loop, so build the Group and sort it.
+	if ( ! isset( bp_nouveau()->activity->inner_buttons ) || ! is_a( bp_nouveau()->activity->inner_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                                 = true;
+		bp_nouveau()->activity->inner_buttons = new BP_Buttons_Group( $buttons_group );
+
+		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
+	} else {
+		$sort = false;
+		bp_nouveau()->activity->inner_buttons->update( $buttons_group );
+	}
+
+	$return = bp_nouveau()->activity->inner_buttons->get( $sort );
+	
+	return $return;
 }
 
 /**
@@ -491,43 +597,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		}
 	}
 
-	// Add the Spam Button if supported.
-	if ( bp_is_akismet_active() && isset( buddypress()->activity->akismet ) && bp_activity_user_can_mark_spam() ) {
-		$buttons['activity_spam'] = array(
-			'id'                => 'activity_spam',
-			'position'          => 45,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'class'               => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
-				'id'                  => 'activity_make_spam_' . $activity_id,
-				// 'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
-				'data-bp-tooltip-pos' => 'up',
-			),
-			'link_text'         => sprintf(
-			/** @todo: use a specific css rule for this ************************************************************ */
-				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-				esc_html__( 'Spam', 'buddyboss' ),
-				esc_html__( 'Spam', 'buddyboss' )
-			),
-		);
-
-		// If button element, add nonce link to data attribute.
-		if ( 'button' === $button_element ) {
-			$data_element = 'data-bp-nonce';
-		} else {
-			$data_element = 'href';
-		}
-
-		$buttons['activity_spam']['button_attr'][ $data_element ] = wp_nonce_url(
-			bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . $activity_id . '/',
-			'bp_activity_akismet_spam_' . $activity_id
-		);
-	}
-
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
@@ -562,10 +631,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	// Remove the Comment button if the user can't comment.
 	if ( ! bp_activity_can_comment() && $activity_type !== 'activity_comment' ) {
 		unset( $return['activity_conversation'] );
-	}
-
-	if ( isset( $return['activity_spam'] ) && ! in_array( $activity_type, BP_Akismet::get_activity_types() ) ) {
-		unset( $return['activity_spam'] );
 	}
 
 	/**
@@ -941,7 +1006,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 /**
  * Get the action buttons for the activity blog post comments
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  *
  * @param object $comment Blog post comment.
  * @param array  $args    Comment meta.
@@ -1581,7 +1646,7 @@ function bp_nouveau_get_edit_activity_data() {
 /**
  * Output the top action buttons inside an Activity Loop.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -1618,7 +1683,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  *
- * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 1.7.1
  */
 function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	$buttons = array();

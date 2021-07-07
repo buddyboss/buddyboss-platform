@@ -1510,6 +1510,11 @@ class BP_Activity_Activity {
 	public static function get_activity_comments( $activity_id, $left, $right, $spam = 'ham_only', $top_level_parent_id = 0 ) {
 		global $wpdb;
 
+		// When the activity has no permission for comment. Specially for blog post comment.
+		if ( ! apply_filters( 'bb_activity_get_comments', true, $activity_id, $left, $right, $spam, $top_level_parent_id ) ) {
+			return array();
+		}
+
 		$function_args = func_get_args();
 
 		if ( empty( $top_level_parent_id ) ) {

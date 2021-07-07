@@ -12011,14 +12011,14 @@ fieldset div.avatar {
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap,
 .activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap {
-  border-bottom: 1px solid #eaeaea;
-  padding: 12px;
+  padding: 12px 12px 6px 12px;
   margin-bottom: 0;
+  background-color: #fafafa;
 }
 
 .activity-list li.bbp_topic_create .bb-content-inr-wrap,
 .activity-list li.bbp_reply_create .bb-content-inr-wrap {
-  padding: 12px;
+  padding: 6px 12px 12px 12px;
   background-color: #fafafa;
 }
 
@@ -12047,7 +12047,18 @@ fieldset div.avatar {
   position: relative;
 }
 
-.activity-list li.blogs .activity-content .activity-inner .bb-post-img-link:before {
+.activity-list li.blogs .activity-content .activity-inner .bb-post-img-link {
+  background-color: #333;
+  display: block;
+  border-radius: 3px 3px 0 0;
+}
+
+.activity-list li.blogs .activity-content .activity-inner .bb-post-img-link img {
+  border-radius: 0;
+  margin: 0 auto;
+}
+
+.activity-list li.blogs .activity-content .activity-inner .bb-post-title-link:before {
   content: "";
   display: block;
   position: absolute;
@@ -12055,11 +12066,6 @@ fieldset div.avatar {
   right: 0;
   top: 0;
   bottom: 0;
-}
-
-.activity-list li.blogs .activity-content .activity-inner .bb-post-img-link img {
-  border-radius: 3px 3px 0 0;
-  margin-bottom: 0;
 }
 
 .activity-list li.blogs .activity-content .activity-inner .bb-content-wrp {
