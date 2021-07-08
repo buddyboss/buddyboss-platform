@@ -5710,6 +5710,7 @@ function bb_activity_topic_reply_acivity( $activity ) {
 
 /**
  * This function will give the reply topic id from reply activity.
+ * Also, helper function for API part.
  *
  * @param object $activity Reply activity data.
  *
