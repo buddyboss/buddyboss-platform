@@ -1058,7 +1058,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.1
 		 *
-		 * @param boolean $single_topic
+		 * @param boolean $single_topic Single topic status.
 		 *
 		 * @uses bp_is_active()             Checking is it acitvity page.
 		 * @uses bp_is_activity_component() Checking is it activity component.
