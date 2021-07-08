@@ -367,7 +367,7 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.7.1
 	 *
 	 * @param array $buttons     The list of buttons.
 	 * @param int   $activity_id The current activity ID.
