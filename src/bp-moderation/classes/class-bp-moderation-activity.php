@@ -263,7 +263,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$sub_items['type'] = false;
 			}
 		}
-		error_log( print_r( $sub_items, 1 ) );
+
 		return $sub_items;
 	}
 
