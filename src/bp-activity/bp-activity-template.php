@@ -1373,45 +1373,6 @@ function bp_get_activity_action( $args = array() ) {
 }
 
 /**
- * Output the activity post lik.
- *
- * @since BuddyBoss 1.7.1
- * 
- * @return void
- */
-function bb_activity_viwe_post_link() {
-	echo bb_activity_get_viwe_post_link(); 
-}
-
-/**
- * The activity post link.
- *
- * @since BuddyBoss 1.7.1
- * 
- * @return string
- */
-function bb_activity_get_viwe_post_link() {
-	global $activities_template;
-	$post_link = '';
-	
-	if ( 
-		( 'blogs' === $activities_template->activity->component ) 
-		&& 
-		isset( $activities_template->activity->secondary_item_id ) 
-		&& 
-		'new_blog_' . get_post_type( $activities_template->activity->secondary_item_id ) === $activities_template->activity->type
-	) {
-		$blog_post = get_post( $activities_template->activity->secondary_item_id );
-		// If we converted $content to an object earlier, flip it back to a string.
-		if ( is_a( $blog_post, 'WP_Post' ) && ! has_post_thumbnail( $blog_post ) ) {
-			$post_link  = sprintf( '<div class="view-post-link"><a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a></div>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( 'View Post', 'buddyboss-theme' ) );
-		}
-	}
-
-	return $post_link;
-}
-
-/**
  * Output the activity content body.
  *
  * @since BuddyPress 1.2.0
