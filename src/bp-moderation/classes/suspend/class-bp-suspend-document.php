@@ -354,7 +354,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			/**
 			 * Remove pre-validate check.
 			 *
-			 * @since BuddyBoss X.X.X.
+			 * @since BuddyBoss 1.7.1
 			 */
 			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
 
@@ -414,7 +414,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			/**
 			 * Added pre-validate check.
 			 *
-			 * @since BuddyBoss X.X.X.
+			 * @since BuddyBoss 1.7.1
 			 */
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 		}
@@ -503,7 +503,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	/**
 	 * Function to update suspend record on activity delete.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.1
 	 *
 	 * @param object $activity_data activity data.
 	 */
