@@ -242,7 +242,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		/**
 		 * Filters the report button text for different components
 		 *
-		 * @since BuddyBoss 1.7.0
+		 * @since BuddyBoss 1.7.1
 		 *
 		 * @param string $button_text Button text.
 		 * @param int    $item_id     Item id.
