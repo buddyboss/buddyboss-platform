@@ -12009,6 +12009,12 @@ fieldset div.avatar {
   text-align: right;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap .emoji,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap .emoji,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap .emoji {
+  margin: 3px;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
   padding: 0;
