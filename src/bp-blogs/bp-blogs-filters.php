@@ -136,46 +136,37 @@ function bp_blogs_register_custom_site_icon_size( $sizes ) {
 add_filter( 'site_icon_image_sizes', 'bp_blogs_register_custom_site_icon_size' );
 
 /**
- * Set view post button for activit post content.
+ * Set view post button for activity post content.
  *
  * @since BuddyBoss 1.7.1
  *
  * @param array $buttons     Group buttons.
- * @param int   $activity_id Activity id.
- * 
+ *
  * @return array
  */
-function bb_nouveau_get_activity_inner_blogs_buttons( $buttons, $activity_id ) {
+function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 	global $activities_template;
 
-	if ( 
-		( 'blogs' === $activities_template->activity->component ) 
-		&& 
-		isset( $activities_template->activity->secondary_item_id ) 
-		&& 
-		'new_blog_' . get_post_type( $activities_template->activity->secondary_item_id ) === $activities_template->activity->type
-	) {
+	if ( ( 'blogs' === $activities_template->activity->component ) && isset( $activities_template->activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activities_template->activity->secondary_item_id ) === $activities_template->activity->type ) {
 		$blog_post = get_post( $activities_template->activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $blog_post, 'WP_Post' ) && ! has_post_thumbnail( $blog_post ) ) {
-			$post_link  = sprintf( '<div class="view-post-link"><a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a></div>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( 'View Post', 'buddyboss-theme' ) );
-		}
-	}
+			$post_type_obj = get_post_type_object( $blog_post->post_type );
 
-	if ( ! empty( $post_link ) ) {
-		$buttons['activity_post'] = array(
-			'id'                => 'activity_post_link_wrap',
-			'position'          => 4,
-			'component'         => 'activity',
-			'button_element'    => 'a',
-			'link_text'         => sprintf( '<span class="text">%1$s</span>', esc_html( 'View Post', 'buddyboss-theme' ) ),
-			'button_attr'       => array(
-				'href'          => esc_url( get_permalink( $blog_post->ID ) ),
-				'class'             => 'button bb-icon-arrow-circle bp-secondary-action',
-			),
-		);
+			$buttons['activity_post'] = array(
+				'id'             => 'activity_post_link_wrap',
+				'position'       => 4,
+				'component'      => 'activity',
+				'button_element' => 'a',
+				'link_text'      => sprintf( '<span class="text">%1$s %2$s</span>', esc_html__( 'View', 'buddyboss' ), esc_attr( ucfirst( $post_type_obj->labels->singular_name ) ) ),
+				'button_attr'    => array(
+					'href'  => esc_url( get_permalink( $blog_post->ID ) ),
+					'class' => 'button bb-icon-arrow-circle bp-secondary-action',
+				),
+			);
+		}
 	}
 
 	return $buttons;
 }
-add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_inner_blogs_buttons', 10, 2 );
+add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_inner_blogs_buttons', 10, 1 );

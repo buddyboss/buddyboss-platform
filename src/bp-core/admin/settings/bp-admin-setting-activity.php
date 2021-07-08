@@ -138,15 +138,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			$comment_option_name   = bb_post_type_feed_comment_option_name( $post_type );
 
 			if ( 'post' === $post_type ) {
-				$parent_fields = array_merge(
-					$fields['args'],
-					array( 'class' => 'child-no-padding-first' )
-				);
+				$fields['args']['class'] = 'child-no-padding-first';
+				// create field for each of custom post type.
+				$this->add_field( $post_type_option_name, __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 
 				$fields['args']['class'] = 'child-no-padding bp-display-none';
-
-				// create field for each of custom post type.
-				$this->add_field( $post_type_option_name, __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $parent_fields );
 				// Activity commenting on post and comments.
 				$this->add_field( $comment_option_name, '&#65279;', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 
@@ -156,28 +152,22 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					$description                   = 1;
 				}
 				if ( 0 === $count ) {
-					$parent_fields = array_merge(
-						$fields['args'],
-						array( 'class' => 'child-no-padding-first' )
-					);
-					$fields['args']['class'] = 'child-no-padding bp-display-none';
-
+					$fields['args']['class'] = 'child-no-padding-first';
 					// create field for each of custom post type.
-					$this->add_field( $post_type_option_name, __( 'Custom Post Types', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $parent_fields );
+					$this->add_field( $post_type_option_name, __( 'Custom Post Types', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+
+					$fields['args']['class'] = 'child-no-padding bp-display-none';
 					$this->add_field( $comment_option_name, '', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 				} else {
-					$parent_fields = array_merge(
-						$fields['args'],
-						array( 'class' => 'child-no-padding-first' )
-					);
+
+					$fields['args']['class'] = 'child-no-padding-first';
+					// create field for each of custom post type.
+					$this->add_field( $post_type_option_name, '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 
 					$fields['args']['class'] = 'child-no-padding bp-display-none';
-
-					// create field for each of custom post type.
-					$this->add_field( $post_type_option_name, '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $parent_fields );
 					$this->add_field( $comment_option_name, '', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 				}
-				$count++;
+				$count ++;
 			}
 		}
 

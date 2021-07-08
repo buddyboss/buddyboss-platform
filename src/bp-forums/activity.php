@@ -202,8 +202,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			if ( bp_is_active( 'groups' ) ) {
 				// Group activity stream items.
-				bp_activity_set_action( 'groups', $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
-				bp_activity_set_action( 'groups', $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
+				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
+				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 			}
 		}
 
@@ -349,15 +349,17 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		 * Take the "discussion" name out of the activity title.
-		 * Put it underneath for both Discussion and Replies.
+		 * Render the activity content for discussion activity. 
 		 *
 		 * @since BuddyBoss 1.7.1
+		 * 
+		 * @param string $content  Activit content.
+		 * @param object $activity Activit data.
 		 *
 		 * @uses bbp_get_reply()           Get reply post data.
 		 * @uses bbp_get_topic_permalink() Get discussion permalink.
 		 *
-		 * @return string|void
+		 * @return string
 		 */
 		public function before_activity_content( $content, $activity ) {
 			global $activities_template;
@@ -812,8 +814,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.1
 		 *
-		 * @param obj $action
-		 * @param obj $activity
+		 * @param string $action    Activity content.
+		 * @param object $activity  Activity data.
 		 *
 		 * @uses bbp_get_topic_forum_id()    Get forum id from topic id.
 		 * @uses bbp_get_user_profile_link() Get user profile link.
@@ -1031,7 +1033,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.1
 		 *
-		 * @param string $avatar
+		 * @param string $avatar The secondary avatar for current activity.
 		 *
 		 * @return string
 		 */
@@ -1056,7 +1058,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.1
 		 *
-		 * @param boolean $single_topic
+		 * @param boolean $single_topic Single topic status.
 		 *
 		 * @uses bp_is_active()             Checking is it acitvity page.
 		 * @uses bp_is_activity_component() Checking is it activity component.

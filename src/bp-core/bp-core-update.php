@@ -330,7 +330,7 @@ function bp_version_updater() {
 		}
 
 		// Version 1.7.1.
-		if ( $raw_db_version < 16801 ) {
+		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_1();
 		}
 	}
@@ -671,6 +671,16 @@ function bp_update_to_1_5_1() {
 		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
+}
+
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_update_to_1_7_0() {
+	bp_core_install_media();
+	bb_core_enable_default_symlink_support();
 }
 
 function bp_update_default_doc_extensions() {
@@ -1198,23 +1208,12 @@ add_filter(
 );
 
 /**
- * Version updation changes.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_update_to_1_7_0() {
-	bp_core_install_media();
-	bb_core_enable_default_symlink_support();
-}
-
-
-/**
- * 1.6.2 update routine.
+ * 1.7.1 update routine.
  *
  * @since BuddyBoss 1.7.1
  */
 function bb_update_to_1_7_1() {
-	bb_update_to_1_7_1_ativity_setting_feed_comments_migration();
+	bb_update_to_1_7_1_activity_setting_feed_comments_migration();
 }
 
 /**
@@ -1230,7 +1229,7 @@ function bb_update_to_1_7_1() {
  *
  * @return void
  */
-function bb_update_to_1_7_1_ativity_setting_feed_comments_migration() {
+function bb_update_to_1_7_1_activity_setting_feed_comments_migration() {
 	$custom_post_types = bb_feed_post_types();
 
 	// Run over all custom post type.

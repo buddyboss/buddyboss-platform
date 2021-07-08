@@ -145,10 +145,11 @@ add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activ
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
-add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bb_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
+add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
 // Obey BuddyBoss commenting rules.
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
+
 // Obey BuddyBoss comment reply rules.
 add_filter( 'bp_activity_can_comment_reply', 'bb_activity_has_comment_reply_access', 10, 2 );
 
@@ -2301,7 +2302,7 @@ function bp_activity_edit_update_document( $document_ids ) {
  * @return mixed
  * @since BuddyBoss 1.7.1
  */
-function bb_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
+function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
 
 	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity', 'video_get_activity' );
 
@@ -2364,8 +2365,6 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			$content     = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-				//$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' View Post', 'buddyboss' ) );
-				//$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
 				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
@@ -2447,7 +2446,7 @@ function bb_activity_has_comment_access( $retval ) {
 
 	// Check blog post activity comment status.
 	if ( bb_activity_blog_post_acivity( $activities_template->activity ) ) {
-		return bp_blogs_disable_activity_commenting( $retval );
+		return ! function_exists( 'bp_blogs_disable_activity_commenting' ) ? false : bp_blogs_disable_activity_commenting( $retval );
 	}
 
 	// Get the current action name.
@@ -2458,7 +2457,7 @@ function bb_activity_has_comment_access( $retval ) {
 		'bbp_topic_create',
 		'bbp_reply_create',
 	);
- 
+
 	// Comment is disabled for discussion and reply discussion.
 	if ( in_array( $action_name, $disabled_actions, true ) ) {
 		$retval = false;
@@ -2468,11 +2467,12 @@ function bb_activity_has_comment_access( $retval ) {
 }
 
 /**
- * Describe activity comment reply access rules.
+ * Disable the comment reply for discussion activity.
  *
  * @since BuddyBoss 1.7.1
  *
- * @param boolean $retval Has comment reply permission.
+ * @param boolean $can_comment Comment permission status.
+ * @param object  $comment     Activity data.
  *
  * @return boolean
  */
@@ -2488,7 +2488,7 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	$comment_actions = array(
 		'activity_comment',
 	);
-	
+
 	// Comment is disabled for discussion and reply discussion.
 	if ( in_array( $action_name, $comment_actions, true ) && bb_acivity_is_topic_comment( $comment->item_id ) ) {
 		$can_comment = false;

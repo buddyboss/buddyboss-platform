@@ -1,4 +1,4 @@
-<?php if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' . get_current_user_id() . '&is_new=1&per_page=500' ) ) : ?>
+<?php if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' . get_current_user_id() . '&is_new=1' ) ) : ?>
 	<?php while ( bp_the_notifications() ) : bp_the_notification(); ?>
         <li class="read-item <?php echo isset( buddypress()->notifications->query_loop->notification->is_new ) && buddypress()->notifications->query_loop->notification->is_new ? 'unread' : ''; ?>">
 			<span class="bb-full-link">
