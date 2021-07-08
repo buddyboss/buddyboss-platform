@@ -1033,7 +1033,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.1
 		 *
-		 * @param string $avatar
+		 * @param string $avatar The secondary avatar for current activity.
 		 *
 		 * @return string
 		 */
