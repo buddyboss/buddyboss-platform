@@ -5239,6 +5239,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 .bb_more_options .bb_more_options_list > .generic-button {
   width: 100%;
+  margin: 0;
 }
 
 .bb_more_options .bb_more_options_list:after {
