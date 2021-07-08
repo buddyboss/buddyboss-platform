@@ -5612,10 +5612,9 @@ function bb_activity_has_comments( $comments, $activity_id ) {
 		return $comments;
 	}
 	global $activities_template;
-	$activities_template                            = new \stdClass();
-	$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
-	$activities_template->activity                  = $activity;
-	$activities_template->in_the_loop               = true;
+	$activities_template              = new \stdClass();
+	$activities_template->activity    = $activity;
+	$activities_template->in_the_loop = true;
 
 	if ( ! bb_activity_blog_post_acivity( $activity ) ) {
 		return $comments;
