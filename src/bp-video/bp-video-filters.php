@@ -339,10 +339,24 @@ function bp_video_activity_comment_entry( $comment_id ) {
 function bp_video_update_activity_video_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 
-	$post_video   = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$post_edit    = filter_input( INPUT_POST, 'edit', FILTER_SANITIZE_STRING );
-	$post_action  = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
-	$post_privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$post_video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$post_edit        = filter_input( INPUT_POST, 'edit', FILTER_SANITIZE_STRING );
+	$post_action      = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$post_privacy     = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$moderated_videos = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+
+	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_videos ) ) {
+		$moderated_videos = explode( ',', $moderated_videos );
+		foreach ( $moderated_videos as $video_id ) {
+			if ( bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
+				$bp_video                   = new BP_Video( $video_id );
+				$post_video[]['video_id']   = $video_id;
+				$post_video[]['album_id']   = $bp_video->album_id;
+				$post_video[]['group_id']   = $bp_video->group_id;
+				$post_video[]['menu_order'] = $bp_video->menu_order;
+			}
+		}
+	}
 
 	if ( ! isset( $post_video ) || empty( $post_video ) ) {
 
@@ -399,15 +413,17 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 
 			if ( ! empty( $old_video_ids ) ) {
 
-				// This is hack to update/delete parent activity if new video added in edit.
-				bp_activity_update_meta( $activity_id, 'bp_video_ids', implode( ',', array_unique( array_merge( $video_ids, $old_video_ids ) ) ) );
-
 				foreach ( $old_video_ids as $video_id ) {
-
-					if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
+				    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) && ! in_array( $video_id, $video_ids ) ) {
+					    $video_ids[] = $video_id;
+					}
+				    if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 						bp_video_delete( array( 'id' => $video_id ) );
 					}
 				}
+
+				// This is hack to update/delete parent activity if new video added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_video_ids', implode( ',', array_unique( array_merge( $video_ids, $old_video_ids ) ) ) );
 			}
 		}
 
