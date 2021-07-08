@@ -4251,7 +4251,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 
 				$document_id    = 'forbidden_' . $document_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ) . '&size=' . $size;
+				$attachment_url = home_url( '/' ) . 'document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id ) . '/' . $size;
 
 			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 				$output_file_src = get_attached_file( $attachment_id );
@@ -4265,7 +4265,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 					if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) ) {
 						$document_id    = 'forbidden_' . $document_id;
 						$attachment_id  = 'forbidden_' . $attachment_id;
-						$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+						$attachment_url = home_url( '/' ) . 'document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
 					}
 				}
 			}
@@ -4286,7 +4286,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$attachment_id        = 'forbidden_' . $attachment_id;
 			$output_file_src      = get_attached_file( $passed_attachment_id );
 			if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+				$attachment_url = home_url( '/' ) . 'document-player/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
 			}
 		}
 	}
@@ -4365,20 +4365,8 @@ function bp_document_mirror_text( $attachment_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_get_preview_audio_url( $document_id, $attachment_id, $extension ) {
-	$attachment_url = '';
 
-	if ( ! empty( $attachment_id ) && ! empty( $document_id ) && in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$document = new BP_Document( $document_id );
-
-		$upload_directory       = wp_get_upload_dir();
-		$document_symlinks_path = bp_document_symlink_path();
-
-		$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
-		if ( ! file_exists( $preview_attachment_path ) ) {
-			bp_document_create_symlinks( $document );
-		}
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-	}
+	$attachment_url = bp_document_get_preview_url( $document_id, $attachment_id, '', true );
 
 	/**
 	 * Filter url here to audio url.
@@ -4487,7 +4475,7 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 		if ( bb_enable_symlinks() ) {
 
 			if ( bb_check_ios_device() ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( 'forbidden_' . $attachment_id ) . '&id1=' . base64_encode( 'forbidden_' . $document_id );
+				$attachment_url = home_url( '/' ) . 'document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
 			} else {
 
 				// Get videos previews symlink directory path.
@@ -4541,7 +4529,7 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 				}
 			}
 		} else {
-			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( 'forbidden_' . $attachment_id ) . '&id1=' . base64_encode( 'forbidden_' . $document_id );
+			$attachment_url = home_url( '/' ) . 'document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
 		}
 	}
 
