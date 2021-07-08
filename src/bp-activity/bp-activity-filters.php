@@ -149,6 +149,7 @@ add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bb_nouveau_remove_e
 
 // Obey BuddyBoss commenting rules.
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
+
 // Obey BuddyBoss comment reply rules.
 add_filter( 'bp_activity_can_comment_reply', 'bb_activity_has_comment_reply_access', 10, 2 );
 
