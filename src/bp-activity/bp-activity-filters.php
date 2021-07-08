@@ -145,7 +145,7 @@ add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activ
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
 // Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
-add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bb_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
+add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
 
 // Obey BuddyBoss commenting rules.
 add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
@@ -2295,7 +2295,7 @@ function bp_activity_edit_update_document( $document_ids ) {
  * @return mixed
  * @since BuddyBoss 1.7.1
  */
-function bb_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
+function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
 
 	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity', 'video_get_activity' );
 
