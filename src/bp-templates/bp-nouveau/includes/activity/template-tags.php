@@ -1632,7 +1632,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 	/**
 	 * Fires at the end of the activity entry top meta data area.
 	 *
-	 * @since BuddyBoss 1.7.0
+	 * @since BuddyBoss 1.7.1
 	 */
 	do_action( 'bp_activity_entry_top_meta' );
 
