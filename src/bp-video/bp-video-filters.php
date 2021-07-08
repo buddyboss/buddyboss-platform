@@ -1505,8 +1505,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 			$video_ids = explode( ',', $video_ids );
 
 			foreach ( $video_ids as $video_id ) {
-				$video = new BP_Video( $video_id );
 
+			    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
+					continue;
+				}
+
+				$video        = new BP_Video( $video_id );
 				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 				$thumb        = '';
 
