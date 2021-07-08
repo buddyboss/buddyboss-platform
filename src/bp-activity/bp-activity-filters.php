@@ -2464,7 +2464,8 @@ function bb_activity_has_comment_access( $retval ) {
  *
  * @since BuddyBoss 1.7.1
  *
- * @param boolean $retval Has comment reply permission.
+ * @param boolean $can_comment Comment permission status.
+ * @param object  $comment     Activity data.
  *
  * @return boolean
  */
