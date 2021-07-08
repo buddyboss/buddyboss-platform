@@ -5745,7 +5745,8 @@ function bb_activity_reply_topic_id( $activity ) {
 }
 
 /**
- * Is it topic comment.
+ * Is it topic comment activity. 
+ * Also helper function for API part.
  *
  * @param int $activity id.
  *
