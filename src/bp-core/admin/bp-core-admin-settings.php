@@ -1570,7 +1570,7 @@ function bp_admin_on_screen_notification_setting_tutorial() {
  *
  * @return void
  */
-function bb_after_update_activity_settings( $tab_name, $class_obj ) {
+function bb_after_update_activity_settings( $tab_name ) {
 	if ( 'bp-activity' !== $tab_name ) {
 		return;
 	}
