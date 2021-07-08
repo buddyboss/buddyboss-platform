@@ -466,9 +466,9 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 
 				if ( ! empty( $parent_activity_id ) ) {
 					$parent_activity  = new BP_Activity_Activity( $parent_activity_id );
-					$parent_media_ids = self::get_video_ids_meta( $parent_activity_id, 'bp_activity_get_meta', $action );
+					$parent_video_ids = self::get_video_ids_meta( $parent_activity_id, 'bp_activity_get_meta', $action );
 
-					if ( empty( $parent_media_ids ) && ! empty( $parent_activity ) && ! empty( $parent_activity->type ) && empty( wp_strip_all_tags( $parent_activity->content ) ) ) {
+					if ( empty( $parent_video_ids ) && ! empty( $parent_activity ) && ! empty( $parent_activity->type ) && empty( wp_strip_all_tags( $parent_activity->content ) ) ) {
 						if ( 'activity_comment' === $parent_activity->type ) {
 							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
 						} else {
@@ -480,7 +480,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 
 			if ( 'unhide' === $action && ! empty( $video->attachment_id ) ) {
 				$attachment_id      = $video->attachment_id;
-				$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 				if ( ! empty( $parent_activity_id ) ) {
 					$parent_activity = new BP_Activity_Activity( $parent_activity_id );
 					if (
