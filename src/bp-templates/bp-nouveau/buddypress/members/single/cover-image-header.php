@@ -104,7 +104,7 @@ $cover_image_url          = bp_attachments_get_attachment( 'url', array( 'object
 				array(
 					'container'         => 'div',
 					'button_element'    => 'button',
-					'container_classes' => array( 'member-header-actions-dropdown' ),
+					'container_classes' => array( 'bb_more_options' ),
 				)
 			); ?>
 

@@ -544,10 +544,10 @@ function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
 	}
 
 	if ( ! $args ) {
-		$args = array( 'container_classes' => array( 'item-bubble-buttons' ) );
+		$args = array( 'container_classes' => array( 'bb_more_options' ) );
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => '<a href="#" class="bb_more_options_action"><i class="bb-icon-menu-dots-h"></i></a><div class="bb_more_options_list">' . $output . '</div>' ) ) );
 }
 
 /**

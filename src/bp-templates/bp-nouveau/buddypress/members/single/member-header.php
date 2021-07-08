@@ -46,7 +46,7 @@
 		<?php echo bp_get_user_social_networks_urls(); ?>
 
 		<?php bp_nouveau_member_header_buttons( array( 'container_classes' => array( 'member-header-actions' ) ) ); ?>
-		<?php bp_nouveau_member_header_bubble_buttons( array( 'container_classes' => array( 'member-header-actions-dropdown' ), ) ); ?>
+		<?php bp_nouveau_member_header_bubble_buttons( array( 'container_classes' => array( 'bb_more_options' ), ) ); ?>
 	</div><!-- #item-header-content -->
 
 </div><!-- .item-header-wrap -->

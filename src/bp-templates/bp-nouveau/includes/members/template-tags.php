@@ -217,7 +217,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 		);
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => '<a href="#" class="bb_more_options_action"><i class="bb-icon-menu-dots-h"></i></a><div class="bb_more_options_list">' . $output . '</div>' ) ) );
 }
 
 /**
