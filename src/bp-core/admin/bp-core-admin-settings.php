@@ -1570,7 +1570,7 @@ function bp_admin_on_screen_notification_setting_tutorial() {
  *
  * @return void
  */
-function bb_after_update_activity_settings( $tab_name, $class_obj ) {
+function bb_after_update_activity_settings( $tab_name ) {
 	if ( 'bp-activity' !== $tab_name ) {
 		return;
 	}
@@ -1591,4 +1591,4 @@ function bb_after_update_activity_settings( $tab_name, $class_obj ) {
 		}
 	}
 }
-add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 2 );
+add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );
