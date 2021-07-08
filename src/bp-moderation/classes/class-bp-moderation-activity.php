@@ -249,7 +249,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) ) ) {
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) ) || ( ! empty( bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) && 1 === count( explode( ',', bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) ) ) ) {
 			if ( bp_is_active( 'video' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
 				$video_id       = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
 				$explode_videos = explode( ',', bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) );
@@ -263,7 +263,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$sub_items['type'] = false;
 			}
 		}
-
+		error_log( print_r( $sub_items, 1 ) );
 		return $sub_items;
 	}
 
