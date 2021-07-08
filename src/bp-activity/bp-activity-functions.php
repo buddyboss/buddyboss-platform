@@ -5593,8 +5593,8 @@ function bb_activity_blog_post_acivity( $activity ) {
 /**
  * Is the blog post activity has comment fetch permission.
  *
- * @param bool $comments   Has permission.
- * @param int $activity_id Bolg post activity id.
+ * @param bool $comments    Has permission.
+ * @param int  $activity_id Bolg post activity id.
  *
  * @since BuddyBoss 1.7.1
  *
@@ -5623,29 +5623,8 @@ function bb_activity_has_comments( $comments, $activity_id ) {
 add_filter( 'bb_activity_get_comments', 'bb_activity_has_comments', 10, 2 );
 
 /**
- * Is it topic activity.
- *
- * @param object $activity Topic activity data.
- *
- * @since BuddyBoss 1.7.1
- *
- * @return bool
- */
-function bb_activity_topic_acivity( $activity ) {
-	if ( empty( $activity ) ) {
-		return false;
-	}
-	
-	// When the activity type does not match with the topic.
-	if ( in_array( $activity->type, array( 'bbp_topic_create' ), true ) ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * This function will give the topic id from topic activity.
+ * - Used in Rest API
  *
  * @param object $activity Topic activity data.
  *
@@ -5659,7 +5638,7 @@ function bb_activity_topic_id( $activity ) {
 	}
 	
 	// When the activity type does not match with the topic.
-	if ( ! bb_activity_topic_acivity( $activity ) ) {
+	if ( 'bbp_topic_create' !==  $activity->type ) {
 		return false;
 	}
 
@@ -5681,30 +5660,8 @@ function bb_activity_topic_id( $activity ) {
 }
 
 /**
- * Is it topic reply activity.
- *
- * @param object $activity Reply activity data.
- *
- * @since BuddyBoss 1.7.1
- *
- * @return bool
- */
-function bb_activity_topic_reply_acivity( $activity ) {
-	if ( empty( $activity ) ) {
-		return false;
-	}
-	
-	// When the activity type does not match with the topic.
-	if ( in_array( $activity->type, array( 'bbp_reply_create' ), true ) ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * This function will give the reply topic id from reply activity.
- * Also, helper function for API part.
+ * - Used in Rest API
  *
  * @param object $activity Reply activity data.
  *
@@ -5717,8 +5674,8 @@ function bb_activity_reply_topic_id( $activity ) {
 		return false;
 	}
 
-	// When the activity type does not match with the topic or reply.
-	if ( ! bb_activity_topic_reply_acivity( $activity ) ) {
+	// When the activity type does not match with the topic.
+	if ( 'bbp_reply_create' !== $activity->type ) {
 		return false;
 	}
 
@@ -5741,7 +5698,7 @@ function bb_activity_reply_topic_id( $activity ) {
 
 /**
  * Is it topic comment activity. 
- * Also helper function for API part.
+ * - Used in Rest API
  *
  * @param int $activity id.
  *
