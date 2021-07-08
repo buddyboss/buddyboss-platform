@@ -2460,7 +2460,7 @@ function bb_activity_has_comment_access( $retval ) {
 }
 
 /**
- * Describe activity comment reply access rules.
+ * Disable the comment reply for discussion activity.
  *
  * @since BuddyBoss 1.7.1
  *
