@@ -5591,40 +5591,6 @@ function bb_activity_blog_post_acivity( $activity ) {
 }
 
 /**
- * Is the blog post activity has comment fetch permission.
- *
- * @param bool $comments    Has permission.
- * @param int  $activity_id Bolg post activity id.
- *
- * @since BuddyBoss 1.7.1
- *
- * @return bool
- */
-function bb_activity_has_comments( $comments, $activity_id ) {
-
-	return $comments;
-	$activity = new BP_Activity_Activity( $activity_id );
-	if ( empty( $activity->id ) ) {
-		return $comments;
-	}
-	global $activities_template;
-	$activities_template              = new \stdClass();
-	$activities_template->activity    = $activity;
-	$activities_template->in_the_loop = true;
-
-	if ( ! bb_activity_blog_post_acivity( $activity ) ) {
-		return $comments;
-	}
-
-	if ( ! bp_activity_can_comment() ) {
-		$comments = false;
-	}
-
-	return $comments;
-}
-add_filter( 'bb_activity_get_comments', 'bb_activity_has_comments', 10, 2 );
-
-/**
  * This function will give the topic id from topic activity.
  * - Used in Rest API
  *

@@ -1896,7 +1896,7 @@ function bp_activity_comments( $args = '' ) {
 function bp_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
-	if ( ! bp_activity_can_comment() ) {
+	if ( ! in_array( $activities_template->activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) && ! bp_activity_can_comment() ) {
 		return false;
 	}
 
