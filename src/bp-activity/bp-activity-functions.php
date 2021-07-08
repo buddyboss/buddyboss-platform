@@ -5604,9 +5604,9 @@ function bb_activity_topic_id( $activity ) {
 	if ( empty( $activity ) ) {
 		return false;
 	}
-	
+
 	// When the activity type does not match with the topic.
-	if ( 'bbp_topic_create' !==  $activity->type ) {
+	if ( 'bbp_topic_create' !== $activity->type ) {
 		return false;
 	}
 
@@ -5665,10 +5665,10 @@ function bb_activity_reply_topic_id( $activity ) {
 }
 
 /**
- * Is it topic comment activity. 
+ * Is it topic comment activity.
  * - Used in Rest API
  *
- * @param int $activity id.
+ * @param int $activity_id Activity id.
  *
  * @since BuddyBoss 1.7.1
  *
@@ -5676,7 +5676,7 @@ function bb_activity_reply_topic_id( $activity ) {
  */
 function bb_acivity_is_topic_comment( $activity_id ) {
 	$item_activity = new BP_Activity_Activity( $activity_id );
-	
+
 	if ( empty( $item_activity ) ) {
 		return false;
 	}
@@ -5689,7 +5689,7 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 		'bbp_topic_create',
 		'bbp_reply_create',
 	);
- 
+
 	// Comment is disabled for discussion and reply discussion.
 	if ( in_array( $action_name, $disabled_actions, true ) ) {
 		return true;

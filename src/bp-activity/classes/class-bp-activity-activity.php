@@ -1509,7 +1509,7 @@ class BP_Activity_Activity {
 	 */
 	public static function get_activity_comments( $activity_id, $left, $right, $spam = 'ham_only', $top_level_parent_id = 0 ) {
 		global $wpdb;
-		
+
 		$function_args = func_get_args();
 
 		if ( empty( $top_level_parent_id ) ) {
