@@ -249,6 +249,21 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) ) ) {
+			if ( bp_is_active( 'video' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+				$video_id       = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+				$explode_videos = explode( ',', bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) );
+				if ( 1 === count( $explode_videos ) && ! empty( $explode_videos[0] ) ) {
+					$video_id = $explode_videos[0];
+				}
+				$sub_items['id']   = $video_id;
+				$sub_items['type'] = BP_Moderation_Video::$moderation_type;
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
+		}
+
 		return $sub_items;
 	}
 
