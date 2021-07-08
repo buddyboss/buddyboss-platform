@@ -1924,9 +1924,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).click( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 						} else {
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', false );
@@ -1936,9 +1936,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( "#bp-member-type-permissions .inside .group-type-checkboxes" ).each( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 							return false;
 						} else {
