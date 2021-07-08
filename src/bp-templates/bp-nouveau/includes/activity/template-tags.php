@@ -1897,7 +1897,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	/**
 	 * Leave a chance to adjust the $return
 	 *
-	 * @since BuddyBoss 1.7.0
+	 * @since BuddyBoss 1.7.1
 	 *
 	 * @param array $return      The list of buttons ordered.
 	 * @param int   $activity_id The current activity ID.
