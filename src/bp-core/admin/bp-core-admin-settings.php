@@ -1591,4 +1591,4 @@ function bb_after_update_activity_settings( $tab_name ) {
 		}
 	}
 }
-add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 2 );
+add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );
