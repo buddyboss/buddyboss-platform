@@ -1413,9 +1413,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
 			$data['url'] = bb_video_get_symlink( $media->id );
 			remove_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
-
-			// Update the download link for the video.
-			$data['download_url'] = bp_video_download_link( $media->attachment_id, $media->id );
 		}
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
