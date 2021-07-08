@@ -349,15 +349,17 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		 * Take the "discussion" name out of the activity title.
-		 * Put it underneath for both Discussion and Replies.
+		 * Render the activity content for discussion activity. 
 		 *
 		 * @since BuddyBoss 1.7.1
+		 * 
+		 * @param string $content  Activit content.
+		 * @param object $activity Activit data.
 		 *
 		 * @uses bbp_get_reply()           Get reply post data.
 		 * @uses bbp_get_topic_permalink() Get discussion permalink.
 		 *
-		 * @return string|void
+		 * @return string
 		 */
 		public function before_activity_content( $content, $activity ) {
 			global $activities_template;
