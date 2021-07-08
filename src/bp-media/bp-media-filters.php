@@ -82,6 +82,10 @@ add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_video_activity_entry_css_class' );
 
+add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
+add_filter( 'query_vars', 'bb_setup_query_media_preview' );
+add_action( 'template_include', 'bb_setup_template_for_media_preview' );
+
 /**
  * Add Media items for search
  */
@@ -2599,4 +2603,47 @@ function bp_video_activity_entry_css_class( $class ) {
 
 	return $class;
 
+}
+
+/**
+ * Add rewrite rule to setup media preview.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_setup_media_preview() {
+	add_rewrite_rule( 'media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+}
+
+/**
+ * Setup query variable for media preview.
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_setup_query_media_preview( $query_vars ) {
+	$query_vars[] = 'media-preview';
+	$query_vars[] = 'id1';
+	$query_vars[] = 'size';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the media preview.
+ *
+ * @param string $template Template path to include.
+ *
+ * @return array
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_setup_template_for_media_preview( $template ) {
+	if ( get_query_var( 'media-preview' ) === false || empty( get_query_var( 'media-preview' ) ) ) {
+		return $template;
+	}
+
+	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
 }
