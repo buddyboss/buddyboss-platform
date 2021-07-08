@@ -2411,7 +2411,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 			foreach ( $media_ids as $media_id ) {
 
-				if ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) {
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) {
 					continue;
 				}
 

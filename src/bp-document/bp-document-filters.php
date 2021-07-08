@@ -1765,7 +1765,7 @@ function bp_document_get_edit_activity_data( $activity ) {
 			$document_ids = explode( ',', $document_ids );
 
 			foreach( $document_ids as $document_id ) {
-				if ( bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
 					continue;
 				}
 				$document = new BP_Document( $document_id );
