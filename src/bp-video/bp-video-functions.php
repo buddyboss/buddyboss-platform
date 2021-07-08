@@ -3351,7 +3351,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 		} else {
 			$video_id       = 'forbidden_' . $video_id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id ) . '&size=' . $size;
+			$attachment_url = home_url( '/' ) . 'video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
 		}
 
 		if ( empty( $attachment_url ) ) {
@@ -3798,19 +3798,12 @@ function bb_video_get_symlink( $video, $generate = true ) {
 
 	if ( $do_symlink ) {
 
-		if ( ! bb_enable_symlinks() ) {
+		if ( ! bb_enable_symlinks() || bb_check_ios_device() ) {
 			$video_id        = 'forbidden_' . $video->id;
 			$attachment_id   = 'forbidden_' . $video->attachment_id;
 			$output_file_src = get_attached_file( $video->attachment_id );
 			if ( ! empty( $attachment_id ) && ! empty( $video_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id );
-			}
-		} elseif ( bb_check_ios_device() ) {
-				$video_id        = 'forbidden_' . $video->id;
-				$attachment_id   = 'forbidden_' . $video->attachment_id;
-				$output_file_src = get_attached_file( $video->attachment_id );
-			if ( ! empty( $attachment_id ) && ! empty( $video_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id );
+				$attachment_url = home_url( '/' ) . 'video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id );
 			}
 		} else {
 			// Get videos previews symlink directory path.
