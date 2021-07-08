@@ -1208,7 +1208,7 @@ add_filter(
 );
 
 /**
- * 1.6.2 update routine.
+ * 1.7.1 update routine.
  *
  * @since BuddyBoss 1.7.1
  */
