@@ -1896,6 +1896,10 @@ function bp_activity_comments( $args = '' ) {
 function bp_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
+	if ( ! bp_activity_can_comment() ) {
+		return false;
+	}
+
 	if ( empty( $activities_template->activity->children ) ) {
 		return false;
 	}
