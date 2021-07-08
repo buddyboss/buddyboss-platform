@@ -5602,7 +5602,7 @@ function bb_activity_blog_post_acivity( $activity ) {
  */
 function bb_activity_has_comments( $comments, $activity_id ) {
 	$activity = new BP_Activity_Activity( $activity_id );
-	if ( empty( $activity ) ) {
+	if ( empty( $activity->id ) ) {
 		return $comments;
 	}
 	global $activities_template;
