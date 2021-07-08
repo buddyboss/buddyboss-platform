@@ -814,8 +814,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.1
 		 *
-		 * @param obj $action
-		 * @param obj $activity
+		 * @param string $action    Activity content.
+		 * @param object $activity  Activity data.
 		 *
 		 * @uses bbp_get_topic_forum_id()    Get forum id from topic id.
 		 * @uses bbp_get_user_profile_link() Get user profile link.
