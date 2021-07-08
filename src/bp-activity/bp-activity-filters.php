@@ -2439,7 +2439,7 @@ function bb_activity_has_comment_access( $retval ) {
 
 	// Check blog post activity comment status.
 	if ( bb_activity_blog_post_acivity( $activities_template->activity ) ) {
-		return bp_blogs_disable_activity_commenting( $retval );
+		return ! function_exists( 'bp_blogs_disable_activity_commenting' ) ? false : bp_blogs_disable_activity_commenting( $retval );
 	}
 
 	// Get the current action name.
