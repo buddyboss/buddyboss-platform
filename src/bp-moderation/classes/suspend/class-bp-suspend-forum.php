@@ -433,7 +433,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Function to un-restrict activity data while deleting the activity.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 *
 	 * @param boolean $restrict restrict single item or not.
 	 *
