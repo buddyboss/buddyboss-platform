@@ -279,16 +279,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Remove Pre-validate check.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 */
 	public function remove_pre_validate_check() {
-		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10 );
 	}
 
 	/**
 	 * Add Pre-validate check.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 */
 	public function add_pre_validate_check() {
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
