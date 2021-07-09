@@ -2104,6 +2104,7 @@ window.bp = window.bp || {};
 		toggleMoreOption: function( event ) {
 
 			if( $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
+				event.preventDefault();
 				
 				if( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
 					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
