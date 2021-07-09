@@ -1379,6 +1379,10 @@ h2.bbp-form-title.entry-title {
 
 		}
 
+		&.no_more_option .bb-video-cover-wrap:before {
+			display: none;
+		}
+
 		&.act-grid-1-1 {
 			flex: 0 0 100%;
 			max-width: 100%;
