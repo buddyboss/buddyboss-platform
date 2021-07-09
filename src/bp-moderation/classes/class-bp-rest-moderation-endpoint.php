@@ -49,11 +49,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'media' ) ) {
 			// Moderation support for media.
 			$this->bp_rest_moderation_media_support();
+		}
 
-			// Moderation support for video.
-			if ( bp_is_active( 'video' ) ) {
-				$this->bp_rest_moderation_video_support();
-			}
+		// Moderation support for video.
+		if ( bp_is_active( 'video' ) ) {
+			$this->bp_rest_moderation_video_support();
 		}
 
 		if ( bp_is_active( 'document' ) ) {
