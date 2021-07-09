@@ -5397,11 +5397,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
  * @return array|bool The Activity edit data or false otherwise.
  */
 function bp_activity_get_edit_data( $activity_id = 0 ) {
-
-	if ( ! bp_is_activity_edit_enabled() ) {
-		return;
-	}
-
 	global $activities_template;
 
 	// check activity empty or not.
