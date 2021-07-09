@@ -66,7 +66,7 @@ add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
 add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 99, 2 );
 
 
-add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
+//add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
 
 /**
  * Add video theatre template for activity pages.
