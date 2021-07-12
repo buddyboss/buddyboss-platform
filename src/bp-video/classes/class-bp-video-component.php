@@ -98,6 +98,10 @@ class BP_Video_Component extends BP_Component {
 	 * @since BuddyBoss 1.7.0
 	 */
 	public function late_includes() {
+
+		// Include Video Streamline.
+		require $this->path . 'bp-video/classes/class-bp-video-stream.php';
+
 		// Bail if PHPUnit is running.
 		if ( defined( 'BP_TESTS_DIR' ) ) {
 			return;
