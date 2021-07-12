@@ -53,8 +53,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 
 		// modify in videos count for album.
 		add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_media_sql' ), 10, 2 );
-		//Disabling to fix the single photo count on user profile.
-		//add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_media_sql' ), 10, 2 );
+		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_media_sql' ), 10, 2 );
 
 		// modify in group videos count for album.
 		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_media_sql' ), 10, 2 );
