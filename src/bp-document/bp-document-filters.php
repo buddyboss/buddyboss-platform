@@ -76,6 +76,10 @@ add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on
 
 add_filter( 'bb_ajax_activity_update_privacy', 'bb_document_update_video_symlink', 99, 2 );
 
+add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
+add_filter( 'query_vars', 'bb_setup_query_document_preview' );
+add_action( 'template_include', 'bb_setup_template_for_document_preview' );
+
 /**
  * Clear a user's symlinks document when attachment document delete.
  *
@@ -1844,4 +1848,54 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 
 	return $response;
 
+}
+
+
+/**
+ * Add rewrite rule to setup document preview.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_setup_document_preview() {
+	add_rewrite_rule( 'document-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'document-player/([^/]+)/([^/]+)/?$', 'index.php?document-player=$matches[1]&id1=$matches[2]', 'top' );
+}
+
+/**
+ * Setup query variable for document preview.
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_setup_query_document_preview( $query_vars ) {
+	$query_vars[] = 'document-preview';
+	$query_vars[] = 'document-player';
+	$query_vars[] = 'id1';
+	$query_vars[] = 'size';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the document preview.
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_setup_template_for_document_preview( $template ) {
+	if ( ! empty( get_query_var( 'document-preview' ) ) ) {
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/preview.php';
+	}
+
+	if ( ! empty( get_query_var( 'document-player' ) ) ) {
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/player.php';
+	}
+
+	return $template;
 }
