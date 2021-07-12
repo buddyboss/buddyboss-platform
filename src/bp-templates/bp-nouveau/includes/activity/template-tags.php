@@ -214,7 +214,7 @@ function bp_nouveau_activity_has_content() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_content() {
-	if ( bp_activity_has_content() ) {
+	if ( bp_nouveau_activity_has_content() ) {
 		bp_activity_content_body();
 	}
 
