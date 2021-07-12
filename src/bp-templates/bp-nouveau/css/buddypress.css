@@ -5210,22 +5210,26 @@ body.buddypress.bp-user #page #primary .entry-header {
   display: none;
 }
 
+#buddypress .bb_more_options,
 .bb_more_options {
   position: relative;
   display: inline-block;
 }
 
+#buddypress .bb_more_options .bb_more_options_action,
 .bb_more_options .bb_more_options_action {
   padding: 5px;
   display: flex;
   cursor: pointer;
 }
 
+#buddypress .bb_more_options .bb_more_options_action i,
 .bb_more_options .bb_more_options_action i {
   font-size: 21px;
   color: #939597;
 }
 
+#buddypress .bb_more_options .bb_more_options_list,
 .bb_more_options .bb_more_options_list {
   position: absolute;
   top: 30px;
@@ -5239,15 +5243,18 @@ body.buddypress.bp-user #page #primary .entry-header {
   z-index: 11;
 }
 
+#buddypress .bb_more_options .bb_more_options_list.is_visible,
 .bb_more_options .bb_more_options_list.is_visible {
   display: block;
 }
 
+#buddypress .bb_more_options .bb_more_options_list > .generic-button,
 .bb_more_options .bb_more_options_list > .generic-button {
   width: 100%;
   margin: 0 !important;
 }
 
+#buddypress .bb_more_options .bb_more_options_list:after,
 .bb_more_options .bb_more_options_list:after {
   content: "";
   position: absolute;
@@ -5271,10 +5278,16 @@ body.buddypress.bp-user #page #primary .entry-header {
   z-index: 101;
 }
 
+#buddypress .bb_more_options .bb_more_options_list p,
 .bb_more_options .bb_more_options_list p {
   margin: 0;
 }
 
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button,
+#buddypress .bb_more_options .bb_more_options_list button,
+#buddypress .bb_more_options .bb_more_options_list a,
+.bb_more_options .bb_more_options_list .generic-button > button,
+.bb_more_options .bb_more_options_list button,
 .bb_more_options .bb_more_options_list a {
   margin: 0;
   display: block;
@@ -5295,10 +5308,20 @@ body.buddypress.bp-user #page #primary .entry-header {
   box-shadow: none !important;
 }
 
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button:hover,
+#buddypress .bb_more_options .bb_more_options_list button:hover,
+#buddypress .bb_more_options .bb_more_options_list a:hover,
+.bb_more_options .bb_more_options_list .generic-button > button:hover,
+.bb_more_options .bb_more_options_list button:hover,
 .bb_more_options .bb_more_options_list a:hover {
   background-color: #f5f5f5 !important;
 }
 
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button:before,
+#buddypress .bb_more_options .bb_more_options_list button:before,
+#buddypress .bb_more_options .bb_more_options_list a:before,
+.bb_more_options .bb_more_options_list .generic-button > button:before,
+.bb_more_options .bb_more_options_list button:before,
 .bb_more_options .bb_more_options_list a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
@@ -5310,10 +5333,41 @@ body.buddypress.bp-user #page #primary .entry-header {
   text-align: center;
 }
 
-.bb_more_options .bb_more_options_list a.reported-content:before, .bb_more_options .bb_more_options_list a.report-content:before {
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.reported-content:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.report-content:before,
+#buddypress .bb_more_options .bb_more_options_list button.reported-content:before,
+#buddypress .bb_more_options .bb_more_options_list button.report-content:before,
+#buddypress .bb_more_options .bb_more_options_list a.reported-content:before,
+#buddypress .bb_more_options .bb_more_options_list a.report-content:before,
+.bb_more_options .bb_more_options_list .generic-button > button.reported-content:before,
+.bb_more_options .bb_more_options_list .generic-button > button.report-content:before,
+.bb_more_options .bb_more_options_list button.reported-content:before,
+.bb_more_options .bb_more_options_list button.report-content:before,
+.bb_more_options .bb_more_options_list a.reported-content:before,
+.bb_more_options .bb_more_options_list a.report-content:before {
   content: "\e8ea";
 }
 
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button:before,
+#buddypress .bb_more_options .bb_more_options_list button:before,
+#buddypress .bb_more_options .bb_more_options_list a:before,
+.bb_more_options .bb_more_options_list .generic-button > button:before,
+.bb_more_options .bb_more_options_list button:before,
+.bb_more_options .bb_more_options_list a:before {
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 15px;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  width: 20px;
+  text-align: center;
+}
+
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list a.view-as:before,
+.bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+.bb_more_options .bb_more_options_list button.view-as:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
   content: "\e88a";
   font-family: bb-icons;
@@ -5325,89 +5379,47 @@ body.buddypress.bp-user #page #primary .entry-header {
   vertical-align: middle;
 }
 
-#buddypress .bb_more_options .bb_more_options_list a {
-  margin: 0;
-  display: block;
-  text-align: left;
-  opacity: 1;
-  font-size: 13px;
-  letter-spacing: -0.24px;
-  width: 100%;
-  text-transform: none;
-  font-weight: 400;
-  min-height: auto;
-  border-radius: 0;
-  padding: 10px 14px;
-  color: #7f868f !important;
-  line-height: 1.1;
-  border: 0;
-  background-color: transparent;
-  box-shadow: none !important;
-}
-
-#buddypress .bb_more_options .bb_more_options_list a:hover {
-  background-color: #f5f5f5 !important;
-}
-
-#buddypress .bb_more_options .bb_more_options_list a:before {
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 15px;
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: middle;
-  width: 20px;
-  text-align: center;
-}
-
-#buddypress .bb_more_options .bb_more_options_list a.reported-content:before, #buddypress .bb_more_options .bb_more_options_list a.report-content:before {
-  content: "\e8ea";
-}
-
-#buddypress .bb_more_options .bb_more_options_list a.view-as:before {
-  content: "\e88a";
-  font-family: bb-icons;
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
+#buddypress .bb_more_options .bb_more_options_list button.send-message:before,
+#buddypress .bb_more_options .bb_more_options_list a.send-message:before,
+.bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
+.bb_more_options .bb_more_options_list button.send-message:before,
+.bb_more_options .bb_more_options_list a.send-message:before {
+  content: "\e839";
   font-size: 16px;
-  display: inline-block;
-  margin-right: 10px;
-  width: 20px;
-  text-align: center;
-  vertical-align: middle;
+  color: inherit !important;
 }
 
-#buddypress .bb_more_options .bb_more_options_list .block-member {
-  margin: 0;
-  display: block;
-  text-align: left;
-  opacity: 1;
-  font-size: 13px;
-  letter-spacing: -0.24px;
-  width: 100%;
-  text-transform: none;
-  font-weight: 400;
-  min-height: auto;
-  border-radius: 0;
-  padding: 10px 14px;
-  color: #7f868f !important;
-  line-height: 1.1;
-  border: 0;
-  background-color: transparent;
-  box-shadow: none !important;
-}
-
-#buddypress .bb_more_options .bb_more_options_list .block-member:hover {
-  background-color: #f5f5f5 !important;
-}
-
-#buddypress .bb_more_options .bb_more_options_list .block-member:before {
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.block-member:before,
+#buddypress .bb_more_options .bb_more_options_list button.block-member:before,
+#buddypress .bb_more_options .bb_more_options_list a.block-member:before,
+.bb_more_options .bb_more_options_list .generic-button > button.block-member:before,
+.bb_more_options .bb_more_options_list button.block-member:before,
+.bb_more_options .bb_more_options_list a.block-member:before {
   content: "\e8c9";
-  font-family: bb-icons;
-  font-size: 15px;
-  display: inline-block;
-  margin-right: 10px;
-  width: 20px;
-  text-align: center;
-  vertical-align: middle;
+}
+
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
+#buddypress .bb_more_options .bb_more_options_list button.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list button.follow-button:before,
+#buddypress .bb_more_options .bb_more_options_list a.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list a.follow-button:before,
+.bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
+.bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
+.bb_more_options .bb_more_options_list button.friendship-button:before,
+.bb_more_options .bb_more_options_list button.follow-button:before,
+.bb_more_options .bb_more_options_list a.friendship-button:before,
+.bb_more_options .bb_more_options_list a.follow-button:before {
+  content: "\e94d";
+}
+
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list a.view-as:before,
+.bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+.bb_more_options .bb_more_options_list button.view-as:before,
+.bb_more_options .bb_more_options_list a.view-as:before {
+  content: "\e88a";
 }
 
 @media screen and (max-width: 799px) {

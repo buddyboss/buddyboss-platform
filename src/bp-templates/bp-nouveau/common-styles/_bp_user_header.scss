@@ -29,6 +29,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 	display: none;
 }
 
+#buddypress .bb_more_options,
 .bb_more_options {
 	position: relative;
 	display: inline-block;
@@ -93,6 +94,8 @@ body.buddypress.bp-user #page #primary .entry-header {
 			margin: 0;
 		}
 
+		.generic-button > button,
+		button,
 		a {
 			margin: 0;
 			display: block;
@@ -131,6 +134,16 @@ body.buddypress.bp-user #page #primary .entry-header {
 				content: "\e8ea";
 			}
 
+			&:before {
+				font-family: "bb-icons";/* stylelint-disable-line */
+				font-size: 15px;
+				display: inline-block;
+				margin-right: 10px;
+				vertical-align: middle;
+				width: 20px;
+				text-align: center;
+			}
+
 			&.view-as:before {
 				content: "\e88a";
 				font-family: bb-icons;
@@ -142,95 +155,23 @@ body.buddypress.bp-user #page #primary .entry-header {
 				vertical-align: middle;
 			}
 
-			#buddypress & {
-				margin: 0;
-				display: block;
-				text-align: left;
-				opacity: 1;
-				font-size: 13px;
-				letter-spacing: -0.24px;
-				width: 100%;
-				text-transform: none;
-				font-weight: 400;
-				min-height: auto;
-				border-radius: 0;
-				padding: 10px 14px;
-				color: #7f868f !important;
-				line-height: 1.1;
-				border: 0;
-				background-color: transparent;
-				box-shadow: none !important;
-
-				&:hover {
-					background-color: #f5f5f5 !important;
-				}
-
-				&:before {
-					font-family: "bb-icons";/* stylelint-disable-line */
-					font-size: 15px;
-					display: inline-block;
-					margin-right: 10px;
-					vertical-align: middle;
-					width: 20px;
-					text-align: center;
-				}
-
-				&.reported-content:before,
-				&.report-content:before {
-					content: "\e8ea";
-				}
-
-				&.view-as:before {
-					content: "\e88a";
-					font-family: bb-icons;
-					font-size: 16px;
-					display: inline-block;
-					margin-right: 10px;
-					width: 20px;
-					text-align: center;
-					vertical-align: middle;
-				}
-
+			&.send-message:before {
+				content: "\e839";
+				font-size: 16px;
+				color: inherit !important;
 			}
 
-		}
+			&.block-member:before {
+				content: "\e8c9";
+			}
 
-		.block-member {
+			&.friendship-button:before,
+			&.follow-button:before {
+				content: "\e94d";
+			}
 
-			#buddypress & {
-				margin: 0;
-				display: block;
-				text-align: left;
-				opacity: 1;
-				font-size: 13px;
-				letter-spacing: -0.24px;
-				width: 100%;
-				text-transform: none;
-				font-weight: 400;
-				min-height: auto;
-				border-radius: 0;
-				padding: 10px 14px;
-				color: #7f868f !important;
-				line-height: 1.1;
-				border: 0;
-				background-color: transparent;
-				box-shadow: none !important;
-
-				&:hover {
-					background-color: #f5f5f5 !important;
-				}
-
-				&:before {
-					content: "\e8c9";
-					font-family: bb-icons;
-					font-size: 15px;
-					display: inline-block;
-					margin-right: 10px;
-					width: 20px;
-					text-align: center;
-					vertical-align: middle;
-				}
-
+			&.view-as:before {
+				content: "\e88a";
 			}
 
 		}
