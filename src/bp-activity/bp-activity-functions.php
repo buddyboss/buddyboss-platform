@@ -5579,13 +5579,7 @@ function bb_get_activity_hierarchy( $activity_id ) {
  * @return bool
  */
 function bb_activity_blog_post_acivity( $activity ) {
-	if ( 
-		( 'blogs' === $activity->component ) 
-		&& 
-		! empty( $activity->secondary_item_id ) 
-		&& 
-		'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type
-	) {
+	if ( ( 'blogs' === $activity->component ) && ! empty( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $blog_post, 'WP_Post' ) ) {
@@ -5597,62 +5591,8 @@ function bb_activity_blog_post_acivity( $activity ) {
 }
 
 /**
- * Is the blog post activity has comment fetch permission.
- *
- * @param bool $comments   Has permission.
- * @param int $activity_id Bolg post activity id.
- *
- * @since BuddyBoss 1.7.1
- *
- * @return bool
- */
-function bb_activity_has_comments( $comments, $activity_id ) {
-	$activity = new BP_Activity_Activity( $activity_id );
-	if ( empty( $activity ) ) {
-		return $comments;
-	}
-	global $activities_template;
-	$activities_template                            = new \stdClass();
-	$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
-	$activities_template->activity                  = $activity;
-	$activities_template->in_the_loop               = true;
-
-	if ( ! bb_activity_blog_post_acivity( $activity ) ) {
-		return $comments;
-	}
-
-	if ( ! bp_activity_can_comment() ) {
-		$comments = false;
-	}
-
-	return $comments;
-}
-add_filter( 'bb_activity_get_comments', 'bb_activity_has_comments', 10, 2 );
-
-/**
- * Is it topic activity.
- *
- * @param object $activity Topic activity data.
- *
- * @since BuddyBoss 1.7.1
- *
- * @return bool
- */
-function bb_activity_topic_acivity( $activity ) {
-	if ( empty( $activity ) ) {
-		return false;
-	}
-	
-	// When the activity type does not match with the topic.
-	if ( in_array( $activity->type, array( 'bbp_topic_create' ), true ) ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * This function will give the topic id from topic activity.
+ * - Used in Rest API
  *
  * @param object $activity Topic activity data.
  *
@@ -5664,9 +5604,9 @@ function bb_activity_topic_id( $activity ) {
 	if ( empty( $activity ) ) {
 		return false;
 	}
-	
+
 	// When the activity type does not match with the topic.
-	if ( ! bb_activity_topic_acivity( $activity ) ) {
+	if ( 'bbp_topic_create' !== $activity->type ) {
 		return false;
 	}
 
@@ -5688,29 +5628,8 @@ function bb_activity_topic_id( $activity ) {
 }
 
 /**
- * Is it topic reply activity.
- *
- * @param object $activity Reply activity data.
- *
- * @since BuddyBoss 1.7.1
- *
- * @return bool
- */
-function bb_activity_topic_reply_acivity( $activity ) {
-	if ( empty( $activity ) ) {
-		return false;
-	}
-	
-	// When the activity type does not match with the topic.
-	if ( in_array( $activity->type, array( 'bbp_reply_create' ), true ) ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * This function will give the reply topic id from reply activity.
+ * - Used in Rest API
  *
  * @param object $activity Reply activity data.
  *
@@ -5723,8 +5642,8 @@ function bb_activity_reply_topic_id( $activity ) {
 		return false;
 	}
 
-	// When the activity type does not match with the topic or reply.
-	if ( ! bb_activity_topic_reply_acivity( $activity ) ) {
+	// When the activity type does not match with the topic.
+	if ( 'bbp_reply_create' !== $activity->type ) {
 		return false;
 	}
 
@@ -5746,9 +5665,10 @@ function bb_activity_reply_topic_id( $activity ) {
 }
 
 /**
- * Is it topic comment.
+ * Is it topic comment activity.
+ * - Used in Rest API
  *
- * @param int $activity id.
+ * @param int $activity_id Activity id.
  *
  * @since BuddyBoss 1.7.1
  *
@@ -5756,7 +5676,7 @@ function bb_activity_reply_topic_id( $activity ) {
  */
 function bb_acivity_is_topic_comment( $activity_id ) {
 	$item_activity = new BP_Activity_Activity( $activity_id );
-	
+
 	if ( empty( $item_activity ) ) {
 		return false;
 	}
@@ -5769,7 +5689,7 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 		'bbp_topic_create',
 		'bbp_reply_create',
 	);
- 
+
 	// Comment is disabled for discussion and reply discussion.
 	if ( in_array( $action_name, $disabled_actions, true ) ) {
 		return true;

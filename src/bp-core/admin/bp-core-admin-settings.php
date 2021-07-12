@@ -837,14 +837,14 @@ function bp_feed_settings_callback_post_type( $args ) {
 	<input
 		class="bp-feed-post-type-checkbox <?php echo 'bp-feed-post-type-' . esc_attr( $post_type ); ?>"
 		data-post_type="<?php echo esc_attr( $post_type ); ?>"
-		name="<?php echo $option_name; ?>"
-		id="<?php echo $option_name; ?>"
+		name="<?php echo esc_attr( $option_name ); ?>"
+		id="<?php echo esc_attr( $option_name ); ?>"
 		type="checkbox"
 		value="1"
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php echo $post_type === 'post' ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
 
@@ -1570,7 +1570,7 @@ function bp_admin_on_screen_notification_setting_tutorial() {
  *
  * @return void
  */
-function bb_after_update_activity_settings( $tab_name, $class_obj ) {
+function bb_after_update_activity_settings( $tab_name ) {
 	if ( 'bp-activity' !== $tab_name ) {
 		return;
 	}
@@ -1591,4 +1591,4 @@ function bb_after_update_activity_settings( $tab_name, $class_obj ) {
 		}
 	}
 }
-add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 2 );
+add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );

@@ -834,6 +834,10 @@ function bp_disable_blogforum_comments( $default = false ) {
 	if ( empty( $activities_template->activity ) ) {
 		return $default;
 	}
+	
+	if ( empty(  $activities_template->activity->component ) ) {
+		return $default;
+	}
 
 	if ( 'blogs' !== $activities_template->activity->component ) {
 		return $default;

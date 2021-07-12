@@ -2490,7 +2490,7 @@ input.search-query-input {
   background: #fff;
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
   border-radius: 4px;
-  width: 168px;
+  width: 198px;
   padding: 5px 0;
   display: none;
   z-index: 11;
@@ -2575,6 +2575,15 @@ input.search-query-input {
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
   content: "\e937";
   font-size: 15px;
+}
+
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.ac-video-thumbnail-edit:before {
+  content: "\e9cb";
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 15px;
+  margin-top: -6px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.edit-activity:before {
@@ -12004,6 +12013,12 @@ fieldset div.avatar {
   text-align: right;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap .emoji,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap .emoji,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap .emoji {
+  margin: 3px;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
   padding: 0;
@@ -12020,6 +12035,11 @@ fieldset div.avatar {
 .activity-list li.bbp_reply_create .bb-content-inr-wrap {
   padding: 6px 12px 12px 12px;
   background-color: #fafafa;
+}
+
+.activity-list li.bbp_topic_create .bb-content-inr-wrap .activity-read-more a,
+.activity-list li.bbp_reply_create .bb-content-inr-wrap .activity-read-more a {
+  text-transform: capitalize;
 }
 
 .activity-list li.bbp_topic_create .bb-activity-media-wrap,
@@ -12056,6 +12076,7 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .bb-post-img-link img {
   border-radius: 0;
   margin: 0 auto;
+  max-height: 640px;
 }
 
 .activity-list li.blogs .activity-content .activity-inner .bb-post-title-link:before {
