@@ -5177,6 +5177,12 @@ body.guillotine-dragging * {
   }
 }
 
+@media screen and (max-width: 380px) {
+  .groups-header .bb_more_options {
+    margin-bottom: 10px;
+  }
+}
+
 /**
 *-----------------------------------------------------
 * @subsection 5.1.2 - Item Header User Accounts
@@ -5239,7 +5245,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 .bb_more_options .bb_more_options_list > .generic-button {
   width: 100%;
-  margin: 0;
+  margin: 0 !important;
 }
 
 .bb_more_options .bb_more_options_list:after {
