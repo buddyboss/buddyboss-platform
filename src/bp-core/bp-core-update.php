@@ -324,10 +324,12 @@ function bp_version_updater() {
 			bb_update_to_1_5_6();
 		}
 
+		// Version 1.7.0.
 		if ( $raw_db_version < 16601 ) {
-			bp_update_to_1_7_0();
+			bb_update_to_1_7_0();
 		}
 
+		// Version 1.7.1.
 		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_1();
 		}
@@ -669,6 +671,16 @@ function bp_update_to_1_5_1() {
 		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
+}
+
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_update_to_1_7_0() {
+	bp_core_install_media();
+	bb_core_enable_default_symlink_support();
 }
 
 function bp_update_default_doc_extensions() {
@@ -1194,53 +1206,6 @@ add_filter(
 		return $extensions;
 	}
 );
-
-/**
- * Update media table for the video components.
- *
- * @since BuddyBoss 1.7.0
- */
-function bp_update_to_1_7_0() {
-	bp_core_install_media();
-	bb_core_enable_default_symlink_support();
-}
-
-function bp_update_default_doc_extensions() {
-
-	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
-
-	//	$changed_array = array(
-	//		'bb_doc_52'   => array(
-	//			'description' => '7z Archive XYZ',
-	//		)
-	//	);
-	//
-	//
-	//	if ( !empty( $changed_array ) ) {
-	//		foreach ( $changed_array as $k => $v ) {
-	//			if ( array_key_exists( $k, $get_extensions ) ) {
-	//				$extension = $get_extensions[$k];
-	//				$get_extensions[$k] = array_replace( $extension, $v );
-	//			} else {
-	//				// For newly add key.
-	//				$get_extensions[$k] = $v;
-	//			}
-	//		}
-	//	}
-	//
-	//	$removed_array = array(
-	//		'bb_doc_51'
-	//	);
-	//
-	//	if ( !empty( $removed_array ) ) {
-	//		foreach (  $removed_array as $key ) {
-	//			unset( $get_extensions[$key] );
-	//		}
-	//
-	//	}
-
-	//bp_update_option( 'bp_document_extensions_support', $get_extensions );
-}
 
 /**
  * 1.7.1 update routine.

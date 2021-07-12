@@ -431,7 +431,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 				/**
 				 * Fires before activity suspend record delete.
 				 *
-				 * @since BuddyBoss X.X.X
+				 * @since BuddyBoss 1.7.2
 				 *
 				 * @param object $activity_data activity data.
 				 */

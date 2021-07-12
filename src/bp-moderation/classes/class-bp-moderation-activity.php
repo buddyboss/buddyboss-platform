@@ -234,7 +234,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_activity', true ) ) ) {
+		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_activity', true ) ) || ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) && 1 === count( explode( ',', bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) ) ) {
 			if ( bp_is_active( 'document' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
 				$document_id       = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
 				$explode_documents = explode( ',', bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) );
@@ -279,16 +279,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Remove Pre-validate check.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 */
 	public function remove_pre_validate_check() {
-		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10 );
 	}
 
 	/**
 	 * Add Pre-validate check.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 */
 	public function add_pre_validate_check() {
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
