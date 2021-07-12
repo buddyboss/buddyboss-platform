@@ -1009,6 +1009,17 @@ window.bp = window.bp || {};
 
 				form.slideDown( 200 );
 
+				/* Stop past image from clipboard */
+				var ce = form.find( '.ac-input[contenteditable]' );
+				if ( ce.length > 0 ) {
+					var div_editor = ce.get( 0 );
+					div_editor.addEventListener( 'paste', function ( e ) {
+						e.preventDefault();
+						var text = e.clipboardData.getData( 'text/plain' );
+						document.execCommand( 'insertText', false, text );
+					} );
+				}
+
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
