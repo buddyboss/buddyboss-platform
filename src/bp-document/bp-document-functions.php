@@ -4522,6 +4522,8 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 							if ( $generate ) {
 								// Generate Document Video Symlink.
+								$ext = pathinfo($attached_file, PATHINFO_EXTENSION);
+								$attachment_path = $attachment_path . '.' . $ext;
 								bb_core_symlink_generator( 'document_video', $document, '', array(), $attached_file, $attachment_path );
 							}
 						}
