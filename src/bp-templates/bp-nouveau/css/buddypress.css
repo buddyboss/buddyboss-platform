@@ -5310,7 +5310,7 @@ body.buddypress.bp-user #page #primary .entry-header {
   text-align: center;
 }
 
-#buddypress .bb_more_options .bb_more_options_list a.report-content:before {
+#buddypress .bb_more_options .bb_more_options_list a.reported-content:before, #buddypress .bb_more_options .bb_more_options_list a.report-content:before {
   content: "\e8ea";
 }
 
