@@ -324,8 +324,12 @@ function bp_version_updater() {
 			bb_update_to_1_5_6();
 		}
 
-		// Version 1.5.9
-		if ( $raw_db_version < 16450 ) {
+		if ( $raw_db_version < 16601 ) {
+			bp_update_to_1_7_0();
+		}
+
+		// Version x.x.x
+		if ( $raw_db_version < 17001 ) {
 			bb_update_to_1_5_9();
 		}
 	}
@@ -668,6 +672,16 @@ function bp_update_to_1_5_1() {
 	}
 }
 
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_update_to_1_7_0() {
+	bp_core_install_media();
+	bb_core_enable_default_symlink_support();
+}
+
 function bp_update_default_doc_extensions() {
 
 	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
@@ -714,7 +728,7 @@ function bp_update_default_doc_extensions() {
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
 
-	// Fix current forums media privacy to 'forums'
+	// Fix current forums media privacy to 'forums'.
 	bp_core_fix_forums_media();
 }
 
@@ -1144,12 +1158,12 @@ function bb_update_to_1_5_6() {
 }
 
 /**
- * 1.5.7.2 update routine.
+ * x.x.x update routine.
  *
  * - Migrate group id to associate forum.
  * - Update forum meta _bbp_group_ids, associated with group id.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss x.x.x
  */
 function bb_update_to_1_5_9() {
 	global $bp_background_updater;
@@ -1174,7 +1188,7 @@ function bb_update_to_1_5_9() {
 /**
  * Chunk the total groups as pages.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss x.x.x
  *
  * @return array
  */
@@ -1205,7 +1219,7 @@ function bb_update_to_1_5_9_get_pages() {
 /**
  * Migrate group id, associate its forum group id.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss x.x.x
  *
  * @param int $page
  *
@@ -1236,7 +1250,7 @@ function bb_update_to_1_5_9_migrate_group_id_associate_forum( $page ) {
 /**
  * Update group ID's for a forum.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss x.x.x
  *
  * @param int   $group_id
  * @param array $forum_ids
@@ -1262,3 +1276,53 @@ function bb_update_to_1_5_9_update_forums_group_id( $group_id, $forum_ids ) {
 		bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
+
+/** 
+ * Add new video support to document extensions.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+add_filter(
+	'bp_media_allowed_document_type',
+	function ( $extensions ) {
+		$changed_array = array(
+			'bb_doc_77' => array(
+				'extension'   => '.mp4',
+				'mime_type'   => 'video/mp4',
+				'description' => __( 'MP4', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_78' => array(
+				'extension'   => '.webm',
+				'mime_type'   => 'video/webm',
+				'description' => __( 'WebM', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_79' => array(
+				'extension'   => '.ogg',
+				'mime_type'   => 'video/ogg',
+				'description' => __( 'Ogg', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_80' => array(
+				'extension'   => '.mov',
+				'mime_type'   => 'video/quicktime',
+				'description' => __( 'Quicktime', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+		);
+
+		$extensions = array_merge( $extensions, $changed_array );
+
+		return $extensions;
+	}
+);
+

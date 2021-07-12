@@ -5,14 +5,19 @@
  * @since BuddyBoss 1.4.0
  * @package BuddyBoss\Core
  */
-
 ?>
 
-<?php bp_nouveau_before_document_directory_content(); ?>
+<?php
+bp_nouveau_before_document_directory_content();
+bp_nouveau_template_notices();
 
-<?php bp_nouveau_template_notices(); ?>
+bp_get_template_part( 'document/theatre' );
+bp_get_template_part( 'media/theatre' );
 
-<?php bp_get_template_part( 'document/theatre' ); ?>
+if ( bp_is_profile_video_support_enabled() ) {
+	bp_get_template_part( 'video/theatre' );
+}
+?>
 
 <div class="screen-content">
 
@@ -51,7 +56,7 @@
 		?>
 	</div>
 
-	<div id="media-stream" class="media document-parent <?php if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) { echo 'group-column'; }?>" data-bp-list="document">
+	<div id="media-stream" class="media document-parent <?php if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) { echo 'group-column'; } ?>" data-bp-list="document">
 		<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-document-loading' ); ?></div>
 	</div><!-- .media -->
 

@@ -1040,3 +1040,59 @@ function bp_notifications_bulk_management_dropdown() {
 	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
 }
+
+/**
+ * Set on-screen notification template.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_on_screen_notification_template() {
+	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 1 );
+
+	if ( empty( $is_on_screen_notification_enable ) ) {
+		return;
+	}
+
+	$user_unread_notification     = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
+	$user_unread_notification_ids = wp_list_pluck( $user_unread_notification, 'id' );
+	$position                     = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
+	$has_mobile_support           = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );
+	$browser_tab                  = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
+	$visibility                   = bp_get_option( '_bp_on_screen_notifications_visibility', 0 );
+	$enable                       = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
+
+	?>
+	<div class="bb-onscreen-notification-enable <?php echo '1' === $has_mobile_support ? 'bb-onscreen-notification-enable-mobile-support' : '';  ?>">
+		<div 
+			class="bb-onscreen-notification bb-position-<?php echo esc_attr( $position ); ?>" 
+			style="display: none;" 
+			data-title-tag="" 
+			data-flash-status="default_title"
+			data-broser-tab="<?php echo esc_attr( $browser_tab ); ?>"
+			data-visibility="<?php echo esc_attr( $visibility ); ?>"
+			data-enable="<?php echo esc_attr( $enable ); ?>"
+		> 
+			<ul 
+				class="notification-list bb-nouveau-list" 
+				data-removed-items="<?php echo esc_attr( json_encode( $user_unread_notification_ids ) ); ?>"
+				data-auto-removed-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
+				data-border-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
+				data-flash-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
+				data-animated-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
+			>	
+			</ul>
+			<div class="bb-remove-all-notification">
+				<a class="action-close primary">
+					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss' ); ?></span>
+					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss' ); ?></span>
+					<span class="dashicons dashicons-no" aria-hidden="true"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<?php
+}
+// No-Screen notification template.
+add_action( 'wp_footer', 'bb_on_screen_notification_template' );

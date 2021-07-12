@@ -142,6 +142,9 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $request['parent_id'] ) ) {
 			$args['parent_id'] = null;
+			if ( true === (bool) bp_enable_group_hide_subgroups() ) {
+				$args['parent_id'] = 0;
+			}
 		}
 
 		// See if the user can see hidden groups.
@@ -162,6 +165,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			)
 			&& function_exists( 'bp_groups_get_excluded_group_ids_by_type' )
 			&& ! empty( bp_groups_get_excluded_group_ids_by_type() )
+			&& empty( $request['parent_id'] )
 		) {
 			$args['exclude'] = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 		}
@@ -302,24 +306,24 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		$group = $this->get_group_object( $request );
 
-		if ( true === $retval && empty( $group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! $this->can_see( $group ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the group.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( true === $retval ) {
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! $this->can_see( $group ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you cannot view the group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -425,16 +429,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create groups.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! ( is_user_logged_in() && bp_user_can_create_groups() ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create groups.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_user_can_create_groups() ) {
+			$retval = true;
 		}
 
 		/**
@@ -525,39 +529,37 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to update this group.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update this group.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$group  = $this->get_group_object( $request );
 
-		$group = $this->get_group_object( $request );
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
 
-		if ( true === $retval && empty( $group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		// If group author does not match logged_in user, block update.
-		if ( true === $retval && ! $this->can_user_delete_or_update( $group ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this group.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+				// If group author does not match logged_in user, block update.
+			} elseif ( ! $this->can_user_delete_or_update( $group ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -646,38 +648,35 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this group.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this group.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$group  = $this->get_group_object( $request );
 
-		$group = $this->get_group_object( $request );
-
-		if ( true === $retval && empty( $group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! $this->can_user_delete_or_update( $group ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this group.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! $this->can_user_delete_or_update( $group ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -716,6 +715,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'slug'               => bp_get_group_slug( $item ),
 			'status'             => bp_get_group_status( $item ),
 			'types'              => bp_groups_get_group_type( $item->id, false ),
+			'group_type_label'   => $this->get_group_type_label( $item ),
 			'subgroups_id'       => $this->bp_rest_get_sub_groups( $item->id ),
 			'admins'             => array(),
 			'mods'               => array(),
@@ -732,6 +732,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
 			'can_post'           => $this->bp_rest_user_can_post( $item ),
 			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
+			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
 			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
 		);
 
@@ -1057,7 +1058,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				return true;
 			}
 
-			if ( is_user_logged_in() && isset( $request['user_id'] ) && absint( $request['user_id'] ) === bp_loggedin_user_id() ) {
+			if ( ( is_user_logged_in() && empty( $request['user_id'] ) ) || ( isset( $request['user_id'] ) && absint( $request['user_id'] ) === bp_loggedin_user_id() ) ) {
 				return true;
 			}
 
@@ -1292,6 +1293,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'type' => 'string',
 					),
 				),
+				'group_type_label'   => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Name of the group type.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
 				'subgroups_id'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Sub Groups id if having a sub groups.', 'buddyboss' ),
@@ -1402,6 +1409,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'create_media'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user has permission to upload media to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'create_video'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to upload video to the group or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1813,5 +1826,24 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		return $user_group_role_title;
 
+	}
+
+	/**
+	 * Fetch group type label.
+	 *
+	 * @param BP_Groups_Group $group Group object.
+	 *
+	 * @return mixed|string|void
+	 */
+	public function get_group_type_label( $group ) {
+
+		if ( function_exists( 'bp_disable_group_type_creation' ) && true !== bp_disable_group_type_creation() ) {
+			return '';
+		}
+
+		$group_type = bp_groups_get_group_type( $group->id );
+		$group_type = bp_groups_get_group_type_object( $group_type );
+
+		return isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : __( 'Group', 'buddyboss' );
 	}
 }

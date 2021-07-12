@@ -5,7 +5,7 @@
  * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
-$search_term =  ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '';
+$search_term =  ! empty( $_REQUEST['s'] ) ? esc_html( $_REQUEST['s'] ) : '';
 ?>
 
 <div class="<?php bp_nouveau_search_container_class(); ?> bp-search-form">

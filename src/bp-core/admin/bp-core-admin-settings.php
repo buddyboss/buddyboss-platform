@@ -1140,6 +1140,24 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 	<?php
 }
 
+/*
+  Admin settings for showing the legal agreement confirmation field.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ */
+function bb_admin_setting_callback_register_show_legal_agreement() {
+	?>
+
+	<input id="register-legal-agreement" name="register-legal-agreement" type="checkbox" value="1" <?php checked( bb_register_legal_agreement( false ) ); ?> />
+	<label for="register-legal-agreement"><?php _e( 'Add Legal Agreement checkbox to register form', 'buddyboss' ); ?></label>
+	<?php
+		printf(
+			'<p class="description">%s</p>',
+			__( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' )
+		);
+}
+
 /**
  * Admin settings for showing the password confirmation field.
  *
@@ -1223,7 +1241,7 @@ function bp_group_directories_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => '',
+					'article' => '83107',
 				),
 				'admin.php'
 			)
@@ -1335,7 +1353,6 @@ function bp_admin_moderation_block_setting_tutorial() {
 	<?php
 }
 
-
 /**
  * Link to Moderation Report tutorial
  *
@@ -1350,6 +1367,144 @@ function bp_admin_moderation_report_setting_tutorial() {
 				array(
 					'page'    => 'bp-help',
 					'article' => 121712,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+
+/**
+ * Enable on-screen notification.
+ *
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_enable() {
+	?>
+	<input id="_bp_on_screen_notifications_enable" name="_bp_on_screen_notifications_enable" type="checkbox"
+		   value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ); ?> />
+	<label for="_bp_on_screen_notifications_enable"><?php esc_html_e( 'Enable on-screen notifications', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Define on-screen notification position.
+ *
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_position() {
+	?>
+	<div class="bb-screen-position-outer">		
+		<div class="bb-screen-position bb-bottom-left">
+			<input id="bp_on_screen_notifications_position_left" name="_bp_on_screen_notifications_position" type="radio" value="left" <?php checked( 'left' === bp_get_option( '_bp_on_screen_notifications_position', '' ) ? true : false ); ?> />
+			<label class="option opt-left" for="bp_on_screen_notifications_position_left">
+				<span>
+					<?php esc_html_e( 'Bottom Left', 'buddyboss' ); ?>
+				</span>					
+			</label>
+		</div>
+		<div class="bb-screen-position bb-bottom-right">
+			<input id="bp_on_screen_notifications_position_right" name="_bp_on_screen_notifications_position" type="radio" value="right" <?php checked( 'right' === bp_get_option( '_bp_on_screen_notifications_position', '' ) ? true : false ); ?> />
+			<label class="option opt-right" for="bp_on_screen_notifications_position_right">
+				<span>
+					<?php esc_html_e( 'Bottom Right', 'buddyboss' ); ?>
+				</span>					
+			</label>
+		</div>
+	</div>
+	<?php
+}
+
+/**
+ * Enable on-screen notification mobile support.
+ *
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_mobile_support() {
+	?>
+	<input id="_bp_on_screen_notifications_mobile_support" name="_bp_on_screen_notifications_mobile_support" type="checkbox" value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 ) ); ?> />
+	<label for="_bp_on_screen_notifications_mobile_support"><?php esc_html_e( 'Show on-screen notifications on small screens', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Enable on-screen notification browser tab.
+ *
+ * @since BuddyBoss 1.7.0
+ * 
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_browser_tab() {
+	?>
+	<input id="_bp_on_screen_notifications_browser_tab" name="_bp_on_screen_notifications_browser_tab" type="checkbox" value="1"  <?php checked( bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 ) ); ?> />
+	<label for="_bp_on_screen_notifications_browser_tab"><?php esc_html_e( 'Show new notifications in the title of the browser tab', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Update the page <title> tab when new notifications are received.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Option value for auto remove on-screen single notification.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_visibility() {
+
+	// Options for remove single notification time.
+	$options = array(
+		'never' => __( 'Never Hide', 'buddyboss' ),
+		'5'     => __( '5 Seconds', 'buddyboss' ),
+		'10'    => __( '10 Seconds', 'buddyboss' ),
+		'30'    => __( '30 Seconds', 'buddyboss' ),
+		'60'    => __( '1 Minute', 'buddyboss' ),
+		'120'   => __( '2 Minutes', 'buddyboss' ),
+		'180'   => __( '3 Minutes', 'buddyboss' ),
+		'240'   => __( '4 Minutes', 'buddyboss' ),
+		'300'   => __( '5 Minutes', 'buddyboss' ),
+	);
+	?>
+
+	<select name="_bp_on_screen_notifications_visibility" id="_bp_on_screen_notifications_visibility" >
+
+		<?php foreach ( $options as $option_id => $label ) : ?>
+
+			<option  value="<?php echo esc_attr( $option_id ); ?>" <?php selected( esc_attr( $option_id ) === bp_get_option( '_bp_on_screen_notifications_visibility', '' ) ? true : false ); ?>>
+				<?php echo esc_html( $label ); ?>
+			</option>
+
+		<?php endforeach; ?>
+
+	</select>
+
+	<?php
+}
+
+
+/**
+ * Link to Moderation Report tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_on_screen_notification_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 124801,
 				),
 				'admin.php'
 			)

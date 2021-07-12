@@ -467,6 +467,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'is_public'      => ( 'public' === $item->status ),
 		'group_media'    => ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 		'group_document' => ( bp_is_active( 'document' ) && bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
+		'group_video'    => ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 	);
 }
 
@@ -580,7 +581,20 @@ function bp_nouveau_get_groups_directory_nav_items() {
 
 	if ( is_user_logged_in() ) {
 
-		$my_groups_count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+		$group_type = bp_get_current_group_directory_type();
+
+		if ( ! empty( $group_type ) ) {
+			$result_groups   = groups_get_groups(
+				array(
+					'user_id'    => bp_loggedin_user_id(),
+					'group_type' => $group_type,
+					'fields'     => 'ids',
+				)
+			);
+			$my_groups_count = isset( $result_groups['total'] ) ? (int) $result_groups['total'] : 0;
+		} else {
+			$my_groups_count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+		}
 
 		// If the user has groups create a nav item
 		if ( $my_groups_count ) {
@@ -863,6 +877,10 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 
 	if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
 		$options['documents'] = __( 'Documents', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+		$options['videos'] = __( 'Videos', 'buddyboss' );
 	}
 
 	return array_merge( $controls,
