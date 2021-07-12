@@ -1107,6 +1107,8 @@ function bp_video_offload_get_thumb_preview_url( $attachment_url, $video_id, $si
 add_filter( 'bb_video_get_thumb_url', 'bp_video_offload_get_thumb_preview_url', PHP_INT_MAX, 4 );
 
 /**
+ * Return the offload media plugin attachment url.
+ *
  * @param string $attachment_url Attachment url.
  * @param int    $video_id       Video id.
  * @param int    $attachment_id  Attachment id.
@@ -1124,3 +1126,139 @@ function bp_video_offload_get_video_url( $attachment_url, $video_id, $attachment
 	return $attachment_url;
 }
 add_filter( 'bb_video_get_symlink', 'bp_video_offload_get_video_url', PHP_INT_MAX, 3 );
+
+/**
+ * Function to set the false to use the default media symlink instead use the WP Stateless media URL of media.
+ *
+ * @param bool   $can           default true.
+ * @param int    $id            media/document/video id.
+ * @param int    $attachment_id attachment id.
+ * @param string $size          preview size.
+ *
+ * @return bool true if the offload media used.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array(  ud_get_stateless_media()->get('sm.mode'), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$can = false;
+	}
+	return $can;
+}
+add_filter( 'bb_media_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_document_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_create_thumb_symlinks', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url Attachment url.
+ * @param int    $video_id       Video id.
+ * @param int    $attachment_id  Attachment id.
+ *
+ * @return string $attachment_url Attachment URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id ) {
+
+    if ( function_exists( 'ud_get_stateless_media' ) && in_array(  ud_get_stateless_media()->get('sm.mode'), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+        $attachment_url = wp_get_attachment_url( $attachment_id );
+    }
+
+	return $attachment_url;
+}
+add_filter( 'bb_video_get_symlink', 'bp_video_wp_stateless_get_video_url', PHP_INT_MAX, 3 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url Attachment url.
+ * @param int    $video_id       Video id.
+ * @param string $size           size of the media.
+ * @param int    $attachment_id  Attachment id.
+ *
+ * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array(  ud_get_stateless_media()->get('sm.mode'), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$get_metadata = wp_get_attachment_metadata( $attachment_id );
+		if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+			$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+		} else {
+			$attachment_url = wp_get_attachment_url( $attachment_id );
+		}
+	}
+
+	return $attachment_url;
+}
+add_filter( 'bb_video_get_thumb_url', 'bp_video_wp_stateless_get_thumb_preview_url', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url attachment url.
+ * @param int    $media_id       media id.
+ * @param int    $attachment_id  attachment id.
+ * @param string $size           size of the media.
+ *
+ * @return false|mixed|string return the original media URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array(  ud_get_stateless_media()->get('sm.mode'), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+			$media          = new BP_Media( $media_id );
+			$attachment_url = wp_get_attachment_url( $media->attachment_id );
+	}
+	return $attachment_url;
+}
+add_filter( 'bp_media_get_preview_image_url', 'bp_media_wp_stateless_get_preview_url', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url attachment url.
+ * @param int    $document_id    media id.
+ * @param string $extension      extension.
+ * @param string $size           size of the media.
+ * @param int    $attachment_id  attachment id.
+ *
+ * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
+
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array(  ud_get_stateless_media()->get('sm.mode'), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+
+			if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+				$get_metadata = wp_get_attachment_metadata( $attachment_id );
+				if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+				} else {
+					$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+				}
+
+				if ( ! $attachment_url ) {
+					bp_document_generate_document_previews( $attachment_id );
+					if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+						$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+					} else {
+						$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+					}
+				}
+			}
+
+            if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+                if ( ! empty( $attachment_id ) && ! empty( $document_id ) ) {
+                    $attachment_url = wp_get_attachment_url( $attachment_id );
+                }
+            }
+	}
+	return $attachment_url;
+}
+add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
