@@ -328,7 +328,7 @@ function bp_version_updater() {
 			bp_update_to_1_7_0();
 		}
 
-		if ( $raw_db_version < 16801 ) {
+		if ( $raw_db_version < 16901 ) {
 			bp_update_to_1_7_2();
 		}
 	}
@@ -681,6 +681,11 @@ function bp_update_to_1_7_0() {
 	bb_core_enable_default_symlink_support();
 }
 
+/**
+ * Flush rewrite rule after update.
+ *
+ * @since BuddyBoss 1.7.2
+ */
 function bp_update_to_1_7_2() {
 	flush_rewrite_rules();
 }

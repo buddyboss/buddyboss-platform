@@ -2608,7 +2608,7 @@ function bp_video_activity_entry_css_class( $class ) {
 /**
  * Add rewrite rule to setup media preview.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_media_preview() {
 	add_rewrite_rule( 'media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
@@ -2621,7 +2621,7 @@ function bb_setup_media_preview() {
  *
  * @return array
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_query_media_preview( $query_vars ) {
 	$query_vars[] = 'media-preview';
@@ -2638,7 +2638,7 @@ function bb_setup_query_media_preview( $query_vars ) {
  *
  * @return array
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_template_for_media_preview( $template ) {
 	if ( get_query_var( 'media-preview' ) === false || empty( get_query_var( 'media-preview' ) ) ) {
@@ -2648,7 +2648,7 @@ function bb_setup_template_for_media_preview( $template ) {
 	/**
 	 * Hooks to perform any action before the template load.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.2
 	 */
 	do_action( 'bb_setup_template_for_media_preview' );
 

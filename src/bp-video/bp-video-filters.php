@@ -1708,7 +1708,7 @@ function bb_video_safari_popup_video_play( $is_ios ) {
 /**
  * Add rewrite rule to setup video preview.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_video_preview() {
 	add_rewrite_rule( 'video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-preview=$matches[1]&id1=$matches[2]', 'top' );
@@ -1721,7 +1721,7 @@ function bb_setup_video_preview() {
  *
  * @return array
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_query_video_preview( $query_vars ) {
 	$query_vars[] = 'video-preview';
@@ -1737,7 +1737,7 @@ function bb_setup_query_video_preview( $query_vars ) {
  *
  * @return string Preview template of the file.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_template_for_video_preview( $template ) {
 	if ( get_query_var( 'video-preview' ) === false || empty( get_query_var( 'video-preview' ) ) ) {
@@ -1747,7 +1747,7 @@ function bb_setup_template_for_video_preview( $template ) {
 	/**
 	 * Hooks to perform any action before the template load.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.2
 	 */
 	do_action( 'bb_setup_template_for_video_preview' );
 
@@ -1757,7 +1757,7 @@ function bb_setup_template_for_video_preview( $template ) {
 /**
  * Add rewrite rule to setup video thumb preview.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_video_thumb_preview() {
 	add_rewrite_rule( 'video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
@@ -1770,7 +1770,7 @@ function bb_setup_video_thumb_preview() {
  *
  * @return array
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_query_video_thumb_preview( $query_vars ) {
 	$query_vars[] = 'video-thumb-preview';
@@ -1786,7 +1786,7 @@ function bb_setup_query_video_thumb_preview( $query_vars ) {
  *
  * @return string Path of the preview template file.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_template_for_video_thumb_preview( $template ) {
 	if ( get_query_var( 'video-thumb-preview' ) === false || empty( get_query_var( 'video-thumb-preview' ) ) ) {
@@ -1796,7 +1796,7 @@ function bb_setup_template_for_video_thumb_preview( $template ) {
 	/**
 	 * Hooks to perform any action before the template load.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.2
 	 */
 	do_action( 'bb_setup_template_for_video_thumb_preview' );
 

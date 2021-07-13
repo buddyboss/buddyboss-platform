@@ -1854,7 +1854,7 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 /**
  * Add rewrite rule to setup document preview.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_document_preview() {
 	add_rewrite_rule( 'document-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
@@ -1868,7 +1868,7 @@ function bb_setup_document_preview() {
  *
  * @return array
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_query_document_preview( $query_vars ) {
 	$query_vars[] = 'document-preview';
@@ -1886,7 +1886,7 @@ function bb_setup_query_document_preview( $query_vars ) {
  *
  * @return string
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.2
  */
 function bb_setup_template_for_document_preview( $template ) {
 	if ( ! empty( get_query_var( 'document-preview' ) ) ) {
@@ -1894,7 +1894,7 @@ function bb_setup_template_for_document_preview( $template ) {
 		/**
 		 * Hooks to perform any action before the template load.
 		 *
-		 * @since BuddyBoss X.X.X
+		 * @since BuddyBoss 1.7.2
 		 */
 		do_action( 'bb_setup_template_for_document_preview' );
 
@@ -1906,7 +1906,7 @@ function bb_setup_template_for_document_preview( $template ) {
 		/**
 		 * Hooks to perform any action before the template load.
 		 *
-		 * @since BuddyBoss X.X.X
+		 * @since BuddyBoss 1.7.2
 		 */
 		do_action( 'bb_setup_template_for_document_player' );
 
