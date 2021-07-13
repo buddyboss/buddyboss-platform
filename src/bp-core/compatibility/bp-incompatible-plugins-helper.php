@@ -255,6 +255,24 @@ function bp_document_offload_get_preview_url( $attachment_url, $document_id, $ex
 						}
 					}
 				}
+
+			    if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
+				    $imageArray = @getimagesize( $attachment_url );
+				    if ( empty( $imageArray ) ) {
+					    add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+					    add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+					    add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+					    bp_document_generate_document_previews( $attachment_id );
+					    remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+					    remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+					    remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+					    if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+						    $attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+					    } else {
+						    $attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+					    }
+				    }
+			    }
 			}
 
 			$all_extensions = array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() );
