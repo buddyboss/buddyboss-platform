@@ -147,9 +147,9 @@ class BP_Latest_Activities extends WP_Widget {
 			$instance['max'] = $new_instance['max'];
 		}
 
-		$instance['type'] = maybe_serialize( array( 'activity_update' ) );
+		$instance['type'] = array( 'activity_update' );
 		if ( ! empty( $new_instance['type'] ) ) {
-			$instance['type'] = maybe_serialize( $new_instance['type'] );
+			$instance['type'] = $new_instance['type'];
 		}
 
 		return $instance;
