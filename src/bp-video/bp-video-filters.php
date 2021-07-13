@@ -1744,6 +1744,13 @@ function bb_setup_template_for_video_preview( $template ) {
 		return $template;
 	}
 
+	/**
+	 * Hooks to perform any action before the template load.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	do_action( 'bb_setup_template_for_video_preview' );
+
 	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/player.php';
 }
 
@@ -1785,6 +1792,13 @@ function bb_setup_template_for_video_thumb_preview( $template ) {
 	if ( get_query_var( 'video-thumb-preview' ) === false || empty( get_query_var( 'video-thumb-preview' ) ) ) {
 		return $template;
 	}
+
+	/**
+	 * Hooks to perform any action before the template load.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	do_action( 'bb_setup_template_for_video_thumb_preview' );
 
 	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/preview.php';
 }

@@ -2645,5 +2645,12 @@ function bb_setup_template_for_media_preview( $template ) {
 		return $template;
 	}
 
+	/**
+	 * Hooks to perform any action before the template load.
+	 *
+	 * @since BuddyBoss X.X.X
+	 */
+	do_action( 'bb_setup_template_for_media_preview' );
+
 	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
 }

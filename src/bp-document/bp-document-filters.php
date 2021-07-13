@@ -1890,10 +1890,26 @@ function bb_setup_query_document_preview( $query_vars ) {
  */
 function bb_setup_template_for_document_preview( $template ) {
 	if ( ! empty( get_query_var( 'document-preview' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss X.X.X
+		 */
+		do_action( 'bb_setup_template_for_document_preview' );
+
 		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/preview.php';
 	}
 
 	if ( ! empty( get_query_var( 'document-player' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss X.X.X
+		 */
+		do_action( 'bb_setup_template_for_document_player' );
+
 		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/player.php';
 	}
 
