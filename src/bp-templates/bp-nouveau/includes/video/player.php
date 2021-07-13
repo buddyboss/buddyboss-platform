@@ -17,7 +17,6 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 	$video_privacy = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'video' ) : true;
 	$can_view      = isset( $video_privacy['can_view'] ) && true === (bool) $video_privacy['can_view'];
 	if ( $can_view ) {
-		$type            = get_post_mime_type( $attachment_id );
 		$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
 
 		if ( ! file_exists( $output_file_src ) ) {
@@ -25,7 +24,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 			exit();
 		}
 
-		$stream = new BP_Video_Stream( $output_file_src, $id );
+		$stream = new BP_Media_Stream( $output_file_src, $attachment_id );
 		$stream->start();
 
 	} else {

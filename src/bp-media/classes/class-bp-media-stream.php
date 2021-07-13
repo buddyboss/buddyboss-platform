@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Video Stream Classes
+ * BuddyBoss Media Stream Classes
  *
- * @package BuddyBoss\Video
+ * @package BuddyBoss\Media
  * @since BuddyBoss 1.7.2
  */
 
@@ -10,14 +10,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Creates Video Stream.
+ * Creates Media Stream.
  *
- * Class BP_Video_Stream
+ * Class BP_Media_Stream
  */
-class BP_Video_Stream {
+class BP_Media_Stream {
 
 	/**
-	 * Video file path.
+	 * Media file path.
 	 *
 	 * @var string
 	 */
@@ -31,14 +31,14 @@ class BP_Video_Stream {
 	private $attachment_id = '';
 
 	/**
-	 * Stream video.
+	 * Stream Media.
 	 *
 	 * @var string
 	 */
 	private $stream = '';
 
 	/**
-	 * Buffer Video.
+	 * Buffer Media.
 	 *
 	 * @var int
 	 */
@@ -66,7 +66,7 @@ class BP_Video_Stream {
 	private $size = 0;
 
 	/**
-	 * BP_Video_Stream constructor.
+	 * BP_Media_Stream constructor.
 	 *
 	 * @param string $file_path     File path.
 	 * @param int    $attachment_id Attachment ID.
@@ -87,7 +87,7 @@ class BP_Video_Stream {
 	}
 
 	/**
-	 * Set proper header to serve the video content.
+	 * Set proper header to serve the media content.
 	 */
 	private function set_header() {
 		ob_get_clean();
@@ -141,7 +141,7 @@ class BP_Video_Stream {
 	}
 
 	/**
-	 * Close curretly opened stream.
+	 * Close currently opened stream.
 	 */
 	private function end() {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
@@ -169,7 +169,7 @@ class BP_Video_Stream {
 	}
 
 	/**
-	 * Start streaming video content
+	 * Start streaming media content
 	 */
 	public function start() {
 		$this->open();
