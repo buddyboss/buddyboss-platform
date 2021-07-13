@@ -2773,7 +2773,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
 	
 	// Get forum visibility update status.
-	$disabled = bbp_forum_visibility_disabled( $r['forum_id'] );
+	$disabled = bb_forum_visibility_disabled( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
@@ -2798,7 +2798,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
  * Checking whether you can update or not forum visibility.
  * - When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
  *
- * @since BuddyBoss 1.5.9
+ * @since BuddyBoss x.x.x
  *
  * @param int $forum_id The forum id to use
  *
@@ -2807,7 +2807,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
  *
  * @return boolean
  */
-function bbp_forum_visibility_disabled( $forum_id ) {
+function bb_forum_visibility_disabled( $forum_id ) {
 	global $wpdb;
 
 	if ( empty( $forum_id ) ) {
