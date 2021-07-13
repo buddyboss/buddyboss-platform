@@ -2771,15 +2771,15 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 
 	// Used variables
 	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
-
-	$has_visibility = bbp_can_update_forum_visibility( $r['forum_id'] );
+	
+	// Get forum visibility update status.
+	$disabled = bbp_forum_visibility_disabled( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
 	?>
-
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?> <?php echo ! $has_visibility ? 'disabled="disabled"' : ''; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
 		<?php foreach ( bbp_get_forum_visibilities() as $key => $label ) : ?>
 
@@ -2788,7 +2788,6 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 		<?php endforeach; ?>
 
     </select>
-
 	<?php
 
 	// Return the results
@@ -2797,8 +2796,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 
 /**
  * Checking whether you can update or not forum visibility.
- *
- * When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
+ * - When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
  *
  * @since BuddyBoss 1.5.9
  *
@@ -2809,26 +2807,32 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
  *
  * @return boolean
  */
-function bbp_can_update_forum_visibility( $forum_id ) {
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+function bbp_forum_visibility_disabled( $forum_id ) {
+	global $wpdb;
 
-	if ( ! empty( $group_ids ) ) {
+	if ( empty( $forum_id ) ) {
 		return false;
-	}
+	} 
 
-	$forum = bbp_get_forum( $forum_id );
-	
-	// When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
-	while ( ! empty( (int) $forum->post_parent ) ) {
-		$forum     = bbp_get_forum( $forum->post_parent );
-		$group_ids = bbp_get_forum_group_ids( $forum->ID );
-		
+	// Get all parent forum id's from child forum.
+	$sql = "SELECT @pv AS _id, (SELECT @pv := post_parent FROM {$wpdb->posts} WHERE id = _id ) AS parent
+		FROM 
+			( SELECT @pv := %d ) current_forum, 
+			( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) posts
+		where @pv <> 0";
+
+	// Run query for getting all parent forum ids from child forum.
+	$parent_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, $forum_id , bbp_get_forum_post_type() ) );
+
+	foreach ( $parent_forum_ids as $parent_forum_id ) {
+		$group_ids = bbp_get_forum_group_ids( $parent_forum_id );
+
 		if ( ! empty( $group_ids ) ) {
-			return false;
+			return true;
 		}
 	}
 
-	return true;
+	return false;
 }
 
 /** Feeds *********************************************************************/
