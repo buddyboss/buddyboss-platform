@@ -3819,7 +3819,7 @@ function bb_video_get_symlink( $video, $generate = true ) {
 			$privacy             = $video->privacy;
 			$upload_directory    = wp_get_upload_dir();
 			$time                = time();
-			$ext = pathinfo($attached_file, PATHINFO_EXTENSION);
+			$ext                 = pathinfo( $attached_file, PATHINFO_EXTENSION );
 			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time ) . ( ! empty( $ext ) ? '.' . $ext : '' );
 
 			if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
