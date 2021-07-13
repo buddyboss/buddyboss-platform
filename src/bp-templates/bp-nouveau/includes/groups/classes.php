@@ -266,7 +266,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Send Invites', 'buddyboss' ),
 				'slug'        => 'invite',
 				'parent_slug' => $this->group->slug,
-				'position'    => 70,
+				'position'    => 30,
 			),
 			'manage'  => array(
 				'name'        => __( 'Manage', 'buddyboss' ),
@@ -281,7 +281,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Photos', 'buddyboss' ),
 				'slug'        => 'photos',
 				'parent_slug' => $this->group->slug,
-				'position'    => 80,
+				'position'    => 21,
 			);
 
 			if ( bp_is_group_video_support_enabled () ) {
@@ -289,7 +289,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 					'name'        => __( 'Videos', 'buddyboss' ),
 					'slug'        => 'videos',
 					'parent_slug' => $this->group->slug,
-					'position'    => 82,
+					'position'    => 22,
 				);
 			}
 
@@ -298,7 +298,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 					'name'        => __( 'Albums', 'buddyboss' ),
 					'slug'        => 'albums',
 					'parent_slug' => $this->group->slug,
-					'position'    => 85,
+					'position'    => 23,
 				);
 			}
 
@@ -320,7 +320,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Subgroups', 'buddyboss' ),
 				'slug'        => 'subgroups',
 				'parent_slug' => $this->group->slug,
-				'position'    => 30,
+				'position'    => 28,
 			);
 		}
 
@@ -362,7 +362,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Send Messages', 'buddyboss' ),
 				'slug'        => 'messages',
 				'parent_slug' => $this->group->slug,
-				'position'    => 20,
+				'position'    => 25,
 			);
 		}
 
@@ -371,7 +371,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Documents', 'buddyboss' ),
 				'slug'        => 'documents',
 				'parent_slug' => $this->group->slug,
-				'position'    => 90,
+				'position'    => 24,
 			);
 		}
 
