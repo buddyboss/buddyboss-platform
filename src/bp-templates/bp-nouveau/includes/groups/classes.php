@@ -371,7 +371,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Documents', 'buddyboss' ),
 				'slug'        => 'documents',
 				'parent_slug' => $this->group->slug,
-				'position'    => 21,
+				'position'    => 90,
 			);
 		}
 
