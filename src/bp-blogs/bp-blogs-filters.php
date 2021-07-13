@@ -138,7 +138,7 @@ add_filter( 'site_icon_image_sizes', 'bp_blogs_register_custom_site_icon_size' )
 /**
  * Set view post button for activity post content.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param array $buttons     Group buttons.
  *

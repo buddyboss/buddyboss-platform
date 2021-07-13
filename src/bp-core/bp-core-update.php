@@ -329,9 +329,9 @@ function bp_version_updater() {
 			bb_update_to_1_7_0();
 		}
 
-		// Version 1.7.1.
+		// Version 1.7.2.
 		if ( $raw_db_version < 16901 ) {
-			bb_update_to_1_7_1();
+			bb_update_to_1_7_2();
 		}
 	}
 
@@ -1208,19 +1208,19 @@ add_filter(
 );
 
 /**
- * 1.7.1 update routine.
+ * 1.7.2 update routine.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  */
-function bb_update_to_1_7_1() {
-	bb_update_to_1_7_1_activity_setting_feed_comments_migration();
+function bb_update_to_1_7_2() {
+	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
 }
 
 /**
  * Migration for activity setting feed comments.
  * Enable all custom post type comments when the default post type comments are enable.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @uses bb_feed_post_types()                    Get all post types.
  * @uses bb_post_type_feed_option_name()         Option key for individual post type.
@@ -1229,7 +1229,7 @@ function bb_update_to_1_7_1() {
  *
  * @return void
  */
-function bb_update_to_1_7_1_activity_setting_feed_comments_migration() {
+function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
 	$custom_post_types = bb_feed_post_types();
 
 	// Run over all custom post type.
