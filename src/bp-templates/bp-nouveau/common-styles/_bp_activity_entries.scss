@@ -1546,6 +1546,7 @@ span.dashicons.dashicons-admin-file:before {
 
 				i {
 					border-radius: 50%;
+					filter: drop-shadow(2px 2px 5px #000);
 
 					&:before {
 						content: "\e81a";
