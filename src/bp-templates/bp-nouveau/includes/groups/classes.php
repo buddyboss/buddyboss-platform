@@ -284,6 +284,15 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'position'    => 80,
 			);
 
+			if ( bp_is_group_video_support_enabled () ) {
+				$nav_items['videos'] = array(
+					'name'        => __( 'Videos', 'buddyboss' ),
+					'slug'        => 'videos',
+					'parent_slug' => $this->group->slug,
+					'position'    => 82,
+				);
+			}
+
 			if ( bp_is_group_albums_support_enabled() ) {
 				$nav_items['albums'] = array(
 					'name'        => __( 'Albums', 'buddyboss' ),
@@ -293,14 +302,6 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				);
 			}
 
-			if ( bp_is_group_video_support_enabled () ) {
-				$nav_items['videos'] = array(
-					'name'        => __( 'Videos', 'buddyboss' ),
-					'slug'        => 'videos',
-					'parent_slug' => $this->group->slug,
-					'position'    => 90,
-				);
-			}
 		}
 
 		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
