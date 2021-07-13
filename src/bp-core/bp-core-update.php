@@ -327,6 +327,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16601 ) {
 			bp_update_to_1_7_0();
 		}
+
+		if ( $raw_db_version < 16801 ) {
+			bp_update_to_1_7_2();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -675,6 +679,10 @@ function bp_update_to_1_5_1() {
 function bp_update_to_1_7_0() {
 	bp_core_install_media();
 	bb_core_enable_default_symlink_support();
+}
+
+function bp_update_to_1_7_2() {
+	flush_rewrite_rules();
 }
 
 function bp_update_default_doc_extensions() {
