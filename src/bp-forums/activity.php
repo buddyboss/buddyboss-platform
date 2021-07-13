@@ -351,7 +351,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Render the activity content for discussion activity. 
 		 *
-		 * @since BuddyBoss 1.7.1
+		 * @since BuddyBoss 1.7.2
 		 * 
 		 * @param string $content  Activit content.
 		 * @param object $activity Activit data.
@@ -405,7 +405,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Meta button for activity discussion.
 		 *
-		 * @since BuddyBoss 1.7.1
+		 * @since BuddyBoss 1.7.2
 		 *
 		 * @param array $buttons     Array of buttons.
 		 * @param int   $activity_id Activity ID.
@@ -812,7 +812,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the topic title from user timeline.
 		 *
-		 * @since BuddyBoss 1.7.1
+		 * @since BuddyBoss 1.7.2
 		 *
 		 * @param string $action    Activity content.
 		 * @param object $activity  Activity data.
@@ -860,7 +860,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the reply title from user timeline.
 		 *
-		 * @since BuddyBoss 1.7.1
+		 * @since BuddyBoss 1.7.2
 		 *
 		 * @param obj $action
 		 * @param obj $activity
@@ -1031,7 +1031,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Remove the group icon from the discussion and reply title.
 		 *
-		 * @since BuddyBoss 1.7.1
+		 * @since BuddyBoss 1.7.2
 		 *
 		 * @param string $avatar The secondary avatar for current activity.
 		 *
@@ -1056,7 +1056,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Generate "bb-modal bb-modal-box" class for quick reply form.
 		 *
-		 * @since BuddyBoss 1.7.1
+		 * @since BuddyBoss 1.7.2
 		 *
 		 * @param boolean $single_topic Single topic status.
 		 *

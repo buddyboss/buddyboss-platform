@@ -5574,7 +5574,7 @@ function bb_get_activity_hierarchy( $activity_id ) {
  *
  * @param object $activity Blog post activity data.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @return bool
  */
@@ -5596,7 +5596,7 @@ function bb_activity_blog_post_acivity( $activity ) {
  *
  * @param object $activity Topic activity data.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @return int
  */
@@ -5633,7 +5633,7 @@ function bb_activity_topic_id( $activity ) {
  *
  * @param object $activity Reply activity data.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @return int
  */
@@ -5670,7 +5670,7 @@ function bb_activity_reply_topic_id( $activity ) {
  *
  * @param int $activity_id Activity id.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @return bool
  */

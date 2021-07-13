@@ -293,7 +293,7 @@ function bp_nouveau_activity_state() {
 /**
  * Output the action buttons inside an Activity inner content.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -327,7 +327,7 @@ function bb_nouveau_activity_inner_buttons( $args = array() ) {
 /**
  * Get the action buttons inside an Activity inner content,
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param array $args Button attributes.
  * 
@@ -352,7 +352,7 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 *
 	 * @param array $buttons     The list of buttons.
 	 * @param int   $activity_id The current activity ID.
@@ -991,7 +991,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 /**
  * Get the action buttons for the activity blog post comments
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param object $comment Blog post comment.
  * @param array  $args    Comment meta.
@@ -1605,7 +1605,7 @@ function bp_nouveau_get_edit_activity_data() {
 /**
  * Output the top action buttons inside an Activity Loop.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -1617,7 +1617,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 	/**
 	 * Fires at the end of the activity entry top meta data area.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 */
 	do_action( 'bp_activity_entry_top_meta' );
 
@@ -1642,7 +1642,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  */
 function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	$buttons = array();
@@ -1841,7 +1841,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 *
 	 * @param array $buttons     The list of buttons.
 	 * @param int   $activity_id The current activity ID.
@@ -1882,7 +1882,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	/**
 	 * Leave a chance to adjust the $return
 	 *
-	 * @since BuddyBoss 1.7.1
+	 * @since BuddyBoss 1.7.2
 	 *
 	 * @param array $return      The list of buttons ordered.
 	 * @param int   $activity_id The current activity ID.

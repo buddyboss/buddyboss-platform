@@ -2293,7 +2293,7 @@ function bp_activity_edit_update_document( $document_ids ) {
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  */
 function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
 
@@ -2428,7 +2428,7 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 /**
  * Describe activity commnet asscess rules.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param boolean $retval Has comment permission.
  *
@@ -2462,7 +2462,7 @@ function bb_activity_has_comment_access( $retval ) {
 /**
  * Disable the comment reply for discussion activity.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param boolean $can_comment Comment permission status.
  * @param object  $comment     Activity data.
@@ -2493,7 +2493,7 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 /**
  * Remove comment reply button for discussion.
  *
- * @since BuddyBoss 1.7.1
+ * @since BuddyBoss 1.7.2
  *
  * @param array $buttons             The list of buttons.
  * @param int   $activity_comment_id The current activity comment ID.
