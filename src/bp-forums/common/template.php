@@ -1492,7 +1492,7 @@ function bbp_get_dropdown( $args = '' ) {
 			'show_none_default_val' => '',
 			'disable_categories'    => true,
 			'disabled'              => '',
-			'meta_query'            => array()
+			'meta_query'            => array(),
 		),
 		'get_dropdown'
 	);
@@ -1539,7 +1539,8 @@ function bbp_get_dropdown( $args = '' ) {
 	if ( empty( $r['options_only'] ) ) {
 
 		// Should this select appear disabled?
-		$disabled = disabled( $r['disabled'], true, false );
+		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		//$disabled = disabled( $r['disabled'], true, false );
 
 		// Setup the tab index attribute
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . intval( $r['tab'] ) . '"' : '';

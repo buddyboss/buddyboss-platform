@@ -568,27 +568,27 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 								'post_parent' => 0,
 								'meta_query'  => array(
 									array(
-										'relation' => 'OR',	
+										'relation' => 'OR',
 
 										// If the forum is not associate with any group.              	
 										array(
 											'key'     => '_bbp_group_ids',
-											'value'   => '', 
-											'compare' => 'NOT EXISTS' 
+											'value'   => '',
+											'compare' => 'NOT EXISTS',
 										),
 
 										// If the forum metadata contain group with empty array.
 										array(
 											'key'     => '_bbp_group_ids',
 											'value'   => 'a:0:{}',
-											'compare' => '='
+											'compare' => '=',
 										),
 
 										// If the forum metadata contain group with empty value.
 										array(
 											'key'     => '_bbp_group_ids',
 											'value'   => '',
-											'compare' => '='
+											'compare' => '=',
 										),
 									),
 									array(
@@ -598,17 +598,17 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 										array(
 											'key'     => '_bbp_forum_type',
 											'value'   => 'category',
-											'compare' => '!='
+											'compare' => '!=',
 										),
 
 										// Include the forum if its category metadata not exists.
 										array(
 											'key'     => '_bbp_forum_type',
-											'value'   => '', 
-											'compare' => 'NOT EXISTS' 
+											'value'   => '',
+											'compare' => 'NOT EXISTS',
 										),
-									)
-								)
+									),
+								),
 							)
 						);
 
