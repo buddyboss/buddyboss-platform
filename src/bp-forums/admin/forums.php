@@ -91,8 +91,9 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		 *
 		 * @since BuddyBoss x.x.x
 		 *
-		 * @param init $post_parent post parent.
-		 * @param init $post_ID     post ID.
+		 * @param init  $post_parent post parent.
+		 * @param init  $post_ID     post ID.
+		 * @param array $new_postarr submited post data.
 		 *
 		 * @return init
 		 */
