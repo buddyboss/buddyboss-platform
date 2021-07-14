@@ -2556,59 +2556,6 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 }
 
 /**
- * Checking whether you can update or not forum type.
- *
- * Disable "Type" field when the main Forum associated with Group.
- *
- * @since BuddyBoss 1.5.9
- *
- * @param int $forum_id The forum id to use
- *
- * @uses  bbp_has_forum_groups() checking Is the forum contain any group.
- *
- * @return boolean
- */
-function bbp_can_update_forum_type( $forum_id ) {
-	return bbp_has_forum_groups( $forum_id );
-}
-
-/**
- * Checking whether you can update or not forum parent.
- *
- * Disable "Forum Parent" field when the main Forum associated with Group.
- *
- * @since BuddyBoss 1.5.9
- *
- * @param int $forum_id The forum id to use
- *
- * @uses  bbp_has_forum_groups() checking Is the forum contain any group.
- *
- * @return boolean
- */
-function bbp_can_update_forum_parent( $forum_id ) {
-	return bbp_has_forum_groups( $forum_id );
-}
-
-/**
- * Is the forum contain any group.
- *
- * @since BuddyBoss 1.5.9
- *
- * @param int $forum_id The forum id to use.
- *
- * @return boolean
- */
-function bbp_has_forum_groups( $forum_id ) {
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
-	
-	if ( ! empty( $group_ids ) ) {
-		return false;
-	}
-
-	return true;
-}
-
-/**
  * Output value forum status dropdown
  *
  * @since bbPress (r3563)
