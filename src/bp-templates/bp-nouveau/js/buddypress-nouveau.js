@@ -396,7 +396,12 @@ window.bp = window.bp || {};
 
 			// Set session's data.
 			if ( null !== data.scope ) {
-				this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				if ( $( '#buddypress [data-bp-list="' + data.object + '"]' ).length && ! _.isUndefined( $( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-follow' ) ) ) {
+					data.scope = $( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-follow' );
+					this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				} else {
+					this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				}
 			}
 
 			if ( null !== data.filter ) {
@@ -437,6 +442,8 @@ window.bp = window.bp || {};
 			} else if ( 'notifications' === data.object ) {
 				data.object   = 'members';
 				data.template = 'member_notifications';
+			} else if ( 'members_following' === data.object || 'members_followers' === data.object ) {
+				data.object = 'members';
 			}
 
 			postdata = $.extend(
@@ -562,7 +569,7 @@ window.bp = window.bp || {};
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );
-					if ( undefined !== typeType && typeType == 'following' ) {
+					if ( undefined !== typeType && ( typeType == 'following' || typeType == 'followers' ) ) {
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;
@@ -1580,7 +1587,8 @@ window.bp = window.bp || {};
 		 */
 		typeMemberFilterQuery: function ( event ) {
 			var self   = event.data, object = $( event.target ).data( 'bp-member-type-filter' ), scope = 'all',
-				filter = null, objectData = {}, extras = null, search_terms = '', template = null;
+				filter = null, objectData = {}, extras = null, search_terms = '', template = null,
+				object_type = $( event.target ).data( 'bp-member-type-object' );
 
 			if ( ! object ) {
 				return event;
@@ -1588,6 +1596,10 @@ window.bp = window.bp || {};
 
 			if ( 'friends' === object ) {
 				object = 'members';
+			}
+
+			if ( 'followers' === object_type || 'following' === object_type ) {
+				object = object + '_' + object_type;
 			}
 
 			objectData = self.getStorage( 'bp-' + object );
@@ -1612,6 +1624,10 @@ window.bp = window.bp || {};
 
 			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
 				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			}
+
+			if ( 'followers' === object_type || 'following' === object_type ) {
+				scope = object_type;
 			}
 
 			self.objectRequest(

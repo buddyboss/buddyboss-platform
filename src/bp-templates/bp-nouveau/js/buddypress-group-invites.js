@@ -1139,8 +1139,8 @@ window.bp = window.bp || {};
 
 		loadMoreInvitesMembers:function ( event ) {
 			var target = $( event.currentTarget );
-			if ( ( target[0].scrollHeight - target.scrollTop() - target.innerHeight() ) <= 30 ) {
-				var element =  $( '#group-invites-container .group-invites-members-listing #members-list li.load-more' );
+			if ( ( target[0].scrollHeight - ( target.scrollTop() ) ) === target.innerHeight() ) {
+				var element = $( '#group-invites-container .group-invites-members-listing #members-list li.load-more' );
 				if ( element.length ) {
 					$( '#group-invites-container .group-invites-members-listing .last #bp-group-invites-next-page' ).trigger( 'click' );
 				}
