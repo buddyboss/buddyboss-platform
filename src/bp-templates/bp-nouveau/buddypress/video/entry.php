@@ -15,7 +15,7 @@ $group_id      = bp_get_video_group_id();
 $move_id       = '';
 $move_type     = '';
 $video_privacy = bb_media_user_can_access( bp_get_video_id(), 'video' );
-$can_edit      = true === (bool) $video_privacy['can_edit'];
+$can_edit      = true === (bool) $video_privacy['can_edit'] && bb_user_can_create_video();
 $can_move      = true === (bool) $video_privacy['can_move'];
 $can_delete    = true === (bool) $video_privacy['can_delete'];
 

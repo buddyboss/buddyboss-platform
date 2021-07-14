@@ -1383,7 +1383,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 	$attachment_urls    = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 	$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 	$video_privacy      = bb_media_user_can_access( $video_id, 'video' );
-	$can_edit           = true === (bool) $video_privacy['can_edit'];
+	$can_edit           = true === (bool) $video_privacy['can_edit'] && bb_user_can_create_video();
 
 	echo '<div class="activity-media-description">' .
 		 '<div class="bp-media-activity-description">' . $content . '</div>'; // phpcs:ignore
