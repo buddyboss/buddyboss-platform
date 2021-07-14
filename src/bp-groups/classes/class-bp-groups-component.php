@@ -822,10 +822,10 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
-				// Checked if order already set before, New menu(video) will be added at last 
+				// Checked if order already set before, New menu(video) will be added at last
 				$video_menu_position = 22;
-				$orders = get_option('bp_nouveau_appearance');
-				if( isset($orders['group_nav_order'] ) && !empty ($orders['group_nav_order']) && !in_array ('vide', $orders['group_nav_order'])) {
+				$orders              = get_option( 'bp_nouveau_appearance' );
+				if ( isset( $orders['group_nav_order'] ) && ! empty( $orders['group_nav_order'] ) && ! in_array( 'vide', $orders['group_nav_order'] ) ) {
 					$video_menu_position = 1001;
 				}
 				$sub_nav[] = array(
