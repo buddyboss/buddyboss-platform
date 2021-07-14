@@ -82,7 +82,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
 
 			// Filter post parent for forum type post.
-			add_filter( 'wp_insert_post_parent', array( $this, 'forum_parent' ), 10, 2 );
+			add_filter( 'wp_insert_post_parent', array( $this, 'forum_parent' ), 10, 3 );
 		}
 
 		/**
@@ -96,7 +96,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		 *
 		 * @return init
 		 */
-		public function forum_parent( $post_parent, $post_ID ) {
+		public function forum_parent( $post_parent, $post_ID, $new_postarr ) {
 			if ( bbp_get_forum_post_type() !== $new_postarr['post_type'] ) {
 				return $post_parent;
 			}
