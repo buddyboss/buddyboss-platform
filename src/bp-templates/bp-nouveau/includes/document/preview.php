@@ -1,11 +1,11 @@
 <?php
 
-if ( empty( get_query_var( 'document-preview' ) ) && empty( get_query_var( 'id1' ) ) ) {
+if ( empty( get_query_var( 'bb-document-preview' ) ) && empty( get_query_var( 'id1' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
 }
 
-$encode_id    = base64_decode( get_query_var( 'document-preview' ) );
+$encode_id    = base64_decode( get_query_var( 'bb-document-preview' ) );
 $encode_id1   = base64_decode( get_query_var( 'id1' ) );
 $size         = ( ! empty( get_query_var( 'size' ) ) ? get_query_var( 'size' ) : '' );
 $explode_arr  = explode( 'forbidden_', $encode_id );

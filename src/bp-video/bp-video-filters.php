@@ -1707,9 +1707,9 @@ function bb_video_safari_popup_video_play( $is_ios ) {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_video_preview() {
-	add_rewrite_rule( 'video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-preview=$matches[1]&id1=$matches[2]', 'top' );
-	add_rewrite_rule( 'video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
-	add_rewrite_rule( 'video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
 }
 
 /**
@@ -1722,8 +1722,8 @@ function bb_setup_video_preview() {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_query_video_preview( $query_vars ) {
-	$query_vars[] = 'video-preview';
-	$query_vars[] = 'video-thumb-preview';
+	$query_vars[] = 'bb-video-preview';
+	$query_vars[] = 'bb-video-thumb-preview';
 	$query_vars[] = 'id1';
 
 	return $query_vars;
@@ -1740,7 +1740,7 @@ function bb_setup_query_video_preview( $query_vars ) {
  */
 function bb_setup_template_for_video_preview( $template ) {
 
-	if ( ! empty( get_query_var( 'video-preview' ) ) ) {
+	if ( ! empty( get_query_var( 'bb-video-preview' ) ) ) {
 
 		/**
 		 * Hooks to perform any action before the template load.
@@ -1752,7 +1752,7 @@ function bb_setup_template_for_video_preview( $template ) {
 		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/player.php';
 	}
 
-	if ( ! empty( get_query_var( 'video-thumb-preview' ) ) ) {
+	if ( ! empty( get_query_var( 'bb-video-thumb-preview' ) ) ) {
 
 		/**
 		 * Hooks to perform any action before the template load.

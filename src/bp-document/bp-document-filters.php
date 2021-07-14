@@ -1857,9 +1857,9 @@ function bb_document_update_video_symlink( $response, $post_data ) {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_document_preview() {
-	add_rewrite_rule( 'document-preview/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]', 'top' );
-	add_rewrite_rule( 'document-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
-	add_rewrite_rule( 'document-player/([^/]+)/([^/]+)/?$', 'index.php?document-player=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-document-player/([^/]+)/([^/]+)/?$', 'index.php?document-player=$matches[1]&id1=$matches[2]', 'top' );
 }
 
 /**
@@ -1872,8 +1872,8 @@ function bb_setup_document_preview() {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_query_document_preview( $query_vars ) {
-	$query_vars[] = 'document-preview';
-	$query_vars[] = 'document-player';
+	$query_vars[] = 'bb-document-preview';
+	$query_vars[] = 'bb-document-player';
 	$query_vars[] = 'id1';
 	$query_vars[] = 'size';
 
@@ -1890,7 +1890,7 @@ function bb_setup_query_document_preview( $query_vars ) {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_template_for_document_preview( $template ) {
-	if ( ! empty( get_query_var( 'document-preview' ) ) ) {
+	if ( ! empty( get_query_var( 'bb-document-preview' ) ) ) {
 
 		/**
 		 * Hooks to perform any action before the template load.
@@ -1902,7 +1902,7 @@ function bb_setup_template_for_document_preview( $template ) {
 		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/preview.php';
 	}
 
-	if ( ! empty( get_query_var( 'document-player' ) ) ) {
+	if ( ! empty( get_query_var( 'bb-document-player' ) ) ) {
 
 		/**
 		 * Hooks to perform any action before the template load.

@@ -1,12 +1,12 @@
 <?php
 
 
-if ( empty( get_query_var( 'document-player' ) ) && empty( get_query_var( 'id1' ) ) ) {
+if ( empty( get_query_var( 'bb-document-player' ) ) && empty( get_query_var( 'id1' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
 }
 
-$encode_id    = base64_decode( get_query_var( 'document-player' ) );
+$encode_id    = base64_decode( get_query_var( 'bb-document-player' ) );
 $encode_id1   = base64_decode( get_query_var( 'id1' ) );
 $explode_arr  = explode( 'forbidden_', $encode_id );
 $explode_arr1 = explode( 'forbidden_', $encode_id1 );
