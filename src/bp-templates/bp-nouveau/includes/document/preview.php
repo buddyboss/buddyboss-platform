@@ -35,7 +35,19 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 			$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
 		}
 
-		$type = get_post_mime_type( $attachment_id );
+		$type = '';
+		if ( function_exists( 'mime_content_type' ) ) {
+			$type = mime_content_type( $output_file_src );
+		} elseif ( class_exists( 'finfo' ) ) {
+			$finfo = new finfo();
+
+			if ( is_resource( $finfo ) === true ) {
+				$type = $finfo->file( $output_file_src, FILEINFO_MIME_TYPE );
+			}
+		} else {
+			$filetype = wp_check_filetype( $output_file_src );
+			$type     = $filetype['type'];
+		}
 
 		if ( ! file_exists( $output_file_src ) ) {
 			$file = image_get_intermediate_size( $attachment_id, 'full' );
