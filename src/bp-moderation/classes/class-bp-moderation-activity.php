@@ -188,9 +188,11 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		$sub_items = array();
+		$updated   = false;
 		switch ( $activity->type ) {
 			case 'bbp_forum_create':
 				$forum_id = $activity->item_id;
+				$updated  = true;
 				if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
 					$sub_items['id']   = current( bbp_get_forum_group_ids( $forum_id ) );
 					$sub_items['type'] = BP_Moderation_Groups::$moderation_type;
@@ -200,6 +202,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 				break;
 			case 'bbp_topic_create':
+				$updated  = true;
 				if ( bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Topics::$moderation_type ) ) {
 					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
 					$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
@@ -209,6 +212,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 				break;
 			case 'bbp_reply_create':
+				$updated  = true;
 				if ( bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Replies::$moderation_type ) ) {
 					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
 					$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
@@ -219,10 +223,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				break;
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) ) || ( ! empty( bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) && 1 === count( explode( ',', bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) ) ) {
+		if ( ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) && false === $updated ) {
 			if ( bp_is_active( 'media' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
-				$media_id       = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
-				$explode_medias = explode( ',', bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) );
+				$explode_medias = explode( ',', $media_ids );
 				if ( 1 === count( $explode_medias ) && ! empty( $explode_medias[0] ) ) {
 					$media_id = $explode_medias[0];
 				}
@@ -234,10 +237,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_activity', true ) ) || ( ! empty( bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) && 1 === count( explode( ',', bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) ) ) {
+		if ( ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) && false === $updated ) {
 			if ( bp_is_active( 'document' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
-				$document_id       = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
-				$explode_documents = explode( ',', bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) );
+				$explode_documents = explode( ',', $document_ids );
 				if ( 1 === count( $explode_documents ) && ! empty( $explode_documents[0] ) ) {
 					$document_id = $explode_documents[0];
 				}
@@ -249,10 +251,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ! empty( bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) ) || ( ! empty( bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) && 1 === count( explode( ',', bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) ) ) ) {
+		if ( ( ! empty( $video_id = bp_activity_get_meta( $activity->id, 'bp_video_id', true ) ) || ! empty( $video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) ) && false === $updated ) {
 			if ( bp_is_active( 'video' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
-				$video_id       = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
-				$explode_videos = explode( ',', bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) );
+				$explode_videos = explode( ',', $video_ids );
 				if ( 1 === count( $explode_videos ) && ! empty( $explode_videos[0] ) ) {
 					$video_id = $explode_videos[0];
 				}
