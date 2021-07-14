@@ -2288,7 +2288,14 @@ function bbp_toggle_topic_handler( $action = '' ) {
 				case 'untrash':
 					check_ajax_referer( 'untrash-' . bbp_get_topic_post_type() . '_' . $topic_id );
 
+					// Status filters that a post gets assigned when it is restored from the trash (untrashed).
+					add_filter( 'wp_untrash_post_status', 'bbp_update_topic_status', 10, 3 );
+
 					$success = wp_untrash_post( $topic_id );
+					
+					// Remove the status filter that a post gets assigned when it is restored from the trash (untrashed).
+					remove_filter( 'wp_untrash_post_status', 'bbp_update_topic_status', 10, 3 );
+					
 					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the discussion.', 'buddyboss' );
 
 					break;
@@ -3792,4 +3799,21 @@ function bbp_check_topic_tag_edit() {
 		wp_safe_redirect( bbp_get_topic_tag_link() );
 		exit();
 	}
+}
+
+/**
+ * Filters the status that a post gets assigned when it is restored from the trash (untrashed).
+ *
+ * @param string $new_status      The new status of the post being restored.
+ * @param int    $post_id         The ID of the post being restored.
+ * @param string $previous_status The status of the post at the point where it was trashed.
+ */
+function bbp_update_topic_status( $new_status, $post_id, $previous_status ) {
+
+	// Change post status to publish if post type is " topic ". 
+	if( bbp_get_topic_post_type() === get_post_type( $post_id )  && ! empty( $previous_status ) ) {
+		$new_status = 'publish';
+	}
+
+	return $new_status;
 }
