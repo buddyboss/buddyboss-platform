@@ -318,7 +318,7 @@ function bbp_forum_metabox() {
 				'options_only'       => false,
 				'show_none'          => __( '- Select Forum -', 'buddyboss' ),
 				'disable_categories' => false,
-				'disabled'           => empty( $group_ids ) ? true : false,
+				'disabled'           => empty( $group_ids ) ? false : true,
 			)
 		);
 		?>
