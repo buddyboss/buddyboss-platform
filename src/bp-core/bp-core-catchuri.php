@@ -1517,7 +1517,7 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 			);
 			$page_title  = ( $privacy ) ? get_the_title( $privacy ) : '';
 			$get_privacy = get_post( $privacy );
-			$link        .= ' and ';
+			$link        .= ' ' . __( 'and', 'buddyboss' ) . ' ';
 			$link        .= sprintf(
 				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
 				'#privacy-modal',
