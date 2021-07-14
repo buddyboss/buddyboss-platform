@@ -71,10 +71,6 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
 add_action( 'template_include', 'bb_setup_template_for_video_preview' );
 
-add_action( 'bp_add_rewrite_rules', 'bb_setup_video_thumb_preview' );
-add_filter( 'query_vars', 'bb_setup_query_video_thumb_preview' );
-add_action( 'template_include', 'bb_setup_template_for_video_thumb_preview' );
-
 /**
  * Add video theatre template for activity pages.
  *
@@ -1712,6 +1708,7 @@ function bb_video_safari_popup_video_play( $is_ios ) {
  */
 function bb_setup_video_preview() {
 	add_rewrite_rule( 'video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
 }
 
 /**
@@ -1725,54 +1722,6 @@ function bb_setup_video_preview() {
  */
 function bb_setup_query_video_preview( $query_vars ) {
 	$query_vars[] = 'video-preview';
-	$query_vars[] = 'id1';
-
-	return $query_vars;
-}
-
-/**
- * Setup template for the video preview.
- *
- * @param string $template Template path to include.
- *
- * @return string Preview template of the file.
- *
- * @since BuddyBoss 1.7.2
- */
-function bb_setup_template_for_video_preview( $template ) {
-	if ( get_query_var( 'video-preview' ) === false || empty( get_query_var( 'video-preview' ) ) ) {
-		return $template;
-	}
-
-	/**
-	 * Hooks to perform any action before the template load.
-	 *
-	 * @since BuddyBoss 1.7.2
-	 */
-	do_action( 'bb_setup_template_for_video_preview' );
-
-	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/player.php';
-}
-
-/**
- * Add rewrite rule to setup video thumb preview.
- *
- * @since BuddyBoss 1.7.2
- */
-function bb_setup_video_thumb_preview() {
-	add_rewrite_rule( 'video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
-}
-
-/**
- * Setup query variable for video thumb preview.
- *
- * @param array $query_vars Array of query variables.
- *
- * @return array
- *
- * @since BuddyBoss 1.7.2
- */
-function bb_setup_query_video_thumb_preview( $query_vars ) {
 	$query_vars[] = 'video-thumb-preview';
 	$query_vars[] = 'id1';
 
@@ -1780,25 +1729,39 @@ function bb_setup_query_video_thumb_preview( $query_vars ) {
 }
 
 /**
- * Setup template for the video thumb preview.
+ * Setup template for the video thumbnail preview and video play.
  *
  * @param string $template Template path to include.
  *
- * @return string Path of the preview template file.
+ * @return string
  *
  * @since BuddyBoss 1.7.2
  */
-function bb_setup_template_for_video_thumb_preview( $template ) {
-	if ( get_query_var( 'video-thumb-preview' ) === false || empty( get_query_var( 'video-thumb-preview' ) ) ) {
-		return $template;
+function bb_setup_template_for_video_preview( $template ) {
+
+	if ( ! empty( get_query_var( 'video-preview' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_video_preview' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/player.php';
 	}
 
-	/**
-	 * Hooks to perform any action before the template load.
-	 *
-	 * @since BuddyBoss 1.7.2
-	 */
-	do_action( 'bb_setup_template_for_video_thumb_preview' );
+	if ( ! empty( get_query_var( 'video-thumb-preview' ) ) ) {
 
-	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/preview.php';
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_video_thumb_preview' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/preview.php';
+	}
+
+	return $template;
 }
