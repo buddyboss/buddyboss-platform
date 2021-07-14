@@ -51,7 +51,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 			exit();
 		}
 
-		// Clear all output buffer
+		// Clear all output buffer.
 		while ( ob_get_level() ) {
 			ob_end_clean();
 		}

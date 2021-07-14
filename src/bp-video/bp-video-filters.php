@@ -1708,6 +1708,7 @@ function bb_video_safari_popup_video_play( $is_ios ) {
  */
 function bb_setup_video_preview() {
 	add_rewrite_rule( 'video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
 }
 
