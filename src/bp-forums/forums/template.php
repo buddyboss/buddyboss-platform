@@ -2531,7 +2531,7 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 
 	// Used variables
 	$tab        = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
-	$group_ids = bbp_get_forum_group_ids( $r['forum_id'] );
+	$group_ids  = bbp_get_forum_group_ids( $r['forum_id'] );
 	$can_update = empty( $group_ids ) ? true : false;
 
 	// Start an output buffer, we'll finish it after the select loop
