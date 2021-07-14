@@ -591,3 +591,101 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+
+
+/**
+ * Add moderation repair list.
+ *
+ * @param array $repair_list
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @return array Repair list items.
+ */
+function bp_moderation_migrate_old_data( $repair_list ) {
+	$repair_list[] = array(
+		'bp-repair-moderation-data',
+		__( 'Repair moderation data.', 'buddyboss' ),
+		'bp_moderation_admin_repair_old_moderation_data',
+	);
+
+	return $repair_list;
+}
+
+add_filter( 'bp_repair_list', 'bp_moderation_migrate_old_data' );
+
+function bp_moderation_admin_repair_old_moderation_data() {
+	global $wpdb;
+
+	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$sql_offset               = ( 1 === $offset ) ? 0 : 0;
+	$activity_table           = "{$wpdb->prefix}bp_activity";
+	$activity_table_meta      = "{$wpdb->prefix}bp_activity_meta";
+	$moderation_table         = "{$wpdb->prefix}bp_moderation";
+	$moderation_table_meta    = "{$wpdb->prefix}bp_moderation_meta";
+	$suspend_table            = "{$wpdb->prefix}bp_suspend";
+	$moderated_activities_sql = $wpdb->prepare( "SELECT {$suspend_table}.id,{$suspend_table}.item_id,{$suspend_table}.last_updated FROM {$suspend_table} INNER JOIN {$activity_table} ON ( {$suspend_table}.item_id = {$activity_table}.id ) WHERE 1=1 AND {$suspend_table}.reported = 1 AND (  {$activity_table}.privacy IN ('media','video','document') ) GROUP BY {$suspend_table}.id ORDER BY {$suspend_table}.id DESC LIMIT 1 OFFSET %d", $sql_offset );
+	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
+	if ( ! empty( $moderated_activities ) ) {
+		foreach ( $moderated_activities as $moderated_activity ) {
+			$activity_sql = $wpdb->prepare( "SELECT id,privacy FROM {$activity_table} WHERE id=%d", $moderated_activity->item_id );
+			$get_activity = $wpdb->get_row( $activity_sql );
+			$meta_type    = '';
+			if ( 'media' === $get_activity->privacy ) {
+				$media_activity_meta_sql = $wpdb->prepare( "SELECT meta_value FROM {$activity_table_meta} WHERE activity_id=%d AND `meta_key` = 'bp_media_id'", $moderated_activity->item_id );
+				$meta_item               = $wpdb->get_row( $media_activity_meta_sql );
+				$meta_type               = 'media';
+			}
+			if ( 'document' === $get_activity->privacy ) {
+				$document_activity_meta_sql = $wpdb->prepare( "SELECT meta_value FROM {$activity_table_meta} WHERE activity_id=%d AND `meta_key` = 'bp_document_id'", $moderated_activity->item_id );
+				$meta_item                  = $wpdb->get_row( $document_activity_meta_sql );
+				$meta_type                  = 'document';
+			}
+			if ( 'video' === $get_activity->privacy ) {
+				$video_activity_meta_sql = $wpdb->prepare( "SELECT meta_value FROM {$activity_table_meta} WHERE activity_id=%d AND `meta_key` = 'bp_video_id'", $moderated_activity->item_id );
+				$meta_item               = $wpdb->get_row( $video_activity_meta_sql );
+				$meta_type               = 'video';
+			}
+			if ( ! empty( $meta_item->meta_value ) ) {
+				$moderation_item_sql = $wpdb->prepare( "SELECT id FROM {$suspend_table} WHERE `item_id`=%d AND `item_type`=%s", $meta_item->meta_value, $meta_type );
+				$moderation_item     = $wpdb->get_row( $moderation_item_sql );
+				if ( ! empty( $moderation_item->id ) ) {
+					// Update moderation table.
+					$wpdb->update( $moderation_table, array( 'moderation_id' => $moderation_item->id ), array( 'moderation_id' => $moderated_activity->id ) );
+
+					// Update moderation meta table.
+					$wpdb->update( $moderation_table_meta, array( 'moderation_id' => $moderation_item->id ), array( 'moderation_id' => $moderated_activity->id ) );
+
+					// Update suspend table Activity row.
+					$wpdb->update( $suspend_table, array(
+						'hide_sitewide' => 0,
+						'hide_parent'   => 1,
+						'reported'      => 0,
+						'last_updated'  => '0000-00-00 00:00:00',
+					), array( 'id' => $moderated_activity->id ) );
+
+					// Update suspend table media row.
+					$wpdb->update( $suspend_table, array(
+						'hide_sitewide' => 1,
+						'hide_parent'   => 0,
+						'reported'      => 1,
+						'last_updated'  => $moderated_activity->last_updated,
+					), array( 'id' => $moderation_item->id ) );
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Moderation update complete!', 'buddyboss' ),
+		);
+	}
+}
