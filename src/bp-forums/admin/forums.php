@@ -82,34 +82,33 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
 
 			// Filter post parent for forum type post.
-			add_filter( 'wp_insert_post_parent', array( $this, 'filter_forum_parent' ), 10, 4 );
+			add_filter( 'wp_insert_post_parent', array( $this, 'forum_parent' ), 10, 2 );
 		}
 
 		/**
-		 * Can update forum parent, If not then return the current parent.
+		 * Update permission for forum parent, If not then return the current parent.
+		 * - Disable "Forum Parent" when the main Forum associated with Group.
 		 *
-		 * Disable "Forum Parent" when the main Forum associated with Group
+		 * @since BuddyBoss x.x.x
 		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param init   post_parent post parent.
-		 * @param init   post_ID     post ID.
-		 * @param array  new_postarr submited post data.
-		 * @param object postarr     post attributes.
+		 * @param init $post_parent post parent.
+		 * @param init $post_ID     post ID.
 		 *
 		 * @return init
 		 */
-		function filter_forum_parent( $post_parent, $post_ID, $new_postarr, $postarr ) {
-			if ( 'forum' != $new_postarr['post_type'] ) {
+		public function forum_parent( $post_parent, $post_ID ) {
+			if ( bbp_get_forum_post_type() !== $new_postarr['post_type'] ) {
 				return $post_parent;
 			}
 
-			if ( ! bbp_can_update_forum_parent( $post_ID ) ) {
-				$forum = bbp_get_forum( $post_ID );
-				return $forum->post_parent;
+			$group_ids = bbp_get_forum_group_ids( $post_ID );
+
+			if ( empty( $group_ids ) ) {
+				return $post_parent;
 			}
 
-			return $post_parent;
+			$forum = bbp_get_forum( $post_ID );
+			return $forum->post_parent;
 		}
 
 		/**
