@@ -2531,14 +2531,15 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 
 	// Used variables
 	$tab        = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
-	$can_update = bbp_can_update_forum_type( $r['forum_id'] );
+	$group_ids = bbp_get_forum_group_ids( $r['forum_id'] );
+	$can_update = empty( $group_ids ) ? true : false;
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start(); ?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>
-            <?php echo $can_update ? '' : 'disabled="disabled"'; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>
+            <?php echo $can_update ? '' : esc_attr( 'disabled="disabled"' ); ?>>
 
 		<?php foreach ( bbp_get_forum_types() as $key => $label ) : ?>
 
