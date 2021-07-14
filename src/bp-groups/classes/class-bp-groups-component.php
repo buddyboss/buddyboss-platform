@@ -822,13 +822,19 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+				// Checked if order already set before, New menu(video) will be added at last 
+				$video_menu_position = 22;
+				$orders = get_option('bp_nouveau_appearance');
+				if( isset($orders['group_nav_order'] ) && !empty ($orders['group_nav_order']) && !in_array ('vide', $orders['group_nav_order'])) {
+					$video_menu_position = 1001;
+				}
 				$sub_nav[] = array(
 					'name'            => __( 'Videos', 'buddyboss' ),
 					'slug'            => 'videos',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_video',
-					'position'        => 22,
+					'position'        => $video_menu_position,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'videos',
 					'no_access_url'   => $group_link,
