@@ -2611,8 +2611,8 @@ function bp_video_activity_entry_css_class( $class ) {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_media_preview() {
-	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/?$', 'index.php?media-preview=$matches[1]&id1=$matches[2]', 'top' );
-	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
 }
 
 /**

@@ -1707,9 +1707,9 @@ function bb_video_safari_popup_video_play( $is_ios ) {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_video_preview() {
-	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-preview=$matches[1]&id1=$matches[2]', 'top' );
-	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
-	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
 }
 
 /**

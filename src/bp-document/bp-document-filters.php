@@ -1857,9 +1857,9 @@ function bb_document_update_video_symlink( $response, $post_data ) {
  * @since BuddyBoss 1.7.2
  */
 function bb_setup_document_preview() {
-	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]', 'top' );
-	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?document-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
-	add_rewrite_rule( 'bb-document-player/([^/]+)/([^/]+)/?$', 'index.php?document-player=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-document-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-document-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-document-player/([^/]+)/([^/]+)/?$', 'index.php?bb-document-player=$matches[1]&id1=$matches[2]', 'top' );
 }
 
 /**
