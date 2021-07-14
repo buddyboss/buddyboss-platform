@@ -3351,7 +3351,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 		} else {
 			$video_id       = 'forbidden_' . $video_id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = home_url( '/' ) . 'video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
+			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
 		}
 
 		if ( empty( $attachment_url ) ) {
@@ -3803,7 +3803,7 @@ function bb_video_get_symlink( $video, $generate = true ) {
 			$attachment_id   = 'forbidden_' . $video->attachment_id;
 			$output_file_src = get_attached_file( $video->attachment_id );
 			if ( ! empty( $attachment_id ) && ! empty( $video_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = home_url( '/' ) . 'video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id );
+				$attachment_url = home_url( '/' ) . 'bb-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id );
 			}
 		} else {
 			// Get videos previews symlink directory path.

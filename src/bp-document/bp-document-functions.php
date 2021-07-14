@@ -4251,7 +4251,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 
 				$document_id    = 'forbidden_' . $document_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
-				$attachment_url = home_url( '/' ) . 'document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id ) . '/' . $size;
+				$attachment_url = home_url( '/' ) . 'bb-document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id ) . '/' . $size;
 
 			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 				$output_file_src = get_attached_file( $attachment_id );
@@ -4265,7 +4265,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 					if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) ) {
 						$document_id    = 'forbidden_' . $document_id;
 						$attachment_id  = 'forbidden_' . $attachment_id;
-						$attachment_url = home_url( '/' ) . 'document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
+						$attachment_url = home_url( '/' ) . 'bb-document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
 					}
 				}
 			}
@@ -4286,7 +4286,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$attachment_id        = 'forbidden_' . $attachment_id;
 			$output_file_src      = get_attached_file( $passed_attachment_id );
 			if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = home_url( '/' ) . 'document-player/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
+				$attachment_url = home_url( '/' ) . 'bb-document-player/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
 			}
 		}
 	}
@@ -4475,7 +4475,7 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 		if ( bb_enable_symlinks() ) {
 
 			if ( bb_check_ios_device() ) {
-				$attachment_url = home_url( '/' ) . 'document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
+				$attachment_url = home_url( '/' ) . 'bb-document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
 			} else {
 
 				// Get videos previews symlink directory path.
@@ -4529,7 +4529,7 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 				}
 			}
 		} else {
-			$attachment_url = home_url( '/' ) . 'document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
+			$attachment_url = home_url( '/' ) . 'bb-document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
 		}
 	}
 

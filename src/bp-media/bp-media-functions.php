@@ -3413,7 +3413,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			} else {
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
-				$attachment_url = home_url( '/' ) . 'media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
+				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
             }
 		}
 	}
