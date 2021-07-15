@@ -327,6 +327,11 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16601 ) {
 			bp_update_to_1_7_0();
 		}
+
+		// Version x.x.x
+		if ( $raw_db_version < 17001 ) {
+			bb_update_to_1_5_9();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1153,6 +1158,126 @@ function bb_update_to_1_5_6() {
 }
 
 /**
+ * x.x.x update routine.
+ *
+ * - Migrate group id to associate forum.
+ * - Update forum meta _bbp_group_ids, associated with group id.
+ *
+ * @since BuddyBoss x.x.x
+ */
+function bb_update_to_1_5_9() {
+	global $bp_background_updater;
+
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	foreach ( bb_update_to_1_5_9_get_pages() as $page ) {
+		$bp_background_updater->push_to_queue(
+			array(
+				'callback' => 'bb_update_to_1_5_9_migrate_group_id_associate_forum',
+				'args'     => array( 'page' => $page ),
+			)
+		);
+	}
+	
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Chunk the total groups as pages.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @return array
+ */
+function bb_update_to_1_5_9_get_pages() {
+	// Return, when group component deactive.
+	if ( ! bp_is_active( 'groups' ) ) {
+		return arrray();
+	}
+
+	$total_groups = groups_get_total_group_count();
+
+	$per_page  = 20;   
+	$max_pages = 1;
+
+	if ( $total_groups > 0 ) {
+	   $max_pages = ( ( $total_groups - 1 ) / $per_page ) + 1;
+	}
+
+	$pages = array();
+	
+	for ( $i = 1; $i <= $max_pages; $i++ ) {
+		array_push( $pages, $i );
+	}
+
+	return $pages;
+}
+
+/**
+ * Migrate group id, associate its forum group id.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param int $page
+ *
+ * @return boolean
+ */
+function bb_update_to_1_5_9_migrate_group_id_associate_forum( $page ) {
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	$group_data = groups_get_groups( array(
+		'per_page' => 20,             
+		'page'     => $page,
+		'order'    => 'ASC' 
+	) );
+
+	$groups = $group_data['groups'];
+
+	foreach ( $groups as $group ) {
+		$forum_ids = groups_get_groupmeta( $group->id, 'forum_id' );
+		bb_update_to_1_5_9_update_forums_group_id( $group->id, $forum_ids );
+	}
+
+	return false;
+}
+
+/**
+ * Update group ID's for a forum.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param int   $group_id
+ * @param array $forum_ids
+ *
+ * @return void
+ */
+function bb_update_to_1_5_9_update_forums_group_id( $group_id, $forum_ids ) {
+	// Return, when forum component deactive.
+	if ( ! bp_is_active( 'forums' ) ) {
+		return arrray();
+	}
+
+	$group_ids = array( $group_id );
+	
+	foreach ( $forum_ids as $forum_id ) {
+		if ( empty( $forum_id ) ) {
+			continue;
+		}
+
+		$has_froum_groups = bbp_get_forum_group_ids( $forum_id );
+		$group_ids        = array_unique( array_merge( $has_froum_groups, $group_ids ) );
+
+		bbp_update_forum_group_ids( $forum_id, $group_ids );
+	}
+}
+
+/** 
  * Add new video support to document extensions.
  *
  * @since BuddyBoss 1.7.0
@@ -1200,3 +1325,4 @@ add_filter(
 		return $extensions;
 	}
 );
+

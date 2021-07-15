@@ -2530,13 +2530,16 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 	}
 
 	// Used variables
-	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$tab        = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$group_ids  = bbp_get_forum_group_ids( $r['forum_id'] );
+	$can_update = empty( $group_ids ) ? true : false;
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start(); ?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>
+            <?php echo $can_update ? '' : esc_attr( 'disabled="disabled"' ); ?>>
 
 		<?php foreach ( bbp_get_forum_types() as $key => $label ) : ?>
 
@@ -2716,15 +2719,15 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 
 	// Used variables
 	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
-
-	$group_ids = bbp_get_forum_group_ids( $r['forum_id'] );
+	
+	// Get forum visibility update status.
+	$disabled = bb_forum_visibility_disabled( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
 	?>
-
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?> <?php echo ! empty( $group_ids ) ? 'disabled="disabled"' : ''; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
 		<?php foreach ( bbp_get_forum_visibilities() as $key => $label ) : ?>
 
@@ -2733,11 +2736,51 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 		<?php endforeach; ?>
 
     </select>
-
 	<?php
 
 	// Return the results
 	return apply_filters( 'bbp_get_form_forum_type_dropdown', ob_get_clean(), $r );
+}
+
+/**
+ * Checking whether you can update or not forum visibility.
+ * - When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param int $forum_id The forum id to use
+ *
+ * @uses  bbp_get_forum() To get the forum.
+ * @uses  bbp_get_forum_group_ids() To get the forum group ids.
+ *
+ * @return boolean
+ */
+function bb_forum_visibility_disabled( $forum_id ) {
+	global $wpdb;
+
+	if ( empty( $forum_id ) ) {
+		return false;
+	} 
+
+	// Get all parent forum id's from child forum.
+	$sql = "SELECT @pv AS _id, (SELECT @pv := post_parent FROM {$wpdb->posts} WHERE id = _id ) AS parent
+		FROM 
+			( SELECT @pv := %d ) current_forum, 
+			( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) posts
+		where @pv <> 0";
+
+	// Run query for getting all parent forum ids from child forum.
+	$parent_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, $forum_id , bbp_get_forum_post_type() ) );
+
+	foreach ( $parent_forum_ids as $parent_forum_id ) {
+		$group_ids = bbp_get_forum_group_ids( $parent_forum_id );
+
+		if ( ! empty( $group_ids ) ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /** Feeds *********************************************************************/
