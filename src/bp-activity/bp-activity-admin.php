@@ -840,13 +840,13 @@ function bp_activity_admin_edit_metabox_status( $item ) {
 
 				<div class="misc-pub-section curtime misc-pub-section-last">
 					<?php
-					// Translators: Publish box date format, see http://php.net/date.
-					$date  = sprintf(
-								/* translators: 1: activity date, 2: activity time */
-								__( '%1$s @ %2$s', 'buddyboss' ),
-								date_i18n( bp_get_option( 'date_format' ), strtotime( $item->date_recorded) ),
-								get_date_from_gmt( $item->date_recorded, bp_get_option( 'time_format' ) )
-							);
+						// Translators: Publish box date format, see http://php.net/date.
+						$date  = sprintf(
+							/* translators: 1: activity date, 2: activity time */
+							__( '%1$s @ %2$s', 'buddyboss' ),
+							date_i18n( bp_get_option( 'date_format' ), strtotime( $item->date_recorded) ),
+							get_date_from_gmt( $item->date_recorded, bp_get_option( 'time_format' ) )
+						);
 					?>
 					<span id="timestamp"><?php printf( __( 'Submitted on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>&nbsp;<a href="#edit_timestamp" class="edit-timestamp hide-if-no-js" tabindex='4'><?php _e( 'Edit', 'buddyboss' ); ?></a>
 
