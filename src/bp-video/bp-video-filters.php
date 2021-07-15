@@ -1689,8 +1689,9 @@ function bb_video_update_video_symlink( $response, $post_data ) {
  */
 function bb_video_safari_popup_video_play( $is_ios ) {
 
-	if ( false === $is_ios && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		$is_safari = stripos( $_SERVER['HTTP_USER_AGENT'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$browser = bb_core_get_browser();
+	if ( false === $is_ios && isset( $browser ) ) {
+		$is_safari = stripos( $browser['name'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$action    = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 
 		if ( $is_safari && 'video_get_activity' === $action ) {
