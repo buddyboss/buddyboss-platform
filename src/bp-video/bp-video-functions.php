@@ -4278,7 +4278,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 		if ( ! bb_enable_symlinks() ) {
 			$video_id       = 'forbidden_' . $video->id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id ) . '&size=' . $size;
+			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
 
 		} else {
 
