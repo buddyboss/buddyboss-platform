@@ -332,11 +332,7 @@ function bp_version_updater() {
 		// Version 1.7.2.
 		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_2();
-		}
-
-		if ( $raw_db_version < 16901 ) {
-			bb_update_to_1_7_2();
-		}
+		}\
 	}
 
 	/* All done! *************************************************************/
