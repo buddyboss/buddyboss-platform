@@ -4000,14 +4000,17 @@ function bp_document_set_time_limits( $time_limit ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
-	$cnt         = 0;
-	$num_updates = 0;
-	$num_fails   = 0;
-	$time        = 0;
+
+	$cnt          = 0;
+	$num_updates  = 0;
+	$num_fails    = 0;
+	$attempt_time = 0;
 
 	if ( $ids ) {
-		$time = microtime( true );
-		$cnt  = count( $ids );
+
+		$attempt_time = microtime( true );
+		$cnt          = count( $ids );
+
 		bp_document_set_time_limits( max( $cnt * 20, 300 ) );
 
 		foreach ( $ids as $idx => $id ) {
@@ -4057,9 +4060,9 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 				}
 			}
 		}
-		$time = round( microtime( true ) - $time, 1 );
+		$attempt_time = round( microtime( true ) - $attempt_time, 1 );
 	}
-	return array( $cnt, $num_updates, $num_fails, $time );
+	return array( $cnt, $num_updates, $num_fails, $attempt_time );
 }
 
 /**
