@@ -329,7 +329,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 16901 ) {
-			bp_update_to_1_7_2();
+			bb_update_to_1_7_2();
 		}
 	}
 
@@ -686,7 +686,7 @@ function bp_update_to_1_7_0() {
  *
  * @since BuddyBoss 1.7.2
  */
-function bp_update_to_1_7_2() {
+function bb_update_to_1_7_2() {
 	flush_rewrite_rules();
 }
 
