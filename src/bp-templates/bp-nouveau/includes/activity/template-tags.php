@@ -490,7 +490,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		}
 
 		// Add activity edit button.
-		if ( bp_is_activity_edit_enabled() ) {
+		if ( bp_is_activity_edit_enabled() && bb_user_can_create_video() ) {
 			$buttons['activity_edit'] = array(
 				'id'                => 'activity_edit',
 				'position'          => 30,
