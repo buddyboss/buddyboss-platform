@@ -4279,8 +4279,13 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$upload_directory        = wp_get_upload_dir();
 			$document_symlinks_path  = bp_document_symlink_path();
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $document->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
+			}
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
-				bp_document_create_symlinks( $document, $size );
+				bp_document_create_symlinks( $document, '' );
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		} elseif ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && ! bb_enable_symlinks() ) {
