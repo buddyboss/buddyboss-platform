@@ -238,17 +238,17 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return int
 		 */
-		public function get_display_forum_id() {
+		public function display_forum_id() {
 
-			// Get Group associate forum id for any level of childs forum. 
+			// Get Group associate forum id for any level of childs forum.
 			// Here post_type should be forum and post_status 'publish'.
-			$forum_id =  $this->get_forum_id_from_froum_post_name();
+			$forum_id = $this->get_forum_id_from_froum_post_name();
 
 			if ( ! empty( $forum_id ) ) {
 				return $forum_id;
 			}
 
-			// Get Group associate forum id for any level of childs forum topic. 
+			// Get Group associate forum id for any level of childs forum topic.
 			// Here post_type should be topic and post_status 'publish'.
 			$forum_id = $this->get_forum_id_from_topic_post_name();
 
@@ -1165,25 +1165,25 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		public function display_forums( $offset = 0 ) {
 			global $wp_query;
 
-			// Allow actions immediately before group forum output
+			// Allow actions immediately before group forum output.
 			do_action( 'bbp_before_group_forum_display' );
 
-			// Load up Forums once
+			// Load up Forums once.
 			$bbp = bbpress();
-			
+
 			/** Query Resets */
 
-			// Forum data
+			// Forum data.
 			$forum_action = bp_action_variable( $offset );
-			$forum_id     = $this->get_display_forum_id();
+			$forum_id     = $this->display_forum_id();
 			$actions      = array( 'page', $this->topic_slug, $this->reply_slug );
 
 			// Unknown forum action set as a page.
-			if ( ! empty( $forum_action ) &&  ! in_array( $forum_action, $actions ) ) {
+			if ( ! empty( $forum_action ) && ! in_array( $forum_action, $actions, true ) ) {
 				$forum_action = false;
 			}
 
-			// Always load up the group forum
+			// Always load up the group forum.
 			bbp_has_forums(
 				array(
 					'p'           => $forum_id,
@@ -1191,10 +1191,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				)
 			);
 
-			// Set the global forum ID
+			// Set the global forum ID.
 			$bbp->current_forum_id = $forum_id;
 
-			// Assume forum query
+			// Assume forum query.
 			bbp_set_query_name( 'bbp_single_forum' );
 			?>
 
@@ -1207,23 +1207,23 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 					case false:
 					case 'page':
-						// Strip the super stickies from topic query
+						// Strip the super stickies from topic query.
 						add_filter( 'bbp_get_super_stickies', array( $this, 'no_super_stickies' ), 10, 1 );
 
-						// Unset the super sticky option on topic form
+						// Unset the super sticky option on topic form.
 						add_filter( 'bbp_get_topic_types', array( $this, 'unset_super_sticky' ), 10, 1 );
 
-						// Query forums and show them if they exist
+						// Query forums and show them if they exist.
 						if ( ! empty( $forum_id ) && bbp_forums() ) :
 
-							// Setup the forum
+							// Setup the forum.
 							bbp_the_forum();
 							?>
 
 							<?php
 							bbp_get_template_part( 'content', 'single-forum' );
 
-							// No forums found
+							// No forums found.
 						else :
 							?>
 
@@ -1240,10 +1240,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					/** Single Topic */
 
 					case $this->topic_slug:
-						// hide the 'to front' admin links
+						// hide the 'to front' admin links.
 						add_filter( 'bbp_get_topic_stick_link', array( $this, 'hide_super_sticky_admin_link' ), 10, 2 );
 
-						// Get the topic
+						// Get the topic.
 						bbp_has_topics(
 							array(
 								'name'           => bp_action_variable( $offset + 1 ),
@@ -1252,7 +1252,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							)
 						);
 
-						// If no topic, 404
+						// If no topic, 404.
 						if ( ! bbp_topics() ) {
 							bp_do_404( bbp_get_forum_permalink( $forum_id ) );
 							?>
@@ -1262,7 +1262,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							return;
 						}
 
-						// Setup the topic
+						// Setup the topic.
 						bbp_the_topic();
 						?>
 
@@ -1270,20 +1270,20 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 						<?php
 
-						// Topic edit
+						// Topic edit.
 						if ( bp_action_variable( $offset + 2 ) === bbp_get_edit_rewrite_id() ) :
 
-							// Unset the super sticky link on edit topic template
+							// Unset the super sticky link on edit topic template.
 							add_filter( 'bbp_get_topic_types', array( $this, 'unset_super_sticky' ), 10, 1 );
 
-							// Set the edit switches
+							// Set the edit switches.
 							$wp_query->bbp_is_edit       = true;
 							$wp_query->bbp_is_topic_edit = true;
 
-							// Setup the global forum ID
+							// Setup the global forum ID.
 							$bbp->current_topic_id = get_the_ID();
 
-							// Merge
+							// Merge.
 							if ( ! empty( $_GET['action'] ) && 'merge' === $_GET['action'] ) :
 								bbp_set_query_name( 'bbp_topic_merge' );
 								bbp_get_template_part( 'form', 'topic-merge' );
@@ -1300,7 +1300,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 							endif;
 
-							// Single Topic
+							// Single Topic.
 							else :
 								bbp_set_query_name( 'bbp_single_topic' );
 								bbp_get_template_part( 'content', 'single-topic' );
@@ -1310,7 +1310,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					/** Single Reply */
 
 					case $this->reply_slug:
-						// Get the reply
+						// Get the reply.
 						bbp_has_replies(
 							array(
 								'name'           => bp_action_variable( $offset + 1 ),
@@ -1318,7 +1318,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							)
 						);
 
-						// If no topic, 404
+						// If no topic, 404.
 						if ( ! bbp_replies() ) {
 							bp_do_404( bbp_get_forum_permalink( $forum_id ) );
 							?>
@@ -1328,7 +1328,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							return;
 						}
 
-						// Setup the reply
+						// Setup the reply.
 						bbp_the_reply();
 						?>
 
@@ -1337,11 +1337,11 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						<?php
 						if ( bp_action_variable( $offset + 2 ) === bbp_get_edit_rewrite_id() ) :
 
-							// Set the edit switches
+							// Set the edit switches.
 							$wp_query->bbp_is_edit       = true;
 							$wp_query->bbp_is_reply_edit = true;
 
-							// Setup the global reply ID
+							// Setup the global reply ID.
 							$bbp->current_reply_id = get_the_ID();
 
 							// Move
@@ -1358,7 +1358,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						break;
 				endswitch;
 
-				// Reset the query
+				// Reset the query.
 				wp_reset_query();
 				?>
 
