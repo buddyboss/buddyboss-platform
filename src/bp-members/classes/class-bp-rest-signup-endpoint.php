@@ -361,16 +361,16 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function signup_form_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not able to view the register form fields.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not able to view the register form fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( ! is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -465,26 +465,16 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -547,37 +537,35 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
-		$signup = $this->get_signup_object( $request['id'] );
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$signup = $this->get_signup_object( $request['id'] );
 
-		if ( true === $retval && empty( $signup ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid signup id.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $signup ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid signup id.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -985,16 +973,16 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( is_user_logged_in() && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( ! is_user_logged_in() || bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -1148,17 +1136,18 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function activate_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_invalid_id',
+			__( 'Invalid signup id.', 'buddyboss' ),
+			array(
+				'status' => 404,
+			)
+		);
+
 		$signup = $this->get_signup_object( $request['id'] );
 
-		if ( empty( $signup ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid signup id.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+		if ( ! empty( $signup ) ) {
+			$retval = true;
 		}
 
 		/**

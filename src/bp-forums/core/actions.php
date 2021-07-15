@@ -184,7 +184,7 @@ add_action( 'delete_post', 'bbp_delete_reply' );
 
 // After Deleted/Trashed/Untrashed Reply
 add_action( 'trashed_post', 'bbp_trashed_reply' );
-add_action( 'untrashed_post', 'bbp_untrashed_reply' );
+add_action( 'untrashed_post', 'bbp_untrashed_reply', 10, 2 );
 add_action( 'deleted_post', 'bbp_deleted_reply' );
 
 // New/Edit Topic
@@ -257,7 +257,6 @@ add_action( 'bbp_new_topic_pre_extras', 'bbp_clean_post_cache' );
 add_action( 'bbp_new_topic_post_extras', 'bbp_clean_post_cache' );
 add_action( 'bbp_new_reply_pre_extras', 'bbp_clean_post_cache' );
 add_action( 'bbp_new_reply_post_extras', 'bbp_clean_post_cache' );
-
 /**
  * Forums needs to redirect the user around in a few different circumstances:
  *

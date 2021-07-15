@@ -261,6 +261,11 @@ function bp_core_activation_notice() {
 				$component_id = 'document';
 			}
 		}
+		if ( 'videos' === $component_id ) {
+			if ( bp_is_active( 'media' ) && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+				$component_id = 'video';
+			}
+		}
 		if ( ! empty( $bp->{$component_id}->has_directory ) ) {
 			$wp_page_components[] = array(
 				'id'   => $component_id,
@@ -1919,9 +1924,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).click( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 						} else {
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', false );
@@ -1931,9 +1936,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( "#bp-member-type-permissions .inside .group-type-checkboxes" ).each( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 							return false;
 						} else {

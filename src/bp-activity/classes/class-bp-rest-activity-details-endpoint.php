@@ -96,22 +96,22 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'activity' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
+		if ( bp_is_active( 'activity' ) ) {
+			$retval = true;
 		}
 
 		/**
 		 * Filter the activity details permissions check.
 		 *
-		 * @param bool|WP_Error $retval Returned value.
+		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
 		 * @since 0.1.0
