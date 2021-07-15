@@ -326,16 +326,12 @@ function bp_version_updater() {
 
 		// Version 1.7.0.
 		if ( $raw_db_version < 16601 ) {
-			bb_update_to_1_7_0();
+			bp_update_to_1_7_0();
 		}
 
 		// Version 1.7.2.
 		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_2();
-		}
-
-		if ( $raw_db_version < 16901 ) {
-			bp_update_to_1_7_2();
 		}
 	}
 
@@ -689,11 +685,13 @@ function bp_update_to_1_7_0() {
 
 /**
  * Flush rewrite rule after update.
+ * Update routine.
  *
  * @since BuddyBoss 1.7.2
  */
-function bp_update_to_1_7_2() {
+function bb_update_to_1_7_2() {
 	flush_rewrite_rules();
+	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
 }
 
 function bp_update_default_doc_extensions() {
@@ -1219,15 +1217,6 @@ add_filter(
 		return $extensions;
 	}
 );
-
-/**
- * 1.7.2 update routine.
- *
- * @since BuddyBoss 1.7.2
- */
-function bb_update_to_1_7_2() {
-	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
-}
 
 /**
  * Migration for activity setting feed comments.
