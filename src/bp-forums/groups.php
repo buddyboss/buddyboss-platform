@@ -43,151 +43,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$this->setup_filters();
 			$this->maybe_unset_forum_menu();
 		}
-
-		/**
-		 * Redirect 404 page when user will input wrong URL from groups forum screen.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @uses bp_current_action() To get groups forum slug from URL.   
-		 * @uses bp_action_variables() To get rest of query var as an array.
-		 * @uses get_forum_id_from_froum_post_name() To get group associate forum id 
-		 *       by forum post_name for any level of childs forum.
-		 * @uses get_forum_id_from_topic_post_name() To get group associate forum id 
-		 *       by topic post_name for any level of child forum-topic.
-		 *
-		 * @return Boolean
-		 */
-		public function can_access() {
-			global $wp_query;
-
-			$forum_slug     = urlencode( get_option( '_bbp_forum_slug', 'forum' ) );
-			$topic_slug     = urlencode( get_option( '_bbp_topic_slug', 'discussions' ) );
-			$reply_slug     = urlencode( get_option( '_bbp_reply_slug', 'reply' ) );
-			$current_action = bp_current_action();
-			$actions        = bp_action_variables();
-
-			// When URL request for groups forum not topic and reply.
-			if ( $current_action == $forum_slug && ! empty( $actions[0] ) && $actions[0] != $topic_slug && $actions[0] != $reply_slug ) {
-				
-				// Get Group associate forum id by forum post_name for any level of childs forum. 
-				// Here post_type should be forum and post_status 'publish'.
-				$forum_id = $this->get_forum_id_from_froum_post_name( $actions[0] );
-
-				// Redirect to 404 If forum does not associate with current gorup.
-				if ( empty( $forum_id ) || ! empty( $actions[1] ) ) {
-					return false;
-				}
-			}
-
-			// When URL request for groups forum-topic not forum and reply.
-			if ( $current_action == $forum_slug && ! empty( $actions[0] ) && ! empty( $actions[1] ) && $actions[0] == $topic_slug ) {
-				
-				// Get Group associate forum id by topic post_name for any level of childs forum topic. 
-				// Here post_type should be topic and post_status 'publish'.
-				$forum_id = $this->get_forum_id_from_topic_post_name( $actions[1] );
-
-				// Redirect to 404 If topic does not associate with current gorup.
-				if ( empty( $forum_id ) || ! empty( $actions[2] ) ) {
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		/**
-		 * Nested forum are not associate with group. 
-		 * This method help to find out the group associte forum id with the help of forum name.
-		 * Or any level of child forum id, Which are not associated with gorup.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param string $forum_name Form post_name.
-		 * @uses get_closest_forum_group_ids() Searching group id for any level of child forum.
-		 *
-		 * @return int
-		 */
-		public function get_forum_id_from_froum_post_name( $forum_name = '' ) {
-			global $wp_query, $wpdb;
-
-			// Set initial forum ID
-			$forum_id = false;
-
-			// get current forums by forum name.
-			if ( empty( $forum_name ) ) {
-				$forum_name = empty( $wp_query->query_vars['name'] ) ? '' : $wp_query->query_vars['name'];
-			}
-
-			// get current forum by forum post_name.
-			$current_forum = $wpdb->get_row( 
-				$wpdb->prepare( 
-					"SELECT * FROM $wpdb->posts WHERE post_type=%s AND post_name=%s AND post_status IN('publish', 'private', 'hidden')",
-					bbp_get_forum_post_type(),
-					$forum_name
-				)
-			);
-			
-			if ( ! empty( $current_forum ) ) {
-				// Searching group id for nested leve of child forum.
-				$group_ids = $this->get_closest_forum_group_ids( $current_forum->ID );
-
-				// Set forum id if it associate with current group.
-				if ( ! empty( $group_ids ) && in_array( bp_get_current_group_id(), $group_ids ) ) {
-					$forum_id = $current_forum->ID; 
-				}
-			}
-
-			return $forum_id;
-		}
-
-		/**
-		 * Nested forum-topic are not associate with group. 
-		 * This method help you to find the group associte forum id for any level of chld forum-topic.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param strin $topic_name Topic post_name.
-		 *
-		 * @uses get_closest_forum_group_ids() Searching group id nested leve of child forum.
-		 * @uses bbp_get_topic_forum_id() To get topic forum id.
-		 *
-		 * @return int
-		 */
-		public function get_forum_id_from_topic_post_name( $topic_name = '' ) {
-			global $wp_query, $wpdb;
-
-			// Set initial forum ID
-			$forum_id = false;
-
-			if ( empty( $topic_name ) ) {
-				$topic_name = empty( $wp_query->query_vars['name'] ) ? '' : $wp_query->query_vars['name'];
-			}
-
-			// get current topics by topic post_name.
-			$current_topic = $wpdb->get_row( 
-				$wpdb->prepare( 
-					"SELECT * FROM $wpdb->posts WHERE post_type=%s AND post_name=%s AND post_status IN('publish', 'closed', 'pending')",
-					bbp_get_topic_post_type(),
-					$topic_name
-				)
-			);
-			   
-			if ( ! empty( $current_topic ) ) {
-				$topic_forum_id = bbp_get_topic_forum_id( $current_topic->ID );
-				
-				// Searching group id for nested leve of child forum.
-				$group_ids = $this->get_closest_forum_group_ids( $topic_forum_id );
-
-				// Set forum id if it associate with current group.
-				if ( ! empty( $group_ids ) && in_array( bp_get_current_group_id(), $group_ids ) ) {
-					$forum_id = $topic_forum_id;
-				}
-			}
-
-			return $forum_id;
-		}
-
+	
 		/**
 		 * Nested forum are not associate with group. This method help you to find the nested forum group id.
 		 *
@@ -200,24 +56,28 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return array/boolean
 		 */
-		public function get_closest_forum_group_ids( $forum_id ) {
-			$forum = bbp_get_forum( $forum_id );
+		public function forum_associate_current_group( $forum_id ) {
+			if ( empty( $forum_id ) ) {
+				return false;
+			}
 
+			$forum = bbp_get_forum( $forum_id );
+ 
 			if ( empty( $forum ) ) {
 				return false;
 			}
-			
-			// When the forum does not contain any child forum
-			if ( empty( $forum->post_parent ) ) {
-				return bbp_get_forum_group_ids( $forum->ID );
-			}
 
+			// Get all parent ids.
+			$parents = $forum->ancestors;
+
+			// Set parameter id forum.
+			array_unshift( $parents, $forum->ID );
+			
 			// Searching gorup id child to parent.
-			while ( ! empty( (int) $forum->post_parent ) ) {
-				$forum     = bbp_get_forum( $forum->post_parent );
-				$group_ids = bbp_get_forum_group_ids( $forum->ID );
-				
-				if ( ! empty( $group_ids ) ) {
+			foreach ( $parents as $parent ) {
+				$group_ids = bbp_get_forum_group_ids( $parent );
+
+				if ( ! empty( $group_ids ) && in_array( bp_get_current_group_id(), $group_ids, true ) ) {
 					return $group_ids;
 				}
 			}
@@ -240,25 +100,45 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 */
 		public function display_forum_id() {
 
-			// Get Group associate forum id for any level of childs forum.
-			// Here post_type should be forum and post_status 'publish'.
-			$forum_id = $this->get_forum_id_from_froum_post_name();
+			$name     = get_query_var( 'name' );
+			$actions  = bp_action_variables();
+			$forum_id = false;
 
-			if ( ! empty( $forum_id ) ) {
-				return $forum_id;
+			$forum_ids        = bbp_get_group_forum_ids( bp_get_current_group_id() );
+			$default_forum_id = array_shift( $forum_ids );
+
+			if ( empty( $name ) || empty( $actions ) || ! in_array( $name, $actions, true ) ) {
+				return $default_forum_id;
 			}
 
-			// Get Group associate forum id for any level of childs forum topic.
-			// Here post_type should be topic and post_status 'publish'.
-			$forum_id = $this->get_forum_id_from_topic_post_name();
+			$query = new WP_Query( array(
+				'name' => $name,
+				'post_type' => array( bbp_get_forum_post_type(), bbp_get_topic_post_type() )
+			) );
 
-			if ( ! empty( $forum_id ) ) {
-				return $forum_id;
+			$post = $query->post;
+
+			if ( empty( $post->ID ) ) {
+				return false;
 			}
 
-			$forum_ids = bbp_get_group_forum_ids( bp_get_current_group_id() );
+			if( bbp_is_forum( $post ) ) {
+				$forum_id = empty( $post->ID ) ? false : $post->ID;
+			}
 
-			return array_shift( $forum_ids );
+			if( bbp_is_topic( $post ) ) {
+				$forum_id = bbp_get_topic_forum_id( $post->ID );
+
+				$forum_id = emtpy( $forum_id ) ? false : $forum_id;
+			}
+
+			$forum_in_current_group = $this->forum_associate_current_group( $forum_id );
+
+			if ( empty( $forum_in_current_group ) ) {
+				return $default_forum_id;
+			}
+
+			return empty( $forum_id ) ? $default_forum_id : $forum_id;
 		}
 
 		/**
@@ -1642,7 +1522,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Searching group id nested leve of child to parent forum.
-			$group_ids =  $this->get_closest_forum_group_ids( $forum_id );
+			$group_ids =  $this->forum_associate_current_group( $forum_id );
 
 			// Bail if the post isn't associated with a group
 			if ( empty( $group_ids ) ) {
