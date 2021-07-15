@@ -5636,15 +5636,8 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 }
 
 function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
-	$url        = explode( '/', $preview_attachment_path );
-	$search_key = array_search( 'uploads', $url, true );
-	if ( is_array( $url ) && ! empty( $url ) && false !== $search_key ) {
-		$url            = array_slice( array_filter( $url ), $search_key );
-		$url            = implode( '/', $url );
-		$attachment_url = trailingslashit( $upload_directory['baseurl'] ) . $url;
-	} else {
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-	}
+
+	$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 
 	return str_replace( 'uploads/uploads', 'uploads', $attachment_url );
 }
