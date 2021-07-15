@@ -161,7 +161,7 @@ if ( 0 === $total_count ) {
 									</div>
 								</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) : ?>
+							<?php if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && bb_user_can_create_video() ) : ?>
 								<div class="dropzone closed" id="bp-group-messages-post-video-uploader"></div>
 								<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
 								<div class="forum-post-video-template" style="display:none;">
