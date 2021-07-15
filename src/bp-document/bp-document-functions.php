@@ -3999,14 +3999,17 @@ function bp_document_set_time_limits( $time_limit ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
-	$cnt         = 0;
-	$num_updates = 0;
-	$num_fails   = 0;
-	$time        = 0;
+
+	$cnt          = 0;
+	$num_updates  = 0;
+	$num_fails    = 0;
+	$attempt_time = 0;
 
 	if ( $ids ) {
-		$time = microtime( true );
-		$cnt  = count( $ids );
+
+		$attempt_time = microtime( true );
+		$cnt          = count( $ids );
+
 		bp_document_set_time_limits( max( $cnt * 20, 300 ) );
 
 		foreach ( $ids as $idx => $id ) {
@@ -4056,9 +4059,9 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 				}
 			}
 		}
-		$time = round( microtime( true ) - $time, 1 );
+		$attempt_time = round( microtime( true ) - $attempt_time, 1 );
 	}
-	return array( $cnt, $num_updates, $num_fails, $time );
+	return array( $cnt, $num_updates, $num_fails, $attempt_time );
 }
 
 /**
@@ -4275,8 +4278,13 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$upload_directory        = wp_get_upload_dir();
 			$document_symlinks_path  = bp_document_symlink_path();
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $document->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
+			}
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
-				bp_document_create_symlinks( $document, $size );
+				bp_document_create_symlinks( $document, '' );
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		} elseif ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && ! bb_enable_symlinks() ) {
