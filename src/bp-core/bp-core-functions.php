@@ -5622,6 +5622,22 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 					chdir( 'wp-content/' . $sym_path );
 					if ( empty( $file['path'] ) ) {
 						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+						if ( 'document' === $type ) {
+							$is_image         = wp_attachment_is_image( $attachment_id );
+							$img_url          = get_attached_file( $attachment_id );
+							$meta             = wp_get_attachment_metadata( $attachment_id );
+							$img_url_basename = wp_basename( $img_url );
+							$upl_dir          = wp_get_upload_dir();
+
+							if ( ! $is_image ) {
+								if ( ! empty( $meta['sizes'][$size] ) ) {
+									$img_url = str_replace( $img_url_basename, $meta['sizes'][$size]['file'], $img_url );
+								} else {
+									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
+								}
+							}
+							$file['path'] = str_replace( trailingslashit( $upl_dir['basedir'] ), '', $img_url );
+						}
 					}
 					$output_file_src = '../../' . $file['path'];
 					if ( file_exists( $output_file_src ) ) {
