@@ -111,8 +111,10 @@ class BP_Media_Component extends BP_Component {
 	 */
 	public function late_includes() {
 
-		// Include Media Streamline.
-		require $this->path . 'bp-media/classes/class-bp-media-stream.php';
+		if ( ! class_exists( 'BP_Media_Stream' ) ) {
+			// Include Media Streamline.
+			require $this->path . 'bp-media/classes/class-bp-media-stream.php';
+		}
 
 		// Bail if PHPUnit is running.
 		if ( defined( 'BP_TESTS_DIR' ) ) {
