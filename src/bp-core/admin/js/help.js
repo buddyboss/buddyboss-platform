@@ -137,7 +137,7 @@
 			 * Load help content when navigate to one menu to another menu.
 			 */
 			function bp_help_bind_ajax_links() {
-				jQuery( 'a[href*="' + BP_HELP.bb_help_url + '"]' ).click( function ( e ) {
+				jQuery( '.buddyboss_page_bp-help a[href*="' + BP_HELP.bb_help_url + '"]' ).click( function ( e ) {
 					e.stopImmediatePropagation();
 					if ( window.history.replaceState ) {
 						e.preventDefault();

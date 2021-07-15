@@ -2669,6 +2669,25 @@ function bp_group_show_document_status_setting( $setting, $group = false ) {
 }
 
 /**
+ * Output the 'checked' value, if needed, for a given video_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_video_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$video_status = bp_group_get_video_status( $group_id );
+
+	if ( $setting === $video_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
  * Get the media status of a group.
  *
  * This function can be used either in or out of the loop.
@@ -7460,18 +7479,18 @@ function bp_groups_get_profile_stats( $args = '' ) {
 		'groups_get_profile_stats'
 	);
 
-	// Allow completely overloaded output
+	// Allow completely overloaded output.
 	if ( empty( $r['output'] ) ) {
 
-		// Only proceed if a user ID was passed
+		// Only proceed if a user ID was passed.
 		if ( ! empty( $r['user_id'] ) ) {
 
-			// Get the user groups
+			// Get the user groups.
 			if ( empty( $r['groups'] ) ) {
 				$r['groups'] = absint( bp_get_total_group_count_for_user( $r['user_id'] ) );
 			}
 
-			// If groups exist, show some formatted output
+			// If groups exist, show some formatted output.
 			$r['output'] = $r['before'] . sprintf( _n( '%s group', '%s groups', $r['groups'], 'buddyboss' ), '<strong>' . $r['groups'] . '</strong>' ) . $r['after'];
 		}
 	}
@@ -7684,4 +7703,106 @@ function bb_get_group_current_messages_tab() {
 	 * @param string $tab Current group message tab slug.
 	 */
 	return apply_filters( 'bb_get_group_current_messages_tab', $tab );
+}
+
+/**
+ * Get the video status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_video_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$video_status = groups_get_groupmeta( $group_id, 'video_status' );
+
+	// Backward compatibility. When 'video_status' is not set, fall back to a default value.
+	if ( ! $video_status ) {
+		$video_status = apply_filters( 'bp_group_video_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the video status of a group.
+	 *
+	 * Video status in this case means who can manage the videos.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param string $video_status Membership level needed to manage video.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_video_status', $video_status, $group_id );
+}
+
+/**
+ * Get the video album status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_video_album_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$album_status = groups_get_groupmeta( $group_id, 'video_album_status' );
+
+	// Backward compatibility. When 'album_status' is not set, fall back to a default value.
+	if ( ! $album_status ) {
+		$album_status = apply_filters( 'bp_group_video_album_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * Invite status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param string $album_status Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_video_album_status', $album_status, $group_id );
 }

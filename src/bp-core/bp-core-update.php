@@ -323,6 +323,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16401 ) {
 			bb_update_to_1_5_6();
 		}
+
+		if ( $raw_db_version < 16601 ) {
+			bp_update_to_1_7_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -663,6 +667,16 @@ function bp_update_to_1_5_1() {
 	}
 }
 
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_update_to_1_7_0() {
+	bp_core_install_media();
+	bb_core_enable_default_symlink_support();
+}
+
 function bp_update_default_doc_extensions() {
 
 	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
@@ -709,7 +723,7 @@ function bp_update_default_doc_extensions() {
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
 
-	// Fix current forums media privacy to 'forums'
+	// Fix current forums media privacy to 'forums'.
 	bp_core_fix_forums_media();
 }
 
@@ -1137,3 +1151,52 @@ function bp_update_to_1_5_5() {
 function bb_update_to_1_5_6() {
 	bp_core_install_moderation_emails();
 }
+
+/**
+ * Add new video support to document extensions.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+add_filter(
+	'bp_media_allowed_document_type',
+	function ( $extensions ) {
+		$changed_array = array(
+			'bb_doc_77' => array(
+				'extension'   => '.mp4',
+				'mime_type'   => 'video/mp4',
+				'description' => __( 'MP4', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_78' => array(
+				'extension'   => '.webm',
+				'mime_type'   => 'video/webm',
+				'description' => __( 'WebM', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_79' => array(
+				'extension'   => '.ogg',
+				'mime_type'   => 'video/ogg',
+				'description' => __( 'Ogg', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_80' => array(
+				'extension'   => '.mov',
+				'mime_type'   => 'video/quicktime',
+				'description' => __( 'Quicktime', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+		);
+
+		$extensions = array_merge( $extensions, $changed_array );
+
+		return $extensions;
+	}
+);

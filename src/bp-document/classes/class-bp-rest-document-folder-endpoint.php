@@ -326,7 +326,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$folder = new BP_Document_Folder( $request['id'] );
+		$folder = new BP_Document_Folder( $request->get_param( 'id' ) );
 
 		if ( true === $retval && empty( $folder->id ) ) {
 			$retval = new WP_Error(
@@ -467,57 +467,58 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if (
-			! is_user_logged_in() ||
-			(
+		$retval = $error;
+
+		if ( is_user_logged_in() ) {
+			$retval = true;
+
+			if (
 				function_exists( 'bb_document_user_can_upload' ) &&
 				! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+				$retval = $error;
+			} elseif ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
+				if (
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
+				) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
-		}
 
-		if ( true === $retval && isset( $request['parent'] ) && ! empty( $request['parent'] ) ) {
-			$parent_folder = new BP_Document_Folder( $request['parent'] );
-			if ( empty( $parent_folder->id ) ) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_parent_folder',
-					__( 'Invalid Parent Folder ID.', 'buddyboss' ),
-					array(
-						'status' => 400,
-					)
-				);
-			} elseif ( ! bp_folder_user_can_edit( $parent_folder->id ) ) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			if ( true === $retval && isset( $request['parent'] ) && ! empty( $request['parent'] ) ) {
+				$parent_folder = new BP_Document_Folder( $request['parent'] );
+				if ( empty( $parent_folder->id ) ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_parent_folder',
+						__( 'Invalid Parent Folder ID.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				} elseif ( ! bp_folder_user_can_edit( $parent_folder->id ) ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -712,61 +713,49 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to update this folder.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update this folder.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		$folder = new BP_Document_Folder( $request['id'] );
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$folder = new BP_Document_Folder( $request->get_param( 'id' ) );
 
-		if ( true === $retval && empty( $folder->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_folder_invalid_id',
-				__( 'Invalid Folder ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if (
-			true === $retval &&
-			(
+			if ( empty( $folder->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_folder_invalid_id',
+					__( 'Invalid Folder ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
 				! bp_folder_user_can_edit( $folder ) ||
 				(
 					function_exists( 'bb_media_user_can_upload' ) &&
 					! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $folder->group_id ) )
 				)
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this folder.', 'buddyboss' ),
-				array(
-					'status' => 500,
-				)
-			);
-		}
-
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+				$retval = $error;
+			} elseif ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
+				if (
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
+				) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -863,38 +852,35 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this folder.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this folder.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$folder = new BP_Document_Folder( $request->get_param( 'id' ) );
 
-		$folder = new BP_Document_Folder( $request['id'] );
-
-		if ( true === $retval && empty( $folder->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_folder_invalid_id',
-				__( 'Invalid Folder ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_folder_user_can_delete( $folder ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this folder.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $folder->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_folder_invalid_id',
+					__( 'Invalid Folder ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_folder_user_can_delete( $folder ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this folder.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -998,16 +984,16 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function folder_tree_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to view folder tree.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view folder tree.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**

@@ -444,6 +444,16 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
 				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
 			}
+
+			// Video settings.
+			if ( bp_is_active( 'video' ) ) {
+				$results['bp_video_profile_video_support']  = bp_is_profile_video_support_enabled();
+				$results['bp_video_group_video_support']    = bp_is_group_video_support_enabled();
+				$results['bp_video_messages_video_support'] = bp_is_messages_video_support_enabled();
+				$results['bp_video_forums_video_support']   = bp_is_forums_video_support_enabled();
+				$results['bp_video_allowed_size']           = bp_video_allowed_upload_video_size();
+				$results['bp_video_allowed_per_batch']      = bp_video_allowed_upload_video_per_batch();
+			}
 		}
 
 		// Connection Settings.

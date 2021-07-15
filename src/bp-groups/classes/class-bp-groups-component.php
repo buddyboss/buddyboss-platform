@@ -202,7 +202,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders', 'videos' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -491,7 +491,7 @@ class BP_Groups_Component extends BP_Component {
 			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
 		}
 
-		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab ) {
+		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab || 'videos' === $default_tab ) {
 			$default_tab = bp_is_active( 'media' ) ? $default_tab : 'members';
 		} else {
 			$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
@@ -817,6 +817,20 @@ class BP_Groups_Component extends BP_Component {
 					'position'        => 85,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'documents',
+					'no_access_url'   => $group_link,
+				);
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+				$sub_nav[] = array(
+					'name'            => __( 'Videos', 'buddyboss' ),
+					'slug'            => 'videos',
+					'parent_url'      => $group_link,
+					'parent_slug'     => $this->current_group->slug,
+					'screen_function' => 'groups_screen_group_video',
+					'position'        => 80,
+					'user_has_access' => $this->current_group->user_has_access,
+					'item_css_id'     => 'videos',
 					'no_access_url'   => $group_link,
 				);
 			}
