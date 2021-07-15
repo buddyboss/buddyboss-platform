@@ -148,8 +148,10 @@ class BP_Notifications_Notification {
 		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
 			global $wpdb;
 
-			$this->id = $wpdb->insert_id;
-			$retval   = $wpdb->insert_id;
+			if ( empty( $this->id ) ) {
+				$this->id = $wpdb->insert_id;
+			}
+			$retval = $this->id;
 		}
 
 		/**

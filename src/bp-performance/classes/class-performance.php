@@ -19,6 +19,7 @@ use BuddyBoss\Performance\Integration\BB_Messages;
 use BuddyBoss\Performance\Integration\BB_Notifications;
 use BuddyBoss\Performance\Integration\BB_Replies;
 use BuddyBoss\Performance\Integration\BB_Topics;
+use BuddyBoss\Performance\Integration\BB_Videos;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -85,6 +86,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				// Make Cache API Available.
 				require_once dirname( __FILE__ ) . '/class-cache.php';
 				require_once dirname( __FILE__ ) . '/integrations/class-integration-abstract.php';
+				require_once dirname( __FILE__ ) . '/class-option-clear-cache.php';
 				require_once dirname( __FILE__ ) . '/class-helper.php';
 				require_once dirname( __FILE__ ) . '/class-route-helper.php';
 				require_once dirname( __FILE__ ) . '/class-pre-user-provider.php';
@@ -92,6 +94,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 				Route_Helper::instance();
 				Helper::instance();
+				OptionClearCache::instance();
 				Pre_User_Provider::instance();
 				Settings::instance();
 
@@ -155,6 +158,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					if ( self::mu_is_component_active( 'document' ) && file_exists( $documents_integration ) ) {
 						require_once $documents_integration;
 						BB_Documents::instance();
+					}
+
+					$videos_integration = dirname( __FILE__ ) . '/integrations/class-bb-videos.php';
+					if ( self::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
+						require_once $videos_integration;
+						BB_Videos::instance();
 					}
 				}
 
@@ -232,7 +241,9 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$charset_collate = $wpdb->get_charset_collate();
 
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			if ( ! function_exists( 'dbDelta' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
 
 			$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
 	            id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,

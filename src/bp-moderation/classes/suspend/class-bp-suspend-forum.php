@@ -30,6 +30,10 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 */
 	public function __construct() {
 
+		if ( ! bp_is_active( 'forums' ) ) {
+			return;
+		}
+
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -388,7 +392,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int     $post_id Post ID.
+	 * @param int $post_id Post ID.
 	 */
 	public function sync_moderation_data_on_delete( $post_id ) {
 

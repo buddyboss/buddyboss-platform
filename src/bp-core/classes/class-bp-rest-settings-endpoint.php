@@ -248,6 +248,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-site-registration'              => bp_enable_site_registration(),
 			'allow-custom-registration'                => bp_allow_custom_registration(),
 			'register-confirm-email'                   => bp_register_confirm_email(),
+			'register-legal-agreement'                 => ( function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false ),
 			'register-confirm-password'                => bp_register_confirm_password(),
 			'bp-disable-account-deletion'              => bp_disable_account_deletion(),
 			'bp-enable-private-network'                => ! bp_enable_private_network(),
@@ -263,7 +264,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-member-type-enable-disable'            => bp_member_type_enable_disable(),
 			'bp-member-type-display-on-profile'        => ! empty( bp_member_type_enable_disable() ) && bp_member_type_display_on_profile(),
 			'bp-member-type-default-on-registration'   => bp_member_type_default_on_registration(),
-			'bp-enable-profile-search'                 => bp_disable_advanced_profile_search(),
+			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
 
@@ -366,6 +367,10 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Group Forums.
 			$results['bbp_enable_group_forums']  = bbp_is_group_forums_active();
 			$results['bbp_group_forums_root_id'] = bbp_get_group_forums_root_id();
+
+			// Check Permalinks for platform forms slugs.
+			$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+			$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
 		}
 
 		// Activity settings.
@@ -439,6 +444,16 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
 				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
 			}
+
+			// Video settings.
+			if ( bp_is_active( 'video' ) ) {
+				$results['bp_video_profile_video_support']  = bp_is_profile_video_support_enabled();
+				$results['bp_video_group_video_support']    = bp_is_group_video_support_enabled();
+				$results['bp_video_messages_video_support'] = bp_is_messages_video_support_enabled();
+				$results['bp_video_forums_video_support']   = bp_is_forums_video_support_enabled();
+				$results['bp_video_allowed_size']           = bp_video_allowed_upload_video_size();
+				$results['bp_video_allowed_per_batch']      = bp_video_allowed_upload_video_per_batch();
+			}
 		}
 
 		// Connection Settings.
@@ -479,6 +494,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		$results['enable_messages']               = bp_is_active( 'messages' );
 		$results['bp_page_privacy']               = $privacy;
 		$results['bp_page_terms']                 = $terms;
+		$results['wp_page_privacy']               = (int) get_option( 'wp_page_for_privacy_policy' );
 
 		return $results;
 	}
@@ -570,6 +586,34 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Forum Integration for BuddyPress.
 			'bbp_enable_group_forums'    => bbp_is_group_forums_active(),
 			'bbp_group_forums_root_id'   => bbp_get_group_forums_root_id(),
+		);
+
+		// Check Permalinks for platform forms slugs.
+		$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+		$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
+
+		return $results;
+	}
+
+	/**
+	 * Get Permalinks settings.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_get_forum_slugs_settings() {
+		$results = array(
+			// Single forum slugs.
+			'forum'         => get_option( '_bbp_forum_slug', 'forum' ),
+			'topic'         => get_option( '_bbp_topic_slug', 'discussions' ),
+			'topic_tag'     => get_option( '_bbp_topic_tag_slug', 'topic-tag' ),
+			'view'          => get_option( '_bbp_view_slug', 'view' ),
+			'reply'         => get_option( '_bbp_reply_slug', 'reply' ),
+			'search'        => get_option( '_bbp_search_slug', 'search' ),
+
+			// Forum Profile Slugs.
+			'replies'       => bbp_get_reply_archive_slug(),
+			'favorites'     => bbp_get_user_favorites_slug(),
+			'subscriptions' => bbp_get_user_subscriptions_slug(),
 		);
 
 		return $results;

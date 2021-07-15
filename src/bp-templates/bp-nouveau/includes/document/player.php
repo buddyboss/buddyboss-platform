@@ -23,11 +23,11 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 	 isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
 	$id               = (int) $explode_arr[1];
 	$id1              = (int) $explode_arr1[1];
-	$document_privacy = ( function_exists( 'bp_document_user_can_manage_document' ) ) ? bp_document_user_can_manage_document( $id1, bp_loggedin_user_id() ) : true ;
-	$can_view         = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+	$document_privacy = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'document' ) : true ;
+	$can_view         = true === (bool) $document_privacy['can_view'];
 	if ( $can_view ) {
 		$type            = get_post_mime_type( $id );
-		$output_file_src = bp_document_scaled_image_path( $id );
+		$output_file_src = bb_core_scaled_attachment_path( $id );
 
 		if ( ! file_exists( $output_file_src ) ) {
 			echo '// Silence is golden.';

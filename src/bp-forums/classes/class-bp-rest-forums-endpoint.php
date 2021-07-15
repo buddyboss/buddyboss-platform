@@ -435,60 +435,51 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to subscribe/unsubscribe the forum.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to subscribe/unsubscribe the forum.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$forum  = bbp_get_forum( $request->get_param( 'id' ) );
 
-		if ( true === $retval && ! bbp_is_subscriptions_active() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Subscription was disabled.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+			if ( ! bbp_is_subscriptions_active() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Subscription was disabled.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
+				empty( $forum->ID ) ||
+				! isset( $forum->post_type ) ||
+				'forum' !== $forum->post_type
+			) {
+				$retval = new WP_Error(
+					'bp_rest_forum_invalid_id',
+					__( 'Invalid forum ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
 
-		$forum = bbp_get_forum( $request['id'] );
+			$user_id = bbp_get_user_id( 0, true, true );
 
-		if ( empty( $forum->ID ) ) {
-			$retval = new WP_Error(
-				'bp_rest_forum_invalid_id',
-				__( 'Invalid forum ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ( ! isset( $forum->post_type ) || 'forum' !== $forum->post_type ) ) {
-			$retval = new WP_Error(
-				'bp_rest_forum_invalid_id',
-				__( 'Invalid forum ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		$user_id = bbp_get_user_id( 0, true, true );
-
-		if ( true === $retval && ! current_user_can( 'edit_user', $user_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'You don\'t have the permission to update favorites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( true === $retval && ! current_user_can( 'edit_user', $user_id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'You don\'t have the permission to update favorites.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
