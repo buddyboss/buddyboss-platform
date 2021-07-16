@@ -3782,7 +3782,7 @@ function bb_media_user_can_access( $id, $type ) {
 
 		case 'forums':
 
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bp_is_active( 'forums' ) ) {
 				$args = array(
 					'user_id'         => $current_user_id,
 					'forum_id'        => $forum_id,
