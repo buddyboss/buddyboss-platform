@@ -111,10 +111,11 @@ add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
 
-
-
 //Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
+// Repair repeater field repeated in admin side.
+add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
+add_action( 'admin_init', 'bb_xprofile_repeater_field_repair_with_background' );
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1060,4 +1061,218 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 	}
 
 	return $args;
+}
+
+/**
+ * Add xprofile notification repair list item.
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ *
+ * @since BuddyBoss 1.6.2
+ */
+function bb_xprofile_repeater_field_repair( $repair_list ) {
+	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
+	if ( false === $get_bp_xprofile_migration ) {
+		$repair_list[] = array(
+			'bp-xprofile-repeater-field-repair',
+			__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
+			'bb_xprofile_repeater_field_repair_callback',
+		);
+	}
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will remove duplicate repeater field from database by repair tool.
+ * Also remove remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ *
+ * @uses bb_xprofile_repeater_field_migration
+ *
+ * @since BuddyBoss 1.6.2
+ */
+function bb_xprofile_repeater_field_repair_callback() {
+	$offset = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
+	if ( 1 === $offset ) {
+		$offset = 0;
+	} else {
+		$offset = $offset;
+	}
+	// Function will do migrate code for the repeated fields.
+	bb_xprofile_repeater_field_migration( $offset, $callback = true );
+}
+
+/**
+ * This function will work as migration process which will remove duplicate repeater field from database.
+ * Also remove remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ *
+ * @param int     $offset offset.
+ * @param boolean $callback callback.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.6.2
+ */
+function bb_xprofile_repeater_field_migration( $offset, $callback ) {
+	global $wpdb;
+	$bp         = buddypress();
+	$recipients = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete = %d LIMIT %d OFFSET %d", 1, 2, $offset ) );
+	if ( ! empty( $recipients ) ) {
+		foreach ( $recipients as $recipient ) {
+			$check_delete_group_data = array();
+			$group_id                = $recipient->id;
+			$group_field_ids         = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE group_id =%d AND parent_id = %d", $group_id, 0 ) );
+			if ( ! empty( $group_field_ids ) ) {
+				foreach ( $group_field_ids as $group_field_id ) {
+					$get_field_order = $wpdb->get_var( $wpdb->prepare( "SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order =%d AND group_id =%d", $group_field_id->field_order, $group_id ) );
+					if ( $get_field_order > 1 ) {
+						$limit           = $get_field_order - 1;
+						$field_id_result = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order =%d AND group_id =%d ORDER BY id DESC LIMIT %d", $group_field_id->field_order, $group_id, $limit ) );
+						$field_id_arr    = array();
+						if ( ! empty( $field_id_result ) ) {
+							foreach ( $field_id_result as $field_id_obj ) {
+								$field_id_arr[] = $field_id_obj->id;
+							}
+						}
+						$field_id_list   = implode( ',', $field_id_arr );
+						$delete_field_id = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = %d AND group_id = %d AND id IN ( $field_id_list )", $group_field_id->field_order, $group_id ) );
+						if ( false !== $delete_field_id ) {
+							$delete_meta_qry = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( $field_id_list ) AND object_type = 'field' " ) );
+							if ( false !== $delete_meta_qry ) {
+								$check_delete_group_data[] = $group_id;
+							}
+						}
+					} else {
+						$check_delete_group_data[] = $group_id;
+					}
+				}
+			}
+			// This will remove unnecessary data that may have remained after the above migration process.
+			if ( ! empty( $check_delete_group_data ) ) {
+				$meta_key            = 'field_set_count_' . $group_id;
+				$user_meta_for_group = $wpdb->get_row( $wpdb->prepare( "SELECT MAX( CAST(meta_value AS DECIMAL) ) as max_value FROM $wpdb->usermeta WHERE meta_key = '$meta_key' " ) );
+				if ( ! empty( $user_meta_for_group ) ) {
+					$max_field_set_count = $user_meta_for_group->max_value;
+					if ( $max_field_set_count >= 10 ) {
+						$bdugf = bb_delete_unnecessory_groups_field( $group_id );
+						if ( true === $bdugf ) {
+							$offset ++;
+						}
+					} else {
+						$offset ++;
+					}
+				}
+			}
+		}
+		if ( true === $callback ) {
+			/* translators: %s: offset */
+			$records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+			return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+			);
+		}
+	} else {
+		bp_update_option( 'bp_xprofile_migration', 'true' );
+		if ( true === $callback ) {
+			return array(
+				'status'  => 1,
+				'message' => __( 'repeater field update complete!', 'buddyboss' ),
+			);
+		}
+	}
+}
+
+/**
+ * This function will remove unnecessary data that may have remained after the above migration process.
+ *
+ * @param int $group_id Group id.
+ *
+ * @return boolean
+ *
+ * @since BuddyBoss 1.6.2
+ */
+function bb_delete_unnecessory_groups_field( $group_id ) {
+	global $wpdb;
+	$bp                = buddypress();
+	$delete_fields_arr = array();
+
+	// It will calculate the total field ID based on the group ID.
+	// This would have to be done after removing the duplicate field order from the DB.
+	$count_total_group_field_ids = $wpdb->get_var( $wpdb->prepare( "SELECT count(id)FROM {$bp->profile->table_name_fields} WHERE group_id =%d AND parent_id = 0", $group_id ) );
+
+	// This will Find those fields id which is cloned from main field id.
+	$group_field_ids = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT gfi.id, gfi.field_order FROM {$bp->profile->table_name_fields} as gfi
+		LEFT JOIN {$bp->profile->table_name_meta} as gfm ON gfm.object_id = gfi.id
+		WHERE gfi.group_id = %d AND gfi.parent_id = %d AND gfm.meta_key = '_is_repeater_clone' AND gfm.meta_value = %d ORDER BY gfi.field_order ASC
+		",
+			$group_id,
+			0,
+			1
+		)
+	);
+
+	// Calculate the main field ID. The field from which the second field is cloned.
+	$main_fields_count = (int) $count_total_group_field_ids - (int) count( $group_field_ids );
+
+	// Here we need to modify fields count based on main field id.
+	// Issue was generating after 10 number of fields.
+	// So, We passed here 10 to multiply with main fields count.
+	// If Any user has more then 10 number of fields, then automatically added fields based on count based on page load (Default functionality).
+	$new_user_fields_count = 10 * $main_fields_count;
+	if ( ! empty( $group_field_ids ) ) {
+		foreach ( $group_field_ids as $key => $field_id ) {
+			if ( $key < $new_user_fields_count ) {
+				continue;
+			}
+			$delete_fields_arr[] = $field_id->id;
+		}
+		$delete_fields_list = implode( ',', $delete_fields_arr );
+		if ( ! empty( $delete_fields_arr ) ) {
+			$delete_field_id = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id IN ( $delete_fields_list )", $group_id ) );
+			if ( false !== $delete_field_id ) {
+				$delete_meta_qry = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( $delete_fields_list ) AND object_type = 'field' " ) );
+				if ( false !== $delete_meta_qry ) {
+					return true;
+				}
+			}
+		}
+	}
+}
+
+/**
+ * This function will work in the background for migration process which will remove duplicate repeater field from database.
+ * Also remove remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ *
+ * @uses bb_xprofile_repeater_field_migration
+ *
+ * @since BuddyBoss 1.6.2
+ */
+function bb_xprofile_repeater_field_repair_with_background() {
+	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
+	if ( false === $get_bp_xprofile_migration ) {
+		global $wpdb, $bp_background_updater;
+		$bp         = buddypress();
+		$recipients = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete = %d", 1 ) );
+
+		for ( $counter = 0; $counter <= $recipients->total_id; $counter ++ ) {
+			if ( (int) $counter !== (int) $recipients->total_id ) {
+				$bp_background_updater->push_to_queue(
+					array(
+						'callback' => bb_xprofile_repeater_field_migration( $counter, $callback = false ),
+					)
+				);
+				$bp_background_updater->save()->schedule_event();
+			} else {
+				bp_update_option( 'bp_xprofile_migration', true );
+			}
+		}
+	}
 }
