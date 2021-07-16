@@ -34,10 +34,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		public function __construct() {
 
 			// Redirect 404 page when user will input wrong URL from groups forum screen.
-			// if ( ! $this->can_access() ) {
-			// 	return;
-			// }
-
 			$this->setup_variables();
 			$this->setup_actions();
 			$this->setup_filters();
@@ -129,7 +125,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			if( bbp_is_topic( $post ) ) {
 				$forum_id = bbp_get_topic_forum_id( $post->ID );
 
-				$forum_id = emtpy( $forum_id ) ? false : $forum_id;
+				$forum_id = empty( $forum_id ) ? false : $forum_id;
 			}
 
 			$forum_in_current_group = $this->forum_associate_current_group( $forum_id );
@@ -183,6 +179,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Possibly redirect
 			add_action( 'bbp_template_redirect', array( $this, 'redirect_canonical' ) );
+
+			// Make consistency without gorup from page. 
+			add_action( 'bbp_template_redirect', array( $this, 'forum_redirect_canonical' ), 11 );
 
 			// Remove group forum cap map when view is done
 			add_action( 'bbp_after_group_forum_display', array( $this, 'remove_group_forum_meta_cap_map' ) );
@@ -1716,6 +1715,30 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			return $args;
 		}
 
+		public function forum_redirect_canonical() {
+			if ( empty( bp_get_current_group_id() || ! empty( bp_action_variables() ) ) ) {
+				return;
+			}
+
+			$forum_id = bbp_get_group_forum_ids( bp_get_current_group_id() );
+			$forum_id = empty( $forum_id ) ? false : array_shift( $forum_id );
+
+			if ( $this->slug !== get_query_var( 'name' ) || empty( $forum_id ) ) {
+				return;
+			}
+
+			$forum = get_post( $forum_id );
+			if ( ! bbp_is_forum( $forum ) ) {
+				return;
+			}
+
+			$group       = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
+			$group_link  = trailingslashit( bp_get_group_permalink( $group ) );
+			$redirect_to = trailingslashit( $group_link . '/' . $this->slug . '/' . $forum->post_name );
+
+			bp_core_redirect( $redirect_to );
+		}
+
 		/**
 		 * Ensure that forum content associated with a BuddyBoss group can only be
 		 * viewed via the group URL.
@@ -1723,7 +1746,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @since bbPress (r3802)
 		 */
 		public function redirect_canonical() {
-
 			// Viewing a single forum
 			if ( bbp_is_single_forum() ) {
 				$forum_id  = get_the_ID();
