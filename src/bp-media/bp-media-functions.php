@@ -3781,7 +3781,6 @@ function bb_media_user_can_access( $id, $type ) {
 			break;
 
 		case 'forums':
-
 			if ( bp_is_active( 'forums' ) ) {
 				$args = array(
 					'user_id'         => $current_user_id,
@@ -3812,35 +3811,37 @@ function bb_media_user_can_access( $id, $type ) {
 			break;
 
 		case 'message':
-			$has_access = messages_check_thread_access( $thread_id, $current_user_id );
-			if ( ! is_user_logged_in() ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( ! $thread_id ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access > 0 ) {
-				$can_view     = true;
-				$can_download = true;
+			if ( bp_is_active( 'messages' ) ) {
+				$has_access = messages_check_thread_access( $thread_id, $current_user_id );
+				if ( ! is_user_logged_in() ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( ! $thread_id ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access > 0 ) {
+					$can_view     = true;
+					$can_download = true;
+				}
 			}
 			break;
 	}
