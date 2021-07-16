@@ -3413,7 +3413,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			} else {
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . $size;
+				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
             }
 		}
 	}
@@ -3781,63 +3781,67 @@ function bb_media_user_can_access( $id, $type ) {
 			break;
 
 		case 'forums':
-			$args = array(
-				'user_id'         => $current_user_id,
-				'forum_id'        => $forum_id,
-				'check_ancestors' => false,
-			);
+			if ( bp_is_active( 'forums' ) ) {
+				$args = array(
+					'user_id'         => $current_user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => false,
+				);
 
-			$has_access = bbp_user_can_view_forum( $args );
-			if ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access ) {
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_delete = true;
+				$has_access = bbp_user_can_view_forum( $args );
+				if ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access ) {
+					if ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_delete = true;
+					}
+					$can_view     = true;
+					$can_download = true;
 				}
-				$can_view     = true;
-				$can_download = true;
 			}
 			break;
 
 		case 'message':
-			$has_access = messages_check_thread_access( $thread_id, $current_user_id );
-			if ( ! is_user_logged_in() ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( ! $thread_id ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access > 0 ) {
-				$can_view     = true;
-				$can_download = true;
+			if ( bp_is_active( 'messages' ) ) {
+				$has_access = messages_check_thread_access( $thread_id, $current_user_id );
+				if ( ! is_user_logged_in() ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( ! $thread_id ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access > 0 ) {
+					$can_view     = true;
+					$can_download = true;
+				}
 			}
 			break;
 	}

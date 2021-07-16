@@ -65,8 +65,9 @@ add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
 
 add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 99, 2 );
 
-
-add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
+add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
+add_filter( 'query_vars', 'bb_setup_query_video_preview' );
+add_action( 'template_include', 'bb_setup_template_for_video_preview' );
 
 /**
  * Add video theatre template for activity pages.
@@ -1676,24 +1677,67 @@ function bb_video_update_video_symlink( $response, $post_data ) {
 }
 
 /**
- * Pass the true if the browser is safari and video need to play in popup.
+ * Add rewrite rule to setup video preview.
  *
- * @param bool $is_ios whether a device is a ios.
- *
- * @return bool|mixed
- *
- * @since BuddyBoss 1.7.0.1
+ * @since BuddyBoss 1.7.2
  */
-function bb_video_safari_popup_video_play( $is_ios ) {
+function bb_setup_video_preview() {
+	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+}
 
-	if ( false === $is_ios && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		$is_safari = stripos( $_SERVER['HTTP_USER_AGENT'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$action    = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+/**
+ * Setup query variable for video preview.
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_query_video_preview( $query_vars ) {
+	$query_vars[] = 'bb-video-preview';
+	$query_vars[] = 'bb-video-thumb-preview';
+	$query_vars[] = 'id1';
 
-		if ( $is_safari && 'video_get_activity' === $action ) {
-			$is_ios = true;
-		}
+	return $query_vars;
+}
+
+/**
+ * Setup template for the video thumbnail preview and video play.
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_template_for_video_preview( $template ) {
+
+	if ( ! empty( get_query_var( 'bb-video-preview' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_video_preview' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/player.php';
 	}
 
-	return $is_ios;
+	if ( ! empty( get_query_var( 'bb-video-thumb-preview' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_video_thumb_preview' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/preview.php';
+	}
+
+	return $template;
 }
