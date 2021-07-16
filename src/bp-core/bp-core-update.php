@@ -326,7 +326,7 @@ function bp_version_updater() {
 
 		// Version 1.7.0.
 		if ( $raw_db_version < 16601 ) {
-			bb_update_to_1_7_0();
+			bp_update_to_1_7_0();
 		}
 
 		// Version 1.7.2.
