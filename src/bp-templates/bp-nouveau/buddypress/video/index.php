@@ -38,7 +38,7 @@
 			<?php
 			bp_get_template_part( 'common/search-and-filters-bar' );
 
-			if ( is_user_logged_in() ) :
+			if ( is_user_logged_in() && bb_user_can_create_video() ) :
 
 				if ( ( bp_is_profile_video_support_enabled() ) ) {
 					?>

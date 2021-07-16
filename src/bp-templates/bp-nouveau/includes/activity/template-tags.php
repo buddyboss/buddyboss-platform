@@ -330,7 +330,7 @@ function bb_nouveau_activity_inner_buttons( $args = array() ) {
  * @since BuddyBoss 1.7.2
  *
  * @param array $args Button attributes.
- * 
+ *
  * @return array
  */
 function bb_nouveau_get_activity_inner_buttons( $args ) {
@@ -375,7 +375,7 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 	}
 
 	$return = bp_nouveau()->activity->inner_buttons->get( $sort );
-	
+
 	return $return;
 }
 
@@ -1686,7 +1686,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 	if ( $activity_type !== 'activity_comment' ) {
 		// Add activity edit button.
-		if ( bp_is_activity_edit_enabled() ) {
+		if ( bp_is_activity_edit_enabled() && bb_user_can_create_video() ) {
 			$buttons['activity_edit'] = array(
 				'id'                => 'activity_edit',
 				'position'          => 30,
@@ -1787,7 +1787,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			if ( ! empty( $attachment_id ) ) {
 				$video_privacy = bb_media_user_can_access( $video_id, 'video' );
 				$can_edit      = true === (bool) $video_privacy['can_edit'];
-				if ( $can_edit ) {
+				if ( $can_edit && bb_user_can_create_video() ) {
 					$parent_activity_id          = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 					$attachment_urls             = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 					$buttons['change_thumbnail'] = array(
