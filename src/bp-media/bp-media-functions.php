@@ -3781,30 +3781,33 @@ function bb_media_user_can_access( $id, $type ) {
 			break;
 
 		case 'forums':
-			$args = array(
-				'user_id'         => $current_user_id,
-				'forum_id'        => $forum_id,
-				'check_ancestors' => false,
-			);
 
-			$has_access = bbp_user_can_view_forum( $args );
-			if ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access ) {
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_delete = true;
+			if ( bp_is_active( 'groups' ) ) {
+				$args = array(
+					'user_id'         => $current_user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => false,
+				);
+
+				$has_access = bbp_user_can_view_forum( $args );
+				if ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access ) {
+					if ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_delete = true;
+					}
+					$can_view     = true;
+					$can_download = true;
 				}
-				$can_view     = true;
-				$can_download = true;
 			}
 			break;
 
