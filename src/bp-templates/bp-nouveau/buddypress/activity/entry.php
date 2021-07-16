@@ -13,6 +13,8 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 <li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>">
 
+	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
+
 	<div class="activity-avatar item-avatar">
 
 		<a href="<?php bp_activity_user_link(); ?>">
@@ -48,7 +50,6 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 		<?php bp_nouveau_activity_state(); ?>
 
 		<?php bp_nouveau_activity_entry_buttons(); ?>
-
 	</div>
 
 	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' ); ?>
