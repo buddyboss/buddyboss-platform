@@ -448,6 +448,11 @@ function bp_nouveau_group_manage_screen() {
 		$is_group_create ? esc_attr( bp_get_new_group_id() ) : esc_attr( bp_get_group_id() )
 	);
 
+	printf(
+		'<input type="hidden" name="parent-id" id="parent-id" value="%s" />',
+		$is_group_create ? esc_attr( bp_get_parent_group_id( bp_get_new_group_id() ) ) : esc_attr( bp_get_parent_group_id( bp_get_group_id() ) )
+	);
+
 	// The submit actions
 	echo $output;
 

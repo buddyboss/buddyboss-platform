@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.7.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-07-15 19:08:59+00:00\n"
+"POT-Creation-Date: 2021-07-16 06:28:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3904,7 +3904,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1659 bp-forums/admin/tools.php:1661
 #: bp-forums/admin/tools.php:1733 bp-forums/admin/tools.php:1735
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1857
-#: bp-video/bp-video-filters.php:980
+#: bp-video/bp-video-filters.php:978
 msgid "Complete!"
 msgstr ""
 
@@ -8034,13 +8034,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8962,7 +8962,7 @@ msgid "Download"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:1140 bp-media/bp-media-filters.php:1952
-#: bp-video/bp-video-filters.php:1073
+#: bp-video/bp-video-filters.php:1071
 msgid "File not found"
 msgstr ""
 
@@ -8989,7 +8989,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-document/bp-document-filters.php:1723 bp-media/bp-media-filters.php:2369
-#: bp-video/bp-video-filters.php:1478
+#: bp-video/bp-video-filters.php:1476
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -17768,11 +17768,11 @@ msgstr ""
 msgid "Groups must have a name and a description. Please try again."
 msgstr ""
 
-#: bp-groups/screens/single/admin/edit-details.php:45
+#: bp-groups/screens/single/admin/edit-details.php:46
 msgid "There was an error updating group details. Please try again."
 msgstr ""
 
-#: bp-groups/screens/single/admin/edit-details.php:47
+#: bp-groups/screens/single/admin/edit-details.php:48
 msgid "Group details were successfully updated."
 msgstr ""
 
@@ -24258,7 +24258,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:70
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:901
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:906
 msgid "Promote to co-%s"
 msgstr ""
 
@@ -24489,7 +24489,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:48
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:44
-#: bp-video/bp-video-filters.php:1473
+#: bp-video/bp-video-filters.php:1471
 #. translators: Photos count.
 #. translators: videos
 msgid "%s video"
@@ -26311,42 +26311,42 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:727
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:783
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:732
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:788
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:299
 msgid "Accept"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:754
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:810
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:759
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:815
 msgid "Reject"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:844
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:849
 msgid "Remove Ban"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:863
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:868
 msgid "Kick &amp; Ban"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:892
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:897
 msgid "Promote to %s"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:921
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:926
 msgid "Remove from group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1355
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1360
 msgid "Groups default front page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1373
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1378
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1410
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1415
 msgid "Notify group members of these changes via email"
 msgstr ""
 
@@ -26893,31 +26893,31 @@ msgstr ""
 msgid "All Videos"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:870
+#: bp-video/bp-video-filters.php:868
 msgid "Repair video on the site."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:875
+#: bp-video/bp-video-filters.php:873
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:929
+#: bp-video/bp-video-filters.php:927
 msgid "%s video updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:939
+#: bp-video/bp-video-filters.php:937
 msgid "Video update complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:968
+#: bp-video/bp-video-filters.php:966
 msgid "%s Forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:976
+#: bp-video/bp-video-filters.php:974
 msgid "Forums video privacy updated %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1091
+#: bp-video/bp-video-filters.php:1089
 msgid "Go to video"
 msgstr ""
 
@@ -26933,11 +26933,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4022
+#: bp-video/bp-video-functions.php:4023
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4061
+#: bp-video/bp-video-functions.php:4062
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
@@ -28682,14 +28682,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
