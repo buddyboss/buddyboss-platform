@@ -1746,7 +1746,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @since bbPress (r3802)
 		 */
 		public function redirect_canonical() {
-			
 			// Viewing a single forum
 			if ( bbp_is_single_forum() ) {
 				$forum_id  = get_the_ID();
