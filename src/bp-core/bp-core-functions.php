@@ -4935,11 +4935,13 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['wp_embed']    = true;
 	} else {
 
+		$user_agent = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ), $url );
+
 		// safely get URL and response body.
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'user-agent' => '', // Default value being blocked by Cloudflare
+				'user-agent' => $user_agent, // Default value being blocked by Cloudflare
 			)
 		);
 		$body     = wp_remote_retrieve_body( $response );
