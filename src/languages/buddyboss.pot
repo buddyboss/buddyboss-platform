@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.7.2\n"
+"Project-Id-Version: BuddyBoss Platform 1.7.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-07-15 19:08:59+00:00\n"
+"POT-Creation-Date: 2021-07-16 07:25:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3904,7 +3904,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1659 bp-forums/admin/tools.php:1661
 #: bp-forums/admin/tools.php:1733 bp-forums/admin/tools.php:1735
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1857
-#: bp-video/bp-video-filters.php:980
+#: bp-video/bp-video-filters.php:978
 msgid "Complete!"
 msgstr ""
 
@@ -8962,7 +8962,7 @@ msgid "Download"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:1140 bp-media/bp-media-filters.php:1952
-#: bp-video/bp-video-filters.php:1073
+#: bp-video/bp-video-filters.php:1071
 msgid "File not found"
 msgstr ""
 
@@ -8989,7 +8989,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-document/bp-document-filters.php:1723 bp-media/bp-media-filters.php:2369
-#: bp-video/bp-video-filters.php:1478
+#: bp-video/bp-video-filters.php:1476
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -24489,7 +24489,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:48
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:21
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:44
-#: bp-video/bp-video-filters.php:1473
+#: bp-video/bp-video-filters.php:1471
 #. translators: Photos count.
 #. translators: videos
 msgid "%s video"
@@ -26893,31 +26893,31 @@ msgstr ""
 msgid "All Videos"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:870
+#: bp-video/bp-video-filters.php:868
 msgid "Repair video on the site."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:875
+#: bp-video/bp-video-filters.php:873
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:929
+#: bp-video/bp-video-filters.php:927
 msgid "%s video updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:939
+#: bp-video/bp-video-filters.php:937
 msgid "Video update complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:968
+#: bp-video/bp-video-filters.php:966
 msgid "%s Forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:976
+#: bp-video/bp-video-filters.php:974
 msgid "Forums video privacy updated %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1091
+#: bp-video/bp-video-filters.php:1089
 msgid "Go to video"
 msgstr ""
 
@@ -26933,11 +26933,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4022
+#: bp-video/bp-video-functions.php:4023
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4061
+#: bp-video/bp-video-functions.php:4062
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
