@@ -53,9 +53,6 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Update report button.
-		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
-
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
@@ -124,31 +121,6 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		}
 
 		return $where;
-	}
-
-	/**
-	 * Function to modify button sub item
-	 *
-	 * @since BuddyBoss 1.7.0
-	 *
-	 * @param int $item_id Item id.
-	 *
-	 * @return array
-	 */
-	public function update_button_sub_items( $item_id ) {
-		$video = new BP_Video( $item_id );
-
-		if ( empty( $video->id ) ) {
-			return array();
-		}
-
-		$sub_items = array();
-		if ( bp_is_active( 'activity' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) && ! empty( $video->activity_id ) ) {
-			$sub_items['id']   = $video->activity_id;
-			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
-		}
-
-		return $sub_items;
 	}
 
 	/**

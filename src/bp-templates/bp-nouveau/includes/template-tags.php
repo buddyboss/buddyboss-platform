@@ -1350,12 +1350,6 @@ function bp_nouveau_get_nav_count() {
 			$count_end   = strpos( $nav_item->name, '<', $count_start );
 			$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
 		}
-		if( bp_is_active( 'media' ) ) {
-			$videos_count = BP_Video::total_video_count( bp_displayed_user_id() );
-			if( $nav_item->slug == 'videos' ) {
-				$count = $videos_count;
-			}
-		}
 	}
 
 	/**
