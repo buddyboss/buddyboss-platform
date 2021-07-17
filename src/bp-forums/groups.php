@@ -24,6 +24,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 	 */
 	class BBP_Forums_Group_Extension extends BP_Group_Extension {
 
+		private $forum_id = false;
+
 		/** Methods ***************************************************************/
 
 		/**
@@ -79,62 +81,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			return false;
-		}
-
-		/**
-		 * Nested forum and forum-topic are not associate with group. 
-		 * This method help you to find the group associte forum id for any level of forum and forum-topic.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @uses get_forum_id_from_froum_post_name() To get group associate forum id 
-		 *       by forum post_name for any level of childs forum.
-		 * @uses get_forum_id_from_topic_post_name() TO get group associate forum id 
-		 *       by topic post_name for any level of child forum-topic.
-		 *
-		 * @return int
-		 */
-		public function display_forum_id() {
-
-			$name     = get_query_var( 'name' );
-			$actions  = bp_action_variables();
-			$forum_id = false;
-
-			$forum_ids        = bbp_get_group_forum_ids( bp_get_current_group_id() );
-			$default_forum_id = array_shift( $forum_ids );
-
-			if ( empty( $name ) || empty( $actions ) || ! in_array( $name, $actions, true ) ) {
-				return $default_forum_id;
-			}
-
-			$query = new WP_Query( array(
-				'name' => $name,
-				'post_type' => array( bbp_get_forum_post_type(), bbp_get_topic_post_type() )
-			) );
-
-			$post = $query->post;
-
-			if ( empty( $post->ID ) ) {
-				return false;
-			}
-
-			if( bbp_is_forum( $post ) ) {
-				$forum_id = empty( $post->ID ) ? false : $post->ID;
-			}
-
-			if( bbp_is_topic( $post ) ) {
-				$forum_id = bbp_get_topic_forum_id( $post->ID );
-
-				$forum_id = empty( $forum_id ) ? false : $forum_id;
-			}
-
-			$forum_in_current_group = $this->forum_associate_current_group( $forum_id );
-
-			if ( empty( $forum_in_current_group ) ) {
-				return $default_forum_id;
-			}
-
-			return empty( $forum_id ) ? $default_forum_id : $forum_id;
 		}
 
 		/**
@@ -245,48 +191,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				add_filter( 'bbp_current_user_can_access_create_topic_form', array( $this, 'form_permissions' ) );
 				add_filter( 'bbp_current_user_can_access_create_reply_form', array( $this, 'form_permissions' ) );
 			}
-
-			// Child forums are not associate with group but its parent forum associate with group.
-			add_filter( 'bbp_has_forums', array( $this, 'is_forum_associate_with_group' ), 10 ,2 );
-		}
-
-		/**
-		 * To check the child forum associate with current group or not.
-		 * Child forums are not associate with group but its parent forum associate with group.
-		 * 
-		 * @since BuddyBoss 1.5.9
-		 *
-		 * @param Object $post
-		 * @param Object $forum_query
-		 * @uses  bp_is_group_single() 
-		 * @uses  bbp_get_group_forum_ids()
-		 * @uses  bbp_get_forum()
-		 *
-		 * @return Boolean
-		 */
-		public function is_forum_associate_with_group( $post, $forum_query ) {
-			global $wp_query, $groups_template;
-
-			if ( ! bp_is_group_single() || empty( $groups_template ) ) {
-				return $post;
-			}
-
-			$group_id = empty( $groups_template->group ) ? false : $groups_template->group->id;
-
-			if ( empty( $group_id ) ) {
-				return $post;
-			}
-
-			$forum_ids = bbp_get_group_forum_ids( $group_id );
-
-			if ( empty( $forum_ids ) ) {
-				return $post;
-			}
-
-			$forum_id = array_shift( $forum_ids );
-			$forum    = bbp_get_forum( $forum_id );
-
-			return empty( $forum ) ? false : true;
 		}
 
 		/**
@@ -1054,7 +958,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Forum data.
 			$forum_action = bp_action_variable( $offset );
-			$forum_id     = $this->display_forum_id();
+			$forum_id     = $this->forum_id;
 			$actions      = array( 'page', $this->topic_slug, $this->reply_slug );
 
 			// Unknown forum action set as a page.
@@ -1716,27 +1620,102 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		public function forum_redirect_canonical() {
-			if ( empty( bp_get_current_group_id() || ! empty( bp_action_variables() ) ) ) {
+			// No need to redirect until it does not navigate to group discussion tab.
+			if ( empty( bp_get_current_group_id() ) || ! bp_is_current_action( $this->slug ) ) {
 				return;
 			}
 
-			$forum_id = bbp_get_group_forum_ids( bp_get_current_group_id() );
-			$forum_id = empty( $forum_id ) ? false : array_shift( $forum_id );
+			$group      = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
+			$group_link = trailingslashit( bp_get_group_permalink( $group ) );
+			$forum_id   = bbp_get_group_forum_ids( bp_get_current_group_id() );
+			$forum_id   = empty( $forum_id ) ? false : array_shift( $forum_id );
+			$forum      = get_post( $forum_id );
+			$actions    = bp_action_variables();
+			$actions    = empty( $actions ) ? array() : $actions;
+			$post_name  = get_query_var( 'name' );
 
-			if ( $this->slug !== get_query_var( 'name' ) || empty( $forum_id ) ) {
-				return;
+			// When navigate to group from.
+			if ( ! bp_is_group_forum_topic() ) {
+
+				if ( empty( $actions ) ) {
+					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $forum->post_name );
+					bp_core_redirect( $redirect_to );
+				}
+
+				$last_path_post = new WP_Query( array( 
+					'name'      => $post_name, 
+					'post_type' => bbp_get_forum_post_type(),
+					'orderby'   => 'ID',
+					'order'     => 'ASC', 
+				) );
+
+				if ( empty( $last_path_post->post ) ) {
+					bbp_set_404();
+					return;
+				}
+
+				$uri      = implode( '/', $actions );
+				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
+				
+				if ( empty( $uri_post->ID ) ) {
+					$uri         = $this->get_page_uri( $forum_id, $last_path_post->post );
+					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $uri );
+					
+					bp_core_redirect( $redirect_to );
+				}
+
+				$this->forum_id = $uri_post->ID;
 			}
 
-			$forum = get_post( $forum_id );
-			if ( ! bbp_is_forum( $forum ) ) {
-				return;
+			if ( bp_is_group_forum_topic() ) {
+				$uri_post = get_page_by_path( $post_name, 'OBJECT', bbp_get_topic_post_type() );
+
+				if ( empty( $uri_post ) ) {
+					bbp_set_404();
+					return;
+				}
+
+				$this->forum_id = bbp_get_topic_forum_id( $uri_post->ID );
+			}			
+		}
+
+		/**
+		 * Build the URI path for a page.
+		 *
+		 * Sub pages will be in the "directory" under the parent page post name.
+		 *
+		 * @since 1.5.0
+		 * @since 4.6.0 The `$page` parameter was made optional.
+		 *
+		 * @param WP_Post|object|int $page Optional. Page ID or WP_Post object. Default is global $post.
+		 * @return string|false Page URI, false on error.
+		 */
+		public function get_page_uri( $main_parent, $page = 0 ) {
+			if ( ! $page instanceof WP_Post ) {
+				$page = get_post( $page );
 			}
 
-			$group       = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
-			$group_link  = trailingslashit( bp_get_group_permalink( $group ) );
-			$redirect_to = trailingslashit( $group_link . '/' . $this->slug . '/' . $forum->post_name );
+			if ( ! $page ) {
+				return false;
+			}
 
-			bp_core_redirect( $redirect_to );
+			$uri = $page->post_name;
+
+			if ( ! in_array( $main_parent, $page->ancestors ) ) {
+				return false;
+			}
+
+			foreach ( $page->ancestors as $parent ) {
+				if ( $main_parent > $parent  ) {
+					continue;
+				}
+				$parent = get_post( $parent );
+				if ( $parent && $parent->post_name ) {
+					$uri = $parent->post_name . '/' . $uri;
+				}
+			}
+
+			return $uri;
 		}
 
 		/**
