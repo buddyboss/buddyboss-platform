@@ -24,8 +24,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 	 */
 	class BBP_Forums_Group_Extension extends BP_Group_Extension {
 
-		private $forum_id = false;
-
 		/** Methods ***************************************************************/
 
 		/**
@@ -90,6 +88,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 */
 		private function setup_variables() {
 
+			// Group forum id.
+			$this->forum_id = false;
+			
 			// Component Name
 			$this->name          = __( 'Forum', 'buddyboss' );
 			$this->nav_item_name = __( 'Discussions', 'buddyboss' );
@@ -1638,7 +1639,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			if ( ! bp_is_group_forum_topic() ) {
 
 				if ( empty( $actions ) ) {
-					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $forum->post_name );
+					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum ) );
 					bp_core_redirect( $redirect_to );
 				}
 
@@ -1658,25 +1659,69 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
 				
 				if ( empty( $uri_post->ID ) ) {
-					$uri         = $this->get_page_uri( $forum_id, $last_path_post->post );
+					$uri         = get_page_uri( $last_path_post->post );
 					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $uri );
 					
 					bp_core_redirect( $redirect_to );
 				}
 
-				$this->forum_id = $uri_post->ID;
+				$this->forum_id = $this->forum_associate_group( $uri_post->ID ) ? $uri_post->ID : false;
 			}
 
 			if ( bp_is_group_forum_topic() ) {
-				$uri_post = get_page_by_path( $post_name, 'OBJECT', bbp_get_topic_post_type() );
+				$query = new WP_Query( array( 
+					'name'      => $post_name, 
+					'post_type' => bbp_get_topic_post_type(),
+					'orderby'   => 'ID',
+					'order'     => 'ASC', 
+				) );
 
-				if ( empty( $uri_post ) ) {
+				$topic = $query->post;
+
+				if ( empty( $topic ) ) {
 					bbp_set_404();
 					return;
 				}
-
-				$this->forum_id = bbp_get_topic_forum_id( $uri_post->ID );
+				
+				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
+				$this->forum_id = $this->forum_associate_group( $topic_forum_id ) ? $topic_forum_id : false;
 			}			
+		}
+
+				/**
+		 * Nested forum are not associate with group. This method help you to find the nested forum group id.
+		 *
+		 * @since BuddyBoss 1.5.9
+		 *
+		 * @param int $forum_id Forum id.
+		 *
+		 * @uses bbp_get_forum() To get forum.
+		 * @uses bbp_get_forum_group_ids() To get forum gorup id.
+		 *
+		 * @return array/boolean
+		 */
+		public function forum_associate_group( $forum_id ) {
+			if ( empty( $forum_id ) ) {
+				return false;
+			}
+
+			$forum = bbp_get_forum( $forum_id );
+ 
+			if ( empty( $forum ) ) {
+				return false;
+			}
+
+			$forum_id = bbp_get_group_forum_ids( bp_get_current_group_id() );
+			$forum_id = array_shift( $forum_id );
+			// Get all parent ids.
+			$parents = $forum->ancestors;
+			array_unshift( $parents, $forum->ID );
+			
+			if ( in_array( $forum_id, $parents, true ) ) {
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
