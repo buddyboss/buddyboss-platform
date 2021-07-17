@@ -1682,7 +1682,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bbp_set_404();
 					return;
 				}
-				
+
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
 				$this->forum_id = $this->forum_associate_group( $topic_forum_id ) ? $topic_forum_id : false;
 			}			
@@ -1722,45 +1722,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			return false;
-		}
-
-		/**
-		 * Build the URI path for a page.
-		 *
-		 * Sub pages will be in the "directory" under the parent page post name.
-		 *
-		 * @since 1.5.0
-		 * @since 4.6.0 The `$page` parameter was made optional.
-		 *
-		 * @param WP_Post|object|int $page Optional. Page ID or WP_Post object. Default is global $post.
-		 * @return string|false Page URI, false on error.
-		 */
-		public function get_page_uri( $main_parent, $page = 0 ) {
-			if ( ! $page instanceof WP_Post ) {
-				$page = get_post( $page );
-			}
-
-			if ( ! $page ) {
-				return false;
-			}
-
-			$uri = $page->post_name;
-
-			if ( ! in_array( $main_parent, $page->ancestors ) ) {
-				return false;
-			}
-
-			foreach ( $page->ancestors as $parent ) {
-				if ( $main_parent > $parent  ) {
-					continue;
-				}
-				$parent = get_post( $parent );
-				if ( $parent && $parent->post_name ) {
-					$uri = $parent->post_name . '/' . $uri;
-				}
-			}
-
-			return $uri;
 		}
 
 		/**
