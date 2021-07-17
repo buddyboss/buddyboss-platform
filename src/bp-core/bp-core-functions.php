@@ -4936,12 +4936,7 @@ function bp_core_parse_url( $url ) {
 	} else {
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get(
-			$url,
-			array(
-				'user-agent' => '', // Default value being blocked by Cloudflare
-			)
-		);
+		$response = wp_safe_remote_get( $url );
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty
