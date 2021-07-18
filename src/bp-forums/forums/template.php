@@ -2762,18 +2762,15 @@ function bb_forum_visibility_disabled( $forum_id ) {
 		return false;
 	} 
 
-	// Get all parent forum id's from child forum.
-	$sql = "SELECT @pv AS _id, (SELECT @pv := post_parent FROM {$wpdb->posts} WHERE id = _id ) AS parent
-		FROM 
-			( SELECT @pv := %d ) current_forum, 
-			( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) posts
-		where @pv <> 0";
+	$forum   = bbp_get_forum( $forum_id );
+	// Get all parent ids.
+	$parents = $forum->ancestors;
 
-	// Run query for getting all parent forum ids from child forum.
-	$parent_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, $forum_id , bbp_get_forum_post_type() ) );
-
-	foreach ( $parent_forum_ids as $parent_forum_id ) {
-		$group_ids = bbp_get_forum_group_ids( $parent_forum_id );
+	// Set parameter id forum.
+	array_unshift( $parents, $forum_id );
+	
+	foreach ( $parents as $parent ) {
+		$group_ids = bbp_get_forum_group_ids( $parent );
 
 		if ( ! empty( $group_ids ) ) {
 			return true;

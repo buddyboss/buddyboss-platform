@@ -1592,7 +1592,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 				
 				$uri = get_query_var( 'forum' );
-
+				
 				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
 				
 				if ( empty( $uri_post->ID ) ) {
