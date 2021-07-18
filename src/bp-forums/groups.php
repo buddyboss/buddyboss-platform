@@ -73,7 +73,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			foreach ( $parents as $parent ) {
 				$group_ids = bbp_get_forum_group_ids( $parent );
 
-				if ( ! empty( $group_ids ) && in_array( bp_get_current_group_id(), $group_ids, true ) ) {
+				if ( ! empty( $group_ids ) ) {
 					return $group_ids;
 				}
 			}
@@ -342,63 +342,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
 					<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 					<?php
-						// Fiter forum query for set the selected forum (Group associate forum).
-						add_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
-
 						bbp_dropdown(
 							array(
-								'select_id'   => 'bbp_group_forum_id',
-								'show_none'   => __( '(No Forum)', 'buddyboss' ),
-								'selected'    => $forum_id,
-								'post_parent' => 0,
-								'meta_query'  => array(
-									array(
-										'relation' => 'OR',
-
-										// If the forum is not associate with any group.              	
-										array(
-											'key'     => '_bbp_group_ids',
-											'value'   => '',
-											'compare' => 'NOT EXISTS',
-										),
-
-										// If the forum metadata contain group with empty array.
-										array(
-											'key'     => '_bbp_group_ids',
-											'value'   => 'a:0:{}',
-											'compare' => '=',
-										),
-
-										// If the forum metadata contain group with empty value.
-										array(
-											'key'     => '_bbp_group_ids',
-											'value'   => '',
-											'compare' => '=',
-										),
-									),
-									array(
-										'relation' => 'OR',
-
-										// Exclude the forum if its type category.
-										array(
-											'key'     => '_bbp_forum_type',
-											'value'   => 'category',
-											'compare' => '!=',
-										),
-
-										// Include the forum if its category metadata not exists.
-										array(
-											'key'     => '_bbp_forum_type',
-											'value'   => '',
-											'compare' => 'NOT EXISTS',
-										),
-									),
-								),
+								'select_id' => 'bbp_group_forum_id',
+								'show_none' => __( '(No Forum)', 'buddyboss' ),
+								'selected'  => $forum_id,
 							)
 						);
-
-						// Remove forum query filters to prevent the conflict with others queries.
-						remove_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
 					?>
 				</div>
 			<?php endif; ?>
@@ -484,10 +434,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$forum_groups = get_post_meta( $forum_id, '_bbp_group_ids', true );
 
 				// Child forum do not allow to associate with other groups.
-				if ( ! empty( (int) $forum->post_parent ) ) {
-					bp_core_add_message( __( 'Child forums are not allowed to associate with other groups', 'buddyboss' ), 'error' );
-					continue;
-				}
+				// if ( ! empty( (int) $forum->post_parent ) ) {
+				// 	bp_core_add_message( __( 'Child forums are not allowed to associate with other groups', 'buddyboss' ), 'error' );
+				// 	continue;
+				// }
 
 				// Category type forum do not allow to associate with other groups.
 				if ( $forum_type == 'category' ) {
@@ -1426,8 +1376,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Get group ID's for this forum
-			$group_ids = bbp_get_forum_group_ids( $forum_id );
-			$group_ids = empty( $group_ids ) ? array( bp_get_current_group_id() ) : $group_ids;
+			$group_ids = $this->forum_associate_current_group( $forum_id );
+			//$group_ids = empty( $group_ids ) ? array( bp_get_current_group_id() ) : $group_ids;
 
 			// Bail if the post isn't associated with a group
 			if ( empty( $group_ids ) ) {
@@ -1621,10 +1571,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id   = empty( $forum_id ) ? false : array_shift( $forum_id );
 			$forum      = get_post( $forum_id );
 			$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
-
+			
 			// When navigate to group from.
 			if ( ! bp_is_group_forum_topic() ) {
-				
 				if ( empty( bp_action_variables() ) ) {
 					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum ) . '/' . $page );
 					bp_core_redirect( $redirect_to );
