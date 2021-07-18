@@ -358,3 +358,20 @@ function bbp_set_platform_tab_submenu_active( $parent_file ) {
 	}
 	return $parent_file;
 }
+
+add_action( 'init', 'bbp_group_add_rewrite_rule' );
+
+function bbp_group_add_rewrite_rule() {
+	add_rewrite_rule( 'groups/([^/]+)/?$', 'index.php?post_type=forum&group_page=$matches[1]', 'top' );
+	add_rewrite_rule( 'groups/([^/]+)/forum/(.+?)/page/?([0-9]{1,})/?$', 'index.php?group_page=$matches[1]&forum=$matches[2]&paged=$matches[3]', 'top' );
+	add_rewrite_rule( 'groups/([^/]+)/forum/(.+?)(?:/([0-9]+))?/?$', 'index.php?group_page=$matches[1]&forum=$matches[2]&paged=$matches[3]', 'top' );
+}
+
+add_filter( 'query_vars', 'bbp_set_query_vars' );
+
+function bbp_set_query_vars( $query_vars ) {
+	$query_vars[] = 'group_page';
+	$query_vars[] = 'forum';
+	$query_vars[] = 'paged';
+	return $query_vars;
+}

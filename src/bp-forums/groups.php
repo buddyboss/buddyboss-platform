@@ -123,7 +123,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @since bbPress (r4552)
 		 */
 		private function setup_actions() {
-
+			//add_action( 'template_redirect', 'redirect_canonical' );
 			// Possibly redirect
 			add_action( 'bbp_template_redirect', array( $this, 'redirect_canonical' ) );
 
@@ -147,6 +147,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Added notification settings for forums.
 			add_action( 'bp_notification_settings', array( $this, 'forums_notification_settings' ), 11 );
+
 		}
 
 		/**
@@ -191,7 +192,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// Group member permissions to view the topic and reply forms
 				add_filter( 'bbp_current_user_can_access_create_topic_form', array( $this, 'form_permissions' ) );
 				add_filter( 'bbp_current_user_can_access_create_reply_form', array( $this, 'form_permissions' ) );
-			}
+			}	
 		}
 
 		/**
@@ -1395,7 +1396,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return string
 		 */
 		private function maybe_map_permalink_to_group( $post_id = 0, $url = false ) {
-			global $groups_template;
 
 			switch ( get_post_type( $post_id ) ) {
 
@@ -1416,7 +1416,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// Forum
 				case bbp_get_forum_post_type():
 					$forum_id = $post_id;
-					$url_end  = $this->get_url_end_by( $forum_id );
+					$url_end  = get_page_uri( bbp_get_forum( $forum_id ) );
 					break;
 
 				// Unknown
@@ -1425,8 +1425,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				break;
 			}
 
-			// Searching group id nested leve of child to parent forum.
-			$group_ids =  $this->forum_associate_current_group( $forum_id );
+			// Get group ID's for this forum
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = empty( $group_ids ) ? array( bp_get_current_group_id() ) : $group_ids;
 
 			// Bail if the post isn't associated with a group
 			if ( empty( $group_ids ) ) {
@@ -1437,21 +1438,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return $url;
 			}
 
-			/**
-			 * For backward compatibility,
-			 * Get the currrent group id from front-end, when same forum associte with multiple group.
-			 */
-			if ( ! empty( $groups_template ) && in_array( $groups_template->group->id, $group_ids ) ) {
-				$group_id = bp_get_group_id();
-			} else {
-				/**
-				 * For the admin panel dashboard forum lists.
-				 * From the forum lists there is no current group, 
-				 * So get the first group id when same forum associate with multiple gorup. 
-				 */
-				$group_id = $group_ids[0];
-			}
-
+			// @todo Multiple group forums/forum groups
+			$group_id = $group_ids[0];
 			$group    = groups_get_group( array( 'group_id' => $group_id ) );
 
 			if ( bp_is_group_admin_screen( $this->slug ) ) {
@@ -1621,7 +1609,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		public function forum_redirect_canonical() {
-			// No need to redirect until it does not navigate to group discussion tab.
+			global $wp_query;
+			 
 			if ( empty( bp_get_current_group_id() ) || ! bp_is_current_action( $this->slug ) ) {
 				return;
 			}
@@ -1631,20 +1620,18 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id   = bbp_get_group_forum_ids( bp_get_current_group_id() );
 			$forum_id   = empty( $forum_id ) ? false : array_shift( $forum_id );
 			$forum      = get_post( $forum_id );
-			$actions    = bp_action_variables();
-			$actions    = empty( $actions ) ? array() : $actions;
-			$post_name  = get_query_var( 'name' );
+			$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
 
 			// When navigate to group from.
 			if ( ! bp_is_group_forum_topic() ) {
-
-				if ( empty( $actions ) ) {
-					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum ) );
+				
+				if ( empty( bp_action_variables() ) ) {
+					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum ) . '/' . $page );
 					bp_core_redirect( $redirect_to );
 				}
 
 				$last_path_post = new WP_Query( array( 
-					'name'      => $post_name, 
+					'name'      => get_query_var( 'name' ), 
 					'post_type' => bbp_get_forum_post_type(),
 					'orderby'   => 'ID',
 					'order'     => 'ASC', 
@@ -1654,14 +1641,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bbp_set_404();
 					return;
 				}
+				
+				$uri = get_query_var( 'forum' );
 
-				$uri      = implode( '/', $actions );
 				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
 				
 				if ( empty( $uri_post->ID ) ) {
 					$uri         = get_page_uri( $last_path_post->post );
-					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $uri );
-					
+					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $uri . '/' . $page );
+
 					bp_core_redirect( $redirect_to );
 				}
 
@@ -1669,8 +1657,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			if ( bp_is_group_forum_topic() ) {
+				
 				$query = new WP_Query( array( 
-					'name'      => $post_name, 
+					'name'      => get_query_var( 'name' ), 
 					'post_type' => bbp_get_topic_post_type(),
 					'orderby'   => 'ID',
 					'order'     => 'ASC', 
@@ -1688,7 +1677,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}			
 		}
 
-				/**
+		/**
 		 * Nested forum are not associate with group. This method help you to find the nested forum group id.
 		 *
 		 * @since BuddyBoss 1.5.9
