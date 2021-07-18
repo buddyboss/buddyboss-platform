@@ -911,10 +911,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Forum data.
 			$forum_action = bp_action_variable( $offset );
 			$forum_id     = $this->forum_id;
-			$actions      = array( 'page', $this->topic_slug, $this->reply_slug );
+			$default_actions      = array( 'page', $this->topic_slug, $this->reply_slug );
 
 			// Unknown forum action set as a page.
-			if ( ! empty( $forum_action ) && ! in_array( $forum_action, $actions, true ) ) {
+			if ( ! empty( $forum_action ) && ! in_array( $forum_action, $default_actions, true ) ) {
 				$forum_action = false;
 			}
 
@@ -1606,9 +1606,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			if ( bp_is_group_forum_topic() ) {
-				
 				$query = new WP_Query( array( 
-					'name'      => get_query_var( 'name' ), 
+					'name'      => bp_action_variable( 1 ), 
 					'post_type' => bbp_get_topic_post_type(),
 					'orderby'   => 'ID',
 					'order'     => 'ASC', 
@@ -1620,7 +1619,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bbp_set_404();
 					return;
 				}
-
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
 				$this->forum_id = $this->forum_associate_group( $topic_forum_id ) ? $topic_forum_id : false;
 			}			
