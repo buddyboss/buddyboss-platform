@@ -1848,7 +1848,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 	}
 
 	if ( ! $args ) {
-		$args = array( 'classes' => array( 'bb-activity-comment-more-options' ) );
+		$args = array( 'classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
 	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
