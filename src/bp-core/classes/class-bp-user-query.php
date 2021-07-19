@@ -295,7 +295,7 @@ class BP_User_Query {
 			case 'random':
 				$this->uid_name  = 'ID';
 				$this->uid_table = $wpdb->users;
-				$sql['select']   = $wpdb->prepare( "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u" );
+				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u ";
 				$sql['where'][]  = ' u.user_status = 0 ';
 
 				if ( 'newest' == $type ) {
