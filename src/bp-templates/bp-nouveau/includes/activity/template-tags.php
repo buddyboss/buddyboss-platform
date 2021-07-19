@@ -784,222 +784,6 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 }
 
 /**
- * Output the action buttons for the activity comments
- *
- * @since BuddyPress 3.0.0
- *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
- */
-function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
-	$output = join( ' ', bb_nouveau_get_activity_comment_bubble_buttons( $args ) );
-
-	ob_start();
-	/**
-	 * Fires after the defualt comment action options display.
-	 *
-	 * @since BuddyPress 1.6.0
-	 */
-	do_action( 'bp_activity_comment_top_options' );
-
-	$output      .= ob_get_clean();
-	$has_content = trim( $output, ' ' );
-
-	if ( ! $has_content ) {
-		return;
-	}
-
-	if ( ! $args ) {
-		$args = array( 'classes' => array( 'bb-activity-comment-more-options' ) );
-	}
-
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
-}
-
-/**
- * Get the top action buttons for the activity comments
- *
- * @since BuddyBoss X.X.X
- *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
- *
- * @return array
- */
-function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
-
-	$buttons = array();
-
-	if ( ! isset( $GLOBALS['activities_template'] ) ) {
-		return $buttons;
-	}
-
-	$activity_comment_id = bp_get_activity_comment_id();
-	$activity_id         = bp_get_activity_id();
-
-	if ( ! $activity_comment_id || ! $activity_id ) {
-		return $buttons;
-	}
-
-	/*
-	 * If the 'container' is set to 'ul'
-	 * set a var $parent_element to li
-	 * otherwise simply pass any value found in args
-	 * or set var false.
-	 */
-	if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
-		$parent_element = 'li';
-	} elseif ( ! empty( $args['parent_element'] ) ) {
-		$parent_element = $args['parent_element'];
-	} else {
-		$parent_element = false;
-	}
-
-	$parent_attr = ( ! empty( $args['parent_attr'] ) ) ? $args['parent_attr'] : array();
-
-	/*
-	 * If we have an arg value for $button_element passed through
-	 * use it to default all the $buttons['button_element'] values
-	 * otherwise default to 'a' (anchor).
-	 */
-	if ( ! empty( $args['button_element'] ) ) {
-		$button_element = $args['button_element'];
-	} else {
-		$button_element = 'a';
-	}
-
-	$buttons = array();
-
-	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
-			array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => $parent_attr,
-				'button_element' => $button_element,
-			)
-		);
-	}
-
-	// If button element set add nonce link to data-attr attr
-	if ( 'button' === $button_element ) {
-		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );
-		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
-	} else {
-		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
-		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
-	}
-
-	// Add the Spam Button if supported.
-	if ( bp_is_akismet_active() && isset( buddypress()->activity->akismet ) && bp_activity_user_can_mark_spam() ) {
-		$buttons['activity_comment_spam'] = array(
-			'id'                => 'activity_comment_spam',
-			'component'         => 'activity',
-			'must_be_logged_in' => true,
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'button_element'    => $button_element,
-			'link_text'         => __( 'Spam', 'buddyboss' ),
-			'button_attr'       => array(
-				'id'    => "activity_make_spam_{$activity_comment_id}",
-				'class' => 'bp-secondary-action spam-activity-comment confirm',
-				'rel'   => 'nofollow',
-			),
-		);
-
-		// If button element set add nonce link to data-attr attr.
-		if ( 'button' === $button_element ) {
-			$data_element = 'data-bp-act-spam-nonce';
-		} else {
-			$data_element = 'href';
-		}
-
-		$buttons['activity_comment_spam']['button_attr'][ $data_element ] = wp_nonce_url(
-			bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . $activity_comment_id . '/?cid=' . $activity_comment_id,
-			'bp_activity_akismet_spam_' . $activity_comment_id
-		);
-	}
-
-	$buttons['activity_comment_delete'] = array(
-		'id'                => 'activity_comment_delete',
-		'component'         => 'activity',
-		'must_be_logged_in' => true,
-		'parent_element'    => $parent_element,
-		'parent_attr'       => $parent_attr,
-		'button_element'    => $button_element,
-		'link_text'         => __( 'Delete', 'buddyboss' ),
-		'button_attr'       => array(
-			'class' => 'delete acomment-delete confirm bp-secondary-action',
-			'rel'   => 'nofollow',
-		),
-	);
-
-	// If button element set add nonce link to data-attr attr.
-	if ( 'button' === $button_element ) {
-		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
-	} else {
-		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
-	}
-
-	/**
-	 * Filter to add your buttons, use the position argument to choose where to insert it.
-	 *
-	 * @since BuddyPress X.X.X
-	 *
-	 * @param array $buttons             The list of buttons.
-	 * @param int   $activity_comment_id The current activity comment ID.
-	 * @param int   $activity_id         The current activity ID.
-	 */
-	$buttons_group = apply_filters( 'bb_nouveau_get_activity_comment_bubble_buttons', $buttons, $activity_comment_id, $activity_id );
-
-	if ( ! $buttons_group ) {
-		return $buttons;
-	}
-
-	// It's the first comment of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->activity->comment_buttons ) || ! is_a( bp_nouveau()->activity->comment_buttons, 'BP_Buttons_Group' ) ) {
-		$sort                                   = true;
-		bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons_group );
-
-		// It's not the first comment, the order is set, we simply need to update the Buttons Group.
-	} else {
-		$sort = false;
-		bp_nouveau()->activity->comment_buttons->update( $buttons_group );
-	}
-
-	$return = bp_nouveau()->activity->comment_buttons->get( $sort );
-
-	if ( ! $return ) {
-		return array();
-	}
-
-	/**
-	 * If there was an activity of the user before one af another
-	 * user as we're updating buttons, we need to unset the delete link
-	 */
-	if ( ! bp_activity_user_can_delete() ) {
-		unset( $return['activity_comment_delete'] );
-	}
-
-	/**
-	 * Leave a chance to adjust the $return
-	 *
-	 * @since BuddyPress 3.0.0
-	 *
-	 * @param array $return              The list of buttons ordered.
-	 * @param int   $activity_comment_id The current activity comment ID.
-	 * @param int   $activity_id         The current activity ID.
-	 */
-	do_action_ref_array(
-		'bb_nouveau_return_activity_comment_top_buttons',
-		array(
-			&$return,
-			$activity_comment_id,
-			$activity_id,
-		)
-	);
-
-	return $return;
-}
-
-/**
  * Get the action buttons for the activity comments
  *
  * @since BuddyPress 3.0.0
@@ -1111,10 +895,6 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	 */
 	if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
 		unset( $return['activity_comment_reply'] );
-	}
-
-	if ( isset( $return['activity_comment_spam'] ) && ( ! bp_activity_current_comment() || ! in_array( bp_activity_current_comment()->type, BP_Akismet::get_activity_types(), true ) ) ) {
-		unset( $return['activity_comment_spam'] );
 	}
 
 	/**
@@ -2038,6 +1818,194 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	 * @param int   $activity_id The current activity ID.
 	 */
 	do_action_ref_array( 'bb_nouveau_return_activity_entry_bubble_buttons', array( &$return, $activity_id ) );
+
+	return $return;
+}
+
+/**
+ * Output the action buttons for the activity comments
+ *
+ * @since BuddyPress X.X.X
+ *
+ * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
+	$output = join( ' ', bb_nouveau_get_activity_comment_bubble_buttons( $args ) );
+
+	ob_start();
+	/**
+	 * Fires after the default comment action options display.
+	 *
+	 * @since BuddyPress 1.6.0
+	 */
+	do_action( 'bp_activity_comment_bubble_options' );
+
+	$output      .= ob_get_clean();
+	$has_content = trim( $output, ' ' );
+
+	if ( ! $has_content ) {
+		return;
+	}
+
+	if ( ! $args ) {
+		$args = array( 'classes' => array( 'bb-activity-comment-more-options' ) );
+	}
+
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
+ * Get the top action buttons for the activity comments
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ *
+ * @return array
+ */
+function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
+
+	$buttons = array();
+
+	if ( ! isset( $GLOBALS['activities_template'] ) ) {
+		return $buttons;
+	}
+
+	$activity_comment_id = bp_get_activity_comment_id();
+	$activity_id         = bp_get_activity_id();
+
+	if ( ! $activity_comment_id || ! $activity_id ) {
+		return $buttons;
+	}
+
+	/*
+	 * If the 'container' is set to 'ul'
+	 * set a var $parent_element to li
+	 * otherwise simply pass any value found in args
+	 * or set var false.
+	 */
+	if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
+		$parent_element = 'li';
+	} elseif ( ! empty( $args['parent_element'] ) ) {
+		$parent_element = $args['parent_element'];
+	} else {
+		$parent_element = false;
+	}
+
+	$parent_attr = ( ! empty( $args['parent_attr'] ) ) ? $args['parent_attr'] : array();
+
+	/*
+	 * If we have an arg value for $button_element passed through
+	 * use it to default all the $buttons['button_element'] values
+	 * otherwise default to 'a' (anchor).
+	 */
+	if ( ! empty( $args['button_element'] ) ) {
+		$button_element = $args['button_element'];
+	} else {
+		$button_element = 'a';
+	}
+
+	$buttons = array();
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
+			array(
+				'parent_element' => $parent_element,
+				'parent_attr'    => $parent_attr,
+				'button_element' => $button_element,
+			)
+		);
+	}
+
+	// If button element set add nonce link to data-attr attr
+	if ( 'button' === $button_element ) {
+		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );
+		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
+	} else {
+		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
+		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
+	}
+
+	$buttons['activity_comment_delete'] = array(
+		'id'                => 'activity_comment_delete',
+		'component'         => 'activity',
+		'must_be_logged_in' => true,
+		'parent_element'    => $parent_element,
+		'parent_attr'       => $parent_attr,
+		'button_element'    => $button_element,
+		'link_text'         => __( 'Delete', 'buddyboss' ),
+		'button_attr'       => array(
+			'class' => 'delete acomment-delete confirm bp-secondary-action',
+			'rel'   => 'nofollow',
+		),
+	);
+
+	// If button element set add nonce link to data-attr attr.
+	if ( 'button' === $button_element ) {
+		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
+	} else {
+		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
+	}
+
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress X.X.X
+	 *
+	 * @param array $buttons             The list of buttons.
+	 * @param int   $activity_comment_id The current activity comment ID.
+	 * @param int   $activity_id         The current activity ID.
+	 */
+	$buttons_group = apply_filters( 'bb_nouveau_get_activity_comment_bubble_buttons', $buttons, $activity_comment_id, $activity_id );
+
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
+
+	// It's the first comment of the loop, so build the Group and sort it.
+	if ( ! isset( bp_nouveau()->activity->comment_buttons ) || ! is_a( bp_nouveau()->activity->comment_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                                   = true;
+		bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons_group );
+
+		// It's not the first comment, the order is set, we simply need to update the Buttons Group.
+	} else {
+		$sort = false;
+		bp_nouveau()->activity->comment_buttons->update( $buttons_group );
+	}
+
+	$return = bp_nouveau()->activity->comment_buttons->get( $sort );
+
+	if ( ! $return ) {
+		return array();
+	}
+
+	/**
+	 * If there was an activity of the user before one af another
+	 * user as we're updating buttons, we need to unset the delete link
+	 */
+	if ( ! bp_activity_user_can_delete() ) {
+		unset( $return['activity_comment_delete'] );
+	}
+
+	/**
+	 * Leave a chance to adjust the $return
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array $return              The list of buttons ordered.
+	 * @param int   $activity_comment_id The current activity comment ID.
+	 * @param int   $activity_id         The current activity ID.
+	 */
+	do_action_ref_array(
+		'bb_nouveau_return_activity_comment_bubble_buttons',
+		array(
+			&$return,
+			$activity_comment_id,
+			$activity_id,
+		)
+	);
 
 	return $return;
 }
