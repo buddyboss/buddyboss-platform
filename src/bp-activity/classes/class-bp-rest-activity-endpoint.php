@@ -1182,7 +1182,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$activities_template                            = new \stdClass();
 		$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 		$activities_template->activity                  = $activity;
-		
+		$activities_template->in_the_loop               = true;
+
 		// Remove feature image from content from the activity feed which added last in the content.
 		$blog_id = '';
 		if ( 'blogs' === $activity->component && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
@@ -1254,14 +1255,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $schema['properties']['user_avatar'] ) ) {
 			$data['user_avatar'] = array(
-				'full' => bp_core_fetch_avatar(
+				'full'  => bp_core_fetch_avatar(
 					array(
 						'item_id' => $activity->user_id,
 						'html'    => false,
 						'type'    => 'full',
 					)
 				),
-
 				'thumb' => bp_core_fetch_avatar(
 					array(
 						'item_id' => $activity->user_id,
@@ -1470,9 +1470,22 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-
 			$links['group'] = array(
 				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, buddypress()->groups->id, $activity->item_id ) ),
+				'embeddable' => true,
+			);
+		}
+
+		if ( 'bbp_topic_create' === $activity->type && function_exists( 'bb_activity_topic_id' ) && bb_activity_topic_id( $activity ) ) {
+			$links['topic'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, 'topics', bb_activity_topic_id( $activity ) ) ),
+				'embeddable' => true,
+			);
+		}
+
+		if ( 'bbp_reply_create' === $activity->type && function_exists( 'bb_activity_reply_topic_id' ) && bb_activity_reply_topic_id( $activity ) ) {
+			$links['topic'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, 'topics', bb_activity_reply_topic_id( $activity ) ) ),
 				'embeddable' => true,
 			);
 		}
@@ -2136,6 +2149,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		$edit_activity_data = bp_activity_get_edit_data( $activity->id );
+		$edit_activity_data = empty( $edit_activity_data ) ? array() : $edit_activity_data;
 
 		if ( ! empty( $edit_activity_data ) ) {
 			// Removed unwanted data.
