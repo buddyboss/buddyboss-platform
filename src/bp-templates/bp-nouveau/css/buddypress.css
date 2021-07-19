@@ -12063,6 +12063,8 @@ fieldset div.avatar {
 .activity-list li.bbp_reply_create .bb-activity-media-wrap.bb-media-length-1 .bb-activity-media-elem {
   margin: 12px auto;
   border: none;
+  width: -webkit-calc(100% - 24px);
+  width: calc(100% - 24px);
 }
 
 .activity-list li.blogs .activity-content .activity-inner {

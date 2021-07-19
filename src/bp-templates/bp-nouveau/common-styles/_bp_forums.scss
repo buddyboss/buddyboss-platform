@@ -1048,6 +1048,8 @@ fieldset div.avatar {
 	.bb-activity-media-wrap.bb-media-length-1 .bb-activity-media-elem {
 		margin: 12px auto;
 		border: none;
+		width: -webkit-calc(100% - 24px);
+		width: calc(100% - 24px);
 	}
 
 }
