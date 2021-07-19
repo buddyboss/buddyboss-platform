@@ -135,16 +135,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Members component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'members' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Members component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
+		if ( bp_is_active( 'members' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -178,6 +178,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$retval = array();
 		global $bp;
 		$tmp_bp = $bp;
+
+		$logged_user_id = get_current_user_id();
 
 		$current_user_id = $request->get_param( 'id' );
 		if ( empty( $current_user_id ) ) {
@@ -275,8 +277,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'profile'  => 'xprofile',
 		);
 
-		if ( ! empty( $navs->get_primary( array( 'show_for_displayed_user' => true ) ) ) ) {
-			foreach ( $navs->get_primary( array( 'show_for_displayed_user' => true ) ) as $nav ) {
+		$args = array();
+
+		if ( ! ( ! empty( $logged_user_id ) && (int) $logged_user_id === (int) $current_user_id ) ) {
+			$args = array( 'show_for_displayed_user' => true );
+		}
+
+		if ( ! empty( $navs->get_primary( $args ) ) ) {
+			foreach ( $navs->get_primary( $args ) as $nav ) {
 
 				$name = $nav['name'];
 				$id   = $nav['slug'];
@@ -458,16 +466,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_profile_dropdown_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**

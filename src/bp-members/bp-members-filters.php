@@ -239,6 +239,80 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_personal_scope', 10, 2 );
 
 /**
+ * Set up video arguments for use with the 'personal' scope.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_members_filter_video_personal_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$privacy = array( 'public' );
+
+	if ( bp_loggedin_user_id() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_loggedin_user_id() === (int) $user_id ) {
+			$privacy[] = 'onlyme';
+		}
+
+		if ( bp_is_active( 'friends' ) && bp_is_profile_video_support_enabled() ) {
+			if ( bp_loggedin_user_id() === (int) $user_id ) {
+				$privacy[] = 'friends';
+			} else {
+				$friends = friends_get_friend_user_ids( $user_id );
+				if ( ! empty( $friends ) && in_array( (int) bp_loggedin_user_id(), $friends, true ) ) {
+					$privacy[] = 'friends';
+				}
+			}
+		}
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		array(
+			'column' => 'user_id',
+			'value'  => $user_id,
+		),
+		array(
+			'column'  => 'privacy',
+			'value'   => $privacy,
+			'compare' => 'IN',
+		),
+	);
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$retval[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	return $retval;
+}
+add_filter( 'bp_video_set_personal_scope_args', 'bp_members_filter_video_personal_scope', 10, 2 );
+
+/**
  * Set up media arguments for use with the 'personal' scope.
  *
  * @since BuddyBoss 1.1.9

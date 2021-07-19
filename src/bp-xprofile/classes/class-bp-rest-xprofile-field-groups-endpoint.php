@@ -430,16 +430,16 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to view this XProfile field group.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view this XProfile field group.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -788,14 +788,14 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 
 		$args = array(
 			'profile_group_id'       => $profile_group_id,
-			'user_id'                => $request['user_id'],
-			'member_type'            => $request['member_type'],
-			'hide_empty_fields'      => $request['hide_empty_fields'],
-			'fetch_fields'           => $request['fetch_fields'],
-			'fetch_field_data'       => $request['fetch_field_data'],
-			'fetch_visibility_level' => $request['fetch_visibility_level'],
-			'exclude_fields'         => $request['exclude_fields'],
-			'update_meta_cache'      => $request['update_meta_cache'],
+			'user_id'                => (int) ( isset( $request['user_id'] ) ? $request['user_id'] : 0 ),
+			'member_type'            => ( isset( $request['member_type'] ) ? $request['member_type'] : false ),
+			'hide_empty_fields'      => ( isset( $request['hide_empty_fields'] ) ? $request['hide_empty_fields'] : false ),
+			'fetch_fields'           => ( isset( $request['fetch_fields'] ) ? $request['fetch_fields'] : false ),
+			'fetch_field_data'       => ( isset( $request['fetch_field_data'] ) ? $request['fetch_field_data'] : false ),
+			'fetch_visibility_level' => ( isset( $request['fetch_visibility_level'] ) ? $request['fetch_visibility_level'] : false ),
+			'exclude_fields'         => ( isset( $request['exclude_fields'] ) ? $request['exclude_fields'] : false ),
+			'update_meta_cache'      => ( isset( $request['update_meta_cache'] ) ? $request['update_meta_cache'] : true ),
 		);
 
 		if ( empty( $request['member_type'] ) ) {
