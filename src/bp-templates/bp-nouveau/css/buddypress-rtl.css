@@ -2572,7 +2572,7 @@ input.search-query-input {
   font-size: 15px;
 }
 
-#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
+#buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
   content: "\e937";
   font-size: 15px;
 }
@@ -2602,6 +2602,10 @@ input.search-query-input {
     -ms-transform: translate(90%, 0);
     transform: translate(90%, 0);
   }
+}
+
+#buddypress .activity-list .comment-item .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before {
+  vertical-align: bottom;
 }
 
 .activity-list .comment-item .acomment-meta {
