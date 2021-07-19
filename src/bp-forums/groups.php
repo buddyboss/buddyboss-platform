@@ -928,7 +928,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Set the global forum ID.
 			$bbp->current_forum_id = $forum_id;
-
 			// Assume forum query.
 			bbp_set_query_name( 'bbp_single_forum' );
 			?>
@@ -1590,18 +1589,18 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bbp_set_404();
 					return;
 				}
-				
+
 				$uri = get_query_var( 'forum' );
 				
 				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
-				
+
 				if ( empty( $uri_post->ID ) ) {
 					$uri         = get_page_uri( $last_path_post->post );
 					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $uri . '/' . $page );
 
 					bp_core_redirect( $redirect_to );
 				}
-
+				
 				$this->forum_id = $this->forum_associate_group( $uri_post->ID ) ? $uri_post->ID : false;
 			}
 
