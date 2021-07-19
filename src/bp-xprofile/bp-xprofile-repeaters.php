@@ -205,8 +205,9 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
 
 					if ( 'datebox' === $type ) {
-						$new_data = $new_data; // Value will get Y-m-d h:i:s format here. So dont need to pass manually 00:00:00
+						$new_data = wp_date( 'Y-m-d H:i:s', strtotime( $new_data ) );
 					}
+
 					xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
 
 					if ( ! isset( $main_field_data[ $cloned_from ] ) ) {
