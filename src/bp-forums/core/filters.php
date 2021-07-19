@@ -162,6 +162,9 @@ add_filter( 'bbp_get_topic_content', 'wpautop', 40 );
 add_filter( 'bbp_get_topic_content', 'bbp_remove_html_tags', 45 );
 add_filter( 'bbp_get_topic_content', 'bbp_rel_nofollow', 50 );
 
+// Run filter on topic tag creation
+add_filter( 'user_has_cap', 'bbp_organizer_cap_filter', 20, 4 );
+
 // Form textarea output - undo the code-trick done pre-save, and sanitize
 add_filter( 'bbp_get_form_forum_content', 'bbp_code_trick_reverse' );
 add_filter( 'bbp_get_form_forum_content', 'esc_textarea' );
