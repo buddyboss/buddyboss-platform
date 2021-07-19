@@ -159,8 +159,69 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+// Filter activity discussion content.
+add_filter( 'bp_get_activity_content_body', 'bb_before_activity_content', 10, 2 );
+
 /** Functions *****************************************************************/
 
+/**
+ * Render the activity content for discussion activity.
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param string $content  Activit content.
+ * @param object $activity Activit data.
+ *
+ * @uses bbp_get_reply()           Get reply post data.
+ * @uses bbp_get_topic_permalink() Get discussion permalink.
+ *
+ * @return string
+ */
+function bb_before_activity_content( $content, $activity ) {
+
+	// When the activity type does not match with the topic or reply.
+	if ( ! in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true ) ) {
+		return $content;
+	}
+
+	$rendered_content = sprintf( '<div class="bb-content-inr-wrap">%1$s</div>', $content );
+
+	if ( ! bp_is_active( 'forums' ) ) {
+		return $rendered_content;
+	}
+
+	// Set topic id when activity component is not groups.
+	if ( 'bbpress' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->item_id;
+
+		// Set topic id when activity type reply.
+		if ( 'bbp_reply_create' === $activity->type ) {
+			$topic    = bbp_get_reply( $topic_id );
+			$topic_id = $topic->post_parent;
+		}
+	}
+
+	// Set topic id when activity component is groups.
+	if ( 'groups' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->secondary_item_id;
+
+		// Set topic id when activity type reply.
+		if ( 'bbp_reply_create' === $activity->type ) {
+			$topic    = bbp_get_reply( $topic_id );
+			$topic_id = $topic->post_parent;
+		}
+	}
+
+	// Topic.
+	$topic_permalink = bbp_get_topic_permalink( $topic_id );
+	$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
+	$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
+	$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> %4$s', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $rendered_content );
+
+	return $content;
+}
 /**
  * Types of activity feed items to moderate.
  *
