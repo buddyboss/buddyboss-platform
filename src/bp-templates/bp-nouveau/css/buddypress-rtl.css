@@ -12023,14 +12023,14 @@ fieldset div.avatar {
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap,
 .activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap {
-  padding: 12px 12px 6px 12px;
+  padding: 12px 12px 0 12px;
   margin-bottom: 0;
   background-color: #fafafa;
 }
 
 .activity-list li.bbp_topic_create .bb-content-inr-wrap,
 .activity-list li.bbp_reply_create .bb-content-inr-wrap {
-  padding: 6px 12px 12px 12px;
+  padding: 12px 12px 12px 12px;
   background-color: #fafafa;
 }
 
@@ -12057,6 +12057,12 @@ fieldset div.avatar {
 .activity-list li.bbp_topic_create .bb-activity-media-wrap .bb-activity-media-elem .entry-img img,
 .activity-list li.bbp_reply_create .bb-activity-media-wrap .bb-activity-media-elem .entry-img img {
   margin-bottom: 0;
+}
+
+.activity-list li.bbp_topic_create .bb-activity-media-wrap.bb-media-length-1 .bb-activity-media-elem,
+.activity-list li.bbp_reply_create .bb-activity-media-wrap.bb-media-length-1 .bb-activity-media-elem {
+  margin: 12px auto;
+  border: none;
 }
 
 .activity-list li.blogs .activity-content .activity-inner {
