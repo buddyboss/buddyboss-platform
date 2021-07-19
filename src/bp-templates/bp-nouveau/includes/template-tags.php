@@ -1277,6 +1277,8 @@ function bp_nouveau_nav_has_count() {
 		$count   = 0 !== (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_media_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
+		$count = 0 !== (int) bp_video_get_total_group_video_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_album_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
@@ -1330,6 +1332,8 @@ function bp_nouveau_get_nav_count() {
 		$count = bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 		$count = bp_media_get_total_group_album_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
+		$count = bp_video_get_total_group_video_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
 		$group  = groups_get_current_group();
 		$admins = groups_get_group_admins( $group->id );
@@ -1345,6 +1349,12 @@ function bp_nouveau_get_nav_count() {
 			$count_start = strpos( $nav_item->name, '>', $span ) + 1;
 			$count_end   = strpos( $nav_item->name, '<', $count_start );
 			$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
+		}
+		if( bp_is_active( 'media' ) ) {
+			$videos_count = BP_Video::total_video_count( bp_displayed_user_id() );
+			if( $nav_item->slug == 'videos' ) {
+				$count = $videos_count;
+			}
 		}
 	}
 

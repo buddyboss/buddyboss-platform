@@ -1438,6 +1438,10 @@ function bp_nouveau_group_template_part() {
 			$template = 'documents';
 		} elseif ( true === bp_disable_group_messages() && bp_is_group_messages() ) {
 			$template = 'messages';
+		} elseif ( bp_is_group_video() ) {
+			$template = 'videos';
+		} elseif ( bp_is_group_video_albums() ) {
+			$template = 'albums';
 		}
 
 		bp_nouveau_group_get_template_part( $template );

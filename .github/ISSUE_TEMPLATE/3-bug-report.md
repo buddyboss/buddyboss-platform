@@ -2,7 +2,7 @@
 name: "\U0001F41E Report a Bug"
 about: Submit a new bug found in the BuddyBoss platform.
 title: ''
-labels: bug, needs validating
+labels: 'bug, bug: needs validating'
 assignees: ''
 
 ---
@@ -22,6 +22,9 @@ A clear and concise description of what you expected to happen.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
+
+**Environment**
+Which site did you replicate this issue on?
 
 **Support ticket links**
 If applicable, add HelpScout link or ticket number where the issue was originally reported.

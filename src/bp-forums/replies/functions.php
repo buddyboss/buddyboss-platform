@@ -285,7 +285,11 @@ function bbp_new_reply_handler( $action = '' ) {
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 	// No reply content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) ) && empty( $_POST['bbp_media'] ) && empty( $_POST['bbp_media_gif'] ) && empty( $_POST['bbp_document'] )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+		 && empty( $_POST['bbp_media'] )
+		 && empty( $_POST['bbp_video'] )
+		 && empty( $_POST['bbp_media_gif'] )
+		 && empty( $_POST['bbp_document'] )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -666,8 +670,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
-	// No reply content
-	if ( empty( $reply_content ) ) {
+	// No reply content.
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+	     && empty( $_POST['bbp_media'] )
+	     && empty( $_POST['bbp_video'] )
+	     && empty( $_POST['bbp_media_gif'] )
+	     && empty( $_POST['bbp_document'] )
+	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
 

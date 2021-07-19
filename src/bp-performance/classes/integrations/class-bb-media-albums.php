@@ -33,6 +33,8 @@ class BB_Media_Albums extends Integration_Abstract {
 		$purge_events = array(
 			'bp_media_album_after_save',   // Any Media Album add.
 			'bp_media_album_after_delete', // Any Media Album deleted.
+			'bp_video_album_after_save',   // Any Video Album add.
+			'bp_video_album_after_delete', // Any Video Album deleted.
 
 			// Added moderation support.
 			'bp_suspend_media_suspended',         // Any Media Suspended.
@@ -47,12 +49,18 @@ class BB_Media_Albums extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'bp_media_album_after_save'          => 1, // Any Media Album add.
-			'bp_media_album_after_delete'        => 1, // Any Media Album deleted.
+			'bp_media_album_after_save'   => 1, // Any Media Album add.
+			'bp_media_album_after_delete' => 1, // Any Media Album deleted.
+			'bp_video_album_after_save'   => 1, // Any Video Album add.
+			'bp_video_album_after_delete' => 1, // Any Video Album deleted.
 
 			'bp_media_add'                       => 1, // Any Media Photo add.
 			'bp_media_after_save'                => 1, // Any Media Photo updated.
 			'bp_media_before_delete'             => 1, // Any Media Photos deleted.
+
+			'bp_video_add'           => 1, // Any Video File add.
+			'bp_video_after_save'    => 1, // Any Video File updated.
+			'bp_video_before_delete' => 1, // Any Video File deleted.
 
 			// Media group information update support.
 			'groups_update_group'                => 1,   // When Group Details updated.
@@ -157,6 +165,70 @@ class BB_Media_Albums extends Integration_Abstract {
 			foreach ( $medias as $media ) {
 				if ( ! empty( $media->album_id ) ) {
 					Cache::instance()->purge_by_group( 'bp-media-albums_' . $media->album_id );
+				}
+			}
+		}
+	}
+
+	/****************************** Video Album Events *****************************/
+	/**
+	 * Any Video Album.
+	 *
+	 * @param BP_Video_Album $album Video Album object.
+	 */
+	public function event_bp_video_album_after_save( $album ) {
+		if ( ! empty( $album->id ) ) {
+			Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
+		}
+	}
+
+	/**
+	 * Any Video Album.
+	 *
+	 * @param array $albums Array of video albums.
+	 */
+	public function event_bp_video_album_after_delete( $albums ) {
+		if ( ! empty( $albums ) ) {
+			foreach ( $albums as $album ) {
+				if ( ! empty( $album->id ) ) {
+					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Any Video Photos add
+	 *
+	 * @param BP_Video $video Video object.
+	 */
+	public function event_bp_video_add( $video ) {
+		if ( ! empty( $video->album_id ) ) {
+			Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
+		}
+	}
+
+	/**
+	 * Any Video Photos after save
+	 *
+	 * @param BP_Video $video Current instance of video item being saved. Passed by reference.
+	 */
+	public function event_bp_video_after_save( $video ) {
+		if ( ! empty( $video->album_id ) ) {
+			Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
+		}
+	}
+
+	/**
+	 * Any Videos before delete
+	 *
+	 * @param array $videos Array of video.
+	 */
+	public function event_bp_video_before_delete( $videos ) {
+		if ( ! empty( $videos ) ) {
+			foreach ( $videos as $video ) {
+				if ( ! empty( $video->album_id ) ) {
+					Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
 				}
 			}
 		}

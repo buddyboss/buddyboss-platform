@@ -30,6 +30,10 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		if ( ! bp_is_active( 'forums' ) ) {
+			return;
+		}
+
 		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
