@@ -5397,11 +5397,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
  * @return array|bool The Activity edit data or false otherwise.
  */
 function bp_activity_get_edit_data( $activity_id = 0 ) {
-
-	if ( ! bp_is_activity_edit_enabled() ) {
-		return;
-	}
-
 	global $activities_template;
 
 	// check activity empty or not.
@@ -5567,4 +5562,133 @@ function bb_get_activity_hierarchy( $activity_id ) {
 	$data = $wpdb->get_results( $activity_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	return array_filter( $data );
+}
+
+/**
+ * Is it blog post activity.
+ *
+ * @param object $activity Blog post activity data.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return bool
+ */
+function bb_activity_blog_post_acivity( $activity ) {
+	if ( ( 'blogs' === $activity->component ) && ! empty( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$blog_post = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * This function will give the topic id from topic activity.
+ * - Used in Rest API
+ *
+ * @param object $activity Topic activity data.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return int
+ */
+function bb_activity_topic_id( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// When the activity type does not match with the topic.
+	if ( 'bbp_topic_create' !== $activity->type ) {
+		return false;
+	}
+
+	$topic_id = false;
+
+	// Set topic id when activity component is not groups.
+	if ( 'bbpress' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->item_id;
+	}
+
+	// Set topic id when activity component is groups.
+	if ( 'groups' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->secondary_item_id;
+	}
+
+	return $topic_id;
+}
+
+/**
+ * This function will give the reply topic id from reply activity.
+ * - Used in Rest API
+ *
+ * @param object $activity Reply activity data.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return int
+ */
+function bb_activity_reply_topic_id( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// When the activity type does not match with the topic.
+	if ( 'bbp_reply_create' !== $activity->type ) {
+		return false;
+	}
+
+	$topic_id = false;
+
+	// Set topic id when activity component is not groups.
+	if ( 'bbpress' === $activity->component ) {
+		// Set topic id when activity type reply.
+		$topic_id = bbp_get_reply_topic_id( $activity->item_id );
+	}
+
+	// Set topic id when activity component is groups.
+	if ( 'groups' === $activity->component ) {
+		// Set topic id when activity type reply.
+		$topic_id = bbp_get_reply_topic_id( $activity->secondary_item_id );
+	}
+
+	return $topic_id;
+}
+
+/**
+ * Is it topic comment activity.
+ * - Used in Rest API
+ *
+ * @param int $activity_id Activity id.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return bool
+ */
+function bb_acivity_is_topic_comment( $activity_id ) {
+	$item_activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $item_activity ) ) {
+		return false;
+	}
+
+	// Get the current action name.
+	$action_name = $item_activity->type;
+
+	// Setup the array of possibly disabled actions.
+	$disabled_actions = array(
+		'bbp_topic_create',
+		'bbp_reply_create',
+	);
+
+	// Comment is disabled for discussion and reply discussion.
+	if ( in_array( $action_name, $disabled_actions, true ) ) {
+		return true;
+	}
+
+	return false;
 }
