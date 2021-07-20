@@ -5969,6 +5969,11 @@ body.buddypress.bp-user #page #primary .entry-header {
   display: none;
 }
 
+.forum #bbpress-forums > .bb_more_options {
+  float: right;
+  margin-top: -3px;
+}
+
 #buddypress .bb_more_options,
 .bb_more_options {
   position: relative;
