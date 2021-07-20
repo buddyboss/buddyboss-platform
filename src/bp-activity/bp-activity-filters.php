@@ -160,7 +160,7 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
 // Filter activity discussion content.
-add_filter( 'bp_get_activity_content_body', 'bb_before_activity_content', 10, 2 );
+add_filter( 'bp_get_activity_content_body', 'bb_disabled_forum_render_activity_content', 10, 2 );
 
 /** Functions *****************************************************************/
 
