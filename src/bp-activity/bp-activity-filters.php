@@ -186,6 +186,7 @@ function bb_disabled_forum_render_activity_content( $content, $activity ) {
 
 	return $content;
 }
+
 /**
  * Types of activity feed items to moderate.
  *
