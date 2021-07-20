@@ -15,7 +15,7 @@ $group_id      = bp_get_video_group_id();
 $move_id       = '';
 $move_type     = '';
 $video_privacy = bb_media_user_can_access( bp_get_video_id(), 'video' );
-$can_edit      = true === (bool) $video_privacy['can_edit'] && bb_user_can_create_video();
+$can_edit      = true === (bool) $video_privacy['can_edit'];
 $can_move      = true === (bool) $video_privacy['can_move'];
 $can_delete    = true === (bool) $video_privacy['can_delete'];
 
@@ -45,7 +45,7 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 				<div class="video-action_list item-action_list">
 					<ul>
 						<?php
-						if ( $can_edit ) {
+						if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
 							?>
 							<li class="edit_thumbnail_video">
 								<a href="#" data-action="video" data-video-attachments="<?php echo esc_html( json_encode( $attachment_urls ) ); ?>" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?></a>

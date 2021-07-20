@@ -1686,7 +1686,8 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 	if ( $activity_type !== 'activity_comment' ) {
 		// Add activity edit button.
-		if ( bp_is_activity_edit_enabled() && bb_user_can_create_video() ) {
+		$video_id = BP_Video::get_activity_video_id( $activity_id );
+		if ( bp_is_activity_edit_enabled() && ( bp_is_group_activity() || empty( $video_id ) || bb_user_can_create_video() ) ) {
 			$buttons['activity_edit'] = array(
 				'id'                => 'activity_edit',
 				'position'          => 30,
@@ -1781,13 +1782,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	if ( $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
-		$video_id = BP_Video::get_activity_video_id( $activity_id );
+		$video_id       = BP_Video::get_activity_video_id( $activity_id );
+		$video_group_id = bp_get_video_group_id();
 		if ( ! empty( $video_id ) ) {
 			$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
 			if ( ! empty( $attachment_id ) ) {
 				$video_privacy = bb_media_user_can_access( $video_id, 'video' );
 				$can_edit      = true === (bool) $video_privacy['can_edit'];
-				if ( $can_edit && bb_user_can_create_video() ) {
+				if ( $can_edit && ( bb_user_can_create_video() || $video_group_id > 0 ) ) {
 					$parent_activity_id          = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 					$attachment_urls             = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 					$buttons['change_thumbnail'] = array(
