@@ -181,7 +181,7 @@ function bb_disabled_forum_render_activity_content( $content, $activity ) {
 
 	// When the activity type does not match with the topic or reply.
 	if ( ! bp_is_active( 'forums' ) && in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true ) ) {
-		return $content;
+		return sprintf( '<div class="bb-content-inr-wrap">%1$s</div>', $content );
 	}
 
 	$rendered_content = sprintf( '<div class="bb-content-inr-wrap">%1$s</div>', $content );
