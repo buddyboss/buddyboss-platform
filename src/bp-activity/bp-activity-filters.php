@@ -177,7 +177,7 @@ add_filter( 'bp_get_activity_content_body', 'bb_disabled_forum_render_activity_c
  *
  * @return string
  */
-function bb_before_activity_content( $content, $activity ) {
+function bb_disabled_forum_render_activity_content( $content, $activity ) {
 
 	// When the activity type does not match with the topic or reply.
 	if ( ! in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true ) ) {
