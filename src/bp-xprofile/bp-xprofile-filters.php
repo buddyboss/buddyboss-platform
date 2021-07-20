@@ -115,7 +115,6 @@ add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_cl
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 // Repair repeater field repeated in admin side.
 add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
-add_action( 'admin_init', 'bb_xprofile_repeater_field_repair_with_background' );
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1101,7 +1100,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 		$offset = $offset;
 	}
 	// Function will do migrate code for the repeated fields.
-	bb_xprofile_repeater_field_migration( $offset, $callback = true );
+	return bb_xprofile_repeater_field_migration( $offset, $callback = true );
 }
 
 /**
@@ -1244,35 +1243,5 @@ function bb_delete_unnecessory_groups_field( $group_id ) {
 			}
 		}
 	}
-}
-
-/**
- * This function will work in the background for migration process which will remove duplicate repeater field from database.
- * Also remove remove unnecessary data that may have remained after the migration process.
- * This function will be called only once.
- *
- * @uses bb_xprofile_repeater_field_migration
- *
- * @since BuddyBoss 1.6.2
- */
-function bb_xprofile_repeater_field_repair_with_background() {
-	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
-	if ( false === $get_bp_xprofile_migration ) {
-		global $wpdb, $bp_background_updater;
-		$bp         = buddypress();
-		$recipients = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT( DISTINCT id ) as total_id FROM {$bp->profile->table_name_groups} WHERE can_delete = %d", 1 ) );
-
-		for ( $counter = 0; $counter <= $recipients->total_id; $counter ++ ) {
-			if ( (int) $counter !== (int) $recipients->total_id ) {
-				$bp_background_updater->push_to_queue(
-					array(
-						'callback' => bb_xprofile_repeater_field_migration( $counter, $callback = false ),
-					)
-				);
-				$bp_background_updater->save()->schedule_event();
-			} else {
-				bp_update_option( 'bp_xprofile_migration', true );
-			}
-		}
-	}
+	return true;
 }
