@@ -304,9 +304,10 @@ class BP_User_Query {
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
-					$sql['orderby'] = array(
-						// Merge with active members id and wp_users id and sorting by descending order.
-						$this->order_by_activity(),
+					$activity_members = $this->activity_members();
+					$sql['orderby']   = array(
+						// Merge active members id and wp_users id and sorting by descending order.
+						array( "field( u.{$this->uid_name}, {$activity_members} )", 'DESC' ),
 						array( 'u.display_name', 'ASC' ),
 					);
 				}
@@ -531,19 +532,17 @@ class BP_User_Query {
 	 * 
 	 * @return array
 	 */
-	public function order_by_activity() {
+	public function activity_members() {
 		global $wpdb;
 
 		$bp         = buddypress();
-		$sql        = $wpdb->prepare( "SELECT user_id FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' ORDER BY COALESCE( date_recorded, NULL ) ASC", buddypress()->members->id );
 		// Get all active members id.
-		$members    = $wpdb->get_results( $sql );
+		$members    = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' ORDER BY COALESCE( date_recorded, NULL ) ASC", buddypress()->members->id ) );
 		$member_ids = wp_list_pluck( $members, 'user_id' );
 		$member_ids = empty( $member_ids ) ? array( 0 ) : $member_ids;
 		$member_ids = implode( ',', $member_ids );
 
-		// Merge with active members id and wp_users id and sorting by descending order.
-		return array( "field( u.{$this->uid_name}, {$member_ids} )", 'DESC' );
+		return $member_ids;
 	}
 
 	/**
