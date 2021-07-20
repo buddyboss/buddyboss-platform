@@ -247,7 +247,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		 * @param string $button_text Button text.
 		 * @param int    $item_id     Item id.
 		 */
-		$button_text          = apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
+		$button_text = apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
 
 		/**
 		 * Filters the reported button text for different components

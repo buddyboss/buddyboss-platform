@@ -297,6 +297,20 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
+		if ( ( ! empty( $video_id = bp_activity_get_meta( $activity->id, 'bp_video_id', true ) ) || ! empty( $video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) ) && false === $updated ) {
+			if ( ! empty( $video_id ) ) {
+				$button_text = __( 'Report Video', 'buddyboss' );
+			}
+			if ( ! empty( $video_ids ) ) {
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$button_text = __( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = __( 'Report Video', 'buddyboss' );
+				}
+			}
+		}
+
 		return $button_text;
 	}
 }

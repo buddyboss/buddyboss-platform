@@ -66,9 +66,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		// Report button text.
 		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
-
-		// Reported button text.
-		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'reported_button_text' ), 10, 2 );
 	}
 
 	/**
@@ -219,19 +216,5 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 */
 	public function report_button_text( $button_text, $item_id ) {
 		return __( 'Report Topic', 'buddyboss' );
-	}
-
-	/**
-	 * Function to change reported button text.
-	 *
-	 * @since BuddyBoss X.X.X
-	 *
-	 * @param string $button_text Button text.
-	 * @param int    $item_id     Item id.
-	 *
-	 * @return string
-	 */
-	public function reported_button_text( $button_text, $item_id ) {
-		return __( 'Reported Topic', 'buddyboss' );
 	}
 }

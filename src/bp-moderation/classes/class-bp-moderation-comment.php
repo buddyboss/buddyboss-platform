@@ -56,18 +56,15 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
 
-		// Report button text.
-		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
-
-		// Reported button text.
-		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'reported_button_text' ), 10, 2 );
-
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
 	}
 
 	/**
@@ -390,19 +387,5 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function report_button_text( $button_text, $item_id ) {
 		return __( 'Report Comment', 'buddyboss' );
-	}
-
-	/**
-	 * Function to change reported button text.
-	 *
-	 * @since BuddyBoss X.X.X
-	 *
-	 * @param string $button_text Button text.
-	 * @param int    $item_id     Item id.
-	 *
-	 * @return string
-	 */
-	public function reported_button_text( $button_text, $item_id ) {
-		return __( 'Reported Comment', 'buddyboss' );
 	}
 }
