@@ -542,6 +542,7 @@
 							font-size: 15px;
 						}
 
+						&.delete:before,
 						&.delete-activity:before {
 							content: "\e937";
 							font-size: 15px;
@@ -586,6 +587,14 @@
 	}
 
 	.comment-item {
+
+		.bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before {
+
+			#buddypress & {
+				vertical-align: bottom;
+			}
+
+		}
 
 		.acomment-meta {
 			margin-right: 25px;
