@@ -304,7 +304,7 @@ class BP_User_Query {
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
-					$activity_members = $this->activity_members();
+					$activity_members = implode( ',', $this->activity_members() );
 					$sql['orderby']   = array(
 						// Merge active members id and wp_users id and sorting by descending order.
 						array( "field( u.{$this->uid_name}, {$activity_members} )", 'DESC' ),
@@ -530,19 +530,16 @@ class BP_User_Query {
 	 *
 	 * @since BuddyBoss 1.7.3
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function activity_members() {
 		global $wpdb;
 
 		$bp         = buddypress();
-		// Get all active members id.
 		$members    = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' ORDER BY COALESCE( date_recorded, NULL ) ASC", buddypress()->members->id ) );
 		$member_ids = wp_list_pluck( $members, 'user_id' );
-		$member_ids = empty( $member_ids ) ? array( 0 ) : $member_ids;
-		$member_ids = implode( ',', $member_ids );
 
-		return $member_ids;
+		return empty( $member_ids ) ? array( 0 ) : $member_ids;
 	}
 
 	/**
