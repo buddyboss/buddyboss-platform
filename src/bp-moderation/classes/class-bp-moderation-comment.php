@@ -296,7 +296,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		if ( ! empty( $link ) && bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
-			$link .= bp_moderation_get_report_button(
+			$comment_report_link = bp_moderation_get_report_button(
 				array(
 					'id'                => 'comment_report',
 					'component'         => 'moderation',
@@ -308,6 +308,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 					),
 				)
 			);
+			$link .= sprintf( '<div class="bb-activity-more-options-wrap action"><span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $comment_report_link );
 		}
 
 		return $link;
