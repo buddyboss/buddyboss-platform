@@ -18947,14 +18947,18 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 /*comment option*/
-.comments-area .ast-comment-info {
+#comments .comment-body {
   position: relative;
 }
 
-.comments-area .ast-comment-info .bb_more_options {
+#comments .comment-body .bb_more_options {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+#comments .comment-body .bb_more_options a {
+  text-decoration: none;
 }
 
 /* BASICS */

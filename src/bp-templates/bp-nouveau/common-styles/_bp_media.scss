@@ -4912,13 +4912,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 /*comment option*/
-.comments-area .ast-comment-info {
+#comments .comment-body {
 	position: relative;
 
 	.bb_more_options {
 		position: absolute;
 		top: 0;
 		right: 0;
+
+		a {
+			text-decoration: none;
+		}
+
 	}
 
 }
