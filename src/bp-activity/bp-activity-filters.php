@@ -180,7 +180,7 @@ add_filter( 'bp_get_activity_content_body', 'bb_disabled_forum_render_activity_c
 function bb_disabled_forum_render_activity_content( $content, $activity ) {
 
 	// When the activity type does not match with the topic or reply.
-	if ( ! in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true ) ) {
+	if ( ! bp_is_active( 'forums' ) && in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true ) ) {
 		return $content;
 	}
 
