@@ -1164,7 +1164,7 @@ function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 		$author_id = bbp_get_reply_author_id( $reply_id );
 
 		// Try to get a display name
-		$author_name = get_the_author_meta( 'display_name', $author_id );
+		$author_name = ! empty( $author_id ) ? bp_core_get_user_displayname( $author_id ) : '';
 
 		// Fall back to user login
 		if ( empty( $author_name ) ) {
