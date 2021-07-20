@@ -526,11 +526,11 @@ class BP_User_Query {
 	}
 
 	/**
-	 * Order by activity for members 'active' querie.
+	 * Get activity member ids.
 	 *
-	 * @since BuddyBoss 1.6.1
-	 * 
-	 * @return array
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @return string
 	 */
 	public function activity_members() {
 		global $wpdb;
