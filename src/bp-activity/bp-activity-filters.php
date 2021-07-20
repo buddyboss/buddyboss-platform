@@ -179,7 +179,7 @@ add_filter( 'bp_get_activity_content_body', 'bb_disabled_forum_render_activity_c
  */
 function bb_disabled_forum_render_activity_content( $content, $activity ) {
 
-	// When the activity type does not match with the topic or reply.
+	// When forum is disabled and the activity type match with the topic or reply.
 	if ( ! bp_is_active( 'forums' ) && in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true ) ) {
 		return sprintf( '<div class="bb-content-inr-wrap">%1$s</div>', $content );
 	}
