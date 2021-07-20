@@ -18946,6 +18946,17 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   }
 }
 
+/*comment option*/
+.comments-area .ast-comment-info {
+  position: relative;
+}
+
+.comments-area .ast-comment-info .bb_more_options {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 /* BASICS */
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
