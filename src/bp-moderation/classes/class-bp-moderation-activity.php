@@ -60,6 +60,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
 	}
 
 	/**
@@ -227,5 +230,73 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string|void
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+
+		$activity = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $activity->id ) ) {
+			return $button_text;
+		}
+
+		$updated = false;
+
+		switch ( $activity->type ) {
+			case 'bbp_forum_create':
+				$button_text = __( 'Report Forum', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_topic_create':
+				$button_text = __( 'Report Topic', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_reply_create':
+				$button_text = __( 'Report Reply', 'buddyboss' );
+				$updated     = true;
+				break;
+			default:
+				$button_text = __( 'Report Post', 'buddyboss' );
+		}
+
+		if ( ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) && false === $updated ) {
+			if ( ! empty( $media_id ) ) {
+				$button_text = __( 'Report Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$button_text = __( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = __( 'Report Photo', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) && false === $updated ) {
+			if ( ! empty( $document_id ) ) {
+				$button_text = __( 'Report Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$button_text = __( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = __( 'Report Document', 'buddyboss' );
+				}
+			}
+		}
+
+		return $button_text;
 	}
 }
