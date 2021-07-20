@@ -486,6 +486,9 @@ function bb_moderation_content_report_popup() {
 	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
 		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
 	}
+	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/reported-content-popup.php" ) ) {
+		include buddypress()->core->path . "bp-moderation/screens/reported-content-popup.php";
+	}
 }
 
 add_action( 'wp_footer', 'bb_moderation_content_report_popup' );

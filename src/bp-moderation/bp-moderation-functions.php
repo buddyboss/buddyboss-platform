@@ -286,11 +286,20 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
-		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
-		$button['button_attr']['class']     = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
-		$button['button_attr']['item_id']   = $item_id;
-		$button['button_attr']['item_type'] = $item_type;
-		unset( $button['button_attr']['href'] );
+		$button['link_text']                    = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
+		$button['button_attr']['class']         = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
+		$button['button_attr']['item_id']       = $item_id;
+		$button['button_attr']['item_type']     = $item_type;
+		$button['button_attr']['href']          = '#reported-content';
+		/**
+		 * Filters the reported content type
+		 *
+		 * @since BuddyBoss X.X.X
+		 *
+		 * @param string $content_type Content type.
+		 * @param int    $item_id     Item id.
+		 */
+		$button['button_attr']['reported_type'] = apply_filters( "bp_moderation_{$item_type}_reported_content_type", __( 'Post', 'buddyboss' ), $item_id );
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );

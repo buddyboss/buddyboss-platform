@@ -63,6 +63,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Report button text.
 		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		//Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_reported_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
@@ -312,5 +316,87 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $button_text;
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string|void
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+
+		$activity = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $activity->id ) ) {
+			return $content_type;
+		}
+
+		$updated = false;
+
+		switch ( $activity->type ) {
+			case 'bbp_forum_create':
+				$content_type = __( 'Forum', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_topic_create':
+				$content_type = __( 'Topic', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_reply_create':
+				$content_type = __( 'Reply', 'buddyboss' );
+				$updated     = true;
+				break;
+			default:
+				$content_type = __( 'Post', 'buddyboss' );
+		}
+
+		if ( ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) && false === $updated ) {
+			if ( ! empty( $media_id ) ) {
+				$content_type = __( 'Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$content_type = __( 'Post', 'buddyboss' );
+				} else {
+					$content_type = __( 'Photo', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) && false === $updated ) {
+			if ( ! empty( $document_id ) ) {
+				$content_type = __( 'Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$content_type = __( 'Post', 'buddyboss' );
+				} else {
+					$content_type = __( 'Document', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( ( ! empty( $video_id = bp_activity_get_meta( $activity->id, 'bp_video_id', true ) ) || ! empty( $video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) ) && false === $updated ) {
+			if ( ! empty( $video_id ) ) {
+				$content_type = __( 'Video', 'buddyboss' );
+			}
+			if ( ! empty( $video_ids ) ) {
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$content_type = __( 'Post', 'buddyboss' );
+				} else {
+					$content_type = __( 'Video', 'buddyboss' );
+				}
+			}
+		}
+
+		return $content_type;
 	}
 }

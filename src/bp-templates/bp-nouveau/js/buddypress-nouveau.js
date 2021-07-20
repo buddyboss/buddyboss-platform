@@ -59,6 +59,7 @@ window.bp = window.bp || {};
 			// Report content popup.
 			this.reportPopUp();
 			this.reportActions();
+			this.reportedPopup();
 
 			// Toggle password text.
 			this.togglePassword();
@@ -535,6 +536,7 @@ window.bp = window.bp || {};
 					setTimeout(
 						function () { // Waiting to load dummy image.
 							self.reportPopUp();
+							self.reportedPopup();
 						},
 						1000
 					);
@@ -2321,15 +2323,40 @@ window.bp = window.bp || {};
 			mf_content.find( '.bp-report-form-err' ).empty();
 		},
 		changeReportButtonStatus: function ( data ) {
+			var _this = this;
 			$( '[data-bp-content-id=' + data.button.button_attr.item_id + '][data-bp-content-type=' + data.button.button_attr.item_type + ']' ).each(
 				function () {
-					$( this ).removeAttr( 'href' );
 					$( this ).removeAttr( 'data-bp-content-id' );
 					$( this ).removeAttr( 'data-bp-content-type' );
 					$( this ).removeAttr( 'data-bp-nonce' );
 
 					$( this ).html( data.button.link_text );
 					$( this ).attr( 'class', data.button.button_attr.class );
+					$( this ).attr( 'reported_type', data.button.button_attr.reported_type );
+					$( this ).attr( 'href', data.button.button_attr.href );
+					setTimeout(
+						function () { // Waiting to load dummy image.
+							_this.reportedPopup();
+						},
+						1
+					);
+				}
+			);
+		},
+		reportedPopup: function () {
+			$( '.reported-content' ).magnificPopup(
+				{
+					type: 'inline',
+					midClick: true,
+					callbacks: {
+						open: function () {
+							var contentType = this.currItem.el.attr( 'reported_type' );
+							if ( 'undefined' !== typeof contentType ) {
+								var mf_content = $( '#reported-content' );
+								mf_content.find( '.bp-reported-type' ).text( contentType );
+							}
+						}
+					}
 				}
 			);
 		},
