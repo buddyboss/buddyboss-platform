@@ -304,7 +304,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	 * @param string $content_type Content type.
 	 * @param int    $item_id     Item id.
 	 */
-	$button['button_attr']['reported_type'] = apply_filters( "bp_moderation_{$item_type}_reported_content_type", __( 'Post', 'buddyboss' ), $item_id );
+	$button['button_attr']['reported_type'] = bp_moderation_get_report_type( $item_type, $item_id );
 
 	/**
 	 * Filter to update report link args
@@ -320,7 +320,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		if ( $is_reported ) {
 			$button = sprintf( '<a href="%s"  id="%s" class="%s" reported_type="%s" >%s</a>', $button['button_attr']['href'], esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), $button['button_attr']['reported_type'], wp_kses_post( $button['link_text'] ) );
 		} else {
-			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), wp_kses_post( $button['link_text'] ) );
+			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" reported_type="%s" >%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), $button['button_attr']['reported_type'], wp_kses_post( $button['link_text'] ) );
 		}
 	}
 
@@ -334,6 +334,22 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	 * @param bool  $html   Should return button html or not.
 	 */
 	return apply_filters( 'bp_moderation_get_report_button', $button, $args, $html );
+}
+
+/**
+ * Function to get content report type.
+ *
+ * @param string $item_type Item type.
+ * @param int    $item_id   Item id.
+ *
+ * @return mixed|void
+ */
+function bp_moderation_get_report_type( $item_type, $item_id ) {
+	if ( ! $item_type || ! $item_id ) {
+		return false;
+	}
+
+	return apply_filters( "bp_moderation_{$item_type}_reported_content_type", __( 'Post', 'buddyboss' ), $item_id );
 }
 
 /**
