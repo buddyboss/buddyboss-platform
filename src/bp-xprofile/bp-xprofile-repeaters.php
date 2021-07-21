@@ -383,7 +383,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 			$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				foreach ( $metas as $meta ) {
-					bp_xprofile_add_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 				}
 			}
 			$current_clone_number = 1;
@@ -392,7 +392,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 			if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
 				/**
 				 * MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
-				 * It will issuing in query.
+				 * It will create issue in the query.
 				 */
 				$all_clones_list       = implode( ',', $all_clones );
 				$last_max_clone_number = $wpdb->get_var(
@@ -946,7 +946,7 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 /**
  * Function will delete duplicate field order which inserted last from DB.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2.3
  *
  * @param int $field_group_id    Current group id.
  * @param int $clone_field_order Field order id.

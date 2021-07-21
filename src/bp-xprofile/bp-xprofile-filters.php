@@ -1069,17 +1069,14 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
  *
  * @return array Repair list items.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2.3
  */
 function bb_xprofile_repeater_field_repair( $repair_list ) {
-	$get_bp_xprofile_migration = (bool) bp_get_option( 'bp_xprofile_migration' );
-	if ( false === $get_bp_xprofile_migration ) {
-		$repair_list[] = array(
-			'bp-xprofile-repeater-field-repair',
-			__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
-			'bb_xprofile_repeater_field_repair_callback',
-		);
-	}
+	$repair_list[] = array(
+		'bp-xprofile-repeater-field-repair',
+		__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
+		'bb_xprofile_repeater_field_repair_callback',
+	);
 	return $repair_list;
 }
 
@@ -1090,15 +1087,10 @@ function bb_xprofile_repeater_field_repair( $repair_list ) {
  *
  * @uses bb_xprofile_repeater_field_migration
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2.3
  */
 function bb_xprofile_repeater_field_repair_callback() {
-	$offset = filter_input( INPUT_POST, 'offset', FILTER_VALIDATE_INT );
-	if ( 1 === $offset ) {
-		$offset = 0;
-	} else {
-		$offset = $offset;
-	}
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	// Function will do migrate code for the repeated fields.
 	return bb_xprofile_repeater_field_migration( $offset, $callback = true );
 }
@@ -1113,76 +1105,46 @@ function bb_xprofile_repeater_field_repair_callback() {
  *
  * @return array
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2.3
  */
 function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 	global $wpdb;
-	$bp         = buddypress();
-	$recipients = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->profile->table_name_groups} WHERE can_delete = %d LIMIT %d OFFSET %d", 1, 2, $offset ) );
-	if ( ! empty( $recipients ) ) {
-		foreach ( $recipients as $recipient ) {
-			$check_delete_group_data = array();
-			$group_id                = $recipient->id;
-			$group_field_ids         = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE group_id =%d AND parent_id = %d", $group_id, 0 ) );
-			if ( ! empty( $group_field_ids ) ) {
-				foreach ( $group_field_ids as $group_field_id ) {
-					$get_field_order = $wpdb->get_var( $wpdb->prepare( "SELECT count(field_order) FROM {$bp->profile->table_name_fields} WHERE field_order =%d AND group_id =%d", $group_field_id->field_order, $group_id ) );
-					if ( $get_field_order > 1 ) {
-						$limit           = $get_field_order - 1;
-						$field_id_result = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE field_order =%d AND group_id =%d ORDER BY id DESC LIMIT %d", $group_field_id->field_order, $group_id, $limit ) );
-						$field_id_arr    = array();
-						if ( ! empty( $field_id_result ) ) {
-							foreach ( $field_id_result as $field_id_obj ) {
-								$field_id_arr[] = $field_id_obj->id;
-							}
-						}
-						$field_id_list   = implode( ',', $field_id_arr );
-						$delete_field_id = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE field_order = %d AND group_id = %d AND id IN ( $field_id_list )", $group_field_id->field_order, $group_id ) );
-						if ( false !== $delete_field_id ) {
-							$delete_meta_qry = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( $field_id_list ) AND object_type = 'field' " ) );
-							if ( false !== $delete_meta_qry ) {
-								$check_delete_group_data[] = $group_id;
-							}
-						}
+	$bp                 = buddypress();
+	$added_fields_query = "SELECT object_id, meta_value FROM {$bp->table_prefix}bp_xprofile_meta where meta_key = '_cloned_from' LIMIT 50 OFFSET $offset ";
+	$added_fields       = $wpdb->get_results( $added_fields_query );
+	if ( ! empty( $added_fields ) ) {
+		foreach ( $added_fields as $field ) {
+			$clone_id = $field->object_id;
+			$metas    = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->meta_value} AND object_type = 'field'", ARRAY_A );
+			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
+				$field_member_types = array();
+				foreach ( $metas as $meta ) {
+					if ( $meta['meta_key'] != 'member_type' ) {
+						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					} else {
-						$check_delete_group_data[] = $group_id;
+						$field_member_types[] = $meta;
+						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
+					}
+				}
+				if ( ! empty( $field_member_types ) ) {
+					foreach ( $field_member_types as $meta ) {
+						bp_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					}
 				}
 			}
-			// This will remove unnecessary data that may have remained after the above migration process.
-			if ( ! empty( $check_delete_group_data ) ) {
-				$meta_key            = 'field_set_count_' . $group_id;
-				$user_meta_for_group = $wpdb->get_row( $wpdb->prepare( "SELECT MAX( CAST(meta_value AS DECIMAL) ) as max_value FROM $wpdb->usermeta WHERE meta_key = '$meta_key' " ) );
-				if ( ! empty( $user_meta_for_group ) ) {
-					$max_field_set_count = $user_meta_for_group->max_value;
-					if ( $max_field_set_count >= 10 ) {
-						$bdugf = bb_delete_unnecessory_groups_field( $group_id );
-						if ( true === $bdugf ) {
-							$offset ++;
-						}
-					} else {
-						$offset ++;
-					}
-				}
-			}
+			$offset ++;
 		}
-		if ( true === $callback ) {
-			/* translators: %s: offset */
-			$records_updated = sprintf( __( '%s repeater field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
-			return array(
-				'status'  => 'running',
-				'offset'  => $offset,
-				'records' => $records_updated,
-			);
-		}
+		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
 	} else {
-		bp_update_option( 'bp_xprofile_migration', 'true' );
-		if ( true === $callback ) {
-			return array(
-				'status'  => 1,
-				'message' => __( 'repeater field update complete!', 'buddyboss' ),
-			);
-		}
+		return array(
+			'status'  => 1,
+			'message' => __( 'Field update complete!', 'buddyboss' ),
+		);
 	}
 }
 
@@ -1193,7 +1155,7 @@ function bb_xprofile_repeater_field_migration( $offset, $callback ) {
  *
  * @return boolean
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2.3
  */
 function bb_delete_unnecessory_groups_field( $group_id ) {
 	global $wpdb;

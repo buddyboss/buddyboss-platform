@@ -391,8 +391,7 @@ class BP_XProfile_Group {
 		$include_field_ids = array();
 
 		// Member-type restrictions.
-		$is_repeater_enabled = 'on' === self::get_group_meta( $r['profile_group_id'], 'is_repeater_enabled' ) ? true : false;
-		if ( bp_get_member_types() && ! $is_repeater_enabled ) {
+		if ( bp_get_member_types() ) {
 			if ( $r['user_id'] || false !== $r['member_type'] ) {
 				$member_types = $r['member_type'];
 				if ( $r['user_id'] ) {
