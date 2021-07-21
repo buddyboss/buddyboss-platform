@@ -239,25 +239,8 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
 	} else {
-		/**
-		 * Filters the report button text for different components
-		 *
-		 * @since BuddyBoss 1.7.2
-		 *
-		 * @param string $button_text Button text.
-		 * @param int    $item_id     Item id.
-		 */
-		$button_text = apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
-
-		/**
-		 * Filters the reported button text for different components
-		 *
-		 * @since BuddyBoss 1.7.2
-		 *
-		 * @param string $button_text Button text.
-		 * @param int    $item_id     Item id.
-		 */
-		$reported_button_text = apply_filters( "bb_moderation_{$item_type}_reported_button_text", __( 'Reported', 'buddyboss' ), $item_id );
+		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
+		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
 	}
 
 	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
@@ -296,14 +279,6 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		unset( $button['button_attr']['data-bp-nonce'] );
 	}
 
-	/**
-	 * Filters the reported content type
-	 *
-	 * @since BuddyBoss X.X.X
-	 *
-	 * @param string $content_type Content type.
-	 * @param int    $item_id     Item id.
-	 */
 	$button['button_attr']['reported_type'] = bp_moderation_get_report_type( $item_type, $item_id );
 
 	/**
@@ -334,22 +309,6 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	 * @param bool  $html   Should return button html or not.
 	 */
 	return apply_filters( 'bp_moderation_get_report_button', $button, $args, $html );
-}
-
-/**
- * Function to get content report type.
- *
- * @param string $item_type Item type.
- * @param int    $item_id   Item id.
- *
- * @return mixed|void
- */
-function bp_moderation_get_report_type( $item_type, $item_id ) {
-	if ( ! $item_type || ! $item_id ) {
-		return false;
-	}
-
-	return apply_filters( "bp_moderation_{$item_type}_report_content_type", __( 'Post', 'buddyboss' ), $item_id );
 }
 
 /**
@@ -1111,4 +1070,82 @@ function bp_moderation_item_count( $args = array() ) {
 	$result = BP_Moderation::get( $moderation_request_args );
 
 	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
+}
+
+/**
+ * Function to get content report type.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param string $item_type Item type.
+ * @param int    $item_id   Item id.
+ *
+ * @return mixed|void
+ */
+function bp_moderation_get_report_type( $item_type, $item_id ) {
+	if ( ! $item_type || ! $item_id ) {
+		return false;
+	}
+
+	/**
+	 * Filters the reported content type
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param string $content_type Content type.
+	 * @param int    $item_id      Item id.
+	 */
+	return apply_filters( "bp_moderation_{$item_type}_report_content_type", __( 'Post', 'buddyboss' ), $item_id );
+}
+
+/**
+ * Function to get report button text.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param string $item_type Item type.
+ * @param int    $item_id   Item id.
+ *
+ * @return false|mixed|void
+ */
+function bp_moderation_get_report_button_text( $item_type, $item_id ) {
+	if ( ! $item_type || ! $item_id ) {
+		return false;
+	}
+
+	/**
+	 * Filters the report button text for different components
+	 *
+	 * @since BuddyBoss 1.7.2
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 */
+	return apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
+}
+
+/**
+ * Function to get reported button text.
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param string $item_type Item type.
+ * @param int    $item_id   Item id.
+ *
+ * @return false|mixed|void
+ */
+function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
+	if ( ! $item_type || ! $item_id ) {
+		return false;
+	}
+
+	/**
+	 * Filters the reported button text for different components
+	 *
+	 * @since BuddyBoss 1.7.2
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 */
+	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", __( 'Reported', 'buddyboss' ), $item_id );
 }
