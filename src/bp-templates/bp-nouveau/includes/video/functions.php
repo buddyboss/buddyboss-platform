@@ -320,8 +320,8 @@ function bp_video_allowed_video_type() {
 			'extension'   => '.mov',
 			'mime_type'   => 'video/quicktime',
 			'description' => __( 'Quicktime', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
+			'is_default'  => 0,
+			'is_active'   => 0,
 			'icon'        => '',
 		),
 	);
