@@ -522,7 +522,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					return;
 				}
 
-				$pre_search_query = implode( ' UNION ', $sql_queries ) . ' ORDER BY relevance DESC, type DESC, entry_date DESC ';
+				$pre_search_query = implode( ' UNION ', $sql_queries ) . ' ORDER BY type DESC, entry_date DESC ';
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
