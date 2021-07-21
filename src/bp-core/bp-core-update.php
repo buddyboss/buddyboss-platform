@@ -333,12 +333,6 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_2();
 		}
-
-		// Version 1.7.3.
-		if ( $raw_db_version < 17301 ) {
-			bb_update_to_1_7_3();
-		}
-
 	}
 
 	/* All done! *************************************************************/
@@ -697,40 +691,6 @@ function bp_update_to_1_7_0() {
 function bb_update_to_1_7_2() {
 	flush_rewrite_rules();
 	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
-}
-
-/**
- * Update the .mov file to default false.
- *
- * @since BuddyBoss 1.7.3
- */
-function bb_update_to_1_7_3() {
-
-	bp_add_option( '_bp_ignore_deprecated_code', false );
-
-	$document_extensions = bp_get_option( 'bp_document_extensions_support', array() );
-	$video_extensions    = bp_get_option( 'bp_video_extensions_support', array() );
-
-	if ( ! empty( $document_extensions ) ) {
-		$key = array_keys( array_combine( array_keys( $document_extensions ), array_column( $document_extensions, 'extension' ) ), '.mov' );
-		if ( ! empty( $key ) ) {
-			$key                                       = current( $key );
-			$document_extensions[ $key ]['is_default'] = 0;
-			bp_update_option( 'bp_document_extensions_support', $document_extensions );
-
-		}
-	}
-
-	if ( ! empty( $video_extensions ) ) {
-		$key = array_keys( array_combine( array_keys( $video_extensions ), array_column( $video_extensions, 'extension' ) ), '.mov' );
-		if ( ! empty( $key ) ) {
-			$key                                    = current( $key );
-			$video_extensions[ $key ]['is_default'] = 0;
-			bp_update_option( 'bp_video_extensions_support', $video_extensions );
-		}
-	}
-
-
 }
 
 function bp_update_default_doc_extensions() {
@@ -1213,7 +1173,9 @@ function bb_update_to_1_5_6() {
  *
  * @since BuddyBoss 1.7.0
  */
-add_filter( 'bp_media_allowed_document_type', function ( $extensions ) {
+add_filter(
+	'bp_media_allowed_document_type',
+	function ( $extensions ) {
 		$changed_array = array(
 			'bb_doc_77' => array(
 				'extension'   => '.mp4',
@@ -1243,8 +1205,8 @@ add_filter( 'bp_media_allowed_document_type', function ( $extensions ) {
 				'extension'   => '.mov',
 				'mime_type'   => 'video/quicktime',
 				'description' => __( 'Quicktime', 'buddyboss' ),
-				'is_default'  => 0,
-				'is_active'   => 0,
+				'is_default'  => 1,
+				'is_active'   => 1,
 				'icon'        => '',
 			),
 		);
