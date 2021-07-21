@@ -64,7 +64,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
 
 		// Report popup content type.
-		add_filter( "bp_moderation_{$this->item_type}_reported_content_type", array( $this, 'report_content_type' ), 10, 2 );
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**

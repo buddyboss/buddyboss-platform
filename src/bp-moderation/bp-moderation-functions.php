@@ -349,7 +349,7 @@ function bp_moderation_get_report_type( $item_type, $item_id ) {
 		return false;
 	}
 
-	return apply_filters( "bp_moderation_{$item_type}_reported_content_type", __( 'Post', 'buddyboss' ), $item_id );
+	return apply_filters( "bp_moderation_{$item_type}_report_content_type", __( 'Post', 'buddyboss' ), $item_id );
 }
 
 /**
