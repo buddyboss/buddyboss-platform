@@ -159,33 +159,7 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
-// Filter activity discussion content.
-add_filter( 'bp_get_activity_content_body', 'bb_disabled_forum_render_activity_content', 10, 2 );
-
 /** Functions *****************************************************************/
-
-/**
- * Render the activity content for discussion activity.
- *
- * @since BuddyBoss 1.7.3
- *
- * @param string $content  Activit content.
- * @param object $activity Activit data.
- *
- * @uses bbp_get_reply()           Get reply post data.
- * @uses bbp_get_topic_permalink() Get discussion permalink.
- *
- * @return string
- */
-function bb_disabled_forum_render_activity_content( $content, $activity ) {
-
-	// When forum is disabled and the activity type match with the topic or reply.
-	if ( ! bp_is_active( 'forums' ) && in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true ) ) {
-		return sprintf( '<div class="bb-content-inr-wrap">%1$s</div>', $content );
-	}
-
-	return $content;
-}
 
 /**
  * Types of activity feed items to moderate.
