@@ -59,7 +59,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Set positions towards end
 			$this->create_step_position = 15;
-			$this->nav_item_position    = 10;
+			$this->nav_item_position    = 30;
 
 			// Allow create step and show in nav
 			$this->enable_create_step = true;
