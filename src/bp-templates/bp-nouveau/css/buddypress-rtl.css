@@ -3646,7 +3646,6 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul li.report_file a.reported-content,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li.report_file a.reported-content {
   opacity: 0.8 !important;
-  pointer-events: none;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.report-content, #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.report_file a.reported-content,
@@ -3993,7 +3992,6 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.report_file a.reported-content,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.report_file a.reported-content {
   opacity: 0.8 !important;
-  pointer-events: none;
 }
 
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a.report-content, #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.report_file a.reported-content,
@@ -15565,7 +15563,7 @@ ul.bb-albums-list .load-more {
   font-size: 22px;
 }
 
-.bbm-uploader-model-wrap .bb-model-header span {
+.bbm-uploader-model-wrap .bb-model-header span:not(.bp-reported-type) {
   font-size: 1rem;
   color: #939597;
   letter-spacing: -0.24px;
@@ -16972,7 +16970,6 @@ div.dropzone .dz-preview .dz-filename {
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content {
   opacity: 0.8 !important;
-  pointer-events: none;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.report-content, .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a.reported-content,
@@ -23700,4 +23697,36 @@ span.icons:before {
   .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .bb-remove-all-notification .action-close {
     display: flex !important;
   }
+}
+
+/*
+*-----------------------------------------
+* @section 18.0 - Moderation Popup
+*-----------------------------------------
+*/
+/*__ 1. Popup style __*/
+#reported-content .bb-model-header,
+#block-member .bb-model-header,
+#content-report .bb-model-header {
+  position: relative;
+}
+
+#reported-content .bb-model-header .mfp-close,
+#block-member .bb-model-header .mfp-close,
+#content-report .bb-model-header .mfp-close {
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+#reported-content .bb-model-header .mfp-close:hover,
+#block-member .bb-model-header .mfp-close:hover,
+#content-report .bb-model-header .mfp-close:hover {
+  box-shadow: none;
+}
+
+#reported-content .bb-model-header .mfp-close .bb-icon,
+#block-member .bb-model-header .mfp-close .bb-icon,
+#content-report .bb-model-header .mfp-close .bb-icon {
+  font-size: 24px;
+  pointer-events: none;
 }
