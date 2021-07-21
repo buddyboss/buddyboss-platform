@@ -1,5 +1,20 @@
 <script type="text/html" id="tmpl-messages-video">
-    <div class="dropzone closed" id="messages-post-video-uploader"></div>
+	<?php if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && bb_user_can_create_video() ) : ?>
+		<div class="dropzone closed" id="messages-post-video-uploader"></div>
+	<?php endif; ?>
+	<?php
+	$is_group_message_thread = false;
+	if ( $thread_id = (int) bp_action_variable() ) {
+		$first_message    = BP_Messages_Thread::get_first_message( $thread_id );
+		$message_group_id = bp_messages_get_meta( $first_message->id, 'group_id', true );
+		if ( ! empty ( $message_group_id ) ) {
+			$is_group_message_thread = true;
+		}
+	}
+	?>
+	<?php if ( $is_group_message_thread === true ) : ?>
+		<div class="dropzone closed" id="messages-post-video-uploader"></div>
+	<?php endif; ?>
     <div class="message-post-video-template" style="display:none;">
         <div class="dz-preview dz-file-preview well" id="dz-preview-template">
             <div class="dz-details">
