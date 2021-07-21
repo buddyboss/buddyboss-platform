@@ -2181,6 +2181,11 @@ window.bp = window.bp || {};
 								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
 								var nonce       = this.currItem.el.data( 'bp-nonce' );
+								var reportType  = this.currItem.el.attr( 'reported_type' );
+								if ( 'undefined' !== typeof reportType ) {
+									var mf_content = $( '#content-report' );
+									mf_content.find( '.bp-reported-type' ).text( reportType );
+								}
 								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 									$( document ).find( '.bp-report-form-err' ).empty();
 									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );

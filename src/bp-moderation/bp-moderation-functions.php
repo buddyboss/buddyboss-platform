@@ -291,19 +291,20 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$button['button_attr']['item_id']       = $item_id;
 		$button['button_attr']['item_type']     = $item_type;
 		$button['button_attr']['href']          = '#reported-content';
-		/**
-		 * Filters the reported content type
-		 *
-		 * @since BuddyBoss X.X.X
-		 *
-		 * @param string $content_type Content type.
-		 * @param int    $item_id     Item id.
-		 */
-		$button['button_attr']['reported_type'] = apply_filters( "bp_moderation_{$item_type}_reported_content_type", __( 'Post', 'buddyboss' ), $item_id );
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );
 	}
+
+	/**
+	 * Filters the reported content type
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param string $content_type Content type.
+	 * @param int    $item_id     Item id.
+	 */
+	$button['button_attr']['reported_type'] = apply_filters( "bp_moderation_{$item_type}_reported_content_type", __( 'Post', 'buddyboss' ), $item_id );
 
 	/**
 	 * Filter to update report link args
@@ -317,7 +318,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 
 	if ( ! empty( $html ) ) {
 		if ( $is_reported ) {
-			$button = sprintf( '<a id="%s" class="%s" >%s</a>', esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), wp_kses_post( $button['link_text'] ) );
+			$button = sprintf( '<a href="%s"  id="%s" class="%s" reported_type="%s" >%s</a>', $button['button_attr']['href'], esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), $button['button_attr']['reported_type'], wp_kses_post( $button['link_text'] ) );
 		} else {
 			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), wp_kses_post( $button['link_text'] ) );
 		}
