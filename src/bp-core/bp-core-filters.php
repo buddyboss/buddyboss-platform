@@ -145,6 +145,34 @@ function bp_core_exclude_pages( $pages = array() ) {
 add_filter( 'wp_list_pages_excludes', 'bp_core_exclude_pages' );
 
 /**
+ * Exclude 'onlyme' activities from showing on 'Latest Updates' widget.
+ *
+ * @param array $privacy List of the Privacy options. 
+ *
+ * @return array The privacy list, with 'onlyme' excluded
+ */
+function bp_core_exclude_onlyme_privacy( $privacy = array() ) {
+
+	global $wpdb;
+	 
+	$table_name = $wpdb->prefix . 'bp_activity';
+	 
+	$field_name = 'privacy';
+	 
+	$prepared_statement = $wpdb->prepare( "SELECT DISTINCT {$field_name} FROM {$table_name}" );
+	
+	$privacy = $wpdb->get_col( $prepared_statement );
+	
+	if ( ( $key = array_search( 'onlyme', $privacy ) ) !== false ) {
+		unset($privacy[$key]);
+	}
+	
+	return apply_filters( 'bp_core_exclude_onlyme_privacy', $privacy );
+	
+}
+add_filter( 'bb_activity_privacy_values', 'bp_core_exclude_onlyme_privacy' );
+
+/**
  * Prevent specific pages (eg 'Activate') from showing in the Pages meta box of the Menu Administration screen.
  *
  * @since BuddyPress 2.0.0
