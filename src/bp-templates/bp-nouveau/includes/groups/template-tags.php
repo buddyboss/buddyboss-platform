@@ -864,7 +864,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			$buttons['group_membership_reject']['button_attr']['href'] = esc_url( bp_get_group_request_reject_link() );
 		}
 
-		/*
+		/**
 		 * Manage group members for the group's manage screen.
 		 * The 'button_attr' keys 'href' & 'formaction' are set at the end of this array block
 		 */
