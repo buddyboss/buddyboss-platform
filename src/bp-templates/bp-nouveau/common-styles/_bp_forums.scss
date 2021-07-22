@@ -1103,6 +1103,10 @@ fieldset div.avatar {
 
 }
 
+.activity-list li.activity .activity-inner .gamipress-buddypress-user-details + .gamipress-buddypress-user-details {
+	display: none;
+}
+
 /* =User Capabilities
 -------------------------------------------------------------- */
 

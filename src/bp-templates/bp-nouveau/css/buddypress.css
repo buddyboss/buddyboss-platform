@@ -12117,6 +12117,10 @@ fieldset div.avatar {
   background-color: #fafafa;
 }
 
+.activity-list li.activity .activity-inner .gamipress-buddypress-user-details + .gamipress-buddypress-user-details {
+  display: none;
+}
+
 /* =User Capabilities
 -------------------------------------------------------------- */
 #bbpress-forums dl.bbp-user-capabilities {
