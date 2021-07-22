@@ -135,6 +135,9 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
+			//Activity More Option Dropdown
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
+
 			// Activity autoload.
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
@@ -1009,6 +1012,17 @@ window.bp = window.bp || {};
 
 				form.slideDown( 200 );
 
+				/* Stop past image from clipboard */
+				var ce = form.find( '.ac-input[contenteditable]' );
+				if ( ce.length > 0 ) {
+					var div_editor = ce.get( 0 );
+					div_editor.addEventListener( 'paste', function ( e ) {
+						e.preventDefault();
+						var text = e.clipboardData.getData( 'text/plain' );
+						document.execCommand( 'insertText', false, text );
+					} );
+				}
+
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
@@ -1163,7 +1177,7 @@ window.bp = window.bp || {};
 											activity_comments.append( '<ul></ul>' );
 										}
 									}
-
+									
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 									$( form ).find( '.ac-input' ).first().html( '' );
 
@@ -2155,6 +2169,23 @@ window.bp = window.bp || {};
 				}
 			);
 		},
+
+		toggleActivityOption: function( event ) {
+
+			if( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+			}
+		},
+
 	};
 
 	// Launch BP Nouveau Activity.
