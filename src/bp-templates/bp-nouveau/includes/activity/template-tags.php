@@ -1825,7 +1825,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 /**
  * Output the action buttons for the activity comments
  *
- * @since BuddyPress 1.7.3
+ * @since BuddyBoss 1.7.3
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -1836,7 +1836,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 	/**
 	 * Fires after the default comment action options display.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.7.3
 	 */
 	do_action( 'bp_activity_comment_bubble_options' );
 
@@ -1952,7 +1952,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
-	 * @since BuddyPress 1.7.3
+	 * @since BuddyBoss 1.7.3
 	 *
 	 * @param array $buttons             The list of buttons.
 	 * @param int   $activity_comment_id The current activity comment ID.
@@ -1992,7 +1992,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	/**
 	 * Leave a chance to adjust the $return
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.7.3
 	 *
 	 * @param array $return              The list of buttons ordered.
 	 * @param int   $activity_comment_id The current activity comment ID.
