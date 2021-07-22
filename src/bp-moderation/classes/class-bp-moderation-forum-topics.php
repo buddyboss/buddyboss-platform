@@ -219,7 +219,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return esc_html__( 'Report Topic', 'buddyboss' );
+		return esc_html__( 'Report Discussion', 'buddyboss' );
 	}
 
 	/**
@@ -233,6 +233,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return esc_html__( 'Topic', 'buddyboss' );
+		return esc_html__( 'Discussion', 'buddyboss' );
 	}
 }

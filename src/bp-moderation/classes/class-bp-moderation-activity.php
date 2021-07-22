@@ -262,7 +262,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$updated     = true;
 				break;
 			case 'bbp_topic_create':
-				$button_text = esc_html__( 'Report Topic', 'buddyboss' );
+				$button_text = esc_html__( 'Report Discussion', 'buddyboss' );
 				$updated     = true;
 				break;
 			case 'bbp_reply_create':
@@ -353,7 +353,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$updated     = true;
 				break;
 			case 'bbp_topic_create':
-				$content_type = esc_html__( 'Topic', 'buddyboss' );
+				$content_type = esc_html__( 'Discussion', 'buddyboss' );
 				$updated     = true;
 				break;
 			case 'bbp_reply_create':
