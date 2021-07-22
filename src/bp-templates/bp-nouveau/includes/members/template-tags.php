@@ -173,7 +173,7 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 /**
  * Output the action buttons for the displayed user profile
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.3
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -201,7 +201,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 	/**
 	 * Fires in the member header actions section.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.3
 	 */
 	do_action( 'bp_member_header_bubble_actions' );
 	$output .= ob_get_clean();

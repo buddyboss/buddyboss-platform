@@ -2,7 +2,7 @@
 /**
  * Reported content popup
  *
- * @since   BuddyBoss X.X.X
+ * @since   BuddyBoss 1.7.3
  * @package BuddyBoss
  */
 

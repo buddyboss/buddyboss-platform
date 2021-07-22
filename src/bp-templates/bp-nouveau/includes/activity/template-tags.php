@@ -843,7 +843,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			'parent_element'    => $parent_element,
 			'parent_attr'       => $parent_attr,
 			'button_element'    => $button_element,
-			'link_text'         => __( 'Reply', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reply', 'buddyboss' ),
 			'button_attr'       => array(
 					'class' => "acomment-reply bp-primary-action",
 					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
@@ -1825,7 +1825,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 /**
  * Output the action buttons for the activity comments
  *
- * @since BuddyPress X.X.X
+ * @since BuddyPress 1.7.3
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -1859,7 +1859,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 /**
  * Get the top action buttons for the activity comments
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.3
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  *
@@ -1935,7 +1935,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 		'parent_element'    => $parent_element,
 		'parent_attr'       => $parent_attr,
 		'button_element'    => $button_element,
-		'link_text'         => __( 'Delete', 'buddyboss' ),
+		'link_text'         => esc_html__( 'Delete', 'buddyboss' ),
 		'button_attr'       => array(
 			'class' => 'delete acomment-delete confirm bp-secondary-action',
 			'rel'   => 'nofollow',
@@ -1952,7 +1952,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
-	 * @since BuddyPress X.X.X
+	 * @since BuddyPress 1.7.3
 	 *
 	 * @param array $buttons             The list of buttons.
 	 * @param int   $activity_comment_id The current activity comment ID.

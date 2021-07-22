@@ -210,7 +210,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Function to change report button text.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.3
 	 *
 	 * @param string $button_text Button text.
 	 * @param int    $item_id     Item id.
@@ -218,13 +218,13 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return __( 'Report Forum', 'buddyboss' );
+		return esc_html__( 'Report Forum', 'buddyboss' );
 	}
 
 	/**
 	 * Function to change report type.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.3
 	 *
 	 * @param string $content_type Button text.
 	 * @param int    $item_id     Item id.
@@ -232,6 +232,6 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return __( 'Forum', 'buddyboss' );
+		return esc_html__( 'Forum', 'buddyboss' );
 	}
 }

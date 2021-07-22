@@ -1075,7 +1075,7 @@ function bp_moderation_item_count( $args = array() ) {
 /**
  * Function to get content report type.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.3
  *
  * @param string $item_type Item type.
  * @param int    $item_id   Item id.
@@ -1090,18 +1090,18 @@ function bp_moderation_get_report_type( $item_type, $item_id ) {
 	/**
 	 * Filters the reported content type
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.3
 	 *
 	 * @param string $content_type Content type.
 	 * @param int    $item_id      Item id.
 	 */
-	return apply_filters( "bp_moderation_{$item_type}_report_content_type", __( 'Post', 'buddyboss' ), $item_id );
+	return apply_filters( "bp_moderation_{$item_type}_report_content_type", esc_html__( 'Post', 'buddyboss' ), $item_id );
 }
 
 /**
  * Function to get report button text.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.3
  *
  * @param string $item_type Item type.
  * @param int    $item_id   Item id.
@@ -1121,13 +1121,13 @@ function bp_moderation_get_report_button_text( $item_type, $item_id ) {
 	 * @param string $button_text Button text.
 	 * @param int    $item_id     Item id.
 	 */
-	return apply_filters( "bb_moderation_{$item_type}_report_button_text", __( 'Report', 'buddyboss' ), $item_id );
+	return apply_filters( "bb_moderation_{$item_type}_report_button_text", esc_html__( 'Report', 'buddyboss' ), $item_id );
 }
 
 /**
  * Function to get reported button text.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.3
  *
  * @param string $item_type Item type.
  * @param int    $item_id   Item id.
@@ -1147,5 +1147,5 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 * @param string $button_text Button text.
 	 * @param int    $item_id     Item id.
 	 */
-	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", __( 'Reported', 'buddyboss' ), $item_id );
+	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
 }

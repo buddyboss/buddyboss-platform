@@ -516,7 +516,7 @@ function bp_nouveau_group_header_buttons( $args = array() ) {
 /**
  * Output the action bubble buttons for the displayed group
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.3
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -534,7 +534,7 @@ function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
 	/**
 	 * Fires in the group header actions section.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.7.3
 	 */
 	do_action( 'bp_group_header_bubble_actions' );
 	$output .= ob_get_clean();
@@ -715,7 +715,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 		return $buttons;
 	}
 
-	/*
+	/**
 	 * If the 'container' is set to 'ul' set $parent_element to li,
 	 * otherwise simply pass any value found in $args or set var false.
 	 */
@@ -790,7 +790,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'component'         => 'groups',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
-			'link_text'         => __( 'Reject', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reject', 'buddyboss' ),
 			'parent_attr'       => array(
 				'id'    => '',
 				'class' => $parent_class . ' ' . 'reject',
@@ -845,7 +845,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
 			'button_element'    => $button_element,
-			'link_text'         => __( 'Reject', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reject', 'buddyboss' ),
 			'parent_attr'       => array(
 				'id'    => '',
 				'class' => $parent_class,
@@ -879,7 +879,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => __( 'Remove Ban', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Remove Ban', 'buddyboss' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -898,7 +898,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => __( 'Kick &amp; Ban', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Kick &amp; Ban', 'buddyboss' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -956,7 +956,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => __( 'Remove from group', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Remove from group', 'buddyboss' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -1122,7 +1122,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
  * Get the action buttons for the current group in the loop,
  * or the current displayed group.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.3
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
