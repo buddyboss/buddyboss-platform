@@ -384,7 +384,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				}
 			}
 		} else {
-			$content_type = esc_html__( 'Report Comment', 'buddyboss' );
+			$content_type = esc_html__( 'Comment', 'buddyboss' );
 		}
 
 		return $content_type;
