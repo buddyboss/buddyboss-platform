@@ -1,6 +1,6 @@
 <?php
 /**
- * Reported content popup
+ * Reported content popup.
  *
  * @since   BuddyBoss 1.7.3
  * @package BuddyBoss
@@ -14,15 +14,15 @@
 			<div class="modal-container">
 				<header class="bb-model-header">
 					<h4>
-                        <?php printf('%s <span class="bp-reported-type"></span>', esc_html__('Report', 'buddyboss') ); ?>
-                    </h4>
+						<?php printf( '%s <span class="bp-reported-type"></span>', esc_html__( 'Report', 'buddyboss' ) ); ?>
+					</h4>
 					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
-                        <span class="bb-icon bb-icon-close"></span>
-                    </button>
+						<span class="bb-icon bb-icon-close"></span>
+					</button>
 				</header>
 
 				<div class="bb-report-type-wrp">
-					<?php printf('%s <span class="bp-reported-type"></span>', esc_html__('You have already reported this', 'buddyboss') ); ?>
+					<?php printf( '%s <span class="bp-reported-type"></span>', esc_html__( 'You have already reported this', 'buddyboss' ) ); ?>
 				</div>
 			</div>
 		</div>
