@@ -12016,6 +12016,25 @@ fieldset div.avatar {
   margin: 3px;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap + .gamipress-buddypress-user-details,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap + .gamipress-buddypress-user-details,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap + .gamipress-buddypress-user-details {
+  display: none;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .gamipress-buddypress-user-details,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .gamipress-buddypress-user-details,
+.activity-list li.blogs .activity-content .activity-inner .gamipress-buddypress-user-details {
+  margin-left: 10px;
+  position: relative;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .gamipress-buddypress-user-details .wp-post-image,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .gamipress-buddypress-user-details .wp-post-image,
+.activity-list li.blogs .activity-content .activity-inner .gamipress-buddypress-user-details .wp-post-image {
+  margin: 0;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
   padding: 0;

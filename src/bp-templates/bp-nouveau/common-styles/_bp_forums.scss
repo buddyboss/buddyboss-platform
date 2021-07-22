@@ -994,6 +994,20 @@ fieldset div.avatar {
 
 		}
 
+		.bb-content-inr-wrap + .gamipress-buddypress-user-details {
+			display: none;
+		}
+
+		.gamipress-buddypress-user-details {
+			margin-left: 10px;
+			position: relative;
+
+			.wp-post-image {
+				margin: 0;
+			}
+
+		}
+
 	}
 
 }
