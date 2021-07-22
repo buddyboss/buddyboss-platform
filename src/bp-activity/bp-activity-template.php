@@ -221,7 +221,7 @@ function bp_has_activities( $args = '' ) {
 	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
-	if ( bp_is_group() ) {
+	if ( bp_is_active( 'groups' ) ) {
 		$object          = $bp->groups->id;
 		$args['privacy'] = ( isset( $args['privacy'] ) ? $args['privacy'] : array( 'public' ) );
 		$primary_id      = bp_get_current_group_id();
