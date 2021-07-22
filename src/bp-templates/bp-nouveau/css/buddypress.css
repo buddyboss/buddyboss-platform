@@ -12035,6 +12035,12 @@ fieldset div.avatar {
   margin: 0;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .gamipress-buddypress-user-details span,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .gamipress-buddypress-user-details span,
+.activity-list li.blogs .activity-content .activity-inner .gamipress-buddypress-user-details span {
+  vertical-align: middle;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
   padding: 0;
