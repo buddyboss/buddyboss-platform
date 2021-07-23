@@ -230,7 +230,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				break;
 		}
 
-		if ( ( ! empty( $media_id = bp_activity_get_meta( $activity->id, 'bp_media_id', true ) ) || ! empty( $media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) ) ) && false === $updated ) {
+		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
 			if ( bp_is_active( 'media' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
 				$explode_medias = explode( ',', $media_ids );
 				if ( 1 === count( $explode_medias ) && ! empty( $explode_medias[0] ) ) {
@@ -244,7 +247,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ( ! empty( $document_id = bp_activity_get_meta( $activity->id, 'bp_document_id', true ) ) || ! empty( $document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true ) ) ) && false === $updated ) {
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
 			if ( bp_is_active( 'document' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
 				$explode_documents = explode( ',', $document_ids );
 				if ( 1 === count( $explode_documents ) && ! empty( $explode_documents[0] ) ) {
@@ -258,7 +264,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( ( ! empty( $video_id = bp_activity_get_meta( $activity->id, 'bp_video_id', true ) ) || ! empty( $video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) ) ) && false === $updated ) {
+		$video_id  = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
 			if ( bp_is_active( 'video' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
 				$explode_videos = explode( ',', $video_ids );
 				if ( 1 === count( $explode_videos ) && ! empty( $explode_videos[0] ) ) {
