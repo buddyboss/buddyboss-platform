@@ -1686,8 +1686,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 	if ( $activity_type !== 'activity_comment' ) {
 		// Add activity edit button.
-		$video_id = BP_Video::get_activity_video_id( $activity_id );
-		if ( bp_is_activity_edit_enabled() && ( bp_is_group_activity() || empty( $video_id ) || bb_user_can_create_video() ) ) {
+		if ( bp_is_activity_edit_enabled() ) {
 			$buttons['activity_edit'] = array(
 				'id'                => 'activity_edit',
 				'position'          => 30,

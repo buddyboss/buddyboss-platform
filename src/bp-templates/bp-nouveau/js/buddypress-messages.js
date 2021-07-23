@@ -1880,7 +1880,7 @@ window.bp = window.bp || {};
 					this.views.add( this.messagesDocument );
 				}
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video || BP_Nouveau.video.group_video ) ) {
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video_active ) ) {
 					this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
 					this.views.add( this.messagesVideo );
 				}
@@ -3309,7 +3309,7 @@ window.bp = window.bp || {};
 						$( '#whats-new-messages-toolbar .post-media-photo-support' ).show();
 					}
 
-					if ( BP_Nouveau.video.messages_video === false || BP_Nouveau.video.can_create_video === false ) {
+					if ( BP_Nouveau.video.messages_video === false ) {
 						$( '#whats-new-messages-toolbar .post-media-video-support' ).hide();
 					} else {
 						$( '#whats-new-messages-toolbar .post-media-video-support' ).show();
