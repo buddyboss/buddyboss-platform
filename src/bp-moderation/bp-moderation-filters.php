@@ -618,14 +618,14 @@ function bp_moderation_admin_repair_old_moderation_data() {
 	global $wpdb;
 
 	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$sql_offset               = ( 1 === $offset ) ? 0 : 0;
 	$activity_table           = "{$wpdb->prefix}bp_activity";
 	$activity_table_meta      = "{$wpdb->prefix}bp_activity_meta";
 	$moderation_table         = "{$wpdb->prefix}bp_moderation";
 	$moderation_table_meta    = "{$wpdb->prefix}bp_moderation_meta";
 	$suspend_table            = "{$wpdb->prefix}bp_suspend";
-	$moderated_activities_sql = $wpdb->prepare( "SELECT {$suspend_table}.id,{$suspend_table}.item_id,{$suspend_table}.last_updated FROM {$suspend_table} INNER JOIN {$activity_table} ON ( {$suspend_table}.item_id = {$activity_table}.id ) WHERE 1=1 AND {$suspend_table}.reported = 1 AND (  {$activity_table}.privacy IN ('media','video','document') ) GROUP BY {$suspend_table}.id ORDER BY {$suspend_table}.id DESC LIMIT 1 OFFSET %d", $sql_offset );
+	$moderated_activities_sql = $wpdb->prepare( "SELECT {$suspend_table}.id,{$suspend_table}.item_id,{$suspend_table}.last_updated FROM {$suspend_table} INNER JOIN {$activity_table} ON ( {$suspend_table}.item_id = {$activity_table}.id ) WHERE 1=1 AND {$suspend_table}.reported = 1 AND (  {$activity_table}.privacy IN ('media','video','document') ) GROUP BY {$suspend_table}.id ORDER BY {$suspend_table}.id DESC LIMIT 10" );
 	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
+
 	if ( ! empty( $moderated_activities ) ) {
 		foreach ( $moderated_activities as $moderated_activity ) {
 			$activity_sql = $wpdb->prepare( "SELECT id,privacy FROM {$activity_table} WHERE id=%d", $moderated_activity->item_id );
