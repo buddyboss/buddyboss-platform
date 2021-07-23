@@ -6801,6 +6801,7 @@ window.bp = window.bp || {};
 								setTimeout(
 									function () { // Waiting to load dummy image
 										bp.Nouveau.reportPopUp();
+										bp.Nouveau.reportedPopup();
 									},
 									1000
 								);
@@ -6854,6 +6855,7 @@ window.bp = window.bp || {};
 								setTimeout(
 									function () { // Waiting to load dummy image
 										bp.Nouveau.reportPopUp();
+										bp.Nouveau.reportedPopup();
 									},
 									1000
 								);

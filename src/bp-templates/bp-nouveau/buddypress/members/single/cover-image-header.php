@@ -106,6 +106,14 @@ if ( ! empty( $cover_image_url ) ) {
 			);
 			?>
 
+			<?php bp_nouveau_member_header_bubble_buttons(
+				array(
+					'container'         => 'div',
+					'button_element'    => 'button',
+					'container_classes' => array( 'bb_more_options' ),
+				)
+			); ?>
+
 		</div><!-- #item-header-content -->
 	</div><!-- #item-header-cover-image -->
 </div><!-- #cover-image-container -->
