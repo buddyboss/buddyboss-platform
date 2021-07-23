@@ -174,7 +174,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity discussion.
 			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
-			//add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
 		}
 
 		/**

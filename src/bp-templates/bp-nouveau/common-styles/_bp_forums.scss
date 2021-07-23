@@ -1005,7 +1005,7 @@ fieldset div.avatar {
 		padding: 0;
 
 		.activity-discussion-title-wrap {
-			padding: 12px 12px 6px 12px;
+			padding: 12px 12px 0 12px;
 			margin-bottom: 0;
 			background-color: #fafafa;
 		}
@@ -1013,7 +1013,7 @@ fieldset div.avatar {
 	}
 
 	.bb-content-inr-wrap {
-		padding: 6px 12px 12px 12px;
+		padding: 12px 12px 12px 12px;
 		background-color: #fafafa;
 
 		.activity-read-more {
@@ -1043,6 +1043,13 @@ fieldset div.avatar {
 
 		}
 
+	}
+
+	.bb-activity-media-wrap.bb-media-length-1 .bb-activity-media-elem {
+		margin: 12px auto;
+		border: none;
+		width: -webkit-calc(100% - 24px);
+		width: calc(100% - 24px);
 	}
 
 }
