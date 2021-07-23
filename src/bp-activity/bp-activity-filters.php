@@ -2366,7 +2366,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
 					$content .= $iframe;
 				}
-				$content = sprintf( '%1$s <div class="bb-content-wrp">%2$s %3$s</div>', $content_img, $post_title, $content );
+				$content = sprintf( '%1$s <div class="bb-content-wrp">%2$s %3$s</div>', $content_img, $post_title, wpautop( $content ) );
 			} else {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				$content = strip_tags( $content, '<a><iframe><img><span><div>' );
@@ -2374,7 +2374,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
 				}
-				$content = sprintf( '%1$s <div class="bb-content-wrp">%2$s %3$s</div>', $content_img, $post_title, $content );
+				$content = sprintf( '%1$s <div class="bb-content-wrp">%2$s %3$s</div>', $content_img, $post_title, wpautop( $content ) );
 			}
 		}
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
@@ -2383,7 +2383,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-			$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text );
+			$content     = wpautop( sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text ) );
 		}
 	}
 
