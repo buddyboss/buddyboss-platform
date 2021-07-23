@@ -499,72 +499,74 @@
 
 			.generic-button {
 				width: 100%;
-			}
 
-			.generic-button a {
+				a {
 
-				#buddypress & {
-					margin: 0;
-					display: block;
-					text-align: left;
-					opacity: 1;
-					font-size: 14px;
-					letter-spacing: -0.24px;
-					width: 100%;
-					text-transform: none;
-					font-weight: 400;
-					min-height: auto;
-					border-radius: 0;
-					padding: 8px 14px;
-					color: #7f868f;
-					line-height: 1;
-					border: 0;
-					background-color: transparent;
-					box-shadow: none;
+					#buddypress & {
+						margin: 0;
+						display: block;
+						text-align: left;
+						opacity: 1;
+						font-size: 13px;
+						letter-spacing: -0.24px;
+						width: 100%;
+						text-transform: none;
+						font-weight: 400;
+						min-height: auto;
+						border-radius: 0;
+						padding: 10px 14px;
+						color: #7f868f;
+						line-height: 1.1;
+						border: 0;
+						background-color: transparent;
+						box-shadow: none;
 
-					&:hover {
-						color: $blue;
-						background-color: #f5f5f5;
-					}
+						&:hover {
+							color: $blue;
+							background-color: #f5f5f5;
+						}
 
-					&:before {
-						font-family: "bb-icons";/* stylelint-disable-line */
-						font-size: 18px;
-						display: inline-block;
-						margin-right: 10px;
-						vertical-align: middle;
-						width: 20px;
-						text-align: center;
-					}
+						&:before {
+							font-family: "bb-icons";/* stylelint-disable-line */
+							font-size: 18px;
+							display: inline-block;
+							margin-right: 10px;
+							vertical-align: middle;
+							width: 20px;
+							text-align: center;
+						}
 
-					&.reported-content:before,
-					&.report-content:before {
-						content: "\e8ea";
-						font-size: 15px;
-					}
+						&.reported-content:before,
+						&.report-content:before {
+							content: "\e8ea";
+							font-size: 15px;
+						}
 
-					&.delete-activity:before {
-						content: "\e937";
-						font-size: 15px;
-					}
+						&.delete:before,
+						&.delete-activity:before {
+							content: "\e937";
+							font-size: 15px;
+						}
 
-					&.ac-video-thumbnail-edit:before {
-						content: "\e9cb";
-						font-size: 20px;
-						display: inline-block;
-						vertical-align: middle;
-						max-height: 15px;
-						margin-top: -6px;
-					}
+						&.ac-video-thumbnail-edit:before {
+							content: "\e9cb";
+							font-size: 20px;
+							display: inline-block;
+							vertical-align: middle;
+							max-height: 15px;
+							margin-top: -6px;
+						}
 
-					&.edit-activity:before {
-						content: "\e80c";
-						font-size: 17px !important;
-					}
+						&.edit-activity:before {
+							content: "\e80c";
+							font-size: 17px !important;
+						}
 
-					span:not(.bp-screen-reader-text) {
-						display: inline-block;
-						vertical-align: middle;
+						span:not(.bp-screen-reader-text) {
+							display: inline-block;
+							vertical-align: middle;
+						}
+
 					}
 
 				}
@@ -585,6 +587,14 @@
 	}
 
 	.comment-item {
+
+		.bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before {
+
+			#buddypress & {
+				vertical-align: bottom;
+			}
+
+		}
 
 		.acomment-meta {
 			margin-right: 25px;
@@ -1395,7 +1405,7 @@ span.dashicons.dashicons-admin-file:before {
 
 						&.reported-content {
 							opacity: 0.8 !important;
-							pointer-events: none;
+							//pointer-events: none;
 						}
 
 						&.report-content,
@@ -1655,7 +1665,7 @@ span.dashicons.dashicons-admin-file:before {
 
 						&.reported-content {
 							opacity: 0.8 !important;
-							pointer-events: none;
+							//pointer-events: none;
 						}
 
 						&.report-content,
