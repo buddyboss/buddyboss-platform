@@ -6600,7 +6600,12 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				if ( 'mov' === self.current_document.extension ) {
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/mp4" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				} else {
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				}
+
 				//fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();
 				$( window ).scroll();
 
