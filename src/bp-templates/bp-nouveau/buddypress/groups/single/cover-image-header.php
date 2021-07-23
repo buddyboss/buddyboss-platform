@@ -36,13 +36,13 @@ $has_cover_image_position = '';
 			}
 			?>
 			<?php if ( bp_is_item_admin() ) { ?>
-				<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
+				<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e('Change Cover Photo', 'buddyboss'); ?>">
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 			<?php } ?>
-			
+
 			<?php if ( ! empty( $group_cover_image ) && bp_is_item_admin() ) { ?>
-				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
+				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e('Reposition Cover Photo', 'buddyboss'); ?>">
 					<i class="bb-icon-move"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
@@ -59,7 +59,7 @@ $has_cover_image_position = '';
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
-					<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Group Photo', 'buddyboss'); ?>">
+					<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e('Change Group Photo', 'buddyboss'); ?>">
 						<i class="bb-icon-edit-thin"></i>
 					</a>
 				<?php } ?>
@@ -88,6 +88,7 @@ $has_cover_image_position = '';
 
 				<?php bp_nouveau_group_header_buttons(); ?>
 
+				<?php bb_nouveau_group_header_bubble_buttons(); ?>
 			</div><!-- #item-header-content -->
 		<?php endif; ?>
 

@@ -204,8 +204,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$request['component']         = 'groups';
 			$args['filter']['object']     = 'groups';
 			$args['filter']['primary_id'] = $args['group_id'];
+			$args['privacy']              = array( 'public' );
 
 			$item_id = $args['group_id'];
+		} elseif ( ! empty( $request['component'] ) && 'groups' === $request['component'] && ! empty( $request['primary_id'] ) ) {
+			$args['privacy'] = array( 'public' );
 		}
 
 		if ( ! empty( $args['site_id'] ) ) {
@@ -1182,7 +1185,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$activities_template                            = new \stdClass();
 		$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 		$activities_template->activity                  = $activity;
-		
+		$activities_template->in_the_loop               = true;
+
 		// Remove feature image from content from the activity feed which added last in the content.
 		$blog_id = '';
 		if ( 'blogs' === $activity->component && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
@@ -1254,14 +1258,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $schema['properties']['user_avatar'] ) ) {
 			$data['user_avatar'] = array(
-				'full' => bp_core_fetch_avatar(
+				'full'  => bp_core_fetch_avatar(
 					array(
 						'item_id' => $activity->user_id,
 						'html'    => false,
 						'type'    => 'full',
 					)
 				),
-
 				'thumb' => bp_core_fetch_avatar(
 					array(
 						'item_id' => $activity->user_id,
@@ -1470,9 +1473,22 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-
 			$links['group'] = array(
 				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, buddypress()->groups->id, $activity->item_id ) ),
+				'embeddable' => true,
+			);
+		}
+
+		if ( 'bbp_topic_create' === $activity->type && function_exists( 'bb_activity_topic_id' ) && bb_activity_topic_id( $activity ) ) {
+			$links['topic'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, 'topics', bb_activity_topic_id( $activity ) ) ),
+				'embeddable' => true,
+			);
+		}
+
+		if ( 'bbp_reply_create' === $activity->type && function_exists( 'bb_activity_reply_topic_id' ) && bb_activity_reply_topic_id( $activity ) ) {
+			$links['topic'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, 'topics', bb_activity_reply_topic_id( $activity ) ) ),
 				'embeddable' => true,
 			);
 		}
@@ -2136,10 +2152,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		$edit_activity_data = bp_activity_get_edit_data( $activity->id );
+		$edit_activity_data = empty( $edit_activity_data ) ? array() : $edit_activity_data;
 
 		if ( ! empty( $edit_activity_data ) ) {
 			// Removed unwanted data.
-			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document' );
+			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document', 'video' );
 			foreach ( $unset_keys as $key ) {
 				if ( array_key_exists( $key, $edit_activity_data ) ) {
 					unset( $edit_activity_data[ $key ] );
@@ -2147,14 +2164,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( array_key_exists( 'group_media', $edit_activity_data ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		if ( isset( $edit_activity_data['group_media'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
 				$edit_activity_data['group_media'] = bp_is_group_media_support_enabled() && ( ! function_exists( 'bb_media_user_can_upload' ) || bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );
 			}
 		}
 
-		if ( array_key_exists( 'group_document', $edit_activity_data ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		if ( isset( $edit_activity_data['group_document'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
 				$edit_activity_data['group_document'] = bp_is_group_document_support_enabled() && ( ! function_exists( 'bb_document_user_can_upload' ) || bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );

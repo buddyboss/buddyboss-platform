@@ -396,14 +396,21 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp-feed-platform-group_details_updated'] = bp_platform_is_feed_enable( 'bp-feed-platform-group_details_updated' );
 			$results['bp-feed-platform-bbp_topic_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_topic_create' );
 			$results['bp-feed-platform-bbp_reply_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_reply_create' );
-			$results['bp-disable-blogforum-comments']          = bp_disable_blogforum_comments();
 
-			$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
-			if ( ! empty( $custom_post_types ) ) {
-				foreach ( $custom_post_types as $single_post ) {
+			if ( function_exists( 'bb_feed_post_types' ) ) {
+				foreach ( bb_feed_post_types() as $single_post ) {
 					// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
-					$enabled                                               = bp_is_post_type_feed_enable( $single_post );
-					$results[ 'bp-feed-custom-post-type-' . $single_post ] = $enabled;
+					$results[ 'bp-feed-custom-post-type-' . $single_post ]               = (bool) bp_is_post_type_feed_enable( $single_post );
+					$results[ 'bp-feed-custom-post-type-' . $single_post . '-comments' ] = (bool) bb_is_post_type_feed_comment_enable( $single_post );
+				}
+			} else {
+				$results['bp-disable-blogforum-comments'] = bp_disable_blogforum_comments();
+				$custom_post_types                        = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
+				if ( ! empty( $custom_post_types ) ) {
+					foreach ( $custom_post_types as $single_post ) {
+						// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
+						$results[ 'bp-feed-custom-post-type-' . $single_post ] = (bool) bp_is_post_type_feed_enable( $single_post );
+					}
 				}
 			}
 		}
@@ -443,6 +450,16 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_is_forums_document_support_enabled'] = bp_is_forums_document_support_enabled();
 				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
 				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
+			}
+
+			// Video settings.
+			if ( bp_is_active( 'video' ) ) {
+				$results['bp_video_profile_video_support']  = bp_is_profile_video_support_enabled();
+				$results['bp_video_group_video_support']    = bp_is_group_video_support_enabled();
+				$results['bp_video_messages_video_support'] = bp_is_messages_video_support_enabled();
+				$results['bp_video_forums_video_support']   = bp_is_forums_video_support_enabled();
+				$results['bp_video_allowed_size']           = bp_video_allowed_upload_video_size();
+				$results['bp_video_allowed_per_batch']      = bp_video_allowed_upload_video_per_batch();
 			}
 		}
 
