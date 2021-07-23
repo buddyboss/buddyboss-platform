@@ -11681,11 +11681,11 @@ var Log = function () {
 
 Log.GLOBAL_TAG = 'flv.js';
 Log.FORCE_GLOBAL_TAG = false;
-Log.ENABLE_ERROR = true;
-Log.ENABLE_INFO = true;
-Log.ENABLE_WARN = true;
-Log.ENABLE_DEBUG = true;
-Log.ENABLE_VERBOSE = true;
+Log.ENABLE_ERROR = false;
+Log.ENABLE_INFO = false;
+Log.ENABLE_WARN = false;
+Log.ENABLE_DEBUG = false;
+Log.ENABLE_VERBOSE = false;
 
 Log.ENABLE_CALLBACK = false;
 
