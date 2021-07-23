@@ -15100,7 +15100,7 @@ ul.bb-albums-list .load-more {
   margin-bottom: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1025px) {
   .bb-media-model-inner {
     max-height: 90vh;
     min-height: 90vh;
@@ -15115,7 +15115,7 @@ ul.bb-albums-list .load-more {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   a.bb-close-model {
     top: 10px;
     right: 10px;
@@ -15128,6 +15128,7 @@ ul.bb-albums-list .load-more {
     min-width: initial;
     margin: 0 30px;
     height: 100%;
+    max-width: 100%;
   }
   #buddypress .bb-document-theater .bb-media-model-inner {
     height: 100%;
@@ -16414,7 +16415,7 @@ div.dropzone .dz-preview .dz-filename {
   border-radius: 0 0 0 4px;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1025px) {
   .bb-document-theater .bb-media-section {
     border-right: 1px solid #ecedee;
   }
