@@ -49,6 +49,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'media' ) ) {
 			// Moderation support for media.
 			$this->bp_rest_moderation_media_support();
+
+			// Moderation support for video.
+			if ( bp_is_active( 'video' ) ) {
+				$this->bp_rest_moderation_video_support();
+			}
 		}
 
 		if ( bp_is_active( 'document' ) ) {
@@ -232,16 +237,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -314,16 +319,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -461,29 +466,19 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
-
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to block member.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to block member.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		$item_id = $request->get_param( 'item_id' );
 		$user    = bp_rest_get_user( $item_id );
 
-		if ( true === $retval && ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_item_id',
-				__( 'Invalid Member Item ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+		if ( is_user_logged_in() && $user instanceof WP_User ) {
+			$retval = true;
 		}
 
 		if ( true === $retval && ! empty( $user->roles ) && in_array( 'administrator', $user->roles, true ) ) {
@@ -624,16 +619,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to unblock member.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to unblock member.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -1679,6 +1674,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Added support for blocked Video.
+	 */
+	protected function bp_rest_moderation_video_support() {
+
+		bp_rest_register_field(
+			'video',
+			'can_report',
+			array(
+				'get_callback' => array( $this, 'bp_rest_media_can_report' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'video',
+			'reported',
+			array(
+				'get_callback' => array( $this, 'bp_rest_media_is_reported' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the Video is reported or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+	}
+
+	/**
 	 * The function to use to get can_report of the media REST Field.
 	 *
 	 * @param BP_Media $media The Media object.
@@ -1692,7 +1721,13 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $media_id, BP_Suspend_Media::$type ) ) {
+		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
+			$type = BP_Suspend_Video::$type;
+		} else {
+			$type = BP_Suspend_Media::$type;
+		}
+
+		if ( is_user_logged_in() && bp_moderation_user_can( $media_id, $type ) ) {
 			return true;
 		}
 
@@ -1713,7 +1748,13 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $media_id, BP_Suspend_Media::$type ) ) {
+		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
+			$type = BP_Suspend_Video::$type;
+		} else {
+			$type = BP_Suspend_Media::$type;
+		}
+
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $media_id, $type ) ) {
 			return true;
 		}
 

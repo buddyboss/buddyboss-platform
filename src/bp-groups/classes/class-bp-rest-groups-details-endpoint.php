@@ -119,16 +119,16 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
+		if ( bp_is_active( 'groups' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -333,7 +333,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$retval['tabs'] = $navigation;
+		$retval['tabs'] = apply_filters( 'bp_rest_group_tabs', $navigation );
 
 		// Fixes for the phpunit.
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );

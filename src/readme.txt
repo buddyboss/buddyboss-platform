@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.5.8.3
+Stable tag: 1.7.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,129 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.2.2 =
+* Activity - Fixed critical error on plugin update
+
+= 1.7.2.1 =
+* Activity - Fixed critical error when Forums component disabled
+
+= 1.7.2 =
+* Activity - Provided option to disable comments in the activity feed for blog posts and custom post types
+* Activity - Improved forum discussion and replies activity workflow to handle redundant comments data
+* Activity - Improved blog posts and custom post types layout in the activity feed
+* Activity - Moved activities action button other than Like and Comment to ellipsis dropdown
+* Activity - Fixed comment JS issue when Edit Activity disabled
+* Media - Fixed media preview fallback logic by using WP URL instead of the PHP file
+* Media - Fixed documents mp3 file issue when symbolic link settings enabled
+* Media - Fixed video playing issue when symbolic link settings disabled
+* Media - Fixed video playing issue in Safari browser
+* Groups - Fixed group navigation tabs order issue in the customizer
+* Text Editor - Fixed text copy-paste issue
+* REST API - Added comments options support in the activity feed for blog posts and custom post types
+* REST API - Added activity feed forum discussion quick reply support
+* Compatibility - Fixed WP Offload Media plugin compatibility issue when 'Remove files from server' enabled
+* Compatibility - Fixed WordPress 8.0 compatibility issues
+* Translations - Updated German (formal) language files
+
+= 1.7.1 =
+* Videos - Fixed video tab issue not allowing to re-order in Groups
+* Videos - Fixed video player controls styling to handle white background videos
+* Groups - Fixed issue with Group type on Group settings update
+* Text Editor - Copy Paste image restricted for all frontend text editor
+
+= 1.7.0.1 =
+* Media - Added settings to enable/disable symbolic link for medias
+* Media - Fixed document PDF file preview issue
+* Media - Fixed photos size issue to improve quality in the activity feed
+* Videos - Fixed video not playing issue in Safari browser
+* Videos - Fixed video symbolic signed URL download issue
+* Moderation - Fixed issue to hide activity photos and documents on report
+* REST API - Fixed symbolic link issue in the APIs
+
+= 1.7.0 =
+* Videos - Added Videos support for Activity, Profiles, Groups, Messages, Forums
+* Videos - Added central Videos page for showing all site Videos
+* Videos - Added functionality to move and organized Videos into Albums
+* Videos - Added settings page for customizable Video File Extensions
+* Videos - Added support to auto-generate Video cover images
+* Videos - Added Video Player support
+* Videos - Added Video support for Documents
+* Notifications - Added On-Screen Notifications support
+* Notifications - Added On-Screen Notifications controls
+* Media - Major security & performance improvements for Photos, Documents, and Videos preview
+* Groups - Media permission improvements
+* REST API - Added Videos API support
+* REST API - Media permission and Media performance Code refactoring
+
+= 1.6.4 =
+* Profiles - Fixed profile photo not showing issue when 'Avatar display' not enabled in discussion WordPress settings
+* Profiles - Fixed profile photo cropping issue for RTL languages
+* Activity - Code refactoring and API improvements specific to activity avatar
+* Text Editor - Fixed numbered list formatting issue
+* REST API - API endpoints code refactoring to improve security and fix vulnerabilities
+* REST API - Small improvement for custom profile and group tabs endpoints
+
+= 1.6.3 =
+* Profiles - Fixed issue to handle special character in profile field type - dropdown
+* Profiles - Fixed irrelevant members name issue in private message search
+* Forums - Provided forum discussion first level replies pagination support
+* Forums - Fixed bug by escaping Html in forum discussion and reply
+* Forums - Fixed hidden reply issue on restore
+* Forums - Fixed Organizer and Moderator sync issue with social groups
+* Network Search - Fixed issue with sub-forum discussion not showing in search results
+* REST API - Provided API support for forum replies pagination
+* Compatibility - small improvement for profile and group custom tab screen
+
+= 1.6.2 =
+* Moderation - Improved module to optimize performance
+* Icons - Added new font icons for TikTok, Telegram, and ClubHouse
+
+= 1.6.1 =
+* Activity - Small improvement to stop saving zero width space html entity with post update
+* Activity - Fixed minor button text for edit activity popup
+* Media - Fixed media link embed issue in Activity, Comments, Private message, Forums, etc
+* Messages - Fixed issue to stop triggering multiple messages on frequent clicks
+* REST API - Code refactoring
+
+= 1.6.0 =
+* Profiles - Added validation to restrict duplicate Nicknames in the dashboard
+* Profiles - Fixed issue when trying to search members using courses
+* Media - Fixed media preview issue for specific server configuration
+* Notifications - Fixed notification issue with blog post comments and replies
+* Registration - Small improvement to show relevant validation message on the account activation
+* REST API - Provided customer profile/group tab details in relevant endpoints
+* REST API - Improved caching for menu and settings
+* REST API - Fixed issue with hiding subgroups option not working on groups endpoint
+* REST API - Fixed issue with forum screen in settings endpoint when forum slug updated
+* REST API - Fixed messages issue by providing media objects in the bulk URL details endpoint
+* REST API - Fixed empty profile type issue in the member endpoint
+* REST API - Fixed notification wrong 'from' field parameter issue
+* Translations - Updated German (formal) language files
+
+= 1.5.9 =
+* Profiles - Improvements to reflect uploaded profile and cover photo instantly
+* Profiles - Small bug fix to show only published profile type and group type in the dashboard options
+* Groups - Small improvement to show 404 screen when group type is invalid
+* Groups - Fixed issue with group members logic to improve performance
+* Groups - Fixed issue with a hidden group create a discussion to redirect to the discussion
+* Forums - Provided Email Preference option to stop receiving forum replies and discussion email
+* Forums - Fixed issue with duplicate reply notification generated
+* Activity - Fixed activity comment box scroll issue
+* Media - Fixed issue with Redis cache when photos moved into an album
+* Messages - Fixed iPhone bug when sending Private Messages
+* Messages - Fixed infinite loading issue on delete messages action
+* Network Search - Small code improvement
+* Moderation - Small bug fix to improve performance
+* REST API - Fixed issue with notification marked read/unread
+* REST API - Fixed notification endpoint invalid data issue
+* REST API - Email Preference forum options support added
+* REST API - Fixed registration label special character issue
+* REST API - Cache improvements to fix group issues
+* REST API - Fixed activity feed issue when activity tab disabled
+* REST API - Fixed activity endpoint edit issue
+* LearnDash - Fixed Courses slug compatibility issue
+* Translations - Updated German (formal) language files
 
 = 1.5.8.3 =
 * Registration - Provided Legal Agreement checkbox option

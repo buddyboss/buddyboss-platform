@@ -38,6 +38,10 @@ if ( bp_is_active( 'media' ) ) {
 	new BP_Moderation_Media();
 }
 
+//if ( bp_is_active( 'video' ) ) {
+//	 new BP_Moderation_Video();
+//}
+
 if ( bp_is_active( 'messages' ) ) {
 	new BP_Moderation_Message();
 }
@@ -476,11 +480,14 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  */
 function bb_moderation_content_report_popup() {
 
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/content-report-form.php" ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/content-report-form.php";
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/content-report-form.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
 	}
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/block-member-form.php' ) ) {
 		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
+	}
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php';
 	}
 }
 
@@ -523,3 +530,67 @@ function bb_moderation_suspend_after_delete( $recode ) {
 
 }
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
+
+/**
+ * Function to clear the cache data on item suspend.
+ *
+ * @since BuddyBoss 1.6.2
+ *
+ * @param array $moderation_data moderation item data.
+ */
+function bb_moderation_clear_suspend_cache( $moderation_data ) {
+	if ( empty( $moderation_data['item_type'] ) || empty( $moderation_data['item_id'] ) ) {
+		return;
+	}
+	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+}
+
+add_action( 'bb_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
+add_action( 'bb_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cache' );
+
+/**
+ * Function to clear cache on suspend item delete.
+ *
+ * @since BuddyBoss 1.6.2
+ *
+ * @param object $suspend_record suspend item record.
+ */
+function bb_moderation_clear_delete_cache( $suspend_record ) {
+	if ( empty( $suspend_record->item_type ) || empty( $suspend_record->item_id ) ) {
+		return;
+	}
+	wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+	wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+}
+
+add_action( 'bp_moderation_after_save', 'bb_moderation_clear_delete_cache' );
+add_action( 'suspend_after_delete', 'bb_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_hide', 'bb_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_unhide', 'bb_moderation_clear_delete_cache' );
+
+/**
+ * Function to clear cache when item hide/unhide
+ *
+ * @since BuddyBoss 1.6.2
+ *
+ * @param string $content_type content type.
+ * @param int    $content_id   content id.
+ * @param array  $args         item arguments.
+ */
+function bb_moderation_clear_status_change_cache( $content_type, $content_id, $args ) {
+	if ( empty( $content_type ) || empty( $content_id ) ) {
+		return;
+	}
+	wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bb' );
+	wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bb' );
+	wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bb' );
+	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . $content_id, 'bb' );
+}
+
+add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );

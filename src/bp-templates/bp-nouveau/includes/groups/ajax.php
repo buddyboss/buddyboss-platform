@@ -1080,6 +1080,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	$gif_data = filter_input( INPUT_POST, 'gif_data', FILTER_DEFAULT );
 	$media    = filter_input( INPUT_POST, 'media', FILTER_DEFAULT );
 	$document = filter_input( INPUT_POST, 'document', FILTER_DEFAULT );
+	$video    = filter_input( INPUT_POST, 'video', FILTER_DEFAULT );
 
 	if ( isset( $gif_data ) && '' !== $gif_data ) {
 		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
@@ -1091,6 +1092,10 @@ function bp_nouveau_ajax_groups_send_message() {
 
 	if ( isset( $document ) && '' !== $document ) {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
+	}
+
+	if ( isset( $video ) && '' !== $video ) {
+		$_POST['video'] = json_decode( wp_kses_stripslashes( $video ), true );
 	}
 
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
@@ -1290,7 +1295,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				);
 
 				// Check if there is already previously group thread created.
-				if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+				if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
 
 					$thread_id = 0;
 

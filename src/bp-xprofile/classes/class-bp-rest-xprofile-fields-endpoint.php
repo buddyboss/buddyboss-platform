@@ -528,16 +528,16 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() || ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -760,42 +760,39 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$field  = $this->get_xprofile_field_object( $request );
 
-		$field = $this->get_xprofile_field_object( $request );
+			if ( empty( $field->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid field ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = $this->get_xprofile_field_display_permission( $retval, $field->id );
+			}
 
-		if ( true === $retval && empty( $field->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = $this->get_xprofile_field_display_permission( $retval, $field->id );
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -851,7 +848,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'group_id'          => (int) $field->group_id,
 			'parent_id'         => (int) $field->parent_id,
 			'type'              => $field->type,
-			'name'              => $field->name,
+			'name'              => wp_specialchars_decode( $field->name ),
 			'alternate_name'    => '',
 			'description'       => array(
 				'raw'      => $field->description,
@@ -876,10 +873,12 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$data['data']['id'] = $field->data->id;
 			}
 
+			$field_value = isset( $field->data->value ) ? $field->data->value : '';
+
 			$data['data']['value'] = array(
-				'raw'          => $this->get_profile_field_raw_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
-				'unserialized' => $this->get_profile_field_unserialized_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
-				'rendered'     => $this->get_profile_field_rendered_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
+				'raw'          => $this->get_profile_field_raw_value( $field_value, $field ),
+				'unserialized' => $this->get_profile_field_unserialized_value( $field_value, $field ),
+				'rendered'     => $this->get_profile_field_rendered_value( $field_value, $field ),
 			);
 		}
 
@@ -933,7 +932,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Get alternate name for the field.
 		$alternate_name = bp_xprofile_get_meta( (int) $field->id, 'field', 'alternate_name' );
 		if ( ! empty( $alternate_name ) ) {
-			$data['alternate_name'] = $alternate_name;
+			$data['alternate_name'] = wp_specialchars_decode( $alternate_name );
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -1029,6 +1028,18 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		// Set the $field global as the `xprofile_filter_link_profile_data` filter needs it.
 		$field = $profile_field;
+
+		if ( 'membertypes' === $profile_field->type ) {
+			// Need to pass $profile_field as object.
+			$all_member_type = $this->get_member_type_options( $profile_field, array( 'show_all' => true ) );
+			if ( ! empty( $all_member_type ) ) {
+				$all_member_type = array_column( $all_member_type, 'name', 'id' );
+			}
+
+			if ( ! empty( $all_member_type ) && array_key_exists( $profile_field->data->value, $all_member_type ) ) {
+				$value = $all_member_type[ $profile_field->data->value ];
+			}
+		}
 
 		/**
 		 * Apply Filters to sanitize XProfile field value.
@@ -1484,7 +1495,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
-				if ( '' === $enabled || '1' === $enabled ) {
+				if ( '' === $enabled || '1' === $enabled || ! empty( $request['show_all'] ) ) {
 					$options[] = array(
 						'id'                => $post->ID,
 						'group_id'          => $field->group_id,

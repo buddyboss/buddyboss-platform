@@ -432,7 +432,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Check comment author is suspended or not
 	 *
-	 * @param int $comment_id comment id
+	 * @param int $comment_id comment id.
 	 *
 	 * @return bool
 	 */
