@@ -154,12 +154,8 @@ function bp_nouveau_ajax_document_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_document_upload_dir' );
-
 	// Upload file.
 	$result = bp_document_upload();
-
-	remove_filter( 'upload_dir', 'bp_document_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 
@@ -358,12 +354,11 @@ function bp_nouveau_ajax_document_get_document_description() {
 		wp_send_json_error( $response );
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
-
-	$document_privacy = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-	$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-	$can_manage_btn   = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
-	$can_view         = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+	$content          = get_post_field( 'post_content', $attachment_id );
+	$document_privacy = bb_media_user_can_access( $document_id, 'document' );
+	$can_download_btn = true === (bool) $document_privacy['can_download'];
+	$can_edit_btn     = true === (bool) $document_privacy['can_edit'];
+	$can_view         = true === (bool) $document_privacy['can_view'];
 
 	$document     = new BP_Document( $document_id );
 	$user_domain  = bp_core_get_user_domain( $document->user_id );
@@ -393,57 +388,47 @@ function bp_nouveau_ajax_document_get_document_description() {
 					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 				</div>
 			</div>
-		<div class="activity-media-description">
-			<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
-			<?php
-			if ( $can_manage_btn ) {
-				?>
-				<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-				href="#">
-					<span class="bb-icon-edit-thin"></span>
-					<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-					<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-				</a>
-
-				<div class="bp-edit-media-activity-description" style="display: none;">
-					<div class="innerWrap">
-								<textarea id="add-activity-description"
-										title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-										class="textInput"
-										name="caption_text"
-										placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-										role="textbox"><?php echo $content; ?></textarea>
-					</div>
-					<div class="in-profile description-new-submit">
-												<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-						<input type="submit" id="bp-activity-description-new-submit" class="button small"
-							name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-						<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
-							value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
-					</div>
-				</div>
+			<div class="activity-media-description">
+				<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
 				<?php
-			}
-			?>
-		</div>
-		<?php
-		if ( ! empty( $document_id ) ) {
-			$document_privacy = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-			if ( $can_download_btn ) {
-				$download_url = bp_document_download_link( $attachment_id, $document_id );
-				if ( $download_url ) {
+				if ( $can_edit_btn ) {
 					?>
-						<a class="download-document"
-							href="<?php echo esc_url( $download_url ); ?>">
-						<?php _e( 'Download', 'buddyboss' ); ?>
-						</a>
+					<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+					href="#">
+						<span class="bb-icon-edit-thin"></span>
+						<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+						<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+					</a>
+
+					<div class="bp-edit-media-activity-description" style="display: none;">
+						<div class="innerWrap">
+							<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
+						</div>
+						<div class="in-profile description-new-submit">
+							<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_attr_e( 'Done Editing', 'buddyboss' ); ?>">
+							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>">
+						</div>
+					</div>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+			if ( ! empty( $document_id ) ) {
+				$document_privacy = bb_media_user_can_access( $document_id, 'document' );
+				$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+				if ( $can_download_btn ) {
+					$download_url = bp_document_download_link( $attachment_id, $document_id );
+					if ( $download_url ) {
+						?>
+						<a class="download-document" href="<?php echo esc_url( $download_url ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a>
 						<?php
+					}
 				}
 			}
-		}
-		?>
-	</li>
+			?>
+		</li>
 		<?php
 		$document_description = ob_get_contents();
 		ob_end_clean();
@@ -862,24 +847,24 @@ function bp_nouveau_ajax_document_move() {
 				?>
 
 				<div class="document-data-table-head">
-					<span class="data-head-sort-label"><?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+					<span class="data-head-sort-label"><?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 					<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 					</div>
@@ -902,7 +887,7 @@ function bp_nouveau_ajax_document_move() {
 				?>
 				<div class="pager">
 					<div class="dt-more-container load-more">
-						<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+						<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 					</div>
 				</div>
 				<?php
@@ -1187,24 +1172,24 @@ function bp_nouveau_ajax_document_delete() {
 			?>
 
 			<div class="document-data-table-head">
-				<span class="data-head-sort-label"><?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+				<span class="data-head-sort-label"><?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 				<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 				</div>
@@ -1228,7 +1213,7 @@ function bp_nouveau_ajax_document_delete() {
 			?>
 			<div class="pager">
 				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php
@@ -1345,24 +1330,24 @@ function bp_nouveau_ajax_document_folder_move() {
 			?>
 
 			<div class="document-data-table-head">
-				<span class="data-head-sort-label">:<?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
+				<span class="data-head-sort-label">:<?php esc_attr_e( 'Sort By:', 'buddyboss' ); ?></span>
 				<div class="data-head data-head-name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 				</div>
@@ -1386,7 +1371,7 @@ function bp_nouveau_ajax_document_folder_move() {
 			?>
 			<div class="pager">
 				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_attr_e( 'Load More', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php
@@ -1502,10 +1487,13 @@ function bp_nouveau_ajax_document_save_privacy() {
 	// Update document privacy with nested level.
 	bp_document_update_privacy( $id, $privacy, $type );
 
+	$document = ( 'document' === $type ? bb_get_document_attachments( $id ) : '' );
+
 	wp_send_json_success(
 		array(
-			'message' => 'success',
-			'html'    => $type,
+			'message'  => 'success',
+			'html'     => $type,
+			'document' => $document,
 		)
 	);
 
@@ -1562,7 +1550,7 @@ function bp_nouveau_ajax_document_activity_delete() {
 		ob_start();
 		if ( bp_has_activities(
 			array(
-				'include'     => $activity_id,
+				'include' => $activity_id,
 			)
 		) ) {
 			while ( bp_activities() ) {
@@ -1572,7 +1560,7 @@ function bp_nouveau_ajax_document_activity_delete() {
 		}
 		$activity_content = ob_get_contents();
 		ob_end_clean();
-    }
+	}
 
 	wp_send_json_success(
 		array(

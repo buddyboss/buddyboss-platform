@@ -270,6 +270,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 
 			if ( ! is_array( $value ) ) {
 				$value = (array) $value;
+				$value = array_filter( $value );
 			}
 		}
 
@@ -333,16 +334,16 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to save XProfile data.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to save XProfile data.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		$user = bp_rest_get_user( $request->get_param( 'user_id' ) );

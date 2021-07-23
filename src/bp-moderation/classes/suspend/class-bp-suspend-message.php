@@ -266,7 +266,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int thread_id deleted thread id.
+	 * @param int $thread_id deleted thread id.
 	 */
 	public function sync_moderation_data_on_delete( $thread_id ) {
 

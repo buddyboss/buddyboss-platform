@@ -130,6 +130,18 @@ abstract class BP_Suspend_Abstract {
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
+
+					/**
+					 * Fire before hide item
+					 *
+					 * @since BuddyBoss 1.6.2
+					 *
+					 * @param string $content_type content type
+					 * @param int    $content_id   item id
+					 * @param array  $args         unhide item arguments
+					 */
+					do_action( 'bb_suspend_hide_before', $content_type, $content_id, $args );
+
 					/**
 					 * Add related content of reported item into hidden list
 					 *
@@ -191,6 +203,18 @@ abstract class BP_Suspend_Abstract {
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
+
+					/**
+					 * Fire before unhide item
+					 *
+					 * @since BuddyBoss 1.6.2
+					 *
+					 * @param string $content_type content type
+					 * @param int    $content_id   item id
+					 * @param array  $args         unhide item arguments
+					 */
+					do_action( 'bb_suspend_unhide_before', $content_type, $content_id, $args );
+
 					/**
 					 * Remove related content of reported item from hidden list.
 					 *

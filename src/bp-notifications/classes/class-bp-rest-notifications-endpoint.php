@@ -181,16 +181,25 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		if ( ! is_user_logged_in() || ( bp_loggedin_user_id() !== $request['user_id'] && ! $this->can_see() ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( bp_loggedin_user_id() !== $request['user_id'] && ! $this->can_see() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -252,38 +261,35 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the notification.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval       = true;
+			$notification = $this->get_notification_object( $request );
 
-		$notification = $this->get_notification_object( $request );
-
-		if ( true === $retval && is_null( $notification->item_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_notification_invalid_id',
-				__( 'Invalid notification ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! $this->can_see( $notification->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view this notification.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( is_null( $notification->item_id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_notification_invalid_id',
+					__( 'Invalid notification ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! $this->can_see( $notification->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you cannot view this notification.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -763,12 +769,13 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	protected function prepare_links( $notification, $object ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 
-		$users = $notification->user_id;
-		if ( ( 'user' === $object ) ) {
-			$users = array(
-				$users,
-				$notification->secondary_item_id
+		if ( 'user' === $object && (int) $notification->user_id !== (int) $notification->secondary_item_id ) {
+			$users_ids = array(
+				$notification->user_id,
+				$notification->secondary_item_id,
 			);
+		} else {
+			$users_ids = $notification->user_id;
 		}
 
 		// Entity meta.
@@ -780,7 +787,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $users ) ),
+				'href'       => rest_url( bp_rest_get_user_url( $users_ids ) ),
 				'embeddable' => true,
 			),
 		);
