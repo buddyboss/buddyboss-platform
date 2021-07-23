@@ -60,6 +60,13 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
@@ -227,5 +234,187 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string|void
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+
+		$activity = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $activity->id ) ) {
+			return $button_text;
+		}
+
+		$updated = false;
+
+		switch ( $activity->type ) {
+			case 'bbp_forum_create':
+				$button_text = esc_html__( 'Report Forum', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_topic_create':
+				$button_text = esc_html__( 'Report Discussion', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_reply_create':
+				$button_text = esc_html__( 'Report Reply', 'buddyboss' );
+				$updated     = true;
+				break;
+			default:
+				$button_text = esc_html__( 'Report Post', 'buddyboss' );
+		}
+
+		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
+			if ( ! empty( $media_id ) ) {
+				$button_text = esc_html__( 'Report Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Photo', 'buddyboss' );
+				}
+			}
+		}
+
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
+			if ( ! empty( $document_id ) ) {
+				$button_text = esc_html__( 'Report Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Document', 'buddyboss' );
+				}
+			}
+		}
+
+		$video_id  = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
+			if ( ! empty( $video_id ) ) {
+				$button_text = esc_html__( 'Report Video', 'buddyboss' );
+			}
+			if ( ! empty( $video_ids ) ) {
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Video', 'buddyboss' );
+				}
+			}
+		}
+
+		return $button_text;
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string|void
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+
+		$activity = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $activity->id ) ) {
+			return $content_type;
+		}
+
+		$updated = false;
+
+		switch ( $activity->type ) {
+			case 'bbp_forum_create':
+				$content_type = esc_html__( 'Forum', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_topic_create':
+				$content_type = esc_html__( 'Discussion', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_reply_create':
+				$content_type = esc_html__( 'Reply', 'buddyboss' );
+				$updated     = true;
+				break;
+			default:
+				$content_type = esc_html__( 'Post', 'buddyboss' );
+		}
+
+		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
+			if ( ! empty( $media_id ) ) {
+				$content_type = esc_html__( 'Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Photo', 'buddyboss' );
+				}
+			}
+		}
+
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
+			if ( ! empty( $document_id ) ) {
+				$content_type = esc_html__( 'Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Document', 'buddyboss' );
+				}
+			}
+		}
+
+		$video_id  = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
+			if ( ! empty( $video_id ) ) {
+				$content_type = esc_html__( 'Video', 'buddyboss' );
+			}
+			if ( ! empty( $video_ids ) ) {
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Video', 'buddyboss' );
+				}
+			}
+		}
+
+		return $content_type;
 	}
 }
