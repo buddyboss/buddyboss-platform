@@ -59,6 +59,7 @@ window.bp = window.bp || {};
 			// Report content popup.
 			this.reportPopUp();
 			this.reportActions();
+			this.reportedPopup();
 
 			// Toggle password text.
 			this.togglePassword();
@@ -535,6 +536,7 @@ window.bp = window.bp || {};
 					setTimeout(
 						function () { // Waiting to load dummy image.
 							self.reportPopUp();
+							self.reportedPopup();
 						},
 						1000
 					);
@@ -699,6 +701,8 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
 
+			//More Option Dropdown
+			$( document ).on( 'click', this.toggleMoreOption.bind( this ) );
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 
@@ -2177,6 +2181,11 @@ window.bp = window.bp || {};
 								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
 								var nonce       = this.currItem.el.data( 'bp-nonce' );
+								var reportType  = this.currItem.el.attr( 'reported_type' );
+								if ( 'undefined' !== typeof reportType ) {
+									var mf_content = $( '#content-report' );
+									mf_content.find( '.bp-reported-type' ).text( reportType );
+								}
 								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 									$( document ).find( '.bp-report-form-err' ).empty();
 									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
@@ -2319,15 +2328,40 @@ window.bp = window.bp || {};
 			mf_content.find( '.bp-report-form-err' ).empty();
 		},
 		changeReportButtonStatus: function ( data ) {
+			var _this = this;
 			$( '[data-bp-content-id=' + data.button.button_attr.item_id + '][data-bp-content-type=' + data.button.button_attr.item_type + ']' ).each(
 				function () {
-					$( this ).removeAttr( 'href' );
 					$( this ).removeAttr( 'data-bp-content-id' );
 					$( this ).removeAttr( 'data-bp-content-type' );
 					$( this ).removeAttr( 'data-bp-nonce' );
 
 					$( this ).html( data.button.link_text );
 					$( this ).attr( 'class', data.button.button_attr.class );
+					$( this ).attr( 'reported_type', data.button.button_attr.reported_type );
+					$( this ).attr( 'href', data.button.button_attr.href );
+					setTimeout(
+						function () { // Waiting to load dummy image.
+							_this.reportedPopup();
+						},
+						1
+					);
+				}
+			);
+		},
+		reportedPopup: function () {
+			$( '.reported-content' ).magnificPopup(
+				{
+					type: 'inline',
+					midClick: true,
+					callbacks: {
+						open: function () {
+							var contentType = this.currItem.el.attr( 'reported_type' );
+							if ( 'undefined' !== typeof contentType ) {
+								var mf_content = $( '#reported-content' );
+								mf_content.find( '.bp-reported-type' ).text( contentType );
+							}
+						}
+					}
 				}
 			);
 		},
@@ -2532,6 +2566,25 @@ window.bp = window.bp || {};
 		coverPhotoCropperAlert: function ( e ) {
 			e.preventDefault();
 			$( '#cover-photo-alert' ).remove();
+		},
+		/**
+		 *  Toggle More Option
+		 */
+		toggleMoreOption: function( event ) {
+
+			if( $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
+				event.preventDefault();
+				
+				if( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
+					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+				} else {
+					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+					$( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible' );
+				}
+
+			} else {
+				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+			}
 		},
 
 		getVideoThumb: function ( file, target ) { // target = '.node'.

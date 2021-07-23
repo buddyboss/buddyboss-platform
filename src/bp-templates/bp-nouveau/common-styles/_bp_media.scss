@@ -1738,7 +1738,7 @@ ul.bb-albums-list {
 			font-size: 22px;
 		}
 
-		span {
+		span:not(.bp-reported-type) {
 			font-size: 1rem;
 			color: #939597;
 			letter-spacing: -0.24px;
@@ -3099,7 +3099,7 @@ div.dropzone .dz-preview {
 
 						&.reported-content {
 							opacity: 0.8 !important;
-							pointer-events: none;
+							//pointer-events: none;
 						}
 
 						&.report-content,
@@ -4905,6 +4905,23 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 			}
 
+		}
+
+	}
+
+}
+
+/*comment option*/
+#comments .comment-body {
+	position: relative;
+
+	.bb_more_options {
+		position: absolute;
+		top: 0;
+		right: 0;
+
+		a {
+			text-decoration: none;
 		}
 
 	}
