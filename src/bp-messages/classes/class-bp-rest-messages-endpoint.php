@@ -477,6 +477,43 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$request['message'] = '&nbsp;';
 		}
 
+		if (
+			empty( $request['message'] )
+			&& ! (
+				(
+					function_exists( 'bp_is_messages_media_support_enabled' )
+					&& false !== bp_is_messages_media_support_enabled()
+					&& ! empty( $request['bp_media_ids'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_gif_support_enabled' )
+					&& false !== bp_is_messages_gif_support_enabled()
+					&& ! empty( $request['media_gif']['url'] )
+					&& ! empty( $request['media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_document_support_enabled' )
+					&& false !== bp_is_messages_document_support_enabled()
+					&& ! empty( $request['bp_documents'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_video_support_enabled' )
+					&& false !== bp_is_messages_video_support_enabled()
+					&& ! empty( $request['bp_videos'] )
+				)
+			)
+		) {
+			return new WP_Error(
+				'bp_rest_messages_empty_message',
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else if ( empty( $request['message'] ) ) {
+			$request['message'] = '&nbsp;';
+		}
+
 		$message_object = $this->prepare_item_for_database( $request );
 		// Create the message or the reply.
 		$thread_id = messages_new_message( $message_object );
@@ -671,16 +708,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function search_recipients_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to search recipients.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to search recipients.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -758,16 +795,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function search_thread_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -1372,11 +1409,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'sender_id'                 => (int) $message->sender_id,
 			'subject'                   => array(
 				'raw'      => $message->subject,
-				'rendered' => apply_filters( 'bp_get_message_thread_subject', wp_staticize_emoji( $message->subject ) ),
+				'rendered' => apply_filters( 'bp_get_message_thread_subject', $message->subject ),
 			),
 			'message'                   => array(
 				'raw'      => wp_strip_all_tags( $message->message ),
-				'rendered' => apply_filters( 'bp_get_the_thread_message_content', wp_staticize_emoji( $message->message ) ),
+				'rendered' => apply_filters( 'bp_get_the_thread_message_content', $message->message ),
 			),
 			'date_sent'                 => bp_rest_prepare_date_response( $message->date_sent ),
 			'display_date'              => bp_core_time_since( $message->date_sent ),

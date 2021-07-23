@@ -295,6 +295,47 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		/* Legal agreement field */
+		$legal_agreement_field = function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false;
+
+		if ( $legal_agreement_field ) {
+			$page_ids = bp_core_get_directory_page_ids();
+			$terms    = ! empty( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+			$privacy  = ! empty( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+
+			$headline = '';
+			if ( ! empty( $terms ) && ! empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: 1. Term agreement page. 2. Privacy page. */
+					__( 'I agree to the %1$s and %2$s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>',
+					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
+				);
+			} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: Term agreement page. */
+					__( 'I agree to the %s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>'
+				);
+			} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
+				$headline = sprintf(
+					/* translators: Privacy page. */
+					__( 'I agree to the %s.', 'buddyboss' ),
+					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
+				);
+			}
+
+			$fields[] = array(
+				'id'          => 'legal_agreement',
+				'label'       => $headline,
+				'description' => '',
+				'type'        => 'checkbox',
+				'required'    => true,
+				'options'     => array(),
+				'member_type' => '',
+			);
+		}
+
 		$response = rest_ensure_response( $fields );
 
 		/**
@@ -320,16 +361,16 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function signup_form_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not able to view the register form fields.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not able to view the register form fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( ! is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -424,26 +465,16 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -506,37 +537,35 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
-		$signup = $this->get_signup_object( $request['id'] );
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$signup = $this->get_signup_object( $request['id'] );
 
-		if ( true === $retval && empty( $signup ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid signup id.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $signup ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid signup id.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -683,6 +712,11 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			) {
 				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
 			}
+		}
+
+		// Adding error message for the legal agreement checkbox.
+		if ( function_exists( 'bb_register_legal_agreement' ) && true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
 		}
 
 		$bp->signup->username = $user_name;
@@ -901,6 +935,10 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( ! empty( $wp_user_id ) && ! is_wp_error( $wp_user_id ) && ! empty( $_POST['legal_agreement'] ) ) {
+			update_user_meta( $wp_user_id, 'bb_legal_agreement', true );
+		}
+
 		$retval            = array();
 		$retval['success'] = true;
 		$retval['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
@@ -935,16 +973,16 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( is_user_logged_in() && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( ! is_user_logged_in() || bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -1098,17 +1136,18 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function activate_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_invalid_id',
+			__( 'Invalid signup id.', 'buddyboss' ),
+			array(
+				'status' => 404,
+			)
+		);
+
 		$signup = $this->get_signup_object( $request['id'] );
 
-		if ( empty( $signup ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid signup id.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+		if ( ! empty( $signup ) ) {
+			$retval = true;
 		}
 
 		/**

@@ -1188,6 +1188,11 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 			continue;
 		}
 
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
+			continue;
+		}
+
 		// Send notification email.
 		bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
 	}
@@ -1309,6 +1314,11 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 		// Don't send notifications to the person who made the post
 		if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
+			continue;
+		}
+
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
 			continue;
 		}
 
@@ -1517,7 +1527,6 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
-
 		$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_count, 'bbpress_posts' );
 	}
@@ -1604,7 +1613,6 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 		// Join post statuses to specifically exclude together
 		$not_in      = array( 'draft', 'future' );
 		$post_status = "'" . implode( "', '", $not_in ) . "'";
-
 		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}

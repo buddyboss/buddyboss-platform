@@ -112,6 +112,24 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 			: bp_is_active( 'document' ) && bp_is_messages_document_support_enabled() && ( ! function_exists( 'bb_user_can_create_document' ) || bb_user_can_create_document() )
 		);
 
+		$data['can_create_video'] = (
+			function_exists( 'bb_user_has_access_upload_video' )
+			? bb_user_has_access_upload_video( 0, $user_id, 0, 0, 'profile' )
+			: bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
+		);
+
+		$data['can_create_forum_video'] = (
+			function_exists( 'bb_user_has_access_upload_video' )
+			? bb_user_has_access_upload_video( 0, $user_id, 0, 0, 'forum' )
+			: bp_is_active( 'video' ) && bp_is_forums_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
+		);
+
+		$data['can_create_message_video'] = (
+			function_exists( 'bb_user_has_access_upload_video' )
+			? bb_user_has_access_upload_video( 0, $user_id, 0, 0, 'message' )
+			: bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
+		);
+
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$response = rest_ensure_response( $data );
 
@@ -137,16 +155,16 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 	 * @since 1.5.7
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -172,33 +190,75 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 			'title'      => 'members_permission',
 			'type'       => 'object',
 			'properties' => array(
-				'can_create_activity' => array(
+				'can_create_activity'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user can create activity or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_create_group'    => array(
+				'can_create_group'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user can create group or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_join_group'      => array(
+				'can_join_group'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user can join the group or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_create_media'    => array(
+				'can_create_media'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user can create the media or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_create_document' => array(
+				'can_create_forum_media'      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the media into forums or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_message_media'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the media into messages or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_document'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user can create the document or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_forum_document'   => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the document into forums or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_message_document' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the document into messages or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_video'            => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the video or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_forum_video'      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the video into forums or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_message_video'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the video into messages or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
