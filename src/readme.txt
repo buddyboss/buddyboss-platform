@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.6.4
+Stable tag: 1.7.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,60 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.2.2 =
+* Activity - Fixed critical error on plugin update
+
+= 1.7.2.1 =
+* Activity - Fixed critical error when Forums component disabled
+
+= 1.7.2 =
+* Activity - Provided option to disable comments in the activity feed for blog posts and custom post types
+* Activity - Improved forum discussion and replies activity workflow to handle redundant comments data
+* Activity - Improved blog posts and custom post types layout in the activity feed
+* Activity - Moved activities action button other than Like and Comment to ellipsis dropdown
+* Activity - Fixed comment JS issue when Edit Activity disabled
+* Media - Fixed media preview fallback logic by using WP URL instead of the PHP file
+* Media - Fixed documents mp3 file issue when symbolic link settings enabled
+* Media - Fixed video playing issue when symbolic link settings disabled
+* Media - Fixed video playing issue in Safari browser
+* Groups - Fixed group navigation tabs order issue in the customizer
+* Text Editor - Fixed text copy-paste issue
+* REST API - Added comments options support in the activity feed for blog posts and custom post types
+* REST API - Added activity feed forum discussion quick reply support
+* Compatibility - Fixed WP Offload Media plugin compatibility issue when 'Remove files from server' enabled
+* Compatibility - Fixed WordPress 8.0 compatibility issues
+* Translations - Updated German (formal) language files
+
+= 1.7.1 =
+* Videos - Fixed video tab issue not allowing to re-order in Groups
+* Videos - Fixed video player controls styling to handle white background videos
+* Groups - Fixed issue with Group type on Group settings update
+* Text Editor - Copy Paste image restricted for all frontend text editor
+
+= 1.7.0.1 =
+* Media - Added settings to enable/disable symbolic link for medias
+* Media - Fixed document PDF file preview issue
+* Media - Fixed photos size issue to improve quality in the activity feed
+* Videos - Fixed video not playing issue in Safari browser
+* Videos - Fixed video symbolic signed URL download issue
+* Moderation - Fixed issue to hide activity photos and documents on report
+* REST API - Fixed symbolic link issue in the APIs
+
+= 1.7.0 =
+* Videos - Added Videos support for Activity, Profiles, Groups, Messages, Forums
+* Videos - Added central Videos page for showing all site Videos
+* Videos - Added functionality to move and organized Videos into Albums
+* Videos - Added settings page for customizable Video File Extensions
+* Videos - Added support to auto-generate Video cover images
+* Videos - Added Video Player support
+* Videos - Added Video support for Documents
+* Notifications - Added On-Screen Notifications support
+* Notifications - Added On-Screen Notifications controls
+* Media - Major security & performance improvements for Photos, Documents, and Videos preview
+* Groups - Media permission improvements
+* REST API - Added Videos API support
+* REST API - Media permission and Media performance Code refactoring
 
 = 1.6.4 =
 * Profiles - Fixed profile photo not showing issue when 'Avatar display' not enabled in discussion WordPress settings

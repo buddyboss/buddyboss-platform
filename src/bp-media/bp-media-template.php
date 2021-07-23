@@ -144,10 +144,19 @@ function bp_has_media( $args = '' ) {
 		$album_id = ( isset( $args['album_id'] ) ? $args['album_id'] : false );
 	}
 
+	if ( $album_id && ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) ) {
+		$args['video'] = true;
+	}
+
 	$group_id = false;
+	$privacy  = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
-		$user_id  = false;
+		$privacy  = array( 'grouponly' );
+		if ( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) {
+			$privacy = false;
+		}
+		$user_id = false;
 	}
 
 	// The default scope should recognize custom slugs.
@@ -187,7 +196,8 @@ function bp_has_media( $args = '' ) {
 			'user_id'      => $user_id,        // user_id to filter on.
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
-			'privacy'      => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'video'        => false,            // Whether to include videos.
 
 		// Searching.
 			'search_terms' => $search_terms_default,
@@ -673,20 +683,13 @@ function bp_media_user_can_delete( $media = false ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
-			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $media->group_id );
-			$status   = bp_group_get_media_status( $media->group_id );
+			$manage   = groups_can_user_manage_media( bp_loggedin_user_id(), $media->group_id );
 			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
 			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
 			if ( $manage ) {
-				if ( $media->user_id === bp_loggedin_user_id() ) {
-					$can_delete = true;
-				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
-					$can_delete = true;
-				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-					$can_delete = true;
-				} elseif ( 'admins' == $status && $is_admin ) {
-					$can_delete = true;
-				}
+				$can_delete = true;
+			} elseif ( $is_mod || $is_admin ) {
+				$can_delete = true;
 			}
 		}
 	}
@@ -894,7 +897,7 @@ function bp_get_media_attachment_image_activity_thumbnail() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_attachment_image() {
-	echo bp_get_media_attachment_image();
+	echo esc_url( bp_get_media_attachment_image() );
 }
 
 /**
@@ -1146,7 +1149,7 @@ function bp_has_albums( $args = '' ) {
 			// get the login user id.
 			$current_user_id = get_current_user_id();
 
-			// check if the login user is friends of the display user
+			// check if the login user is friends of the display user.
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
 
 			/**
@@ -1189,7 +1192,7 @@ function bp_has_albums( $args = '' ) {
 			'fields'       => 'all',
 			'count_total'  => false,
 
-			// Filtering
+			// Filtering.
 			'user_id'      => $user_id,     // user_id to filter on.
 			'group_id'     => $group_id,    // group_id to filter on.
 			'privacy'      => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
@@ -1615,7 +1618,7 @@ function bp_album_user_can_delete( $album = false ) {
 		if ( ! empty( $album->group_id ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
 			$can_delete = true;
 
-			// Users are allowed to delete their own album.
+		// Users are allowed to delete their own album.
 		} elseif ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
 			$can_delete = true;
 		}
@@ -1808,19 +1811,18 @@ function bp_media_user_can_edit( $media = false ) {
 		}
 
 		// Users are allowed to edit their own media.
-		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $media->user_id ) && ( bp_loggedin_user_id() === $media->user_id ) ) {
 			$can_edit = true;
 		}
 
 		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
-
 			$manage   = groups_can_user_manage_media( bp_loggedin_user_id(), $media->group_id );
 			$status   = bp_group_get_media_status( $media->group_id );
 			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
 			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
 
 			if ( $manage ) {
-				if ( $media->user_id === bp_loggedin_user_id() ) {
+				if ( bp_loggedin_user_id() === $media->user_id ) {
 					$can_edit = true;
 				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 					$can_edit = true;
@@ -1893,5 +1895,67 @@ function bp_album_user_can_edit( $album = false ) {
 	 * @param bool   $can_edit Whether the user can edit the item.
 	 * @param object $album   Current album item object.
 	 */
-	return (bool) apply_filters( 'bp_album_user_can_delete', $can_edit, $album );
+	return (bool) apply_filters( 'bp_album_user_can_edit', $can_edit, $album );
+}
+
+/**
+ * Output the media photos/directory thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_media_photos_directory_image_thumbnail() {
+	echo bb_get_media_photos_directory_image_thumbnail();
+}
+
+/**
+ * Return the media photos/directory thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media photos/directory thumbnail url.
+ */
+function bb_get_media_photos_directory_image_thumbnail() {
+	global $media_template;
+
+	/**
+	 * Filters the media photos/directory being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media photos/directory thumbnail.
+	 */
+	return apply_filters( 'bb_get_media_photos_directory_image_thumbnail', $media_template->media->attachment_data->media_photos_directory_page );
+}
+
+/**
+ * Output the media photos/directory thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_media_photos_theatre_popup_image() {
+	echo bb_get_media_photos_theatre_popup_image();
+}
+
+/**
+ * Return the media theatre popup thumbnail.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media theatre popup thumbnail url.
+ */
+function bb_get_media_photos_theatre_popup_image() {
+	global $media_template;
+
+	/**
+	 * Filters the media theatre popup being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media theatre popup thumbnail.
+	 */
+	return apply_filters( 'bb_get_media_photos_theatre_popup_image', $media_template->media->attachment_data->media_theatre_popup );
 }

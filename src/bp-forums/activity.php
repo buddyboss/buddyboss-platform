@@ -140,11 +140,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Hook into topic and reply delete.
 			add_action( 'bbp_delete_topic', array( $this, 'topic_delete' ), 10, 1 );
 			add_action( 'bbp_delete_reply', array( $this, 'reply_delete' ), 10, 1 );
-
-			// Hook after member activity content in timeline.
-			add_action( 'bp_after_member_activity_content', array( $this, 'activity_quick_reply' ) );
-			add_action( 'bp_after_group_activity_content', array( $this, 'activity_quick_reply' ) );
-			add_action( 'bp_after_directory_activity', array( $this, 'activity_quick_reply' ) );
 		}
 
 		/**
@@ -178,13 +173,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_filter( 'bp_get_activity_content_body', array( $this, 'before_activity_content' ), 10, 2 );
 
 			// Meta button for activity discussion.
-			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10 ,2 );
-
-			// Meta button for activity reply.
-			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_get_activity_reply_buttons' ), 10 ,2 );
-
-			// Remove commnet button for blog post. When post status is closed.
-			add_filter( 'bp_nouveau_get_activity_entry_buttons', array( $this, 'nouveau_remove_blog_post_comment_button' ), 10 ,2 );
+			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
 		}
 
 		/**
@@ -210,9 +199,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			bp_activity_set_action( $this->component, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
 			bp_activity_set_action( $this->component, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
 
-			// Group activity stream items
-			bp_activity_set_action( 'groups', $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
-			bp_activity_set_action( 'groups', $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
+			if ( bp_is_active( 'groups' ) ) {
+				// Group activity stream items.
+				bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), array( $this, 'topic_activity_action_callback' ) );
+				bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), array( $this, 'reply_activity_action_callback' ) );
+			}
 		}
 
 		/**
@@ -357,15 +348,17 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		 * Take the "discussion" name out of the activity title.
-		 * Put it underneath for both Discussion and Replies.
+		 * Render the activity content for discussion activity. 
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.2
+		 * 
+		 * @param string $content  Activit content.
+		 * @param object $activity Activit data.
 		 *
 		 * @uses bbp_get_reply()           Get reply post data.
 		 * @uses bbp_get_topic_permalink() Get discussion permalink.
 		 *
-		 * @return string|void
+		 * @return string
 		 */
 		public function before_activity_content( $content, $activity ) {
 			global $activities_template;
@@ -402,8 +395,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Topic.
 			$topic_permalink = bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$reply_icon      = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? '<i class="bb-icon-corner-down-right"></i>' : '';
-			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s %4$s</div>', esc_url( $topic_permalink ), $topic_title, $reply_icon, $content );
+			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
+			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
 
 			return $content;
 		}
@@ -411,14 +404,14 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Meta button for activity discussion.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.2
 		 *
-		 * @param array $buttons
-		 * @param int   $activity_id
+		 * @param array $buttons     Array of buttons.
+		 * @param int   $activity_id Activity ID.
 		 *
-		 * @uses bp_activity_get_specific() Get activity post data.
-		 * @uses bbp_get_topic_forum_id()   Get forum id from topic id.
-		 * @uses get_post_field()           Get specific WP post field.
+		 * @uses  bp_activity_get_specific() Get activity post data.
+		 * @uses  bbp_get_topic_forum_id()   Get forum id from topic id.
+		 * @uses  get_post_field()           Get specific WP post field.
 		 *
 		 * @return array
 		 */
@@ -432,193 +425,83 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			$activity = array_shift( $activities['activities'] );
 
-			// Set deafult meta buttons when the activity type is not topic.
-			if ( $this->topic_create !== $activity->type ) {
-				return $buttons;
-			}
+			// Set default meta buttons when the activity type is not topic.
+			if ( $this->topic_create === $activity->type ) {
 
-			// Set topic id when the activity component is not groups.
-			if ( $this->component === $activity->component ) {
-				$topic_id = $activity->item_id;
-			}
+				// Set topic id when the activity component is not groups.
+				if ( $this->component === $activity->component ) {
+					$topic_id = $activity->item_id;
+				}
 
-			// Set topic id when the activity component is groups.
-			if ( 'groups' === $activity->component ) {
-				$topic_id = $activity->secondary_item_id;
-			}
+				// Set topic id when the activity component is groups.
+				if ( 'groups' === $activity->component ) {
+					$topic_id = $activity->secondary_item_id;
+				}
 
-			// Topic title.
-			$forum_id    = bbp_get_topic_forum_id( $topic_id );
-			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
-			$author      = bbp_get_topic_author_display_name( $topic_id );
-
-			// New meta button as 'Join discussion'.
-			$buttons['activity_discussionsss'] = array(
-				'id'                => 'activity_discussionsss',
-				'position'          => 5,
-				'component'         => 'activity',
-				'must_be_logged_in' => true,
-				'button_element'    => 'a',
-				'link_text'         => sprintf(
-					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-					__( 'Join Discussion', 'buddyboss' ),
-					__( 'Join Discussion', 'buddyboss' )
-				),
-				'button_attr'       => array(
-					'class'         => 'button bb-icon-discussion bp-secondary-action',
-					'aria-expanded' => 'false',
-					'href'          => bbp_get_topic_permalink( $topic_id ),
-				),
-			);
-
-			// Current users has access for quick reply.
-			if ( bbp_current_user_can_access_create_reply_form() ) {
-
-				// New meta button as 'Quick Reply'.
-				$buttons['quick_reply'] = array(
-					'id'                => 'quick_reply',
+				// New meta button as 'Join discussion'.
+				$buttons['activity_discussionsss'] = array(
+					'id'                => 'activity_discussionsss',
 					'position'          => 5,
 					'component'         => 'activity',
 					'must_be_logged_in' => true,
 					'button_element'    => 'a',
 					'link_text'         => sprintf(
 						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-						__( 'Quick Reply', 'buddyboss' ),
-						__( 'Quick Reply', 'buddyboss' )
+						__( 'Join Discussion', 'buddyboss' ),
+						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'            => 'button bb-icon-chat bp-secondary-action',
-						'data-modal-id'    => 'bbp-reply-form',
-						'data-topic-title' => esc_attr( $topic_title ),
-						'data-topic-id'    => $topic_id,
-						'aria-expanded'    => 'false',
-						'href'             => '#new-post',
-						'data-author-name' => $author,
+						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'aria-expanded' => 'false',
+						'href'          => bbp_get_topic_permalink( $topic_id ),
+					),
+				);
+			}
+
+			// Set default meta buttons when the activity type is not reply.
+			if ( $this->reply_create === $activity->type ) {
+
+				// Set topic id when the activity component is not groups.
+				if ( $this->component === $activity->component ) {
+					$reply_id = $activity->item_id;
+					$topic    = bbp_get_reply( $reply_id );
+					$topic_id = $topic->post_parent;
+				}
+
+				// Set topic id when the activity component is groups.
+				if ( 'groups' === $activity->component ) {
+					$reply_id = $activity->secondary_item_id;
+					$topic    = bbp_get_reply( $reply_id );
+					$topic_id = $topic->post_parent;
+				}
+				
+				// Redirect to.
+				$redirect_to = bbp_get_redirect_to();
+		
+				// Get the reply URL.
+				$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
+
+				// New meta button as 'Join discussion'.
+				$buttons['activity_reply_discussion'] = array(
+					'id'                => 'activity_reply_discussion',
+					'position'          => 5,
+					'component'         => 'activity',
+					'must_be_logged_in' => true,
+					'button_element'    => 'a',
+					'link_text'         => sprintf(
+						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+						__( 'Join Discussion', 'buddyboss' ),
+						__( 'Join Discussion', 'buddyboss' )
+					),
+					'button_attr'       => array(
+						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'aria-expanded' => 'false',
+						'href'          => $reply_url,
 					),
 				);
 			}
 
 			return $buttons;
-		}
-
-		/**
-		 * Meta button for activity reply.
-		 *
-		 * @since BuddyBoss 1.6.2
-		 *
-		 * @param array $buttons
-		 * @param int   $activity_id
-		 *
-		 * @uses bp_activity_get_specific() Get activity post data.
-		 * @uses bbp_get_reply()            Get reply post data.
-		 * @uses bbp_get_topic_permalink()  Get topic permalink.
-		 *
-		 * @return array
-		 */
-		public function nouveau_get_activity_reply_buttons( $buttons, $activity_id ) {
-			// Activity post data.
-			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-
-			if ( empty( $activities['activities'] ) ) {
-				return $buttons;
-			}
-
-			$activity = array_shift( $activities['activities'] );
-
-			// Set deafult meta buttons when the activity type is not reply.
-			if ( $this->reply_create !== $activity->type ) {
-				return $buttons;
-			}
-
-			// Set topic id when the activity component is not groups.
-			if ( $this->component === $activity->component ) {
-				$topic_id = $activity->item_id;
-				$topic    = bbp_get_reply( $topic_id );
-				$topic_id = $topic->post_parent;
-			}
-
-			// Set topic id when the activity component is groups.
-			if ( 'groups' === $activity->component ) {
-				$topic_id = $activity->secondary_item_id;
-				$topic    = bbp_get_reply( $topic_id );
-				$topic_id = $topic->post_parent;
-			}
-
-			// New meta button as 'Join discussion'.
-			$buttons['activity_reply_discussionsss'] = array(
-				'id'                => 'activity_reply_discussionsss',
-				'position'          => 5,
-				'component'         => 'activity',
-				'must_be_logged_in' => true,
-				'button_element'    => 'a',
-				'link_text'         => sprintf(
-					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-					__( 'Join Discussion', 'buddyboss' ),
-					__( 'Join Discussion', 'buddyboss' )
-				),
-				'button_attr'       => array(
-					'class'         => 'button bb-icon-discussion bp-secondary-action',
-					'aria-expanded' => 'false',
-					'href'          => bbp_get_topic_permalink( $topic_id ),
-				),
-
-			);
-
-			return $buttons;
-		}
-
-		public function nouveau_remove_blog_post_comment_button( $buttons, $activity_id  ) {
-			// Activity post data.
-			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-
-			if ( empty( $activities['activities'] ) ) {
-				return $buttons;
-			}
-
-			$activity = array_shift( $activities['activities'] );
-
-			if ( ! bp_is_blog_post_activity( $activity ) ) {
-				return $buttons;
-			}
-
-			$post = get_post( $activity->secondary_item_id );
-
-			// Has post.
-			if ( empty( $post ) ) {
-				return $buttons;
-			}
-
-			$open = ( 'open' === $post->comment_status );
-		
-			// Disable comment when the comment not open for individual post.
-			if ( ! $open && ! empty( $buttons['activity_conversation'] ) ) {
-				unset( $buttons['activity_conversation'] );
-			}
-
-			return $buttons;
-		}
-
-		/**
-		 * Reply form for member timeline.
-		 *
-		 * @since BuddyBoss 1.6.2
-		 *
-		 * @uses bbp_get_template_part() Load required template.
-		 *
-		 * @return void
-		 */
-		public function activity_quick_reply() {
-			?>
-			<div id="bbpress-forums" class="bbpress-forums-activity buddyboss-quick-reply-form-wrap" data-component="activity" style="display: none;">
-				<?php
-					// Timeline quick reply form template.
-					bbp_get_template_part( 'form', 'reply' );
-				?>
-			</div>
-
-			<?php
-			// Success message template.
-			bbp_get_template_part( 'form-reply', 'success' );
 		}
 
 		/** Topics ****************************************************************/
@@ -928,10 +811,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the topic title from user timeline.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.2
 		 *
-		 * @param obj $action
-		 * @param obj $activity
+		 * @param string $action    Activity content.
+		 * @param object $activity  Activity data.
 		 *
 		 * @uses bbp_get_topic_forum_id()    Get forum id from topic id.
 		 * @uses bbp_get_user_profile_link() Get user profile link.
@@ -976,7 +859,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Modify the reply title from user timeline.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.2
 		 *
 		 * @param obj $action
 		 * @param obj $activity
@@ -1147,9 +1030,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Remove the group icon from the discussion and reply title.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.2
 		 *
-		 * @param string $avatar
+		 * @param string $avatar The secondary avatar for current activity.
 		 *
 		 * @return string
 		 */
@@ -1172,9 +1055,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		/**
 		 * Generate "bb-modal bb-modal-box" class for quick reply form.
 		 *
-		 * @since BuddyBoss 1.6.2
+		 * @since BuddyBoss 1.7.2
 		 *
-		 * @param boolean $single_topic
+		 * @param boolean $single_topic Single topic status.
 		 *
 		 * @uses bp_is_active()             Checking is it acitvity page.
 		 * @uses bp_is_activity_component() Checking is it activity component.

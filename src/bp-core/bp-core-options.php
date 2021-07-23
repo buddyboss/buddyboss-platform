@@ -829,23 +829,31 @@ function bp_enable_private_network( $default = false ) {
  */
 function bp_disable_blogforum_comments( $default = false ) {
 	global $activities_template;
-	
+
 	// When here is not activity.
 	if ( empty( $activities_template->activity ) ) {
+		return $default;
+	}
+	
+	if ( empty(  $activities_template->activity->component ) ) {
 		return $default;
 	}
 
 	if ( 'blogs' !== $activities_template->activity->component ) {
 		return $default;
 	}
-	
+
 	$post = get_post( $activities_template->activity->secondary_item_id );
+
+	if ( ! isset( $post->post_type ) ) {
+		return $default;
+	}
 
 	// Does not allow comment for WooCommerce product.
 	if ( 'product' === $post->post_type ) {
 		return true;
 	}
-	
+
 	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
 	$disable = (bool) bb_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
@@ -860,9 +868,9 @@ function bp_disable_blogforum_comments( $default = false ) {
 }
 
 /**
- * Are any post type/comment activity feed comments enable?
+ * Describe the activity comment is enable or not for custom post type.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2
  *
  * @param bool $post_type custom post type.
  * @param bool $default   Optional. Fallback value if not found in the database.
@@ -876,7 +884,7 @@ function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
 	 *
-	 * @since BuddyBoss 1.6.2
+	 * @since BuddyBoss 1.7.2
 	 *
 	 * @param bool $value Whether or not custom post type activity feed comments are enable.
 	 */
@@ -1821,10 +1829,32 @@ function bp_rest_enable_private_network() {
 }
 
 /**
+ * Is the symlink is enabled in Media, Document & Video?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the symlink is enabled in Media, Document & Video enable,
+ *              otherwise false.
+ */
+function bb_enable_symlinks( $default = false ) {
+
+	/**
+	 * Filters whether or not the symlink is enabled in Media, Document & Video.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
+	 */
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
+}
+
+/**
  * Option name for custom post type.
  * From the activity settings whether any custom post enable or disable for timeline feed.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2
  *
  * @param bool $post_type custom post type.
  *
@@ -1838,7 +1868,7 @@ function bb_post_type_feed_option_name( $post_type ) {
  * Option name for custom post type comments.
  * From the activity settings whether any custom post comments are enable or disable for timeline feed.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2
  *
  * @param bool $post_type custom post type.
  *
@@ -1851,7 +1881,7 @@ function bb_post_type_feed_comment_option_name( $post_type ) {
 /**
  * Custom post types for activity settings.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2
  *
  * @return array.
  */
@@ -1879,7 +1909,7 @@ function bb_feed_post_types() {
 /**
  * Custom post types for activity settings.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2
  *
  * @return array.
  */

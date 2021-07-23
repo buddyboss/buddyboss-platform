@@ -18,6 +18,7 @@ $template_parts = apply_filters(
 		'parts/bp-activity-link-preview',
 		'parts/bp-activity-media',
 		'parts/bp-activity-document',
+		'parts/bp-activity-video',
 		'parts/bp-activity-post-form-avatar',
 		'parts/bp-activity-post-form-buttons',
 		'parts/bp-activity-post-form-feedback',

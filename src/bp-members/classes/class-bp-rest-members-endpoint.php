@@ -247,8 +247,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			(
 				empty( $request['scope'] )
 				|| ( isset( $request['scope'] ) && 'all' === $request['scope'] )
-				|| empty( $request['bp_ps_search'] )
 			)
+			&& empty( $request['bp_ps_search'] )
 			&& function_exists( 'bp_get_users_of_removed_member_types' )
 			&& ! empty( bp_get_users_of_removed_member_types() )
 		) {

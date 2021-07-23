@@ -620,7 +620,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Photos', 'buddyboss' ),
 				'name'        => 'group-media-status',
-				'description' => esc_html__( 'Which members of this group are allowed to manage photos?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to upload photos?', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_media_status( $group_id ),
 				'options'     => array(
@@ -650,7 +650,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Albums', 'buddyboss' ),
 				'name'        => 'group-album-status',
-				'description' => esc_html__( 'Which members of this group are allowed to manage albums?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to create albums?', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_album_status( $group_id ),
 				'options'     => array(
@@ -680,7 +680,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Documents', 'buddyboss' ),
 				'name'        => 'group-document-status',
-				'description' => esc_html__( 'Which members of this group are allowed to manage documents?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to upload documents?', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_document_status( $group_id ),
 				'options'     => array(
@@ -701,6 +701,36 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 						'value'             => 'admins',
 						'description'       => '',
 						'is_default_option' => 'admins' === bp_group_get_document_status( $group_id ),
+					),
+				),
+			);
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+			$fields[] = array(
+				'label'       => esc_html__( 'Group Videos', 'buddyboss' ),
+				'name'        => 'group-video-status',
+				'description' => esc_html__( 'Which members of this group are allowed to upload videos?', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => bp_group_get_video_status( $group_id ),
+				'options'     => array(
+					array(
+						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'value'             => 'members',
+						'description'       => '',
+						'is_default_option' => 'members' === bp_group_get_video_status( $group_id ),
+					),
+					array(
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'value'             => 'mods',
+						'description'       => '',
+						'is_default_option' => 'mods' === bp_group_get_video_status( $group_id ),
+					),
+					array(
+						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'value'             => 'admins',
+						'description'       => '',
+						'is_default_option' => 'admins' === bp_group_get_video_status( $group_id ),
 					),
 				),
 			);
@@ -934,6 +964,11 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
+		$allowed_video_status = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
+		$video_status         = ( array_key_exists( 'group-video-status', (array) $post_fields ) && ! empty( $post_fields['group-video-status'] ) ) ? $post_fields['group-video-status'] : bp_group_get_video_status( $group->id );
+
+		// Checked against a whitelist for security.
+		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_message_status = apply_filters( 'groups_allowed_message_status', array( 'mods', 'admins', 'members' ) );
 		$message_status         = ( array_key_exists( 'group-message-status', (array) $post_fields ) && ! empty( $post_fields['group-message-status'] ) ) ? $post_fields['group-message-status'] : bp_group_get_message_status( $group->id );
 
@@ -969,7 +1004,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$error  = '';
 		$notice = '';
 
-		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $album_status, $message_status ) ) {
+		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
 			$error = __( 'There was an error updating group settings. Please try again.', 'buddyboss' );
 		} else {
 			$notice = __( 'Group settings were successfully updated.', 'buddyboss' );

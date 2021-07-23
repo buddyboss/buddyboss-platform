@@ -830,28 +830,28 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the last option of CPT
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
 	<input
 		class="bp-feed-post-type-checkbox <?php echo 'bp-feed-post-type-' . esc_attr( $post_type ); ?>"
 		data-post_type="<?php echo esc_attr( $post_type ); ?>"
-		name="<?php echo $option_name; ?>"
-		id="<?php echo $option_name; ?>"
+		name="<?php echo esc_attr( $option_name ); ?>"
+		id="<?php echo esc_attr( $option_name ); ?>"
 		type="checkbox"
 		value="1"
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php echo $post_type === 'post' ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
 
 	// Description for the WordPress Blog Posts
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php _e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
 		<?php
 	}
 }
@@ -859,7 +859,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 /**
  * Allow activity comments on posts and comments.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2
  *
  * @param array $args Feed settings.
  *
@@ -874,7 +874,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		?>
 			<p class="description <?php echo 'bp-feed-post-type-comment-' . esc_attr( $post_type ); ?>"><?php printf( esc_html__( 'Comments are not supported for %s', 'buddyboss' ), esc_html( $post_type  ) ); ?></p>
 		<?php
-		return;	
+		return;
 	}
 	?>
 
@@ -1396,7 +1396,6 @@ function bp_admin_moderation_block_setting_tutorial() {
 	<?php
 }
 
-
 /**
  * Link to Moderation Report tutorial
  *
@@ -1421,9 +1420,146 @@ function bp_admin_moderation_report_setting_tutorial() {
 }
 
 /**
+ * Enable on-screen notification.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_enable() {
+	?>
+	<input id="_bp_on_screen_notifications_enable" name="_bp_on_screen_notifications_enable" type="checkbox"
+		   value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ); ?> />
+	<label for="_bp_on_screen_notifications_enable"><?php esc_html_e( 'Enable on-screen notifications', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Define on-screen notification position.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_position() {
+	?>
+	<div class="bb-screen-position-outer">
+		<div class="bb-screen-position bb-bottom-left">
+			<input id="bp_on_screen_notifications_position_left" name="_bp_on_screen_notifications_position" type="radio" value="left" <?php checked( 'left' === bp_get_option( '_bp_on_screen_notifications_position', '' ) ? true : false ); ?> />
+			<label class="option opt-left" for="bp_on_screen_notifications_position_left">
+				<span>
+					<?php esc_html_e( 'Bottom Left', 'buddyboss' ); ?>
+				</span>
+			</label>
+		</div>
+		<div class="bb-screen-position bb-bottom-right">
+			<input id="bp_on_screen_notifications_position_right" name="_bp_on_screen_notifications_position" type="radio" value="right" <?php checked( 'right' === bp_get_option( '_bp_on_screen_notifications_position', '' ) ? true : false ); ?> />
+			<label class="option opt-right" for="bp_on_screen_notifications_position_right">
+				<span>
+					<?php esc_html_e( 'Bottom Right', 'buddyboss' ); ?>
+				</span>
+			</label>
+		</div>
+	</div>
+	<?php
+}
+
+/**
+ * Enable on-screen notification mobile support.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_mobile_support() {
+	?>
+	<input id="_bp_on_screen_notifications_mobile_support" name="_bp_on_screen_notifications_mobile_support" type="checkbox" value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 ) ); ?> />
+	<label for="_bp_on_screen_notifications_mobile_support"><?php esc_html_e( 'Show on-screen notifications on small screens', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Enable on-screen notification browser tab.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_browser_tab() {
+	?>
+	<input id="_bp_on_screen_notifications_browser_tab" name="_bp_on_screen_notifications_browser_tab" type="checkbox" value="1"  <?php checked( bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 ) ); ?> />
+	<label for="_bp_on_screen_notifications_browser_tab"><?php esc_html_e( 'Show new notifications in the title of the browser tab', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Update the page <title> tab when new notifications are received.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Option value for auto remove on-screen single notification.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_notifications_visibility() {
+
+	// Options for remove single notification time.
+	$options = array(
+		'never' => __( 'Never Hide', 'buddyboss' ),
+		'5'     => __( '5 Seconds', 'buddyboss' ),
+		'10'    => __( '10 Seconds', 'buddyboss' ),
+		'30'    => __( '30 Seconds', 'buddyboss' ),
+		'60'    => __( '1 Minute', 'buddyboss' ),
+		'120'   => __( '2 Minutes', 'buddyboss' ),
+		'180'   => __( '3 Minutes', 'buddyboss' ),
+		'240'   => __( '4 Minutes', 'buddyboss' ),
+		'300'   => __( '5 Minutes', 'buddyboss' ),
+	);
+	?>
+
+	<select name="_bp_on_screen_notifications_visibility" id="_bp_on_screen_notifications_visibility" >
+
+		<?php foreach ( $options as $option_id => $label ) : ?>
+
+			<option  value="<?php echo esc_attr( $option_id ); ?>" <?php selected( esc_attr( $option_id ) === bp_get_option( '_bp_on_screen_notifications_visibility', '' ) ? true : false ); ?>>
+				<?php echo esc_html( $label ); ?>
+			</option>
+
+		<?php endforeach; ?>
+
+	</select>
+
+	<?php
+}
+
+
+/**
+ * Link to Moderation Report tutorial
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_admin_on_screen_notification_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 124801,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+/**
  * After update activity setting
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.2
  *
  * @param string $tab_name  Settings tab name.
  * @param object $class_obj Tab property.
@@ -1434,7 +1570,7 @@ function bp_admin_moderation_report_setting_tutorial() {
  *
  * @return void
  */
-function bb_after_update_activity_settings( $tab_name, $class_obj ) {
+function bb_after_update_activity_settings( $tab_name ) {
 	if ( 'bp-activity' !== $tab_name ) {
 		return;
 	}
@@ -1455,4 +1591,4 @@ function bb_after_update_activity_settings( $tab_name, $class_obj ) {
 		}
 	}
 }
-add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 2 );
+add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );
