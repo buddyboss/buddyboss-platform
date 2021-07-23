@@ -614,7 +614,7 @@ class BP_Video {
 			}
 			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
 			// https://stackoverflow.com/a/44858204.
-			if ( in_array( $filetype['ext'], array( 'mov' ), true ) ) {
+			if ( in_array( $ext, array( 'mov' ), true ) ) {
 				$ext = 'mp4';
 			}
 
