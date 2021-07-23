@@ -1912,7 +1912,7 @@ function bb_media_settings_callback_symlink_support() {
 
 		$disabled = explode( ',', ini_get( 'disable_functions' ) );
 
-		if ( in_array( 'symlink', $disabled, true ) ) {
+		if ( ! empty( $disabled ) && in_array( 'symlink', $disabled, true ) ) {
 			$has_error = true;
 			?>
 			<div class="bp-messages-feedback">
@@ -1937,7 +1937,6 @@ function bb_media_settings_callback_symlink_support() {
 		<?php
 	}
 
-	
 	if ( empty( bb_enable_symlinks() ) ) {
 		?>
         <div class="bp-messages-feedback">
@@ -1971,90 +1970,88 @@ function bb_media_settings_callback_symlink_support() {
  */
 function bb_media_settings_callback_symlink_direct_access() {
 
-	$get_sample_ids = bp_get_option( 'bb_directory_get_test_ids', array() );
+	$get_sample_ids         = array();
+	$video_attachment_id    = 0;
+	$media_attachment_id    = 0;
+	$document_attachment_id = 0;
 
-	if ( empty( $get_sample_ids ) ) {
+    // Add upload filters.
+    add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
 
-		// Add upload filters.
-		add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+	$file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+	$filename    = basename( $file );
+	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-		$file                = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-		$filename            = basename( $file );
-		$upload_file         = wp_upload_bits( $filename, null, file_get_contents( $file ) );
-		$video_attachment_id = 0;
-		if ( ! $upload_file['error'] ) {
-			$wp_filetype         = wp_check_filetype( $filename, null );
-			$attachment          = array(
-				'post_mime_type' => $wp_filetype['type'],
-				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-				'post_content'   => '',
-				'post_status'    => 'inherit',
-			);
-			$video_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-			if ( ! is_wp_error( $video_attachment_id ) ) {
-				require_once ABSPATH . 'wp-admin/includes/image.php';
-				$attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
-				wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
-				$get_sample_ids['bb_videos'] = $video_attachment_id;
-			}
-		}
+    if ( ! $upload_file['error'] ) {
+        $wp_filetype         = wp_check_filetype( $filename, null );
+        $attachment          = array(
+            'post_mime_type' => $wp_filetype['type'],
+            'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+            'post_content'   => '',
+            'post_status'    => 'inherit',
+        );
+        $video_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+        if ( ! is_wp_error( $video_attachment_id ) ) {
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+            $attachment_data = wp_generate_attachment_metadata( $video_attachment_id, $upload_file['file'] );
+            wp_update_attachment_metadata( $video_attachment_id, $attachment_data );
+            $get_sample_ids['bb_videos'] = $video_attachment_id;
+        }
+    }
 
-		// Remove upload filters.
-		remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+    // Remove upload filters.
+    remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
 
-		add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+    add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
 
-		$file                = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-		$filename            = basename( $file );
-		$upload_file         = wp_upload_bits( $filename, null, file_get_contents( $file ) );
-		$media_attachment_id = 0;
-		if ( ! $upload_file['error'] ) {
-			$wp_filetype         = wp_check_filetype( $filename, null );
-			$attachment          = array(
-				'post_mime_type' => $wp_filetype['type'],
-				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-				'post_content'   => '',
-				'post_status'    => 'inherit',
-			);
-			$media_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-			if ( ! is_wp_error( $media_attachment_id ) ) {
-				require_once ABSPATH . 'wp-admin/includes/image.php';
-				$attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
-				wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
-				$get_sample_ids['bb_medias'] = $media_attachment_id;
-			}
-		}
+    $file        = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+    $filename    = basename( $file );
+    $upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-		remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+    if ( ! $upload_file['error'] ) {
+        $wp_filetype         = wp_check_filetype( $filename, null );
+        $attachment          = array(
+            'post_mime_type' => $wp_filetype['type'],
+            'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+            'post_content'   => '',
+            'post_status'    => 'inherit',
+        );
+        $media_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+        if ( ! is_wp_error( $media_attachment_id ) ) {
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+            $attachment_data = wp_generate_attachment_metadata( $media_attachment_id, $upload_file['file'] );
+            wp_update_attachment_metadata( $media_attachment_id, $attachment_data );
+            $get_sample_ids['bb_medias'] = $media_attachment_id;
+        }
+    }
 
-		add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+    remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
 
-		$file                   = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
-		$filename               = basename( $file );
-		$upload_file            = wp_upload_bits( $filename, null, file_get_contents( $file ) );
-		$document_attachment_id = 0;
-		if ( ! $upload_file['error'] ) {
-			$wp_filetype            = wp_check_filetype( $filename, null );
-			$attachment             = array(
-				'post_mime_type' => $wp_filetype['type'],
-				'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-				'post_content'   => '',
-				'post_status'    => 'inherit',
-			);
-			$document_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
-			if ( ! is_wp_error( $document_attachment_id ) ) {
-				require_once ABSPATH . 'wp-admin/includes/image.php';
-				$attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
-				wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
-				$get_sample_ids['bb_documents'] = $document_attachment_id;
-			}
-		}
+    add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 
-		remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+    $file                   = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+    $filename               = basename( $file );
+    $upload_file            = wp_upload_bits( $filename, null, file_get_contents( $file ) );
 
-		bp_update_option( 'bb_directory_get_test_ids', $get_sample_ids );
+    if ( ! $upload_file['error'] ) {
+        $wp_filetype            = wp_check_filetype( $filename, null );
+        $attachment             = array(
+            'post_mime_type' => $wp_filetype['type'],
+            'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+            'post_content'   => '',
+            'post_status'    => 'inherit',
+        );
+        $document_attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+        if ( ! is_wp_error( $document_attachment_id ) ) {
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+            $attachment_data = wp_generate_attachment_metadata( $document_attachment_id, $upload_file['file'] );
+            wp_update_attachment_metadata( $document_attachment_id, $attachment_data );
+            $get_sample_ids['bb_documents'] = $document_attachment_id;
+        }
+    }
 
-	}
+    remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+
 
 	$directory = array();
 	foreach ( $get_sample_ids as $id => $v ) {
@@ -2085,5 +2082,9 @@ function bb_media_settings_callback_symlink_direct_access() {
 		esc_html__( 'Media Permissions', 'buddyboss' ),
 		esc_html__( ' tutorial to configure your server.', 'buddyboss' )
 	);
+
+	wp_delete_attachment( $document_attachment_id, true );
+	wp_delete_attachment( $media_attachment_id, true );
+	wp_delete_attachment( $video_attachment_id, true );
 
 }
