@@ -595,89 +595,51 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 
-
 /**
  * Add moderation repair list.
  *
  * @param array $repair_list
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.4
  *
  * @return array Repair list items.
  */
-function bp_moderation_migrate_old_data( $repair_list ) {
+function bb_moderation_migrate_old_data( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-moderation-data',
 		__( 'Repair moderation data.', 'buddyboss' ),
-		'bp_moderation_admin_repair_old_moderation_data',
+		'bb_moderation_admin_repair_old_moderation_data',
 	);
 
 	return $repair_list;
 }
 
-add_filter( 'bp_repair_list', 'bp_moderation_migrate_old_data' );
+add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
 
-function bp_moderation_admin_repair_old_moderation_data() {
+/**
+ * Function to admin repair tool for fix moderation data.
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @return array
+ */
+function bb_moderation_admin_repair_old_moderation_data() {
 	global $wpdb;
-
+	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$table_exists  = (bool) $wpdb->get_results( "DESCRIBE {$suspend_table}" );
+	if ( ! $table_exists ) {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Moderation update complete!', 'buddyboss' ),
+		);
+	}
 	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$activity_table           = "{$wpdb->prefix}bp_activity";
-	$activity_table_meta      = "{$wpdb->prefix}bp_activity_meta";
-	$moderation_table         = "{$wpdb->prefix}bp_moderation";
-	$moderation_table_meta    = "{$wpdb->prefix}bp_moderation_meta";
-	$suspend_table            = "{$wpdb->prefix}bp_suspend";
-	$moderated_activities_sql = $wpdb->prepare( "SELECT {$suspend_table}.id,{$suspend_table}.item_id,{$suspend_table}.last_updated FROM {$suspend_table} INNER JOIN {$activity_table} ON ( {$suspend_table}.item_id = {$activity_table}.id ) WHERE 1=1 AND {$suspend_table}.reported = 1 AND (  {$activity_table}.privacy IN ('media','video','document') ) GROUP BY {$suspend_table}.id ORDER BY {$suspend_table}.id DESC LIMIT 10" );
+	$sql_offset               = $offset - 1;
+	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
 	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
 
 	if ( ! empty( $moderated_activities ) ) {
-		foreach ( $moderated_activities as $moderated_activity ) {
-			$activity_sql = $wpdb->prepare( "SELECT id,privacy FROM {$activity_table} WHERE id=%d", $moderated_activity->item_id );
-			$get_activity = $wpdb->get_row( $activity_sql );
-			$meta_type    = '';
-			if ( 'media' === $get_activity->privacy ) {
-				$media_activity_meta_sql = $wpdb->prepare( "SELECT meta_value FROM {$activity_table_meta} WHERE activity_id=%d AND `meta_key` = 'bp_media_id'", $moderated_activity->item_id );
-				$meta_item               = $wpdb->get_row( $media_activity_meta_sql );
-				$meta_type               = 'media';
-			}
-			if ( 'document' === $get_activity->privacy ) {
-				$document_activity_meta_sql = $wpdb->prepare( "SELECT meta_value FROM {$activity_table_meta} WHERE activity_id=%d AND `meta_key` = 'bp_document_id'", $moderated_activity->item_id );
-				$meta_item                  = $wpdb->get_row( $document_activity_meta_sql );
-				$meta_type                  = 'document';
-			}
-			if ( 'video' === $get_activity->privacy ) {
-				$video_activity_meta_sql = $wpdb->prepare( "SELECT meta_value FROM {$activity_table_meta} WHERE activity_id=%d AND `meta_key` = 'bp_video_id'", $moderated_activity->item_id );
-				$meta_item               = $wpdb->get_row( $video_activity_meta_sql );
-				$meta_type               = 'video';
-			}
-			if ( ! empty( $meta_item->meta_value ) ) {
-				$moderation_item_sql = $wpdb->prepare( "SELECT id FROM {$suspend_table} WHERE `item_id`=%d AND `item_type`=%s", $meta_item->meta_value, $meta_type );
-				$moderation_item     = $wpdb->get_row( $moderation_item_sql );
-				if ( ! empty( $moderation_item->id ) ) {
-					// Update moderation table.
-					$wpdb->update( $moderation_table, array( 'moderation_id' => $moderation_item->id ), array( 'moderation_id' => $moderated_activity->id ) );
-
-					// Update moderation meta table.
-					$wpdb->update( $moderation_table_meta, array( 'moderation_id' => $moderation_item->id ), array( 'moderation_id' => $moderated_activity->id ) );
-
-					// Update suspend table Activity row.
-					$wpdb->update( $suspend_table, array(
-						'hide_sitewide' => 0,
-						'hide_parent'   => 1,
-						'reported'      => 0,
-						'last_updated'  => '0000-00-00 00:00:00',
-					), array( 'id' => $moderated_activity->id ) );
-
-					// Update suspend table media row.
-					$wpdb->update( $suspend_table, array(
-						'hide_sitewide' => 1,
-						'hide_parent'   => 0,
-						'reported'      => 1,
-						'last_updated'  => $moderated_activity->last_updated,
-					), array( 'id' => $moderation_item->id ) );
-				}
-			}
-			$offset ++;
-		}
+		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
 		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
 
 		return array(
@@ -690,5 +652,143 @@ function bp_moderation_admin_repair_old_moderation_data() {
 			'status'  => 1,
 			'message' => __( 'Moderation update complete!', 'buddyboss' ),
 		);
+	}
+}
+
+/**
+ * Function to check if media record is exist.
+ *
+ * @param int    $id   media id
+ * @param string $type media type
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @return null|array|object|void
+ */
+function bb_moderation_get_media_record_by_id( $id, $type ) {
+	global $wpdb;
+
+	$record         = array();
+	$media_table    = "{$wpdb->prefix}bp_media";
+	$document_table = "{$wpdb->prefix}bp_document";
+
+	if ( in_array( $type, array( 'media', 'video' ) ) ) {
+		$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
+		$record    = $wpdb->get_row( $media_sql );
+	}
+
+	if ( 'document' === $type ) {
+		$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
+		$record       = $wpdb->get_row( $document_sql );
+	}
+
+	return $record;
+}
+
+/**
+ * Function to check if suspend record is exist.
+ *
+ * @param int $id id
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @return null|array|object|void
+ */
+function bb_moderation_suspend_record_exist( $id ) {
+	global $wpdb;
+
+	$record = array();
+
+	if ( ! $id ) {
+		return $record;
+	}
+
+	$suspend_table = "{$wpdb->prefix}bp_suspend";
+
+	$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
+	$record             = $wpdb->get_row( $suspend_record_sql );
+
+	return $record;
+}
+
+/**
+ * Function to update suspend data.
+ *
+ * @param object $moderated_activities suspend records
+ * @param int    $offset               pagination object
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @return int|mixed
+ */
+function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 ) {
+	global $wpdb;
+
+	$suspend_table = "{$wpdb->prefix}bp_suspend";
+
+	if ( ! empty( $moderated_activities ) ) {
+		foreach ( $moderated_activities as $moderated_activity ) {
+
+			if ( in_array( $moderated_activity->item_type, array( 'media', 'video' ) ) ) {
+				$media_results = bb_moderation_get_media_record_by_id( $moderated_activity->item_id, $moderated_activity->item_type );
+				if ( ! empty( $media_results ) ) {
+					$suspend_record = bb_moderation_suspend_record_exist( $media_results->activity_id );
+					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $suspend_record->item_id,
+							'item_type' => $suspend_record->item_type,
+						), array( 'id' => $moderated_activity->id ) );
+
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $moderated_activity->item_id,
+							'item_type' => $moderated_activity->item_type,
+						), array( 'id' => $suspend_record->id ) );
+					}
+				}
+			}
+
+			if ( 'document' === $moderated_activity->item_type ) {
+				$document_results = bb_moderation_get_media_record_by_id( $moderated_activity->item_id, 'document' );
+				if ( ! empty( $document_results ) ) {
+					$suspend_record = bb_moderation_suspend_record_exist( $document_results->activity_id );
+					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $suspend_record->item_id,
+							'item_type' => $suspend_record->item_type,
+						), array( 'id' => $moderated_activity->id ) );
+
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $moderated_activity->item_id,
+							'item_type' => $moderated_activity->item_type,
+						), array( 'id' => $suspend_record->id ) );
+					}
+				}
+			}
+			$offset ++;
+		}
+	}
+
+	return $offset;
+}
+
+/**
+ * Function to update moderation data on plugin update.
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @return int|mixed|void
+ */
+function bb_moderation_bg_update_moderation_data() {
+	global $wpdb;
+	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$table_exists  = (bool) $wpdb->get_results( "DESCRIBE {$suspend_table}" );
+
+	if ( ! $table_exists ) {
+		return;
+	}
+
+	$moderated_activities = $wpdb->get_results( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC" );
+	if ( ! empty( $moderated_activities ) ) {
+		bb_moderation_update_suspend_data( $moderated_activities, 0 );
 	}
 }

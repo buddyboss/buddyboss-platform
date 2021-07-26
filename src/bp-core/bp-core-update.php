@@ -333,6 +333,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_2();
 		}
+
+		if ( $raw_db_version < 17401 ) {
+			bb_update_to_1_7_4();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -691,6 +695,24 @@ function bp_update_to_1_7_0() {
 function bb_update_to_1_7_2() {
 	flush_rewrite_rules();
 	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
+}
+
+/**
+ * Function to update data
+ *
+ * @since BuddyBoss 1.7.4
+ */
+function bb_update_to_1_7_4(){
+	global $bp_background_updater;
+
+	$bp_background_updater->push_to_queue(
+		array(
+			'callback' => 'bb_moderation_bg_update_moderation_data',
+			'args'     => array(),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
 }
 
 function bp_update_default_doc_extensions() {
