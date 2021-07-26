@@ -204,8 +204,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$request['component']         = 'groups';
 			$args['filter']['object']     = 'groups';
 			$args['filter']['primary_id'] = $args['group_id'];
+			$args['privacy']              = array( 'public' );
 
 			$item_id = $args['group_id'];
+		} elseif ( ! empty( $request['component'] ) && 'groups' === $request['component'] && ! empty( $request['primary_id'] ) ) {
+			$args['privacy'] = array( 'public' );
 		}
 
 		if ( ! empty( $args['site_id'] ) ) {
