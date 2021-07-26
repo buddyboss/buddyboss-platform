@@ -15141,6 +15141,7 @@ ul.bb-albums-list .load-more {
     width: 100%;
     margin-left: 0;
     max-height: calc(50vh - 40px);
+    border-radius: 0 0 4px 4px;
   }
   #buddypress .bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-list.bp-list {
     min-height: calc(50vh - 40px);
@@ -20156,7 +20157,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   cursor: auto;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1024px) {
   .bb-media-model-wrapper.video .bb-media-section figure {
     max-height: 50vh;
     min-height: 50vh;
