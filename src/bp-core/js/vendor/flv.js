@@ -1245,12 +1245,12 @@ EventEmitter.prototype.emit = function(type) {
         (isObject(this._events.error) && !this._events.error.length)) {
       er = arguments[1];
       if (er instanceof Error) {
-        //throw er; // Unhandled 'error' event
+        //throw er; // Unhandled 'error' event //Edited By BuddyBoss
       } else {
         // At least give some kind of context to the user
         var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
         err.context = er;
-        //throw err;
+        //throw err; //Edited By BuddyBoss
       }
     }
   }
@@ -11681,11 +11681,11 @@ var Log = function () {
 
 Log.GLOBAL_TAG = 'flv.js';
 Log.FORCE_GLOBAL_TAG = false;
-Log.ENABLE_ERROR = false;
-Log.ENABLE_INFO = false;
-Log.ENABLE_WARN = false;
-Log.ENABLE_DEBUG = false;
-Log.ENABLE_VERBOSE = false;
+Log.ENABLE_ERROR = false; //Edited By BuddyBoss
+Log.ENABLE_INFO = false; //Edited By BuddyBoss
+Log.ENABLE_WARN = false; //Edited By BuddyBoss
+Log.ENABLE_DEBUG = false; //Edited By BuddyBoss
+Log.ENABLE_VERBOSE = false; //Edited By BuddyBoss
 
 Log.ENABLE_CALLBACK = false;
 
