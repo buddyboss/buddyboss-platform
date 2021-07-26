@@ -172,10 +172,8 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
  */
 function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$can = false;
-		}
+
+		$can = false;
 	}
 	return $can;
 }
@@ -217,82 +215,39 @@ function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file
 function bp_document_offload_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
 
     if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
 
-		    if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		        $get_metadata = wp_get_attachment_metadata( $attachment_id );
-				if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-				} else {
-					$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-				}
+        if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+            $get_metadata = wp_get_attachment_metadata( $attachment_id );
+            if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+                $attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+            } else {
+                $attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+            }
 
-				if ( ! $attachment_url ) {
-					if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
-						add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-						add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						bp_document_generate_document_previews( $attachment_id );
-						remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-						if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-						} else {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-						}
-					} else {
-						add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						bp_document_generate_document_previews( $attachment_id );
-						remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-						remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-						if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-						} else {
-							$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-						}
-					}
-				}
+            $imageArray = @getimagesize( $attachment_url );
 
-			    if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
-				    $imageArray = @getimagesize( $attachment_url );
-				    if ( empty( $imageArray ) ) {
-					    add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-					    add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-					    add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-					    bp_document_generate_document_previews( $attachment_id );
-					    remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-					    remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-					    remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-					    if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-						    $attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-					    } else {
-						    $attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-					    }
-				    }
-			    }
-			}
+            if ( ! $attachment_url || empty( $imageArray ) ) {
 
-			$all_extensions = array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() );
-			if ( in_array( $extension, $all_extensions, true ) ) {
-				$document = new BP_Document( $document_id );
+                    add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+                    add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+                    add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+                    bp_document_generate_document_previews( $attachment_id );
+                    remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+                    remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+                    remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+                    if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+                        $attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+                    } else {
+                        $attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+                    }
+            }
+        }
 
-				$upload_directory        = wp_get_upload_dir();
-				$document_symlinks_path  = bp_document_symlink_path();
-				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
-				if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-					$group_object            = groups_get_group( $document->group_id );
-					$group_status            = bp_get_group_status( $group_object );
-					$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
-				}
-				if ( ! file_exists( $preview_attachment_path ) ) {
-					bp_document_create_symlinks( $document );
-				}
-				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-			}
-		}
+        if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+            if ( ! empty( $attachment_id ) && ! empty( $document_id ) ) {
+                $attachment_url = wp_get_attachment_url( $attachment_id );
+            }
+        }
 	}
 	return $attachment_url;
 }
@@ -305,11 +260,8 @@ add_filter( 'bp_document_get_preview_url', 'bp_document_offload_get_preview_url'
  */
 function bb_offload_media_set_private() {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-		}
+        add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+        add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
 	}
 }
 add_action( 'bb_before_document_upload_handler', 'bb_offload_media_set_private' );
@@ -327,11 +279,8 @@ add_action( 'bb_document_before_generate_document_previews', 'bb_offload_media_s
  */
 function bb_offload_media_unset_private() {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-		}
+        remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+        remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
 	}
 }
 add_action( 'bb_after_document_upload_handler', 'bb_offload_media_unset_private' );
@@ -355,13 +304,10 @@ add_action( 'bb_document_after_generate_document_previews', 'bb_offload_media_un
  * @since BuddyBoss 1.7.0
  */
 function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$media          = new BP_Media( $media_id );
-			$attachment_url = wp_get_attachment_url( $media->attachment_id );
-		}
-	}
+    if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+        $media          = new BP_Media( $media_id );
+        $attachment_url = wp_get_attachment_url( $media->attachment_id );
+    }
 	return $attachment_url;
 }
 add_filter( 'bp_media_get_preview_image_url', 'bp_media_offload_get_preview_url', PHP_INT_MAX, 4 );
@@ -1066,12 +1012,9 @@ function bb_media_private_upload_acl( $acl ) {
  */
 function bb_video_set_wp_offload_download_video_local( $video ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-			add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-		}
+        add_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
+        add_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+        add_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
 	}
 }
 add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_offload_download_video_local', 99999, 1 );
@@ -1085,12 +1028,9 @@ add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_set_wp_
  */
 function bb_video_unset_wp_offload_download_video_local( $video ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
-			remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
-			remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
-		}
+        remove_filter( 'as3cf_upload_acl', 'bb_media_private_upload_acl', 10, 1 );
+        remove_filter( 'as3cf_upload_acl_sizes', 'bb_media_private_upload_acl', 10, 1 );
+        remove_filter( 'as3cf_get_attached_file_copy_back_to_local', 'bb_document_as3cf_get_attached_file_copy_back_to_local', PHP_INT_MAX, 4 );
 	}
 }
 add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp_offload_download_video_local', 99999, 1 );
@@ -1109,15 +1049,12 @@ add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_unset_wp
  */
 function bp_video_offload_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$get_metadata = wp_get_attachment_metadata( $attachment_id );
-			if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
-				$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
-			} else {
-				$attachment_url = wp_get_attachment_url( $attachment_id );
-			}
-		}
+		$get_metadata = wp_get_attachment_metadata( $attachment_id );
+        if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+            $attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+        } else {
+            $attachment_url = wp_get_attachment_url( $attachment_id );
+        }
 	}
 
 	return $attachment_url;
@@ -1135,10 +1072,7 @@ add_filter( 'bb_video_get_thumb_url', 'bp_video_offload_get_thumb_preview_url', 
  */
 function bp_video_offload_get_video_url( $attachment_url, $video_id, $attachment_id ) {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$attachment_url = wp_get_attachment_url( $attachment_id );
-		}
+		$attachment_url = wp_get_attachment_url( $attachment_id );
 	}
 
 	return $attachment_url;
