@@ -64,7 +64,9 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		add_filter( 'bbp_get_forum', array( $this, 'restrict_single_item' ), 10, 2 );
 
-		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		}
 	}
 
 	/**

@@ -68,10 +68,11 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		add_filter( 'bp_video_search_join_sql_video', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_video_search_where_conditions_video', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
-
-		add_action( 'bb_moderation_' . BP_Moderation_Activity::$moderation_type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
-		add_action( 'bb_moderation_' . BP_Moderation_Activity_Comment::$moderation_type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity_Comment::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+		}
 	}
 
 	/**
@@ -603,11 +604,11 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 
 		if ( ! empty( $videos ) && 1 === count( $videos ) ) {
 			foreach ( $videos as $video ) {
-				if ( bp_moderation_is_content_hidden( $video, $this->item_type ) ) {
+				if ( bp_moderation_is_content_hidden( $video, $this->item_type ) && bp_is_active( 'activity' ) ) {
 					BP_Core_Suspend::add_suspend(
 						array(
 							'item_id'     => $secondary_item_id,
-							'item_type'   => BP_Moderation_Activity::$moderation_type,
+							'item_type'   => BP_Suspend_Activity::$type,
 							'hide_parent' => 1,
 						)
 					);
