@@ -3261,7 +3261,7 @@ span.dashicons.dashicons-admin-file:before {
   #media-stream.media .bb-photo-thumb.is-visible:before,
   .bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible:before,
   .bb-activity-media-wrap .bb-activity-video-elem.is-visible:before {
-    content: '';
+    content: "";
     position: fixed;
     top: 0;
     left: 0;
@@ -3856,7 +3856,7 @@ span.dashicons.dashicons-admin-file:before {
   #video-stream.video .bb-item-thumb.is-visible:before,
   #media-stream.media .bb-video-thumb.is-visible:before,
   .bb-activity-video-wrap .bb-activity-video-elem.is-visible:before {
-    content: '';
+    content: "";
     position: fixed;
     top: 0;
     left: 0;
