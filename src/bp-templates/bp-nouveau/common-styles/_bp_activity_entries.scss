@@ -1186,27 +1186,6 @@ span.dashicons.dashicons-admin-file:before {
 		display: none;
 	}
 
-	@media screen and (max-width: 544px) {
-
-		.bb-activity-media-elem {
-			flex: 0 0 100% !important;
-			max-width: 100% !important;
-			min-width: auto !important;
-
-			.entry-img {
-				padding-top: 55.56% !important;
-			}
-
-			&.hideact-grid-1-2 {
-				flex: 0 !important;
-			}
-		}
-
-		.bb-media-length-1 .bb-activity-media-elem .entry-img {
-			padding-top: 0 !important;
-		}
-
-	}
 }
 
 #media-stream.media .bb-photo-thumb,
@@ -1236,6 +1215,51 @@ span.dashicons.dashicons-admin-file:before {
 		.video-action-wrap .video-action_list {
 			opacity: 1;
 			visibility: visible;
+		}
+
+		@media screen and (max-width: 544px) {
+			position: relative;
+			z-index: 1111;
+
+			.item-action-wrap i {
+				opacity: 0.1;
+			}
+
+			&:before {
+				content: '';
+				position: fixed;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				background: rgba(250, 251, 253, 0.9);
+				z-index: 99;
+			}
+
+			.media-action_more:after,
+			.media-action_more:before {
+				display: none;
+			}
+
+			.media-action-wrap .media-action_list,
+			.video-action-wrap .video-action_list {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				border: 1px solid #d2d4d6;
+				box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+
+				.admin-bar & {
+					margin-top: 46px;
+				}
+
+				&:after {
+					display: none;
+				}
+
+			}
+
 		}
 
 	}
@@ -1508,6 +1532,50 @@ span.dashicons.dashicons-admin-file:before {
 		.item-action-wrap .item-action_list {
 			opacity: 1;
 			visibility: visible;
+		}
+
+		@media screen and (max-width: 544px) {
+			position: relative;
+			z-index: 1111;
+
+			.item-action-wrap i {
+				opacity: 0.1;
+			}
+
+			&:before {
+				content: '';
+				position: fixed;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				background-color: rgba(250, 251, 253, 0.9);
+				z-index: 99;
+			}
+
+			.video-action_more.item-action_more:after,
+			.video-action_more.item-action_more:before {
+				display: none;
+			}
+
+			.item-action-wrap .item-action_list {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				border: 1px solid #d2d4d6;
+				box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+
+				.admin-bar & {
+					margin-top: 46px;
+				}
+
+				&:after {
+					display: none;
+				}
+
+			}
+
 		}
 
 	}
