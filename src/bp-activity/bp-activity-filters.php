@@ -1857,6 +1857,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 		if ( ! empty( $old_media_ids ) ) {
 			$old_media_ids = wp_parse_id_list( $old_media_ids );
+			$media_ids     = wp_parse_id_list( $media_ids );
 
 			// old media count 1 and new media uploaded count is greater than 1.
 			if ( 1 === count( $old_media_ids ) && 1 < count( $media_ids ) ) {
@@ -2194,6 +2195,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 		if ( ! empty( $old_document_ids ) ) {
 			$old_document_ids = wp_parse_id_list( $old_document_ids );
+			$document_ids     = wp_parse_id_list( $document_ids );
 
 			// old document count 1 and new document uploaded count is greater than 1.
 			if ( 1 === count( $old_document_ids ) && 1 < count( $document_ids ) ) {
@@ -2804,6 +2806,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 		if ( ! empty( $old_video_ids ) ) {
 			$old_video_ids = wp_parse_id_list( $old_video_ids );
+			$video_ids     = wp_parse_id_list( $video_ids );
 
 			// old video count 1 and new video uploaded count is greater than 1.
 			if ( 1 === count( $old_video_ids ) && 1 < count( $video_ids ) ) {
