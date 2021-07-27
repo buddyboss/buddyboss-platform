@@ -196,10 +196,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array(
-			'upload_id'    => $upload['id'],
-			'upload'       => $upload['url'],
-			'upload_thumb' => $upload['thumb'],
-			'name'         => $upload['name'],
+			'upload_id' => $upload['id'],
+			'name'      => $upload['name'],
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1593,10 +1591,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					wp_update_post( $video_post );
 				}
 
-				$video = array(
-					'id' => $wp_attachment_id,
-				);
-				bp_video_add_generate_thumb_background_process( $wp_attachment_id, $video );
+				bp_video_add_generate_thumb_background_process( $video_id );
 
 				$created_video_ids[] = $video_id;
 
@@ -2138,10 +2133,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				if ( ! is_wp_error( $video_id ) ) {
 					$video_ids[] = $video_id;
 
-					$video = array(
-						'id' => $attachment_id,
-					);
-					bp_video_add_generate_thumb_background_process( $attachment_id, $video );
+					bp_video_add_generate_thumb_background_process( $video_id );
 
 					// save video is saved in attachment.
 					update_post_meta( $attachment_id, 'bp_video_saved', true );
