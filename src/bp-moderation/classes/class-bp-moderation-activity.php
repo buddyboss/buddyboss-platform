@@ -320,7 +320,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Add Pre-validate check.
 	 *
-	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 1.7.4
 	 */
 	public function add_pre_validate_check() {
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
