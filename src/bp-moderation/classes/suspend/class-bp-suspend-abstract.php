@@ -323,7 +323,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Return whitelisted keys from array arguments.
 	 *
-	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 1.7.4
 	 *
 	 * @param int    $item_id   Item ID.
 	 * @param string $item_type Item type.
@@ -333,7 +333,7 @@ abstract class BP_Suspend_Abstract {
 	public static function is_content_reported_hidden( $item_id, $item_type ) {
 		global $wpdb, $bp;
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
 
 		return ! empty( $result );
 	}

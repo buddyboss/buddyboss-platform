@@ -64,7 +64,9 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		add_filter( 'bbp_get_topic', array( $this, 'restrict_single_item' ), 10, 2 );
 
-		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -392,7 +394,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $topic_id );
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $topic_id, 'get_post_meta', $action );
 		}
 
 		return $related_contents;
@@ -454,7 +456,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Function to un-restrict activity data while deleting the activity.
 	 *
-	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 1.7.4
 	 *
 	 * @param boolean $restrict restrict single item or not.
 	 *

@@ -401,7 +401,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta' );
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
 		$related_content_hide = array();
@@ -496,7 +496,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				/**
 				 * Fires before activity suspend record delete.
 				 *
-				 * @since BuddyBoss 1.7.2
+				 * @since BuddyBoss 1.7.4
 				 *
 				 * @param object $activity_data activity data.
 				 */
@@ -511,7 +511,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Remove Pre-validate check.
 	 *
-	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 1.7.4
 	 */
 	public function remove_pre_validate_check() {
 		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10 );
@@ -520,7 +520,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Add Pre-validate check.
 	 *
-	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 1.7.4
 	 */
 	public function add_pre_validate_check() {
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );

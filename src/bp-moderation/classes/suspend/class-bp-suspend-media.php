@@ -59,10 +59,11 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bb_moderation_restrict_single_item_' . BP_Moderation_Activity::$moderation_type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
-
-		add_action( 'bb_moderation_' . BP_Moderation_Activity::$moderation_type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
-		add_action( 'bb_moderation_' . BP_Moderation_Activity_Comment::$moderation_type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity_Comment::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+		}
 	}
 
 	/**
@@ -363,7 +364,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			/**
 			 * Remove pre-validate check.
 			 *
-			 * @since BuddyBoss 1.7.2
+			 * @since BuddyBoss 1.7.4
 			 */
 			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
 
@@ -423,7 +424,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			/**
 			 * Added pre-validate check.
 			 *
-			 * @since BuddyBoss 1.7.2
+			 * @since BuddyBoss 1.7.4
 			 */
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 		}
@@ -494,7 +495,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Function to un-restrict activity data while deleting the activity.
 	 *
-	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 1.7.4
 	 *
 	 * @param boolean $restrict restrict single item or not.
 	 *
@@ -512,7 +513,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Function to update suspend record on activity delete.
 	 *
-	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 1.7.4
 	 *
 	 * @param object $activity_data activity data.
 	 */
@@ -528,11 +529,11 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		if ( ! empty( $medias ) && 1 === count( $medias ) ) {
 			foreach ( $medias as $media ) {
-				if ( bp_moderation_is_content_hidden( $media, $this->item_type ) ) {
+				if ( bp_moderation_is_content_hidden( $media, $this->item_type ) && bp_is_active( 'activity' ) ) {
 					BP_Core_Suspend::add_suspend(
 						array(
 							'item_id'     => $secondary_item_id,
-							'item_type'   => BP_Moderation_Activity::$moderation_type,
+							'item_type'   => BP_Suspend_Activity::$type,
 							'hide_parent' => 1,
 						)
 					);

@@ -38,9 +38,9 @@ if ( bp_is_active( 'media' ) ) {
 	new BP_Moderation_Media();
 }
 
-//if ( bp_is_active( 'video' ) ) {
-//	 new BP_Moderation_Video();
-//}
+if ( bp_is_active( 'video' ) ) {
+	new BP_Moderation_Video();
+}
 
 if ( bp_is_active( 'messages' ) ) {
 	new BP_Moderation_Message();
@@ -594,3 +594,56 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+
+/**
+ * Add moderation repair list.
+ *
+ * @param array $repair_list
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @return array Repair list items.
+ */
+function bb_moderation_migrate_old_data( $repair_list ) {
+	$repair_list[] = array(
+		'bp-repair-moderation-data',
+		__( 'Repair moderation data.', 'buddyboss' ),
+		'bb_moderation_admin_repair_old_moderation_data',
+	);
+
+	return $repair_list;
+}
+
+add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
+
+/**
+ * Function to admin repair tool for fix moderation data.
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @return array
+ */
+function bb_moderation_admin_repair_old_moderation_data() {
+	global $wpdb;
+	$suspend_table            = "{$wpdb->prefix}bp_suspend";
+	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$sql_offset               = $offset - 1;
+	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
+	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
+
+	if ( ! empty( $moderated_activities ) ) {
+		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
+		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Moderation update complete!', 'buddyboss' ),
+		);
+	}
+}
