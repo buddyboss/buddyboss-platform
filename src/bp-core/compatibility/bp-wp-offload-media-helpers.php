@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * AS3CF_Plugin_Compatibility Class
+ * BB_AS3CF_Plugin_Compatibility Class
  *
- * This class handles compatibility code for third party plugins used in conjunction with AS3CF
+ * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since 0.8.3
+ * @since BuddyBoss 1.7.4
  */
 class BB_AS3CF_Plugin_Compatibility {
 
@@ -19,7 +19,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 *
 	 * @var self
 	 *
-	 * @since 1.1.0
+	 * @since BuddyBoss 1.7.4
 	 */
 	private static $instance = null;
 
@@ -33,7 +33,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyBoss 1.7.4
 	 *
 	 * @return Controller|null
 	 */
