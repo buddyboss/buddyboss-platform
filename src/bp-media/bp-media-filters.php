@@ -299,7 +299,7 @@ function bp_media_activity_append_media( $content, $activity ) {
  *
  * @return string
  */
-function bp_gif_activity_append_gif( $content, $activity ) {
+function bb_gif_activity_append_gif( $content, $activity ) {
 	$gif_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 	if ( ! empty( $gif_data ) ) {
 		
