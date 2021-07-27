@@ -383,7 +383,16 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 			$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				foreach ( $metas as $meta ) {
-					bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					if ( ! empty( $meta['meta_key'] ) && $meta['meta_key'] == 'member_type' ) {
+						$meta_data = bp_xprofile_get_meta( $new_field_id, 'field', $meta['meta_key'] );
+						if ( ! empty( $meta_data ) && ! in_array( $meta['meta_value'], (array) $meta_data ) ) {
+							bp_xprofile_add_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+						} else {
+							bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+						}
+					} else {
+						bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					}
 				}
 			}
 			$current_clone_number = 1;
