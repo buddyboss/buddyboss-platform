@@ -207,7 +207,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
 				if ( 1 < count( $explode_medias ) ) {
 					$sub_items['id']   = $comment->id;
-					$sub_items['type'] = BP_Moderation_Activity_Comment::$moderation_type;
+					$sub_items['type'] = self::$moderation_type;
 				}
 			} else {
 				$sub_items['id']   = false;
@@ -223,7 +223,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				$sub_items['type'] = BP_Moderation_Document::$moderation_type;
 				if ( 1 < count( $explode_documents ) ) {
 					$sub_items['id']   = $comment->id;
-					$sub_items['type'] = BP_Moderation_Activity_Comment::$moderation_type;
+					$sub_items['type'] = self::$moderation_type;
 				}
 			} else {
 				$sub_items['id']   = false;
@@ -239,7 +239,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				$sub_items['type'] = BP_Moderation_Video::$moderation_type;
 				if ( 1 < count( $explode_videos ) ) {
 					$sub_items['id']   = $comment->id;
-					$sub_items['type'] = BP_Moderation_Activity_Comment::$moderation_type;
+					$sub_items['type'] = self::$moderation_type;
 				}
 			} else {
 				$sub_items['id']   = false;

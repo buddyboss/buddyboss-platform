@@ -247,7 +247,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
 				if ( 1 < count( $explode_medias ) ) {
 					$sub_items['id']   = $activity->id;
-					$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
+					$sub_items['type'] = self::$moderation_type;
 				}
 			} else {
 				$sub_items['id']   = false;
@@ -263,7 +263,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$sub_items['type'] = BP_Moderation_Document::$moderation_type;
 				if ( 1 < count( $explode_documents ) ) {
 					$sub_items['id']   = $activity->id;
-					$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
+					$sub_items['type'] = self::$moderation_type;
 				}
 			} else {
 				$sub_items['id']   = false;
@@ -279,7 +279,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$sub_items['type'] = BP_Moderation_Video::$moderation_type;
 				if ( 1 < count( $explode_videos ) ) {
 					$sub_items['id']   = $activity->id;
-					$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
+					$sub_items['type'] = self::$moderation_type;
 				}
 			} else {
 				$sub_items['id']   = false;
@@ -446,15 +446,15 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		switch ( $activity->type ) {
 			case 'bbp_forum_create':
 				$content_type = esc_html__( 'Forum', 'buddyboss' );
-				$updated     = true;
+				$updated      = true;
 				break;
 			case 'bbp_topic_create':
 				$content_type = esc_html__( 'Discussion', 'buddyboss' );
-				$updated     = true;
+				$updated      = true;
 				break;
 			case 'bbp_reply_create':
 				$content_type = esc_html__( 'Reply', 'buddyboss' );
-				$updated     = true;
+				$updated      = true;
 				break;
 			default:
 				$content_type = esc_html__( 'Post', 'buddyboss' );

@@ -702,7 +702,7 @@ function bb_update_to_1_7_2() {
  *
  * @since BuddyBoss 1.7.4
  */
-function bb_update_to_1_7_4(){
+function bb_update_to_1_7_4() {
 	global $bp_background_updater;
 
 	$bp_background_updater->push_to_queue(
