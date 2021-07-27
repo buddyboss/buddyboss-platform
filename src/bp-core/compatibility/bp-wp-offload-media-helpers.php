@@ -24,7 +24,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	private static $instance = null;
 
 	/**
-	 * @param Amazon_S3_And_CloudFront $as3cf
+	 * BB_AS3CF_Plugin_Compatibility constructor.
 	 */
 	public function __construct() {
 		$this->compatibility_init();
@@ -98,6 +98,8 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 
 		/**
+		 * Global object for Amazon_S3_And_CloudFront|Amazon_S3_And_CloudFront_Pro.
+		 *
 		 * @var Amazon_S3_And_CloudFront|\Amazon_S3_And_CloudFront_Pro $as3cf
 		 */
 		global $as3cf;
@@ -158,6 +160,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @param string $extension      extension.
 	 * @param string $size           size of the media.
 	 * @param int    $attachment_id  attachment id.
+	 * @param bool   $symlink        display symlink or not.
 	 *
 	 * @return false|mixed|string return the original document URL.
 	 *
@@ -173,9 +176,9 @@ class BB_AS3CF_Plugin_Compatibility {
 				$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
 			}
 
-			$imageArray = @getimagesize( $attachment_url );
+			$image_array = @getimagesize( $attachment_url );
 
-			if ( ! $attachment_url || empty( $imageArray ) ) {
+			if ( ! $attachment_url || empty( $image_array ) ) {
 
 				add_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'bb_document_as3cf_get_attached_file_copy_back_to_local' ), PHP_INT_MAX, 4 );
 				add_filter( 'as3cf_upload_acl', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
@@ -211,6 +214,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @param int    $media_id       media id.
 	 * @param int    $attachment_id  attachment id.
 	 * @param string $size           size of the media.
+	 * @param bool   $symlink        display symlink or not.
 	 *
 	 * @return false|mixed|string return the original media URL.
 	 *
@@ -277,6 +281,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @param int    $video_id       Video id.
 	 * @param string $size           size of the media.
 	 * @param int    $attachment_id  Attachment id.
+	 * @param bool   $symlink        display symlink or not.
 	 *
 	 * @return false|mixed|string return the original document URL.
 	 *
@@ -302,12 +307,13 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @param string $attachment_url Attachment url.
 	 * @param int    $video_id       Video id.
 	 * @param int    $attachment_id  Attachment id.
+	 * @param bool   $symlink        display symlink or not.
 	 *
 	 * @return string $attachment_url Attachment URL.
 	 */
 	public function bp_video_offload_get_video_url( $attachment_url, $video_id, $attachment_id, $symlink ) {
 
-		if (! $symlink ) {
+		if ( ! $symlink ) {
 			$attachment_url = wp_get_attachment_url( $attachment_id );
 		}
 
