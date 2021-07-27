@@ -2798,7 +2798,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
 		$old_video_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_video_ids', true );
-		$old_video_ids = explode( ',', $old_video_ids );
+		$old_video_ids = wp_parse_id_list( explode( ',', $old_video_ids ) );
 
 		if ( ! empty( $old_video_ids ) ) {
 
@@ -2855,7 +2855,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 				// old video count is greater than 1 and new video uploaded count is only 1 now.
 			} elseif ( 1 < count( $old_video_ids ) && 1 === count( $video_ids ) ) {
-				$new_video_id = $video_ids[0];
+				$new_video_id = (int) $video_ids[0];
 
 				// check if new video is in old video uploaded, if yes then delete that video's video activity first.
 				if ( in_array( $new_video_id, $old_video_ids, true ) ) {
@@ -2877,7 +2877,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 				// old video and new video count is same and old video and new video are different.
 			} elseif ( 1 === count( $old_video_ids ) && 1 === count( $video_ids ) ) {
-				$new_video_id = $video_ids[0];
+				$new_video_id = (int) $video_ids[0];
 
 				// check if new video is not in old video uploaded and.
 				if ( ! in_array( $new_video_id, $old_video_ids, true ) ) {
