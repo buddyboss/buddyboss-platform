@@ -1164,6 +1164,8 @@ function bb_update_to_1_5_6() {
  * - Update forum meta _bbp_group_ids, associated with group id.
  *
  * @since BuddyBoss x.x.x
+ * 
+ * @return void
  */
 function bb_update_to_1_5_9() {
 	// Return, when group or forum component deactive.
@@ -1204,8 +1206,8 @@ function bb_update_to_1_5_9() {
  *
  * @since BuddyBoss x.x.x
  *
- * @param int   $group_id
- * @param array $forum_ids
+ * @param int   $group_id  Group id.
+ * @param array $forum_ids Forum ids.
  *
  * @return void
  */
@@ -1277,4 +1279,3 @@ add_filter(
 		return $extensions;
 	}
 );
-
