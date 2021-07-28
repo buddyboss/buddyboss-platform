@@ -963,6 +963,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Set the global forum ID
 			$bbp->current_forum_id = $forum_id;
+
 			// Assume forum query
 			bbp_set_query_name( 'bbp_single_forum' );
 			?>
@@ -1411,7 +1412,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Get group ID's for this forum
 			$group_ids = $this->forum_associate_current_group( $forum_id );
-			//$group_ids = empty( $group_ids ) ? array( bp_get_current_group_id() ) : $group_ids;
 
 			// Bail if the post isn't associated with a group
 			if ( empty( $group_ids ) ) {
@@ -1433,21 +1433,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			return trailingslashit( trailingslashit( $group_permalink . $this->slug ) . $url_end );
-		}
-
-		/**
-		 * Froum name set as query var.
-		 *
-		 * @since bbPress (r4612)
-		 *
-		 * @param int $forum_id Forum id.
-		 * @uses bbp_get_forum() To get forum.
-		 *
-		 * @return string
-		 */
-		public function get_url_end_by( $forum_id ) {
-			$form = bbp_get_forum( $forum_id );
-			return $form->post_name;
 		}
 
 		/**
@@ -1712,6 +1697,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @since bbPress (r3802)
 		 */
 		public function redirect_canonical() {
+
 			// Viewing a single forum
 			if ( bbp_is_single_forum() ) {
 				$forum_id  = get_the_ID();
