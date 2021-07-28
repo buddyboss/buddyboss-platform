@@ -1620,7 +1620,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id   = empty( $forum_id ) ? false : array_shift( $forum_id );
 			$forum      = get_post( $forum_id );
 			$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
-			
+
 			// When navigate to group from.
 			if ( ! bp_is_group_forum_topic() ) {
 				if ( empty( bp_action_variables() ) ) {
