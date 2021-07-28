@@ -933,6 +933,21 @@ input#send-to-input {
 				}
 			}
 		}
+
+		&.is-visible .document-action-wrap .document-action_list {
+			top: 50% !important;
+			bottom: initial !important;
+
+			&:after {
+				top: 0 !important;
+				bottom: initial !important;
+				line-height: 1.5;
+				transform: none;
+				right: 0;
+			}
+
+		}
+
 	}
 
 	.bb-activity-video-wrap .bb-activity-media-elem.video-activity {

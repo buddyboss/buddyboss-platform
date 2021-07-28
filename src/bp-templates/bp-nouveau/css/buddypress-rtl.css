@@ -8403,6 +8403,19 @@ input#send-to-input {
   transform: rotate(-137deg);
 }
 
+.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action-wrap .document-action_list {
+  top: 50% !important;
+  bottom: initial !important;
+}
+
+.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action-wrap .document-action_list:after {
+  top: 0 !important;
+  bottom: initial !important;
+  line-height: 1.5;
+  transform: none;
+  left: 0;
+}
+
 .bp-single-message-content .bb-activity-video-wrap .bb-activity-media-elem.video-activity .video-action-wrap .video-action_list li {
   margin: 0 !important;
   padding: 0 !important;
