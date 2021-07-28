@@ -1197,37 +1197,14 @@ function bb_update_to_1_5_9() {
 
 	foreach ( $groups as $group_id ) {
 		$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
-		bb_update_forums_group_id( $group_id, $forum_ids );
-	}
-}
 
-/**
- * Update group ID's for a forum.
- *
- * @since BuddyBoss x.x.x
- *
- * @param int   $group_id  Group id.
- * @param array $forum_ids Forum ids.
- *
- * @return void|bool
- */
-function bb_update_forums_group_id( $group_id, $forum_ids ) {
-	// Return, when forum component deactive.
-	if ( ! bp_is_active( 'forums' ) ) {
-		return false;
-	}
-
-	$group_ids = array( $group_id );
-
-	foreach ( $forum_ids as $forum_id ) {
-		if ( empty( $forum_id ) ) {
+		if ( empty( $forum_ids ) ) {
 			continue;
 		}
 
-		$has_froum_groups = bbp_get_forum_group_ids( $forum_id );
-		$group_ids        = array_unique( array_merge( $group_ids, $has_froum_groups ) );
+		$forum_id = array_shift( $forum_ids );
 
-		bbp_update_forum_group_ids( $forum_id, $group_ids );
+		bbp_update_forum_group_ids( $forum_id, array( $group_id ) );
 	}
 }
 
