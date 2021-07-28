@@ -437,13 +437,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			$forum_ids = bbp_get_group_forum_ids( $this->group_id );
 			$forum_ids = array_filter( $forum_ids );
-			
+
 			if ( empty( $forum_ids ) ) {
 				return $where;
 			}
 
 			$query_string = implode( ',', $forum_ids );
-			
+
 			// Set the selected forum in the forum dropdown from the group edit screen.
 			$where .= " OR {$wpdb->postmeta}.post_id IN ($query_string)";
 
@@ -454,20 +454,19 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Exclude the forums
 		 *
 		 * Exclude if the forum associated with other groups.
-		 * Exclude if the forum type is category.
-		 * Exclude if the forum is child forum.
-		 * 
+		 * - Exclude if the forum type is category.
+		 * - Exclude if the forum is child forum.
 		 *
-		 * @since BuddyBoss 1.5.9
+		 * @since BuddyBoss x.x.x
 		 *
-		 * @param array $forum_ids
-		 * @param int   $group_id
+		 * @param array $forum_ids Fourm id.
+		 * @param int   $group_id  Group id.
 		 * @uses bbp_get_forum() To get the forum.
 		 *
 		 * @return array
 		 */
 		public function validate_forum_ids( $forum_ids, $group_id ) {
-			
+
 			$update_forum_ids = array();
 
 			// set all forum id within an array.
@@ -480,20 +479,14 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$forum_type   = get_post_meta( $forum_id, '_bbp_forum_type', true );
 				$forum_groups = get_post_meta( $forum_id, '_bbp_group_ids', true );
 
-				// Child forum do not allow to associate with other groups.
-				// if ( ! empty( (int) $forum->post_parent ) ) {
-				// 	bp_core_add_message( __( 'Child forums are not allowed to associate with other groups', 'buddyboss' ), 'error' );
-				// 	continue;
-				// }
-
 				// Category type forum do not allow to associate with other groups.
-				if ( $forum_type == 'category' ) {
+				if ( 'category' === $forum_type ) {
 					bp_core_add_message( __( 'Category type forums are not allowed to associate with other groups', 'buddyboss' ), 'error' );
 					continue;
 				}
 
 				// Do not allow same Forum to be associated with more than 1 Group.
-				if ( ! empty( $forum_groups ) && ! in_array( $group_id, $forum_groups ) ) {
+				if ( ! empty( $forum_groups ) && ! in_array( $group_id, $forum_groups, true ) ) {
 					bp_core_add_message( __( 'This forum is already associated with other groups.', 'buddyboss' ), 'error' );
 					continue;
 				}
@@ -501,7 +494,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$update_forum_ids[] = $forum_id;
 			}
 
-			return $update_forum_ids; 
+			return $update_forum_ids;
 		}
 
 		/**
@@ -573,13 +566,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Is the forum associated with others group then exclude it.
 			$filter_forum_ids = $this->validate_forum_ids( $forum_ids, $group_id );
 
-			if ( 
-				// If no forum is seleted from forum dropdown.
-				( empty( $forum_ids ) && empty( $filter_forum_ids ) ) 
-					|| 
-				( ! empty( $forum_ids ) && ! empty( $filter_forum_ids ) ) 
-			) {
-				// Update the group ID and forum ID relationships
+			if ( ( empty( $forum_ids ) && empty( $filter_forum_ids ) ) || ( ! empty( $forum_ids ) && ! empty( $filter_forum_ids ) ) ) {
+				// Update the group ID and forum ID relationships.
 				bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
 				bbp_update_forum_group_ids( $forum_id, (array) $group_id );
 			}
