@@ -401,7 +401,7 @@ function bbp_has_topics( $args = '' ) {
 
 				// Forum archive
 			} elseif ( bbp_is_forum_archive() ) {
-				if( bbp_show_on_root() == 'forums' ){
+				if ( bbp_show_on_root() === 'forums' ) {
 					$base = bbp_get_topics_url();
 				} else {
 					$base = bbp_get_forums_url();
