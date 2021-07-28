@@ -342,13 +342,63 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
 					<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 					<?php
+						// Fiter forum query for set the selected forum (Group associate forum).
+						add_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
+
 						bbp_dropdown(
 							array(
-								'select_id' => 'bbp_group_forum_id',
-								'show_none' => __( '(No Forum)', 'buddyboss' ),
-								'selected'  => $forum_id,
+								'select_id'   => 'bbp_group_forum_id',
+								'show_none'   => __( '(No Forum)', 'buddyboss' ),
+								'selected'    => $forum_id,
+								'post_parent' => 0,
+								'meta_query'  => array(
+									array(
+										'relation' => 'OR',	
+
+										// If the forum is not associate with any group.              	
+										array(
+											'key'     => '_bbp_group_ids',
+											'value'   => '', 
+											'compare' => 'NOT EXISTS' 
+										),
+
+										// If the forum metadata contain group with empty array.
+										array(
+											'key'     => '_bbp_group_ids',
+											'value'   => 'a:0:{}',
+											'compare' => '='
+										),
+
+										// If the forum metadata contain group with empty value.
+										array(
+											'key'     => '_bbp_group_ids',
+											'value'   => '',
+											'compare' => '='
+										),
+									),
+									array(
+										'relation' => 'OR',
+
+										// Exclude the forum if its type category.
+										array(
+											'key'     => '_bbp_forum_type',
+											'value'   => 'category',
+											'compare' => '!='
+										),
+
+										// Include the forum if its category metadata not exists.
+										array(
+											'key'     => '_bbp_forum_type',
+											'value'   => '', 
+											'compare' => 'NOT EXISTS' 
+										),
+									)
+								)
 							)
 						);
+
+						// Remove forum query filters to prevent the conflict with others queries.
+						remove_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
 					?>
 				</div>
 			<?php endif; ?>
