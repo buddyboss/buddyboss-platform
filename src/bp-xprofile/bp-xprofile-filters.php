@@ -1110,7 +1110,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 	global $wpdb;
 	$bp                 = buddypress();
-	$added_fields_query = "SELECT object_id, meta_value FROM {$bp->table_prefix}bp_xprofile_meta where meta_key = '_cloned_from' LIMIT 50 OFFSET $offset ";
+	$added_fields_query = "SELECT object_id, meta_value FROM {$bp->profile->table_name_meta} where meta_key = '_cloned_from' LIMIT 50 OFFSET $offset ";
 	$added_fields       = $wpdb->get_results( $added_fields_query );
 	if ( ! empty( $added_fields ) ) {
 		foreach ( $added_fields as $field ) {
@@ -1146,64 +1146,4 @@ function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 			'message' => __( 'Field update complete!', 'buddyboss' ),
 		);
 	}
-}
-
-/**
- * This function will remove unnecessary data that may have remained after the above migration process.
- *
- * @param int $group_id Group id.
- *
- * @return boolean
- *
- * @since BuddyBoss 1.7.2.3
- */
-function bb_delete_unnecessory_groups_field( $group_id ) {
-	global $wpdb;
-	$bp                = buddypress();
-	$delete_fields_arr = array();
-
-	// It will calculate the total field ID based on the group ID.
-	// This would have to be done after removing the duplicate field order from the DB.
-	$count_total_group_field_ids = $wpdb->get_var( $wpdb->prepare( "SELECT count(id)FROM {$bp->profile->table_name_fields} WHERE group_id =%d AND parent_id = 0", $group_id ) );
-
-	// This will Find those fields id which is cloned from main field id.
-	$group_field_ids = $wpdb->get_results(
-		$wpdb->prepare(
-			"SELECT gfi.id, gfi.field_order FROM {$bp->profile->table_name_fields} as gfi
-		LEFT JOIN {$bp->profile->table_name_meta} as gfm ON gfm.object_id = gfi.id
-		WHERE gfi.group_id = %d AND gfi.parent_id = %d AND gfm.meta_key = '_is_repeater_clone' AND gfm.meta_value = %d ORDER BY gfi.field_order ASC
-		",
-			$group_id,
-			0,
-			1
-		)
-	);
-
-	// Calculate the main field ID. The field from which the second field is cloned.
-	$main_fields_count = (int) $count_total_group_field_ids - (int) count( $group_field_ids );
-
-	// Here we need to modify fields count based on main field id.
-	// Issue was generating after 10 number of fields.
-	// So, We passed here 10 to multiply with main fields count.
-	// If Any user has more then 10 number of fields, then automatically added fields based on count based on page load (Default functionality).
-	$new_user_fields_count = 10 * $main_fields_count;
-	if ( ! empty( $group_field_ids ) ) {
-		foreach ( $group_field_ids as $key => $field_id ) {
-			if ( $key < $new_user_fields_count ) {
-				continue;
-			}
-			$delete_fields_arr[] = $field_id->id;
-		}
-		$delete_fields_list = implode( ',', $delete_fields_arr );
-		if ( ! empty( $delete_fields_arr ) ) {
-			$delete_field_id = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id IN ( $delete_fields_list )", $group_id ) );
-			if ( false !== $delete_field_id ) {
-				$delete_meta_qry = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_meta} WHERE object_id IN ( $delete_fields_list ) AND object_type = 'field' " ) );
-				if ( false !== $delete_meta_qry ) {
-					return true;
-				}
-			}
-		}
-	}
-	return true;
 }
