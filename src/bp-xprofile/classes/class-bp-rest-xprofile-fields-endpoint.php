@@ -528,16 +528,16 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() || ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -760,42 +760,39 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$field  = $this->get_xprofile_field_object( $request );
 
-		$field = $this->get_xprofile_field_object( $request );
+			if ( empty( $field->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid field ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = $this->get_xprofile_field_display_permission( $retval, $field->id );
+			}
 
-		if ( true === $retval && empty( $field->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = $this->get_xprofile_field_display_permission( $retval, $field->id );
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

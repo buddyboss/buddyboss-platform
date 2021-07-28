@@ -38,6 +38,10 @@ if ( bp_is_active( 'media' ) ) {
 	new BP_Moderation_Media();
 }
 
+//if ( bp_is_active( 'video' ) ) {
+//	 new BP_Moderation_Video();
+//}
+
 if ( bp_is_active( 'messages' ) ) {
 	new BP_Moderation_Message();
 }
@@ -476,11 +480,14 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  */
 function bb_moderation_content_report_popup() {
 
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/content-report-form.php" ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/content-report-form.php";
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/content-report-form.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
 	}
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/block-member-form.php' ) ) {
 		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
+	}
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php';
 	}
 }
 

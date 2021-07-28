@@ -1745,12 +1745,14 @@ function bbp_topic_form_fields() {
 function bbp_reply_form_fields() {
 
 	if ( bbp_is_reply_edit() ) :
+		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1
 		?>
 
 		<input type="hidden" name="bbp_reply_id"    id="bbp_reply_id"    value="<?php bbp_reply_id(); ?>" />
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-edit-reply" />
-
+		<input type="hidden" name="bbp_redirect_page_to" id="bbp_redirect_page_to" value="<?php echo intval( $forum_redirect_to ); ?>" />
+	
 		<?php
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			wp_nonce_field( 'bbp-unfiltered-html-reply_' . bbp_get_reply_id(), '_bbp_unfiltered_html_reply', false );}

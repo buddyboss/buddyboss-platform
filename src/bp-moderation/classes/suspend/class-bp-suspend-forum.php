@@ -30,6 +30,10 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 */
 	public function __construct() {
 
+		if ( ! bp_is_active( 'forums' ) ) {
+			return;
+		}
+
 		$this->item_type = self::$type;
 
 		// Manage hidden list.

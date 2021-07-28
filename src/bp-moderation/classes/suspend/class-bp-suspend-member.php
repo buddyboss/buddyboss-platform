@@ -502,6 +502,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id );
 		}
 
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_member_video_ids( $member_id );
+		}
+
 		return $related_contents;
 	}
 

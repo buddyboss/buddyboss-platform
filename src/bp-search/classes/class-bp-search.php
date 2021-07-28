@@ -122,10 +122,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		public function load_search_helpers() {
 			global $bp;
 
-			// load the helper type parent class
+			// load the helper type parent class.
 			require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-types.php';
 
-			// load and associate helpers one by one
+			// load and associate helpers one by one.
 			if ( bp_is_search_post_type_enable( 'post' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
 				$this->search_helpers['posts'] = new Bp_Search_Posts( 'post', 'posts' );
@@ -190,6 +190,12 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-documents.php';
 				$this->search_helpers['documents'] = Bp_Search_Documents::instance();
 				$this->searchable_items[]          = 'documents';
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_active( 'video' ) && bp_is_search_videos_enable() && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-video.php';
+				$this->search_helpers['videos'] = Bp_Search_Video::instance();
+				$this->searchable_items[]       = 'videos';
 			}
 
 			if ( bp_is_active( 'media' ) && bp_is_search_folders_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {

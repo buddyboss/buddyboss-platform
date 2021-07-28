@@ -329,6 +329,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id );
 		}
 
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_group_video_ids( $group_id );
+		}
+
 		return $related_contents;
 	}
 

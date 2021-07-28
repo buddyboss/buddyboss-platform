@@ -66,6 +66,26 @@ add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
+
+// Delete symlinks for media when before saved.
+add_action( 'bp_media_before_save', 'bp_media_delete_symlinks' );
+
+// Create symlinks for media when saved.
+add_action( 'bp_media_after_save', 'bp_media_create_symlinks' );
+
+// Clear media symlinks on delete.
+add_action( 'bp_media_before_delete', 'bp_media_clear_media_symlinks_on_delete', 10 );
+
+// Filter attachments in the query to filter media and documents.
+add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+
+add_filter( 'bp_get_activity_entry_css_class', 'bp_video_activity_entry_css_class' );
+
+add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
+add_filter( 'query_vars', 'bb_setup_query_media_preview' );
+add_action( 'template_include', 'bb_setup_template_for_media_preview' );
+
 /**
  * Add Media items for search
  */
@@ -808,7 +828,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
 			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted playsinline>
+				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
@@ -1098,7 +1118,7 @@ function bp_media_gif_message_validated_content( $validated_content, $content, $
 function bp_media_activity_embed_gif_content( $activity_id ) {
 
 	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
-	
+
 	if ( empty( $gif_data ) ) {
 		return;
 	}
@@ -1113,7 +1133,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
 			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted playsinline>
+				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
@@ -1490,6 +1510,23 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 }
 
 /**
+ * Clear a user's symlinks media when attachment media delete.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param array $medias DB results of media items.
+ */
+function bp_media_clear_media_symlinks_on_delete( $medias ) {
+	if ( ! empty( $medias[0] ) ) {
+		foreach ( (array) $medias as $deleted_media ) {
+		    if ( isset( $deleted_media->id ) ){
+			    bp_media_delete_symlinks( $deleted_media->id );
+            }
+		}
+	}
+}
+
+/**
  * Update media privacy when activity is updated.
  *
  * @since BuddyBoss 1.2.3
@@ -1505,7 +1542,7 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		foreach ( $media_ids as $media_id ) {
 			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
-			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly' ) ) ) {
+			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
 				$media->privacy = $activity->privacy;
 				$media->save();
 			}
@@ -1690,7 +1727,7 @@ function bp_media_message_privacy_repair() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' LIMIT 20 OFFSET $offset ";
+	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET $offset ";
 	$medias      = $wpdb->get_results( $media_query );
 
 	if ( ! empty( $medias ) ) {
@@ -1730,7 +1767,7 @@ function bp_media_admin_repair_media() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
+	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET $offset ";
 	$medias      = $wpdb->get_results( $media_query );
 
 	if ( ! empty( $medias ) ) {
@@ -2365,8 +2402,8 @@ function bp_media_get_edit_activity_data( $activity ) {
 				$activity['media'][] = array(
 					'id'            => $media_id,
 					'attachment_id' => $media->attachment_id,
-					'thumb'         => wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' ),
-					'url'           => wp_get_attachment_image_url( $media->attachment_id, 'full' ),
+					'thumb'         => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' ),
+					'url'           => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
 					'name'          => $media->title,
 					'group_id'      => $media->group_id,
 					'album_id'      => $media->album_id,
@@ -2416,3 +2453,205 @@ function bp_media_activity_entry_css_class( $class ) {
 
 }
 
+/**
+ * Protect downloads from ms-files.php in multisite.
+ *
+ * @param string $rewrite rewrite rules.
+ * @return string
+ * @since BuddyBoss 1.7.0
+ */
+function bp_media_protect_download_rewite_rules( $rewrite ) {
+	if ( ! is_multisite() ) {
+		return $rewrite;
+	}
+
+	$rule  = "\n# Media Rules - Protect Files from ms-files.php\n\n";
+	$rule .= "<IfModule mod_rewrite.c>\n";
+	$rule .= "RewriteEngine On\n";
+	$rule .= "RewriteCond %{QUERY_STRING} file=media_uploads/ [NC]\n";
+	$rule .= "RewriteRule /ms-files.php$ - [F]\n";
+	$rule .= "</IfModule>\n\n";
+
+	return $rule . $rewrite;
+}
+add_filter( 'mod_rewrite_rules', 'bp_media_protect_download_rewite_rules' );
+
+/**
+ * Function will protect the download album.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_media_check_download_album_protection() {
+
+	$upload_dir     = wp_get_upload_dir();
+	$files = array(
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb_medias',
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews',
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-media' ),
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-videos' ),
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-documents' ),
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb-platform-previews',
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb_medias',
+			'file'    => '.htaccess',
+			'content' => 'deny from all
+# BEGIN BuddyBoss code execution protection
+<IfModule mod_php5.c>
+php_flag engine 0
+</IfModule>
+<IfModule mod_php7.c>
+php_flag engine 0
+</IfModule>
+AddHandler cgi-script .php .phtml .php3 .pl .py .jsp .asp .htm .shtml .sh .cgi
+Options -ExecCGI
+# END BuddyBoss code execution protection',
+		),
+	);
+
+	foreach ( $files as $file ) {
+		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+			if ( $file_handle ) {
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+			}
+		}
+	}
+}
+add_action( 'bp_init', 'bp_media_check_download_album_protection', 9999 );
+
+/**
+ * Filter attachments query posts join sql.
+ * Filters all photos/documents.
+ *
+ * @param string $join     Join statement query.
+ * @param object $wp_query WP_Query object.
+ *
+ * @return mixed|string
+ * @since BuddyBoss 1.7.0
+ */
+function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
+	global $wpdb;
+	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
+		$join .= " LEFT JOIN {$wpdb->postmeta} AS bb_mt1 ON ({$wpdb->posts}.ID = bb_mt1.post_id AND bb_mt1.meta_key = 'bp_media_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt2 ON ({$wpdb->posts}.ID = bb_mt2.post_id AND bb_mt2.meta_key = 'bp_document_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt3 ON ({$wpdb->posts}.ID = bb_mt3.post_id AND bb_mt3.meta_key = 'bp_video_upload' )";
+	}
+
+	return $join;
+}
+
+/**
+ * Filter attachments query posts where sql.
+ * Filters all photos/documents.
+ *
+ * @param string $where    Where statement query.
+ * @param object $wp_query WP_Query object.
+ *
+ * @return mixed|string
+ * @since BuddyBoss 1.7.0
+ */
+function bp_media_filter_attachments_query_posts_where( $where, $wp_query ) {
+	global $wpdb;
+	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
+		$where .= " AND ( ( bb_mt1.post_id IS NULL AND bb_mt2.post_id IS NULL AND bb_mt3.post_id IS NULL ) OR ( {$wpdb->posts}.post_parent != 0 ) )";
+	}
+
+	return $where;
+}
+
+/**
+ * Added activity entry class for Video.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param string $class class.
+ *
+ * @return string
+ */
+function bp_video_activity_entry_css_class( $class ) {
+
+	if ( bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
+
+		$video_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_video_ids', true );
+		if ( ! empty( $video_ids ) ) {
+			$class .= ' video-activity-wrap';
+		}
+	}
+
+	return $class;
+
+}
+
+/**
+ * Add rewrite rule to setup media preview.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_media_preview() {
+	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+}
+
+/**
+ * Setup query variable for media preview.
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_query_media_preview( $query_vars ) {
+	$query_vars[] = 'bb-media-preview';
+	$query_vars[] = 'id1';
+	$query_vars[] = 'size';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the media preview.
+ *
+ * @param string $template Template path to include.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_template_for_media_preview( $template ) {
+	if ( get_query_var( 'bb-media-preview' ) === false || empty( get_query_var( 'bb-media-preview' ) ) ) {
+		return $template;
+	}
+
+	/**
+	 * Hooks to perform any action before the template load.
+	 *
+	 * @since BuddyBoss 1.7.2
+	 */
+	do_action( 'bb_setup_template_for_media_preview' );
+
+	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
+}

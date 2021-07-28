@@ -774,14 +774,14 @@ function bp_profile_repeaters_print_group_html_start() {
 
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
-					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
+					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-edit"></i>
 						<span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
 					<?php
 					if ( true === $can_delete ) {
 						?>
-						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
+						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
 							<i class="dashicons dashicons-trash"></i>
 							<span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
 						</a>
@@ -803,14 +803,14 @@ function bp_profile_repeaters_print_group_html_start() {
 
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
-					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
+					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-edit"></i>
 						<span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
 				<?php
 				if ( true === $can_delete ) {
 					?>
-					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
+					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-trash"></i>
 						<span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
 					</a>
