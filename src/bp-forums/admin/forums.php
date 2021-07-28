@@ -86,8 +86,8 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		}
 
 		/**
-		 * Update permission for forum parent, If not then return the current parent.
-		 * - Disable "Forum Parent" when the main Forum associated with Group.
+		 * Permission for forum parent, If not then return the current parent.
+		 * - You can not make the forum as a child forum when its associaate with any group.
 		 *
 		 * @since BuddyBoss x.x.x
 		 *
