@@ -2737,7 +2737,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 		<?php endforeach; ?>
 
     </select>
-	
+
 	<?php
 
 	// Return the results
