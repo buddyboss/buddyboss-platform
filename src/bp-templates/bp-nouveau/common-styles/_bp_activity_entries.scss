@@ -404,6 +404,15 @@
 		top: 20px;
 		z-index: 11;
 
+		&.is_visible {
+			z-index: 999;
+
+			.bb-activity-more-options-action:before,
+			.bb-activity-more-options-action:after {
+				display: none;
+			}
+		}
+
 		.bb-activity-more-options-action {
 			padding: 5px;
 			display: flex;
@@ -468,6 +477,70 @@
 
 			&.is_visible {
 				display: block;
+
+				@media screen and (max-width: 544px) {
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					border: 1px solid #d2d4d6;
+					box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+					z-index: 999;
+					padding-top: 35px;
+
+					&:before {
+						content: "\e828";
+						position: absolute;
+						right: 6px;
+						top: 5px;
+						font-size: 20px;
+						color: #939597;
+						font-family: "bb-icons";/* stylelint-disable-line */
+						cursor: pointer;
+						line-height: 1;
+						z-index: 11;
+					}
+
+					&:after {
+						content: attr(data-title);
+						display: block !important;
+						font-size: 13px;
+						font-weight: 500;
+						position: absolute;
+						left: 0;
+						right: 0;
+						z-index: 1;
+						width: auto;
+						transform: none;
+						text-align: left;
+						border: 0;
+						padding: 5px 15px;
+						height: auto;
+						background: #fbfbfc;
+						box-shadow: 0 1px 0 0 #eef0f3;
+						border-radius: 4px 4px 0 0;
+					}
+
+					.admin-bar & {
+						margin-top: 46px;
+					}
+
+					&:after {
+						display: none;
+					}
+
+					+.bb-activity-more-options_overlay {
+						position: fixed;
+						top: 0;
+						left: 0;
+						bottom: 0;
+						right: 0;
+						background-color: rgba(250, 251, 253, 0.9);
+						z-index: 99;
+					}
+
+				}
+
 			}
 
 			&:after {
@@ -1249,6 +1322,40 @@ span.dashicons.dashicons-admin-file:before {
 				transform: translate(-50%, -50%);
 				border: 1px solid #d2d4d6;
 				box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+				padding-top: 30px;
+
+				&:before {
+					content: "\e828";
+					position: absolute;
+					right: 6px;
+					top: 5px;
+					font-size: 20px;
+					color: #939597;
+					font-family: "bb-icons";/* stylelint-disable-line */
+					cursor: pointer;
+					line-height: 1;
+					z-index: 11;
+				}
+
+				&:after {
+					content: attr(data-title);
+					display: block !important;
+					font-size: 13px;
+					font-weight: 500;
+					position: absolute;
+					left: 0;
+					right: 0;
+					z-index: 1;
+					width: auto;
+					transform: none;
+					text-align: left;
+					border: 0;
+					padding: 5px 15px;
+					height: auto;
+					background: #fbfbfc;
+					box-shadow: 0 1px 0 0 #eef0f3;
+					border-radius: 4px 4px 0 0;
+				}
 
 				.admin-bar & {
 					margin-top: 46px;
@@ -1565,6 +1672,40 @@ span.dashicons.dashicons-admin-file:before {
 				transform: translate(-50%, -50%);
 				border: 1px solid #d2d4d6;
 				box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+				padding-top: 30px;
+
+				&:before {
+					content: "\e828";
+					position: absolute;
+					right: 6px;
+					top: 5px;
+					font-size: 20px;
+					color: #939597;
+					font-family: "bb-icons";/* stylelint-disable-line */
+					cursor: pointer;
+					line-height: 1;
+					z-index: 11;
+				}
+
+				&:after {
+					content: attr(data-title);
+					display: block !important;
+					font-size: 13px;
+					font-weight: 500;
+					position: absolute;
+					left: 0;
+					right: 0;
+					z-index: 1;
+					width: auto;
+					transform: none;
+					text-align: left;
+					border: 0;
+					padding: 5px 15px;
+					height: auto;
+					background: #fbfbfc;
+					box-shadow: 0 1px 0 0 #eef0f3;
+					border-radius: 4px 4px 0 0;
+				}
 
 				.admin-bar & {
 					margin-top: 46px;
