@@ -1264,7 +1264,7 @@ function bb_update_to_1_5_9_update_forums_group_id( $group_id, $forum_ids ) {
 	}
 
 	$group_ids = array( $group_id );
-	
+
 	foreach ( $forum_ids as $forum_id ) {
 		if ( empty( $forum_id ) ) {
 			continue;
