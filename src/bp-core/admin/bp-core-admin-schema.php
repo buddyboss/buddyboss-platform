@@ -247,7 +247,7 @@ function bp_core_install_follow() {
 			leader_id bigint(20) NOT NULL,
 			follower_id bigint(20) NOT NULL,
 			PRIMARY KEY  (id),
-	        KEY followers (leader_id, follower_id)
+			KEY followers (leader_id, follower_id)
 		) {$charset_collate};";
 
 	dbDelta( $sql );
