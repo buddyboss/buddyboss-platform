@@ -304,7 +304,7 @@ class BP_User_Query {
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
-					$activity_members = $this->activity_members();
+					$activity_members = rtrim( $this->activity_members(), ',' );
 					$sql['orderby']   = array(
 						// Merge active members id and wp_users id and sorting by descending order.
 						array( "field( u.{$this->uid_name}, {$activity_members} )", 'DESC' ),
