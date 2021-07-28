@@ -1607,9 +1607,16 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			return $args;
 		}
 
+		/**
+		 * Ensure that forum content associated with a BuddyBoss group can only be viewed via the group URL.
+		 *
+		 * @since BuddyBoss x.x.x
+		 *
+		 * @return void
+		 */
 		public function forum_redirect_canonical() {
 			global $wp_query;
-			 
+
 			if ( empty( bp_get_current_group_id() ) || ! bp_is_current_action( $this->slug ) ) {
 				return;
 			}
@@ -1628,12 +1635,14 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bp_core_redirect( $redirect_to );
 				}
 
-				$last_path_post = new WP_Query( array( 
-					'name'      => get_query_var( 'name' ), 
-					'post_type' => bbp_get_forum_post_type(),
-					'orderby'   => 'ID',
-					'order'     => 'ASC', 
-				) );
+				$last_path_post = new WP_Query(
+					array(
+						'name'      => get_query_var( 'name' ),
+						'post_type' => bbp_get_forum_post_type(),
+						'orderby'   => 'ID',
+						'order'     => 'ASC',
+					)
+				);
 
 				if ( empty( $last_path_post->post ) ) {
 					bbp_set_404();
@@ -1641,7 +1650,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 
 				$uri = get_query_var( 'forum' );
-				
+
 				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
 
 				if ( empty( $uri_post->ID ) ) {
@@ -1650,17 +1659,19 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 					bp_core_redirect( $redirect_to );
 				}
-				
+
 				$this->forum_id = $this->forum_associate_group( $uri_post->ID ) ? $uri_post->ID : false;
 			}
 
 			if ( bp_is_group_forum_topic() ) {
-				$query = new WP_Query( array( 
-					'name'      => bp_action_variable( 1 ), 
-					'post_type' => bbp_get_topic_post_type(),
-					'orderby'   => 'ID',
-					'order'     => 'ASC', 
-				) );
+				$query = new WP_Query(
+					array(
+						'name'      => bp_action_variable( 1 ),
+						'post_type' => bbp_get_topic_post_type(),
+						'orderby'   => 'ID',
+						'order'     => 'ASC',
+					)
+				);
 
 				$topic = $query->post;
 
@@ -1670,7 +1681,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
 				$this->forum_id = $this->forum_associate_group( $topic_forum_id ) ? $topic_forum_id : false;
-			}			
+			}	
 		}
 
 		/**
@@ -1691,7 +1702,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			$forum = bbp_get_forum( $forum_id );
- 
+
 			if ( empty( $forum ) ) {
 				return false;
 			}
@@ -1701,7 +1712,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Get all parent ids.
 			$parents = $forum->ancestors;
 			array_unshift( $parents, $forum->ID );
-			
+
 			if ( in_array( $forum_id, $parents, true ) ) {
 				return true;
 			}
