@@ -2089,21 +2089,22 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 /**
  * Return an associative array of available topic statuses
  *
- * @since bbPress (r5059)
+ * @since 2.4.0 bbPress (r5059)
+ *
+ * @param int $topic_id   Optional. Topic id.
  *
  * @return array
  */
-function bbp_get_topic_statuses() {
-	return apply_filters(
-		'bbp_get_topic_statuses',
-		array(
-			bbp_get_public_status_id()  => __( 'Open', 'buddyboss' ),
-			bbp_get_closed_status_id()  => __( 'Closed', 'buddyboss' ),
-			bbp_get_spam_status_id()    => __( 'Spam', 'buddyboss' ),
-			bbp_get_trash_status_id()   => __( 'Trash', 'buddyboss' ),
-			bbp_get_pending_status_id() => __( 'Pending', 'buddyboss' ),
-		)
-	);
+function bbp_get_topic_statuses( $topic_id = 0 ) {
+
+	// Filter & return
+	return (array) apply_filters( 'bbp_get_topic_statuses', array(
+		bbp_get_public_status_id()  => _x( 'Open',    'Open the topic',      'bbpress' ),
+		bbp_get_closed_status_id()  => _x( 'Closed',  'Close the topic',     'bbpress' ),
+		bbp_get_spam_status_id()    => _x( 'Spam',    'Spam the topic',      'bbpress' ),
+		bbp_get_trash_status_id()   => _x( 'Trash',   'Trash the topic',     'bbpress' ),
+		bbp_get_pending_status_id() => _x( 'Pending', 'Unapprove the topic', 'bbpress' )
+	), $topic_id );
 }
 
 /**
