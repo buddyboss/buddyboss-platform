@@ -1209,12 +1209,12 @@ function bb_update_to_1_5_9() {
  * @param int   $group_id  Group id.
  * @param array $forum_ids Forum ids.
  *
- * @return void
+ * @return void|bool
  */
 function bb_update_forums_group_id( $group_id, $forum_ids ) {
 	// Return, when forum component deactive.
 	if ( ! bp_is_active( 'forums' ) ) {
-		return arrray();
+		return false;
 	}
 
 	$group_ids = array( $group_id );
