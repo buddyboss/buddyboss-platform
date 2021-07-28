@@ -32,7 +32,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @since bbPress (r3552)
 		 */
 		public function __construct() {
-
 			// Redirect 404 page when user will input wrong URL from groups forum screen.
 			$this->setup_variables();
 			$this->setup_actions();
