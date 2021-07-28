@@ -55,7 +55,7 @@ if ( 'video' === $media_template->media->type ) {
 					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-menu-dots-v"></i>
 					</a>
-					<div class="video-action_list item-action_list">
+					<div class="video-action_list item-action_list" data-title="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 						<ul>
 							<?php
 							if ( $can_edit ) {
@@ -151,7 +151,7 @@ if ( 'video' === $media_template->media->type ) {
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
 				</a>
-				<div class="media-action_list">
+				<div class="media-action_list" data-title="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 					<ul>
 						<?php
 						if ( $is_comment_pic ) {

@@ -50,7 +50,7 @@ $more_media     = $media_template->media_count > 5 ? true : false;
 					<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-menu-dots-v"></i>
 					</a>
-					<div class="media-action_list">
+					<div class="media-action_list" data-title="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 						<ul class="conflict-activity-ul-li-comment">
 							<?php
 							if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
