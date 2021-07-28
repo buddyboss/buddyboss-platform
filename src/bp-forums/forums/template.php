@@ -2535,8 +2535,7 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 	$can_update = empty( $group_ids ) ? true : false;
 
 	// Start an output buffer, we'll finish it after the select loop
-	ob_start(); 
-	?>
+	ob_start(); ?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
             id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>
@@ -2727,6 +2726,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
 	?>
+	
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
             id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
