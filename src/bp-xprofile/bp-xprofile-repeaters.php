@@ -480,7 +480,7 @@ function xprofile_update_clones_on_template_update( $field ) {
 
 		$wpdb->query( $sql );
 
-		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field' AND object_type = 'field'", ARRAY_A );
+		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field'", ARRAY_A );
 		if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 			foreach ( $clone_ids as $clone_id ) {
 				foreach ( $metas as $meta ) {
