@@ -1164,7 +1164,7 @@ function bb_update_to_1_5_6() {
  * - Update forum meta _bbp_group_ids, associated with group id.
  *
  * @since BuddyBoss x.x.x
- * 
+ *
  * @return void
  */
 function bb_update_to_1_5_9() {
@@ -1174,24 +1174,26 @@ function bb_update_to_1_5_9() {
 	}
 
 	// Get all forum associated groups.
-	$group_data = groups_get_groups( array(
-		'per_page'   => -1,             
-		'fields'     => 'ids',
-		'status'     => array( 'public', 'private', 'hidden' ),
-		'meta_query' => array(
-			'relation' => 'AND',
-			array(
-				'key'     => 'forum_id',
-				'value'   => 'a:0:{}',
-				'compare' => '!='
-			),
-			array(
-				'key'     => 'forum_id',
-				'value'   => '',
-				'compare' => '!='
+	$group_data = groups_get_groups(
+		array(
+			'per_page'   => -1,
+			'fields'     => 'ids',
+			'status'     => array( 'public', 'private', 'hidden' ),
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'forum_id',
+					'value'   => 'a:0:{}',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'forum_id',
+					'value'   => '',
+					'compare' => '!=',
+				),
 			),
 		)
-	) );
+	);
 
 	$groups = empty( $group_data['groups'] ) ? array() : $group_data['groups'];
 
