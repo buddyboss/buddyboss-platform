@@ -121,7 +121,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @since bbPress (r4552)
 		 */
 		private function setup_actions() {
-			//add_action( 'template_redirect', 'redirect_canonical' );
 			// Possibly redirect
 			add_action( 'bbp_template_redirect', array( $this, 'redirect_canonical' ) );
 
