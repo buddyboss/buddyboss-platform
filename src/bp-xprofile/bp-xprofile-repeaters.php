@@ -955,7 +955,7 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 /**
  * Function will delete duplicate field order which inserted last from DB.
  *
- * @since BuddyBoss 1.7.2.3
+ * @since BuddyBoss 1.7.4
  *
  * @param int $field_group_id    Current group id.
  * @param int $clone_field_order Field order id.

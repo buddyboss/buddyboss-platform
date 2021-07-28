@@ -1069,7 +1069,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
  *
  * @return array Repair list items.
  *
- * @since BuddyBoss 1.7.2.3
+ * @since BuddyBoss 1.7.4
  */
 function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$repair_list[] = array(
@@ -1087,7 +1087,7 @@ function bb_xprofile_repeater_field_repair( $repair_list ) {
  *
  * @uses bb_xprofile_repeater_field_migration
  *
- * @since BuddyBoss 1.7.2.3
+ * @since BuddyBoss 1.7.4
  */
 function bb_xprofile_repeater_field_repair_callback() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
@@ -1105,7 +1105,7 @@ function bb_xprofile_repeater_field_repair_callback() {
  *
  * @return array
  *
- * @since BuddyBoss 1.7.2.3
+ * @since BuddyBoss 1.7.4
  */
 function bb_xprofile_repeater_field_migration( $offset, $callback ) {
 	global $wpdb;
