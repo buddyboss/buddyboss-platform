@@ -368,12 +368,12 @@ function bbp_set_platform_tab_submenu_active( $parent_file ) {
  */
 function bb_group_add_rewrite_rule() {
 	// Single Slugs.
-	$forum_slug     = get_option( '_bbp_forum_slug', 'froum' );
-	$from_post_type = bbp_get_forum_post_type();
-	$group_page_id  = bp_core_get_directory_page_id( 'groups' );
-	$group_page     = get_post( $group_page_id );
+	$forum_slug      = get_option( '_bbp_forum_slug', 'froum' );
+	$forum_post_type = bbp_get_forum_post_type();
+	$group_page_id   = bp_core_get_directory_page_id( 'groups' );
+	$group_page      = get_post( $group_page_id );
 
-	add_rewrite_rule( $group_page->post_name . '/([^/]+)/?$', 'index.php?post_type=' . $from_post_type . '&group_page=$matches[1]', 'top' );
+	add_rewrite_rule( $group_page->post_name . '/([^/]+)/?$', 'index.php?post_type=' . $forum_post_type . '&group_page=$matches[1]', 'top' );
 	add_rewrite_rule( $group_page->post_name . '/([^/]+)/' . $forum_slug . '/(.+?)/page/?([0-9]{1,})/?$', 'index.php?group_page=$matches[1]&forum=$matches[2]&paged=$matches[3]', 'top' );
 	add_rewrite_rule( $group_page->post_name . '/([^/]+)/' . $forum_slug . '/(.+?)(?:/([0-9]+))?/?$', 'index.php?group_page=$matches[1]&forum=$matches[2]&paged=$matches[3]', 'top' );
 }
