@@ -368,7 +368,7 @@ function bbp_set_platform_tab_submenu_active( $parent_file ) {
  */
 function bb_group_add_rewrite_rule() {
 	// Single Slugs.
-	$forum_slug      = get_option( '_bbp_forum_slug', 'froum' );
+	$forum_slug      = get_option( '_bbp_forum_slug', 'forum' );
 	$forum_post_type = bbp_get_forum_post_type();
 	$group_page_id   = bp_core_get_directory_page_id( 'groups' );
 	$group_page      = get_post( $group_page_id );
