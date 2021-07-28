@@ -963,7 +963,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Set the global forum ID
 			$bbp->current_forum_id = $forum_id;
-			// Assume forum query.
+			// Assume forum query
 			bbp_set_query_name( 'bbp_single_forum' );
 			?>
 
@@ -1009,7 +1009,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					/** Single Topic */
 
 					case $this->topic_slug:
-						// hide the 'to front' admin links.
+						// hide the 'to front' admin links
 						add_filter( 'bbp_get_topic_stick_link', array( $this, 'hide_super_sticky_admin_link' ), 10, 2 );
 
 						// Get the topic
@@ -1039,7 +1039,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 						<?php
 
-						// Topic edit.
+						// Topic edit
 						if ( bp_action_variable( $offset + 2 ) === bbp_get_edit_rewrite_id() ) :
 
 							// Unset the super sticky link on edit topic template
@@ -1097,7 +1097,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							return;
 						}
 
-						// Setup the reply.
+						// Setup the reply
 						bbp_the_reply();
 						?>
 
