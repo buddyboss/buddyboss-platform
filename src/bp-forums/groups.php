@@ -145,7 +145,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Added notification settings for forums.
 			add_action( 'bp_notification_settings', array( $this, 'forums_notification_settings' ), 11 );
-
 		}
 
 		/**
