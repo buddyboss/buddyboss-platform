@@ -23,7 +23,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: true,
+								cleanPastedHTML: false,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
