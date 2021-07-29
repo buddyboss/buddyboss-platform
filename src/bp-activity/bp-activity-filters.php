@@ -1856,13 +1856,15 @@ function bp_activity_edit_update_media( $media_ids ) {
 		$old_media_ids = explode( ',', $old_media_ids );
 
 		if ( ! empty( $old_media_ids ) ) {
+			$old_media_ids = wp_parse_id_list( $old_media_ids );
+			$media_ids     = wp_parse_id_list( $media_ids );
 
 			// old media count 1 and new media uploaded count is greater than 1.
 			if ( 1 === count( $old_media_ids ) && 1 < count( $media_ids ) ) {
-				$old_media_id = $old_media_ids[0];
+				$old_media_id = (int) $old_media_ids[0];
 
 				// check if old media id is in new media uploaded.
-				if ( in_array( $old_media_id, $media_ids ) ) {
+				if ( in_array( $old_media_id, $media_ids, true ) ) {
 
 					// Create new media activity for old media because it has only parent activity to show right now.
 					$old_media = new BP_Media( $old_media_id );
@@ -1905,10 +1907,10 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 				// old media count is greater than 1 and new media uploaded count is only 1 now.
 			} elseif ( 1 < count( $old_media_ids ) && 1 === count( $media_ids ) ) {
-				$new_media_id = $media_ids[0];
+				$new_media_id = (int) $media_ids[0];
 
 				// check if new media is in old media uploaded, if yes then delete that media's media activity first.
-				if ( in_array( $new_media_id, $old_media_ids ) ) {
+				if ( in_array( $new_media_id, $old_media_ids, true ) ) {
 					$new_media         = new BP_Media( $new_media_id );
 					$media_activity_id = $new_media->activity_id;
 
@@ -1927,10 +1929,10 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 				// old media and new media count is same and old media and new media are different.
 			} elseif ( 1 === count( $old_media_ids ) && 1 === count( $media_ids ) ) {
-				$new_media_id = $media_ids[0];
+				$new_media_id = (int) $media_ids[0];
 
 				// check if new media is not in old media uploaded and.
-				if ( ! in_array( $new_media_id, $old_media_ids ) ) {
+				if ( ! in_array( $new_media_id, $old_media_ids, true ) ) {
 					$old_media_id = $old_media_ids[0];
 					$old_media    = new BP_Media( $old_media_id );
 
@@ -2192,13 +2194,15 @@ function bp_activity_edit_update_document( $document_ids ) {
 		$old_document_ids = explode( ',', $old_document_ids );
 
 		if ( ! empty( $old_document_ids ) ) {
+			$old_document_ids = wp_parse_id_list( $old_document_ids );
+			$document_ids     = wp_parse_id_list( $document_ids );
 
 			// old document count 1 and new document uploaded count is greater than 1.
 			if ( 1 === count( $old_document_ids ) && 1 < count( $document_ids ) ) {
-				$old_document_id = $old_document_ids[0];
+				$old_document_id = (int) $old_document_ids[0];
 
 				// check if old document id is in new document uploaded.
-				if ( in_array( $old_document_id, $document_ids ) ) {
+				if ( in_array( $old_document_id, $document_ids, true ) ) {
 
 					// Create new document activity for old document because it has only parent activity to show right now.
 					$old_document = new BP_Document( $old_document_id );
@@ -2241,10 +2245,10 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 				// old document count is greater than 1 and new document uploaded count is only 1 now.
 			} elseif ( 1 < count( $old_document_ids ) && 1 === count( $document_ids ) ) {
-				$new_document_id = $document_ids[0];
+				$new_document_id = (int) $document_ids[0];
 
 				// check if new document is in old document uploaded, if yes then delete that document's document activity first.
-				if ( in_array( $new_document_id, $old_document_ids ) ) {
+				if ( in_array( $new_document_id, $old_document_ids, true ) ) {
 					$new_document         = new BP_Document( $new_document_id );
 					$document_activity_id = $new_document->activity_id;
 
@@ -2263,10 +2267,10 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 				// old document and new document count is same and old document and new document are different.
 			} elseif ( 1 === count( $old_document_ids ) && 1 === count( $document_ids ) ) {
-				$new_document_id = $document_ids[0];
+				$new_document_id = (int) $document_ids[0];
 
 				// check if new document is not in old document uploaded and.
-				if ( ! in_array( $new_document_id, $old_document_ids ) ) {
+				if ( ! in_array( $new_document_id, $old_document_ids, true ) ) {
 					$old_document_id = $old_document_ids[0];
 					$old_document    = new BP_Document( $old_document_id );
 
@@ -2801,6 +2805,8 @@ function bp_activity_edit_update_video( $video_ids ) {
 		$old_video_ids = explode( ',', $old_video_ids );
 
 		if ( ! empty( $old_video_ids ) ) {
+			$old_video_ids = wp_parse_id_list( $old_video_ids );
+			$video_ids     = wp_parse_id_list( $video_ids );
 
 			// old video count 1 and new video uploaded count is greater than 1.
 			if ( 1 === count( $old_video_ids ) && 1 < count( $video_ids ) ) {
@@ -2826,6 +2832,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 							bp_core_get_userlink( $old_video->user_id ),
 							'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
 						);
+
 						$activity_id = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
@@ -2855,7 +2862,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 				// old video count is greater than 1 and new video uploaded count is only 1 now.
 			} elseif ( 1 < count( $old_video_ids ) && 1 === count( $video_ids ) ) {
-				$new_video_id = $video_ids[0];
+				$new_video_id = (int) $video_ids[0];
 
 				// check if new video is in old video uploaded, if yes then delete that video's video activity first.
 				if ( in_array( $new_video_id, $old_video_ids, true ) ) {
@@ -2877,7 +2884,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 				// old video and new video count is same and old video and new video are different.
 			} elseif ( 1 === count( $old_video_ids ) && 1 === count( $video_ids ) ) {
-				$new_video_id = $video_ids[0];
+				$new_video_id = (int) $video_ids[0];
 
 				// check if new video is not in old video uploaded and.
 				if ( ! in_array( $new_video_id, $old_video_ids, true ) ) {
