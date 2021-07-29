@@ -384,7 +384,16 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 			$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				foreach ( $metas as $meta ) {
-					bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					if ( ! empty( $meta['meta_key'] ) && $meta['meta_key'] == 'member_type' ) {
+						$meta_data = bp_xprofile_get_meta( $new_field_id, 'field', $meta['meta_key'] );
+						if ( ! empty( $meta_data ) && ! in_array( $meta['meta_value'], (array) $meta_data ) ) {
+							bp_xprofile_add_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+						} else {
+							bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+						}
+					} else {
+						bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					}
 				}
 			}
 			$current_clone_number = 1;
@@ -393,7 +402,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $count ) 
 			if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
 				/**
 				 * MAX( CAST(meta_value AS DECIMAL) ) - Dont use space between CAST(meta_value AS DECIMAL) those brackets.
-				 * It will issuing in query.
+				 * It will create issue in the query.
 				 */
 				$all_clones_list       = implode( ',', $all_clones );
 				$last_max_clone_number = $wpdb->get_var(
@@ -472,17 +481,22 @@ function xprofile_update_clones_on_template_update( $field ) {
 
 		$wpdb->query( $sql );
 
-		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field' AND object_type = 'field'", ARRAY_A );
+		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field'", ARRAY_A );
 		if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
-			$field_member_types = array();
 			foreach ( $clone_ids as $clone_id ) {
 				foreach ( $metas as $meta ) {
 					if ( $meta['meta_key'] != 'member_type' ) {
 						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					} else {
-						$field_member_types[] = $meta;
 						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
 					}
+				}
+			}
+
+			$field_member_types = array();
+			foreach ( $metas as $meta ) {
+				if ( $meta['meta_key'] == 'member_type' ) {
+					$field_member_types[] = $meta;
 				}
 			}
 
@@ -942,7 +956,7 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 /**
  * Function will delete duplicate field order which inserted last from DB.
  *
- * @since BuddyBoss 1.6.2
+ * @since BuddyBoss 1.7.4
  *
  * @param int $field_group_id    Current group id.
  * @param int $clone_field_order Field order id.
