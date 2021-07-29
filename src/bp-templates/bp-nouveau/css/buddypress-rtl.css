@@ -3360,6 +3360,7 @@ span.dashicons.dashicons-admin-file:before {
     border: 1px solid #d2d4d6;
     box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
     padding-top: 30px;
+    width: 80%;
   }
   #media-stream.media .bb-photo-thumb.is-visible .media-action-wrap .media-action_list:before,
   #media-stream.media .bb-photo-thumb.is-visible .video-action-wrap .video-action_list:before,
@@ -3995,6 +3996,7 @@ span.dashicons.dashicons-admin-file:before {
     border: 1px solid #d2d4d6;
     box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
     padding-top: 30px;
+    width: 80%;
   }
   #video-stream.video .bb-item-thumb.is-visible .item-action-wrap .item-action_list:before,
   #media-stream.media .bb-video-thumb.is-visible .item-action-wrap .item-action_list:before,
@@ -4697,6 +4699,7 @@ span.dashicons.dashicons-admin-file:before {
     box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
     z-index: 999;
     padding-top: 30px;
+    width: 80%;
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action_list:before {
     content: "\e828";
