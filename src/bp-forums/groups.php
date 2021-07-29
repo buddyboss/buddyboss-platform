@@ -421,7 +421,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Set the selected forum in the forum dropdown from the group edit screen.
 		 *
-		 * @since BuddyBoss 1.5.9
+		 * @since BuddyBoss x.x.x
 		 *
 		 * @param string $where        where condition forum post query.
 		 * @param object $query_object forum post query property.
@@ -432,7 +432,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			global $wpdb;
 
 			// Prevent update query when post type is not forum.
-			if ( $query_object->query['post_type'] != 'forum' ) {
+			if ( bbp_get_forum_post_type() !== $query_object->query['post_type'] ) {
 				return $where;
 			}
 
