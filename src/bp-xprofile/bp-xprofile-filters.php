@@ -1074,7 +1074,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$repair_list[] = array(
 		'bp-xprofile-repeater-field-repair',
-		__( 'Repair xprofile repeater field repeated.', 'buddyboss' ),
+		__( 'Repair Profile Repeater fieldset cloned field issue.', 'buddyboss' ),
 		'bb_xprofile_repeater_field_repair_callback',
 	);
 	return $repair_list;
