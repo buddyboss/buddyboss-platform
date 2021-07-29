@@ -37,11 +37,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$this->setup_filters();
 			$this->maybe_unset_forum_menu();
 		}
-	
+
 		/**
-		 * Nested forum are not associate with group. This method help you to find the nested forum group id.
+		 * Nested forum are not associate with group.
+		 * - This method help you to find the nested forum group id.
 		 *
-		 * @since BuddyBoss 1.5.9
+		 * @since BuddyBoss x.x.x
 		 *
 		 * @param int $forum_id Forum id.
 		 *
@@ -50,13 +51,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return array/boolean
 		 */
-		public function forum_associate_current_group( $forum_id ) {
+		public function child_forum_group_id( $forum_id ) {
 			if ( empty( $forum_id ) ) {
 				return false;
 			}
 
 			$forum = bbp_get_forum( $forum_id );
- 
+
 			if ( empty( $forum ) ) {
 				return false;
 			}
@@ -66,7 +67,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Set parameter id forum.
 			array_unshift( $parents, $forum->ID );
-			
+
 			// Searching gorup id child to parent.
 			foreach ( $parents as $parent ) {
 				$group_ids = bbp_get_forum_group_ids( $parent );
@@ -1411,7 +1412,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Get group ID's for this forum
-			$group_ids = $this->forum_associate_current_group( $forum_id );
+			$group_ids = $this->child_forum_group_id( $forum_id );
 
 			// Bail if the post isn't associated with a group
 			if ( empty( $group_ids ) ) {
