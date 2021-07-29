@@ -4181,8 +4181,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
 			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-				$group_object    = groups_get_group( $document->group_id );
-				$group_status    = bp_get_group_status( $group_object );
+				$group_object            = groups_get_group( $document->group_id );
+				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $document->privacy . $size );
 			}
 
@@ -4246,7 +4246,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$file_path = $file_path . '/' . $file['file'];
 			} elseif ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' === $extension ) {
 				bp_document_generate_document_previews( $attachment_id );
-				$file = image_get_intermediate_size( $attachment_id, $size );
+				$file      = image_get_intermediate_size( $attachment_id, $size );
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
@@ -4518,6 +4518,8 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 							if ( $generate ) {
 								// Generate Document Video Symlink.
+								$ext              = pathinfo( $attached_file, PATHINFO_EXTENSION );
+								$attachment_path .= ( ! empty( $ext ) ) ? '.' . $ext : '';
 								bb_core_symlink_generator( 'document_video', $document, '', array(), $attached_file, $attachment_path );
 							}
 						}
