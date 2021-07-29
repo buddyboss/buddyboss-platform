@@ -1588,12 +1588,15 @@ function bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = f
  * @uses                  apply_filters() Calls 'bbp_get_forum_topic_count' with the
  *                        topic count and forum id
  * @uses                  bbp_get_forum_id() To get the forum id
+ * @uses                  bbp_get_super_stickies() To Get super stickies topic count
  */
 function bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
 	$meta_key = empty( $total_count ) ? '_bbp_topic_count' : '_bbp_total_topic_count';
 	$topics   = (int) get_post_meta( $forum_id, $meta_key, true );
 	$filter   = ( true === $integer ) ? 'bbp_get_forum_topic_count_int' : 'bbp_get_forum_topic_count';
+	$stickies = count( bbp_get_super_stickies() );
+	$topics   = ( 0 === $stickies ) ? $topics : $topics + $stickies;
 
 	return apply_filters( $filter, $topics, $forum_id );
 }
