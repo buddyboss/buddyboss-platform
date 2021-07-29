@@ -459,6 +459,7 @@ function xprofile_update_clones_on_template_update( $field ) {
 					if ( $meta['meta_key'] != 'member_type' ) {
 						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					} else {
+						$field_member_types[] = $meta;
 						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
 					}
 				}
