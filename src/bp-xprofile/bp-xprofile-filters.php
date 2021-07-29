@@ -113,8 +113,7 @@ add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_cl
 
 //Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
-// Repair repeater field repeated in admin side.
-add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1060,90 +1059,4 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 	}
 
 	return $args;
-}
-
-/**
- * Add xprofile notification repair list item.
- *
- * @param array $repair_list Repair list items.
- *
- * @return array Repair list items.
- *
- * @since BuddyBoss 1.7.4
- */
-function bb_xprofile_repeater_field_repair( $repair_list ) {
-	$repair_list[] = array(
-		'bp-xprofile-repeater-field-repair',
-		__( 'Repair Profile Repeater fieldset cloned field issue.', 'buddyboss' ),
-		'bb_xprofile_repeater_field_repair_callback',
-	);
-	return $repair_list;
-}
-
-/**
- * This function will work as migration process which will remove duplicate repeater field from database by repair tool.
- * Also remove remove unnecessary data that may have remained after the migration process.
- * This function will be called only once.
- *
- * @uses bb_xprofile_repeater_field_migration
- *
- * @since BuddyBoss 1.7.4
- */
-function bb_xprofile_repeater_field_repair_callback() {
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	// Function will do migrate code for the repeated fields.
-	return bb_xprofile_repeater_field_migration( $offset, $callback = true );
-}
-
-/**
- * This function will work as migration process which will remove duplicate repeater field from database.
- * Also remove remove unnecessary data that may have remained after the migration process.
- * This function will be called only once.
- *
- * @param int     $offset offset.
- * @param boolean $callback callback.
- *
- * @return array
- *
- * @since BuddyBoss 1.7.4
- */
-function bb_xprofile_repeater_field_migration( $offset, $callback ) {
-	global $wpdb;
-	$bp                 = buddypress();
-	$added_fields_query = "SELECT object_id, meta_value FROM {$bp->profile->table_name_meta} where meta_key = '_cloned_from' LIMIT 50 OFFSET $offset ";
-	$added_fields       = $wpdb->get_results( $added_fields_query );
-	if ( ! empty( $added_fields ) ) {
-		foreach ( $added_fields as $field ) {
-			$clone_id = $field->object_id;
-			$metas    = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->meta_value} AND object_type = 'field'", ARRAY_A );
-			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
-				$field_member_types = array();
-				foreach ( $metas as $meta ) {
-					if ( $meta['meta_key'] != 'member_type' ) {
-						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
-					} else {
-						$field_member_types[] = $meta;
-						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
-					}
-				}
-				if ( ! empty( $field_member_types ) ) {
-					foreach ( $field_member_types as $meta ) {
-						bp_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
-					}
-				}
-			}
-			$offset ++;
-		}
-		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
-		return array(
-			'status'  => 'running',
-			'offset'  => $offset,
-			'records' => $records_updated,
-		);
-	} else {
-		return array(
-			'status'  => 1,
-			'message' => __( 'Field update complete!', 'buddyboss' ),
-		);
-	}
 }
