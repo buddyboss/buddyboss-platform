@@ -5774,6 +5774,7 @@ function bb_core_enable_default_symlink_support() {
 				unlink( $attachment_path );
 
 				if ( bb_enable_symlinks() ) {
+					wp_delete_attachment( $attachment_id, true );
 					return;
 				}
 
@@ -5805,7 +5806,7 @@ function bb_core_enable_default_symlink_support() {
 				}
 			}
 		}
-		wp_delete_post( $attachment_id, true );
+		wp_delete_attachment( $attachment_id, true );
 	}
 }
 
