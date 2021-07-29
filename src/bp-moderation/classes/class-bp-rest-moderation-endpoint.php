@@ -49,11 +49,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'media' ) ) {
 			// Moderation support for media.
 			$this->bp_rest_moderation_media_support();
+		}
 
-			// Moderation support for video.
-			if ( bp_is_active( 'video' ) ) {
-				$this->bp_rest_moderation_video_support();
-			}
+		// Moderation support for video.
+		if ( bp_is_active( 'video' ) ) {
+			$this->bp_rest_moderation_video_support();
 		}
 
 		if ( bp_is_active( 'document' ) ) {
@@ -1004,6 +1004,62 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		bp_rest_register_field(
+			'activity',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_activity_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Activity report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'activity_comments',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_activity_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Activity comment report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'activity',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_activity_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Activity report type.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'activity_comments',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_activity_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Activity comment report type.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
 		add_filter( 'bp_rest_activity_prepare_value', array( $this, 'bp_rest_moderation_activity_prepare_value' ), 999, 3 );
 	}
 
@@ -1057,6 +1113,50 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function to get activity report button text.
+	 *
+	 * @param BP_Activity_Activity $activity Activity array.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_activity_report_button_text( $activity ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		$type = BP_Suspend_Activity::$type;
+		if ( 'activity_comment' === $activity['type'] ) {
+			$type = BP_Suspend_Activity_Comment::$type;
+		}
+
+		return bp_moderation_get_report_button_text( $type, $activity_id );
+	}
+
+	/**
+	 * Function to get activity report type.
+	 *
+	 * @param BP_Activity_Activity $activity Activity array.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_activity_report_type( $activity ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		$type = BP_Suspend_Activity::$type;
+		if ( 'activity_comment' === $activity['type'] ) {
+			$type = BP_Suspend_Activity_Comment::$type;
+		}
+
+		return bp_moderation_get_report_type( $type, $activity_id );
 	}
 
 	/**
@@ -1173,6 +1273,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 			)
 		);
+
+		bp_rest_register_field(
+			'groups',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_group_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Group report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'groups',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_group_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Group report type.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
 	}
 
 	/**
@@ -1217,6 +1345,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 
+	/**
+	 * Function to get group report button text.
+	 *
+	 * @param BP_Groups_Group $group Group object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_group_report_button_text( $group ) {
+		$group_id = $group['id'];
+
+		if ( empty( $group_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_button_text( BP_Suspend_Group::$type, $group_id );
+	}
+
+	/**
+	 * Function to get group report type.
+	 *
+	 * @param BP_Groups_Group $group Group object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_group_report_type( $group ) {
+		$group_id = $group['id'];
+
+		if ( empty( $group_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_type( BP_Suspend_Group::$type, $group_id );
+	}
+
 	/********************** Forums Support *****************************************/
 
 	/**
@@ -1247,6 +1409,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the Forum is reported or not.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'forums',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_forum_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Forum report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'forums',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_forum_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Forum report type.', 'buddyboss' ),
+					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
@@ -1295,6 +1485,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 
+	/**
+	 * Function to get forum report button text.
+	 *
+	 * @param WP_Post $forum Forum post object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_forum_report_button_text( $forum ) {
+		$forum_id = $forum['id'];
+
+		if ( empty( $forum_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_button_text( BP_Suspend_Forum::$type, $forum_id );
+	}
+
+	/**
+	 * Function to get forum report type.
+	 *
+	 * @param WP_Post $forum Forum post object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_forum_report_type( $forum ) {
+		$forum_id = $forum['id'];
+
+		if ( empty( $forum_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_type( BP_Suspend_Forum::$type, $forum_id );
+	}
+
 	/********************** Topic Support *****************************************/
 
 	/**
@@ -1325,6 +1549,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the topic is reported or not.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'topics',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_topic_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Topic report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'topics',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_topic_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Topic report type.', 'buddyboss' ),
+					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
@@ -1373,6 +1625,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 
+	/**
+	 * Function to get topic report button text.
+	 *
+	 * @param WP_Post $topic Topic post object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_topic_report_button_text( $topic ) {
+		$topic_id = $topic['id'];
+
+		if ( empty( $topic_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_button_text( BP_Suspend_Forum_Topic::$type, $topic_id );
+	}
+
+	/**
+	 * Function to get topic report type.
+	 *
+	 * @param WP_Post $topic Topic post object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_topic_report_type( $topic ) {
+		$topic_id = $topic['id'];
+
+		if ( empty( $topic_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_type( BP_Suspend_Forum_Topic::$type, $topic_id );
+	}
+
 	/********************** Reply Support *****************************************/
 
 	/**
@@ -1403,6 +1689,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the reply is reported or not.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'reply',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_reply_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Reply report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'reply',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_reply_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Reply report type.', 'buddyboss' ),
+					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
@@ -1451,6 +1765,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function to get reply report button text.
+	 *
+	 * @param WP_Post $reply Reply post object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_reply_report_button_text( $reply ) {
+		$reply_id = $reply['id'];
+
+		if ( empty( $reply_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_button_text( BP_Suspend_Forum_Reply::$type, $reply_id );
+	}
+
+	/**
+	 * Function to get reply report type.
+	 *
+	 * @param WP_Post $reply Reply post object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_reply_report_type( $reply ) {
+		$reply_id = $reply['id'];
+
+		if ( empty( $reply_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_type( BP_Suspend_Forum_Reply::$type, $reply_id );
 	}
 
 	/**
@@ -1671,6 +2019,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 			)
 		);
+
+		bp_rest_register_field(
+			'media',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_media_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Media report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'media',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_media_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Media report type.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
 	}
 
 	/**
@@ -1701,6 +2077,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the Video is reported or not.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'video',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_media_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Video report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'video',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_media_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Video report type.', 'buddyboss' ),
+					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
@@ -1761,6 +2165,52 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 
+	/**
+	 * Function to get media report button text.
+	 *
+	 * @param BP_Media $media The Media object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_media_report_button_text( $media ) {
+		$media_id = $media['id'];
+
+		if ( empty( $media_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
+			$type = BP_Suspend_Video::$type;
+		} else {
+			$type = BP_Suspend_Media::$type;
+		}
+
+		return bp_moderation_get_report_button_text( $type, $media_id );
+	}
+
+	/**
+	 * Function to get media report type.
+	 *
+	 * @param BP_Media $media The Media object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_media_report_type( $media ) {
+		$media_id = $media['id'];
+
+		if ( empty( $media_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
+			$type = BP_Suspend_Video::$type;
+		} else {
+			$type = BP_Suspend_Media::$type;
+		}
+
+		return bp_moderation_get_report_type( $type, $media_id );
+	}
+
 	/********************** Document Support *****************************************/
 
 	/**
@@ -1791,6 +2241,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'document',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_document_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Document report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'document',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_document_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Document report type.', 'buddyboss' ),
+					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
@@ -1875,6 +2353,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function to get document report button text.
+	 *
+	 * @param BP_Document $document The Document object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_document_report_button_text( $document ) {
+		$document_id = $document['id'];
+
+		if ( empty( $document ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_button_text( BP_Suspend_Document::$type, $document_id );
+	}
+
+	/**
+	 * Function to get document report type.
+	 *
+	 * @param BP_Document $document The Document object.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_document_report_type( $document ) {
+		$document_id = $document['id'];
+
+		if ( empty( $document ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_type( BP_Suspend_Document::$type, $document_id );
 	}
 
 	/********************** Messages Support *****************************************/
@@ -2066,6 +2578,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		register_rest_field(
+			'comment',
+			'report_button_text',
+			array(
+				'get_callback' => array( $this, 'bp_rest_blog_comment_report_button_text' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Blog comment report button text.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'comment',
+			'report_type',
+			array(
+				'get_callback' => array( $this, 'bp_rest_blog_comment_report_type' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Blog comment report type.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+			)
+		);
+
 		add_filter( 'rest_prepare_comment', array( $this, 'bp_rest_moderation_prepare_comment' ), 9999, 4 );
 	}
 
@@ -2109,6 +2649,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function to get blog comment report button text.
+	 *
+	 * @param WP_Post $post Post Array.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_blog_comment_report_button_text( $post ) {
+		$comment_id = $post['id'];
+
+		if ( empty( $comment_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_button_text( BP_Suspend_Comment::$type, $comment_id );
+	}
+
+	/**
+	 * Function to get blog comment report type.
+	 *
+	 * @param WP_Post $post Post Array.
+	 *
+	 * @return false|mixed|void
+	 */
+	public function bp_rest_blog_comment_report_type( $post ) {
+		$comment_id = $post['id'];
+
+		if ( empty( $comment_id ) ) {
+			return false;
+		}
+
+		return bp_moderation_get_report_type( BP_Suspend_Comment::$type, $comment_id );
 	}
 
 	/**
