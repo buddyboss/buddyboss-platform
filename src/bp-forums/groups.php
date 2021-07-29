@@ -126,9 +126,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Possibly redirect
 			add_action( 'bbp_template_redirect', array( $this, 'redirect_canonical' ) );
 
-			// Make consistency without gorup from page. 
-			add_action( 'bbp_template_redirect', array( $this, 'forum_redirect_canonical' ), 11 );
-
 			// Remove group forum cap map when view is done
 			add_action( 'bbp_after_group_forum_display', array( $this, 'remove_group_forum_meta_cap_map' ) );
 
@@ -146,6 +143,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Added notification settings for forums.
 			add_action( 'bp_notification_settings', array( $this, 'forums_notification_settings' ), 11 );
+
+			// Make consistency without gorup from page. 
+			add_action( 'bbp_template_redirect', array( $this, 'forum_redirect_canonical' ), 11 );
 		}
 
 		/**
