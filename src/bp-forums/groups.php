@@ -468,6 +468,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		public function forum_can_associate_wth_group( $forum_ids, $group_id ) {
 
 			$filter_forum_ids = array();
+			$group_forum_ids  = bbp_get_group_forum_ids( $group_id );
 
 			// set all forum id within an array.
 			foreach ( (array) $forum_ids as $forum_id ) {
@@ -475,9 +476,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					continue;
 				}
 
-				$forum        = bbp_get_forum( $forum_id );
-				$forum_type   = get_post_meta( $forum_id, '_bbp_forum_type', true );
-				$forum_groups = get_post_meta( $forum_id, '_bbp_group_ids', true );
+				$forum           = bbp_get_forum( $forum_id );
+				$forum_type      = get_post_meta( $forum_id, '_bbp_forum_type', true );
+				$forum_groups    = get_post_meta( $forum_id, '_bbp_group_ids', true );
+
+				// When the forum is already exist in the group.
+				if ( in_array( $forum_id, $group_forum_ids, true ) ) {
+					$filter_forum_ids[] = $forum_id;
+					continue;
+				}
 
 				// Child forums are not allow to associate with any groups.
 				if ( ! empty( $forum->post_parent ) ) {
@@ -572,11 +579,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Is the forum associated with others group then exclude it.
 			$filter_forum_ids = $this->forum_can_associate_wth_group( $forum_ids, $group_id );
 
-			if ( ( empty( $forum_ids ) && empty( $filter_forum_ids ) ) || ( ! empty( $forum_ids ) && ! empty( $filter_forum_ids ) ) ) {
-				// Update the group ID and forum ID relationships.
-				bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
-				bbp_update_forum_group_ids( $forum_id, (array) $group_id );
-			}
+			// Update the group ID and forum ID relationships.
+			bbp_update_group_forum_ids( $group_id, (array) $filter_forum_ids );
+			bbp_update_forum_group_ids( $forum_id, (array) $group_id );
 
 			// Update the group forum setting
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
