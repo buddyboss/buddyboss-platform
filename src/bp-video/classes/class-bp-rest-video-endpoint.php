@@ -658,7 +658,16 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( is_user_logged_in() ) {
+		if (
+			is_user_logged_in() &&
+			(
+				! function_exists( 'bb_video_user_can_upload' ) ||
+				(
+					function_exists( 'bb_video_user_can_upload' ) &&
+					bb_video_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
+				)
+			)
+		) {
 			$retval = true;
 
 			if (
@@ -1955,7 +1964,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public function bp_rest_forums_collection_params( $params ) {
 
 		if ( function_exists( 'bp_is_forums_video_support_enabled' ) && true === bp_is_forums_video_support_enabled() ) {
-			$params['bbp_video'] = array(
+			$params['bbp_videos'] = array(
 				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
 				'type'              => 'array',
 				'items'             => array( 'type' => 'integer' ),
