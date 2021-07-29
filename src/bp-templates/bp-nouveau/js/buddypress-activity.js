@@ -2176,13 +2176,16 @@ window.bp = window.bp || {};
 
 				if( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible' ) ) {
 					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+					$( '.bb-activity-more-options-wrap' ).removeClass( 'is_visible' );
 				} else {
 					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
 					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).addClass( 'is_visible' );
 				}
 
 			} else {
 				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+				$( '.bb-activity-more-options-wrap' ).removeClass( 'is_visible' );
 			}
 		},
 

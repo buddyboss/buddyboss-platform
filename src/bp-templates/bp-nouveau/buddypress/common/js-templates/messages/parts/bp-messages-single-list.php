@@ -145,13 +145,14 @@
 							<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="{{data.document[i].more_action}}">
 								<i class="bb-icon-menu-dots-v"></i>
 							</a>
-							<div class="document-action_list">
+							<div class="document-action_list" data-title="{{data.document[i].more_option}}">
 								<ul>
 									<li class="copy_download_file_url">
 										<a href="{{data.document[i].url}}">{{data.document[i].copy_download_link}}</a>
 									</li>
 								</ul>
 							</div>
+							<div class="document-more-options_overlay"></div>
 						</div>
 						{{{data.document[i].msg_preview}}}
 					</div>

@@ -65,7 +65,7 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
 				</a>
-				<div class="video-action_list item-action_list">
+				<div class="video-action_list item-action_list" data-title="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 					<ul>
 						<?php if ( ! in_array( $db_privacy, array( 'forums', 'comment', 'message' ), true ) ) { ?>
 						<li class="edit_thumbnail_video video-action-class">
