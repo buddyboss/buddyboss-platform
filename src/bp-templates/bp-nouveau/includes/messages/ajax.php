@@ -424,6 +424,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
+	if ( ! empty( $_POST['video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
+		if ( ! $can_send_video ) {
+			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
 	if ( ! empty( $_POST['gif_data'] ) ) {
 		$can_send_document = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
