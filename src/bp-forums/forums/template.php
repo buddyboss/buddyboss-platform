@@ -2721,7 +2721,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
 	
 	// Get forum visibility update status.
-	$disabled = bb_forum_visibility_disabled( $r['forum_id'] );
+	$disabled = bb_forum_visibility_dropdown_disabled( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
@@ -2757,7 +2757,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
  *
  * @return boolean
  */
-function bb_forum_visibility_disabled( $forum_id ) {
+function bb_forum_visibility_dropdown_disabled( $forum_id ) {
 	global $wpdb;
 
 	if ( empty( $forum_id ) ) {
