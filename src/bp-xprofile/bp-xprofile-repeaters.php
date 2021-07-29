@@ -160,7 +160,11 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 		return;
 	}
 
-	$field_group_id = $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = %d", $posted_field_ids[0] ) );
+	$field_group_id = 0;
+
+	if ( isset( $posted_field_ids[0] ) ) {
+		$field_group_id = $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = %d", $posted_field_ids[0] ) );
+	}
 
 	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( ! $is_repeater_enabled ) {
