@@ -995,7 +995,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						add_filter( 'bbp_get_topic_types', array( $this, 'unset_super_sticky' ), 10, 1 );
 
 						// Query forums and show them if they exist
-						if ( ! empty( $forum_id ) && bbp_forums() ) :
+						if ( bbp_forums() ) :
 
 							// Setup the forum
 							bbp_the_forum();
