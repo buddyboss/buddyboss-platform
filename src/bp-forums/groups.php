@@ -955,12 +955,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			/** Query Resets */
 
 			// Forum data
-			$forum_action = bp_action_variable( $offset );
-			$forum_id     = $this->forum_id;
-			$default_actions      = array( 'page', $this->topic_slug, $this->reply_slug );
+			$forum_action    = bp_action_variable( $offset );
+			$forum_id        = $this->forum_id;
+			$default_actions = array( 'page', $this->topic_slug, $this->reply_slug );
 
-			// Unknown forum action set as a page
-			if ( ! empty( $forum_action ) && ! in_array( $forum_action, $default_actions, true ) ) {
+			// Unknown forum action set as false.
+			if ( ! in_array( $forum_action, $default_actions, true ) ) {
 				$forum_action = false;
 			}
 
@@ -1606,7 +1606,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$group_link = trailingslashit( bp_get_group_permalink( $group ) );
 			$forum_id   = bbp_get_group_forum_ids( bp_get_current_group_id() );
 			$forum_id   = empty( $forum_id ) ? false : array_shift( $forum_id );
-			$forum      = get_post( $forum_id );
+			$forum      = bbp_get_forum( $forum_id );
 			$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
 
 			// When navigate to group from.
@@ -1630,8 +1630,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					return;
 				}
 
-				$uri = get_query_var( 'forum' );
-
+				$uri      = get_query_var( 'forum' );
 				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
 
 				if ( empty( $uri_post->ID ) ) {
@@ -1660,9 +1659,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bbp_set_404();
 					return;
 				}
+
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
 				$this->forum_id = $this->forum_associate_group( $topic_forum_id ) ? $topic_forum_id : false;
-			}	
+			}
 		}
 
 		/**
