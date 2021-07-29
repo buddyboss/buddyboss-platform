@@ -452,9 +452,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/**
-		 * Exclude the forums
-		 *
-		 * Exclude if the forum associated with other groups.
+		 * Exclude the forum if its associated with other groups.
 		 * - Exclude if the forum type is category.
 		 * - Exclude if the forum is child forum.
 		 *
@@ -462,13 +460,14 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @param array $forum_ids Fourm id.
 		 * @param int   $group_id  Group id.
+		 *
 		 * @uses bbp_get_forum() To get the forum.
 		 *
 		 * @return array
 		 */
-		public function validate_forum_ids( $forum_ids, $group_id ) {
+		public function forum_can_associate_wth_group( $forum_ids, $group_id ) {
 
-			$update_forum_ids = array();
+			$filter_forum_ids = array();
 
 			// set all forum id within an array.
 			foreach ( (array) $forum_ids as $forum_id ) {
@@ -480,9 +479,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$forum_type   = get_post_meta( $forum_id, '_bbp_forum_type', true );
 				$forum_groups = get_post_meta( $forum_id, '_bbp_group_ids', true );
 
-				// Category type forum do not allow to associate with other groups.
+				// Child forums are not allow to associate with any groups.
+				if ( ! empty( $forum->post_parent ) ) {
+					bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups', 'buddyboss' ), 'error' );
+					continue;
+				}
+
+				// Category type forums are not allow to associate with any groups.
 				if ( 'category' === $forum_type ) {
-					bp_core_add_message( __( 'Category type forums are not allowed to associate with other groups', 'buddyboss' ), 'error' );
+					bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups', 'buddyboss' ), 'error' );
 					continue;
 				}
 
@@ -492,10 +497,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					continue;
 				}
 
-				$update_forum_ids[] = $forum_id;
+				$filter_forum_ids[] = $forum_id;
 			}
 
-			return $update_forum_ids;
+			return $filter_forum_ids;
 		}
 
 		/**
@@ -565,7 +570,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Is the forum associated with others group then exclude it.
-			$filter_forum_ids = $this->validate_forum_ids( $forum_ids, $group_id );
+			$filter_forum_ids = $this->forum_can_associate_wth_group( $forum_ids, $group_id );
 
 			if ( ( empty( $forum_ids ) && empty( $filter_forum_ids ) ) || ( ! empty( $forum_ids ) && ! empty( $filter_forum_ids ) ) ) {
 				// Update the group ID and forum ID relationships.
