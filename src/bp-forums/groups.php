@@ -563,7 +563,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 				// No support for multiple forums yet
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
-				$submited_forum_id = $forum_id;
 
 				// Is the forum associated with others group then exclude it.
 				$valid_forum = $this->forum_can_associate_wth_group( $forum_id, $group_id );
