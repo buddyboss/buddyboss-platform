@@ -513,7 +513,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
-					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " $limit ) ";
+					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
 					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
 				}
 
@@ -522,7 +522,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					return;
 				}
 
-				$pre_search_query = implode( ' UNION ', $sql_queries ) . ' ORDER BY relevance, type DESC, entry_date DESC ';
+				$pre_search_query = implode( ' UNION ', $sql_queries );
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
