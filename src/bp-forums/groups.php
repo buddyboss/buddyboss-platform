@@ -568,6 +568,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$valid_forum = $this->forum_can_associate_wth_group( $forum_id, $group_id );
 				$forum_id    = $valid_forum ? $forum_id : 0;
 				$forum_ids   = $valid_forum ? $forum_ids : array();
+				$edit_forum  = $valid_forum ? $edit_forum : false;
 			}
 
 			// Update the group ID and forum ID relationships
