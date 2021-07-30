@@ -60,10 +60,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.7.4 =
 * Member Access Controls - Added support to restrict Video upload based on Access Control settings provided in BuddyBoss Platform Pro
 * Profiles - Fixed issue with Repeater date field value on changing the order
-* Groups - Fixed critical parse syntax error
+* Groups - Fixed critical parse syntax error in the template
 * Activity - Small improvement to show activity blog post excerpt in a wrapper
 * Media - Fixed video popup JS error on edit
-* Media - Fixed unwanted mystery-man files getting created
+* Media - Fixed unwanted mystery-man files getting created issue
 * Media - Fixed JS error for .flv format videos uploaded
 * Media - Fixed critical issue for photos not showing
 * Network Search - Fixed search result order for members listing
