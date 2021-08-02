@@ -500,6 +500,12 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 					'embeddable' => true,
 				);
 				break;
+			case BP_Suspend_Video::$type:
+				$links['video'] = array(
+					'href'       => rest_url( '/' . $this->namespace . '/video/' . $item_id ),
+					'embeddable' => true,
+				);
+				break;
 		}
 
 		return $links;
