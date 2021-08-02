@@ -1214,16 +1214,11 @@ function bp_media_activity_save_gif_data( $activity ) {
 		return;
 	}
 
-	// Bail if edit acitivity id doesn't match.
-	if( isset( $_POST['id'] ) && $activity->id === intval( $_POST['id'] ) ) {
-		return;
-	}
-
 	$gif_data     = ! empty( $_POST['gif_data'] ) ? $_POST['gif_data'] : array();
 	$gif_old_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
 	// if edit activity then delete attachment and clear activity meta.
-	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) ) {
+	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) && isset( $_POST['id'] ) && $activity->id === intval( $_POST['id'] ) ) {
 		if ( ! empty( $gif_old_data ) ) {
 			wp_delete_attachment( $gif_old_data['still'], true );
 			wp_delete_attachment( $gif_old_data['mp4'], true );
