@@ -650,10 +650,17 @@ class SyncGenerator {
 		$ldGroup  = get_post( $this->ldGroupId );
 		$settings = bp_ld_sync( 'settings' );
 
+		// Get the bp parent group id associate with ld parent group.
+		$bp_parent_group_id = 0;
+		if ( ! empty( $ldGroup->post_parent ) ) {
+			$bp_parent_group_id = get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
+		}
+
 		$this->bpGroupId = groups_create_group(
 			array(
 				'name'   => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
 				'status' => $settings->get( 'learndash.default_bp_privacy' ),
+				'parent_id' => $bp_parent_group_id
 			)
 		);
 
@@ -836,6 +843,13 @@ class SyncGenerator {
 		$settings = bp_ld_sync( 'settings' );
 
 		if ( ! empty( $groupId ) ) {
+
+			// Get the bp parent group id associate with ld parent group.
+			$bp_parent_group_id = 0;
+			if ( ! empty( $ldGroup->post_parent ) ) {
+				$bp_parent_group_id = get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
+			}
+
 			groups_create_group(
 				array(
 					'group_id'    => $groupId,
@@ -844,6 +858,7 @@ class SyncGenerator {
 					'status'      => $settings->get( 'learndash.default_bp_privacy' ),
 					'description' => $ldGroup->post_content,
 					'slug'        => $ldGroup->post_name,
+					'parent_id'   => $bp_parent_group_id
 				)
 			);
 
