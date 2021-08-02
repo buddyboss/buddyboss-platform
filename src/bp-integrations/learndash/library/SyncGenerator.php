@@ -551,7 +551,9 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function loadLdGroupId() {
-		return groups_get_groupmeta( $this->bpGroupId, $this->syncMetaKey, true ) ?: null;
+		if (function_exists('groups_get_groupmeta')) {
+			return groups_get_groupmeta( $this->bpGroupId, $this->syncMetaKey, true ) ?: null;
+		}
 	}
 
 	/**
@@ -570,8 +572,10 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function setLdGroupId() {
-		 groups_update_groupmeta( $this->bpGroupId, $this->syncMetaKey, $this->ldGroupId );
-		return $this;
+		if (function_exists('groups_get_groupmeta')) {
+			groups_update_groupmeta( $this->bpGroupId, $this->syncMetaKey, $this->ldGroupId );
+			return $this;
+		}
 	}
 
 	/**
