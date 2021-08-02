@@ -987,7 +987,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						add_filter( 'bbp_get_topic_types', array( $this, 'unset_super_sticky' ), 10, 1 );
 
 						// Query forums and show them if they exist
-						if ( bbp_forums() ) :
+						if ( $forum_id && bbp_forums() ) :
 
 							// Setup the forum
 							bbp_the_forum();
@@ -1622,7 +1622,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					return;
 				}
 
-				$uri      = get_query_var( 'forum' );
+				$uri      = $this->page_uri();
 				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
 
 				if ( empty( $uri_post->ID ) ) {
@@ -1657,6 +1657,33 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$forum_group_id = $this->child_forum_group_id( $topic_forum_id );
 				$this->forum_id = empty( $forum_group_id ) ? false : $topic_forum_id;
 			}
+		}
+
+		/**
+		 * Get forum page uri from action variables.
+		 *
+		 * @since BuddyBoss x.x.x
+		 *
+		 * @uses bp_action_variables() URL query params.
+		 *
+		 * @return string
+		 */
+		public function page_uri() {
+			$actions = bp_action_variables();
+
+			if ( empty( $actions ) ) {
+				return '';
+			}
+
+			if ( ! in_array( 'page', $actions ) ) {
+				return implode( '/', $actions );
+			}
+
+			$page_key = array_search( 'page', $actions );
+			$chunk    = array_chunk( $actions, $page_key );
+			$uri      = array_shift( $chunk );
+
+			return implode( '/', $uri );
 		}
 
 		/**

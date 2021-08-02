@@ -367,6 +367,8 @@ function bbp_set_platform_tab_submenu_active( $parent_file ) {
  * @return void
  */
 function bb_group_add_rewrite_rule() {
+	//flush_rewrite_rules(true);
+
 	// Single Slugs.
 	$forum_slug      = get_option( '_bbp_forum_slug', 'forum' );
 	$forum_post_type = bbp_get_forum_post_type();
@@ -377,7 +379,7 @@ function bb_group_add_rewrite_rule() {
 	add_rewrite_rule( $group_page->post_name . '/([^/]+)/' . $forum_slug . '/(.+?)/page/?([0-9]{1,})/?$', 'index.php?group_page=$matches[1]&forum=$matches[2]&paged=$matches[3]', 'top' );
 	add_rewrite_rule( $group_page->post_name . '/([^/]+)/' . $forum_slug . '/(.+?)(?:/([0-9]+))?/?$', 'index.php?group_page=$matches[1]&forum=$matches[2]&paged=$matches[3]', 'top' );
 }
-add_action( 'init', 'bb_group_add_rewrite_rule' );
+//add_action( 'init', 'bb_group_add_rewrite_rule' );
 
 /**
  * Set query var for group associated forum rewrite rules.
@@ -395,4 +397,4 @@ function bbp_set_query_vars( $query_vars ) {
 
 	return $query_vars;
 }
-add_filter( 'query_vars', 'bbp_set_query_vars' );
+//add_filter( 'query_vars', 'bbp_set_query_vars' );
