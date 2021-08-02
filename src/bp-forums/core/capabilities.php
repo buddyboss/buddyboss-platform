@@ -609,14 +609,23 @@ function bbp_restore_caps_from_wp_roles() {
 	);
 }
 
-// Restore capabilities to create topic tags for non-admin organizer
-function bbp_organizer_cap_filter( $allcaps, $caps, $args, $user ){
+/**
+ * Restore capabilities to create topic tags for non-admin organizer
+ *
+ * @since  BuddyBoss x.x.x
+ *
+ * @param array $allcaps Current user's all capabilities.
+ * @param array $caps    Required capability.
+ * @param array $args    Required Arguments.
+ */
+function bbp_organizer_cap_filter( $allcaps, $caps, $args ) {
 	$bbp = bbpress();
-	if( $bbp->current_user->is_group_admin ){
-		$caps = array(
-			// Primary caps
-			'participate'           => true,
-			'moderate'              => true,
+
+	if ( $bbp->current_user->is_group_admin ) {
+		$caps    = array(
+			// Primary caps.
+			'participate' => true,
+			'moderate'    => true,
 		);
 		$allcaps = array_merge( $allcaps, $caps );
 	}
