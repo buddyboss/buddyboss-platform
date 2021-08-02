@@ -1605,6 +1605,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			if ( ! bp_is_group_forum_topic() ) {
 				if ( empty( bp_action_variables() ) ) {
 					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum ) . '/' . $page );
+
+					// Redirect to the first forum when action variables is empty.
 					bp_core_redirect( $redirect_to );
 				}
 
