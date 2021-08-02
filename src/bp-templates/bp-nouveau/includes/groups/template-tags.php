@@ -1198,7 +1198,7 @@ function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
 					'data-bp-content-type' => BP_Moderation_Groups::$moderation_type,
 				),
 			),
-			false,
+			false
 		);
 	}
 
