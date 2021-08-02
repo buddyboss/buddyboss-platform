@@ -658,8 +658,8 @@ class SyncGenerator {
 
 		$this->bpGroupId = groups_create_group(
 			array(
-				'name'   => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
-				'status' => $settings->get( 'learndash.default_bp_privacy' ),
+				'name'      => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+				'status'    => $settings->get( 'learndash.default_bp_privacy' ),
 				'parent_id' => $bp_parent_group_id
 			)
 		);
