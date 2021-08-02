@@ -204,8 +204,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$request['component']         = 'groups';
 			$args['filter']['object']     = 'groups';
 			$args['filter']['primary_id'] = $args['group_id'];
+			$args['privacy']              = array( 'public' );
 
 			$item_id = $args['group_id'];
+		} elseif ( ! empty( $request['component'] ) && 'groups' === $request['component'] && ! empty( $request['primary_id'] ) ) {
+			$args['privacy'] = array( 'public' );
 		}
 
 		if ( ! empty( $args['site_id'] ) ) {
@@ -502,6 +505,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					return new WP_Error(
 						'bp_rest_bp_activity_document',
 						__( 'You don\'t have access to send the document.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+
+			if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+				$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+				if ( ! $can_send_video ) {
+					return new WP_Error(
+						'bp_rest_bp_activity_video',
+						__( 'You don\'t have access to send the video.', 'buddyboss' ),
 						array(
 							'status' => 400,
 						)

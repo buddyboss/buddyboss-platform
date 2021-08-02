@@ -111,10 +111,9 @@ add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
 
-
-
 //Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *

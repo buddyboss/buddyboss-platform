@@ -593,6 +593,18 @@ class BP_Activity_Activity {
 			$where_conditions['excluded_types'] = "a.type NOT IN ({$not_in})";
 		}
 
+		// Remove forums activity while component is disabled.
+		if ( ! function_exists( 'bbpress' ) || ! bp_is_active( 'forums' ) ) {
+			$not_in_type                                = "'" . implode( "', '", esc_sql( array( 'bbp_topic_create', 'bbp_reply_create' ) ) ) . "'";
+			$where_conditions['exclude_forum_activity'] = "a.type NOT IN ({$not_in_type})";
+		}
+
+		// Remove groups activity while component is disabled.
+		if ( ! bp_is_active( 'groups' ) ) {
+			$not_in_type                                 = "'" . implode( "', '", esc_sql( array( 'groups' ) ) ) . "'";
+			$where_conditions['exclude_groups_activity'] = "a.component NOT IN ({$not_in_type})";
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the Activity items get method.
 		 *

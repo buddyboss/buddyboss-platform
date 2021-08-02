@@ -239,6 +239,19 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_video ) {
+				return new WP_Error(
+					'bp_rest_bp_message_document',
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
 		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
 			$can_send_gif = bb_user_has_access_upload_gif( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_gif ) {
