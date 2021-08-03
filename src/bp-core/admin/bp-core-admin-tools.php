@@ -833,7 +833,15 @@ function bb_repair_nicknames() {
 
 			if ( ! empty( $nickname ) ) {
 				$nickname = preg_replace( '/[^A-Za-z0-9-_\.]/', '-', $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+
+				// or use the user_nicename.
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+
 				bp_update_user_meta( $user->ID, 'nickname', $nickname );
+				xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
 				$offset++;
 			}
 		}
