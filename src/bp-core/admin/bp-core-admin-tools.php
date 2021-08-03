@@ -351,6 +351,12 @@ function bp_admin_repair_list() {
 		'xprofile_update_display_names',
 	);
 
+	$repair_list[39] = array(
+		'bbp-wordpress-update-nickname',
+		__( 'Update nickname by removing invalid special characters.', 'buddyboss' ),
+		'bbp_repair_nicknames',
+	);
+
 	// Connections:
 	// - user friend count.
 	if ( bp_is_active( 'friends' ) ) {
@@ -796,6 +802,49 @@ function xprofile_update_display_names() {
 		);
 	} else {
 		$statement = __( 'Update WordPress user display names&hellip; %s', 'buddyboss' );
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}
+
+/**
+ * Update nickname by removing invalid special characters.
+ *
+ * @since BuddyBoss x.x.x
+ */
+function bbp_repair_nicknames() {
+
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+	$args = array(
+		'number' => 50,
+		'fields' => array( 'ID' ),
+		'offset' => $offset,
+	);
+
+	$users = get_users( $args );
+
+	if ( ! empty( $users ) ) {
+
+		foreach ( $users as $user ) {
+			$nickname = bp_get_user_meta( $user->ID, 'nickname', true );
+
+			if ( ! empty( $nickname ) ) {
+				$nickname = preg_replace( '/[^A-Za-z0-9-_\.]/', '-', $nickname );
+				bp_update_user_meta( $user->ID, 'nickname', $nickname );
+				$offset++;
+			}
+		}
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		$statement = __( 'Update WordPress user nicknames&hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),

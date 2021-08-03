@@ -265,7 +265,13 @@ function bp_register_admin_integrations() {
 function bb_check_user_nickname( &$errors, $update, &$user ) {
 	global $wpdb;
 
-	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
+	$nickname = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
+
+	$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+
+	if ( $invalid ) {
+		$errors->add( 'nickname_with_spaces', sprintf( __( '<strong>Error</strong>: %s', 'buddyboss' ), $invalid ), array( 'form-field' => 'nickname' ) );
+	}
 
 	$where = array(
 		'meta_key = "nickname"',
