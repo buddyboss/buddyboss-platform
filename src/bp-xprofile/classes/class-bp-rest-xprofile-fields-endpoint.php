@@ -19,6 +19,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Current Users ID.
+	 *
+	 * @var integer Member ID.
+	 */
+	protected $user_id;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -863,6 +870,14 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'options'           => array(),
 		);
 
+		// When we add paragraph as field for the profiles field then its not displaying proper format.
+		$current_user_id = $request->get_param( 'user_id' );
+		if ( empty( $current_user_id ) ) {
+			$current_user_id = bp_loggedin_user_id();
+		}
+
+		$this->user_id = $current_user_id;
+
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
 			$data['visibility_level']        = $field->visibility_level;
 			$data['allow_custom_visibility'] = $this->bp_rest_get_field_visibility( $field );
@@ -1041,6 +1056,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+
 		/**
 		 * Apply Filters to sanitize XProfile field value.
 		 *
@@ -1051,6 +1068,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		$value = apply_filters( 'bp_get_the_profile_field_value', $value, $field->type, $field->id );
+
+		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		// Reset the global before returning the value.
 		$field = $reset_global;
@@ -1821,5 +1840,16 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_xprofile_field_data_object( $field_id, $user_id ) {
 		return new BP_XProfile_ProfileData( $field_id, $user_id );
+	}
+
+	/**
+	 * Set current and display user with current user.
+	 *
+	 * @param int $user_id The user id.
+	 *
+	 * @return int
+	 */
+	public function bp_rest_get_displayed_user( $user_id ) {
+		return ( ! empty( $this->user_id ) ? $this->user_id : bp_loggedin_user_id() );
 	}
 }
