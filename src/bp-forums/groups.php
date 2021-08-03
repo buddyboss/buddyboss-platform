@@ -39,48 +39,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/**
-		 * Nested forum are not associate with group.
-		 * - This method help you to find the nested forum group id.
-		 *
-		 * @since BuddyBoss x.x.x
-		 *
-		 * @param int $forum_id Forum id.
-		 *
-		 * @uses bbp_get_forum() To get forum.
-		 * @uses bbp_get_forum_group_ids() To get forum gorup id.
-		 *
-		 * @return array/boolean
-		 */
-		public function child_forum_group_id( $forum_id ) {
-			if ( empty( $forum_id ) ) {
-				return false;
-			}
-
-			$forum = bbp_get_forum( $forum_id );
-
-			if ( empty( $forum ) ) {
-				return false;
-			}
-
-			// Get all parent ids.
-			$parents = $forum->ancestors;
-
-			// Set parameter id forum.
-			array_unshift( $parents, $forum->ID );
-
-			// Searching gorup id child to parent.
-			foreach ( $parents as $parent ) {
-				$group_ids = bbp_get_forum_group_ids( $parent );
-
-				if ( ! empty( $group_ids ) ) {
-					return $group_ids;
-				}
-			}
-
-			return false;
-		}
-
-		/**
 		 * Setup the group forums class variables
 		 *
 		 * @since bbPress ()
@@ -1688,18 +1646,19 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/**
-		 * Nested forum are not associate with group. This method help you to find the nested forum group id.
+		 * Nested forum are not associate with group.
+		 * - This method help you to find the nested forum group id.
 		 *
-		 * @since BuddyBoss 1.5.9
+		 * @since BuddyBoss x.x.x
 		 *
 		 * @param int $forum_id Forum id.
 		 *
 		 * @uses bbp_get_forum() To get forum.
 		 * @uses bbp_get_forum_group_ids() To get forum gorup id.
 		 *
-		 * @return array/boolean
+		 * @return array/bool
 		 */
-		public function forum_associate_group( $forum_id ) {
+		public function child_forum_group_id( $forum_id ) {
 			if ( empty( $forum_id ) ) {
 				return false;
 			}
@@ -1710,14 +1669,19 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return false;
 			}
 
-			$forum_id = bbp_get_group_forum_ids( bp_get_current_group_id() );
-			$forum_id = array_shift( $forum_id );
 			// Get all parent ids.
 			$parents = $forum->ancestors;
+
+			// Set parameter id forum.
 			array_unshift( $parents, $forum->ID );
 
-			if ( in_array( $forum_id, $parents, true ) ) {
-				return true;
+			// Searching gorup id child to parent.
+			foreach ( $parents as $parent ) {
+				$group_ids = bbp_get_forum_group_ids( $parent );
+
+				if ( ! empty( $group_ids ) ) {
+					return $group_ids;
+				}
 			}
 
 			return false;
