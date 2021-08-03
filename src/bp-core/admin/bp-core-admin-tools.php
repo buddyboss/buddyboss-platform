@@ -814,7 +814,7 @@ function xprofile_update_display_names() {
  *
  * @since BuddyBoss x.x.x
  */
-function bbp_repair_nicknames() {
+function bb_repair_nicknames() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
