@@ -167,12 +167,15 @@ function xprofile_screen_edit_profile() {
 				// Update the field data and visibility level.
 				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
 				$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, $is_required[ $field_id ] );
-				$value         = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
 
+				// We need to pass post value here.
+				// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
 				$new_values[ $field_id ] = array(
 					'value'      => $value,
 					'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
 				);
+
+				$value = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
 
 				if ( ! $field_updated ) {
 					$errors = true;

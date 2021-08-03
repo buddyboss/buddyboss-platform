@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 5.6.20
-Stable tag: 1.7.2.2
+Stable tag: 1.7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,33 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.4 =
+* Member Access Controls - Added support to restrict Video upload based on Access Control settings provided in BuddyBoss Platform Pro
+* Profiles - Fixed issue with Repeater date field value on changing the order
+* Groups - Fixed critical parse syntax error in the template
+* Activity - Small improvement to show activity blog post excerpt in a wrapper
+* Media - Fixed video popup JS error on edit
+* Media - Fixed unwanted mystery-man files getting created issue
+* Media - Fixed JS error for .flv format videos uploaded
+* Media - Fixed critical issue for photos not showing
+* Network Search - Fixed search result order for members listing
+* REST API - Added API Support for Video Access Control
+* REST API - Added Report text API related changes
+* REST API - Fixed Profile field description formatting issue in the API
+* REST API - Fixed videos API param issue
+* REST API - Small API improvements in Moderation
+* REST API - Fixed Profile Nickname update issue in the API
+
+= 1.7.3 =
+* Moderation - Improvement to show Report button less prominent in the dropdown for all content types
+* Groups - Fixed group description HTML formatting issue
+* Activity - Improvement to hide Forum activities when Forum component disabled
+* Media - Fixed minor issue with .mov video support
+* REST API - Fixed activity endpoint group related issue
+* REST API - Fixed Video thumbnail generate endpoint issue
+* LearnDash - Fixed avatar issue on Courses, Lessons, and Topics
+* Translations - Updated German (formal) language files
 
 = 1.7.2.2 =
 * Activity - Fixed critical error on plugin update

@@ -893,6 +893,19 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_video ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
 		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
 			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_gif ) {
