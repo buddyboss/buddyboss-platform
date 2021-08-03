@@ -426,7 +426,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		public function forum_can_associate_wth_group( $forum_id, $group_id ) {
 
 			$group_forum_ids = bbp_get_group_forum_ids( $group_id );
-
 			$forum           = bbp_get_forum( $forum_id );
 			$forum_type      = get_post_meta( $forum_id, '_bbp_forum_type', true );
 			$forum_groups    = get_post_meta( $forum_id, '_bbp_group_ids', true );
@@ -438,7 +437,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Child forums are not allow to associate with any groups.
 			if ( ! empty( $forum->post_parent ) ) {
-				bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'Child forum are not allowed to associate with any groups', 'buddyboss' ), 'error' );
 				return false;
 			}
 
@@ -1559,7 +1558,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum      = bbp_get_forum( $forum_id );
 			$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
 
-			// When navigate to group from.
+			// When navigate to group forum.
 			if ( ! bp_is_group_forum_topic() ) {
 				if ( empty( bp_action_variables() ) ) {
 					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum ) . '/' . $page );
