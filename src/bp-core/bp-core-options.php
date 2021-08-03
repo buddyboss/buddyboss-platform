@@ -834,7 +834,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 	if ( empty( $activities_template->activity ) ) {
 		return $default;
 	}
-	
+
 	if ( empty(  $activities_template->activity->component ) ) {
 		return $default;
 	}
@@ -1916,4 +1916,88 @@ function bb_feed_post_types() {
 function bb_feed_not_allowed_comment_post_types() {
 	// Exclude BP CPT.
 	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+}
+
+/**
+ * Allow sending joined message in group thread?
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if allow sending joined message in group thread, otherwise false.
+ */
+function bp_disable_group_messages_joined_message( $default = true ) {
+
+	/**
+	 * Filters whether allow sending joined message in group thread or not.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param bool $value whether allow sending joined message in group thread or not.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_messages_joined_message', (bool) bp_get_option( 'bp-disable-group-messages-joined-message', $default ) );
+}
+
+/**
+ * Allow sending left message in group thread?
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if allow sending left message in group thread, otherwise false.
+ */
+function bp_disable_group_messages_left_message( $default = true ) {
+
+	/**
+	 * Filters whether allow sending left message in group thread or not.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param bool $value whether allow sending left message in group thread or not.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_messages_left_message', (bool) bp_get_option( 'bp-disable-group-messages-left-message', $default ) );
+}
+
+/**
+ * Allow sending ban message in group thread?
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if allow sending ban message in group thread, otherwise false.
+ */
+function bp_disable_group_messages_ban_message( $default = true ) {
+
+	/**
+	 * Filters whether allow sending ban message in group thread or not.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param bool $value whether allow sending ban message in group thread or not.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_messages_ban_message', (bool) bp_get_option( 'bp-disable-group-messages-ban-message', $default ) );
+}
+
+/**
+ * Allow sending un ban message in group thread?
+ *
+ * @since BuddyBoss X.X.X
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if allow sending un ban message in group thread, otherwise false.
+ */
+function bp_disable_group_messages_un_ban_message( $default = true ) {
+
+	/**
+	 * Filters whether allow sending un ban message in group thread or not.
+	 *
+	 * @since BuddyBoss X.X.X
+	 *
+	 * @param bool $value whether allow sending un ban message in group thread or not.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_messages_un_ban_message', (bool) bp_get_option( 'bp-disable-group-messages-un-ban-message', $default ) );
 }

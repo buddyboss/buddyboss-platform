@@ -1371,8 +1371,6 @@ function bp_admin_setting_callback_group_messages() {
 	<?php
 }
 
-
-
 /**
  * Link to Moderation Block tutorial
  *
@@ -1592,3 +1590,51 @@ function bb_after_update_activity_settings( $tab_name ) {
 	}
 }
 add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );
+
+/**
+ * Allow sending joined message in group thread field markup.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_admin_settings_callback_joined_message() {
+	?>
+    <input id="bp-disable-group-messages-joined-message" name="bp-disable-group-messages-joined-message" type="checkbox" value="1" <?php checked( bp_disable_group_messages_joined_message() ); ?> />
+    <label for="bp-disable-group-messages-joined-message"><?php _e( 'Allow to send joined message in group thread', 'buddyboss' ); ?> </label>
+	<?php
+}
+
+/**
+ * Allow sending left message in group thread field markup.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_admin_settings_callback_left_message() {
+	?>
+    <input id="bp-disable-group-messages-left-message" name="bp-disable-group-messages-left-message" type="checkbox" value="1" <?php checked( bp_disable_group_messages_left_message() ); ?> />
+    <label for="bp-disable-group-messages-left-message"><?php _e( 'Allow to send left message in group thread', 'buddyboss' ); ?> </label>
+	<?php
+}
+
+/**
+ * Allow sending ban message in group thread field markup.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_admin_settings_callback_ban_message() {
+	?>
+    <input id="bp-disable-group-messages-ban-message" name="bp-disable-group-messages-ban-message" type="checkbox" value="1" <?php checked( bp_disable_group_messages_ban_message() ); ?> />
+    <label for="bp-disable-group-messages-ban-message"><?php _e( 'Allow to send ban message in group thread', 'buddyboss' ); ?> </label>
+	<?php
+}
+
+/**
+ * Allow sending un ban message in group thread field markup.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_admin_settings_callback_un_ban_message() {
+	?>
+    <input id="bp-disable-group-messages-un-ban-message" name="bp-disable-group-messages-un-ban-message" type="checkbox" value="1" <?php checked( bp_disable_group_messages_un_ban_message() ); ?> />
+    <label for="bp-disable-group-messages-un-ban-message"><?php _e( 'Allow to send un ban message in group thread', 'buddyboss' ); ?> </label>
+	<?php
+}
