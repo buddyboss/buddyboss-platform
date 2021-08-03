@@ -354,7 +354,7 @@ function bp_admin_repair_list() {
 	$repair_list[39] = array(
 		'bbp-wordpress-update-nickname',
 		__( 'Update nickname by removing invalid special characters.', 'buddyboss' ),
-		'bbp_repair_nicknames',
+		'bb_repair_nicknames',
 	);
 
 	// Connections:
