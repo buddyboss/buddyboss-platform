@@ -567,10 +567,14 @@ function bbp_get_paged_slug() {
  * @return object
  */
 function bbp_rewrite() {
-	return bbp_get_global_object( 'wp_rewrite', 'WP_Rewrite', (object) array(
-		'root'            => '',
-		'pagination_base' => 'page',
-	) );
+	return bbp_get_global_object(
+		'wp_rewrite',
+		'WP_Rewrite',
+		(object) array(
+			'root'            => '',
+			'pagination_base' => 'page',
+		)
+	);
 }
 
 /**
@@ -583,23 +587,23 @@ function bbp_rewrite() {
  *
  * @since 2.6.0 bbPress (r6678)
  *
- * @param string $pagination_links The HTML links used for pagination
+ * @param string $pagination_links The HTML links used for pagination.
  *
  * @return string
  */
 function bbp_make_first_page_canonical( $pagination_links = '' ) {
 
-	// Default value
+	// Default value.
 	$retval = $pagination_links;
 
-	// Remove first page from pagination
+	// Remove first page from pagination.
 	if ( ! empty( $pagination_links ) ) {
 		$retval = bbp_use_pretty_urls()
 			? str_replace( bbp_get_paged_slug() . '/1/', '', $pagination_links )
 			: preg_replace( '/&#038;paged=1(?=[^0-9])/m', '', $pagination_links );
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_make_first_page_canonical', $retval, $pagination_links );
 }
 
@@ -609,41 +613,45 @@ function bbp_make_first_page_canonical( $pagination_links = '' ) {
  *
  * @since 2.6.0 bbPress (r6679)
  *
- * @param array $args
+ * @param array $args Array of arguments.
  *
  * @return string
  */
 function bbp_paginate_links( $args = array() ) {
 
-	// Maybe add view-all args
+	// Maybe add view-all args.
 	$add_args = empty( $args['add_args'] ) && bbp_get_view_all()
 		? array( 'view' => 'all' )
 		: false;
 
-	// Pagination settings with filter
-	$r = bbp_parse_args( $args, array(
+	// Pagination settings with filter.
+	$r = bbp_parse_args(
+		$args,
+		array(
 
-		// Used by callers
-		'base'      => '',
-		'total'     => 1,
-		'current'   => bbp_get_paged(),
-		'prev_next' => true,
-		'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
-		'next_text' => is_rtl() ? '&larr;' : '&rarr;',
-		'mid_size'  => 1,
-		'end_size'  => 3,
-		'add_args'  => $add_args,
+			// Used by callers.
+			'base'               => '',
+			'total'              => 1,
+			'current'            => bbp_get_paged(),
+			'prev_next'          => true,
+			'prev_text'          => is_rtl() ? '&rarr;' : '&larr;',
+			'next_text'          => is_rtl() ? '&larr;' : '&rarr;',
+			'mid_size'           => 1,
+			'end_size'           => 3,
+			'add_args'           => $add_args,
 
-		// Unused by callers
-		'show_all'           => false,
-		'type'               => 'plain',
-		'format'             => '',
-		'add_fragment'       => '',
-		'before_page_number' => '',
-		'after_page_number'  => ''
-	), 'paginate_links' );
+			// Unused by callers.
+			'show_all'           => false,
+			'type'               => 'plain',
+			'format'             => '',
+			'add_fragment'       => '',
+			'before_page_number' => '',
+			'after_page_number'  => '',
+		),
+		'paginate_links'
+	);
 
-	// Return paginated links
+	// Return paginated links.
 	return bbp_make_first_page_canonical( paginate_links( $r ) );
 }
 
@@ -663,32 +671,32 @@ function bbp_get_wp_query() {
  *
  * @since 2.5.8 bbPress (r5814)
  *
- * @param  string  $name     Name of global variable
- * @param  string  $type     Type of variable to check with `is_a()`
- * @param  mixed   $default  Default value to return if no global found
+ * @param  string $name     Name of global variable.
+ * @param  string $type     Type of variable to check with `is_a()`.
+ * @param  mixed  $default  Default value to return if no global found.
  *
  * @return mixed   Verified object if valid, Default or null if invalid
  */
 function bbp_get_global_object( $name = '', $type = '', $default = null ) {
 
-	// If no name passed
+	// If no name passed.
 	if ( empty( $name ) ) {
 		$retval = $default;
 
-		// If no global exists
+		// If no global exists.
 	} elseif ( ! isset( $GLOBALS[ $name ] ) ) {
 		$retval = $default;
 
-		// If not the correct type of global
+		// If not the correct type of global.
 	} elseif ( ! empty( $type ) && ! is_a( $GLOBALS[ $name ], $type ) ) {
 		$retval = $default;
 
-		// Global variable exists
+		// Global variable exists.
 	} else {
 		$retval = $GLOBALS[ $name ];
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_get_global_object', $retval, $name, $type, $default );
 }
 
@@ -703,16 +711,16 @@ function bbp_get_global_object( $name = '', $type = '', $default = null ) {
  */
 function bbp_use_pretty_urls() {
 
-	// Default
+	// Default.
 	$retval  = false;
 	$rewrite = bbp_rewrite();
 
-	// Use $wp_rewrite->using_permalinks() if available
+	// Use $wp_rewrite->using_permalinks() if available.
 	if ( method_exists( $rewrite, 'using_permalinks' ) ) {
 		$retval = $rewrite->using_permalinks();
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_pretty_urls', $retval );
 }
 
@@ -875,12 +883,12 @@ function bbp_get_major_wp_version() {
  */
 function bbp_is_large_install() {
 
-	// Multisite has a function specifically for this
+	// Multisite has a function specifically for this.
 	$retval = function_exists( 'wp_is_large_network' )
 		? wp_is_large_network( 'users' )
 		: ( bbp_get_total_users() > 10000 );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_large_install', $retval );
 }
 
@@ -891,11 +899,11 @@ function bbp_is_large_install() {
  *
  * @since 2.6.0 bbPress (r6733)
  *
- * @param int $site_id
+ * @param int $site_id Site ID.
  */
 function bbp_switch_to_site( $site_id = 0 ) {
 
-	// Switch to a specific site
+	// Switch to a specific site.
 	if ( is_multisite() ) {
 		switch_to_blog( $site_id );
 	}
@@ -910,7 +918,7 @@ function bbp_switch_to_site( $site_id = 0 ) {
  */
 function bbp_restore_current_site() {
 
-	// Switch back to the original site
+	// Switch back to the original site.
 	if ( is_multisite() ) {
 		restore_current_blog();
 	}
@@ -930,7 +938,7 @@ function bbp_restore_current_site() {
 function bbp_default_intercept() {
 	static $rand = null;
 
-	// Generate a new random and unique string
+	// Generate a new random and unique string.
 	if ( null === $rand ) {
 
 		// If ext/hash is not present, compat.php's hash_hmac() does not support sha256.
@@ -943,11 +951,11 @@ function bbp_default_intercept() {
 			? AUTH_SALT
 			: (string) wp_rand();
 
-		// Create unique ID
+		// Create unique ID.
 		$rand = hash_hmac( $algo, uniqid( $salt, true ), $salt );
 	}
 
-	// Return random string (from locally static variable)
+	// Return random string (from locally static variable).
 	return $rand;
 }
 
@@ -967,35 +975,35 @@ function bbp_is_intercepted( $value = '' ) {
  *
  * @since 2.6.0
  *
- * @param string $action Typically the name of the caller function
- * @param array  $args   Typically the results of caller function func_get_args()
+ * @param string $action Typically the name of the caller function.
+ * @param array  $args   Typically the results of caller function func_get_args().
  *
  * @return mixed         Intercept results. Default bbp_default_intercept().
  */
 function bbp_maybe_intercept( $action = '', $args = array() ) {
 
-	// Backwards compatibility juggle
+	// Backwards compatibility juggle.
 	$hook = ( false === strpos( $action, 'pre_' ) )
 		? "pre_{$action}"
 		: $action;
 
-	// Default value
+	// Default value.
 	$default = bbp_default_intercept();
 
-	// Parse args
+	// Parse args.
 	$r = bbp_parse_args( (array) $args, array(), 'maybe_intercept' );
 
-	// Bail if no args
+	// Bail if no args.
 	if ( empty( $r ) ) {
 		return $default;
 	}
 
-	// Filter
+	// Filter.
 	$args     = array_merge( array( $hook ), $r );
 	$filtered = call_user_func_array( 'apply_filters', $args );
 
-	// Return filtered value, or default if not intercepted
-	return ( $filtered === reset( $r ) )
+	// Return filtered value, or default if not intercepted.
+	return ( reset( $r ) === $filtered )
 		? $default
 		: $filtered;
 }
@@ -1011,13 +1019,13 @@ function bbp_maybe_intercept( $action = '', $args = array() ) {
  */
 function bbp_get_empty_datetime() {
 
-	// Get the database version
+	// Get the database version.
 	$db_version = bbp_db()->db_version();
 
-	// Default return value
+	// Default return value.
 	$retval = '0000-00-00 00:00:00';
 
-	// Filter & return
+	// Filter & return.
 	return (string) apply_filters( 'bbp_get_default_zero_date', $retval, $db_version );
 }
 

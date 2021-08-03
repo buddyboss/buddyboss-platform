@@ -238,7 +238,7 @@ function bbp_format_revision_reason( $reason = '' ) {
  *
  * @since 2.6.0 bbPress (r6481)
  *
- * @param array $array Array to get values of
+ * @param array $array Array to get values of.
  *
  * @return array
  */
@@ -1647,29 +1647,33 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
  *
  * @since 2.6.0 bbPress (r6699)
  *
- * @param array $objects Array of objects, fresh from a query
+ * @param array $objects Array of objects, fresh from a query.
  *
  * @return bool True if some IDs were cached
  */
 function bbp_update_post_family_caches( $objects = array() ) {
 
-	// Bail if no posts
+	// Bail if no posts.
 	if ( empty( $objects ) ) {
 		return false;
 	}
 
-	// Default value
+	// Default value.
 	$post_ids = array();
 
-	// Filter the types of IDs to prime
-	$ids = apply_filters( 'bbp_update_post_family_caches', array(
-		'_bbp_last_active_id',
-		'_bbp_last_reply_id',
-		'_bbp_last_topic_id',
-		'_bbp_reply_to'
-	), $objects );
+	// Filter the types of IDs to prime.
+	$ids = apply_filters(
+		'bbp_update_post_family_caches',
+		array(
+			'_bbp_last_active_id',
+			'_bbp_last_reply_id',
+			'_bbp_last_topic_id',
+			'_bbp_reply_to',
+		),
+		$objects
+	);
 
-	// Get the last active IDs
+	// Get the last active IDs.
 	foreach ( $objects as $object ) {
 		$object = get_post( $object );
 
@@ -1678,30 +1682,30 @@ function bbp_update_post_family_caches( $objects = array() ) {
 			continue;
 		}
 
-		// Meta IDs
+		// Meta IDs.
 		foreach ( $ids as $key ) {
 			$post_ids[] = get_post_meta( $object->ID, $key, true );
 		}
 
-		// This post ID is already cached, but the post author may not be
+		// This post ID is already cached, but the post author may not be.
 		$post_ids[] = $object->ID;
 	}
 
-	// Unique, non-zero values
+	// Unique, non-zero values.
 	$post_ids = bbp_get_unique_array_values( $post_ids );
 
-	// Bail if no IDs to prime
+	// Bail if no IDs to prime.
 	if ( empty( $post_ids ) ) {
 		return false;
 	}
 
-	// Prime post caches
+	// Prime post caches.
 	_prime_post_caches( $post_ids, true, true );
 
-	// Prime post author caches
+	// Prime post author caches.
 	bbp_update_post_author_caches( $post_ids );
 
-	// Return
+	// Return.
 	return true;
 }
 
@@ -1716,21 +1720,21 @@ function bbp_update_post_family_caches( $objects = array() ) {
  *
  * @since 2.6.0 bbPress (r6699)
  *
- * @param array $objects Array of objects, fresh from a query
+ * @param array $objects Array of objects, fresh from a query.
  *
  * @return bool True if some IDs were cached
  */
 function bbp_update_post_author_caches( $objects = array() ) {
 
-	// Bail if no posts
+	// Bail if no posts.
 	if ( empty( $objects ) ) {
 		return false;
 	}
 
-	// Default value
+	// Default value.
 	$user_ids = array();
 
-	// Get the user IDs (could use wp_list_pluck() if this is ever a bottleneck)
+	// Get the user IDs (could use wp_list_pluck() if this is ever a bottleneck).
 	foreach ( $objects as $object ) {
 		$object = get_post( $object );
 
@@ -1743,18 +1747,18 @@ function bbp_update_post_author_caches( $objects = array() ) {
 		$user_ids[] = (int) $object->post_author;
 	}
 
-	// Unique, non-zero values
+	// Unique, non-zero values.
 	$user_ids = bbp_get_unique_array_values( $user_ids );
 
-	// Bail if no IDs to prime
+	// Bail if no IDs to prime.
 	if ( empty( $user_ids ) ) {
 		return false;
 	}
 
-	// Try to prime user caches
+	// Try to prime user caches.
 	cache_users( $user_ids );
 
-	// Return
+	// Return.
 	return true;
 }
 

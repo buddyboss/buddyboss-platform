@@ -812,18 +812,18 @@ function bbp_is_single_user_replies() {
  */
 function bbp_is_single_user_engagements() {
 
-	// Assume false
+	// Assume false.
 	$retval = false;
 
-	// Get the main query global
+	// Get the main query global.
 	$wp_query = bbp_get_wp_query();
 
-	// Check query
+	// Check query.
 	if ( ! empty( $wp_query->bbp_is_single_user_engagements ) && ( true === $wp_query->bbp_is_single_user_engagements ) ) {
 		$retval = true;
 	}
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_single_user_engagements', $retval );
 }
 
