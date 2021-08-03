@@ -1677,15 +1677,14 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return '';
 			}
 
-			if ( ! in_array( 'page', $actions ) ) {
-				return implode( '/', $actions );
+			$uri  = implode( '/', $actions );
+			$page = empty( get_query_var( 'paged' ) ) ? '' : '/page/' . get_query_var( 'paged' );
+
+			if ( ! empty( $page ) ) {
+				$uri = str_replace( $page, '', $uri );
 			}
 
-			$page_key = array_search( 'page', $actions );
-			$chunk    = array_chunk( $actions, $page_key );
-			$uri      = array_shift( $chunk );
-
-			return implode( '/', $uri );
+			return $uri;
 		}
 
 		/**
