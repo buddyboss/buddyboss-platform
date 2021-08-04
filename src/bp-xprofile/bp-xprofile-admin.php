@@ -324,35 +324,62 @@ endif;
 												<?php
 
 												if ( ! empty( $group->fields ) ) :
-													foreach ( $group->fields as $field ) {
+													if ( 1 === $group->id ) {
+														$signup_fields = bp_nouveau_get_signup_fields( 'account_details' );
+														$final_fields  = array_merge( $group->fields, $signup_fields );
+														$group->fields = $final_fields;
+													}
+													$xprofile_order = get_option( 'bp_xprofile_filed_order' );
+													$rt_fileds      = array();
+													if ( ! empty( $xprofile_order ) ) {
+														foreach ( $xprofile_order as $forder ) {
+															if ( array_key_exists( $forder, $group->fields ) ) {
 
-														if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-															if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && $field->id === bp_get_xprofile_member_type_field_id() ) {
-																continue;
 															}
 														}
+													}
+													foreach ( $group->fields as $key => $field ) {
+														if ( $field instanceof BP_XProfile_Field ) {
+															if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+																if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && $field->id === bp_get_xprofile_member_type_field_id() ) {
+																	continue;
+																}
+															}
 
-														// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-														if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
-															continue;
+															// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+															if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+																continue;
+															}
+
+															// Load the field.
+															$field = xprofile_get_field( $field->id );
+
+															$class = '';
+															if ( empty( $field->can_delete ) ) {
+																$class = ' core';
+															}
+
+															/**
+															 * This function handles the WYSIWYG profile field
+															 * display for the xprofile admin setup screen.
+															 */
+															xprofile_admin_field( $field, $group, $class );
+														} else {
+														    $bkey = base64_encode( $key );
+															?>
+                                                            <fieldset id='<?php echo "draggable_field_{$bkey}"; ?>'
+                                                                      class="textbox primary_field sortable core">
+                                                                <legend>
+                                                                        <span>
+                                                                            <span class="field-name"><?php echo esc_html( $field['label'] ); ?></span>
+                                                                            <span class="bp-signup-field-label"><?php esc_html_e( '(Signup)', 'buddyboss' ); ?></span>
+                                                                            <span class="bp-required-field-label"><?php esc_html_e( '(required)', 'buddyboss' ); ?></span>
+                                                                        </span>
+                                                                </legend>
+                                                            </fieldset>
+															<?php
 														}
-
-														// Load the field.
-														$field = xprofile_get_field( $field->id );
-
-														$class = '';
-														if ( empty( $field->can_delete ) ) {
-															$class = ' core';
-														}
-
-														/**
-														 * This function handles the WYSIWYG profile field
-														 * display for the xprofile admin setup screen.
-														 */
-														xprofile_admin_field( $field, $group, $class );
-
 													} // end for
-
 												else : // !$group->fields
 													?>
 
@@ -735,8 +762,14 @@ function xprofile_ajax_reorder_fields() {
 	$field_group_id = $_POST['field_group_id'];
 
 	foreach ( (array) $order['draggable_field'] as $position => $field_id ) {
-		xprofile_update_field_position( (int) $field_id, (int) $position, (int) $field_group_id );
+		if ( base64_encode( base64_decode( $field_id ) ) === $field_id ) {
+			$reorder[ $position ] = base64_decode( $field_id );
+		} else {
+			xprofile_update_field_position( (int) $field_id, (int) $position, (int) $field_group_id );
+			$reorder[ $position ] = $field_id;
+		}
 	}
+	update_option( 'bp_xprofile_filed_order', $reorder, false );
 }
 add_action( 'wp_ajax_xprofile_reorder_fields', 'xprofile_ajax_reorder_fields' );
 
