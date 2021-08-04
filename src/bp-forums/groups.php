@@ -383,7 +383,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @param string $where        where condition forum post query.
 		 * @param object $query_object forum post query property.
-		 * 
+		 *
 		 * @return string
 		 */
 		public function update_forum_dropdown_query( $where, $query_object ) {
