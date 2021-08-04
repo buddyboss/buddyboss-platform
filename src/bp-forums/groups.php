@@ -149,6 +149,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				add_filter( 'bbp_current_user_can_access_create_topic_form', array( $this, 'form_permissions' ) );
 				add_filter( 'bbp_current_user_can_access_create_reply_form', array( $this, 'form_permissions' ) );
 			}
+
+			add_filter( 'bbp_get_forum_group_ids', array( $this, 'nested_forum_group_id' ), 10, 2 );
 		}
 
 		/**
@@ -174,6 +176,27 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			add_filter( 'bbp_no_breadcrumb', '__return_true' );
 
 			$this->display_forums( 0 );
+		}
+
+		/**
+		 * Get nested or child froum group ids.
+		 *
+		 * @since BuddyBoss x.x.x
+		 *
+		 * @param array $group_ids Current group ids.
+		 * @param int   $forum_id  Forum id.
+		 *
+		 * @return array
+		 */
+		public function nested_forum_group_id( $group_ids, $forum_id ) {
+			$forum_group_ids = $this->child_forum_group_id( $forum_id );
+			$forum_group_ids = array_filter( $forum_group_ids );
+
+			if ( ! empty( $forum_group_ids ) ) {
+				return $forum_group_ids;
+			}
+
+			return $group_ids;
 		}
 
 		/**
@@ -1655,7 +1678,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @uses bbp_get_forum() To get forum.
 		 * @uses bbp_get_forum_group_ids() To get forum gorup id.
 		 *
-		 * @return array/bool
+		 * @return array
 		 */
 		public function child_forum_group_id( $forum_id ) {
 			if ( empty( $forum_id ) ) {
@@ -1676,14 +1699,25 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Searching gorup id child to parent.
 			foreach ( $parents as $parent ) {
-				$group_ids = bbp_get_forum_group_ids( $parent );
+				// Get the forums.
+				if ( ! empty( $parent ) ) {
+					$group_ids = get_post_meta( $parent, '_bbp_group_ids', true );
+				}
+
+				// Make sure result is an array.
+				if ( ! is_array( $group_ids ) ) {
+					$group_ids = (array) $group_ids;
+				}
+
+				// Trim out any empty array items.
+				$group_ids = array_filter( $group_ids );
 
 				if ( ! empty( $group_ids ) ) {
 					return $group_ids;
 				}
 			}
 
-			return false;
+			return array();
 		}
 
 		/**
