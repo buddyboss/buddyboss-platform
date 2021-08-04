@@ -150,7 +150,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				add_filter( 'bbp_current_user_can_access_create_reply_form', array( $this, 'form_permissions' ) );
 			}
 
-			add_filter( 'bbp_get_forum_group_ids', array( $this, 'nested_forum_group_id' ), 10, 2 );
+			add_filter( 'bbp_get_forum_group_ids', array( $this, 'child_forum_group_id' ), 10, 2 );
 		}
 
 		/**
@@ -176,27 +176,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			add_filter( 'bbp_no_breadcrumb', '__return_true' );
 
 			$this->display_forums( 0 );
-		}
-
-		/**
-		 * Get nested or child froum group ids.
-		 *
-		 * @since BuddyBoss x.x.x
-		 *
-		 * @param array $group_ids Current group ids.
-		 * @param int   $forum_id  Forum id.
-		 *
-		 * @return array
-		 */
-		public function nested_forum_group_id( $group_ids, $forum_id ) {
-			$forum_group_ids = $this->child_forum_group_id( $forum_id );
-			$forum_group_ids = array_filter( $forum_group_ids );
-
-			if ( ! empty( $forum_group_ids ) ) {
-				return $forum_group_ids;
-			}
-
-			return $group_ids;
 		}
 
 		/**
@@ -1394,7 +1373,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			// Get group ID's for this forum
-			$group_ids = $this->child_forum_group_id( $forum_id );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
 
 			// Bail if the post isn't associated with a group
 			if ( empty( $group_ids ) ) {
@@ -1614,7 +1593,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bp_core_redirect( $redirect_to );
 				}
 
-				$forum_group_id = $this->child_forum_group_id( $uri_post->ID );
+				$forum_group_id = bbp_get_forum_group_ids( $uri_post->ID );
 				$this->forum_id = empty( $forum_group_id ) ? false: $uri_post->ID;
 			}
 
@@ -1636,7 +1615,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
-				$forum_group_id = $this->child_forum_group_id( $topic_forum_id );
+				$forum_group_id = bbp_get_forum_group_ids( $topic_forum_id );
 				$this->forum_id = empty( $forum_group_id ) ? false : $topic_forum_id;
 			}
 		}
@@ -1680,15 +1659,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return array
 		 */
-		public function child_forum_group_id( $forum_id ) {
+		public function child_forum_group_id( $group_ids, $forum_id ) {
 			if ( empty( $forum_id ) ) {
-				return false;
+				return $group_ids;
 			}
 
 			$forum = bbp_get_forum( $forum_id );
 
 			if ( empty( $forum ) ) {
-				return false;
+				return $group_ids;
 			}
 
 			// Get all parent ids.
@@ -1699,25 +1678,27 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Searching gorup id child to parent.
 			foreach ( $parents as $parent ) {
+				$forum_group_ids = array();
+
 				// Get the forums.
 				if ( ! empty( $parent ) ) {
-					$group_ids = get_post_meta( $parent, '_bbp_group_ids', true );
+					$forum_group_ids = get_post_meta( $parent, '_bbp_group_ids', true );
 				}
 
 				// Make sure result is an array.
-				if ( ! is_array( $group_ids ) ) {
-					$group_ids = (array) $group_ids;
+				if ( ! is_array( $forum_group_ids ) ) {
+					$forum_group_ids = (array) $forum_group_ids;
 				}
 
 				// Trim out any empty array items.
-				$group_ids = array_filter( $group_ids );
+				$forum_group_ids = array_filter( $forum_group_ids );
 
-				if ( ! empty( $group_ids ) ) {
-					return $group_ids;
+				if ( ! empty( $forum_group_ids ) ) {
+					return $forum_group_ids;
 				}
 			}
 
-			return array();
+			return $group_ids;
 		}
 
 		/**
