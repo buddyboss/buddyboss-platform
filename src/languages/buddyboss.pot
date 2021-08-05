@@ -388,7 +388,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-akismet.php:242
 #: bp-core/admin/bp-core-admin-functions.php:1536
 #: bp-forums/admin/replies.php:806 bp-forums/admin/topics.php:899
-#: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2332
+#: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2343
 #: bp-forums/topics/functions.php:2109 bp-forums/topics/template.php:3186
 msgid "Spam"
 msgstr ""
@@ -407,7 +407,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:847
 #: bp-activity/classes/class-bp-activity-list-table.php:671
 #: bp-forums/common/template.php:2409 bp-forums/forums/template.php:55
-#: bp-forums/replies/template.php:55 bp-forums/replies/template.php:2081
+#: bp-forums/replies/template.php:55 bp-forums/replies/template.php:2092
 #: bp-forums/topics/template.php:55 bp-forums/topics/template.php:2712
 #: bp-groups/classes/class-bp-groups-list-table.php:570
 #: bp-invites/bp-invites-admin.php:268
@@ -529,8 +529,8 @@ msgstr ""
 #: bp-core/classes/class-bp-email-tokens.php:702
 #: bp-core/classes/class-bp-email-tokens.php:891
 #: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:329
-#: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1764
-#: bp-forums/replies/template.php:1807 bp-forums/topics/template.php:3295
+#: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1775
+#: bp-forums/replies/template.php:1818 bp-forums/topics/template.php:3295
 #: bp-moderation/classes/class-bp-moderation-activity.php:360
 #: bp-moderation/classes/class-bp-moderation-forum-replies.php:253
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:401
@@ -542,7 +542,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:1156
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:45
-#: bp-forums/replies/template.php:1843 bp-groups/bp-groups-admin.php:1069
+#: bp-forums/replies/template.php:1854 bp-groups/bp-groups-admin.php:1069
 #: bp-members/classes/class-bp-members-admin.php:2515
 #: bp-moderation/screens/block-member-form.php:75
 #: bp-moderation/screens/content-report-form.php:62
@@ -999,7 +999,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2788
-#: bp-core/bp-core-attachments.php:810 bp-forums/replies/template.php:2224
+#: bp-core/bp-core-attachments.php:810 bp-forums/replies/template.php:2235
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2855
@@ -10596,28 +10596,28 @@ msgid "Mark this reply as spam"
 msgstr ""
 
 #: bp-forums/admin/replies.php:815 bp-forums/admin/topics.php:907
-#: bp-forums/replies/template.php:2237 bp-forums/topics/template.php:2868
+#: bp-forums/replies/template.php:2248 bp-forums/topics/template.php:2868
 msgid "Restore this item from the Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:815 bp-forums/admin/topics.php:907
-#: bp-forums/replies/template.php:2223 bp-forums/topics/template.php:2854
+#: bp-forums/replies/template.php:2234 bp-forums/topics/template.php:2854
 msgid "Restore"
 msgstr ""
 
 #: bp-forums/admin/replies.php:817 bp-forums/admin/topics.php:909
-#: bp-forums/replies/template.php:2250 bp-forums/topics/template.php:2881
+#: bp-forums/replies/template.php:2261 bp-forums/topics/template.php:2881
 msgid "Move this item to the Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:817 bp-forums/admin/topics.php:909
-#: bp-forums/replies/template.php:2222 bp-forums/topics/functions.php:2110
+#: bp-forums/replies/template.php:2233 bp-forums/topics/functions.php:2110
 #: bp-forums/topics/template.php:2853
 msgid "Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:821 bp-forums/admin/topics.php:913
-#: bp-forums/replies/template.php:2265 bp-forums/topics/template.php:2896
+#: bp-forums/replies/template.php:2276 bp-forums/topics/template.php:2896
 msgid "Delete this item permanently"
 msgstr ""
 
@@ -13987,6 +13987,7 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1801
 #: bp-messages/bp-messages-template.php:2066
 #: bp-messages/classes/class-bp-messages-thread.php:1475
+#: bp-forums/replies/template.php:1182
 msgid "Deleted User"
 msgstr ""
 
@@ -14030,30 +14031,30 @@ msgstr ""
 msgid "This reply was modified %1$s by %2$s."
 msgstr ""
 
-#: bp-forums/replies/template.php:1181 bp-forums/topics/template.php:1469
+#: bp-forums/replies/template.php:1192 bp-forums/topics/template.php:1469
 #: bp-forums/users/template.php:183
 msgid "Anonymous"
 msgstr ""
 
-#: bp-forums/replies/template.php:1308 bp-forums/topics/template.php:1597
+#: bp-forums/replies/template.php:1319 bp-forums/topics/template.php:1597
 #: bp-forums/users/template.php:1718
 msgid "View %s's profile"
 msgstr ""
 
-#: bp-forums/replies/template.php:1308 bp-forums/topics/template.php:1597
+#: bp-forums/replies/template.php:1319 bp-forums/topics/template.php:1597
 #: bp-forums/users/template.php:1718
 msgid "Visit %s's website"
 msgstr ""
 
-#: bp-forums/replies/template.php:2276 bp-forums/topics/template.php:2907
+#: bp-forums/replies/template.php:2287 bp-forums/topics/template.php:2907
 msgid "Are you sure you want to delete that permanently?"
 msgstr ""
 
-#: bp-forums/replies/template.php:2333 bp-forums/topics/template.php:3187
+#: bp-forums/replies/template.php:2344 bp-forums/topics/template.php:3187
 msgid "Unspam"
 msgstr ""
 
-#: bp-forums/replies/template.php:2408
+#: bp-forums/replies/template.php:2419
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:53
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:60
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:27
@@ -14075,37 +14076,37 @@ msgstr ""
 msgid "Move"
 msgstr ""
 
-#: bp-forums/replies/template.php:2409
+#: bp-forums/replies/template.php:2420
 msgid "Move this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2485
+#: bp-forums/replies/template.php:2496
 msgid "Split"
 msgstr ""
 
-#: bp-forums/replies/template.php:2486
+#: bp-forums/replies/template.php:2497
 msgid "Split the topic from this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2602 bp-forums/replies/template.php:2613
+#: bp-forums/replies/template.php:2613 bp-forums/replies/template.php:2624
 msgid "Viewing %1$s reply"
 msgid_plural "Viewing %1$s replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/replies/template.php:2606 bp-forums/replies/template.php:2617
+#: bp-forums/replies/template.php:2617 bp-forums/replies/template.php:2628
 msgid "Viewing %2$s of %4$s replies"
 msgid_plural "Viewing %2$s - %3$s of %4$s replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/replies/template.php:2625
+#: bp-forums/replies/template.php:2636
 msgid "Viewing %1$s post"
 msgid_plural "Viewing %1$s posts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/replies/template.php:2629
+#: bp-forums/replies/template.php:2640
 msgid "Viewing %2$s of %4$s posts"
 msgid_plural "Viewing %2$s - %3$s of %4$s posts"
 msgstr[0] ""
@@ -28929,4 +28930,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:197
 msgctxt "Pending Certificate Status Label"
 msgid "Pending"
+msgstr ""
+
+#: bp-forums/replies/template.php:650
+msgid "This reply was deleted."
 msgstr ""
