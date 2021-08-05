@@ -829,19 +829,20 @@ function bb_repair_nicknames() {
 	if ( ! empty( $users ) ) {
 
 		foreach ( $users as $user ) {
-			$nickname = bp_get_user_meta( $user->ID, 'nickname', true );
+			$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user->ID );
 
 			if ( ! empty( $nickname ) ) {
-				$nickname = preg_replace( '/[^A-Za-z0-9-_\.]/', '-', $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+				$nickname     = preg_replace( '/[^A-Za-z0-9-_\.]/', '-', $nickname );
+				$new_nickname = $nickname;
+				$count        = 1;
 
-				// or use the user_nicename.
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
+				while ( bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $new_nickname, $user->ID ) ) {
+					$new_nickname = $nickname . $count;
+					$count++;
 				}
 
-				bp_update_user_meta( $user->ID, 'nickname', $nickname );
-				xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
+				bp_update_user_meta( $user->ID, 'nickname', $new_nickname );
+				xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $new_nickname );
 				$offset++;
 			}
 		}
