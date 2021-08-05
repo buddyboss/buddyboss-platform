@@ -51,7 +51,7 @@ function bb_moderation_load() {
 	}
 }
 
-add_action( 'bp_init', 'bb_moderation_load' );
+add_action( 'bp_init', 'bb_moderation_load', 1 );
 
 /**
  * Update modebypass Param
