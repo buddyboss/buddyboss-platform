@@ -5930,7 +5930,7 @@ function bb_core_get_browser() {
  * @param int    $id   media id
  * @param string $type media type
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 1.7.5
  *
  * @return null|array|object|void
  */
@@ -5959,7 +5959,7 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
  *
  * @param int $id id
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 1.7.5
  *
  * @return null|array|object|void
  */
@@ -5986,7 +5986,7 @@ function bb_moderation_suspend_record_exist( $id ) {
  * @param object $moderated_activities suspend records
  * @param int    $offset               pagination object
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 1.7.5
  *
  * @return int|mixed
  */
@@ -6042,7 +6042,7 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 /**
  * Function to update moderation data on plugin update.
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 1.7.5
  *
  * @return int|mixed|void
  */
