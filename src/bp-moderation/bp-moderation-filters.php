@@ -600,7 +600,7 @@ add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache
  *
  * @param array $repair_list
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 1.7.5
  *
  * @return array Repair list items.
  */
@@ -619,7 +619,7 @@ add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
 /**
  * Function to admin repair tool for fix moderation data.
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 1.7.5
  *
  * @return array
  */

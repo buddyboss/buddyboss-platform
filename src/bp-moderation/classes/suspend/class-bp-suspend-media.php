@@ -364,7 +364,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			/**
 			 * Remove pre-validate check.
 			 *
-			 * @since BuddyBoss 1.7.4
+			 * @since BuddyBoss 1.7.5
 			 */
 			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
 
@@ -424,7 +424,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			/**
 			 * Added pre-validate check.
 			 *
-			 * @since BuddyBoss 1.7.4
+			 * @since BuddyBoss 1.7.5
 			 */
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 		}
@@ -495,7 +495,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Function to un-restrict activity data while deleting the activity.
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss 1.7.5
 	 *
 	 * @param boolean $restrict restrict single item or not.
 	 *
@@ -513,7 +513,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Function to update suspend record on activity delete.
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss 1.7.5
 	 *
 	 * @param object $activity_data activity data.
 	 */

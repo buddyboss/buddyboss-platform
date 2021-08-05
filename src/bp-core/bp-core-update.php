@@ -335,7 +335,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 17401 ) {
-			bb_update_to_1_7_4();
+			bb_update_to_1_7_5();
 		}
 	}
 
@@ -700,9 +700,9 @@ function bb_update_to_1_7_2() {
 /**
  * Function to update data
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 1.7.5
  */
-function bb_update_to_1_7_4() {
+function bb_update_to_1_7_5() {
 	global $bp_background_updater;
 
 	$bp_background_updater->push_to_queue(
