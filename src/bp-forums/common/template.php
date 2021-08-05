@@ -804,6 +804,30 @@ function bbp_is_single_user_replies() {
 }
 
 /**
+ * Check if current page is a user engagements page
+ *
+ * @since 2.6.0 bbPress (r6320)
+ *
+ * @return bool True if it's a user's replies page, false if not
+ */
+function bbp_is_single_user_engagements() {
+
+	// Assume false.
+	$retval = false;
+
+	// Get the main query global.
+	$wp_query = bbp_get_wp_query();
+
+	// Check query.
+	if ( ! empty( $wp_query->bbp_is_single_user_engagements ) && ( true === $wp_query->bbp_is_single_user_engagements ) ) {
+		$retval = true;
+	}
+
+	// Filter & return.
+	return (bool) apply_filters( 'bbp_is_single_user_engagements', $retval );
+}
+
+/**
  * Check if current page is a view page
  *
  * @since bbPress (r2789)
