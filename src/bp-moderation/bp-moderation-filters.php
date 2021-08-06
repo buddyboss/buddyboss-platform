@@ -9,42 +9,49 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-new BP_Core_Suspend();
-new BP_Moderation_Members();
-new BP_Moderation_Comment();
+/**
+ * Load Moderation component after plugin loaded.
+ */
+function bb_moderation_load() {
+	new BP_Core_Suspend();
+	new BP_Moderation_Members();
+	new BP_Moderation_Comment();
 
-if ( bp_is_active( 'activity' ) ) {
-	new BP_Moderation_Activity();
-	new BP_Moderation_Activity_Comment();
+	if ( bp_is_active( 'activity' ) ) {
+		new BP_Moderation_Activity();
+		new BP_Moderation_Activity_Comment();
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		new BP_Moderation_Groups();
+	}
+
+	if ( bp_is_active( 'forums' ) ) {
+		new BP_Moderation_Forums();
+		new BP_Moderation_Forum_Topics();
+		new BP_Moderation_Forum_Replies();
+	}
+
+	if ( bp_is_active( 'document' ) ) {
+		new BP_Moderation_Folder();
+		new BP_Moderation_Document();
+	}
+
+	if ( bp_is_active( 'media' ) ) {
+		new BP_Moderation_Album();
+		new BP_Moderation_Media();
+	}
+
+	if ( bp_is_active( 'video' ) ) {
+		new BP_Moderation_Video();
+	}
+
+	if ( bp_is_active( 'messages' ) ) {
+		new BP_Moderation_Message();
+	}
 }
 
-if ( bp_is_active( 'groups' ) ) {
-	new BP_Moderation_Groups();
-}
-
-if ( bp_is_active( 'forums' ) ) {
-	new BP_Moderation_Forums();
-	new BP_Moderation_Forum_Topics();
-	new BP_Moderation_Forum_Replies();
-}
-
-if ( bp_is_active( 'document' ) ) {
-	new BP_Moderation_Folder();
-	new BP_Moderation_Document();
-}
-
-if ( bp_is_active( 'media' ) ) {
-	new BP_Moderation_Album();
-	new BP_Moderation_Media();
-}
-
-if ( bp_is_active( 'video' ) ) {
-	new BP_Moderation_Video();
-}
-
-if ( bp_is_active( 'messages' ) ) {
-	new BP_Moderation_Message();
-}
+add_action( 'bp_init', 'bb_moderation_load', 1 );
 
 /**
  * Update modebypass Param
