@@ -194,9 +194,17 @@ $admins            = array_map( 'intval', get_users(
 									<?php
 									if ( $is_content_screen ) {
 
-										$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+										$user_id           = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+										$is_user_suspended = false;
+										if ( is_array( $user_id ) ) {
+											foreach ( $user_id as $userid ) {
+												$is_user_suspended = bp_moderation_is_user_suspended( $userid );
+											}
+										} else {
+											$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+										}
 
-										if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+										if ( false === $is_user_suspended ) {
 											?>
                                             <a href="javascript:void(0);"
                                                class="button button-primary bp-hide-request single-report-btn"

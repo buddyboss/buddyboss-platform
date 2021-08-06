@@ -519,7 +519,16 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			);
 		}
 
-		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+		$is_user_suspended = false;
+		if ( is_array( $user_id ) ) {
+			foreach ( $user_id as $userid ) {
+				$is_user_suspended = bp_moderation_is_user_suspended( $userid );
+			}
+		} else {
+			$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+		}
+
+		if ( false === $is_user_suspended ) {
 			$actions['hide'] = sprintf(
 				'<a href="javascript:void(0);" class="%s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
 				esc_attr( $class ),
