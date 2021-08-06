@@ -373,6 +373,14 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 		groups_accept_all_pending_membership_requests( $group->id );
 	}
 
+	/**
+	 * Before we potentially switch the group status, if it has been changed to private
+	 * from public and there are existing activity feed, change feed status private. ( hide_sitewide = 1 )
+	 */
+	if ( 'public' === $group->status && 'private' === $status ) {
+		groups_make_all_activity_feed_status_private( $group->id );
+	}
+
 	// Now update the status.
 	$group->status = $status;
 
@@ -2650,6 +2658,39 @@ function groups_get_membership_requested_user_ids( $group_id = 0 ) {
 	) );
 
 	return $requests;
+}
+
+/**
+ * Make all activity feed status to private to a group.
+ *
+ * @since BuddyPress 1.7.4
+ *
+ * @param int $group_id ID of the group.
+ * @return bool True on success, false on failure.
+ */
+function groups_make_all_activity_feed_status_private( $group_id = 0 ) {
+	global $wpdb, $bp;
+
+	//bail if no group_id
+	if ( $group_id === 0 ) {
+		return false;
+	}
+
+	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = 1 WHERE item_id = %d and component = 'groups'", $group_id );
+	if ( false === $wpdb->query( $q ) ) {
+		return false;
+	}
+
+	/**
+	 * Fires after makeing all activity feed status to private to a group.
+	 *
+	 * @since BuddyPress 1.7.4
+	 *
+	 * @param int $group_id ID of the group.
+	 */
+	do_action( 'groups_make_all_activity_feed_status_private', $group_id );
+
+	return true;
 }
 
 /**
