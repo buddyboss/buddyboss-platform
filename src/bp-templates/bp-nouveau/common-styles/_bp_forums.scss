@@ -994,6 +994,24 @@ fieldset div.avatar {
 
 		}
 
+		.bb-content-inr-wrap + .gamipress-buddypress-user-details {
+			display: none;
+		}
+
+		.gamipress-buddypress-user-details {
+			margin-left: 10px;
+			position: relative;
+
+			.wp-post-image {
+				margin: 0;
+			}
+
+			span {
+				vertical-align: middle;
+			}
+
+		}
+
 	}
 
 }
@@ -1090,6 +1108,10 @@ fieldset div.avatar {
 
 	}
 
+}
+
+.activity-list li.activity .activity-inner .gamipress-buddypress-user-details + .gamipress-buddypress-user-details {
+	display: none;
 }
 
 /* =User Capabilities
