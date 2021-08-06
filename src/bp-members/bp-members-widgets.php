@@ -120,7 +120,7 @@ function bp_core_ajax_widget_members() {
 						<?php elseif ( 'active' == $settings['member_default'] ) : ?>
                             <span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
 						<?php else : ?>
-                            <span class="activity"><?php bp_member_total_friend_count(); ?></span>
+                            <span class="activity"><?php bp_is_active( 'friends' ) ? bp_member_total_friend_count() : ''; ?></span>
 						<?php endif; ?>
                     </div>
                 </div>
