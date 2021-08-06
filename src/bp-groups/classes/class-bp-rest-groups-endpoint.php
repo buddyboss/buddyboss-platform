@@ -1844,6 +1844,6 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$group_type = bp_groups_get_group_type( $group->id );
 		$group_type = bp_groups_get_group_type_object( $group_type );
 
-		return isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : __( 'Group', 'buddyboss' );
+		return isset( $group_type->labels['singular_name'] ) ? wp_specialchars_decode( $group_type->labels['singular_name'] ) : __( 'Group', 'buddyboss' );
 	}
 }
