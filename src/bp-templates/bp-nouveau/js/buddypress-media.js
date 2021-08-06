@@ -6808,7 +6808,7 @@ window.bp = window.bp || {};
 										bp.Nouveau.reportPopUp();
 										bp.Nouveau.reportedPopup();
 									},
-									1000
+									10
 								);
 							}
 						}
@@ -6862,7 +6862,7 @@ window.bp = window.bp || {};
 										bp.Nouveau.reportPopUp();
 										bp.Nouveau.reportedPopup();
 									},
-									1000
+									10
 								);
 							}
 						}

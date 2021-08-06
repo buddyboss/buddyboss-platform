@@ -125,8 +125,14 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function hide_related_content( $item_id, $hide_sitewide, $args = array() ) {
-		$related_contents = $this->get_related_contents( $item_id );
-		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
+		if ( empty( $args['action'] ) ) {
+			$args['action'] = 'hide';
+		}
+
+		$related_contents = $this->get_related_contents( $item_id, $args );
+
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
@@ -198,8 +204,14 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
+		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
+		if ( empty( $args['action'] ) ) {
+			$args['action'] = 'unhide';
+		}
+
 		$related_contents = $this->get_related_contents( $item_id, $args );
-		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
@@ -306,6 +318,24 @@ abstract class BP_Suspend_Abstract {
 		}
 
 		return array_intersect_key( $args, array_flip( self::$white_list_keys ) );
+	}
+
+	/**
+	 * Return whitelisted keys from array arguments.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param int    $item_id   Item ID.
+	 * @param string $item_type Item type.
+	 *
+	 * @return bool
+	 */
+	public static function is_content_reported_hidden( $item_id, $item_type ) {
+		global $wpdb, $bp;
+
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
+
+		return ! empty( $result );
 	}
 
 }
