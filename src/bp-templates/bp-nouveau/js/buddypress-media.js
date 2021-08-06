@@ -4396,6 +4396,9 @@ window.bp = window.bp || {};
 
 			this.openUploader( event );
 			$( '#bp-media-create-album' ).show();
+			if( $( 'body' ).hasClass( 'directory' ) ) {
+				$( '#bp-media-uploader' ).hide();
+			}
 		},
 
 		openCreateFolderModal: function ( event ) {
