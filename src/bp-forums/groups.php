@@ -1579,7 +1579,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				);
 
 				if ( empty( $last_path_post->post ) ) {
-					bbp_set_404();
 					return;
 				}
 
@@ -1610,7 +1609,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$topic = $query->post;
 
 				if ( empty( $topic ) ) {
-					bbp_set_404();
 					return;
 				}
 
