@@ -369,8 +369,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = esc_html__( 'Report Post', 'buddyboss' );
 		}
 
-		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
-		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
 			if ( ! empty( $media_id ) ) {
@@ -381,9 +385,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-
 		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
 			if ( ! empty( $document_id ) ) {
 				$button_text = esc_html__( 'Report Document', 'buddyboss' );
@@ -392,9 +393,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = esc_html__( 'Report Post', 'buddyboss' );
 			}
 		}
-
-		$video_id  = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
-		$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
 			if ( ! empty( $video_id ) ) {
@@ -445,8 +443,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$content_type = esc_html__( 'Post', 'buddyboss' );
 		}
 
-		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
-		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
 			if ( ! empty( $media_id ) ) {
@@ -457,9 +459,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 		}
 
-		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-
 		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
 			if ( ! empty( $document_id ) ) {
 				$content_type = esc_html__( 'Document', 'buddyboss' );
@@ -468,9 +467,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$content_type = esc_html__( 'Post', 'buddyboss' );
 			}
 		}
-
-		$video_id  = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
-		$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
 			if ( ! empty( $video_id ) ) {
