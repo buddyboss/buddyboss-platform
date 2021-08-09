@@ -52,6 +52,8 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function compatibility_init() {
 
+		add_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
+
 		add_filter( 'bb_media_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
 		add_filter( 'bb_document_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
 		add_filter( 'bb_video_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
@@ -115,24 +117,6 @@ class BB_AS3CF_Plugin_Compatibility {
 	}
 
 	/**
-	 * Copy to local media file when the offload media used and remove local file setting used in offload media plugin to regenerate the thumb of the PDF.
-	 *
-	 * @param bool               $default       default false.
-	 * @param string             $file          file to download.
-	 * @param int                $attachment_id attachment id.
-	 * @param Media_Library_Item $as3cf_item    media library object.
-	 *
-	 * @return bool
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	public function bb_document_as3cf_get_attached_file_copy_back_to_local( $default, $file, $attachment_id, $as3cf_item ) {
-		$default = true;
-
-		return $default;
-	}
-
-	/**
 	 * Set the uploaded document to make private on offload media plugin.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -180,7 +164,6 @@ class BB_AS3CF_Plugin_Compatibility {
 
 			if ( ! $attachment_url || empty( $image_array ) ) {
 
-				add_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'bb_document_as3cf_get_attached_file_copy_back_to_local' ), PHP_INT_MAX, 4 );
 				add_filter( 'as3cf_upload_acl', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
 				add_filter( 'as3cf_upload_acl_sizes', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
 
@@ -188,7 +171,6 @@ class BB_AS3CF_Plugin_Compatibility {
 
 				remove_filter( 'as3cf_upload_acl', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
 				remove_filter( 'as3cf_upload_acl_sizes', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
-				remove_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'bb_document_as3cf_get_attached_file_copy_back_to_local' ), PHP_INT_MAX, 4 );
 
 				if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
 					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
@@ -256,7 +238,6 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @since BuddyBoss 1.7.0
 	 */
 	public function bb_video_set_wp_offload_download_video_local( $video ) {
-		add_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'bb_document_as3cf_get_attached_file_copy_back_to_local' ), PHP_INT_MAX, 4 );
 		add_filter( 'as3cf_upload_acl', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
 		add_filter( 'as3cf_upload_acl_sizes', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
 	}
@@ -271,7 +252,6 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bb_video_unset_wp_offload_download_video_local( $video ) {
 		remove_filter( 'as3cf_upload_acl', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
 		remove_filter( 'as3cf_upload_acl_sizes', array( $this, 'bb_media_private_upload_acl' ), 10, 1 );
-		remove_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'bb_document_as3cf_get_attached_file_copy_back_to_local' ), PHP_INT_MAX, 4 );
 	}
 
 	/**
