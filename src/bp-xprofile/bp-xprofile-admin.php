@@ -329,15 +329,17 @@ endif;
 														$final_fields  = array_merge( $group->fields, $signup_fields );
 														$group->fields = $final_fields;
 													}
+
 													$xprofile_order = get_option( 'bp_xprofile_filed_order' );
 													$rt_fileds      = array();
+
 													if ( ! empty( $xprofile_order ) ) {
 														foreach ( $xprofile_order as $forder ) {
-															if ( array_key_exists( $forder, $group->fields ) ) {
-
-															}
+															$rt_fileds[ $forder ] = $group->fields[ $forder ];
 														}
+														$group->fields = $rt_fileds;
 													}
+
 													foreach ( $group->fields as $key => $field ) {
 														if ( $field instanceof BP_XProfile_Field ) {
 															if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
