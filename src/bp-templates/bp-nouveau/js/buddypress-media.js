@@ -2185,6 +2185,11 @@ window.bp = window.bp || {};
 				var dropzone_obj_key = dropzone_container.data( 'key' );
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
+					if (  self.options.previewTemplate !== 'undefined' && self.options.previewTemplate == '' ) {
+						var ForumMediaTemplate = document.getElementsByClassName('forum-post-media-template').length ? document.getElementsByClassName('forum-post-media-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+						self.options.previewTemplate = ForumMediaTemplate;
+					}
+
 					// init dropzone.
 					self.dropzone_obj[ dropzone_obj_key ] = new Dropzone( dropzone_container[ 0 ], self.options );
 					self.dropzone_media[ dropzone_obj_key ] = [];
@@ -2870,6 +2875,11 @@ window.bp = window.bp || {};
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
+					if (  self.documentOptions.previewTemplate !== 'undefined' && self.documentOptions.previewTemplate == '' ) {
+						var ForumDocumentTemplates = document.getElementsByClassName('forum-post-document-template').length ? document.getElementsByClassName('forum-post-document-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+						self.documentOptions.previewTemplate = ForumDocumentTemplates;
+					}
+
 					// init dropzone.
 					self.dropzone_obj[ dropzone_obj_key ] = new Dropzone( dropzone_container[ 0 ], self.documentOptions );
 					self.dropzone_media[ dropzone_obj_key ] = [];
@@ -3107,6 +3117,11 @@ window.bp = window.bp || {};
 				var dropzone_obj_key = dropzone_container.data( 'key' );
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
+
+					if (  self.videoOptions.previewTemplate !== 'undefined' && self.videoOptions.previewTemplate == '' ) {
+						var ForumVideoTemplate = document.getElementsByClassName('forum-post-video-template').length ? document.getElementsByClassName('forum-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
+						self.videoOptions.previewTemplate = ForumVideoTemplate;
+					}
 
 					// init dropzone.
 					self.dropzone_obj[ dropzone_obj_key ] = new Dropzone( dropzone_container[ 0 ], self.videoOptions );

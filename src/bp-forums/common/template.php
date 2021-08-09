@@ -1776,7 +1776,7 @@ function bbp_reply_form_fields() {
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-edit-reply" />
 		<input type="hidden" name="bbp_redirect_page_to" id="bbp_redirect_page_to" value="<?php echo intval( $forum_redirect_to ); ?>" />
-	
+
 		<?php
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			wp_nonce_field( 'bbp-unfiltered-html-reply_' . bbp_get_reply_id(), '_bbp_unfiltered_html_reply', false );}
@@ -1786,9 +1786,16 @@ function bbp_reply_form_fields() {
 		wp_nonce_field( 'bbp-edit-reply_' . bbp_get_reply_id() );
 
 	else :
+
+		if ( isset ( $_POST['topic_id'] ) && ! empty( $_POST['topic_id'] ) ) {
+			$topic_id = $_POST['topic_id'];
+		}else{
+			$topic_id = bbp_get_topic_id();
+		}
+
 		?>
 
-		<input type="hidden" name="bbp_topic_id"    id="bbp_topic_id"    value="<?php bbp_topic_id(); ?>" />
+		<input type="hidden" name="bbp_topic_id"    id="bbp_topic_id"    value="<?php echo $topic_id; ?>" />
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-new-reply" />
 
