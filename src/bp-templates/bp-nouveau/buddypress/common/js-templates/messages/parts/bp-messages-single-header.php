@@ -3,6 +3,7 @@
 	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
+
 	if (other_recipients.length == 0) {    include_you = true;    }    #>
 
 	<header class="single-message-thread-header">
@@ -142,7 +143,7 @@
 								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 							</header>
 							<div class="bb-report-type-wrp">
-								<#	_.reject(other_recipients, function(item) {
+								<# _.reject(other_recipients, function(item) {
 	                            if( false == item.can_be_blocked ) {
 	                                return false;
 	                            } #>

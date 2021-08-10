@@ -54,6 +54,12 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_document_search_join_sql_document', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10, 2 );
+
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity_Comment::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+		}
 	}
 
 	/**
@@ -61,11 +67,12 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_document_ids( $member_id ) {
+	public static function get_member_document_ids( $member_id, $action = '' ) {
 		$document_ids = array();
 
 		$documents = BP_Document::get(
@@ -79,6 +86,14 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		if ( ! empty( $documents['documents'] ) ) {
 			$document_ids = $documents['documents'];
+		}
+
+		if ( 'hide' === $action && ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $k => $document_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $document_id, self::$type, true ) ) {
+					unset( $document_ids[ $k ] );
+				}
+			}
 		}
 
 		return $document_ids;
@@ -119,21 +134,38 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
+	 * @param string $action   Action name to perform.
 	 *
 	 * @return array Document IDs
 	 */
-	public static function get_document_ids_meta( $item_id, $function = 'get_post_meta' ) {
+	public static function get_document_ids_meta( $item_id, $function = 'get_post_meta', $action = '' ) {
 		$document_ids = array();
 
 		if ( function_exists( $function ) ) {
 			if ( ! empty( $item_id ) ) {
 				$post_document = $function( $item_id, 'bp_document_ids', true );
-				if ( empty( $post_document ) ){
+				if ( empty( $post_document ) ) {
 					$post_document = BP_Document::get_activity_document_id( $item_id );
 				}
 
-				if ( ! empty( $post_document )  ){
-					$document_ids  = wp_parse_id_list( $post_document );
+				if ( ! empty( $post_document ) ) {
+					$document_ids = wp_parse_id_list( $post_document );
+				}
+			}
+		}
+
+		if ( 'hide' === $action && ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $k => $document_id ) {
+				if ( BP_Core_Suspend::check_hidden_content( $document_id, self::$type, true ) ) {
+					unset( $document_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $k => $document_id ) {
+				if ( self::is_content_reported_hidden( $document_id, self::$type ) ) {
+					unset( $document_ids[ $k ] );
 				}
 			}
 		}
@@ -313,7 +345,94 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $document_id, $args = array() ) {
-		return array();
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$related_contents = array();
+		$document         = new BP_Document( $document_id );
+
+		if ( bp_is_active( 'activity' ) && ! empty( $document ) && ! empty( $document->activity_id ) ) {
+
+			/**
+			 * Remove pre-validate check.
+			 *
+			 * @since BuddyBoss 1.7.5
+			 */
+			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
+
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $document->activity_id );
+
+			$activity = new BP_Activity_Activity( $document->activity_id );
+
+			if ( ! empty( $activity ) && ! empty( $activity->type ) ) {
+				if ( 'activity_comment' === $activity->type ) {
+					$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $activity->id;
+				} else {
+					$related_contents[ BP_Suspend_Activity::$type ][] = $activity->id;
+				}
+			}
+
+			if ( 'hide' === $action && ! empty( $document->attachment_id ) ) {
+				$attachment_id = $document->attachment_id;
+
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent_activity  = new BP_Activity_Activity( $parent_activity_id );
+					$parent_media_ids = self::get_document_ids_meta( $parent_activity_id, 'bp_activity_get_meta', $action );
+
+					if (
+						empty( $parent_media_ids ) &&
+						! empty( $parent_activity ) &&
+						! empty( $parent_activity->type ) &&
+						empty( wp_strip_all_tags( $parent_activity->content ) )
+					) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+				}
+			}
+
+			if ( 'unhide' === $action && ! empty( $document->attachment_id ) ) {
+				$attachment_id      = $document->attachment_id;
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+					if (
+						! empty( $parent_activity ) &&
+						! empty( $parent_activity->type )
+					) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Added pre-validate check.
+			 *
+			 * @since BuddyBoss 1.7.5
+			 */
+			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
+		}
+
+		$related_contents = json_decode( wp_json_encode( $related_contents ), true );
+
+		if ( ! empty( $blocked_user ) && ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				foreach ( (array) $related_content as $k => $item ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
+						unset( $related_contents[ $key ][ $k ] );
+					}
+				}
+			}
+		}
+
+		return $related_contents;
 	}
 
 	/**
@@ -339,7 +458,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			$suspended_record = BP_Core_Suspend::get_recode( $document->user_id, BP_Moderation_Members::$moderation_type );
 		}
 
-		if ( empty( $suspended_record ) ) {
+		if ( empty( $suspended_record ) || bp_moderation_is_content_hidden( $document->id, self::$type ) ) {
 			return;
 		}
 
@@ -361,6 +480,56 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		foreach ( $documents as $document ) {
 			BP_Core_Suspend::delete_suspend( $document->id, $this->item_type );
+		}
+	}
+
+	/**
+	 * Function to un-restrict activity data while deleting the activity.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param boolean $restrict restrict single item or not.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_single_item( $restrict ) {
+
+		if ( empty( $restrict ) && did_action( 'bp_document_after_delete' ) ) {
+			$restrict = true;
+		}
+
+		return $restrict;
+	}
+
+	/**
+	 * Function to update suspend record on activity delete.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param object $activity_data activity data.
+	 */
+	public function update_suspend_data_on_activity_delete( $activity_data ) {
+		$secondary_item_id = ! empty( $activity_data->secondary_item_id ) ? $activity_data->secondary_item_id : 0;
+
+		if ( empty( $secondary_item_id ) ) {
+			return;
+		}
+
+		$documents = bp_activity_get_meta( $secondary_item_id, 'bp_document_ids', true );
+		$documents = ! empty( $documents ) ? explode( ',', $documents ) : array();
+
+		if ( ! empty( $documents ) && 1 === count( $documents ) ) {
+			foreach ( $documents as $document ) {
+				if ( bp_moderation_is_content_hidden( $document, $this->item_type ) && bp_is_active( 'activity' ) ) {
+					BP_Core_Suspend::add_suspend(
+						array(
+							'item_id'     => $secondary_item_id,
+							'item_type'   => BP_Suspend_Activity::$type,
+							'hide_parent' => 1,
+						)
+					);
+				}
+			}
 		}
 	}
 }

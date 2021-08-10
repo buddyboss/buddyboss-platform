@@ -234,6 +234,19 @@ function bbp_format_revision_reason( $reason = '' ) {
 /** Misc **********************************************************************/
 
 /**
+ * Return the unique non-empty values of an array.
+ *
+ * @since 2.6.0 bbPress (r6481)
+ *
+ * @param array $array Array to get values of.
+ *
+ * @return array
+ */
+function bbp_get_unique_array_values( $array = array() ) {
+	return array_unique( array_filter( array_values( $array ) ) );
+}
+
+/**
  * Return the unescaped redirect_to request value
  *
  * @bbPress (r4655)
@@ -1188,6 +1201,11 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 			continue;
 		}
 
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
+			continue;
+		}
+
 		// Send notification email.
 		bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
 	}
@@ -1309,6 +1327,11 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 		// Don't send notifications to the person who made the post
 		if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
+			continue;
+		}
+
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
 			continue;
 		}
 
@@ -1517,7 +1540,6 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
-
 		$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_count, 'bbpress_posts' );
 	}
@@ -1604,13 +1626,140 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 		// Join post statuses to specifically exclude together
 		$not_in      = array( 'draft', 'future' );
 		$post_status = "'" . implode( "', '", $not_in ) . "'";
-
 		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}
 
 	// Filter and return
 	return apply_filters( 'bbp_get_all_child_ids', $child_ids, (int) $parent_id, $post_type );
+}
+
+/**
+ * Prime familial post caches.
+ *
+ * This function uses _prime_post_caches() to prepare the object cache for
+ * imminent requests to post objects that aren't naturally cached by the primary
+ * WP_Query calls themselves. Post author caches are also primed.
+ *
+ * This is triggered when a `update_post_family_cache` argument is set to true.
+ *
+ * Also see: bbp_update_post_author_caches()
+ *
+ * @since 2.6.0 bbPress (r6699)
+ *
+ * @param array $objects Array of objects, fresh from a query.
+ *
+ * @return bool True if some IDs were cached
+ */
+function bbp_update_post_family_caches( $objects = array() ) {
+
+	// Bail if no posts.
+	if ( empty( $objects ) ) {
+		return false;
+	}
+
+	// Default value.
+	$post_ids = array();
+
+	// Filter the types of IDs to prime.
+	$ids = apply_filters(
+		'bbp_update_post_family_caches',
+		array(
+			'_bbp_last_active_id',
+			'_bbp_last_reply_id',
+			'_bbp_last_topic_id',
+			'_bbp_reply_to',
+		),
+		$objects
+	);
+
+	// Get the last active IDs.
+	foreach ( $objects as $object ) {
+		$object = get_post( $object );
+
+		// Skip if post ID is empty.
+		if ( empty( $object->ID ) ) {
+			continue;
+		}
+
+		// Meta IDs.
+		foreach ( $ids as $key ) {
+			$post_ids[] = get_post_meta( $object->ID, $key, true );
+		}
+
+		// This post ID is already cached, but the post author may not be.
+		$post_ids[] = $object->ID;
+	}
+
+	// Unique, non-zero values.
+	$post_ids = bbp_get_unique_array_values( $post_ids );
+
+	// Bail if no IDs to prime.
+	if ( empty( $post_ids ) ) {
+		return false;
+	}
+
+	// Prime post caches.
+	_prime_post_caches( $post_ids, true, true );
+
+	// Prime post author caches.
+	bbp_update_post_author_caches( $post_ids );
+
+	// Return.
+	return true;
+}
+
+/**
+ * Prime post author caches.
+ *
+ * This function uses cache_users() to prepare the object cache for
+ * imminent requests to user objects that aren't naturally cached by the primary
+ * WP_Query calls themselves.
+ *
+ * This is triggered when a `update_post_author_cache` argument is set to true.
+ *
+ * @since 2.6.0 bbPress (r6699)
+ *
+ * @param array $objects Array of objects, fresh from a query.
+ *
+ * @return bool True if some IDs were cached
+ */
+function bbp_update_post_author_caches( $objects = array() ) {
+
+	// Bail if no posts.
+	if ( empty( $objects ) ) {
+		return false;
+	}
+
+	// Default value.
+	$user_ids = array();
+
+	// Get the user IDs (could use wp_list_pluck() if this is ever a bottleneck).
+	foreach ( $objects as $object ) {
+		$object = get_post( $object );
+
+		// Skip if post does not have an author ID.
+		if ( empty( $object->post_author ) ) {
+			continue;
+		}
+
+		// If post exists, add post author to the array.
+		$user_ids[] = (int) $object->post_author;
+	}
+
+	// Unique, non-zero values.
+	$user_ids = bbp_get_unique_array_values( $user_ids );
+
+	// Bail if no IDs to prime.
+	if ( empty( $user_ids ) ) {
+		return false;
+	}
+
+	// Try to prime user caches.
+	cache_users( $user_ids );
+
+	// Return.
+	return true;
 }
 
 /** Globals *******************************************************************/

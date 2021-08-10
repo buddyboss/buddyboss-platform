@@ -56,6 +56,7 @@ class BP_Media_Query extends BP_Recursive_Query {
 		'privacy',
 		'menu_order',
 		'date_created',
+		'type',
 	);
 
 	/**
