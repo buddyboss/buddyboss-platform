@@ -2261,6 +2261,5 @@ function bp_get_thread_total_recipients_count() {
 	 *
 	 * @param int $count Total recipients number.
 	 */
-	error_log( ' bp_get_thread_total_recipients_count ' . $thread_template->thread->total_recipients_count );
 	return (int) apply_filters( 'bp_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
 }
