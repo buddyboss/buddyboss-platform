@@ -133,7 +133,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( empty( $request['component_name'] ) ) {
-			$args['component_name'] = false;
+			$args['component_name'] = bp_notifications_get_registered_components();
 		}
 
 		/**

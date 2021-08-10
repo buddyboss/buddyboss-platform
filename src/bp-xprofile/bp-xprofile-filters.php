@@ -1097,12 +1097,12 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	$clone_fields_query = "SELECT xf.* from {$bp->profile->table_name_fields} as xf inner join {$bp->profile->table_name_meta} as xm where xf.id = xm.object_id  and xm.meta_key = '_is_repeater_clone' and xm.meta_value = '1' order by xf.id ASC LIMIT 50 OFFSET $offset";
+	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id) 
+    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id) 
+    WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
 	$added_fields       = $wpdb->get_results( $clone_fields_query );
 
 	if ( $offset == 0 ) {
-		bp_update_option( 'bp_repair_duplicate_fields', array() );
-		bp_update_option( 'bp_repair_updated_fields', array() );
 		$duplicate_fields = array();
 		$updated_fields   = array();
 	} else {
@@ -1113,7 +1113,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 	if ( ! empty( $added_fields ) ) {
 		foreach ( $added_fields as $field ) {
 			$clone_id   = (int) $field->id;
-			$main_field = bp_xprofile_get_meta( (int) $clone_id, 'field', '_cloned_from' );
+			$main_field = bb_xprofile_top_most_template_field_id( (int) $clone_id );
 
 			$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$main_field} AND object_type = 'field'", ARRAY_A );
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
@@ -1133,16 +1133,19 @@ function bb_xprofile_repeater_field_repair_callback() {
 				}
 			}
 
-			$keys_main  = ( ! empty( $updated_fields ) ? array_keys( array_combine( array_keys( $updated_fields ), array_column( $updated_fields, 'main_field' ) ), $main_field ) : array() );
-			$keys_order = ( ! empty( $updated_fields ) ? array_keys( array_combine( array_keys( $updated_fields ), array_column( $updated_fields, 'field_order' ) ), $field->field_order ) : array() );
+			bp_xprofile_update_meta( $clone_id, 'field', '_cloned_from', $main_field );
 
-			if ( ! empty( $keys_main ) && ! empty( $keys_order ) ) {
+			$data = array(
+				'group_id'     => $field->group_id,
+				'main_field'   => $main_field,
+				'field_order'  => $field->field_order,
+				'clone_number' => $field->clone_number,
+			);
+
+			if ( ! empty( $updated_fields ) && array_search( $data, $updated_fields, true ) ) {
 				$duplicate_fields[] = $clone_id;
 			} else {
-				$updated_fields[ $clone_id ] = array(
-					'main_field'  => $main_field,
-					'field_order' => $field->field_order,
-				);
+				$updated_fields[ $clone_id ] = $data;
 			}
 
 			$offset ++;
@@ -1159,7 +1162,6 @@ function bb_xprofile_repeater_field_repair_callback() {
 			'records' => $records_updated,
 		);
 	} else {
-
 		if ( ! empty( $duplicate_fields ) ) {
 			foreach ( $duplicate_fields as $field_id ) {
 				xprofile_delete_field( $field_id );
