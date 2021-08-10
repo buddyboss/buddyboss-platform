@@ -47,7 +47,7 @@
 
 	.bb-video-duration {
 		font-size: 13px;
-		margin: 0;
+		margin: 0 !important;
 		background-color: #000;
 		color: #fff;
 		display: inline-block;
@@ -170,9 +170,22 @@
 		max-width: 100%;
 		cursor: pointer;
 
+		.vjs-control-bar:before {
+			content: "";
+			position: absolute;
+			bottom: -10px;
+			top: 0;
+			width: 100%;
+			background: #333;
+			background: -webkit-linear-gradient(bottom, rgba(51, 51, 51, 0.5), rgba(51, 51, 51, 0));
+			background: -moz-linear-gradient(bottom, rgba(51, 51, 51, 0.5), rgba(51, 51, 51, 0));/* stylelint-disable-line */
+			background: linear-gradient(to top, rgba(51, 51, 51, 0.5), rgba(51, 51, 51, 0));/* stylelint-disable-line */
+		}
+
 
 		.vjs-control-bar {
-			bottom: 15px;
+			padding-top: 5px;
+			bottom: 10px;
 			background-color: transparent;
 			z-index: 1;
 

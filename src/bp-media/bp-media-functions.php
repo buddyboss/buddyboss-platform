@@ -98,11 +98,12 @@ function bp_media_allowed_mimes( $mime_types ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_media_remove_default_image_sizes( $sizes ) {
-	if ( isset( $sizes['bb-media-activity-image'] ) && isset( $sizes['bb-media-photos-album-directory-image'] ) && isset( $sizes['bb-media-photos-popup-image'] ) ) {
+	if ( isset( $sizes['bb-media-activity-image'] ) && isset( $sizes['bb-media-photos-album-directory-image'] ) && isset( $sizes['bb-media-photos-album-directory-image-medium'] ) && isset( $sizes['bb-media-photos-popup-image'] ) ) {
 		return array(
-			'bb-media-activity-image'               => $sizes['bb-media-activity-image'],
-			'bb-media-photos-album-directory-image' => $sizes['bb-media-photos-album-directory-image'],
-			'bb-media-photos-popup-image'           => $sizes['bb-media-photos-popup-image'],
+			'bb-media-activity-image'                      => $sizes['bb-media-activity-image'],
+			'bb-media-photos-album-directory-image'        => $sizes['bb-media-photos-album-directory-image'],
+			'bb-media-photos-album-directory-image-medium' => $sizes['bb-media-photos-album-directory-image-medium'],
+			'bb-media-photos-popup-image'                  => $sizes['bb-media-photos-popup-image'],
 		);
 	}
 
@@ -3313,11 +3314,11 @@ function bp_media_delete_symlinks( $media ) {
 		unlink( $attachment_path );
 	}
 
-	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-album-directory-image' );
+	$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $privacy . 'bb-media-photos-album-directory-image-medium' );
 	if ( $old_media->group_id > 0 && bp_is_active( 'groups' ) ) {
 		$group_object    = groups_get_group( $old_media->group_id );
 		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-album-directory-image' );
+		$attachment_path = $symlinks_path . '/' . md5( $old_media->id . $attachment_id . $group_status . $privacy . 'bb-media-photos-album-directory-image-medium' );
 	}
 
 	if ( file_exists( $attachment_path ) ) {
@@ -3399,10 +3400,20 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 
 				$attachment_url = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 
+				/**
+				 * Filter for the after thumb symlink generate.
+				 *
+				 * @param string $attachment_url Attachment URL.
+				 * @param object $media          Media Object.
+				 *
+				 * @since BuddyBoss 1.7.0.1
+				 */
+				$attachment_url = apply_filters( 'bb_media_after_get_preview_image_url_symlink', $attachment_url, $media );
+
 			} else {
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . $size;
+				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
             }
 		}
 	}
@@ -3458,15 +3469,19 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 function bp_media_get_image_sizes() {
 
 	$image_sizes = array(
-		'bb-media-activity-image'               => array(
+		'bb-media-activity-image'                      => array(
 			'height' => 400,
 			'width'  => 640,
 		),
-		'bb-media-photos-album-directory-image' => array(
+		'bb-media-photos-album-directory-image'        => array(
 			'height' => 267,
 			'width'  => 400,
 		),
-		'bb-media-photos-popup-image'           => array(
+		'bb-media-photos-album-directory-image-medium' => array(
+			'height' => 534,
+			'width'  => 800,
+		),
+		'bb-media-photos-popup-image'                  => array(
 			'height' => 900,
 			'width'  => 1500,
 		),
@@ -3766,63 +3781,67 @@ function bb_media_user_can_access( $id, $type ) {
 			break;
 
 		case 'forums':
-			$args = array(
-				'user_id'         => $current_user_id,
-				'forum_id'        => $forum_id,
-				'check_ancestors' => false,
-			);
+			if ( bp_is_active( 'forums' ) ) {
+				$args = array(
+					'user_id'         => $current_user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => false,
+				);
 
-			$has_access = bbp_user_can_view_forum( $args );
-			if ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access ) {
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_delete = true;
+				$has_access = bbp_user_can_view_forum( $args );
+				if ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access ) {
+					if ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_delete = true;
+					}
+					$can_view     = true;
+					$can_download = true;
 				}
-				$can_view     = true;
-				$can_download = true;
 			}
 			break;
 
 		case 'message':
-			$has_access = messages_check_thread_access( $thread_id, $current_user_id );
-			if ( ! is_user_logged_in() ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( ! $thread_id ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access > 0 ) {
-				$can_view     = true;
-				$can_download = true;
+			if ( bp_is_active( 'messages' ) ) {
+				$has_access = messages_check_thread_access( $thread_id, $current_user_id );
+				if ( ! is_user_logged_in() ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( ! $thread_id ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access > 0 ) {
+					$can_view     = true;
+					$can_download = true;
+				}
 			}
 			break;
 	}

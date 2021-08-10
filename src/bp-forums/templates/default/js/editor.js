@@ -50,6 +50,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -132,6 +133,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -216,6 +218,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );

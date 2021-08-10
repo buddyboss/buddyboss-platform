@@ -196,10 +196,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array(
-			'upload_id'    => $upload['id'],
-			'upload'       => $upload['url'],
-			'upload_thumb' => $upload['thumb'],
-			'name'         => $upload['name'],
+			'upload_id' => $upload['id'],
+			'name'      => $upload['name'],
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -660,7 +658,16 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( is_user_logged_in() ) {
+		if (
+			is_user_logged_in() &&
+			(
+				! function_exists( 'bb_video_user_can_upload' ) ||
+				(
+					function_exists( 'bb_video_user_can_upload' ) &&
+					bb_video_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
+				)
+			)
+		) {
 			$retval = true;
 
 			if (
@@ -692,7 +699,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					);
 				}
 
-				$album_privacy = bp_video_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
+				if ( function_exists( 'bb_media_user_can_access' ) ) {
+					$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
+				} else {
+					$album_privacy = bp_media_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
+				}
+
 				if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
@@ -1588,10 +1600,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					wp_update_post( $video_post );
 				}
 
-				$video = array(
-					'id' => $wp_attachment_id,
-				);
-				bp_video_add_generate_thumb_background_process( $wp_attachment_id, $video );
+				bp_video_add_generate_thumb_background_process( $video_id );
 
 				$created_video_ids[] = $video_id;
 
@@ -1955,7 +1964,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public function bp_rest_forums_collection_params( $params ) {
 
 		if ( function_exists( 'bp_is_forums_video_support_enabled' ) && true === bp_is_forums_video_support_enabled() ) {
-			$params['bbp_video'] = array(
+			$params['bbp_videos'] = array(
 				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
 				'type'              => 'array',
 				'items'             => array( 'type' => 'integer' ),
@@ -2133,10 +2142,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				if ( ! is_wp_error( $video_id ) ) {
 					$video_ids[] = $video_id;
 
-					$video = array(
-						'id' => $attachment_id,
-					);
-					bp_video_add_generate_thumb_background_process( $attachment_id, $video );
+					bp_video_add_generate_thumb_background_process( $video_id );
 
 					// save video is saved in attachment.
 					update_post_meta( $attachment_id, 'bp_video_saved', true );

@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 5.6.20
-Stable tag: 1.7.0
+Stable tag: 1.7.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,89 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.5 =
+* Moderation - Added moderation support for the Video module
+* Moderation - Improvements to report media instead of reporting activity post internally
+* Moderation - Fixed issue showing hidden media on edit activity post
+* Profiles - Fixed edit profile repeater field issue not allowing to add new instance
+* Profiles - Fixed duplicate fields issue in the admin when adding too many at once from the edit profile screen
+* Groups - Fixed issue to not show My Group tab in Videos and Photos directory page when Group component disabled
+* Forums - Fixed discussion pagination issue when 'Discussions by Last Post' configured
+* Media - Fixed minor issue with .m4v video support
+* GamiPress - Fixed gamipress badges UI issue in the activity feed
+* Compatibility - Fixed moderation conflict with Avada Builder Plugin
+* REST API - Fixed Repeater field issue in the API endpoint
+* REST API - Fixed API issue when Push Notification component disabled
+* REST API - Provided embeddable report link for media, document, and video in the API endpoint
+* REST API - Fixed Group type issue in the Groups endpoints showing HTML markup
+* REST API - Fixed API compatibility issue also with Avada Builder Plugin
+
+= 1.7.4 =
+* Member Access Controls - Added support to restrict Video upload based on Access Control settings provided in BuddyBoss Platform Pro
+* Profiles - Fixed issue with Repeater date field value on changing the order
+* Groups - Fixed critical parse syntax error in the template
+* Activity - Small improvement to show activity blog post excerpt in a wrapper
+* Media - Fixed video popup JS error on edit
+* Media - Fixed unwanted mystery-man files getting created issue
+* Media - Fixed JS error for .flv format videos uploaded
+* Media - Fixed critical issue for photos not showing
+* Network Search - Fixed search result order for members listing
+* REST API - Added API Support for Video Access Control
+* REST API - Added Report text API related changes
+* REST API - Fixed Profile field description formatting issue in the API
+* REST API - Fixed videos API param issue
+* REST API - Small API improvements in Moderation
+* REST API - Fixed Profile Nickname update issue in the API
+
+= 1.7.3 =
+* Moderation - Improvement to show Report button less prominent in the dropdown for all content types
+* Groups - Fixed group description HTML formatting issue
+* Activity - Improvement to hide Forum activities when Forum component disabled
+* Media - Fixed minor issue with .mov video support
+* REST API - Fixed activity endpoint group related issue
+* REST API - Fixed Video thumbnail generate endpoint issue
+* LearnDash - Fixed avatar issue on Courses, Lessons, and Topics
+* Translations - Updated German (formal) language files
+
+= 1.7.2.2 =
+* Activity - Fixed critical error on plugin update
+
+= 1.7.2.1 =
+* Activity - Fixed critical error when Forums component disabled
+
+= 1.7.2 =
+* Activity - Provided option to disable comments in the activity feed for blog posts and custom post types
+* Activity - Improved forum discussion and replies activity workflow to handle redundant comments data
+* Activity - Improved blog posts and custom post types layout in the activity feed
+* Activity - Moved activities action button other than Like and Comment to ellipsis dropdown
+* Activity - Fixed comment JS issue when Edit Activity disabled
+* Media - Fixed media preview fallback logic by using WP URL instead of the PHP file
+* Media - Fixed documents mp3 file issue when symbolic link settings enabled
+* Media - Fixed video playing issue when symbolic link settings disabled
+* Media - Fixed video playing issue in Safari browser
+* Groups - Fixed group navigation tabs order issue in the customizer
+* Text Editor - Fixed text copy-paste issue
+* REST API - Added comments options support in the activity feed for blog posts and custom post types
+* REST API - Added activity feed forum discussion quick reply support
+* Compatibility - Fixed WP Offload Media plugin compatibility issue when 'Remove files from server' enabled
+* Compatibility - Fixed WordPress 8.0 compatibility issues
+* Translations - Updated German (formal) language files
+
+= 1.7.1 =
+* Videos - Fixed video tab issue not allowing to re-order in Groups
+* Videos - Fixed video player controls styling to handle white background videos
+* Groups - Fixed issue with Group type on Group settings update
+* Text Editor - Copy Paste image restricted for all frontend text editor
+
+= 1.7.0.1 =
+* Media - Added settings to enable/disable symbolic link for medias
+* Media - Fixed document PDF file preview issue
+* Media - Fixed photos size issue to improve quality in the activity feed
+* Videos - Fixed video not playing issue in Safari browser
+* Videos - Fixed video symbolic signed URL download issue
+* Moderation - Fixed issue to hide activity photos and documents on report
+* REST API - Fixed symbolic link issue in the APIs
 
 = 1.7.0 =
 * Videos - Added Videos support for Activity, Profiles, Groups, Messages, Forums

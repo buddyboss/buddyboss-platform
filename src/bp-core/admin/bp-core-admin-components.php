@@ -115,12 +115,16 @@ function bp_core_admin_components_options() {
 			break;
 		case 'active':
 			foreach ( array_keys( $active_components ) as $component ) {
-				$current_components[ $component ] = $all_components[ $component ];
+				if ( isset( $all_components[ $component ] ) ) {
+					$current_components[ $component ] = $all_components[ $component ];
+				}
 			}
 			break;
 		case 'inactive':
 			foreach ( $inactive_components as $component ) {
-				$current_components[ $component ] = $all_components[ $component ];
+				if ( isset( $all_components[ $component ] ) ) {
+					$current_components[ $component ] = $all_components[ $component ];
+				}
 			}
 			break;
 		case 'mustuse':
