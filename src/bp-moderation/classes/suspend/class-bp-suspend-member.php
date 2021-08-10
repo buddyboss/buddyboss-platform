@@ -207,12 +207,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $where_conditions Member Where sql.
-	 * @param array $args             Query arguments.
+	 * @param array  $where_conditions Member Where sql.
+	 * @param string $column_name      Column name.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions, $args = array() ) {
+	public function update_where_sql( $where_conditions, $column_name ) {
 
 		$where                  = array();
 		$where['suspend_where'] = $this->exclude_where_query();
