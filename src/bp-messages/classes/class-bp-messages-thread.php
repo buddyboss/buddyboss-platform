@@ -1592,7 +1592,7 @@ class BP_Messages_Thread {
 		/**
 		 * Filters the Join SQL statement.
 		 *
-         * @since BuddyBoss 1.7.4
+		 * @since BuddyBoss 1.7.6
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.

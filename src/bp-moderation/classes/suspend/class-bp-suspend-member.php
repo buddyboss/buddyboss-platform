@@ -151,21 +151,21 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Prepare thread recipients Join SQL query to filter blocked recipients
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss 1.7.6
 	 *
 	 * @param string $join_sql recipients Join sql.
 	 * @param string $uid_name User ID field name.
 	 *
 	 * @return string Join sql
 	 */
-	public function update_thread_join_sql( $join_sql, $uid_name = '' ) {
+	public function update_thread_join_sql( $join_sql, $uid_name ) {
 
 		$join_sql .= $this->exclude_joint_query( $uid_name );
 
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.7.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
