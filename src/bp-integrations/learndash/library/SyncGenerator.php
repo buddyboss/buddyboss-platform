@@ -551,7 +551,7 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function loadLdGroupId() {
-		if (function_exists('groups_get_groupmeta')) {
+		if ( function_exists( 'groups_get_groupmeta' ) ) {
 			return groups_get_groupmeta( $this->bpGroupId, $this->syncMetaKey, true ) ?: null;
 		}
 	}
@@ -572,10 +572,10 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function setLdGroupId() {
-		if (function_exists('groups_get_groupmeta')) {
+		if ( function_exists( 'groups_get_groupmeta' ) ) {
 			groups_update_groupmeta( $this->bpGroupId, $this->syncMetaKey, $this->ldGroupId );
-			return $this;
 		}
+		return $this;
 	}
 
 	/**
@@ -859,11 +859,11 @@ class SyncGenerator {
 
 	/**
 	 * Promote the uesr as a learndash group leader.
-	 * 
+	 *
 	 * @since BuddyBoss 1.6.3
-	 * 
+	 *
 	 * @param int $userId Member id.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function promoteAsGroupLeader( $userId, $ldRole, $remove = false ) {
@@ -879,7 +879,7 @@ class SyncGenerator {
 		if ( true === $remove || 'user' === $ldRole ) {
 			$this->remove_group_leader_role( $userId );
 			return;
-		} 
+		}
 
 		// Set learndash admin role.
 		if ( 'admin' === $ldRole ) {
@@ -942,7 +942,7 @@ class SyncGenerator {
 	 * Add BB group member role as LD group leader.
 	 *
 	 * @since BuddyBoss 1.6.3
-	 * 
+	 *
 	 * @param int $userID Member id.
 	 *
 	 * @uses learndash_is_admin_user()        Is member admin user.
