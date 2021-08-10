@@ -407,6 +407,7 @@ function bp_is_username_compatibility_mode() {
 	 *
 	 * @param bool $value Whether or not username compatibility mode should be used.
 	 */
+
 	return apply_filters( 'bp_is_username_compatibility_mode', defined( 'BP_ENABLE_USERNAME_COMPATIBILITY_MODE' ) && BP_ENABLE_USERNAME_COMPATIBILITY_MODE );
 }
 
