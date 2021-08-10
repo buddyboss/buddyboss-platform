@@ -1589,6 +1589,16 @@ class BP_Messages_Thread {
 			'pagination' => '',
 		);
 
+		/**
+		 * Filters the Join SQL statement.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 *
+		 * @param string $sql      From SQL statement.
+		 * @param string $uid_name User ID field name.
+		 */
+		$sql['from'] = apply_filters( 'bp_thread_recipients_query_join_sql', $sql['from'], 'r.user_id' );
+
 		$where_conditions = array();
 
 		if ( ! empty( $r['include'] ) ) {
