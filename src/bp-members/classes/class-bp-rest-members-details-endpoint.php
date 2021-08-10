@@ -230,6 +230,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 
+		remove_action( 'bp_init', 'bb_moderation_load', 1 );
 		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		remove_action( 'bp_init', 'bp_register_post_types', 2 );
 		remove_action( 'bp_init', 'bp_setup_title', 8 );
@@ -247,6 +248,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		do_action( 'bp_init' );
 
+		add_action( 'bp_init', 'bb_moderation_load', 1 );
 		add_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		add_action( 'bp_init', 'bp_register_post_types', 2 );
 		add_action( 'bp_init', 'bp_setup_title', 8 );
