@@ -111,10 +111,12 @@ add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
 
-
-
 //Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
+
+// Repair repeater field repeated in admin side.
+add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1060,4 +1062,119 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 	}
 
 	return $args;
+}
+
+/**
+ * Add xprofile notification repair list item.
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_xprofile_repeater_field_repair( $repair_list ) {
+	$repair_list[] = array(
+		'bp-xprofile-repeater-field-repair',
+		__( 'Repair xProfile repeater fieldset.', 'buddyboss' ),
+		'bb_xprofile_repeater_field_repair_callback',
+	);
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will remove duplicate repeater field from database by repair tool.
+ * Also remove remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ *
+ * @uses bb_xprofile_repeater_field_migration
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_xprofile_repeater_field_repair_callback() {
+	global $wpdb;
+	$bp = buddypress();
+
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id) 
+    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id) 
+    WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
+	$added_fields       = $wpdb->get_results( $clone_fields_query );
+
+	if ( $offset == 0 ) {
+		$duplicate_fields = array();
+		$updated_fields   = array();
+	} else {
+		$duplicate_fields = bp_get_option( 'bp_repair_duplicate_fields', array() );
+		$updated_fields   = bp_get_option( 'bp_repair_updated_fields', array() );
+	}
+
+	if ( ! empty( $added_fields ) ) {
+		foreach ( $added_fields as $field ) {
+			$clone_id   = (int) $field->id;
+			$main_field = bb_xprofile_top_most_template_field_id( (int) $clone_id );
+
+			$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$main_field} AND object_type = 'field'", ARRAY_A );
+			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
+				$field_member_types = array();
+				foreach ( $metas as $meta ) {
+					if ( $meta['meta_key'] === 'member_type' ) {
+						$field_member_types[] = $meta;
+						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
+					} else {
+						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					}
+				}
+				if ( ! empty( $field_member_types ) ) {
+					foreach ( $field_member_types as $meta ) {
+						bp_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					}
+				}
+			}
+
+			bp_xprofile_update_meta( $clone_id, 'field', '_cloned_from', $main_field );
+
+			$data = array(
+				'group_id'     => $field->group_id,
+				'main_field'   => $main_field,
+				'field_order'  => $field->field_order,
+				'clone_number' => $field->clone_number,
+			);
+
+			if ( ! empty( $updated_fields ) && array_search( $data, $updated_fields, true ) ) {
+				$duplicate_fields[] = $clone_id;
+			} else {
+				$updated_fields[ $clone_id ] = $data;
+			}
+
+			$offset ++;
+		}
+
+		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
+		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
+
+		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		if ( ! empty( $duplicate_fields ) ) {
+			foreach ( $duplicate_fields as $field_id ) {
+				xprofile_delete_field( $field_id );
+				bp_xprofile_delete_meta( $field_id, 'field' );
+			}
+		}
+
+		bp_delete_option( 'bp_repair_duplicate_fields' );
+		bp_delete_option( 'bp_repair_updated_fields' );
+
+		return array(
+			'status'  => 1,
+			'message' => __( 'Field update complete!', 'buddyboss' ),
+		);
+	}
 }

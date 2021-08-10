@@ -99,6 +99,15 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	if ( ! empty( $_POST['video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_video ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the video. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
 	if ( ! empty( $_POST['gif_data'] ) ) {
 		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
