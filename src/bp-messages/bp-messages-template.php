@@ -1752,9 +1752,7 @@ function bp_get_thread_recipients_count() {
 	 *
 	 * @param int $count Total recipients number.
 	 */
-	//return (int) apply_filters( 'bp_get_thread_recipients_count', count( $thread_template->thread->recipients ) );
-	//message_imp
-	return (int) apply_filters( 'bp_get_thread_recipients_count', $thread_template->thread->total_recipients_count );
+	return (int) apply_filters( 'bp_get_thread_recipients_count', count( $thread_template->thread->recipients ) );
 }
 
 /**
@@ -2243,4 +2241,26 @@ function bp_embed_message_cache( $cache, $id, $cachekey ) {
  */
 function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
 	bp_messages_update_meta( $id, $cachekey, $cache );
+}
+
+
+
+/**
+ * Get the total number of recipients in the current thread.
+ *
+ * @since x.x.x
+ *
+ * @return int
+ */
+function bp_get_thread_total_recipients_count() {
+	global $thread_template;
+	/**
+	 * Filters the total number of recipients in a thread.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param int $count Total recipients number.
+	 */
+	error_log( ' bp_get_thread_total_recipients_count ' . $thread_template->thread->total_recipients_count );
+	return (int) apply_filters( 'bp_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
 }

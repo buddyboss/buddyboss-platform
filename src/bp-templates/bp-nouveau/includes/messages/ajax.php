@@ -1809,8 +1809,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread = new stdClass();
 
 	$recipients = (array) $thread_template->thread->recipients;
-	//message_imp	
-	$recipents_count = bp_get_thread_recipients_count();
+	
+	// Get the total number of recipients in the current thread.	
+	$recipents_count = bp_get_thread_total_recipients_count();
 	// Strip the sender from the recipient list, and unset them if they are
 	// not alone. If they are alone, let them talk to themselves.
 	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {

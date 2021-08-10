@@ -275,7 +275,7 @@ class BP_Messages_Thread {
 
 			$results = self::get(
 				array(
-					'per_page'             => bp_messages_recepients_per_page(), //- 1,
+					'per_page'             => bp_messages_recepients_per_page(),
 					'include_threads'      => array( $thread_id ),
 					'include_current_user' => (int) $user_id,
 				)
@@ -1567,7 +1567,7 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		$defaults = array(
-			'orderby'              => 'user_id',//id
+			'orderby'              => 'id',
 			'order'                => 'DESC',
 			'per_page'             => 20,
 			'page'                 => 1,
@@ -1581,8 +1581,6 @@ class BP_Messages_Thread {
 			'fields'               => 'all',
 			'count_total'          => false,
 			'exclude_active_users' => false,
-			'include_current_user' => false,
-			'exclude_current_user' => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1637,10 +1635,6 @@ class BP_Messages_Thread {
 			$where_conditions['exclude_active_users'] = 'user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')';
 		}
 
-		if ( ! empty( $r['exclude_current_user'] ) ) {
-			$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_current_user'] ) .' )';
-		}
-
 		/* Order/orderby ********************************************/
 
 		$order   = $r['order'];
@@ -1690,7 +1684,6 @@ class BP_Messages_Thread {
 		 * @param string $sql From SQL statement.
 		 */
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
-
 		
 		if ( ! empty( $r['include_current_user'] ) ) {
 			// Need to include current user in query. Because if will not add then thread will not display in message.
@@ -1702,7 +1695,7 @@ class BP_Messages_Thread {
 			$sv_where = '';
 			if ( ! empty( $sv_products_request['where'] ) ) {
 				$sql['where'] = implode( ' AND ', $where_conditions );
-				$sv_where        = "WHERE {$sv_products_request['where']}";
+				$sv_where     = "WHERE {$sv_products_request['where']}";
 			}
 			// Union query
 			// One query - get recipients based on limited number
@@ -1833,7 +1826,7 @@ class BP_Messages_Thread {
 		}
 
 		$thread_id = (int) $thread_id;
-		$user_id =	bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+		$user_id   = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
 			$results = self::get(
 				array(
 					'per_page'             => - 1,
@@ -1841,6 +1834,7 @@ class BP_Messages_Thread {
 					'fields'               => 'ids',
 					'count_total'          => true,
 					'exclude_current_user' => array( 1, $user_id ),
+					'orderby'              => 'user_id'
 				)
 			);
 
