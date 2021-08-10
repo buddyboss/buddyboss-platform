@@ -23772,3 +23772,9 @@ span.icons:before {
   font-size: 24px;
   pointer-events: none;
 }
+
+.bb-report-type-pagination p.page-data {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+} 
