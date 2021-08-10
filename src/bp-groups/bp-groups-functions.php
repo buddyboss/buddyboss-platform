@@ -2663,9 +2663,10 @@ function groups_get_membership_requested_user_ids( $group_id = 0 ) {
 /**
  * Make all activity feed status to private to a group.
  *
- * @since BuddyPress 1.7.4
+ * @since BuddyPress 1.7.6
  *
  * @param int $group_id ID of the group.
+ *
  * @return bool True on success, false on failure.
  */
 function groups_make_all_activity_feed_status_private( $group_id = 0 ) {
@@ -2684,7 +2685,7 @@ function groups_make_all_activity_feed_status_private( $group_id = 0 ) {
 	/**
 	 * Fires after makeing all activity feed status to private to a group.
 	 *
-	 * @since BuddyPress 1.7.4
+	 * @since BuddyPress 1.7.6
 	 *
 	 * @param int $group_id ID of the group.
 	 */
