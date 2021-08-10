@@ -2349,7 +2349,7 @@ window.bp = window.bp || {};
 			);
 		},
 		reportedPopup: function () {
-			if ( typeof magnificPopup === 'function' && $( '.reported-content' ).length > 0 ) {
+			if ( $( '.reported-content' ).length > 0 ) {
 				$( '.reported-content' ).magnificPopup(
 					{
 						type: 'inline',
