@@ -2703,6 +2703,7 @@ window.bp = window.bp || {};
 			var postData = {
 				'page_no': currentPage,
 				'thread_id': threadId,
+				'action': bpAction
 			};
 			$.ajax({
 				type: 'POST',

@@ -1825,15 +1825,15 @@ class BP_Messages_Thread {
 			$thread_id = $this->thread_id;
 		}
 
-		$thread_id = (int) $thread_id;
-		$user_id   = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+		$thread_id        = (int) $thread_id;
+		$user_id          = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+		$adminstrator_ids = function_exists( 'bb_get_all_admin_user') ? bb_get_all_admin_user() : '';
 			$results = self::get(
 				array(
 					'per_page'             => - 1,
 					'include_threads'      => array( $thread_id ),
 					'fields'               => 'ids',
 					'count_total'          => true,
-					'exclude_current_user' => array( 1, $user_id ),
 					'orderby'              => 'user_id'
 				)
 			);

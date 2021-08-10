@@ -2263,3 +2263,24 @@ function bp_get_thread_total_recipients_count() {
 	 */
 	return (int) apply_filters( 'bp_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
 }
+
+/**
+ * Get all admin users.
+ * 
+ * @since x.x.x
+ * 
+ * @return array
+ */
+function bb_get_all_admin_user() {
+	$args = array(
+		'role'    => 'administrator',
+		'orderby' => 'user_nicename',
+		'order'   => 'ASC',
+		'fields'  => 'id',
+	);
+	$users = get_users( $args );
+	if ( ! empty( $users ) ) {
+		$users = array_map( 'intval',$users );
+	}
+	return $users;
+}

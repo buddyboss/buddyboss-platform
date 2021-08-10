@@ -673,26 +673,24 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 		wp_send_json_error( $response );
 	}
 
+	// Get all admin ids.
+	$adminstrator_ids = function_exists( 'bb_get_all_admin_user' ) ? bb_get_all_admin_user() : '';
+
 	$moderation_type = BP_Moderation_Members::$moderation_type;
-	$results         = BP_Messages_Thread::get(
-		array(
-			'per_page'             => bp_messages_recepients_per_page(),
-			'page'                 => (int) $post_data['page_no'],
-			'include_threads'      => array( $post_data['thread_id'] ),
-			'include_current_user' => $user_id,
-		)
+
+	$args = array(
+		'per_page'             => bp_messages_recepients_per_page(),
+		'page'                 => (int) $post_data['page_no'],
+		'include_threads'      => array( $post_data['thread_id'] ),
+		'include_current_user' => $user_id,
 	);
+	if ( isset( $post_data['action'] ) && 'bp_load_more' === $post_data['action'] ) {
+		$args['exclude_current_user'] = $adminstrator_ids;
+	}
+
+	$results = BP_Messages_Thread::get($args);
 	if ( is_array( $results['recipients'] ) ) {
 		$count          = 1;
-		$admins         = array_map(
-			'intval',
-			get_users(
-				array(
-					'role'   => 'administrator',
-					'fields' => 'ID',
-				)
-			)
-		);
 		$recipients_arr = array();
 		foreach ( $results['recipients'] as $recipient ) {
 			if ( (int) $recipient->user_id !== $user_id ) {
@@ -718,7 +716,7 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 					);
 					if ( bp_is_active( 'moderation' ) ) {
 						$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-						$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $adminstrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 					}
 					$count ++;
 				}
