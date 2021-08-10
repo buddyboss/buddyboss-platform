@@ -19,6 +19,7 @@ use BuddyBoss\Performance\Integration\BB_Messages;
 use BuddyBoss\Performance\Integration\BB_Notifications;
 use BuddyBoss\Performance\Integration\BB_Replies;
 use BuddyBoss\Performance\Integration\BB_Topics;
+use BuddyBoss\Performance\Integration\BB_Videos;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -85,6 +86,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				// Make Cache API Available.
 				require_once dirname( __FILE__ ) . '/class-cache.php';
 				require_once dirname( __FILE__ ) . '/integrations/class-integration-abstract.php';
+				require_once dirname( __FILE__ ) . '/class-option-clear-cache.php';
 				require_once dirname( __FILE__ ) . '/class-helper.php';
 				require_once dirname( __FILE__ ) . '/class-route-helper.php';
 				require_once dirname( __FILE__ ) . '/class-pre-user-provider.php';
@@ -92,6 +94,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 				Route_Helper::instance();
 				Helper::instance();
+				OptionClearCache::instance();
 				Pre_User_Provider::instance();
 				Settings::instance();
 
@@ -155,6 +158,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					if ( self::mu_is_component_active( 'document' ) && file_exists( $documents_integration ) ) {
 						require_once $documents_integration;
 						BB_Documents::instance();
+					}
+
+					$videos_integration = dirname( __FILE__ ) . '/integrations/class-bb-videos.php';
+					if ( self::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
+						require_once $videos_integration;
+						BB_Videos::instance();
 					}
 				}
 
@@ -232,16 +241,19 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$charset_collate = $wpdb->get_charset_collate();
 
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			if ( ! function_exists( 'dbDelta' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
 
 			$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
-	            id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	            id bigint(20) NOT NULL AUTO_INCREMENT,
 	            user_id bigint(20) NOT NULL DEFAULT 0,
 	            blog_id bigint(20) NOT NULL DEFAULT 0,
 	            cache_name varchar(1000) NOT NULL,
 	            cache_group varchar(200) NOT NULL,
 	            cache_value mediumtext DEFAULT NULL,
 	            cache_expire datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+	            PRIMARY KEY  (id),
 	            KEY cache_name (cache_name),
 	            KEY cache_group (cache_group),
 	            KEY cache_expire (cache_expire)
@@ -326,22 +338,6 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' );
 				}
-
-				$purge_nonce = filter_input( INPUT_GET, 'download_mu_file', FILTER_SANITIZE_STRING );
-				if ( wp_verify_nonce( $purge_nonce, 'bp_performance_mu_download' ) && ! empty( $bp_mu_plugin_file_path ) ) {
-					if ( file_exists( $bp_mu_plugin_file_path ) ) {
-						header( 'Content-Type: application/force-download' );
-						header( 'Content-Disposition: attachment; filename="' . basename( $bp_mu_plugin_file_path ) . '"' );
-						header( 'Expires: 0' );
-						header( 'Cache-Control: must-revalidate' );
-						header( 'Pragma: public' );
-						header( 'Content-Length: ' . filesize( $bp_mu_plugin_file_path ) );
-						flush();
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo $wp_files_system->get_contents( $bp_mu_plugin_file_path );
-						die();
-					}
-				}
 			} elseif ( ! empty( $mu_plugins ) && array_key_exists( 'buddyboss-api-caching-mu.php', $mu_plugins ) && version_compare( $mu_plugins['buddyboss-api-caching-mu.php']['Version'], '1.0.1', '<' ) ) {
 
 				// Try to automatically install MU plugin.
@@ -349,6 +345,22 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php', true );
+				}
+			}
+
+			$purge_nonce = filter_input( INPUT_GET, 'download_mu_file', FILTER_SANITIZE_STRING );
+			if ( wp_verify_nonce( $purge_nonce, 'bp_performance_mu_download' ) && ! empty( $bp_mu_plugin_file_path ) ) {
+				if ( file_exists( $bp_mu_plugin_file_path ) ) {
+					header( 'Content-Type: application/force-download' );
+					header( 'Content-Disposition: attachment; filename="' . basename( $bp_mu_plugin_file_path ) . '"' );
+					header( 'Expires: 0' );
+					header( 'Cache-Control: must-revalidate' );
+					header( 'Pragma: public' );
+					header( 'Content-Length: ' . filesize( $bp_mu_plugin_file_path ) );
+					flush();
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $wp_files_system->get_contents( $bp_mu_plugin_file_path );
+					die();
 				}
 			}
 
