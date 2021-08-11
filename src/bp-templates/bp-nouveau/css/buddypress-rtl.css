@@ -2435,7 +2435,6 @@ input.search-query-input {
   position: absolute;
   left: 15px;
   top: 20px;
-  z-index: 11;
 }
 
 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action {
