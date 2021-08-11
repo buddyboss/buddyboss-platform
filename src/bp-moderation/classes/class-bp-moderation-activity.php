@@ -237,49 +237,61 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
 		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
-		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
-			if ( bp_is_active( 'media' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
-				$explode_medias = explode( ',', $media_ids );
-				if ( 1 === count( $explode_medias ) && ! empty( $explode_medias[0] ) ) {
-					$media_id = $explode_medias[0];
-				}
+		if ( ( ! empty( $media_ids ) || ! empty( $media_id ) ) && false === $updated ) {
+			if ( bp_is_active( 'media' ) && ! empty( $media_id ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			} elseif ( bp_is_active( 'media' ) && ! empty( $media_id ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
 				$sub_items['id']   = $media_id;
 				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+			} elseif ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
+				$explode_medias = explode( ',', $media_ids );
 				if ( 1 < count( $explode_medias ) ) {
 					$sub_items['id']   = $activity->id;
 					$sub_items['type'] = self::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
 				}
 			} else {
 				$sub_items['id']   = false;
 				$sub_items['type'] = false;
 			}
 		} elseif ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
-			if ( bp_is_active( 'document' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+			if ( bp_is_active( 'document' ) && ! empty( $document_id ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			} elseif ( bp_is_active( 'document' ) && ! empty( $document_id ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+				$sub_items['id']   = $media_id;
+				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+			} elseif ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
 				$explode_documents = explode( ',', $document_ids );
-				if ( 1 === count( $explode_documents ) && ! empty( $explode_documents[0] ) ) {
-					$document_id = $explode_documents[0];
-				}
-				$sub_items['id']   = $document_id;
-				$sub_items['type'] = BP_Moderation_Document::$moderation_type;
 				if ( 1 < count( $explode_documents ) ) {
 					$sub_items['id']   = $activity->id;
 					$sub_items['type'] = self::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
 				}
 			} else {
 				$sub_items['id']   = false;
 				$sub_items['type'] = false;
 			}
 		} elseif ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
-			if ( bp_is_active( 'video' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+			if ( bp_is_active( 'video' ) && ! empty( $video_id ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			} elseif ( bp_is_active( 'video' ) && ! empty( $video_id ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+				$sub_items['id']   = $media_id;
+				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+			} elseif ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
 				$explode_videos = explode( ',', $video_ids );
-				if ( 1 === count( $explode_videos ) && ! empty( $explode_videos[0] ) ) {
-					$video_id = $explode_videos[0];
-				}
-				$sub_items['id']   = $video_id;
-				$sub_items['type'] = BP_Moderation_Video::$moderation_type;
 				if ( 1 < count( $explode_videos ) ) {
 					$sub_items['id']   = $activity->id;
 					$sub_items['type'] = self::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
 				}
 			} else {
 				$sub_items['id']   = false;
