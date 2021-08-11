@@ -3395,7 +3395,6 @@ function bb_activity_update_data( $comment_id, $new_secondary_item_id, $main_roo
             $wpdb->query( $wpdb->prepare( 'UPDATE ' . $activity_table_name . ' SET mptt_right = %d WHERE id = %d', $new_mppt_right_for_parent_id, $main_root_id ) );
         }
     }
-    bb_migration_write_log( ' comment_id ' . $comment_id . ' !== ' . ' new_secondary_item_id ' . $new_secondary_item_id );
     if ( (int) $comment_id !== (int) $new_secondary_item_id ) {
         // Get mptt_right for secondary comment.
         $mptt_data_for_new_secondary_item_id = $wpdb->get_row( $wpdb->prepare( 'SELECT mptt_left, mptt_right FROM ' . $activity_table_name . ' WHERE id=%d', $new_secondary_item_id ) );
