@@ -381,7 +381,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = esc_html__( 'Report Photo', 'buddyboss' );
 			}
 			if ( ! empty( $media_ids ) ) {
-				$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Photo', 'buddyboss' );
+				}
 			}
 		}
 
@@ -390,7 +395,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = esc_html__( 'Report Document', 'buddyboss' );
 			}
 			if ( ! empty( $document_ids ) ) {
-				$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Document', 'buddyboss' );
+				}
 			}
 		}
 
@@ -399,7 +409,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = esc_html__( 'Report Video', 'buddyboss' );
 			}
 			if ( ! empty( $video_ids ) ) {
-				$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Video', 'buddyboss' );
+				}
 			}
 		}
 
@@ -455,7 +470,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$content_type = esc_html__( 'Photo', 'buddyboss' );
 			}
 			if ( ! empty( $media_ids ) ) {
-				$content_type = esc_html__( 'Post', 'buddyboss' );
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Photo', 'buddyboss' );
+				}
 			}
 		}
 
@@ -464,7 +484,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$content_type = esc_html__( 'Document', 'buddyboss' );
 			}
 			if ( ! empty( $document_ids ) ) {
-				$content_type = esc_html__( 'Post', 'buddyboss' );
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Document', 'buddyboss' );
+				}
 			}
 		}
 
@@ -473,7 +498,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$content_type = esc_html__( 'Video', 'buddyboss' );
 			}
 			if ( ! empty( $video_ids ) ) {
-				$content_type = esc_html__( 'Post', 'buddyboss' );
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Video', 'buddyboss' );
+				}
 			}
 		}
 
