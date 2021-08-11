@@ -485,6 +485,7 @@
 
 .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojionearea-category-block > .emojionearea-category {
 	padding: 0 6px !important;
+	overflow: hidden;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojionearea-category-block > .emojionearea-category:after, .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojionearea-category-block > .emojionearea-category:before {
