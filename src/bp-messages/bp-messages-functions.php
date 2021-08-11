@@ -143,6 +143,15 @@ function messages_new_message( $args = '' ) {
 			unset( $message->recipients[ $r['sender_id'] ] );
 		}
 
+		// Filter out the suspended recipients
+		if ( function_exists( 'bp_moderation_is_user_suspended' ) && count( $message->recipients ) > 0 ) {
+			foreach ( $message->recipients as $key => $recipient ) {
+				if( bp_moderation_is_user_suspended( $key ) ) {
+					unset( $message->recipients[ $key ] );
+				}
+			}
+		}
+		
 		// Set a default reply subject if none was sent.
 		if ( empty( $message->subject ) ) {
 			$re = __( 'Re', 'buddyboss' ) . ': ';
