@@ -67,7 +67,7 @@
 
 						<?php
 						$get_topic_id = bbp_get_topic_id();
-						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bbp_get_topic_tag_names( $get_topic_id ) : '';
+						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bbp_get_topic_tag_names( $get_topic_id ) : array();
 						?>
 
 						<p>
