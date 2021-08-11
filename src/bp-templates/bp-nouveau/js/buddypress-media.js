@@ -4388,6 +4388,9 @@ window.bp = window.bp || {};
 				current_popup.find( '#bb-media-privacy' ).show();
 				current_popup.find( '.bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, #bb-media-privacy' ).hide();
 			}
+			if( content_tab === 'bp-existing-media-content' ) {
+				current_popup.find( '.bb-field-uploader-actions' ).hide();
+			}
 			jQuery( window ).scroll();
 		},
 
