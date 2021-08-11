@@ -1589,16 +1589,6 @@ class BP_Messages_Thread {
 			'pagination' => '',
 		);
 
-		/**
-		 * Filters the Join SQL statement.
-		 *
-		 * @since BuddyBoss 1.7.6
-		 *
-		 * @param string $sql      From SQL statement.
-		 * @param string $uid_name User ID field name.
-		 */
-		$sql['from'] = apply_filters( 'bp_thread_recipients_query_join_sql', $sql['from'], 'r.user_id' );
-
 		$where_conditions = array();
 
 		if ( ! empty( $r['include'] ) ) {
@@ -1664,16 +1654,6 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && - 1 !== $r['per_page'] ) {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
-
-		/**
-		 * Filters the Where SQL statement.
-		 *
-		 * @since BuddyBoss 1.5.4
-		 *
-		 * @param array $r                Array of parsed arguments for the get method.
-		 * @param array $where_conditions Where conditions SQL statement.
-		 */
-		$where_conditions = apply_filters( 'bp_recipients_recipient_get_where_conditions', $where_conditions, $r );
 
 		$where = '';
 		if ( ! empty( $where_conditions ) ) {
