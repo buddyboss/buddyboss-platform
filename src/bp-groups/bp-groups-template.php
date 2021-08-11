@@ -2854,12 +2854,14 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 		}
 	}
 
-	if ( false === $user_id ) {
+	if ( ! current_user_can( 'manage_options' ) && false === $user_id ) {
 		$user_id = bp_loggedin_user_id();
 		if ( ! $user_id ) {
 			// If we can't resolve the user_id, don't proceed with a zero value.
 			return array();
 		}
+	} else {
+		$user_id = false;
 	}
 
 	// First, get a list of descendants (don't pass a user id--we want them all).
