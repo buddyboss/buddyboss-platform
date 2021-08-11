@@ -378,7 +378,15 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	 * from public and there are existing activity feed, change feed status private. ( hide_sitewide = 1 )
 	 */
 	if ( 'public' === $group->status && 'private' === $status ) {
-		groups_make_all_activity_feed_status_private( $group->id );
+		groups_change_all_activity_feed_status( $group->id, 1 );
+	}
+
+	/**
+	 * Before we potentially switch the group status, if it has been changed to public
+	 * from private and there are existing activity feed, change feed status public. ( hide_sitewide = 0 )
+	 */
+	if ( 'private' === $group->status && 'public' === $status ) {
+		groups_change_all_activity_feed_status( $group->id, 0 );
 	}
 
 	// Now update the status.
@@ -2661,15 +2669,16 @@ function groups_get_membership_requested_user_ids( $group_id = 0 ) {
 }
 
 /**
- * Make all activity feed status to private to a group.
+ * Change all activity feed status for a group.
  *
  * @since BuddyPress 1.7.6
  *
  * @param int $group_id ID of the group.
+ * @param int $status ( 1 = private, 0 = public )
  *
  * @return bool True on success, false on failure.
  */
-function groups_make_all_activity_feed_status_private( $group_id = 0 ) {
+function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
 	global $wpdb, $bp;
 
 	//bail if no group_id
@@ -2677,7 +2686,7 @@ function groups_make_all_activity_feed_status_private( $group_id = 0 ) {
 		return false;
 	}
 
-	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = 1 WHERE item_id = %d and component = 'groups'", $group_id );
+	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups'", $status, $group_id );
 	if ( false === $wpdb->query( $q ) ) {
 		return false;
 	}
@@ -2689,7 +2698,7 @@ function groups_make_all_activity_feed_status_private( $group_id = 0 ) {
 	 *
 	 * @param int $group_id ID of the group.
 	 */
-	do_action( 'groups_make_all_activity_feed_status_private', $group_id );
+	do_action( 'groups_change_all_activity_feed_status', $status, $group_id );
 
 	return true;
 }
