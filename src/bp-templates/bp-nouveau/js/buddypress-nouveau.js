@@ -717,7 +717,7 @@ window.bp = window.bp || {};
 			 * Pagination for message block list
 			 */
 			 $(document).on('click', '.page-data a.load_more_rl', this.messageBlockListPagination);
-			 $(document).on('click', '#view_more_members', this.messageBlockListPagination);
+			 $(document).on('click', '.view_more_members', this.messageBlockListPagination);
 		},
 
 		/**
@@ -2695,6 +2695,9 @@ window.bp = window.bp || {};
 		 */
 		messageBlockListPagination: function (e) {
 			e.preventDefault();
+			if ( $('#view_more_members').length ) {
+				$('#view_more_members').removeClass('view_more_members');
+			}
 			var $this = $(this);
 			var bpAction = $this.attr('data-action');
 			var threadId = parseInt($this.attr('data-thread-id'));
@@ -2767,6 +2770,9 @@ window.bp = window.bp || {};
 				},
 				complete: function () {
 					$('.load_more_rl').removeClass('loading');
+					if ( $('#view_more_members').length ) {
+						$('#view_more_members').addClass('view_more_members');
+					}
 				},
 			});
 			return false;
