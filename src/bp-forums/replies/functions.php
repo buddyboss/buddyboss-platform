@@ -741,18 +741,18 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// remove deleted terms
 	$existing_terms = bbp_get_topic_tag_names( $topic_id );
 
-	if ( !empty( $existing_terms ) ) {
-		$deleted_terms = [];
+	if ( ! empty( $existing_terms ) ) {
+		$deleted_terms  = array();
 		$existing_terms = explode( ',', $existing_terms );
 		$existing_terms = array_map( function ( $single ) {
 			return trim( $single );
 		}, $existing_terms );
 
-		if ( !empty( $terms ) ) {
-			$terms_array = explode( ',', $terms );
+		if ( ! empty( $terms ) ) {
+			$terms_array   = explode( ',', $terms );
 			$deleted_terms = array_diff( $existing_terms, $terms_array );
 		}
-		if ( !empty( $deleted_terms ) ) {
+		if ( ! empty( $deleted_terms ) ) {
 			wp_remove_object_terms( $topic_id, $deleted_terms, bbp_get_topic_tag_tax_id() );
 		}
 	}
