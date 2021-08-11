@@ -2991,7 +2991,6 @@ function bb_activity_media_document_migration_process() {
         }
     }
     $recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
-    bb_migration_write_log( ' count_recepient_qry - ' . $count_recepient_qry );
     $recipients_query = 'SELECT id FROM ' . $activity_table_name . ' WHERE ( item_id=0 AND secondary_item_id=0 )';
     if ( ! empty( $post_type_arr ) ) {
         foreach ( $post_type_arr as $get_post_type ) {
@@ -3002,7 +3001,6 @@ function bb_activity_media_document_migration_process() {
     if ( 1 < (int) $recipients_count_row_data->ids ) {
         $recipients_query .= ' LIMIT ' . $offset . ', 2';
     }
-    //bb_migration_write_log( 'recipients_query - ' . $recipients_query );
     $recipients = $wpdb->get_results( $recipients_query );
     if ( ! empty( $recipients ) ) {
         $records_updated = '';
