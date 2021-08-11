@@ -1789,13 +1789,13 @@ function bbp_reply_form_fields() {
 
 		if ( isset ( $_POST['topic_id'] ) && ! empty( $_POST['topic_id'] ) ) {
 			$topic_id = $_POST['topic_id'];
-		}else{
+		} else {
 			$topic_id = bbp_get_topic_id();
 		}
 
 		?>
 
-		<input type="hidden" name="bbp_topic_id"    id="bbp_topic_id"    value="<?php echo $topic_id; ?>" />
+		<input type="hidden" name="bbp_topic_id"    id="bbp_topic_id"    value="<?php echo esc_attr( $topic_id ); ?>" />
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-new-reply" />
 
