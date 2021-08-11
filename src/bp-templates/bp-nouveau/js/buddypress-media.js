@@ -6191,10 +6191,10 @@ window.bp = window.bp || {};
 			self.setCurrentMedia( id );
 			self.showMedia();
 			self.navigationCommands();
-            // If activity privacy is comment for media then it will call getMediasDescription
-            if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && self.current_media.privacy !== 'comment' ) {
-	            self.getActivity();
-            } else {
+			// If activity privacy is comment for media then it will call getMediasDescription
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && self.current_media.privacy !== 'comment' ) {
+				self.getActivity();
+			} else {
 				self.getMediasDescription();
 			}
 
@@ -6261,10 +6261,10 @@ window.bp = window.bp || {};
 			self.setCurrentDocument( id );
 			self.showDocument();
 			self.navigationDocumentCommands();
-            // If activity privacy is comment for doc then it will call getDocumentsDescription
-            if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && self.current_document.privacy !== 'comment' ) {
-	            self.getDocumentsActivity();
-            } else {
+			// If activity privacy is comment for doc then it will call getDocumentsDescription
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && self.current_document.privacy !== 'comment' ) {
+				self.getDocumentsActivity();
+			} else {
 				self.getDocumentsDescription();
 			}
 
