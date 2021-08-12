@@ -206,7 +206,7 @@ class BP_Messages_Thread {
 		$this->recipients = $this->get_recipients();
 
 		// Fetch the recipients count. //message_imp
-		$this->total_recipients_count = $this->get_recipients_count();
+		$this->total_recipients_count = $this->bb_get_recipients_count();
 
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
@@ -1819,7 +1819,7 @@ class BP_Messages_Thread {
 	 *
 	 * @return array
 	 */
-	public function get_recipients_count( $thread_id = 0 ) {
+	public function bb_get_recipients_count( $thread_id = 0 ) {
 		if ( empty( $thread_id ) ) {
 			$thread_id = $this->thread_id;
 		}
@@ -1837,6 +1837,6 @@ class BP_Messages_Thread {
 				)
 			);
 
-		return apply_filters( 'bp_messages_thread_get_recipients_count', $results['total'], $thread_id );
+		return apply_filters( 'bb_messages_thread_get_recipients_count', $results['total'], $thread_id );
 	}
 }
