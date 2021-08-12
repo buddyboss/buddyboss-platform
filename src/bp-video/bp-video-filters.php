@@ -1705,7 +1705,7 @@ function bb_video_update_video_symlink( $response, $post_data ) {
  *
  * @return bool|mixed
  *
- * @since BuddyBoss 1.7.5
+ * @since BuddyBoss 1.7.6
  */
 function bb_video_safari_popup_video_play( $is_ios ) {
 
