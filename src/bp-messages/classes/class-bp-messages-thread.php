@@ -266,7 +266,7 @@ class BP_Messages_Thread {
 		}
 
 		$thread_id  = (int) $thread_id;
-		$user_id    = bp_loggedin_user_id() ? bp_loggedin_user_id() : 0;
+		
 		$recipients = wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
 		if ( false === $recipients ) {
@@ -275,9 +275,8 @@ class BP_Messages_Thread {
 
 			$results = self::get(
 				array(
-					'per_page'             => bb_messages_recepients_per_page(),
+					'per_page'             => -1,
 					'include_threads'      => array( $thread_id ),
-					'include_current_user' => (int) $user_id,
 				)
 			);
 
@@ -1686,7 +1685,7 @@ class BP_Messages_Thread {
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
 		
         $paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
-
+		error_log( ' $paged_recipients_sql ' . $paged_recipients_sql );
 		/**
 		 * Filters the pagination SQL statement.
 		 *
@@ -1815,6 +1814,7 @@ class BP_Messages_Thread {
 					'include_threads' => array( $thread_id ),
 					'page'            => $page,
 					'count_total'     => true,
+					//'include'         => array( 61 ) ,
 				)
 			);
 
