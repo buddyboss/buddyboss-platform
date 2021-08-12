@@ -223,10 +223,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						// Remove hidden profile type users.
 						$remove_hidden_profile_type_users = array();
-						if ( bp_has_members( array( 'include' => $user_ids ) ) ) {
-							while ( bp_members() ) {
-								bp_the_member();
-								$remove_hidden_profile_type_users[] = bp_get_member_user_id();
+						if ( ! empty( $user_ids ) ) {
+							if ( bp_has_members( array( 'include' => $user_ids ) ) ) {
+								while ( bp_members() ) {
+									bp_the_member();
+									$remove_hidden_profile_type_users[] = bp_get_member_user_id();
+								}
 							}
 						}
 
