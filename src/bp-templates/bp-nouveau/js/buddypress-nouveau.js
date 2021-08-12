@@ -2698,6 +2698,9 @@ window.bp = window.bp || {};
 			if ( $('#view_more_members').length ) {
 				$('#view_more_members').removeClass('view_more_members');
 			}
+			if ( $('#load_more_rl').length ) {
+				$('#load_more_rl').removeClass('load_more_rl');
+			}
 			var $this = $(this);
 			var bpAction = $this.attr('data-action');
 			var threadId = parseInt($this.attr('data-thread-id'));
@@ -2716,7 +2719,7 @@ window.bp = window.bp || {};
 					'post_data': postData,
 				},
 				beforeSend: function () {
-					$('.load_more_rl').addClass('loading');
+					$('#load_more_rl').addClass('loading');
 				},
 				success: function (response) {
 					if (response.success && response.data && '' !== response.data.content) {
@@ -2756,7 +2759,7 @@ window.bp = window.bp || {};
 						});
 						if (totalPages === currentPage) {
 							if ('bp_load_more' === bpAction) {
-								$('.load_more_rl').hide();
+								$('#load_more_rl').hide();
 							}
 							if ('bp_view_more' === bpAction) {
 								$('#view_more_members').hide();
@@ -2769,7 +2772,10 @@ window.bp = window.bp || {};
 					}
 				},
 				complete: function () {
-					$('.load_more_rl').removeClass('loading');
+					$('#load_more_rl').removeClass('loading');
+					if ( $('#load_more_rl').length ) {
+						$('#load_more_rl').addClass('load_more_rl');
+					}
 					if ( $('#view_more_members').length ) {
 						$('#view_more_members').addClass('view_more_members');
 					}

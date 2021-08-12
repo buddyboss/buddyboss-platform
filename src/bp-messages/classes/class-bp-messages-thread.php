@@ -266,7 +266,7 @@ class BP_Messages_Thread {
 		}
 
 		$thread_id  = (int) $thread_id;
-		$user_id    = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+		$user_id    = bp_loggedin_user_id() ? bp_loggedin_user_id() : 0;
 		$recipients = wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
 		if ( false === $recipients ) {
@@ -1813,8 +1813,7 @@ class BP_Messages_Thread {
 	/**
 	 * Returns recipients count for a message thread. //message_imp
 	 *
-	 * @since BuddyPress 1.0.0
-	 * @since BuddyPress 2.3.0 Added $thread_id as a parameter.
+	 * @since BuddyBoss 1.7.6
 	 *
 	 * @param int $thread_id The thread ID.
 	 *
@@ -1826,7 +1825,7 @@ class BP_Messages_Thread {
 		}
 
 		$thread_id        = (int) $thread_id;
-		$user_id          = bp_loggedin_user_id() ? bp_loggedin_user_id() : '';
+		$user_id          = bp_loggedin_user_id() ? bp_loggedin_user_id() : 0;
 		$adminstrator_ids = function_exists( 'bb_get_all_admin_user') ? bb_get_all_admin_user() : '';
 			$results = self::get(
 				array(

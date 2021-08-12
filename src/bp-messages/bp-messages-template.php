@@ -2248,7 +2248,7 @@ function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
 /**
  * Get the total number of recipients in the current thread.
  *
- * @since x.x.x
+ * @since BuddyBoss 1.7.6
  *
  * @return int
  */
@@ -2262,25 +2262,4 @@ function bp_get_thread_total_recipients_count() {
 	 * @param int $count Total recipients number.
 	 */
 	return (int) apply_filters( 'bp_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
-}
-
-/**
- * Get all admin users.
- * 
- * @since x.x.x
- * 
- * @return array
- */
-function bb_get_all_admin_user() {
-	$args = array(
-		'role'    => 'administrator',
-		'orderby' => 'user_nicename',
-		'order'   => 'ASC',
-		'fields'  => 'id',
-	);
-	$users = get_users( $args );
-	if ( ! empty( $users ) ) {
-		$users = array_map( 'intval',$users );
-	}
-	return $users;
 }

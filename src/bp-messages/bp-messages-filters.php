@@ -714,9 +714,9 @@ function bp_messages_admin_repair_unread_messages_count() {
 }
 
 /**
- * Exclude current user and admin suer when we open blocked member list.
+ * Exclude current user and admin user when we open blocked member list.
  * 
- * @since x.x.x
+ * @since BuddyBoss 1.7.6
  */
 function bp_recipients_recipient_get_where_conditions_callback( $where_conditions, $r ) {
 	if ( ! empty( $r['exclude_current_user'] ) ) {
