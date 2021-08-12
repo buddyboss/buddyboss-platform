@@ -1759,9 +1759,6 @@ class BP_Messages_Thread {
 			case 'thread_id':
 				$order_by_term = 'r.thread_id';
 				break;
-			case 'user_id':
-				$order_by_term = 'r.user_id';
-				break;
 			case 'id':
 			default:
 				$order_by_term = 'r.id';
@@ -1787,36 +1784,6 @@ class BP_Messages_Thread {
 		$where_conditions['columns'] = $wpdb->prepare( 'm.id > %d', $last_deleted_id );
 
 		return $where_conditions;
-	}
-
-	/**
-	 * Returns recipients count for a message thread. //message_imp
-	 *
-	 * @since BuddyBoss 1.7.6
-	 *
-	 * @param int $thread_id The thread ID.
-	 *
-	 * @return array
-	 */
-	public function bb_get_recipients_count( $thread_id = 0 ) {
-		if ( empty( $thread_id ) ) {
-			$thread_id = $this->thread_id;
-		}
-
-		$thread_id        = (int) $thread_id;
-		$user_id          = bp_loggedin_user_id() ? bp_loggedin_user_id() : 0;
-		$adminstrator_ids = function_exists( 'bb_get_all_admin_user') ? bb_get_all_admin_user() : '';
-			$results = self::get(
-				array(
-					'per_page'             => - 1,
-					'include_threads'      => array( $thread_id ),
-					'fields'               => 'ids',
-					'count_total'          => true,
-					'orderby'              => 'user_id'
-				)
-			);
-
-		return apply_filters( 'bb_messages_thread_get_recipients_count', $results['total'], $thread_id );
 	}
 
 	/**
@@ -1873,7 +1840,7 @@ class BP_Messages_Thread {
 		/**
 		 * Filters the recipients of a message thread.
 		 *
-		 * @since BuddyPress 2.2.0
+		 * @since BuddyBoss 1.7.6
 		 *
 		 * @param array $recipients Array of recipient objects.
 		 * @param int   $thread_id  ID of the current thread.
