@@ -346,7 +346,6 @@ function bb_nouveau_next_recepient_list_for_blocks() {
 		'per_page'             => bb_messages_recepients_per_page(),
 		'page'                 => (int) $post_data['page_no'],
 		'include_threads'      => array( $post_data['thread_id'] ),
-		'include_current_user' => $user_id,
 	);
 	if ( isset( $post_data['action'] ) && 'bp_load_more' === $post_data['action'] ) {
 		$args['exclude_admin_user'] = $adminstrator_ids;
