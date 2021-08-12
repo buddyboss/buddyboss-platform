@@ -275,7 +275,7 @@ class BP_Messages_Thread {
 
 			$results = self::get(
 				array(
-					'per_page'             => bp_messages_recepients_per_page(),
+					'per_page'             => bb_messages_recepients_per_page(),
 					'include_threads'      => array( $thread_id ),
 					'include_current_user' => (int) $user_id,
 				)

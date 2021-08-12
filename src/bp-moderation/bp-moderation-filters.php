@@ -659,7 +659,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
 /**
  * Function which get next recepients list for block member in message section.
  */
-function bp_nouveau_next_recepient_list_for_blocks() {
+function bb_nouveau_next_recepient_list_for_blocks() {
 	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 
@@ -679,7 +679,7 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 	$moderation_type = BP_Moderation_Members::$moderation_type;
 
 	$args = array(
-		'per_page'             => bp_messages_recepients_per_page(),
+		'per_page'             => bb_messages_recepients_per_page(),
 		'page'                 => (int) $post_data['page_no'],
 		'include_threads'      => array( $post_data['thread_id'] ),
 		'include_current_user' => $user_id,
@@ -733,5 +733,5 @@ function bp_nouveau_next_recepient_list_for_blocks() {
 	wp_die();
 }
 
-add_action( 'wp_ajax_next_recepient_list_for_blocks', 'bp_nouveau_next_recepient_list_for_blocks' );
-add_action( 'wp_ajax_nopriv_next_recepient_list_for_blocks', 'bp_nouveau_next_recepient_list_for_blocks' );
+add_action( 'wp_ajax_next_recepient_list_for_blocks', 'bb_nouveau_next_recepient_list_for_blocks' );
+add_action( 'wp_ajax_nopriv_next_recepient_list_for_blocks', 'bb_nouveau_next_recepient_list_for_blocks' );

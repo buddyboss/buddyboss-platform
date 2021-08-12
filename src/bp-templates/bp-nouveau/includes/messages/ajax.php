@@ -1811,7 +1811,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$recipients = (array) $thread_template->thread->recipients;
 	
 	// Get the total number of recipients in the current thread.	
-	$recipents_count = bp_get_thread_total_recipients_count();
+	$recipents_count = bb_get_thread_total_recipients_count();
 	// Strip the sender from the recipient list, and unset them if they are
 	// not alone. If they are alone, let them talk to themselves.
 	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
@@ -2113,8 +2113,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$thread->thread['recipients']['count']         = $recipents_count;	
 	$thread->thread['recipients']['current_count'] = count( $thread->thread['recipients']['members'] );	
-	$thread->thread['recipients']['per_page']      = bp_messages_recepients_per_page();	
-	$thread->thread['recipients']['total_pages']   = ceil( (int) $recipents_count / (int) bp_messages_recepients_per_page() );
+	$thread->thread['recipients']['per_page']      = bb_messages_recepients_per_page();	
+	$thread->thread['recipients']['total_pages']   = ceil( (int) $recipents_count / (int) bb_messages_recepients_per_page() );
 
 	$thread->messages = array();
 	$i                = 0;

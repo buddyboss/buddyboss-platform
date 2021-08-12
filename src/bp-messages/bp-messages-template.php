@@ -2250,7 +2250,7 @@ function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
  *
  * @return int
  */
-function bp_get_thread_total_recipients_count() {
+function bb_get_thread_total_recipients_count() {
 	global $thread_template;
 	/**
 	 * Filters the total number of recipients in a thread.
@@ -2259,5 +2259,5 @@ function bp_get_thread_total_recipients_count() {
 	 *
 	 * @param int $count Total recipients number.
 	 */
-	return (int) apply_filters( 'bp_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
+	return (int) apply_filters( 'bb_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
 }

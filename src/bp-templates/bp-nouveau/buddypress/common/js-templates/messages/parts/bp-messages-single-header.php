@@ -34,7 +34,7 @@
 				data-thread-id="{{data.id}}"
 				data-tp="{{data.recipients.total_pages}}"
 				data-tc="{{data.recipients.count}}"
-				data-pp="<?php echo esc_attr( bp_messages_recepients_per_page() ); ?>"
+				data-pp="<?php echo esc_attr( bb_messages_recepients_per_page() ); ?>"
 				data-cp="2"
 				data-action="bp_view_more"><?php esc_html_e( 'View More Members', 'buddyboss' ); ?></a>
 			<# } #>
@@ -176,7 +176,7 @@
 											data-thread-id="{{data.id}}"
 										   data-tp="{{data.recipients.total_pages}}"
 										   data-tc="{{data.recipients.count}}"
-										   data-pp="<?php echo esc_attr( bp_messages_recepients_per_page() ); ?>"
+										   data-pp="<?php echo esc_attr( bb_messages_recepients_per_page() ); ?>"
 										   data-cp="2" data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 									</p>
 								</div>
