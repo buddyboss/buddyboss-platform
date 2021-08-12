@@ -2686,7 +2686,7 @@ function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
 		return false;
 	}
 
-	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups'", $status, $group_id );
+	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups' AND privacy = 'public' ", $status, $group_id );
 	if ( false === $wpdb->query( $q ) ) {
 		return false;
 	}
