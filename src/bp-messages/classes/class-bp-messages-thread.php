@@ -275,8 +275,8 @@ class BP_Messages_Thread {
 
 			$results = self::get(
 				array(
-					'per_page'             => -1,
-					'include_threads'      => array( $thread_id ),
+					'per_page'        => -1,
+					'include_threads' => array( $thread_id ),
 				)
 			);
 
