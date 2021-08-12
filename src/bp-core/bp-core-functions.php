@@ -6062,7 +6062,6 @@ function bb_moderation_bg_update_moderation_data() {
 	}
 }
 
-
 /**
  * Get all admin users.
  * 
@@ -6079,7 +6078,7 @@ function bb_get_all_admin_user() {
 	);
 	$users = get_users( $args );
 	if ( ! empty( $users ) ) {
-		$users = array_map( 'intval',$users );
+		$users = array_map( 'intval', $users );
 	}
 	return $users;
 }

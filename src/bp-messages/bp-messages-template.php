@@ -2243,8 +2243,6 @@ function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
 	bp_messages_update_meta( $id, $cachekey, $cache );
 }
 
-
-
 /**
  * Get the total number of recipients in the current thread.
  *

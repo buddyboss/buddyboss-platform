@@ -1165,5 +1165,5 @@ function bb_messages_is_group_thread( $thread_id ) {
  *
  */
 function bp_messages_recepients_per_page() {
-	return 5;
+	return apply_filters( 'bp_messages_recepients_per_page', 5 );
 }
