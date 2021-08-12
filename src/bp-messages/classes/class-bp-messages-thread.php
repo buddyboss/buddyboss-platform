@@ -205,8 +205,8 @@ class BP_Messages_Thread {
 		// Fetch the recipients.
 		$this->recipients = $this->get_recipients();
 
-		// Fetch the recipients count. //message_imp
-		$this->total_recipients_count = $this->bb_get_recipients_count();
+		// Fetch the recipients with pagination.
+		$this->pagination_recipients = $this->get_pagination_recipients();
 
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
@@ -1685,28 +1685,7 @@ class BP_Messages_Thread {
 		 */
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
 		
-		if ( ! empty( $r['include_current_user'] ) ) {
-			// Need to include current user in query. Because if will not add then thread will not display in message.
-			$sv_products_request = array(
-				'select'     => 'SELECT DISTINCT ru.id',
-				'from'       => "{$bp->messages->table_name_recipients} as ru",
-				'where'      => " ru.user_id = " . $r['include_current_user'] . " AND ru.thread_id = " . $include_threads,
-			);
-			$sv_where = '';
-			if ( ! empty( $sv_products_request['where'] ) ) {
-				$sql['where'] = implode( ' AND ', $where_conditions );
-				$sv_where     = "WHERE {$sv_products_request['where']}";
-			}
-			// Union query
-			// One query - get recipients based on limited number
-			// Second query - get current user recipients
-			$paged_recipients_sql = "( {$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']}
-			{$sql['pagination']} )
-		    UNION ( {$sv_products_request['select']} FROM {$sv_products_request['from']}
-		    {$sv_where} )";
-		} else {
-			$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
-		}
+        $paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
 		/**
 		 * Filters the pagination SQL statement.
@@ -1838,5 +1817,67 @@ class BP_Messages_Thread {
 			);
 
 		return apply_filters( 'bb_messages_thread_get_recipients_count', $results['total'], $thread_id );
+	}
+
+	/**
+	 * Returns recipients for a message thread with pagination.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 *
+	 * @param int $thread_id The thread ID.
+	 * @param int $page The page number.
+	 *
+	 * @return array
+	 */
+	public function get_pagination_recipients( $thread_id = 0, $page = 1 ) {
+		if ( empty( $thread_id ) ) {
+			$thread_id = $this->thread_id;
+		}
+
+		$thread_id  = (int) $thread_id;
+		$user_id    = bp_loggedin_user_id() ? bp_loggedin_user_id() : 0;
+		$recipients = wp_cache_get( 'thread_pagination_recipients' . $thread_id . '_' . $page, 'bp_messages' );
+
+		if ( false === $recipients ) {
+
+			$recipients = array();
+
+			$results = self::get(
+				array(
+					'per_page'        => bb_messages_recepients_per_page(),
+					'include_threads' => array( $thread_id ),
+					'page'            => $page,
+					'count_total'     => true,
+				)
+			);
+
+			if ( ! empty( $results['recipients'] ) ) {
+				foreach ( (array) $results['recipients'] as $recipient ) {
+					$recipients[ $recipient->user_id ] = $recipient;
+				}
+
+				wp_cache_set( 'thread_pagination_recipients' . $thread_id . '_' . $page, $recipients, 'bp_messages' );
+			}
+
+			if ( ! empty( $results['total'] ) ) {
+				// Fetch the recipients count.
+				$this->total_recipients_count = $results['total'];
+			}
+		}
+
+		// Cast all items from the messages DB table as integers.
+		foreach ( (array) $recipients as $key => $data ) {
+			$recipients[ $key ] = (object) array_map( 'intval', (array) $data );
+		}
+
+		/**
+		 * Filters the recipients of a message thread.
+		 *
+		 * @since BuddyPress 2.2.0
+		 *
+		 * @param array $recipients Array of recipient objects.
+		 * @param int   $thread_id  ID of the current thread.
+		 */
+		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $recipients, $thread_id );
 	}
 }

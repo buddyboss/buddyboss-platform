@@ -6069,7 +6069,7 @@ function bb_moderation_bg_update_moderation_data() {
  * 
  * @return array
  */
-function bb_get_all_admin_user() {
+function bb_get_all_admin_users() {
 	$args = array(
 		'role'    => 'administrator',
 		'orderby' => 'user_nicename',

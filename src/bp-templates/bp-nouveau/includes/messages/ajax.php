@@ -2068,7 +2068,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
 	);
 
-	if ( is_array( $thread_template->thread->recipients ) ) {
+	if ( is_array( $thread_template->thread->pagination_recipients ) ) {
 		$count  = 1;
 		$admins = array_map(
 			'intval',
@@ -2079,7 +2079,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				)
 			)
 		);
-		foreach ( $thread_template->thread->recipients as $recipient ) {
+		foreach ( $thread_template->thread->pagination_recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients']['members'][ $count ] = array(
 					'avatar'     => esc_url(
