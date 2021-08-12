@@ -265,8 +265,8 @@ class BP_Messages_Thread {
 			$thread_id = $this->thread_id;
 		}
 
-		$thread_id  = (int) $thread_id;
-		
+		$thread_id = (int) $thread_id;
+
 		$recipients = wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
 		if ( false === $recipients ) {
@@ -275,7 +275,7 @@ class BP_Messages_Thread {
 
 			$results = self::get(
 				array(
-					'per_page'        => -1,
+					'per_page'        => - 1,
 					'include_threads' => array( $thread_id ),
 				)
 			);
