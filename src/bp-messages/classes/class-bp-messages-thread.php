@@ -1684,8 +1684,8 @@ class BP_Messages_Thread {
 		 */
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
 		
-        $paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
-		error_log( ' $paged_recipients_sql ' . $paged_recipients_sql );
+		$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
+
 		/**
 		 * Filters the pagination SQL statement.
 		 *
@@ -1795,7 +1795,7 @@ class BP_Messages_Thread {
 	 *
 	 * @return array
 	 */
-	public function get_pagination_recipients( $thread_id = 0, $page = 1 ) {
+	public function get_pagination_recipients( $thread_id = 0, $page = 1, $args = array() ) {
 		if ( empty( $thread_id ) ) {
 			$thread_id = $this->thread_id;
 		}
@@ -1808,15 +1808,16 @@ class BP_Messages_Thread {
 
 			$recipients = array();
 
-			$results = self::get(
-				array(
-					'per_page'        => bb_messages_recepients_per_page(),
-					'include_threads' => array( $thread_id ),
-					'page'            => $page,
-					'count_total'     => true,
-					//'include'         => array( 61 ) ,
-				)
+			$default_args = array(
+				'per_page'        => bb_messages_recepients_per_page(),
+				'include_threads' => array( $thread_id ),
+				'page'            => $page,
+				'count_total'     => true,
 			);
+			if ( ! empty( $args ) ) {
+				$default_args = array_merge( $default_args, $args );
+			}
+			$results = self::get( $default_args );
 
 			if ( ! empty( $results['recipients'] ) ) {
 				foreach ( (array) $results['recipients'] as $recipient ) {

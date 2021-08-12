@@ -2724,12 +2724,7 @@ window.bp = window.bp || {};
 				success: function ( response ) {
 					if ( response.success && response.data && '' !== response.data.content ) {
 						var moderation_type = response.data.recipients.moderation_type;
-						if ( 'bp_view_more' === bpAction ) {
-							if ( currentPage == 2 ) {
-								var oldSpanTagTextNode = document.createTextNode(', ');
-								$( '.participants-name:last a' ).after(oldSpanTagTextNode);
-							}
-						}
+						var memberData = response.data.recipients.members;
 						$.each( response.data.recipients.members, function ( index, item ) {
 							if ( '' !== item ) {
 								if ( 'bp_load_more' === bpAction ) {
@@ -2750,9 +2745,14 @@ window.bp = window.bp || {};
 									$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 								}
 								if ( 'bp_view_more' === bpAction ) {
+									var oldSpanTagTextNode = document.createTextNode(', ');
 									var cloneParticipantsName = $( '.participants-name:last' ).clone();
 									cloneParticipantsName.find( 'a' ).attr( 'href', item.user_link );
 									cloneParticipantsName.find( 'a' ).html( item.user_name );
+									cloneParticipantsName.find( 'a' ).append( oldSpanTagTextNode );
+									if ( parseInt( index ) !== parseInt( Object.keys(memberData).length ) || cloneParticipantsName ) {
+										$( '.participants-name:last' ).find( 'a' ).append( oldSpanTagTextNode );
+									}
 									$( '.participants-name:last' ).after( cloneParticipantsName );
 								}
 							}
@@ -2763,7 +2763,7 @@ window.bp = window.bp || {};
 							}
 							if ( 'bp_view_more' === bpAction ) {
 								$( '#view_more_members' ).hide();
-								$( '.participants-name:last a' ).get( 0 ).nextSibling.remove();
+								$( '.participants-name:last a' ).get(0).nextSibling.remove();
 							}
 						} else {
 							currentPage++;

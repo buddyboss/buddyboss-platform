@@ -338,24 +338,22 @@ function bb_nouveau_next_recepient_list_for_blocks() {
 	}
 
 	// Get all admin ids.
-	$adminstrator_ids = function_exists( 'bb_get_all_admin_user' ) ? bb_get_all_admin_user() : '';
+	$adminstrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
 
 	$moderation_type = BP_Moderation_Members::$moderation_type;
 
-	$args = array(
-		'per_page'             => bb_messages_recepients_per_page(),
-		'page'                 => (int) $post_data['page_no'],
-		'include_threads'      => array( $post_data['thread_id'] ),
-	);
+	$args = array();
 	if ( isset( $post_data['action'] ) && 'bp_load_more' === $post_data['action'] ) {
 		$args['exclude_admin_user'] = $adminstrator_ids;
 	}
 
-	$results = BP_Messages_Thread::get($args);
-	if ( is_array( $results['recipients'] ) ) {
+	$thread  = new BP_Messages_Thread( $thread_id );
+	$results = $thread->get_pagination_recipients( $post_data['thread_id'], (int) $post_data['page_no'], $args );
+
+	if ( is_array( $results ) ) {
 		$count          = 1;
 		$recipients_arr = array();
-		foreach ( $results['recipients'] as $recipient ) {
+		foreach ( $results as $recipient ) {
 			if ( (int) $recipient->user_id !== $user_id ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$recipients_arr['members'][ $count ] = array(
