@@ -1196,21 +1196,27 @@ function bb_update_to_1_5_9() {
 
 	$groups = empty( $group_data['groups'] ) ? array() : $group_data['groups'];
 
-	foreach ( $groups as $group_id ) {
-		$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+	if ( ! empty( $groups ) ) {
+		foreach ( $groups as $group_id ) {
+			$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
 
-		// Group never contains multiple forums.
-		$forum_id         = current( $forum_ids );
-		$existence_groups = bbp_get_forum_group_ids( $forum_id );
-		$existence_groups = empty( $existence_groups ) ? array() : $existence_groups;
+			if ( empty( $forum_ids ) ) {
+				continue;
+			}
 
-		if ( in_array( $group_id, $existence_groups, true ) ) {
-			continue;
+			// Group never contains multiple forums.
+			$forum_id  = current( $forum_ids );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = empty( $group_ids ) ? array() : $group_ids;
+
+			if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+				continue;
+			}
+
+			$group_ids[] = $group_id;
+
+			bbp_update_forum_group_ids( $forum_id, $group_ids );
 		}
-
-		$group_ids = array_merge( $existence_groups, array( $group_id ) );
-
-		bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
 
