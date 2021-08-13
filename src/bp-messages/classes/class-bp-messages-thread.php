@@ -1811,10 +1811,8 @@ class BP_Messages_Thread {
 		$recipients = array();
 
 		if ( ! empty( $results['recipients'] ) ) {
-			$k = 1;
 			foreach ( (array) $results['recipients'] as $recipient ) {
-				$recipients[ $k ] = $recipient;
-				$k ++;
+				$recipients[ $recipient->user_id ] = (object) array_map( 'intval', (array) $recipient );
 			}
 		}
 
