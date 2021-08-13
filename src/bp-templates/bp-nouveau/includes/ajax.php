@@ -339,7 +339,6 @@ function bb_nouveau_next_recepient_list_for_blocks() {
 
 	// Get all admin ids.
 	$adminstrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-	$moderation_type  = BP_Moderation_Members::$moderation_type;
 
 	$args = array();
 	if ( isset( $post_data['action'] ) && 'bp_load_more' === $post_data['action'] ) {
@@ -383,7 +382,8 @@ function bb_nouveau_next_recepient_list_for_blocks() {
 			}
 		}
 	}
-	$recipients_arr['moderation_type'] = $moderation_type;
+
+	$recipients_arr['moderation_type'] = bp_is_active( 'moderation' ) ? BP_Moderation_Members::$moderation_type : '';
 	wp_send_json_success(
 		array(
 			'recipients' => $recipients_arr,

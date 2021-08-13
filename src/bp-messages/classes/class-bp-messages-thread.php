@@ -200,6 +200,7 @@ class BP_Messages_Thread {
 			$this->sender_ids[ $message->sender_id ] = $message->sender_id;
 		}
 
+		$args['per_page'] = bb_messages_recipients_per_page();
 		// Fetch the recipients.
 		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
 
