@@ -727,3 +727,15 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 	return $where_conditions;
 }
 
+/**
+ * Add nonce for the moderation when click on block member button.
+ * 
+ * @param $params Get params.
+ * 
+ * @return $params Return params.
+ */
+add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
+function bp_core_get_js_strings_callback(  $params ) {
+	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
+	return $params;
+}

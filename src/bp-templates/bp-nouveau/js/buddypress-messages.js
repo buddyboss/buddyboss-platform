@@ -388,7 +388,6 @@ window.bp = window.bp || {};
 		 */
 		messageBlockListPagination: function ( e ) {
 			e.preventDefault();
-
 			if ( $( '#view_more_members' ).length ) {
 				$( '#view_more_members' ).removeClass( 'view_more_members' );
 			}
@@ -435,11 +434,37 @@ window.bp = window.bp || {};
 											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
 											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
 											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.messages.nonces.send );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
 											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
 										}
 									}
 									$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
+									
+									// When click on block button then need to open popup
+									if ( $( '.report-content, .block-member' ).length > 0 ) {
+										$( '.report-content, .block-member' ).magnificPopup(
+											{
+												type: 'inline',
+												midClick: true,
+												callbacks: {
+													open: function () {
+														var contentId   = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-id' );
+														var contentType = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-type' );
+														var nonce       = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-nonce' );
+														var reportType  = cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'reported_type' );
+														if ( 'undefined' !== typeof reportType ) {
+															var mf_content = $( '#content-report' );
+															mf_content.find( '.bp-reported-type' ).text( reportType );
+														}
+														if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+															$( document ).find( '.bp-report-form-err' ).empty();
+															this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+														}
+													}
+												}
+											}
+										);
+									}
 								}
 								if ( 'bp_view_more' === bpAction ) {
 									var oldSpanTagTextNode = document.createTextNode( ', ' );
@@ -479,7 +504,13 @@ window.bp = window.bp || {};
 				},
 			} );
 			return false;
-		}
+		},
+		setFormValues: function ( data ) {
+			var mf_content = $( '.mfp-content' );
+			mf_content.find( '.bp-content-id' ).val( data.contentId );
+			mf_content.find( '.bp-content-type' ).val( data.contentType );
+			mf_content.find( '.bp-nonce' ).val( data.nonce );
+		},
 	};
 
 	bp.Models.Message = Backbone.Model.extend(
