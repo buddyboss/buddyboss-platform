@@ -221,21 +221,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							}
 						}
 
-						// Remove hidden profile type users.
-						$remove_hidden_profile_type_users = array();
+						// Added user when visibility matched.
 						if ( ! empty( $user_ids ) ) {
-							if ( bp_has_members( array( 'include' => $user_ids ) ) ) {
-								while ( bp_members() ) {
-									bp_the_member();
-									$remove_hidden_profile_type_users[] = bp_get_member_user_id();
+							$member_type__not_in = array();
+							// get all excluded member types.
+							$bp_member_type_ids = bp_get_removed_member_types();
+							if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+								foreach ( $bp_member_type_ids as $single ) {
+									$member_type__not_in[] = $single['name'];
 								}
 							}
-						}
 
-						// Added user when visbility matched.
-						if ( ! empty( $remove_hidden_profile_type_users ) ) {
-							$remove_hidden_profile_type_users = array_unique( $remove_hidden_profile_type_users );
-							$where_fields[]                   = "u.id IN ( " . implode( ',', $remove_hidden_profile_type_users ) . " )";
+							$user_ids       = array_unique( $user_ids );
+							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " ) AND " . $this->get_sql_clause_for_member_types( $member_type__not_in, 'NOT IN' );;
 						} else {
 							$where_fields[] = "u.id = 0";
 						}
@@ -397,6 +395,79 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				}
 				echo '</div><!-- .xprofile-fields -->';
 			}
+		}
+
+		/**
+		 * Get a SQL clause representing member_type include/exclusion.
+		 *
+		 * @since BuddyPress 1.7.6
+		 *
+		 * @param string|array $member_types Array or comma-separated list of profile types.
+		 * @param string       $operator     'IN' or 'NOT IN'.
+		 *
+		 * @return string
+		 */
+		protected function get_sql_clause_for_member_types( $member_types, $operator ) {
+			global $wpdb;
+
+			// Sanitize.
+			if ( 'NOT IN' !== $operator ) {
+				$operator = 'IN';
+			}
+
+			// Parse and sanitize types.
+			if ( ! is_array( $member_types ) ) {
+				$member_types = preg_split( '/[,\s+]/', $member_types );
+			}
+
+			$types = array();
+			foreach ( $member_types as $mt ) {
+				if ( bp_get_member_type_object( $mt ) ) {
+					$types[] = $mt;
+				}
+			}
+
+			$tax_query = new WP_Tax_Query(
+				array(
+					array(
+						'taxonomy' => bp_get_member_type_tax_name(),
+						'field'    => 'name',
+						'operator' => $operator,
+						'terms'    => $types,
+					),
+				)
+			);
+
+			// Switch to the root blog, where profile type taxonomies live.
+			$site_id  = bp_get_taxonomy_term_site_id( bp_get_member_type_tax_name() );
+			$switched = false;
+			if ( $site_id !== get_current_blog_id() ) {
+				switch_to_blog( $site_id );
+				$switched = true;
+			}
+
+			$sql_clauses = $tax_query->get_sql( 'u', 'ID' );
+
+			$clause = '';
+
+			// The no_results clauses are the same between IN and NOT IN.
+			if ( false !== strpos( $sql_clauses['where'], '0 = 1' ) ) {
+				$clause = '0 = 1';
+
+				// The tax_query clause generated for NOT IN can be used almost as-is. We just trim the leading 'AND'.
+			} elseif ( 'NOT IN' === $operator ) {
+				$clause = preg_replace( '/^\s*AND\s*/', '', $sql_clauses['where'] );
+
+				// IN clauses must be converted to a subquery.
+			} elseif ( preg_match( '/' . $wpdb->term_relationships . '\.term_taxonomy_id IN \([0-9, ]+\)/', $sql_clauses['where'], $matches ) ) {
+				$clause = "u.ID IN ( SELECT object_id FROM $wpdb->term_relationships WHERE {$matches[0]} )";
+			}
+
+			if ( $switched ) {
+				restore_current_blog();
+			}
+
+			return $clause;
 		}
 	}
 
