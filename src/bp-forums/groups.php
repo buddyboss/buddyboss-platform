@@ -151,6 +151,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			add_filter( 'bbp_get_forum_group_ids', array( $this, 'child_forum_group_id' ), 10, 2 );
+			
+			// Disabled drodown options for forum.
+			add_filter( 'bbp_walker_dropdown_option_attr', array( $this, 'disabled_forum_dropdown_options' ), 10, 4 );
 		}
 
 		/**
@@ -261,6 +264,41 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/** Edit ******************************************************************/
 
 		/**
+		 * Disabled dropdown options for forum.
+		 *
+		 * @since BuddyBoss x.x.x
+		 *
+		 * @param string $attr_output Default attributes.
+		 * @param object $object      Froum post data.
+		 * @param array  $args        Froum dropdown arguments.
+		 *
+		 * @uses bbp_get_forum_post_type() Forum post type.
+		 * @uses bbp_get_forum_group_ids() Get forum group id.
+		 *
+		 * @return string
+		 */
+		public function disabled_forum_dropdown_options( $attr_output, $object, $args ) {
+			if ( bbp_get_forum_post_type() !== $object->post_type || 'bbp_group_forum_id' !== $args['select_id'] ) {
+				return $attr_output;
+			}
+
+			if ( $args['selected'] === $object->ID ) {
+				return $attr_output;
+			}
+
+			if ( ! empty( $object->post_parent ) ) {
+				return ' disabled="disabled"';
+			}
+
+			$group_ids = bbp_get_forum_group_ids( $object->ID );
+
+			if ( ! empty( $group_ids ) ) {
+				return ' disabled="disabled"';
+			}
+
+			return $attr_output;
+		}
+		/**
 		 * Show forums and new forum form when editing a group
 		 *
 		 * @since bbPress (r3563)
@@ -300,63 +338,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
 					<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 					<?php
-						// Fiter forum query for set the selected forum (Group associate forum).
-						add_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
-
 						bbp_dropdown(
 							array(
-								'select_id'   => 'bbp_group_forum_id',
-								'show_none'   => __( '(No Forum)', 'buddyboss' ),
-								'selected'    => $forum_id,
-								'post_parent' => 0,
-								'meta_query'  => array(
-									array(
-										'relation' => 'OR',
-
-										// If the forum is not associate with any group.      	
-										array(
-											'key'     => '_bbp_group_ids',
-											'value'   => '',
-											'compare' => 'NOT EXISTS',
-										),
-
-										// If the forum metadata contain group with empty array.
-										array(
-											'key'     => '_bbp_group_ids',
-											'value'   => 'a:0:{}',
-											'compare' => '=',
-										),
-
-										// If the forum metadata contain group with empty value.
-										array(
-											'key'     => '_bbp_group_ids',
-											'value'   => '',
-											'compare' => '=',
-										),
-									),
-									array(
-										'relation' => 'OR',
-
-										// Exclude the forum if its type category.
-										array(
-											'key'     => '_bbp_forum_type',
-											'value'   => 'category',
-											'compare' => '!=',
-										),
-
-										// Include the forum if its category metadata not exists.
-										array(
-											'key'     => '_bbp_forum_type',
-											'value'   => '',
-											'compare' => 'NOT EXISTS',
-										),
-									),
-								),
+								'select_id' => 'bbp_group_forum_id',
+								'show_none' => __( '(No Forum)', 'buddyboss' ),
+								'selected'  => $forum_id,
 							)
 						);
-
-						// Remove forum query filters to prevent the conflict with others queries.
-						remove_filter( 'posts_where', array( $this, 'update_forum_dropdown_query' ), 10, 2 );
 					?>
 				</div>
 			<?php endif; ?>
@@ -376,39 +364,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			} else {
 				wp_nonce_field( 'groups_edit_save_' . $this->slug );
 			}
-		}
-
-		/**
-		 * Set the selected forum in the forum dropdown from the group edit screen.
-		 *
-		 * @since BuddyBoss x.x.x
-		 *
-		 * @param string $where        where condition forum post query.
-		 * @param object $query_object forum post query property.
-		 *
-		 * @return string
-		 */
-		public function update_forum_dropdown_query( $where, $query_object ) {
-			global $wpdb;
-
-			// Prevent update query when post type is not forum.
-			if ( bbp_get_forum_post_type() !== $query_object->query['post_type'] ) {
-				return $where;
-			}
-
-			$forum_ids = bbp_get_group_forum_ids( $this->group_id );
-			$forum_ids = array_filter( $forum_ids );
-
-			if ( empty( $forum_ids ) ) {
-				return $where;
-			}
-
-			$query_string = implode( ',', $forum_ids );
-
-			// Set the selected forum in the forum dropdown from the group edit screen.
-			$where .= " OR {$wpdb->postmeta}.post_id IN ($query_string)";
-
-			return $where;
 		}
 
 		/**
