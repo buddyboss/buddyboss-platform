@@ -151,9 +151,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			add_filter( 'bbp_get_forum_group_ids', array( $this, 'child_forum_group_id' ), 10, 2 );
-			
+
 			// Disabled drodown options for forum.
-			add_filter( 'bbp_walker_dropdown_option_attr', array( $this, 'disabled_forum_dropdown_options' ), 10, 4 );
+			add_filter( 'bb_walker_dropdown_option_attr', array( $this, 'disabled_forum_dropdown_options' ), 10, 4 );
 		}
 
 		/**
