@@ -384,8 +384,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			$group_forum_ids = bbp_get_group_forum_ids( $group_id );
 			$forum           = bbp_get_forum( $forum_id );
-			$forum_type      = get_post_meta( $forum_id, '_bbp_forum_type', true );
-			$forum_groups    = get_post_meta( $forum_id, '_bbp_group_ids', true );
+			$forum_type      = bbp_get_forum_type( $forum_id );
+			$forum_groups    = bbp_get_forum_group_ids( $forum_id );
 
 			// When the forum is already exist in the group.
 			if ( in_array( $forum_id, $group_forum_ids, true ) ) {
