@@ -394,13 +394,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Child forums are not allow to associate with any groups.
 			if ( ! empty( $forum->post_parent ) ) {
-				bp_core_add_message( __( 'Child forum are not allowed to associate with any groups', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'Child forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
 				return false;
 			}
 
 			// Category type forums are not allow to associate with any groups.
 			if ( 'category' === $forum_type ) {
-				bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
 				return false;
 			}
 
