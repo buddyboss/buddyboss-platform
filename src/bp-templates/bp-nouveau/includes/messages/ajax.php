@@ -98,6 +98,12 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'messages_recipient_list_for_blocks' => array(
+					'function' => 'bb_nouveau_ajax_recipient_list_for_blocks',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -2600,6 +2606,77 @@ function bp_nouveau_ajax_hide_thread() {
 		array(
 			'type'     => 'success',
 			'messages' => 'Thread removed successfully.',
+		)
+	);
+}
+
+/**
+ * Function which get next recipients list for block member in message section and message header.
+ */
+function bb_nouveau_ajax_recipient_list_for_blocks() {
+	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
+
+	if ( ! isset( $post_data['thread_id'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+
+	if ( ! isset( $post_data['page_no'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Invalid page number.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+
+	// Get all admin ids.
+	$adminstrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+
+	$args = array();
+	if ( isset( $post_data['action'] ) && 'bp_load_more' === $post_data['action'] ) {
+		$args['exclude_admin_user'] = $adminstrator_ids;
+	}
+	$args['page'] = (int) $post_data['page_no'];
+	$thread       = new BP_Messages_Thread();
+	$results      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+
+	if ( is_array( $results ) ) {
+		$count          = 1;
+		$recipients_arr = array();
+		foreach ( $results as $recipient ) {
+			if ( (int) $recipient->user_id !== $user_id ) {
+				if ( empty( $recipient->is_deleted ) ) {
+					$recipients_arr['members'][ $count ] = array(
+						'avatar'     => esc_url(
+							bp_core_fetch_avatar(
+								array(
+									'item_id' => $recipient->user_id,
+									'object'  => 'user',
+									'type'    => 'thumb',
+									'width'   => BP_AVATAR_THUMB_WIDTH,
+									'height'  => BP_AVATAR_THUMB_HEIGHT,
+									'html'    => false,
+								)
+							)
+						),
+						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
+						'id'         => $recipient->user_id,
+					);
+					if ( bp_is_active( 'moderation' ) ) {
+						$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+						$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $adminstrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					}
+					$count ++;
+				}
+			}
+		}
+	}
+	$recipients_arr['moderation_type'] = ( bp_is_active( 'moderation' ) ? BP_Moderation_Members::$moderation_type : '' );
+	wp_send_json_success(
+		array(
+			'recipients' => $recipients_arr,
+			'type'       => 'success',
 		)
 	);
 }

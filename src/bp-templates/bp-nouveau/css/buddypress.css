@@ -22806,7 +22806,6 @@ span.icons:before {
   display: flex;
 }
 
-.bb-report-type-pagination .page-data a#load_more_rl.loading:after,
 #group-messages-container div#group-messages-new-submit #send_group_message_button.loading:after {
   content: "\e838";
   font-family: "bb-icons";
@@ -23771,10 +23770,4 @@ span.icons:before {
 #content-report .bb-model-header .mfp-close .bb-icon {
   font-size: 24px;
   pointer-events: none;
-}
-
-.bb-report-type-pagination p.page-data {
-  display: block;
-  margin: 0 auto;
-  text-align: center;
 }
