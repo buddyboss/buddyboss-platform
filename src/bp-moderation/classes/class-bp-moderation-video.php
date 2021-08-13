@@ -209,8 +209,9 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 				$args['button_attr']['data-bp-content-id']   = $explode_videos[0];
 				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
 			}
+			$report_button = bp_moderation_get_report_button( $args, false );
 		}
 
-		return bp_moderation_get_report_button( $args, false );
+		return $report_button;
 	}
 }
