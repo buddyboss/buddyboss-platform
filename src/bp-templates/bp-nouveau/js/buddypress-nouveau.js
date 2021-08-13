@@ -2681,7 +2681,7 @@ window.bp = window.bp || {};
 				fileReader.readAsArrayBuffer( file );
 			}
 
-		},
+		}
 
 	};
 
