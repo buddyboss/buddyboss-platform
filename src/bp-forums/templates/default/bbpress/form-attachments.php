@@ -8,14 +8,6 @@
 
 $group_id = 0;
 $forum_id = 0;
-
-if ( isset ( $_POST['topic_id'] ) && ! empty( $_POST['topic_id'] ) ) {
-	$forum_id = bbp_get_topic_forum_id( $_POST['topic_id'] );
-}
-if ( isset ( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) {
-	$group_id = $_POST['group_id'];
-}
-
 if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	$group_id = bp_get_current_group_id();
 }
