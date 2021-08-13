@@ -161,7 +161,6 @@ class BP_Messages_Thread {
 			bp_displayed_user_id() ?
 				bp_displayed_user_id() :
 				bp_loggedin_user_id();
-
 		// Merge $args with our defaults.
 		$r = wp_parse_args(
 			$args,
@@ -172,7 +171,6 @@ class BP_Messages_Thread {
 				'before'            => null,
 			)
 		);
-
 		$this->messages_order   = $order;
 		$this->messages_perpage = $r['per_page'];
 		$this->messages_before  = $r['before'];
@@ -206,7 +204,7 @@ class BP_Messages_Thread {
 		$this->recipients = $this->get_recipients();
 
 		// Fetch the recipients with pagination.
-		$this->pagination_recipients = $this->get_pagination_recipients();
+		$this->pagination_recipients = $this->get_pagination_recipients( $this->thread_id, $args );
 
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
@@ -1795,13 +1793,16 @@ class BP_Messages_Thread {
 	 *
 	 * @return array
 	 */
-	public function get_pagination_recipients( $thread_id = 0, $page = 1, $args = array() ) {
+	public function get_pagination_recipients( $thread_id = 0, $args = array() ) {
 		if ( empty( $thread_id ) ) {
 			$thread_id = $this->thread_id;
 		}
 
 		$thread_id  = (int) $thread_id;
-		$user_id    = bp_loggedin_user_id() ? bp_loggedin_user_id() : 0;
+		$page = 1;
+		if ( ! empty( $args ) && isset( $args['page'] ) ) {
+			$page = $args['page'];
+		}
 		$recipients = wp_cache_get( 'thread_pagination_recipients' . $thread_id . '_' . $page, 'bp_messages' );
 
 		if ( false === $recipients ) {
@@ -1811,7 +1812,6 @@ class BP_Messages_Thread {
 			$default_args = array(
 				'per_page'        => bb_messages_recepients_per_page(),
 				'include_threads' => array( $thread_id ),
-				'page'            => $page,
 				'count_total'     => true,
 			);
 			if ( ! empty( $args ) ) {
@@ -1820,24 +1820,28 @@ class BP_Messages_Thread {
 			$results = self::get( $default_args );
 
 			if ( ! empty( $results['recipients'] ) ) {
+				$recipients['total'] = $results['total'];
 				foreach ( (array) $results['recipients'] as $recipient ) {
-					$recipients[ $recipient->user_id ] = $recipient;
+					$recipients['recipients'][ $recipient->user_id ] = $recipient;
 				}
 
 				wp_cache_set( 'thread_pagination_recipients' . $thread_id . '_' . $page, $recipients, 'bp_messages' );
 			}
-
-			if ( ! empty( $results['total'] ) ) {
-				// Fetch the recipients count.
-				$this->total_recipients_count = $results['total'];
+		}
+		
+		if ( isset( $recipients['total'] ) ) {
+			// Fetch the recipients count.
+			$this->total_recipients_count = $recipients['total'];
+		}
+		
+		// Cast all items from the messages DB table as integers.
+		$new_recipients = array();
+		if ( isset( $recipients['recipients'] ) ) {
+			foreach ( (array) $recipients['recipients'] as $key => $data ) {
+				$new_recipients[ $key ] = (object) array_map( 'intval', (array) $data );
 			}
 		}
-
-		// Cast all items from the messages DB table as integers.
-		foreach ( (array) $recipients as $key => $data ) {
-			$recipients[ $key ] = (object) array_map( 'intval', (array) $data );
-		}
-
+		
 		/**
 		 * Filters the recipients of a message thread.
 		 *
@@ -1846,6 +1850,6 @@ class BP_Messages_Thread {
 		 * @param array $recipients Array of recipient objects.
 		 * @param int   $thread_id  ID of the current thread.
 		 */
-		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $recipients, $thread_id );
+		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $new_recipients, $thread_id );
 	}
 }

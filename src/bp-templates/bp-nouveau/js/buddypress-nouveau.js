@@ -2736,11 +2736,13 @@ window.bp = window.bp || {};
 									if ( true === item.is_blocked ) {
 										cloneUserItemWrap.find( '.user-actions .blocked-member' ).html( 'Blocked' );
 									} else {
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', 'wp_create_noncebp-moderation-content' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
+										if( false !== item.can_be_blocked ) {
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.messages.nonces.send );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
+										}
 									}
 									$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 								}

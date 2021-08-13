@@ -143,10 +143,7 @@
 								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 							</header>
 							<div class="bb-report-type-wrp">
-								<# _.reject(other_recipients, function(item) {
-	                            if( false == item.can_be_blocked ) {
-	                                return false;
-	                            } #>
+								<# _.reject(other_recipients, function(item) { #>
 								<div class="user-item-wrp" id="user-{{item.id}}">
 									<div class="user-avatar">
 										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
@@ -159,11 +156,15 @@
 	                                        <a id="reported-user" class="blocked-member button small disabled">
 	                                            <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
 	                                        </a>
-	                                    <# } else{ #>
-	                                        <a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
-	                                            <?php esc_html_e( 'Block', 'buddyboss' ); ?>
-	                                        </a>
-	                                    <# } #>
+	                                    <# } else {
+											if( false !== item.can_be_blocked ) {
+												#>
+												<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+													<?php esc_html_e( 'Block', 'buddyboss' ); ?>
+												</a>
+											<# }
+											}
+										#>
 									</div>
 								</div>
 								<# }); #>
