@@ -2768,14 +2768,16 @@ function bb_forum_visibility_dropdown_disabled( $forum_id ) {
 	// Get all parent ids.
 	$parents = $forum->ancestors;
 
-	// Set parameter id forum.
+	// Set parameter forum_id in the first of the parents array.
 	array_unshift( $parents, $forum_id );
 	
-	foreach ( $parents as $parent ) {
-		$group_ids = bbp_get_forum_group_ids( $parent );
-
-		if ( ! empty( $group_ids ) ) {
-			return true;
+	if ( ! empty( $parents ) ) {
+		foreach ( $parents as $parent ) {
+			$group_ids = bbp_get_forum_group_ids( $parent );
+	
+			if ( ! empty( $group_ids ) ) {
+				return true;
+			}
 		}
 	}
 

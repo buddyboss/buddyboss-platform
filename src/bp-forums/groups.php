@@ -1626,28 +1626,30 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Get all parent ids.
 			$parents = $forum->ancestors;
 
-			// Set parameter id forum.
+			// Set parameter forum_id in the first of the parents array.
 			array_unshift( $parents, $forum->ID );
 
-			// Searching gorup id child to parent.
-			foreach ( $parents as $parent ) {
-				$forum_group_ids = array();
+			if ( ! empty( $parents ) ) {
+				// Searching gorup id child to parent.
+				foreach ( $parents as $parent ) {
+					$forum_group_ids = array();
 
-				// Get the forums.
-				if ( ! empty( $parent ) ) {
-					$forum_group_ids = get_post_meta( $parent, '_bbp_group_ids', true );
-				}
+					// Get the forums.
+					if ( ! empty( $parent ) ) {
+						$forum_group_ids = get_post_meta( $parent, '_bbp_group_ids', true );
+					}
 
-				// Make sure result is an array.
-				if ( ! is_array( $forum_group_ids ) ) {
-					$forum_group_ids = (array) $forum_group_ids;
-				}
+					// Make sure result is an array.
+					if ( ! is_array( $forum_group_ids ) ) {
+						$forum_group_ids = (array) $forum_group_ids;
+					}
 
-				// Trim out any empty array items.
-				$forum_group_ids = array_filter( $forum_group_ids );
+					// Trim out any empty array items.
+					$forum_group_ids = array_filter( $forum_group_ids );
 
-				if ( ! empty( $forum_group_ids ) ) {
-					return $forum_group_ids;
+					if ( ! empty( $forum_group_ids ) ) {
+						return $forum_group_ids;
+					}
 				}
 			}
 
