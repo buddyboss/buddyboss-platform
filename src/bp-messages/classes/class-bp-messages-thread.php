@@ -201,10 +201,7 @@ class BP_Messages_Thread {
 		}
 
 		// Fetch the recipients.
-		$this->recipients = $this->get_recipients();
-
-		// Fetch the recipients with pagination.
-		$this->pagination_recipients = $this->get_pagination_recipients( $this->thread_id, $args );
+		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
 
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
@@ -1801,7 +1798,7 @@ class BP_Messages_Thread {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'per_page'        => bb_messages_recepients_per_page(),
+				'per_page'        => bb_messages_recipients_per_page(),
 				'include_threads' => array( (int) $thread_id ),
 				'count_total'     => true,
 			)

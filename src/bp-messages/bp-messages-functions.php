@@ -1161,9 +1161,9 @@ function bb_messages_is_group_thread( $thread_id ) {
  * Recipients per page list.
  *
  * @return int $per_page Return per page for recipients.
- * 
+ *
  * @since BuddyBoss 1.7.6
  */
-function bb_messages_recepients_per_page() {
-	return apply_filters( 'bb_messages_recepients_per_page', 5 );
+function bb_messages_recipients_per_page() {
+	return apply_filters( 'bb_messages_recipients_per_page', 5 );
 }
