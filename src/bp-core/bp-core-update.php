@@ -1202,8 +1202,13 @@ function bb_update_to_1_5_9() {
 		// Group never contains multiple forums.
 		$forum_id         = current( $forum_ids );
 		$existence_groups = bbp_get_forum_group_ids( $forum_id );
-		$group_ids        = array_merge( $existence_groups, array( $group_id ) );
-		$group_ids        = array_unique( $group_ids );
+
+		if ( in_array( $forum_id, (array) $existence_groups, true ) ) {
+			continue;
+		}
+
+		$group_ids = array_merge( $existence_groups, array( $group_id ) );
+		$group_ids = array_unique( $group_ids );
 
 		bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
