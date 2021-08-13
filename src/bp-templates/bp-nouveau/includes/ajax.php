@@ -319,4 +319,3 @@ function bp_nouveau_ajax_save_cover_position() {
 
 	wp_send_json_success( $result );
 }
-
