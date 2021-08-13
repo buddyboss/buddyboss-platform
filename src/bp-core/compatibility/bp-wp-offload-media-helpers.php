@@ -28,11 +28,6 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function __construct() {
 
-		add_filter( 'bb_media_do_symlink', '__return_false' );
-		add_filter( 'bb_document_do_symlink', '__return_false' );
-		add_filter( 'bb_video_do_symlink', '__return_false' );
-		add_filter( 'bb_video_create_thumb_symlinks', '__return_false' );
-
 		$this->compatibility_init();
 	}
 
@@ -60,11 +55,51 @@ class BB_AS3CF_Plugin_Compatibility {
 
 		add_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
 
+		add_filter( 'bb_media_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
+		add_filter( 'bb_document_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
+		add_filter( 'bb_video_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
+		add_filter( 'bb_video_create_thumb_symlinks', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
+
 		add_filter( 'bp_document_get_preview_url', array( $this, 'bp_document_offload_get_preview_url' ), PHP_INT_MAX, 6 );
 		add_filter( 'bp_media_get_preview_image_url', array( $this, 'bp_media_offload_get_preview_url' ), PHP_INT_MAX, 5 );
 		add_filter( 'bb_video_get_thumb_url', array( $this, 'bp_video_offload_get_thumb_preview_url' ), PHP_INT_MAX, 5 );
 		add_filter( 'bb_video_get_symlink', array( $this, 'bp_video_offload_get_video_url' ), PHP_INT_MAX, 4 );
 
+	}
+
+	/**
+	 * Function to set the false to use the default media symlink instead use the offload media URL of media.
+	 *
+	 * @param bool   $can           default true.
+	 * @param int    $id            media/document/video id.
+	 * @param int    $attachment_id attachment id.
+	 * @param string $size          preview size.
+	 *
+	 * @return bool true if the offload media used.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 */
+	public function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
+
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$server_from_local          = (bool) $remove_local_files_setting['serve-from-s3'];
+
+		if ( ! $server_from_local ) {
+			return true;
+		}
+
+		$wp_upload_directory = wp_get_upload_dir();
+		$attachment_url      = wp_get_attachment_url( $attachment_id );
+		$upload_base_url     = $wp_upload_directory['baseurl'];
+
+		// If the URL from the local then use the symlink/rewrite_url based on settings.
+		if ( strpos( $attachment_url, $upload_base_url ) !== false ) {
+			$can = true;
+		} else {
+			$can = false;
+		}
+
+		return $can;
 	}
 
 	/**
