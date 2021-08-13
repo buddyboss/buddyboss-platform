@@ -1788,8 +1788,8 @@ class BP_Messages_Thread {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 *
-	 * @param int $thread_id The thread ID.
-	 * @param int $page The page number.
+	 * @param int   $thread_id The thread ID.
+	 * @param array $args      Array of parsed arguments for the get method.
 	 *
 	 * @return array
 	 */
@@ -1798,50 +1798,31 @@ class BP_Messages_Thread {
 			$thread_id = $this->thread_id;
 		}
 
-		$thread_id  = (int) $thread_id;
-		$page = 1;
-		if ( ! empty( $args ) && isset( $args['page'] ) ) {
-			$page = $args['page'];
-		}
-		$recipients = wp_cache_get( 'thread_pagination_recipients' . $thread_id . '_' . $page, 'bp_messages' );
-
-		if ( false === $recipients ) {
-
-			$recipients = array();
-
-			$default_args = array(
+		$r = bp_parse_args(
+			$args,
+			array(
 				'per_page'        => bb_messages_recepients_per_page(),
-				'include_threads' => array( $thread_id ),
+				'include_threads' => array( (int) $thread_id ),
 				'count_total'     => true,
-			);
-			if ( ! empty( $args ) ) {
-				$default_args = array_merge( $default_args, $args );
-			}
-			$results = self::get( $default_args );
+			)
+		);
 
-			if ( ! empty( $results['recipients'] ) ) {
-				$recipients['total'] = $results['total'];
-				foreach ( (array) $results['recipients'] as $recipient ) {
-					$recipients['recipients'][ $recipient->user_id ] = $recipient;
-				}
+		$results    = self::get( $r );
+		$recipients = array();
 
-				wp_cache_set( 'thread_pagination_recipients' . $thread_id . '_' . $page, $recipients, 'bp_messages' );
+		if ( ! empty( $results['recipients'] ) ) {
+			$k = 1;
+			foreach ( (array) $results['recipients'] as $recipient ) {
+				$recipients[ $k ] = $recipient;
+				$k ++;
 			}
 		}
-		
-		if ( isset( $recipients['total'] ) ) {
+
+		if ( isset( $results['total'] ) ) {
 			// Fetch the recipients count.
-			$this->total_recipients_count = $recipients['total'];
+			$this->total_recipients_count = $results['total'];
 		}
-		
-		// Cast all items from the messages DB table as integers.
-		$new_recipients = array();
-		if ( isset( $recipients['recipients'] ) ) {
-			foreach ( (array) $recipients['recipients'] as $key => $data ) {
-				$new_recipients[ $key ] = (object) array_map( 'intval', (array) $data );
-			}
-		}
-		
+
 		/**
 		 * Filters the recipients of a message thread.
 		 *
@@ -1850,6 +1831,6 @@ class BP_Messages_Thread {
 		 * @param array $recipients Array of recipient objects.
 		 * @param int   $thread_id  ID of the current thread.
 		 */
-		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $new_recipients, $thread_id );
+		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $recipients, $thread_id );
 	}
 }
