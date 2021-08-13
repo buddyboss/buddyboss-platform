@@ -1203,7 +1203,7 @@ function bb_update_to_1_5_9() {
 		$forum_id         = current( $forum_ids );
 		$existence_groups = bbp_get_forum_group_ids( $forum_id );
 
-		if ( in_array( $forum_id, (array) $existence_groups, true ) ) {
+		if ( in_array( $group_id, (array) $existence_groups, true ) ) {
 			continue;
 		}
 
