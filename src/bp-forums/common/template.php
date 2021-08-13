@@ -1492,7 +1492,6 @@ function bbp_get_dropdown( $args = '' ) {
 			'show_none_default_val' => '',
 			'disable_categories'    => true,
 			'disabled'              => '',
-			'meta_query'            => array(),
 		),
 		'get_dropdown'
 	);
@@ -1526,7 +1525,6 @@ function bbp_get_dropdown( $args = '' ) {
 			'order'                  => $r['order'],
 			'walker'                 => $r['walker'],
 			'disable_categories'     => $r['disable_categories'],
-			'meta_query'             => $r['meta_query'],
 			'suppress_filters'       => false,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
