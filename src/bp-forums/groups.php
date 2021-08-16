@@ -1625,6 +1625,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Get all parent ids.
 			$parents = $forum->ancestors;
+			$parents = empty( $parents ) ? array() : $parents;
 
 			// Set parameter forum_id in the first of the parents array.
 			array_unshift( $parents, $forum->ID );
