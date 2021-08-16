@@ -264,7 +264,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Disabled dropdown options for forum.
 		 *
-		 * @since BuddyBoss x.x.x
+		 * @since BuddyBoss 1.7.6
 		 *
 		 * @param string $attr_output Default attributes.
 		 * @param object $object      Froum post data.
@@ -369,7 +369,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * - Exclude if the forum type is category.
 		 * - Exclude if the forum is child forum.
 		 *
-		 * @since BuddyBoss x.x.x
+		 * @since BuddyBoss 1.7.6
 		 *
 		 * @param array $forum_ids Fourm id.
 		 * @param int   $group_id  Group id.
@@ -1495,7 +1495,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Ensure that forum content associated with a BuddyBoss group can only be viewed via the group URL.
 		 *
-		 * @since BuddyBoss x.x.x
+		 * @since BuddyBoss 1.7.6
 		 *
 		 * @return void
 		 */
@@ -1572,7 +1572,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Get forum page uri from action variables.
 		 *
-		 * @since BuddyBoss x.x.x
+		 * @since BuddyBoss 1.7.6
 		 *
 		 * @uses bp_action_variables() URL query params.
 		 *

@@ -1200,7 +1200,7 @@ function bb_update_to_1_5_6() {
  * - Migrate group id to associate forum.
  * - Update forum meta _bbp_group_ids, associated with group id.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss 1.7.6
  *
  * @return void
  */
