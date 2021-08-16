@@ -8263,6 +8263,26 @@ body .bp-messages-user-threads {
   }
 }
 
+.bb-report-type-pagination .page-data {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bb-report-type-pagination .page-data #load_more_rl.loading:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+  vertical-align: middle;
+}
+
 /**
 *------------------------------------------
 * @subsection 5.2.2.6 - Settings
