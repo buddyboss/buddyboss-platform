@@ -149,12 +149,12 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		$count++;
 		bp_set_profile_field_set_count( $field_group->id, $user_id, $count );
 
-		$clone_fields = bp_get_repeater_clone_field_ids_subset( $field_group->id, $user_id );
+		$clone_fields = bp_get_repeater_clone_field_ids_subset( $field_group->id, $count );
 		if ( empty( $clone_fields ) ) {
 			$group_fields = bp_get_repeater_template_field_ids( $field_group->id );
 			if ( ! empty( $group_fields ) ) {
 				foreach ( $group_fields as $field_id ) {
-					bp_clone_field_for_repeater_sets( $field_id );
+					bp_clone_field_for_repeater_sets( $field_id, $field_group->id );
 				}
 			}
 		}

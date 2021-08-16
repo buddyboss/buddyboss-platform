@@ -1880,7 +1880,7 @@ window.bp = window.bp || {};
 					this.views.add( this.messagesDocument );
 				}
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video || BP_Nouveau.video.group_video ) ) {
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video_active ) ) {
 					this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
 					this.views.add( this.messagesVideo );
 				}

@@ -2349,21 +2349,23 @@ window.bp = window.bp || {};
 			);
 		},
 		reportedPopup: function () {
-			$( '.reported-content' ).magnificPopup(
-				{
-					type: 'inline',
-					midClick: true,
-					callbacks: {
-						open: function () {
-							var contentType = this.currItem.el.attr( 'reported_type' );
-							if ( 'undefined' !== typeof contentType ) {
-								var mf_content = $( '#reported-content' );
-								mf_content.find( '.bp-reported-type' ).text( contentType );
+			if ( $( '.reported-content' ).length > 0 ) {
+				$( '.reported-content' ).magnificPopup(
+					{
+						type: 'inline',
+						midClick: true,
+						callbacks: {
+							open: function () {
+								var contentType = this.currItem.el.attr( 'reported_type' );
+								if ( 'undefined' !== typeof contentType ) {
+									var mf_content = $( '#reported-content' );
+									mf_content.find( '.bp-reported-type' ).text( contentType );
+								}
 							}
 						}
 					}
-				}
-			);
+				);
+			}
 		},
 		handleReportError: function ( errors, target ) {
 			var message = '';
