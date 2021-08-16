@@ -5256,7 +5256,7 @@ MediumEditor.extensions = {};
         return event &&
             event.clipboardData &&
             event.clipboardData.items &&
-            $.inArray( 'Files', event.clipboardData.types )>-1;
+            event.clipboardData.types.includes( 'Files' );
     }
 
     var PasteHandler = MediumEditor.Extension.extend({

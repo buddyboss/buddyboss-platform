@@ -652,7 +652,7 @@ class BP_Document {
 				$document->group_id      = (int) $document->group_id;
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
-				$document->extension     = bp_document_extension( $document->attachment_id ); // Get document extension.
+				$document->extension     = ( $thumb_gen ? bp_document_extension( $document->attachment_id ) : false ); // Get document extension.
 			}
 
 			$group_name = '';
@@ -695,7 +695,7 @@ class BP_Document {
 			$attachment_data->activity_thumb     = $activity_thumb_image;
 			$attachment_data->activity_thumb_pdf = $activity_thumb_pdf;
 			$attachment_data->video_symlink      = $video_symlink;
-			$attachment_data->meta               = self::attachment_meta( $document->attachment_id );
+			$attachment_data->meta               = ( $thumb_gen ? self::attachment_meta( $document->attachment_id ) : '' );
 			$document->attachment_data           = $attachment_data;
 			$document->group_name                = $group_name;
 			$document->visibility                = $visibility;
