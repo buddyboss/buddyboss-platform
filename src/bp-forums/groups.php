@@ -366,15 +366,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 		/**
 		 * Exclude the forum if its associated with other groups.
-		 * - Exclude if the forum type is category.
-		 * - Exclude if the forum is child forum.
+		 * Exclude if the forum type is category.
+		 * Exclude if the forum is child forum.
 		 *
 		 * @since BuddyBoss 1.7.6
 		 *
-		 * @param array $forum_ids Fourm id.
+		 * @param array $forum_id  Fourm id.
 		 * @param int   $group_id  Group id.
 		 *
-		 * @uses bbp_get_forum() To get the forum.
+		 * @uses bbp_get_forum() Get forum.
 		 *
 		 * @return bool
 		 */
@@ -402,7 +402,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return false;
 			}
 
-			// Do not allow same Forum to be associated with more than 1 Group.
+			// Do not allow the same Forum to be associated with more than one Group.
 			if ( ! empty( $forum_groups ) && ! in_array( $group_id, $forum_groups, true ) ) {
 				bp_core_add_message( __( 'This forum is already associated with other groups.', 'buddyboss' ), 'error' );
 				return false;
@@ -476,7 +476,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// No support for multiple forums yet
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
 
-				// Is the forum associated with others group then exclude it.
 				$valid_forum = $this->forum_can_associate_wth_group( $forum_id, $group_id );
 				$forum_id    = $valid_forum ? $forum_id : 0;
 				$forum_ids   = $valid_forum ? $forum_ids : array();
@@ -863,7 +862,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id        = $this->forum_id;
 			$default_actions = array( 'page', $this->topic_slug, $this->reply_slug );
 
-			// Unknown forum action set as false.
 			if ( ! in_array( $forum_action, $default_actions, true ) ) {
 				$forum_action = false;
 			}
