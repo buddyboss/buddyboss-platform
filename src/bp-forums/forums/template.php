@@ -2721,7 +2721,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
 	
 	// Get forum visibility update status.
-	$disabled = bb_forum_visibility_dropdown_disabled( $r['forum_id'] );
+	$disabled = bb_get_child_forum_group_ids( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
@@ -2745,44 +2745,48 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 }
 
 /**
- * Checking whether you can update or not forum visibility.
- * - When Forum associated with Group then Forum and all level child Forums "Visibility" Field should be disabled.
+ * Nested forum are not associate with group.
+ * - This method help you to find the nested forum group id.
  *
  * @since BuddyBoss x.x.x
  *
- * @param int $forum_id The forum id to use
+ * @param int $forum_id Forum id.
  *
- * @uses  bbp_get_forum() To get the forum.
- * @uses  bbp_get_forum_group_ids() To get the forum group ids.
+ * @uses bbp_get_forum() To get forum.
  *
- * @return boolean
+ * @return array
  */
-function bb_forum_visibility_dropdown_disabled( $forum_id ) {
-	global $wpdb;
-
+function bb_get_child_forum_group_ids( $forum_id ) {
 	if ( empty( $forum_id ) ) {
-		return false;
-	} 
+		return array();
+	}
 
-	$forum   = bbp_get_forum( $forum_id );
+	$forum = bbp_get_forum( $forum_id );
+
+	if ( empty( $forum ) ) {
+		return array();
+	}
+
 	// Get all parent ids.
 	$parents = $forum->ancestors;
 	$parents = empty( $parents ) ? array() : $parents;
 
 	// Set parameter forum_id in the first of the parents array.
-	array_unshift( $parents, $forum_id );
-	
+	array_unshift( $parents, $forum->ID );
+
 	if ( ! empty( $parents ) ) {
+		// Searching gorup id child to parent.
 		foreach ( $parents as $parent ) {
+			// Trim out any empty array items.
 			$group_ids = bbp_get_forum_group_ids( $parent );
-	
+
 			if ( ! empty( $group_ids ) ) {
-				return true;
+				return $group_ids;
 			}
 		}
 	}
 
-	return false;
+	return array();
 }
 
 /** Feeds *********************************************************************/
