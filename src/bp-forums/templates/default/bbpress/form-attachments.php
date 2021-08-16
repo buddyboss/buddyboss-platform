@@ -6,8 +6,10 @@
  * @package BuddyBoss\Theme
  */
 
-$group_id = 0;
-$forum_id = 0;
+$group_id = apply_filters( 'bb_forum_attachment_group_id', 0 );
+$forum_id = apply_filters( 'bb_forum_attachment_forum_id', 0 );
+$topic_id = apply_filters( 'bb_forum_attachment_topic_id', 0 );
+
 if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	$group_id = bp_get_current_group_id();
 }
