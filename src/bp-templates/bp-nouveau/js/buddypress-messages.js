@@ -172,6 +172,11 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.closeModalErrorPopup', this.closeModalPopup.bind( this ) );
+			/**
+			 * Pagination for message block list
+			 */
+			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
+			$( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
 
 		},
 
@@ -375,7 +380,137 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'single', view: single_thread } );
 
 			single_thread.inject( '.bp-messages-content' );
-		}
+		},
+
+		/**
+		 * Pagination for message block list
+		 * @returns {boolean}
+		 */
+		messageBlockListPagination: function ( e ) {
+			e.preventDefault();
+			if ( $( '#view_more_members' ).length ) {
+				$( '#view_more_members' ).removeClass( 'view_more_members' );
+			}
+			if ( $( '#load_more_rl' ).length ) {
+				$( '#load_more_rl' ).removeClass( 'load_more_rl' );
+			}
+			var $this = $( this );
+			var bpAction = $this.attr( 'data-action' );
+			var threadId = parseInt( $this.attr( 'data-thread-id' ) );
+			var currentPage = parseInt( $this.attr( 'data-cp' ) );
+			var totalPages = parseInt( $this.attr( 'data-tp' ) );
+			var postData = {
+				'page_no': currentPage,
+				'thread_id': threadId,
+				'action': bpAction
+			};
+
+			$.ajax( {
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: {
+					action: 'messages_recipient_list_for_blocks',
+					post_data: postData,
+				},
+				beforeSend: function () {
+					$( '#load_more_rl' ).addClass( 'loading' );
+				},
+				success: function ( response ) {
+					if ( response.success && response.data && '' !== response.data.content ) {
+						var moderation_type = response.data.recipients.moderation_type;
+						var memberData = response.data.recipients.members;
+						$.each( response.data.recipients.members, function ( index, item ) {
+							if ( '' !== item ) {
+								if ( 'bp_load_more' === bpAction ) {
+									var cloneUserItemWrap = $( '.user-item-wrp:last' ).clone();
+									cloneUserItemWrap.attr( 'id', 'user-' + item.id );
+									cloneUserItemWrap.find( '.user-avatar img' ).attr( 'src', item.avatar );
+									cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
+									cloneUserItemWrap.find( '.user-name' ).html( item.user_name );
+									if ( true === item.is_blocked ) {
+										cloneUserItemWrap.find( '.user-actions .blocked-member' ).html( 'Blocked' );
+									} else {
+										if ( false !== item.can_be_blocked ) {
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
+										}
+									}
+									$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
+									
+									// When click on block button then need to open popup
+									if ( $( '.report-content, .block-member' ).length > 0 ) {
+										$( '.report-content, .block-member' ).magnificPopup(
+											{
+												type: 'inline',
+												midClick: true,
+												callbacks: {
+													open: function () {
+														var contentId   = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-id' );
+														var contentType = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-type' );
+														var nonce       = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-nonce' );
+														var reportType  = cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'reported_type' );
+														if ( 'undefined' !== typeof reportType ) {
+															var mf_content = $( '#content-report' );
+															mf_content.find( '.bp-reported-type' ).text( reportType );
+														}
+														if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+															$( document ).find( '.bp-report-form-err' ).empty();
+															this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+														}
+													}
+												}
+											}
+										);
+									}
+								}
+								if ( 'bp_view_more' === bpAction ) {
+									var oldSpanTagTextNode = document.createTextNode( ', ' );
+									var cloneParticipantsName = $( '.participants-name:last' ).clone();
+									cloneParticipantsName.find( 'a' ).attr( 'href', item.user_link );
+									cloneParticipantsName.find( 'a' ).html( item.user_name );
+									cloneParticipantsName.find( 'a' ).append( oldSpanTagTextNode );
+									if ( parseInt( index ) !== parseInt( Object.keys( memberData ).length ) || cloneParticipantsName ) {
+										$( '.participants-name:last' ).find( 'a' ).append( oldSpanTagTextNode );
+									}
+									$( '.participants-name:last' ).after( cloneParticipantsName );
+								}
+							}
+						} );
+						if ( totalPages === currentPage ) {
+							if ( 'bp_load_more' === bpAction ) {
+								$( '#load_more_rl' ).hide();
+							}
+							if ( 'bp_view_more' === bpAction ) {
+								$( '#view_more_members' ).hide();
+								$( '.participants-name:last a' ).get( 0 ).nextSibling.remove();
+							}
+						} else {
+							currentPage++;
+							$this.attr( 'data-cp', currentPage );
+						}
+					}
+				},
+				complete: function () {
+					$( '#load_more_rl' ).removeClass( 'loading' );
+					if ( $( '#load_more_rl' ).length ) {
+						$( '#load_more_rl' ).addClass( 'load_more_rl' );
+					}
+					if ( $( '#view_more_members' ).length ) {
+						$( '#view_more_members' ).addClass( 'view_more_members' );
+					}
+				},
+			} );
+			return false;
+		},
+		setFormValues: function ( data ) {
+			var mf_content = $( '.mfp-content' );
+			mf_content.find( '.bp-content-id' ).val( data.contentId );
+			mf_content.find( '.bp-content-type' ).val( data.contentType );
+			mf_content.find( '.bp-nonce' ).val( data.nonce );
+		},
 	};
 
 	bp.Models.Message = Backbone.Model.extend(
