@@ -2745,14 +2745,13 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 }
 
 /**
- * Nested forum are not associate with group.
- * - This method help you to find the nested forum group id.
+ * Get group ID's for a child forum.
  *
  * @since BuddyBoss 1.7.6
  *
  * @param int $forum_id Forum id.
  *
- * @uses bbp_get_forum() To get forum.
+ * @uses bbp_get_forum() Get forum.
  *
  * @return array
  */
