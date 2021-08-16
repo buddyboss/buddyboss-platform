@@ -1195,7 +1195,7 @@ function bb_update_to_1_5_6() {
 }
 
 /**
- * x.x.x update routine.
+ * 1.7.6 update routine.
  *
  * - Migrate group id to associate forum.
  * - Update forum meta _bbp_group_ids, associated with group id.
