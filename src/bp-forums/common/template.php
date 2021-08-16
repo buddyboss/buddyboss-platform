@@ -1593,7 +1593,7 @@ function bbp_get_dropdown( $args = '' ) {
 	// Items found so walk the tree
 	if ( ! empty( $posts ) ) {
 		add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
-		unset( $r['walker'] );
+		//unset( $r['walker'] );
 		$retval .= walk_page_dropdown_tree( $posts, 0, $r );
 		remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
 	}
