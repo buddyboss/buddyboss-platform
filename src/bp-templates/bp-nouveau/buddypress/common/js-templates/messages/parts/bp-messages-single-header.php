@@ -152,19 +152,15 @@
 										{{item.user_name}}
 									</div>
 									<div class="user-actions">
-	                                    <# if ( true === item.is_blocked ) { #>
-	                                        <a id="reported-user" class="blocked-member button small disabled">
-	                                            <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
-	                                        </a>
-	                                    <# } else {
-											if( false !== item.can_be_blocked ) {
-												#>
-												<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
-													<?php esc_html_e( 'Block', 'buddyboss' ); ?>
-												</a>
-											<# }
-											}
-										#>
+                                        <# if ( true === item.is_blocked ) { #>
+                                            <a id="reported-user" class="blocked-member button small disabled">
+                                                <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
+                                            </a>
+                                        <# } elseif ( false !== item.can_be_blocked ) { #>
+                                            <a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+                                                <?php esc_html_e( 'Block', 'buddyboss' ); ?>
+                                            </a>
+                                        <# } #>
 									</div>
 								</div>
 								<# }); #>
@@ -174,7 +170,7 @@
 									<p class="page-data" data-thread-id="{{data.id}}">
 										<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
 										   class="load_more_rl button small"
-											data-thread-id="{{data.id}}"
+										   data-thread-id="{{data.id}}"
 										   data-tp="{{data.recipients.total_pages}}"
 										   data-tc="{{data.recipients.count}}"
 										   data-pp="{{data.recipients.per_page}}"
