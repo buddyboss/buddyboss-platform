@@ -252,7 +252,7 @@ if ( class_exists( 'Walker' ) ) :
 
 			/**
 			 * Add extra attributes for dropdown options.
-			 * - Default value empty.
+			 * Default value empty.
 			 *
 			 * @since BuddyBoss 1.7.6
 			 *
