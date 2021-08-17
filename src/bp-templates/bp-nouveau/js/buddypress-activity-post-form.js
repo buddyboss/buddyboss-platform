@@ -2752,6 +2752,15 @@ window.bp = window.bp || {};
 					this.$gifPickerEl.removeClass( 'open' );
 				}
 
+				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
+
+					if( $targetEl.parent('#activity-gif-button').length == 0 && ! $targetEl.parent('.gif-search-query').length && ! $targetEl.parent('.gif-media-search-dropdown').length && ! $targetEl.parent('.gif-media-search').length && ! $targetEl.parent('.gif-search-content').length ) {
+						if ( $( '#activity-gif-button' ).hasClass( 'open' ) ) {
+							$( '#activity-gif-button' ).removeClass( 'open' );
+						}
+					}
+				}
+
 			},
 
 			activeButton: function ( event ) {
