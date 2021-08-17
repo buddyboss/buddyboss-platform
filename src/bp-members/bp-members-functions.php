@@ -3346,6 +3346,11 @@ function bp_member_type_by_type( $type_id ) {
  * @return array Member types
  */
 function bp_get_active_member_types( $args = array() ) {
+
+	if ( ! bp_member_type_enable_disable() ) {
+	    return array();
+	}
+
 	$bp_active_member_types = array();
 
 	$args = bp_parse_args( $args, array(

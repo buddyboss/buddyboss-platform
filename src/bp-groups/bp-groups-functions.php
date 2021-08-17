@@ -3561,6 +3561,11 @@ function bp_group_get_group_type_key( $post_id ) {
  * @return array Group types
  */
 function bp_get_active_group_types( $args = array() ) {
+
+	if ( ! bp_disable_group_type_creation() ) {
+		return array();
+	}
+
 	$bp_active_group_types = array();
 
 	$args = bp_parse_args( $args, array(
