@@ -1580,7 +1580,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @since BuddyBoss 1.7.6
 		 *
-		 * @uses bp_action_variables() URL query params.
+		 * @uses bp_action_variables() URL query parameter.
 		 *
 		 * @return string
 		 */
@@ -1591,8 +1591,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return '';
 			}
 
-			$uri  = implode( '/', $actions );
-			$page = empty( get_query_var( 'paged' ) ) ? '' : '/page/' . get_query_var( 'paged' );
+			$uri        = implode( '/', $actions );
+			$query_page = get_query_var( 'paged' );
+			$page       = empty( $query_page ) ? '' : '/page/' . $query_page;
 
 			if ( ! empty( $page ) ) {
 				$uri = str_replace( $page, '', $uri );
