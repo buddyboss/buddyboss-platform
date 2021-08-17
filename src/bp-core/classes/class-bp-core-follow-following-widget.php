@@ -94,7 +94,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 
-		// show the users the logged-in user is following
+		// show the users the logged-in user is following.
 		if ( bp_has_members(
 			array(
 				'include'         => $following,
