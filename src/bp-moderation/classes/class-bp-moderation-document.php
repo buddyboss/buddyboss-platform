@@ -194,6 +194,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Function to update activity report button arguments.
 	 *
+	 * @since BuddyBoss 1.7.6
+	 *
 	 * @param array $report_button Activity report button
 	 * @param array $args          Arguments
 	 *
@@ -210,8 +212,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 				$args['button_attr']['data-bp-content-id']   = $document_id;
 				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
 			}
-			if ( 1 === count( $explode_documents ) && ! empty( $explode_documents[0] ) ) {
-				$args['button_attr']['data-bp-content-id']   = $explode_documents[0];
+			if ( 1 === count( $explode_documents ) && ! empty( current( $explode_documents ) ) ) {
+				$args['button_attr']['data-bp-content-id']   = current( $explode_documents );
 				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
 			}
 			$report_button = bp_moderation_get_report_button( $args, false );

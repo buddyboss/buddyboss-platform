@@ -224,9 +224,8 @@ abstract class BP_Moderation_Abstract {
 	protected function exclude_where_query() {
 		$where = '';
 
-		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL )
-	    AND
-	    ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
+		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
+		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
 
 		$blocked_query = $this->blocked_user_query();
 		if ( ! empty( $blocked_query ) ) {

@@ -245,8 +245,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 			} elseif ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
 				$explode_medias = explode( ',', $media_ids );
-				if ( 1 === count( $explode_medias ) && ! empty( $explode_medias[0] ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
-					$sub_items['id']   = $explode_medias[0];
+				if ( 1 === count( $explode_medias ) && ! empty( current( $explode_medias ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+					$sub_items['id']   = current( $explode_medias );
 					$sub_items['type'] = BP_Moderation_Media::$moderation_type;
 				} elseif ( 1 < count( $explode_medias ) ) {
 					$sub_items['id']   = $activity->id;
@@ -267,8 +267,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 			} elseif ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
 				$explode_documents = explode( ',', $document_ids );
-				if ( 1 === count( $explode_documents ) && ! empty( $explode_documents[0] ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
-					$sub_items['id']   = $explode_documents[0];
+				if ( 1 === count( $explode_documents ) && ! empty( current( $explode_documents ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+					$sub_items['id']   = current( $explode_documents );
 					$sub_items['type'] = BP_Moderation_Document::$moderation_type;
 				} elseif ( 1 < count( $explode_documents ) ) {
 					$sub_items['id']   = $activity->id;
@@ -289,8 +289,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 			} elseif ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
 				$explode_videos = explode( ',', $video_ids );
-				if ( 1 === count( $explode_videos ) && ! empty( $explode_videos[0] ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
-					$sub_items['id']   = $explode_videos[0];
+				if ( 1 === count( $explode_videos ) && ! empty( current( $explode_videos ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+					$sub_items['id']   = current( $explode_videos );
 					$sub_items['type'] = BP_Moderation_Video::$moderation_type;
 				} elseif ( 1 < count( $explode_videos ) ) {
 					$sub_items['id']   = $activity->id;
