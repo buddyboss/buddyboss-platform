@@ -102,7 +102,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Added notification settings for forums.
 			add_action( 'bp_notification_settings', array( $this, 'forums_notification_settings' ), 11 );
 
-			// Make consistency without gorup from page. 
+			// Possibly redirect.
 			add_action( 'bbp_template_redirect', array( $this, 'forum_redirect_canonical' ), 11 );
 		}
 
@@ -1498,27 +1498,34 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return void
 		 */
 		public function forum_redirect_canonical() {
-			if ( empty( bp_get_current_group_id() ) || ! bp_is_current_action( $this->slug ) ) {
+			$group_id = bp_get_current_group_id();
+
+			if ( empty( $group_id ) || ! bp_is_current_action( $this->slug ) ) {
 				return;
 			}
 
-			$group      = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
-			$group_link = trailingslashit( bp_get_group_permalink( $group ) );
-			$forum_id   = bbp_get_group_forum_ids( bp_get_current_group_id() );
-			$forum_id   = empty( $forum_id ) ? false : array_shift( $forum_id );
-			$forum      = bbp_get_forum( $forum_id );
-			$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
+			$forum_id = bbp_get_group_forum_ids( $group_id );
+			$forum_id = empty( $forum_id ) ? false: current( $forum_id );
+
+			if ( empty( $forum_id ) ) {
+				return;
+			}
 
 			// When navigate to group forum.
 			if ( ! bp_is_group_forum_topic() ) {
-				if ( empty( bp_action_variables() ) ) {
-					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum ) . '/' . $page );
+				$group      = groups_get_group( array( 'group_id' => $group_id ) );
+				$group_link = trailingslashit( bp_get_group_permalink( $group ) );
+				$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
+				$actions    = bp_action_variables();
+
+				if ( empty( $actions ) ) {
+					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . get_page_uri( $forum_id ) );
 
 					// Redirect to the first forum when action variables is empty.
 					bp_core_redirect( $redirect_to );
 				}
 
-				$last_path_post = new WP_Query(
+				$query = new WP_Query(
 					array(
 						'name'      => get_query_var( 'name' ),
 						'post_type' => bbp_get_forum_post_type(),
@@ -1527,22 +1534,23 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					)
 				);
 
-				if ( empty( $last_path_post->post ) ) {
+				if ( empty( $query->post ) ) {
 					return;
 				}
 
-				$uri      = $this->page_uri();
-				$uri_post = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
+				$child_forum = $query->post;
+				$uri         = $this->page_uri();
+				$forum       = get_page_by_path( $uri, 'OBJECT', bbp_get_forum_post_type() );
 
-				if ( empty( $uri_post->ID ) ) {
-					$uri         = get_page_uri( $last_path_post->post );
+				if ( empty( $forum->ID ) ) {
+					$uri         = get_page_uri( $child_forum );
 					$redirect_to = trailingslashit( $group_link . $this->slug . '/' . $uri . '/' . $page );
 
 					bp_core_redirect( $redirect_to );
 				}
 
-				$forum_group_id = bb_get_child_forum_group_ids( $uri_post->ID );
-				$this->forum_id = empty( $forum_group_id ) ? false: $uri_post->ID;
+				$forum_group_id = bb_get_child_forum_group_ids( $forum->ID );
+				$this->forum_id = empty( $forum_group_id ) ? false : $forum->ID;
 			}
 
 			if ( bp_is_group_forum_topic() ) {
