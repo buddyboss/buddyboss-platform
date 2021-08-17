@@ -156,7 +156,7 @@
                                             <a id="reported-user" class="blocked-member button small disabled">
                                                 <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
                                             </a>
-                                        <# } elseif ( false !== item.can_be_blocked ) { #>
+                                        <# } else if ( false !== item.can_be_blocked ) { #>
                                             <a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
                                                 <?php esc_html_e( 'Block', 'buddyboss' ); ?>
                                             </a>
