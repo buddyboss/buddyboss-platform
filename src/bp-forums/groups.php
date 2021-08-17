@@ -1314,7 +1314,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// Forum
 				case bbp_get_forum_post_type():
 					$forum_id = $post_id;
-					$url_end  = get_page_uri( bbp_get_forum( $forum_id ) );
+					$url_end  = get_page_uri( $forum_id );
 					break;
 
 				// Unknown

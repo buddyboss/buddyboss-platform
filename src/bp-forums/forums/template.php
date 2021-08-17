@@ -2770,13 +2770,11 @@ function bb_get_child_forum_group_ids( $forum_id ) {
 	$parents = $forum->ancestors;
 	$parents = empty( $parents ) ? array() : $parents;
 
-	// Set parameter forum_id in the first of the parents array.
+	// Set the parameter forum_id in the parents array as its first element.
 	array_unshift( $parents, $forum->ID );
 
 	if ( ! empty( $parents ) ) {
-		// Searching gorup id child to parent.
 		foreach ( $parents as $parent ) {
-			// Trim out any empty array items.
 			$group_ids = bbp_get_forum_group_ids( $parent );
 
 			if ( ! empty( $group_ids ) ) {
