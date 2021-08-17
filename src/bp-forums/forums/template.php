@@ -1588,7 +1588,6 @@ function bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = f
  * @uses                  apply_filters() Calls 'bbp_get_forum_topic_count' with the
  *                        topic count and forum id
  * @uses                  bbp_get_forum_id() To get the forum id
- * @uses                  bbp_get_super_stickies() To Get super stickies topic count
  */
 function bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
