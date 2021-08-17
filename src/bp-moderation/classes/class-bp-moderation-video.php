@@ -62,6 +62,16 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		// Prepare report button for video when activity moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
+
+		// Prepare report button for video when activity comment moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity_Comment::$moderation_type ) ) {
+			add_filter( 'bp_activity_comment_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -179,5 +189,36 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 		return esc_html__( 'Video', 'buddyboss' );
+	}
+
+	/**
+	 * Function to update activity report button arguments.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 *
+	 * @param array $report_button Activity report button
+	 * @param array $args          Arguments
+	 *
+	 * @return array|string
+	 */
+	public function update_report_button_args( $report_button, $args ) {
+
+		$video_id  = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_id', true );
+		$video_ids = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_ids', true );
+
+		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) ) {
+			$explode_videos = explode( ',', $video_ids );
+			if ( ! empty( $video_id ) ) {
+				$args['button_attr']['data-bp-content-id']   = $video_id;
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			if ( 1 === count( $explode_videos ) && ! empty( current( $explode_videos ) ) ) {
+				$args['button_attr']['data-bp-content-id']   = current( $explode_videos );
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			$report_button = bp_moderation_get_report_button( $args, false );
+		}
+
+		return $report_button;
 	}
 }
