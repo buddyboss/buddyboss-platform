@@ -785,8 +785,8 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	}
 
 	// only alpha numeric, underscore, dash
-	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
-		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+	if ( ! preg_match( '/^([A-Za-z0-9\'-_\.]+)$/', $value ) ) {
+		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "\'", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
 	// must be shorter then 32 characters
@@ -1097,8 +1097,8 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id) 
-    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id) 
+	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
+    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
     WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
 	$added_fields       = $wpdb->get_results( $clone_fields_query );
 
