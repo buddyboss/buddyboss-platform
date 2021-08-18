@@ -719,6 +719,9 @@ window.bp = window.bp || {};
 			bp.Nouveau.removeAllNotification();
 			// Set title tag.
 			bp.Nouveau.setTitle();
+
+			// Following widget more button click.
+			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
 		},
 
 		/**
@@ -2697,8 +2700,23 @@ window.bp = window.bp || {};
 				fileReader.readAsArrayBuffer( file );
 			}
 
-		}
+		},
 
+		/**
+		 *  Click event on more button of following widget.
+		 */
+		bbWidgetMoreFollowing: function ( event ) {
+			var target = $( event.currentTarget ),
+				link = target.attr( 'href' );
+			var parts = link.split( '#' );
+			if ( parts.length > 1 ) {
+				var hash_text = parts.pop();
+				if ( hash_text && $( '[data-bp-scope="' + hash_text + '"]' ).length > 0 ) {
+					$( '[data-bp-scope="' + hash_text + '"] a' ).trigger( 'click' );
+					return false;
+				}
+			}
+		}
 	};
 
 	// Launch BP Nouveau.
