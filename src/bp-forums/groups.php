@@ -1507,8 +1507,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return;
 			}
 
-			$forum_id = bbp_get_group_forum_ids( $group_id );
-			$forum_id = empty( $forum_id ) ? false: current( $forum_id );
+			$forum_ids = bbp_get_group_forum_ids( $group_id );
+			$forum_id  = empty( $forum_ids ) ? false : current( $forum_ids );
 
 			if ( empty( $forum_id ) ) {
 				return;
