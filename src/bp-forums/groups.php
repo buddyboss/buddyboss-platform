@@ -1518,7 +1518,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			if ( ! bp_is_group_forum_topic() ) {
 				$group      = groups_get_group( array( 'group_id' => $group_id ) );
 				$group_link = trailingslashit( bp_get_group_permalink( $group ) );
-				$page       = empty( get_query_var( 'paged' ) ) ? '' : 'page/' . get_query_var( 'paged' );
+				$query_page = get_query_var( 'paged' );
+				$page       = empty( $query_page ) ? '' : 'page/' . $query_page;
 				$actions    = bp_action_variables();
 
 				if ( empty( $actions ) ) {
