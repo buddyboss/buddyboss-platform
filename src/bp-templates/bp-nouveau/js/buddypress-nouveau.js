@@ -2601,65 +2601,63 @@ window.bp = window.bp || {};
 				video.src         = url;
 				var timer         = setInterval(
 					function () {
-						if (video.readyState === 4) {
-							videoDuration  = video.duration.toFixed( 2 );
-							var timeupdate = function () {
+						videoDuration  = video.duration.toFixed( 2 );
+						var timeupdate = function () {
+							if ( snapImage() ) {
+								video.removeEventListener( 'timeupdate', timeupdate );
+								video.pause();
+							}
+						};
+
+						video.addEventListener(
+							'loadeddata',
+							function () {
 								if ( snapImage() ) {
 									video.removeEventListener( 'timeupdate', timeupdate );
-									video.pause();
 								}
-							};
-
-							video.addEventListener(
-								'loadeddata',
-								function () {
-									if ( snapImage() ) {
-										video.removeEventListener( 'timeupdate', timeupdate );
-									}
-								}
-							);
-							var snapImage = function () {
-								var canvas    = document.createElement( 'canvas' );
-								canvas.width  = video.videoWidth;
-								canvas.height = video.videoHeight;
-								canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
-								var image   = canvas.toDataURL();
-								var success = image.length > 100000;
-								if ( success ) {
-									var img = document.createElement( 'img' );
-									img.src = image;
-
-									if ( file.previewElement ) {
-										if ( $( file.previewElement ).find( target ).find( 'img' ).length ) {
-											$( file.previewElement ).find( target ).find( 'img' ).attr( 'src', image );
-										} else {
-											$( file.previewElement ).find( target ).append( img );
-										}
-
-										$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
-									} else {
-										if ( $( target ).find( 'img' ).length ) {
-											$( target ).find( 'img' ).attr( 'src', image );
-										} else {
-											$( target ).append( img );
-										}
-									}
-
-									URL.revokeObjectURL( url );
-								}
-								return success;
-							};
-							video.addEventListener( 'timeupdate', timeupdate );
-							video.preload     = 'metadata';
-							video.src         = url;
-							video.muted       = true;
-							video.playsInline = true;
-							if ( videoDuration != null ) {
-								video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail
 							}
-							video.play();
-							clearInterval( timer );
+						);
+						var snapImage = function () {
+							var canvas    = document.createElement( 'canvas' );
+							canvas.width  = video.videoWidth;
+							canvas.height = video.videoHeight;
+							canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
+							var image   = canvas.toDataURL();
+							var success = image.length > 100000;
+							if ( success ) {
+								var img = document.createElement( 'img' );
+								img.src = image;
+
+								if ( file.previewElement ) {
+									if ( $( file.previewElement ).find( target ).find( 'img' ).length ) {
+										$( file.previewElement ).find( target ).find( 'img' ).attr( 'src', image );
+									} else {
+										$( file.previewElement ).find( target ).append( img );
+									}
+
+									$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
+								} else {
+									if ( $( target ).find( 'img' ).length ) {
+										$( target ).find( 'img' ).attr( 'src', image );
+									} else {
+										$( target ).append( img );
+									}
+								}
+
+								URL.revokeObjectURL( url );
+							}
+							return success;
+						};
+						video.addEventListener( 'timeupdate', timeupdate );
+						video.preload     = 'metadata';
+						video.src         = url;
+						video.muted       = true;
+						video.playsInline = true;
+						if ( videoDuration != null ) {
+							video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail
 						}
+						video.play();
+						clearInterval( timer );
 					},
 					500
 				);
