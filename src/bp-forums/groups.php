@@ -365,13 +365,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/**
-		 * Exclude the forum if its associated with other groups.
-		 * Exclude if the forum type is category.
-		 * Exclude if the forum is child forum.
+		 * Exclude the forum if it is associated with other groups.
+		 * Exclude the forum if the forum type is category.
+		 * Exclude the forum if the forum is child forum.
 		 *
 		 * @since BuddyBoss 1.7.6
 		 *
-		 * @param array $forum_id  Fourm id.
+		 * @param array $forum_id  Fourm ids.
 		 * @param int   $group_id  Group id.
 		 *
 		 * @uses bbp_get_forum() Get forum.
@@ -390,13 +390,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return true;
 			}
 
-			// Child forums are not allow to associate with any groups.
+			// Child forums are not allowed to associate with any groups.
 			if ( ! empty( $forum->post_parent ) ) {
 				bp_core_add_message( __( 'Child forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
 				return false;
 			}
 
-			// Category type forums are not allow to associate with any groups.
+			// Category type forums are not allowed to associate with any groups.
 			if ( 'category' === $forum_type ) {
 				bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
 				return false;
