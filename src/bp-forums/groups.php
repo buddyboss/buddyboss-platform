@@ -1553,8 +1553,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bp_core_redirect( $redirect_to );
 				}
 
-				$forum_group_id = bb_get_child_forum_group_ids( $forum->ID );
-				$this->forum_id = empty( $forum_group_id ) ? false : $forum->ID;
+				$group_ids      = bb_get_child_forum_group_ids( $forum->ID );
+				$this->forum_id = ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ? $forum->ID : false;
 			}
 
 			if ( bp_is_group_forum_topic() ) {
@@ -1574,8 +1574,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
-				$forum_group_id = bb_get_child_forum_group_ids( $topic_forum_id );
-				$this->forum_id = empty( $forum_group_id ) ? false : $topic_forum_id;
+				$group_ids      = bb_get_child_forum_group_ids( $topic_forum_id );
+				$this->forum_id = ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ? $topic_forum_id : false;
 			}
 		}
 
