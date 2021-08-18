@@ -389,14 +389,6 @@ function bbp_admin_get_settings_fields() {
 					'sanitize_callback' => 'intval',
 					'args'              => array(),
 				),
-
-				// Group forums parent forum ID
-				'_bbp_group_forums_root_id' => array(
-					'title'             => __( 'Group Forums Parent', 'buddyboss' ),
-					'callback'          => 'bbp_admin_setting_callback_group_forums_root_id',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-				),
 			),
 
 			/** Akismet */

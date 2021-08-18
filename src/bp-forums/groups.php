@@ -660,7 +660,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					// Create the initial forum.
 					$forum_id = bbp_insert_forum(
 						array(
-							'post_parent'  => bbp_get_group_forums_root_id(),
 							'post_title'   => bp_get_new_group_name(),
 							'post_content' => bp_get_new_group_description(),
 							'post_status'  => $status,
