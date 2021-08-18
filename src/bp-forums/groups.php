@@ -276,6 +276,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return string
 		 */
 		public function disabled_forum_dropdown_options( $attr_output, $object, $args ) {
+			if ( empty( $object ) || empty( $args ) ) {
+				return $attr_output;
+			}
+
 			if ( bbp_get_forum_post_type() !== $object->post_type || 'bbp_group_forum_id' !== $args['select_id'] ) {
 				return $attr_output;
 			}
