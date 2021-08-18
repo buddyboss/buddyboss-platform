@@ -276,7 +276,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return string
 		 */
 		public function disabled_forum_dropdown_options( $attr_output, $object, $args ) {
-			if ( empty( $object ) || empty( $args ) ) {
+			if ( empty( $object->ID ) || empty( $args ) ) {
 				return $attr_output;
 			}
 
