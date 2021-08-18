@@ -280,11 +280,11 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return $attr_output;
 			}
 
-			if ( bbp_get_forum_post_type() !== $object->post_type || 'bbp_group_forum_id' !== $args['select_id'] ) {
+			if ( bbp_get_forum_post_type() !== $object->post_type || ( ! empty( $args['select_id'] ) && 'bbp_group_forum_id' !== $args['select_id'] ) ) {
 				return $attr_output;
 			}
 
-			if ( $args['selected'] === $object->ID ) {
+			if ( ! empty( $args['selected'] ) && $args['selected'] === $object->ID ) {
 				return $attr_output;
 			}
 
