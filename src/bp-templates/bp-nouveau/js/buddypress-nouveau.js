@@ -2601,7 +2601,7 @@ window.bp = window.bp || {};
 				video.src         = url;
 				var timer         = setInterval(
 					function () {
-						if (video.readyState === 1) {
+						if (video.readyState > 0) {
 							videoDuration  = video.duration.toFixed( 2 );
 							var timeupdate = function () {
 								if ( snapImage() ) {
