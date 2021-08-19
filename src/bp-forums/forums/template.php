@@ -2767,7 +2767,7 @@ function bb_get_child_forum_group_ids( $forum_id ) {
 	}
 
 	// Get all parent ids.
-	$parents = $forum->ancestors;
+	$parents = get_post_ancestors( $forum_id );
 	$parents = empty( $parents ) ? array() : $parents;
 
 	// Set the parameter forum_id in the parents array as its first element.
