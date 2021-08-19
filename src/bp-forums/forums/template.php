@@ -2771,7 +2771,7 @@ function bb_get_child_forum_group_ids( $forum_id ) {
 	$parents = empty( $parents ) ? array() : $parents;
 
 	// Set the parameter forum_id in the parents array as its first element.
-	array_unshift( $parents, $forum->ID );
+	array_unshift( $parents, $forum_id );
 
 	if ( ! empty( $parents ) ) {
 		foreach ( $parents as $parent ) {
