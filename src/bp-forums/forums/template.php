@@ -2760,15 +2760,7 @@ function bb_get_child_forum_group_ids( $forum_id ) {
 		return array();
 	}
 
-	$forum = bbp_get_forum( $forum_id );
-
-	if ( empty( $forum ) ) {
-		return array();
-	}
-
-	// Get all parent ids.
 	$parents = get_post_ancestors( $forum_id );
-	$parents = empty( $parents ) ? array() : $parents;
 
 	// Set the parameter forum_id in the parents array as its first element.
 	array_unshift( $parents, $forum_id );
