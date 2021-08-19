@@ -481,7 +481,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// No support for multiple forums yet
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
 
-				$valid_forum = $this->forum_can_associate_wth_group( $forum_id, $group_id );
+				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
 				$forum_id    = $valid_forum ? $forum_id : 0;
 				$forum_ids   = $valid_forum ? $forum_ids : array();
 				$edit_forum  = $valid_forum ? $edit_forum : false;
