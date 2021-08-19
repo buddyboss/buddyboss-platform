@@ -67,7 +67,7 @@ add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
-add_action( 'template_include', 'bb_setup_template_for_video_preview' );
+add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_MAX );
 
 /**
  * Add video theatre template for activity pages.
