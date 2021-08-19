@@ -2539,7 +2539,7 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
             id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>
-            <?php echo $can_update ? '' : esc_attr( 'disabled="disabled"' ); ?>>
+            <?php echo $can_update === false ? esc_attr( 'disabled="disabled"' ) : '' ; ?>>
 
 		<?php foreach ( bbp_get_forum_types() as $key => $label ) : ?>
 
