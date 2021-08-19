@@ -2744,40 +2744,6 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	return apply_filters( 'bbp_get_form_forum_type_dropdown', ob_get_clean(), $r );
 }
 
-/**
- * Get group ID's for a child forum.
- *
- * @since BuddyBoss 1.7.6
- *
- * @param int $forum_id Forum id.
- *
- * @uses bbp_get_forum() Get forum.
- *
- * @return array
- */
-function bb_get_child_forum_group_ids( $forum_id ) {
-	if ( empty( $forum_id ) ) {
-		return array();
-	}
-
-	$parents = get_post_ancestors( $forum_id );
-
-	// Set the parameter forum_id in the parents array as its first element.
-	array_unshift( $parents, $forum_id );
-
-	if ( ! empty( $parents ) ) {
-		foreach ( $parents as $parent ) {
-			$group_ids = bbp_get_forum_group_ids( $parent );
-
-			if ( ! empty( $group_ids ) ) {
-				return $group_ids;
-			}
-		}
-	}
-
-	return array();
-}
-
 /** Feeds *********************************************************************/
 
 /**
@@ -2914,4 +2880,38 @@ function bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
 	}
 
 	return apply_filters( 'bbp_get_forum_replies_feed_link', $link, $url, $forum_id );
+}
+
+/**
+ * Get group ID's for a child forum.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @param int $forum_id Forum id.
+ *
+ * @uses bbp_get_forum() Get forum.
+ *
+ * @return array
+ */
+function bb_get_child_forum_group_ids( $forum_id ) {
+	if ( empty( $forum_id ) ) {
+		return array();
+	}
+
+	$parents = get_post_ancestors( $forum_id );
+
+	// Set the parameter forum_id in the parents array as its first element.
+	array_unshift( $parents, $forum_id );
+
+	if ( ! empty( $parents ) ) {
+		foreach ( $parents as $parent ) {
+			$group_ids = bbp_get_forum_group_ids( $parent );
+
+			if ( ! empty( $group_ids ) ) {
+				return $group_ids;
+			}
+		}
+	}
+
+	return array();
 }

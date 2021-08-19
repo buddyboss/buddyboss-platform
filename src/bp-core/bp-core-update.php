@@ -1194,68 +1194,6 @@ function bb_update_to_1_5_6() {
 	bp_core_install_moderation_emails();
 }
 
-/**
- * 1.7.6 update routine.
- * Update forum meta with its associated group id.
- *
- * @since BuddyBoss 1.7.6
- *
- * @return void
- */
-function bb_update_to_1_7_6() {
-	// Return, when group or forum component deactive.
-	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
-		return;
-	}
-
-	// Get all forum associated groups.
-	$group_data = groups_get_groups(
-		array(
-			'per_page'   => -1,
-			'fields'     => 'ids',
-			'status'     => array( 'public', 'private', 'hidden' ),
-			'meta_query' => array(
-				'relation' => 'AND',
-				array(
-					'key'     => 'forum_id',
-					'value'   => 'a:0:{}',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => 'forum_id',
-					'value'   => '',
-					'compare' => '!=',
-				),
-			),
-		)
-	);
-
-	$groups = empty( $group_data['groups'] ) ? array() : $group_data['groups'];
-
-	if ( ! empty( $groups ) ) {
-		foreach ( $groups as $group_id ) {
-			$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
-
-			if ( empty( $forum_ids ) ) {
-				continue;
-			}
-
-			// Group never contains multiple forums.
-			$forum_id  = current( $forum_ids );
-			$group_ids = bbp_get_forum_group_ids( $forum_id );
-			$group_ids = empty( $group_ids ) ? array() : $group_ids;
-
-			if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
-				continue;
-			}
-
-			$group_ids[] = $group_id;
-
-			bbp_update_forum_group_ids( $forum_id, $group_ids );
-		}
-	}
-}
-
 /** 
  * Add new video support to document extensions.
  *
@@ -1331,6 +1269,68 @@ function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
 
 		if ( bp_is_post_type_feed_enable( $post_type ) ) {
 			bp_update_option( $ptc_opt_name, 1 );
+		}
+	}
+}
+
+/**
+ * 1.7.6 update routine.
+ * Update forum meta with its associated group id.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return void
+ */
+function bb_update_to_1_7_6() {
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Get all forum associated groups.
+	$group_data = groups_get_groups(
+		array(
+			'per_page'   => -1,
+			'fields'     => 'ids',
+			'status'     => array( 'public', 'private', 'hidden' ),
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'forum_id',
+					'value'   => 'a:0:{}',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'forum_id',
+					'value'   => '',
+					'compare' => '!=',
+				),
+			),
+		)
+	);
+
+	$groups = empty( $group_data['groups'] ) ? array() : $group_data['groups'];
+
+	if ( ! empty( $groups ) ) {
+		foreach ( $groups as $group_id ) {
+			$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+
+			if ( empty( $forum_ids ) ) {
+				continue;
+			}
+
+			// Group never contains multiple forums.
+			$forum_id  = current( $forum_ids );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = empty( $group_ids ) ? array() : $group_ids;
+
+			if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+				continue;
+			}
+
+			$group_ids[] = $group_id;
+
+			bbp_update_forum_group_ids( $forum_id, $group_ids );
 		}
 	}
 }

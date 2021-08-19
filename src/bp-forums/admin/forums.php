@@ -86,33 +86,6 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		}
 
 		/**
-		 * Permission for forum parent, If not then return the current parent.
-		 * You can not make the forum a child forum when it's associated with any group.
-		 *
-		 * @since BuddyBoss 1.7.6
-		 *
-		 * @param init  $post_parent post parent.
-		 * @param init  $post_ID     post ID.
-		 * @param array $new_postarr submited post data.
-		 *
-		 * @return init
-		 */
-		public function forum_parent( $post_parent, $post_ID, $new_postarr ) {
-			if ( bbp_get_forum_post_type() !== $new_postarr['post_type'] ) {
-				return $post_parent;
-			}
-
-			$group_ids = bbp_get_forum_group_ids( $post_ID );
-
-			if ( empty( $group_ids ) ) {
-				return $post_parent;
-			}
-
-			$forum = bbp_get_forum( $post_ID );
-			return $forum->post_parent;
-		}
-
-		/**
 		 * Should we bail out of this method?
 		 *
 		 * @since bbPress (r4067)
@@ -691,6 +664,33 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			);
 
 			return $messages;
+		}
+
+		/**
+		 * Permission for forum parent, If not then return the current parent.
+		 * You can not make the forum a child forum when it's associated with any group.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 *
+		 * @param init  $post_parent post parent.
+		 * @param init  $post_ID     post ID.
+		 * @param array $new_postarr submited post data.
+		 *
+		 * @return init
+		 */
+		public function forum_parent( $post_parent, $post_ID, $new_postarr ) {
+			if ( bbp_get_forum_post_type() !== $new_postarr['post_type'] ) {
+				return $post_parent;
+			}
+
+			$group_ids = bbp_get_forum_group_ids( $post_ID );
+
+			if ( empty( $group_ids ) ) {
+				return $post_parent;
+			}
+
+			$forum = bbp_get_forum( $post_ID );
+			return $forum->post_parent;
 		}
 	}
 endif; // class_exists check
