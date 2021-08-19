@@ -221,21 +221,23 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							}
 						}
 
+						$member_type__not_in = array();
+						// get all excluded member types.
+						$bp_member_type_ids = bp_get_removed_member_types();
+						if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+							foreach ( $bp_member_type_ids as $single ) {
+								$member_type__not_in[] = $single['name'];
+							}
+						}
+
+						$member_type_sql = $this->get_sql_clause_for_member_types( $member_type__not_in, 'NOT IN' );
+
 						// Added user when visibility matched.
 						if ( ! empty( $user_ids ) ) {
-							$member_type__not_in = array();
-							// get all excluded member types.
-							$bp_member_type_ids = bp_get_removed_member_types();
-							if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
-								foreach ( $bp_member_type_ids as $single ) {
-									$member_type__not_in[] = $single['name'];
-								}
-							}
-
 							$user_ids       = array_unique( $user_ids );
-							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " ) AND " . $this->get_sql_clause_for_member_types( $member_type__not_in, 'NOT IN' );;
+							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )" . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						} else {
-							$where_fields[] = "u.id = 0";
+							$where_fields[] = "u.id = 0". ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						}
 					}
 				}
