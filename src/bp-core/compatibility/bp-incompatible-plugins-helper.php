@@ -196,8 +196,8 @@ function bp_helper_plugins_loaded_callback() {
 		 * @return void
 		 */
 		function bp_deregister_geodirectory_styles() {
-			wp_dequeue_script( 'ayecode-ui' );
-			wp_deregister_script( 'ayecode-ui' );
+			wp_dequeue_style( 'ayecode-ui' );
+			wp_deregister_style( 'ayecode-ui' );
 		}
 	}
 }
