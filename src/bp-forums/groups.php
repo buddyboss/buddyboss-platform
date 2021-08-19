@@ -383,7 +383,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return bool
 		 */
-		public function forum_can_associate_wth_group( $forum_id, $group_id ) {
+		public function forum_can_associate_with_group( $forum_id, $group_id ) {
 
 			$group_forum_ids = bbp_get_group_forum_ids( $group_id );
 			$forum           = bbp_get_forum( $forum_id );
