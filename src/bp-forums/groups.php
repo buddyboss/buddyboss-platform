@@ -342,9 +342,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					<?php
 						bbp_dropdown(
 							array(
-								'select_id' => 'bbp_group_forum_id',
-								'show_none' => __( '(No Forum)', 'buddyboss' ),
-								'selected'  => $forum_id,
+								'select_id'       => 'bbp_group_forum_id',
+								'show_none'       => __( '(No Forum)', 'buddyboss' ),
+								'selected'        => $forum_id,
+								'disabled_walker' => false,
 							)
 						);
 					?>
