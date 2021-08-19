@@ -266,34 +266,68 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		$user_id = bp_loggedin_user_id();
 	}
 
+	$mutual_friends = array();
+
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
+
+	if ( is_user_logged_in() ) {
+		$mutual_friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+		if ( bp_loggedin_user_id() !== $user_id && in_array( $user_id, $mutual_friends ) ) {
+			$mutual_friends[] = bp_loggedin_user_id();
+		}
+		if ( ! empty( $mutual_friends ) ) {
+			$mutual_friends = array_intersect( $friends, $mutual_friends );
+		}
+	}
+
+	if ( is_user_logged_in() && bp_loggedin_user_id() === $user_id ) {
+		$friends[]        = bp_loggedin_user_id();
+		$mutual_friends[] = bp_loggedin_user_id();
+	}
+
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
+	}
+
+	if ( empty( $mutual_friends ) ) {
+		$mutual_friends = array( 0 );
 	}
 
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
-
-		if ( ! empty( $friends ) ) {
-			$privacy[] = 'friends';
-		}
 	}
 
 	$retval = array(
 		'relation' => 'AND',
 		array(
-			'column'  => 'user_id',
-			'compare' => 'IN',
-			'value'   => (array) $friends,
+			'relation' => 'OR',
+			array(
+				array(
+					'column'  => 'user_id',
+					'compare' => 'IN',
+					'value'   => (array) $friends,
+				),
+				array(
+					'column'  => 'privacy',
+					'compare' => 'IN',
+					'value'   => $privacy,
+				),
+			),
+			array(
+				array(
+					'column'  => 'user_id',
+					'compare' => 'IN',
+					'value'   => (array) $mutual_friends,
+				),
+				array(
+					'column'  => 'privacy',
+					'compare' => 'IN',
+					'value'   => 'friends',
+				),
+			),
 		),
-		array(
-			'column'  => 'privacy',
-			'compare' => 'IN',
-			'value'   => $privacy
-		),
-
 		// We should only be able to view sitewide activity content for friends.
 		array(
 			'column' => 'hide_sitewide',

@@ -5,20 +5,18 @@
  * @package BuddyBoss\Core
  */
 
-$listing_class  = '';
-$attachment_id  = bp_get_media_attachment_id();
-$attachment_url = '';
-$media_id       = bp_get_media_id();
-$filename       = basename( get_attached_file( $attachment_id ) );
-$photo_title    = '';
-$media_type     = '';
-$download_link  = '';
+$listing_class = '';
+$attachment_id = bp_get_media_attachment_id();
+$media_id      = bp_get_media_id();
+$filename      = basename( get_attached_file( $attachment_id ) );
+$photo_title   = '';
+$media_type    = '';
+$download_link = '';
 if ( $attachment_id ) {
-	$attachment_url = wp_get_attachment_url( $attachment_id );
-	$download_link  = bp_media_download_link( $attachment_id, $media_id );
-	$listing_class  = 'ac-media-list';
-	$media_type     = 'photos';
-	$photo_title    = bp_get_media_title();
+	$download_link = bp_media_download_link( $attachment_id, $media_id );
+	$listing_class = 'ac-media-list';
+	$media_type    = 'photos';
+	$photo_title   = bp_get_media_title();
 }
 
 $class = ''; // used.
@@ -35,7 +33,7 @@ $media_created = bp_get_media_date_created();
 			<div class="media-album_items ac-album-list">
 				<div class="media-album_thumb">
 					<a href="<?php echo esc_url( $media_link ); ?>">
-						<img src="<?php echo esc_url( $attachment_url ); ?>" alt="<?php echo esc_html( $photo_title ); ?>" />
+						<img src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php echo esc_html( $photo_title ); ?>" />
 					</a>
 				</div>
 
@@ -51,9 +49,9 @@ $media_created = bp_get_media_date_created();
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-								<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
-								<a href="<?php echo esc_url( $media_link ); ?>"><?php bp_media_author(); ?></a></span>
-								<?php
+							<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
+							<a href="<?php echo esc_url( $media_link ); ?>"><?php bp_media_author(); ?></a></span>
+							<?php
 						}
 						?>
 					</div>
@@ -91,22 +89,22 @@ $media_created = bp_get_media_date_created();
 							$group_id = bp_get_media_group_id();
 							if ( $group_id > 0 ) {
 								?>
-									<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_media_visibility(); ?>
-									</span>
+								</span>
 								<?php
 							} else {
 								?>
-									<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
+								<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
 									<?php bp_media_visibility(); ?>
-									</span>
+								</span>
 								<?php
 							}
 						} else {
 							?>
-								<span>
+							<span>
 								<?php bp_media_visibility(); ?>
-								</span>
+							</span>
 							<?php
 						}
 						?>

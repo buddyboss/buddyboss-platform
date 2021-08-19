@@ -1433,6 +1433,7 @@ function bp_send_message_button( $args = '' ) {
 	 *     @type string $component         Default: 'messages'.
 	 *     @type bool   $must_be_logged_in Default: true.
 	 *     @type bool   $block_self        Default: true.
+	 *     @type int   $message_receiver_user_id        Default: message receiver user id.
 	 *     @type string $wrapper_id        Default: 'send-private-message'.
 	 *     @type string $link_href         Default: the private message link for
 	 *                                     the current member in the loop.
@@ -1443,17 +1444,26 @@ function bp_send_message_button( $args = '' ) {
 	 */
 function bp_get_send_message_button( $args = '' ) {
 
+	if ( bp_displayed_user_id() > 0 ) {
+		$receiver_user_id = bp_displayed_user_id();
+	} elseif ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ) {
+		$receiver_user_id = absint( $_GET['user'] );
+	} else {
+		$receiver_user_id = ( $GLOBALS['members_template']->member->ID ) ? $GLOBALS['members_template']->member->ID : 0;
+	}
+
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'                => 'private_message',
-			'component'         => 'messages',
-			'must_be_logged_in' => true,
-			'block_self'        => true,
-			'wrapper_id'        => 'send-private-message',
-			'link_href'         => bp_get_send_private_message_link(),
-			'link_text'         => __( 'Message', 'buddyboss' ),
-			'link_class'        => 'send-message',
+			'id'                       => 'private_message',
+			'component'                => 'messages',
+			'must_be_logged_in'        => true,
+			'block_self'               => true,
+			'message_receiver_user_id' => $receiver_user_id,
+			'wrapper_id'               => 'send-private-message',
+			'link_href'                => bp_get_send_private_message_link(),
+			'link_text'                => __( 'Message', 'buddyboss' ),
+			'link_class'               => 'send-message',
 		)
 	);
 

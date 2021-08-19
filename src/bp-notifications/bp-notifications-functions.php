@@ -813,3 +813,30 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 
 	return $retval;
 }
+
+/**
+ * Get on-screen notification content.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_heartbeat_on_screen_notifications( $response = array(), $data = array() ) {
+	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 1 );
+
+	if ( empty( $is_on_screen_notification_enable ) ) {
+		return $response;
+	}
+
+	if ( bp_loggedin_user_id() && bp_is_active( 'notifications' ) ) {
+		ob_start();
+		bp_get_template_part( 'notifications/on-screen' );
+		$response['on_screen_notifications'] = ob_get_clean();
+		$response['total_notifications']  = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+	}
+
+	return $response;
+}
+// Heartbeat receive for on-screen notification.
+add_filter( 'heartbeat_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
+add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
