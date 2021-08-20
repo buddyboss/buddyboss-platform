@@ -385,7 +385,7 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	 * Before we potentially switch the group status, if it has been changed to public
 	 * from private and there are existing activity feed, change feed status public. ( hide_sitewide = 0 )
 	 */
-	if ( 'private' === $group->status && 'public' === $status ) {
+	if ( ( 'private' === $group->status || 'hidden' === $group->status ) && 'public' === $status ) {
 		groups_change_all_activity_feed_status( $group->id, 0 );
 	}
 
