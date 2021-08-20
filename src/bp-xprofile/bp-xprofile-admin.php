@@ -326,11 +326,10 @@ endif;
 												if ( ! empty( $group->fields ) ) :
 													if ( 1 === $group->id ) {
 														$signup_fields = bp_nouveau_get_signup_fields( 'account_details' );
-														$final_fields  = array_merge( $group->fields, $signup_fields );
+														$final_fields  = array_merge( $signup_fields, $group->fields );
 														$group->fields = $final_fields;
 													}
-
-													$xprofile_order = get_option( 'bp_xprofile_filed_order' );
+													$xprofile_order = get_option( 'bp_xprofile_fields_order' );
 													$rt_fileds      = array();
 
 													if ( ! empty( $xprofile_order ) ) {
@@ -771,7 +770,7 @@ function xprofile_ajax_reorder_fields() {
 			$reorder[ $position ] = $field_id;
 		}
 	}
-	update_option( 'bp_xprofile_filed_order', $reorder, false );
+	update_option( 'bp_xprofile_fields_order', $reorder, false );
 }
 add_action( 'wp_ajax_xprofile_reorder_fields', 'xprofile_ajax_reorder_fields' );
 
