@@ -2988,6 +2988,7 @@ function bb_activity_media_document_migration( $repair_list ) {
 		$count_recepient_qry .= " OR ( component='blogs' AND type='" . $db_type_name . "' )";
 	  }
 	}
+	$count_recepient_qry .= " OR ( component='groups' AND secondary_item_id=0 )";
 	$recipients_count_row_data = $wpdb->get_row( $count_recepient_qry );
 	$recipients_query = 'SELECT id FROM ' . $activity_table_name . ' WHERE ( item_id=0 AND secondary_item_id=0 )';
 	if ( ! empty( $post_type_arr ) ) {
@@ -2996,6 +2997,7 @@ function bb_activity_media_document_migration( $repair_list ) {
 		$recipients_query .= ' OR ( component="blogs" AND type="' . $db_type_name . '" )';
 	  }
 	}
+	$recipients_query .= " OR ( component='groups' AND secondary_item_id=0 )";
 	if ( 1 < (int) $recipients_count_row_data->ids ) {
 	  $recipients_query .= ' LIMIT ' . $offset . ', 2';
 	}
