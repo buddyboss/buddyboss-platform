@@ -13185,7 +13185,7 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Invalid email address submitted!"
 msgstr ""
 
-#: bp-forums/common/functions.php:2129 bp-forums/common/template.php:1158
+#: bp-forums/common/functions.php:2140 bp-forums/common/template.php:1158
 msgid ""
 "Conditional query tags do not work before the query is run. Before then, "
 "they always return false."
