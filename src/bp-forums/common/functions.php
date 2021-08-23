@@ -1551,8 +1551,8 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 /**
  * Query the DB and get a the child id's of public children
  *
- * @param int    $parent_id Parent id
- * @param string $post_type Post type. Defaults to 'post'
+ * @param int     $parent_id Parent id
+ * @param string  $post_type Post type. Defaults to 'post'
  * @param boolean $force_cache flag to update cache
  * @uses bbp_get_topic_post_type() To get the topic post type
  * @uses wp_cache_get() To check if there is a cache of the children
