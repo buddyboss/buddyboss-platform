@@ -83,27 +83,26 @@ window.bp = window.bp || {};
 
 			var hasDraft = false;
 
-
 			var $whatsNew = self.postForm.$el.find( '#whats-new' );
-
 
 			$( document ).on( 'paste keyup change', '#whats-new', function(){
 
 				if ( self.postForm.$el.hasClass( 'bp-activity-edit' ) ){
 					return;
 				}
+				if ( typeof window.activity_editor !== 'undefined' ) {
+					var $postContent = $( $.parseHTML( window.activity_editor.getContent() ) );
+					var postContent = $postContent.text();
+					var hasEmoji = $whatsNew.find( 'img.emojioneemoji' ).length;
 
-				var $postContent = $( $.parseHTML( window.group_messages_editor.getContent() ) );
-				var postContent = $postContent.text();
-				var hasEmoji = $whatsNew.find( 'img.emojioneemoji' ).length;
+					if ( postContent.length || hasEmoji > 0 ){
+						hasDraft = true;
+					}else{
+						hasDraft = false;
+					}
 
-				if ( postContent.length || hasEmoji > 0 ){
-					hasDraft = true;
-				}else{
-					hasDraft = false;
+					self.toggleDraftClass( hasDraft );
 				}
-
-				self.toggleDraftClass( hasDraft );
 
 			});
 
@@ -154,7 +153,6 @@ window.bp = window.bp || {};
 		},
 
 		draftPostAlert: function() {
-
 			var hasDraft = this.postForm.$el.hasClass( 'bp-activity-has-draft' );
 
 			if ( hasDraft ){
