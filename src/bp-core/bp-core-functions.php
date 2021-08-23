@@ -6065,7 +6065,7 @@ function bb_moderation_bg_update_moderation_data() {
 /**
  * Function will restrict RSS feed.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss x.x.x
  */
 function bb_restricate_rss_feed() {
 	// This will disable default feeds.
@@ -6096,7 +6096,7 @@ function bb_restricate_rss_feed() {
 /**
  * Function will restrict REST API.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss x.x.x
  */
 function bb_restricate_rest_api() {
 	// This will disable woocommerce endpoints.
@@ -6110,7 +6110,7 @@ function bb_restricate_rest_api() {
 /**
  * Function will remove all endpoints.
  *
- * @since BuddyBoss 1.6.0
+ * @since BuddyBoss x.x.x
  *
  * @param array $endpoints Array of endpoints.
  *
