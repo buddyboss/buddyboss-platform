@@ -1907,21 +1907,17 @@ function bb_media_settings_callback_symlink_support() {
 
     <?php
 	$has_error = false;
-	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
-
-		$disabled = explode( ',', ini_get( 'disable_functions' ) );
-
-		if ( ! empty( $disabled ) && in_array( 'symlink', $disabled, true ) ) {
-			$has_error = true;
-			?>
-			<div class="bp-messages-feedback">
-				<div class="bp-feedback warning">
-					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
-				</div>
-			</div>
-			<?php
-		}
+	if ( true === bb_check_server_disabled_symlink() ) {
+		bp_update_option( 'bp_media_symlink_support', 0 );
+		$has_error = true;
+		?>
+        <div class="bp-messages-feedback">
+            <div class="bp-feedback warning">
+                <span class="bp-icon" aria-hidden="true"></span>
+                <p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+            </div>
+        </div>
+		<?php
 	}
 
 	if ( empty( $has_error ) && bb_enable_symlinks() && empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
