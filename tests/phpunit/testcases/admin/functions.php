@@ -213,8 +213,11 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 
 		// Delete all existing email types and descriptions.
 		$emails = get_posts( array(
-			'fields' => 'ids',
-			'post_type' => bp_get_email_post_type(),
+			'fields'                 => 'ids',
+			'post_type'              => bp_get_email_post_type(),
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		) );
 		foreach ( $emails as $email ) {
 			wp_delete_post( $email, true );

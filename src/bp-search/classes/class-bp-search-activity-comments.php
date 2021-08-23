@@ -107,25 +107,35 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 				$privacy[] = 'loggedin';
 			}
 
-			$sql = ' SELECT ';
+			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT a.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT a.id ) ';
 			} else {
-				$sql                .= " DISTINCT a.id , 'activity_comment' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
+				$sql['select']       .= " DISTINCT a.id , 'activity_comment' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
 				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			}
 
+			$sql['from'] = "FROM {$bp->activity->table_name} a inner join {$bp->activity->table_name} ac ON ac.id = a.item_id";
+
+			/**
+			 * Filter the MySQL JOIN clause for the activity Search query.
+			 *
+             * @since BuddyBoss 1.5.6
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$sql['from'] = apply_filters( 'bp_activity_comments_search_join_sql', $sql['from'] );
+
+
 			// searching only activity updates, others don't make sense
-			$sql                .= " FROM 
-						{$bp->activity->table_name} a 
-						inner join {$bp->activity->table_name} ac ON ac.id = a.item_id
-					WHERE 
-						1=1 
-						AND a.is_spam = 0 
-						AND a.content LIKE %s 
+			$where_conditions   = array( '1=1' );
+
+			// searching only activity updates, others don't make sense
+			$where_conditions[] = "a.is_spam = 0
+						AND a.content LIKE %s
 						AND a.type = 'activity_comment'
-						AND 
+						AND
 						(
 							( ac.privacy IN ( '" . implode( "','", $privacy ) . "' ) and ac.component != 'groups' ) " .
 							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ac.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ac.component = 'groups' )" : '' ) .
@@ -133,6 +143,22 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 							( is_user_logged_in() ? " OR ( ac.user_id = '" . bp_loggedin_user_id() . "' AND ac.privacy = 'onlyme' )" : '' ) .
 						")
 				";
+
+			/**
+			 * Filters the MySQL WHERE conditions for the activity Search query.
+			 *
+             * @since BuddyBoss 1.5.6
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $search_term      Search Term.
+			 */
+			$where_conditions = apply_filters( 'bp_activity_comments_search_where_conditions', $where_conditions, $search_term );
+
+			// Join the where conditions together.
+			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
+
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 

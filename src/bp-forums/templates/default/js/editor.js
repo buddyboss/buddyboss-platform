@@ -32,7 +32,7 @@ jQuery( document ).ready(
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: []
+								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
 							imageDragging: false
 						}
@@ -50,6 +50,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -70,8 +71,9 @@ jQuery( document ).ready(
 				});
 
 				//Add Click event to show / hide text formatting Toolbar
-				jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
+				jQuery( 'body' ).on('click', '.bbp-forum-form #whats-new-toolbar .show-toolbar', function(e) {
 					e.preventDefault();
+					var key = jQuery(e.currentTarget).closest('.bbp-forum-form').find('.bbp_editor_forum_content').data('key');
 					var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
 					jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
 					if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
@@ -85,15 +87,9 @@ jQuery( document ).ready(
 							medium_editor.removeClass('medium-editor-toolbar-active');
 						}
 					}
+					jQuery(window.forums_medium_forum_editor[key].elements[0]).focus();
 					medium_editor.toggleClass('active');
 
-				});
-
-				jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
-					e.preventDefault();
-					if( window.forums_medium_forum_editor[key].exportSelection() === null ) {
-						$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
-					}
 				});
 			}
 			if ( jQuery( '.bbp_editor_reply_content' ).length ) {
@@ -119,7 +115,7 @@ jQuery( document ).ready(
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: []
+								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
 							imageDragging: false
 						}
@@ -137,6 +133,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -158,6 +155,7 @@ jQuery( document ).ready(
 					//Add Click event to show / hide text formatting Toolbar
 					jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function(e) {
 						e.preventDefault();
+						var key = jQuery(e.currentTarget).closest('.bbp-reply-form').find('.bbp_editor_reply_content').data('key');
 						var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
 						jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
 						if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
@@ -171,15 +169,9 @@ jQuery( document ).ready(
 								medium_editor.removeClass('medium-editor-toolbar-active');
 							}
 						}
+						jQuery(window.forums_medium_reply_editor[key].elements[0]).focus();
 						medium_editor.toggleClass('active');
 
-					});
-
-					jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
-						e.preventDefault();
-						if( window.forums_medium_reply_editor[key].exportSelection() === null ) {
-							$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
-						}
 					});
 				});
 			}
@@ -206,7 +198,7 @@ jQuery( document ).ready(
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: []
+								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
 							imageDragging: false
 						}
@@ -226,6 +218,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -247,6 +240,7 @@ jQuery( document ).ready(
 					//Add Click event to show / hide text formatting Toolbar
 					jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
 						e.preventDefault();
+						var key = jQuery(e.currentTarget).closest('.bbp-topic-form').find('.bbp_editor_topic_content').data('key');
 						var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
 						jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
 						if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
@@ -260,26 +254,12 @@ jQuery( document ).ready(
 								medium_editor.removeClass('medium-editor-toolbar-active');
 							}
 						}
+						jQuery(window.forums_medium_topic_editor[key].elements[0]).focus();
 						medium_editor.toggleClass('active');
 
 					});
-
-					jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
-						e.preventDefault();
-						if( window.forums_medium_topic_editor[key].exportSelection() === null ) {
-							$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
-						}
-					});
-
 				});
 			}
-			jQuery( document ).on('input', '.bbp-the-content', function(e) {
-				var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
-				setTimeout(function(){
-					medium_editor.addClass('medium-editor-toolbar-active');
-					$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
-				},0);
-			});
 		}
 
 			/* Use backticks instead of <code> for the Code button in the editor */

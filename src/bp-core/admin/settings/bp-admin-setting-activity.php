@@ -70,13 +70,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		bp_core_install( $bp->active_components );
 		bp_core_add_page_mappings( $bp->active_components );
 		bp_update_option( 'bp-active-components', $bp->active_components );
-		// Reset the permalink to fix the 404 on some pages.
-		flush_rewrite_rules();
 
 	}
 
 	public function register_fields() {
-		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
 
 		// Allow Activity edit setting.
 		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
@@ -102,13 +100,13 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
 
+		//Relevant Activity Feeds
+		$this->add_field( '_bp_enable_relevant_feed', __( 'Relevant Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_relevant_feed', 'intval' );
+
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
-
-		// Activity Settings Tutorial
-		$this->add_field( 'bp-activity-settings-tutorial', '', 'bp_activity_settings_tutorial' );
 
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 
@@ -123,27 +121,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			$is_first = false;
 		}
 
-		// Get all active custom post type.
-		$post_types = get_post_types( array( 'public' => true ) );
-
-		// Exclude BP CPT
-		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
-
-		$bp_excluded_cpt = array();
-		foreach ( $post_types as $post_type ) {
-			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array( $post_type, $bp_exclude_cpt ) ) {
-				continue;
-			}
-
-			$bp_excluded_cpt[] = $post_type;
-		}
-
 		// flag for adding conditional CSS class.
 		$count       = 0;
 		$description = 0;
 
-		foreach ( $bp_excluded_cpt as $key => $post_type ) {
+		foreach ( bb_feed_post_types() as $key => $post_type ) {
 
 			$fields = array();
 
@@ -152,11 +134,18 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				'description' => false,
 			);
 
+			$post_type_option_name = bb_post_type_feed_option_name( $post_type );
+			$comment_option_name   = bb_post_type_feed_comment_option_name( $post_type );
+
 			if ( 'post' === $post_type ) {
+				$fields['args']['class'] = 'child-no-padding-first';
 				// create field for each of custom post type.
-				$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+				$this->add_field( $post_type_option_name, __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+
+				$fields['args']['class'] = 'child-no-padding bp-display-none';
 				// Activity commenting on post and comments.
-				$this->add_field( 'bp-disable-blogforum-comments', __( 'Post Type Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'bp_admin_sanitize_callback_blogforum_comments' );
+				$this->add_field( $comment_option_name, '&#65279;', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
+
 			} else {
 				if ( 0 === $description ) {
 					$fields['args']['description'] = true;
@@ -165,18 +154,22 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				if ( 0 === $count ) {
 					$fields['args']['class'] = 'child-no-padding-first';
 					// create field for each of custom post type.
-					$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'Custom Post Types', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+					$this->add_field( $post_type_option_name, __( 'Custom Post Types', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+
+					$fields['args']['class'] = 'child-no-padding bp-display-none';
+					$this->add_field( $comment_option_name, '', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 				} else {
-					$fields['args']['class'] = 'child-no-padding';
+
+					$fields['args']['class'] = 'child-no-padding-first';
 					// create field for each of custom post type.
-					$this->add_field( "bp-feed-custom-post-type-$post_type", '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+					$this->add_field( $post_type_option_name, '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+
+					$fields['args']['class'] = 'child-no-padding bp-display-none';
+					$this->add_field( $comment_option_name, '', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 				}
-				$count++;
+				$count ++;
 			}
 		}
-
-		// Posts in Activity Tutorial
-		$this->add_field( 'bp-posts-in-activity-tutorial', '', 'bp_posts_in_activity_tutorial' );
 
 		/**
 		 * Fires to register Activity tab settings fields and section.

@@ -1,9 +1,9 @@
 <?php
 /**
- * @todo add description
+ * @todo    add description
  *
  * @package BuddyBoss\Search
- * @since BuddyBoss 1.0.0
+ * @since   BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -52,10 +52,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Generates sql for members search.
 		 *
-		 * @todo: if Mr.X has set privacy of xprofile field 'location' data as 'private'
+		 * @todo  : if Mr.X has set privacy of xprofile field 'location' data as 'private'
 		 * then, location of Mr.X shouldn't be checked in searched.
 		 *
 		 * @since BuddyBoss 1.0.0
+		 *
 		 * @param string  $search_term
 		 * @param boolean $only_totalrow_count
 		 *
@@ -72,11 +73,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( $only_totalrow_count ) {
 				$COLUMNS .= ' COUNT( DISTINCT u.id ) ';
 			} else {
-				$COLUMNS            .= " DISTINCT u.id, 'members' as type, u.display_name LIKE %s AS relevance, a.date_recorded as entry_date ";
+				$COLUMNS             .= " DISTINCT u.id, 'members' as type, u.display_name LIKE %s AS relevance, a.date_recorded as entry_date ";
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
 			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id AND a.component = 'members' AND a.type = 'last_activity'";
+
+			/**
+			 * Filter the MySQL JOIN clause for the Member Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param string $join_sql JOIN clause.
+			 * @param string $uid_name User ID field name.
+			 */
+			$FROM = apply_filters( 'bp_user_search_join_sql', $FROM, 'id' );
 
 			$WHERE        = array();
 			$WHERE[]      = '1=1';
@@ -108,7 +119,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 				if ( ! empty( $conditions_wp_user_table ) ) {
 
-					$clause_wp_user_table  = "u.id IN ( SELECT ID FROM {$wpdb->users}  WHERE ( ";
+					$clause_wp_user_table = "u.id IN ( SELECT ID FROM {$wpdb->users}  WHERE ( ";
 					$clause_wp_user_table .= implode( ' OR ', $conditions_wp_user_table );
 					$clause_wp_user_table .= ' ) ) ';
 
@@ -183,13 +194,13 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( ! empty( $selected_xprofile_fields ) ) {
 
-						$data_clause_xprofile_table  = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
+						$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
 						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
 						$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
 						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
 						$data_clause_xprofile_table .= ') ) )';
 
-						$sql_xprofile = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+						$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
 						$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
 
 						$user_ids = array();
@@ -211,9 +222,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						}
 
 						// Added user when visbility matched.
-						if ( !empty( $user_ids ) ) {
-							$user_ids = array_unique( $user_ids );
-							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids )  ." )";
+						if ( ! empty( $user_ids ) ) {
+							$user_ids       = array_unique( $user_ids );
+							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )";
 						} else {
 							$where_fields[] = "u.id = 0";
 						}
@@ -237,10 +248,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( $k == 0 ) {
 						$clause_search_string_table .= ' meta_value LIKE %s ';
-						$query_placeholder[]         = '%' . $sterm . '%';
+						$query_placeholder[]        = '%' . $sterm . '%';
 					} else {
 						$clause_search_string_table .= ' OR meta_value LIKE %s ';
-						$query_placeholder[]         = '%' . $sterm . '%';
+						$query_placeholder[]        = '%' . $sterm . '%';
 					}
 				}
 
@@ -259,6 +270,16 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// other conditions
 			// $WHERE[] = " a.component = 'members' ";
 			// $WHERE[] = " a.type = 'last_activity' ";
+
+			/**
+			 * Filters the MySQL WHERE conditions for the member Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $uid_name         User ID field name.
+			 */
+			$WHERE = apply_filters( 'bp_user_search_where_sql', $WHERE, 'id' );
 
 			$sql = $COLUMNS . ' FROM ' . $FROM . ' WHERE ' . implode( ' AND ', $WHERE );
 			if ( ! $only_totalrow_count ) {
