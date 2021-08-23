@@ -143,21 +143,40 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 
 			// Page or single post.
 		} elseif ( is_page() || is_single() ) {
-			$base = get_permalink();
+			if ( 'forums' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_topics_url();
+			} else {
+				$base = get_permalink();
+			}
 
 			// Forum archive.
 		} elseif ( bbp_is_forum_archive() ) {
-			$base = bbp_get_forums_url();
+			if ( 'forums' === bbp_show_on_root() ) {
+				$base = bbp_get_topics_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
+			}
 
 			// Topic archive.
 		} elseif ( bbp_is_topic_archive() ) {
-			$base = bbp_get_topics_url();
+			if ( 'forums' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_topics_url();
+			}
 
 			// Default.
 		} else {
-			$base = get_permalink( $forum_id );
+			if ( 'forums' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_topics_url();
+			} else {
+				$base = get_permalink( $forum_id );
+			}
 		}
-
 		// Use pagination base.
 		$base = trailingslashit( $base ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 
