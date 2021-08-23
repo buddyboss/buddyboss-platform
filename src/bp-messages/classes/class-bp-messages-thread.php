@@ -1654,7 +1654,7 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && - 1 !== $r['per_page'] ) {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
-
+		
 		/**
 		 * Filters the Where SQL statement.
 		 *
