@@ -1553,6 +1553,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
  *
  * @param int    $parent_id Parent id
  * @param string $post_type Post type. Defaults to 'post'
+ * @param boolean $force_cache flag to update cache
  * @uses bbp_get_topic_post_type() To get the topic post type
  * @uses wp_cache_get() To check if there is a cache of the children
  * @uses wpdb::prepare() To prepare the query
@@ -1562,7 +1563,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
  *                        parent id and post type
  * @return array The array of children
  */
-function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
+function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post', $force_cache = false ) {
 	global $wpdb;
 
 	// Bail if nothing passed
@@ -1575,7 +1576,7 @@ function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
 
 	// Check for cache and set if needed
 	$child_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
-	if ( false === $child_ids ) {
+	if ( false === $child_ids || $force_cache ) {
 		$post_status = array( bbp_get_public_status_id() );
 
 		// Add closed status if topic post type
