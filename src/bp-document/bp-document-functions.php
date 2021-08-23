@@ -4306,10 +4306,11 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 	 * @param string $extension      Extension.
 	 * @param string $size           Size.
 	 * @param int    $attachment_id  Attachment id.
+	 * @param bool   $do_symlink     display symlink or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id );
+	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id, $do_symlink );
 }
 
 /**
