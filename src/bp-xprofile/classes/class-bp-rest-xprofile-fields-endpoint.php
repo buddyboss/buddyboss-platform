@@ -19,6 +19,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Current Users ID.
+	 *
+	 * @var integer Member ID.
+	 */
+	protected $user_id;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -528,16 +535,16 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() || ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -760,42 +767,39 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$field  = $this->get_xprofile_field_object( $request );
 
-		$field = $this->get_xprofile_field_object( $request );
+			if ( empty( $field->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid field ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = $this->get_xprofile_field_display_permission( $retval, $field->id );
+			}
 
-		if ( true === $retval && empty( $field->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = $this->get_xprofile_field_display_permission( $retval, $field->id );
-		}
-
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -851,7 +855,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'group_id'          => (int) $field->group_id,
 			'parent_id'         => (int) $field->parent_id,
 			'type'              => $field->type,
-			'name'              => $field->name,
+			'name'              => wp_specialchars_decode( $field->name ),
 			'alternate_name'    => '',
 			'description'       => array(
 				'raw'      => $field->description,
@@ -866,6 +870,14 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'options'           => array(),
 		);
 
+		// When we add paragraph as field for the profiles field then its not displaying proper format.
+		$current_user_id = $request->get_param( 'user_id' );
+		if ( empty( $current_user_id ) ) {
+			$current_user_id = bp_loggedin_user_id();
+		}
+
+		$this->user_id = $current_user_id;
+
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
 			$data['visibility_level']        = $field->visibility_level;
 			$data['allow_custom_visibility'] = $this->bp_rest_get_field_visibility( $field );
@@ -876,10 +888,12 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$data['data']['id'] = $field->data->id;
 			}
 
+			$field_value = isset( $field->data->value ) ? $field->data->value : '';
+
 			$data['data']['value'] = array(
-				'raw'          => $this->get_profile_field_raw_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
-				'unserialized' => $this->get_profile_field_unserialized_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
-				'rendered'     => $this->get_profile_field_rendered_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
+				'raw'          => $this->get_profile_field_raw_value( $field_value, $field ),
+				'unserialized' => $this->get_profile_field_unserialized_value( $field_value, $field ),
+				'rendered'     => $this->get_profile_field_rendered_value( $field_value, $field ),
 			);
 		}
 
@@ -933,7 +947,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Get alternate name for the field.
 		$alternate_name = bp_xprofile_get_meta( (int) $field->id, 'field', 'alternate_name' );
 		if ( ! empty( $alternate_name ) ) {
-			$data['alternate_name'] = $alternate_name;
+			$data['alternate_name'] = wp_specialchars_decode( $alternate_name );
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -1030,6 +1044,20 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Set the $field global as the `xprofile_filter_link_profile_data` filter needs it.
 		$field = $profile_field;
 
+		if ( 'membertypes' === $profile_field->type ) {
+			// Need to pass $profile_field as object.
+			$all_member_type = $this->get_member_type_options( $profile_field, array( 'show_all' => true ) );
+			if ( ! empty( $all_member_type ) ) {
+				$all_member_type = array_column( $all_member_type, 'name', 'id' );
+			}
+
+			if ( ! empty( $all_member_type ) && array_key_exists( $profile_field->data->value, $all_member_type ) ) {
+				$value = $all_member_type[ $profile_field->data->value ];
+			}
+		}
+
+		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+
 		/**
 		 * Apply Filters to sanitize XProfile field value.
 		 *
@@ -1040,6 +1068,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		$value = apply_filters( 'bp_get_the_profile_field_value', $value, $field->type, $field->id );
+
+		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		// Reset the global before returning the value.
 		$field = $reset_global;
@@ -1484,7 +1514,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
-				if ( '' === $enabled || '1' === $enabled ) {
+				if ( '' === $enabled || '1' === $enabled || ! empty( $request['show_all'] ) ) {
 					$options[] = array(
 						'id'                => $post->ID,
 						'group_id'          => $field->group_id,
@@ -1680,13 +1710,40 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
+		$user_id = ( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id();
+
+		if ( empty( $user_id ) ) {
+			return;
+		}
+
 		$field_id = $field->id;
+
+		$clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $field->group_id );
+		$exclude_fields_cs   = bp_get_repeater_template_field_ids( $field->group_id );
+
+		// include only the subset of clones the current user has data in.
+		$user_field_set_count     = bp_get_profile_field_set_count( $field->group_id, $user_id );
+		$clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $field->group_id, $user_field_set_count );
+		$clones_to_exclude        = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
+
+		$exclude_fields_cs = array_merge( $exclude_fields_cs, $clones_to_exclude );
+		if ( ! empty( $exclude_fields_cs ) ) {
+			$exclude_fields_cs  = implode( ',', $exclude_fields_cs );
+			$exclude_fields_sql = "AND  m1.object_id NOT IN ({$exclude_fields_cs})";
+		} else {
+			$exclude_fields_sql = '';
+		}
+
 		// phpcs:ignore
-		$sql = "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d";
+		$sql = "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
+        JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
+        WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
+        AND m2.meta_key = '_clone_number' {$exclude_fields_sql} ORDER BY m2.object_id, m2.meta_value ASC";
+
 		// phpcs:ignore
 		$sql = $wpdb->prepare( $sql, $field_id );
 		// phpcs:ignore
-		$results = $wpdb->get_col( $sql );
+		$results = $wpdb->get_results( $sql );
 		$user_id = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
 		$data    = array();
 
@@ -1696,13 +1753,17 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 			$count = 1;
 
-			foreach ( $results as $k => $sub_field_id ) {
+			foreach ( $results as $k => $sub_field ) {
+
+				$sub_field_clone_number = $sub_field->clone_number;
+				$sub_field_id           = $sub_field->object_id;
 
 				if ( $count > $user_fields ) {
 					break;
 				}
 
-				$data[ $k ]['id'] = $sub_field_id;
+				$data[ $k ]['id']           = $sub_field_id;
+				$data[ $k ]['clone_number'] = $sub_field_clone_number;
 
 				$field_data = $this->get_xprofile_field_data_object( $sub_field_id, $user_id );
 
@@ -1713,13 +1774,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 						'rendered'     => $this->get_profile_field_rendered_value( $field_data->value, $sub_field_id ),
 					);
 				}
+
 				if ( ! empty( $request['fetch_visibility_level'] ) ) {
 					$data[ $k ]['visibility_level']        = xprofile_get_field_visibility_level( $sub_field_id, $user_id );
 					$data[ $k ]['allow_custom_visibility'] = bp_xprofile_get_meta( $sub_field_id, 'field', 'allow_custom_visibility' );
 				}
 
 				$count ++;
-
 			}
 		}
 
@@ -1810,5 +1871,16 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_xprofile_field_data_object( $field_id, $user_id ) {
 		return new BP_XProfile_ProfileData( $field_id, $user_id );
+	}
+
+	/**
+	 * Set current and display user with current user.
+	 *
+	 * @param int $user_id The user id.
+	 *
+	 * @return int
+	 */
+	public function bp_rest_get_displayed_user( $user_id ) {
+		return ( ! empty( $this->user_id ) ? $this->user_id : bp_loggedin_user_id() );
 	}
 }

@@ -87,6 +87,7 @@ function bp_core_install( $active_components = false ) {
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
+		bb_core_enable_default_symlink_support();
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {
@@ -704,6 +705,7 @@ function bp_core_install_media() {
 		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
 		privacy varchar(50) NULL DEFAULT 'public',
+		type varchar(50) NULL DEFAULT 'photo',
 		menu_order bigint(20) NULL DEFAULT 0 ,
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),

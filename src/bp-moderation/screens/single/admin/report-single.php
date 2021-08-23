@@ -195,7 +195,7 @@ $admins            = array_map( 'intval', get_users(
 									if ( $is_content_screen ) {
 
 										$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-										
+
 										if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 											?>
                                             <a href="javascript:void(0);"

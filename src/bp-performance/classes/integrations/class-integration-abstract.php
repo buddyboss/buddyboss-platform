@@ -514,10 +514,10 @@ abstract class Integration_Abstract {
 
 									if ( ! empty( $unique_key ) && is_array( $unique_key ) ) {
 										$item_id     = $this->prepare_key( $result_data, $unique_key );
-										$cache_group = $cache_group . '_' . $item_id;
+										$cache_group = ! empty( $item_id ) ? $cache_group . '_' . $item_id : $cache_group;
 									} else {
 										$item_id     = ( empty( $param_value ) && isset( $result_data[ $unique_key ] ) ) ? $result_data[ $unique_key ] : $param_value;
-										$cache_group = $cache_group . '_' . $item_id;
+										$cache_group = ! empty( $item_id ) ? $cache_group . '_' . $item_id : $cache_group;
 									}
 
 									Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $cache_group, $user_id );

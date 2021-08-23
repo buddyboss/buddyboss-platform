@@ -460,6 +460,19 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_video ) {
+				return new WP_Error(
+					'bp_rest_bp_message_video',
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
 		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
 			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_gif ) {
@@ -474,6 +487,43 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( empty( $request['message'] ) ) {
+			$request['message'] = '&nbsp;';
+		}
+
+		if (
+			empty( $request['message'] )
+			&& ! (
+				(
+					function_exists( 'bp_is_messages_media_support_enabled' )
+					&& false !== bp_is_messages_media_support_enabled()
+					&& ! empty( $request['bp_media_ids'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_gif_support_enabled' )
+					&& false !== bp_is_messages_gif_support_enabled()
+					&& ! empty( $request['media_gif']['url'] )
+					&& ! empty( $request['media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_document_support_enabled' )
+					&& false !== bp_is_messages_document_support_enabled()
+					&& ! empty( $request['bp_documents'] )
+				)
+				|| (
+					function_exists( 'bp_is_messages_video_support_enabled' )
+					&& false !== bp_is_messages_video_support_enabled()
+					&& ! empty( $request['bp_videos'] )
+				)
+			)
+		) {
+			return new WP_Error(
+				'bp_rest_messages_empty_message',
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else if ( empty( $request['message'] ) ) {
 			$request['message'] = '&nbsp;';
 		}
 
@@ -671,16 +721,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function search_recipients_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to search recipients.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to search recipients.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -758,16 +808,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function search_thread_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**

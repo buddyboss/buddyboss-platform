@@ -367,6 +367,10 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Group Forums.
 			$results['bbp_enable_group_forums']  = bbp_is_group_forums_active();
 			$results['bbp_group_forums_root_id'] = bbp_get_group_forums_root_id();
+
+			// Check Permalinks for platform forms slugs.
+			$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+			$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
 		}
 
 		// Activity settings.
@@ -392,14 +396,21 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp-feed-platform-group_details_updated'] = bp_platform_is_feed_enable( 'bp-feed-platform-group_details_updated' );
 			$results['bp-feed-platform-bbp_topic_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_topic_create' );
 			$results['bp-feed-platform-bbp_reply_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_reply_create' );
-			$results['bp-disable-blogforum-comments']          = bp_disable_blogforum_comments();
 
-			$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
-			if ( ! empty( $custom_post_types ) ) {
-				foreach ( $custom_post_types as $single_post ) {
+			if ( function_exists( 'bb_feed_post_types' ) ) {
+				foreach ( bb_feed_post_types() as $single_post ) {
 					// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
-					$enabled                                               = bp_is_post_type_feed_enable( $single_post );
-					$results[ 'bp-feed-custom-post-type-' . $single_post ] = $enabled;
+					$results[ 'bp-feed-custom-post-type-' . $single_post ]               = (bool) bp_is_post_type_feed_enable( $single_post );
+					$results[ 'bp-feed-custom-post-type-' . $single_post . '-comments' ] = (bool) bb_is_post_type_feed_comment_enable( $single_post );
+				}
+			} else {
+				$results['bp-disable-blogforum-comments'] = bp_disable_blogforum_comments();
+				$custom_post_types                        = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
+				if ( ! empty( $custom_post_types ) ) {
+					foreach ( $custom_post_types as $single_post ) {
+						// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
+						$results[ 'bp-feed-custom-post-type-' . $single_post ] = (bool) bp_is_post_type_feed_enable( $single_post );
+					}
 				}
 			}
 		}
@@ -439,6 +450,16 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				$results['bp_is_forums_document_support_enabled'] = bp_is_forums_document_support_enabled();
 				$results['bp_document_allowed_size']              = bp_media_allowed_upload_document_size();
 				$results['bp_document_allowed_per_batch']         = bp_media_allowed_upload_document_per_batch();
+			}
+
+			// Video settings.
+			if ( bp_is_active( 'video' ) ) {
+				$results['bp_video_profile_video_support']  = bp_is_profile_video_support_enabled();
+				$results['bp_video_group_video_support']    = bp_is_group_video_support_enabled();
+				$results['bp_video_messages_video_support'] = bp_is_messages_video_support_enabled();
+				$results['bp_video_forums_video_support']   = bp_is_forums_video_support_enabled();
+				$results['bp_video_allowed_size']           = bp_video_allowed_upload_video_size();
+				$results['bp_video_allowed_per_batch']      = bp_video_allowed_upload_video_per_batch();
 			}
 		}
 
@@ -572,6 +593,34 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Forum Integration for BuddyPress.
 			'bbp_enable_group_forums'    => bbp_is_group_forums_active(),
 			'bbp_group_forums_root_id'   => bbp_get_group_forums_root_id(),
+		);
+
+		// Check Permalinks for platform forms slugs.
+		$permalinks_settings    = $this->bp_rest_get_forum_slugs_settings();
+		$results['forum_slugs'] = apply_filters( 'bp_rest_forum_slugs_settings', $permalinks_settings );
+
+		return $results;
+	}
+
+	/**
+	 * Get Permalinks settings.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_get_forum_slugs_settings() {
+		$results = array(
+			// Single forum slugs.
+			'forum'         => get_option( '_bbp_forum_slug', 'forum' ),
+			'topic'         => get_option( '_bbp_topic_slug', 'discussions' ),
+			'topic_tag'     => get_option( '_bbp_topic_tag_slug', 'topic-tag' ),
+			'view'          => get_option( '_bbp_view_slug', 'view' ),
+			'reply'         => get_option( '_bbp_reply_slug', 'reply' ),
+			'search'        => get_option( '_bbp_search_slug', 'search' ),
+
+			// Forum Profile Slugs.
+			'replies'       => bbp_get_reply_archive_slug(),
+			'favorites'     => bbp_get_user_favorites_slug(),
+			'subscriptions' => bbp_get_user_subscriptions_slug(),
 		);
 
 		return $results;
