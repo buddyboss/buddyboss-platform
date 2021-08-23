@@ -1591,7 +1591,8 @@ function bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = f
  */
 function bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
-	$topics   = (int) count( bbp_forum_query_topic_ids( $forum_id ) );
+	$meta_key = empty( $total_count ) ? '_bbp_topic_count' : '_bbp_total_topic_count';
+	$topics   = (int) get_post_meta( $forum_id, $meta_key, true );
 	$filter   = ( true === $integer ) ? 'bbp_get_forum_topic_count_int' : 'bbp_get_forum_topic_count';
 
 	return apply_filters( $filter, $topics, $forum_id );
