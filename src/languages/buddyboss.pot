@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.7.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-08-06 10:37:08+00:00\n"
+"POT-Creation-Date: 2021-08-23 12:12:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8056,13 +8056,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -10274,7 +10274,7 @@ msgstr[1] ""
 
 #: bp-forums/admin/metaboxes.php:263 bp-forums/admin/metaboxes.php:264
 #: bp-forums/admin/metaboxes.php:361
-#: bp-forums/templates/default/bbpress/form-topic.php:128
+#: bp-forums/templates/default/bbpress/form-topic.php:145
 msgid "Type:"
 msgstr ""
 
@@ -10314,7 +10314,7 @@ msgstr ""
 
 #: bp-forums/admin/metaboxes.php:392 bp-forums/admin/metaboxes.php:451
 #: bp-forums/groups.php:1095
-#: bp-forums/templates/default/bbpress/form-topic.php:107
+#: bp-forums/templates/default/bbpress/form-topic.php:124
 #: bp-forums/topics/template.php:63
 msgid "Forum:"
 msgstr ""
@@ -11736,7 +11736,7 @@ msgid "Discussion \"%1$s\" successfully unmarked as spam."
 msgstr ""
 
 #: bp-forums/admin/topics.php:739 bp-forums/groups.php:298
-#: bp-forums/templates/default/bbpress/form-topic.php:111
+#: bp-forums/templates/default/bbpress/form-topic.php:128
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:1094
 msgid "(No Forum)"
 msgstr ""
@@ -12697,7 +12697,7 @@ msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:434
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:837
-#: bp-forums/replies/functions.php:1406 bp-forums/replies/template.php:605
+#: bp-forums/replies/functions.php:1425 bp-forums/replies/template.php:605
 #: bp-forums/templates/default/bbpress/form-reply.php:28
 #: bp-forums/topics/functions.php:1405 bp-forums/topics/functions.php:1777
 #. translators: Topic Title.
@@ -13202,7 +13202,7 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2523
+#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2542
 #: bp-groups/bp-groups-admin.php:1482 bp-groups/bp-groups-functions.php:1319
 #: bp-groups/bp-groups-functions.php:4000
 #: bp-groups/bp-groups-functions.php:4019
@@ -13538,7 +13538,7 @@ msgstr ""
 #: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:416
 #: bp-forums/groups.php:344 bp-forums/groups.php:525
 #: bp-forums/notifications.php:366 bp-forums/replies/functions.php:124
-#: bp-forums/replies/functions.php:585 bp-forums/replies/functions.php:1353
+#: bp-forums/replies/functions.php:585 bp-forums/replies/functions.php:1372
 #: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:582
 #: bp-forums/topics/functions.php:1250 bp-forums/topics/functions.php:1572
 #: bp-forums/topics/functions.php:1947 bp-forums/topics/functions.php:1992
@@ -13856,7 +13856,7 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Discussion is closed."
 msgstr ""
 
-#: bp-forums/replies/functions.php:440 bp-forums/replies/functions.php:789
+#: bp-forums/replies/functions.php:440 bp-forums/replies/functions.php:808
 msgid "<strong>ERROR</strong>: There was a problem adding the tags to the topic."
 msgstr ""
 
@@ -13880,92 +13880,92 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Your reply cannot be edited now."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1329
+#: bp-forums/replies/functions.php:1348
 msgid "<strong>ERROR</strong>: Reply ID to move not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1338
+#: bp-forums/replies/functions.php:1357
 msgid "<strong>ERROR</strong>: The reply you want to move was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1348
+#: bp-forums/replies/functions.php:1367
 msgid "<strong>ERROR</strong>: The discussion you want to move from was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1359 bp-forums/topics/functions.php:1261
+#: bp-forums/replies/functions.php:1378 bp-forums/topics/functions.php:1261
 #: bp-forums/topics/functions.php:1578
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the source "
 "discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1369
+#: bp-forums/replies/functions.php:1388
 msgid "<strong>ERROR</strong>: You need to choose a valid move option."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1381 bp-forums/topics/functions.php:1600
+#: bp-forums/replies/functions.php:1400 bp-forums/topics/functions.php:1600
 msgid "<strong>ERROR</strong>: Destination discussion ID not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1391
+#: bp-forums/replies/functions.php:1410
 msgid "<strong>ERROR</strong>: The discussion you want to move to was not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1396 bp-forums/topics/functions.php:1615
+#: bp-forums/replies/functions.php:1415 bp-forums/topics/functions.php:1615
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the "
 "destination discussion!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1453 bp-forums/topics/functions.php:1654
+#: bp-forums/replies/functions.php:1472 bp-forums/topics/functions.php:1654
 msgid ""
 "<strong>ERROR</strong>: There was a problem converting the reply into the "
 "discussion. Please try again."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1458
+#: bp-forums/replies/functions.php:1477
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to create new "
 "discussions. The reply could not be converted into a discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1647
+#: bp-forums/replies/functions.php:1666
 msgid "<strong>ERROR:</strong> You do not have the permission to do that!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1660
+#: bp-forums/replies/functions.php:1679
 msgid "<strong>ERROR</strong>: There was a problem unmarking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1660
+#: bp-forums/replies/functions.php:1679
 msgid "<strong>ERROR</strong>: There was a problem marking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1679
+#: bp-forums/replies/functions.php:1698
 msgid "<strong>ERROR</strong>: There was a problem trashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1687
+#: bp-forums/replies/functions.php:1706
 msgid "<strong>ERROR</strong>: There was a problem untrashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1695
+#: bp-forums/replies/functions.php:1714
 msgid "<strong>ERROR</strong>: There was a problem deleting the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2206
+#: bp-forums/replies/functions.php:2225
 msgid "All Posts"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2208 bp-forums/replies/template.php:52
+#: bp-forums/replies/functions.php:2227 bp-forums/replies/template.php:52
 msgid "All Replies"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2254 bp-forums/topics/functions.php:3732
+#: bp-forums/replies/functions.php:2273 bp-forums/topics/functions.php:3732
 msgid "Replies: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2489 bp-forums/users/template.php:517
+#: bp-forums/replies/functions.php:2508 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1483 bp-groups/bp-groups-functions.php:1327
 #: bp-groups/bp-groups-functions.php:4002
 #: bp-groups/bp-groups-functions.php:4021
@@ -13977,18 +13977,18 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2510 bp-forums/users/template.php:503
+#: bp-forums/replies/functions.php:2529 bp-forums/users/template.php:503
 msgid "Guest"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2514 bp-members/bp-members-functions.php:540
+#: bp-forums/replies/functions.php:2533 bp-members/bp-members-functions.php:540
 #: bp-messages/bp-messages-template.php:1801
 #: bp-messages/bp-messages-template.php:2066
 #: bp-messages/classes/class-bp-messages-thread.php:1475
 msgid "Deleted User"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2519
+#: bp-forums/replies/functions.php:2538
 msgid "Administrator"
 msgstr ""
 
@@ -14396,33 +14396,33 @@ msgid ""
 "capabilities still allow you to do so."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:70
-#: bp-forums/templates/default/bbpress/form-topic.php:95
+#: bp-forums/templates/default/bbpress/form-reply.php:75
+#: bp-forums/templates/default/bbpress/form-topic.php:100
 msgid "Type one or more tag, comma separated"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:87
-#: bp-forums/templates/default/bbpress/form-topic.php:147
+#: bp-forums/templates/default/bbpress/form-reply.php:104
+#: bp-forums/templates/default/bbpress/form-topic.php:164
 msgid "Notify the author of follow-up replies via email"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:91
-#: bp-forums/templates/default/bbpress/form-topic.php:151
+#: bp-forums/templates/default/bbpress/form-reply.php:108
+#: bp-forums/templates/default/bbpress/form-topic.php:168
 msgid "Notify me of follow-up replies via email"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:108
-#: bp-forums/templates/default/bbpress/form-topic.php:167
+#: bp-forums/templates/default/bbpress/form-reply.php:125
+#: bp-forums/templates/default/bbpress/form-topic.php:184
 msgid "Keep a log of this edit:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:112
-#: bp-forums/templates/default/bbpress/form-topic.php:171
+#: bp-forums/templates/default/bbpress/form-reply.php:129
+#: bp-forums/templates/default/bbpress/form-topic.php:188
 msgid "Optional reason for editing:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:129
-#: bp-forums/templates/default/bbpress/form-topic.php:186
+#: bp-forums/templates/default/bbpress/form-reply.php:146
+#: bp-forums/templates/default/bbpress/form-topic.php:203
 #: bp-moderation/bp-moderation-functions.php:1098
 #: bp-moderation/classes/class-bp-moderation-activity.php:460
 #: bp-moderation/classes/class-bp-moderation-activity.php:473
@@ -14432,20 +14432,20 @@ msgstr ""
 msgid "Post"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:153
+#: bp-forums/templates/default/bbpress/form-reply.php:170
 msgid "The discussion \"%s\" is closed to new replies."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:162
-#: bp-forums/templates/default/bbpress/form-topic.php:210
+#: bp-forums/templates/default/bbpress/form-reply.php:179
+#: bp-forums/templates/default/bbpress/form-topic.php:227
 msgid "The forum \"%s\" is closed to new discussions and replies."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:171
+#: bp-forums/templates/default/bbpress/form-reply.php:188
 msgid "You cannot reply to this discussion."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:171
+#: bp-forums/templates/default/bbpress/form-reply.php:188
 msgid "Log in  to reply."
 msgstr ""
 
@@ -14624,11 +14624,11 @@ msgid ""
 "capabilities still allow you to do so."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-topic.php:219
+#: bp-forums/templates/default/bbpress/form-topic.php:236
 msgid "You cannot create new discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-topic.php:219
+#: bp-forums/templates/default/bbpress/form-topic.php:236
 msgid "You must be logged in to create new discussions."
 msgstr ""
 
@@ -28924,14 +28924,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
