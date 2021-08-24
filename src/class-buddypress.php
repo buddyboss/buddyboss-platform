@@ -554,6 +554,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-wp-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-learndash-emails.php';
+		require $this->plugin_dir . 'bp-core/bp-core-email-queue.php';
 		require $this->plugin_dir . 'bp-core/bp-core-profile-search.php';
 		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
@@ -645,6 +646,7 @@ class BuddyPress {
 			'BP_Email_Delivery'                            => 'core',
 			'BP_Email_Recipient'                           => 'core',
 			'BP_Email'                                     => 'core',
+			'BP_Email_Queue'                               => 'core',
 			'BP_Embed'                                     => 'core',
 			'BP_Media_Extractor'                           => 'core',
 			'BP_Members_Suggestions'                       => 'core',
