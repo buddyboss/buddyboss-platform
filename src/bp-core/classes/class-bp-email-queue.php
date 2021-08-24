@@ -18,12 +18,26 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 	class BP_Email_Queue {
 
 		/**
-		 *
+		 * Constructor.
 		 *
 		 * @since BuddyBoss 1.7.6
 		 */
 		function __construct() {
 			$this->create_db_table();
+			$this->setup_cron();
+		}
+
+		/**
+		 * Set up Cron.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 */
+		function setup_cron() {
+			if ( ! wp_next_scheduled( 'bp_email_queue_cron_hook' ) ) {
+				wp_schedule_event( time(), 'bb_schedule_1min', 'bp_email_queue_cron_hook' );
+			}
+
+			add_action( 'bp_email_queue_cron_hook', array( $this, 'email_queue_cron_cb' ) );
 		}
 
 		/**
@@ -33,7 +47,8 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 		 */
 		public function add_record( $email_type, $to, $args = array() ) {
 			global $wpdb;
-			$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient_id, arguments, date_created ) VALUES ( %s, %d, %s, %s )", $email_type, $to, maybe_serialize( $args ), bp_core_current_time() ) );
+
+			return $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient_id, arguments, date_created ) VALUES ( %s, %d, %s, %s )", $email_type, $to, maybe_serialize( $args ), bp_core_current_time() ) );
 		}
 
 		/**
@@ -54,29 +69,27 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 		 */
 		public function get_records() {
 			global $wpdb;
-			$wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue LIMIT 0, 20" ) );
+
+			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue LIMIT 0, 20" ) );
 		}
 
 		/**
-		 * Background process of email queue.
+		 * email queue cron callback.
 		 *
-		 * @param $email_type
-		 *
-		 * @param $to
-		 *
-		 * @param array $args
-
 		 * @since BuddyBoss 1.7.6
 		 */
-		function background_process_cb( $email_type, $to, $args = array() ) {
-			global $bp_background_updater;
-			$bp_background_updater->push_to_queue(
-				array(
-					'callback' => 'bp_send_email',
-					'args'     => array( $email_type, $to, $args ),
-				)
-			);
-			$bp_background_updater->save()->schedule_event();
+		function email_queue_cron_cb() {
+			$get_records = $this->get_records();
+			if ( isset ( $get_records ) && ! empty ( $get_records ) ) {
+				foreach ( $get_records as $single ) {
+					$item_id    = ! empty( $single->id ) ? $single->id : 0;
+					$email_type = ! empty( $single->email_type ) ? $single->email_type : '';
+					$to         = ! empty( $single->recipient_id ) ? get_userdata( $single->recipient_id ) : 0;
+					$args       = ! empty( $single->arguments ) ? maybe_unserialize( $single->arguments ) : '';
+					bp_send_email( $email_type, $to, $args );
+					$this->delete_record( $item_id );
+				}
+			}
 		}
 
 		/**
