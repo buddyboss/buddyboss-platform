@@ -109,7 +109,8 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'profile_album'                      => bp_is_profile_albums_support_enabled(),
 		'group_video'                        => bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
 		'group_album'                        => bp_is_group_albums_support_enabled(),
-		'messages_video'                     => bp_is_messages_video_support_enabled(),
+		'messages_video'                     => bp_is_messages_video_support_enabled() && bb_user_can_create_video(),
+		'messages_video_active'              => bp_is_messages_video_support_enabled(),
 		'dropzone_video_message'             => __( 'Drop videos here to upload', 'buddyboss' ),
 		'dropzone_video_thumbnail_message'   => __( 'Upload thumbnail', 'buddyboss' ),
 		'video_select_error'                 => __( 'This file type is not supported for video uploads.', 'buddyboss' ),
@@ -201,7 +202,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 		);
 	}
 
-	if ( is_user_logged_in() && bp_is_group_video_support_enabled() ) {
+	if ( is_user_logged_in() && bp_is_group_video_support_enabled() && bp_is_active( 'groups' ) ) {
 		$nav_items['group'] = array(
 			'component' => 'video',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
@@ -334,17 +335,4 @@ function bp_video_allowed_video_type() {
 	$extension_lists = apply_filters( 'bp_video_allowed_video_type', $extension_lists );
 
 	return $extension_lists;
-}
-
-/**
- * Function get video popup buttons.
- *
- * @param array $buttons Buttons array.
- *
- * @return array $buttons Buttons array.
- * @since BuddyBoss 1.7.0
- */
-function bp_video_activity_entry_buttons( $buttons ) {
-	unset( $buttons['activity_report'] );
-	return $buttons;
 }
