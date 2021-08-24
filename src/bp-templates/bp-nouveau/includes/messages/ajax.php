@@ -2585,7 +2585,32 @@ function bp_nouveau_ajax_hide_thread() {
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
 
 	foreach ( $thread_ids as $thread_id ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+		// Mark each notification for each PM message as read when hide the thread.
+		if ( bp_is_active( 'notifications' ) && class_exists( 'BP_Notifications_Notification' ) ) {
+
+			// Get unread PM notifications for the user.
+			$new_pm_notifications = BP_Notifications_Notification::get(
+				array(
+					'user_id'          => bp_loggedin_user_id(),
+					'component_name'   => buddypress()->messages->id,
+					'component_action' => 'new_message',
+					'is_new'           => 1,
+				)
+			);
+
+			$unread_message_ids   = wp_list_pluck( $new_pm_notifications, 'item_id' );
+
+			if ( ! empty( $unread_message_ids ) ) {
+
+				// Mark each notification for each PM message as read.
+				foreach ( $unread_message_ids as $message_id ) {
+					bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
+				}
+
+			}
+		}
 	}
 
 	wp_send_json_success(
