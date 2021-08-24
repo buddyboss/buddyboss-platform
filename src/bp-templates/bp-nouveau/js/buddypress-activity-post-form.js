@@ -109,38 +109,32 @@ window.bp = window.bp || {};
 		},
 
 		checkDraftAttachments: function(){
-
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ){
+			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
-
+			  
+			var attachmentLength;
+			if ( bp.Nouveau.Activity.postForm['dropzone'] ) { // check dropzone open or not.
+				// Check media/document/video attached or not in post form.
+				attachmentLength = bp.Nouveau.Activity.postForm.dropzone.files.length;
+			}
+			if ( bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.$el.length ) {
+				// Check gif attached or not in post form.
+				attachmentLength = bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.$el.length;
+			}
+			  
 			var hasDraft;
-
-			var $whatsNewAttachments = $( '#whats-new-attachments' );
-			var countAttachmets = $whatsNewAttachments.find( '.dz-preview' ).length;
-
-			if ( countAttachmets ){
+			if ( attachmentLength ) {
 				hasDraft = true;
-			}else{
+			} else {
 				hasDraft = false;
 			}
-
+			  
 			this.toggleDraftClass( hasDraft );
-			if ( hasDraft ){
+			  
+			if ( hasDraft ) {
 				return;
 			}
-
-			//Check GIF
-
-			var hasGif = $whatsNewAttachments.find( '.gif-image-container' ).length;
-
-			if ( hasGif ){
-				hasDraft = true;
-			}else{
-				hasDraft = false;
-			}
-
-			this.toggleDraftClass( hasDraft );
 
 		},
 
