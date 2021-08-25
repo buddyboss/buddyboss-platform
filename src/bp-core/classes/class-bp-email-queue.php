@@ -86,8 +86,9 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 					$email_type = ! empty( $single->email_type ) ? $single->email_type : '';
 					$to         = ! empty( $single->recipient_id ) ? get_userdata( $single->recipient_id ) : 0;
 					$args       = ! empty( $single->arguments ) ? maybe_unserialize( $single->arguments ) : '';
-					bp_send_email( $email_type, $to, $args );
-					$this->delete_record( $item_id );
+					if ( bp_send_email( $email_type, $to, $args ) ) {
+						$this->delete_record( $item_id );
+					}
 				}
 			}
 		}
