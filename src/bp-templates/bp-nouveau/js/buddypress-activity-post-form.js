@@ -42,8 +42,6 @@ window.bp = window.bp || {};
 			this.postFormView();
 
 			this.postFormPlaceholderView();
-
-			this.checkDraftContentInPostForm();
 		},
 
 		postFormView: function () {
@@ -77,65 +75,43 @@ window.bp = window.bp || {};
 			// Display it within selector.
 			this.postFormPlaceholder.inject( '#bp-nouveau-activity-form-placeholder' );
 		},
-
-		checkDraftContentInPostForm: function(){
-			var self = this;
-
+		// Function will check contents are in the draft or not before edit any other activity.
+		checkDraftContentInPostForm: function( postContent ) {
 			var hasDraft = false;
-
-			var $whatsNew = self.postForm.$el.find( '#whats-new' );
-
-			$( document ).on( 'paste keyup change', '#whats-new', function(){
-
-				if ( self.postForm.$el.hasClass( 'bp-activity-edit' ) ){
-					return;
-				}
-				if ( typeof window.activity_editor !== 'undefined' ) {
-					var $postContent = $( $.parseHTML( window.activity_editor.getContent() ) );
-					var postContent = $postContent.text();
-					var hasEmoji = $whatsNew.find( 'img.emojioneemoji' ).length;
-
-					if ( postContent.length || hasEmoji > 0 ){
-						hasDraft = true;
-					}else{
-						hasDraft = false;
-					}
-
-					self.toggleDraftClass( hasDraft );
-				}
-
-			});
-
-		},
-
-		checkDraftAttachments: function(){
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
-				return;
-			}
-			  
-			var attachmentLength;
-			if ( bp.Nouveau.Activity.postForm['dropzone'] ) { // check dropzone open or not.
-				// Check media/document/video attached or not in post form.
-				attachmentLength = bp.Nouveau.Activity.postForm.dropzone.files.length;
-			}
-			if ( bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.$el.length ) {
-				// Check gif attached or not in post form.
-				attachmentLength = bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.$el.length;
-			}
-			  
-			var hasDraft;
-			if ( attachmentLength ) {
+			if ( postContent && undefined !== postContent ) {
 				hasDraft = true;
 			} else {
 				hasDraft = false;
 			}
-			  
 			this.toggleDraftClass( hasDraft );
-			  
-			if ( hasDraft ) {
+		},
+		// Function will check attachments are in the draft or not before edit any other activity.
+		checkDraftAttachments: function() {
+			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
 
+			var hasDraft, attachmentLength;
+			if ( bp.Nouveau.Activity.postForm['dropzone'] ) { // check dropzone open or not.
+				// Check media/document/video attached or not in post form.
+				attachmentLength = bp.Nouveau.Activity.postForm.dropzone.files.length;
+			} else if ( ! $.isEmptyObject( bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.model.attributes.gif_data ) ) {
+				// Check gif attached or not in post form.
+				attachmentLength = bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.model.attributes.gif_data;
+			}
+			// Get activity content.
+			var getActivityContent = window.activity_editor.getContent();
+			if ( getActivityContent || attachmentLength ) {
+				hasDraft = true;
+			} else {
+				hasDraft = false;
+			}
+			
+			this.toggleDraftClass( hasDraft );
+			
+			if ( hasDraft ) {
+				return;
+			}
 		},
 
 		toggleDraftClass: function( hasDraft ) {
@@ -148,11 +124,9 @@ window.bp = window.bp || {};
 
 		draftPostAlert: function() {
 			var hasDraft = this.postForm.$el.hasClass( 'bp-activity-has-draft' );
-
 			if ( hasDraft ){
 				alert( 'You have a draft post, publish the draft post first in order to edit any activity.' );
 			}
-
 			return hasDraft;
 		},
 
@@ -525,8 +499,8 @@ window.bp = window.bp || {};
 		 */
 		displayEditActivityForm : function( activity_data ) {
 			var self = this;
-
-			if ( self.draftPostAlert() ){
+			
+			if ( self.draftPostAlert() ) {
 				return;
 			}
 
@@ -1957,7 +1931,9 @@ window.bp = window.bp || {};
 				if ( _.isUndefined( activity ) ) {
 					return;
 				}
-
+				// When reset content then also check contents are in draft or not.
+				bp.Nouveau.Activity.postForm.checkDraftContentInPostForm( activity.get( 'content' ) );
+				
 				this.$el.html( activity.get( 'content' ) );
 			},
 
@@ -1982,11 +1958,15 @@ window.bp = window.bp || {};
 				if ( this.linkTimeout != null ) {
 					clearTimeout( this.linkTimeout );
 				}
-
+				
+				var getActivityContent = window.activity_editor.getContent();
+				// When type content then add class like bp-activity-has-draft.
+				bp.Nouveau.Activity.postForm.checkDraftContentInPostForm( getActivityContent );
+				
 				this.linkTimeout = setTimeout(
 					function () {
 						this.linkTimeout = null;
-						self.scrapURL( window.activity_editor.getContent() );
+						self.scrapURL( getActivityContent );
 					},
 					500
 				);
@@ -3266,6 +3246,10 @@ window.bp = window.bp || {};
 							useInternalCDN: false,
 							events: {
 								emojibtn_click: function () {
+									if ( $( '#whats-new' )[ 0 ].emojioneArea.content ) {
+										// This will check emojis in the draft or not before edit any other activity.
+										bp.Nouveau.Activity.postForm.checkDraftContentInPostForm( $( '#whats-new' )[ 0 ].emojioneArea.content );
+									}
 									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
 									$( '#whats-new' ).trigger( 'change' );
 								},
@@ -3293,7 +3277,7 @@ window.bp = window.bp || {};
 						height: '50px'
 					}
 				);
-
+				
 				$( '#whats-new-form' ).removeClass( 'focus-in' ); // remove class when reset.
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
