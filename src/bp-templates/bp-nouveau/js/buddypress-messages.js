@@ -796,7 +796,8 @@ window.bp = window.bp || {};
 		{
 			template  : bp.template( 'bp-messages-editor' ),
 			events: {
-				'input #message_content': 'focusEditorOnChange'
+				'input #message_content': 'focusEditorOnChange',
+				'paste': 'handlePaste',
 			},
 
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
@@ -808,6 +809,18 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+			},
+
+			handlePaste: function ( event ) {
+				// Get user's pasted data.
+				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+					data = clipboardData.getData( 'text/plain' );
+
+				// Insert the filtered content.
+				document.execCommand( 'insertHTML', false, data );
+
+				// Prevent the standard paste behavior.
+				event.preventDefault();
 			},
 
 			initialize: function() {
