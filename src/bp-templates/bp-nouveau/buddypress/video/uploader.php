@@ -28,7 +28,7 @@
 
 						<div class="bb-dropzone-wrap bp-video-upload-tab-content bp-upload-tab-content" id="bp-video-dropzone-content">
 							<div class="bb-field-wrap">
-								<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() && bp_is_active( 'activity' ) ) : ?>
+								<?php if ( ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() ) || ( ! bp_is_messages_component() && bp_is_active( 'activity' ) ) ) : ?>
 									<div class="video-uploader-post-content">
 										<textarea name="bp-video-post-content" id="bp-video-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your videos, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your videos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
 									</div>
