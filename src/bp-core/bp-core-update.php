@@ -337,6 +337,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 17401 ) {
 			bb_update_to_1_7_5();
 		}
+
+		if ( $raw_db_version < 17501 ) {
+			bb_update_to_1_7_6();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -713,6 +717,15 @@ function bb_update_to_1_7_5() {
 	);
 	$bp_background_updater->save()->schedule_event();
 
+}
+
+/**
+ * Function to update data
+ *
+ * @since BuddyBoss 1.7.6
+ */
+function bb_update_to_1_7_6() {
+	bp_email_queue()->create_db_table();
 }
 
 function bp_update_default_doc_extensions() {

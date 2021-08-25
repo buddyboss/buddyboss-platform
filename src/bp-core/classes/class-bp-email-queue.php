@@ -11,33 +11,44 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'BP_Email_Queue' ) ) :
 
 	/**
-	 * Load Email queue class
+	 * Load Email Queue class
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
 	class BP_Email_Queue {
+		/**
+		 * Instance of this class.
+		 */
+		private static $_instance = null;
 
 		/**
-		 * Constructor.
+		 * Return the instance of this class.
 		 *
 		 * @since BuddyBoss 1.7.6
 		 */
-		function __construct() {
-			$this->create_db_table();
-			$this->setup_cron();
+		public static function instance() {
+			if ( is_null( self::$_instance ) ) {
+				self::$_instance = new self();
+			}
+
+			return self::$_instance;
 		}
 
 		/**
-		 * Set up Cron.
+		 * Background Process.
 		 *
 		 * @since BuddyBoss 1.7.6
 		 */
-		function setup_cron() {
-			if ( ! wp_next_scheduled( 'bp_email_queue_cron_hook' ) ) {
-				wp_schedule_event( time(), 'bb_schedule_1min', 'bp_email_queue_cron_hook' );
-			}
+		function background_process() {
+			global $bp_background_updater;
+			$bp_background_updater->push_to_queue(
+				array(
+					'callback' => 'email_queue_cron_cb',
+					'args'     => array(),
+				)
+			);
 
-			add_action( 'bp_email_queue_cron_hook', array( $this, 'email_queue_cron_cb' ) );
+			$bp_background_updater->save()->schedule_event();
 		}
 
 		/**
@@ -67,10 +78,10 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.6
 		 */
-		public function get_records() {
+		public function get_records( $limit = 20, $order_column = 'id', $order = 'ASC' ) {
 			global $wpdb;
 
-			return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}bb_email_queue LIMIT 0, 20" );
+			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue ORDER BY {$order_column} {$order} LIMIT %d", $limit ) );
 		}
 
 		/**
@@ -111,7 +122,7 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 	            id bigint(20) NOT NULL AUTO_INCREMENT,
 	            email_type varchar(200) NOT NULL,
 	            recipient_id bigint(20) NOT NULL DEFAULT 0,
-	            arguments mediumtext DEFAULT NULL,
+	            arguments longtext DEFAULT NULL,
 	            date_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 	            PRIMARY KEY  (id)
 	        ) $charset_collate;";
@@ -122,3 +133,12 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 
 endif; // End class_exists check.
 
+
+function bp_email_queue() {
+	if ( class_exists( 'BP_Email_Queue' ) ) {
+		global $bp_email_queue;
+		$bp_email_queue = BP_Email_Queue::instance();
+
+		return $bp_email_queue;
+	}
+}
