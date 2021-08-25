@@ -70,7 +70,7 @@ if ( ! class_exists( 'BP_Email_Queue' ) ) :
 		public function get_records() {
 			global $wpdb;
 
-			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue LIMIT 0, 20" ) );
+			return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}bb_email_queue LIMIT 0, 20" );
 		}
 
 		/**
