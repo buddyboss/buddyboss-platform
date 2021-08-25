@@ -1680,7 +1680,7 @@ function bp_activity_media_add( $media ) {
 				}
 			}
 
-			// Check when new activity comment is empty then set privacy comment.
+			// Check when new activity comment is not empty then set privacy comment.
 			if ( ! empty( $bp_new_activity_comment ) ) {
 				$activity_id    = $bp_new_activity_comment;
 				$media->privacy = 'comment';
@@ -2032,7 +2032,7 @@ function bp_activity_document_add( $document ) {
 				}
 			}
 
-			// Check when new activity comment is empty then set privacy comment.
+			// Check when new activity comment is not empty then set privacy comment.
 			if ( ! empty( $bp_new_activity_comment ) ) {
 				$activity_id       = $bp_new_activity_comment;
 				$document->privacy = 'comment';
