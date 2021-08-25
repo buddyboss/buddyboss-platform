@@ -6636,6 +6636,28 @@ define({ "api": [
             "optional": false,
             "field": "user_id",
             "description": "<p>The user ID to remove from the thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -6665,6 +6687,28 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>ID of the Messages Thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -6899,6 +6943,28 @@ define({ "api": [
             "optional": false,
             "field": "message_id",
             "description": "<p>By default the latest message of the thread will be updated. Specify this message ID to edit another message of the thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
