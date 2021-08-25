@@ -562,7 +562,6 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
 
-
 /**
  * Update the BuddyBoss Platform Fields when user register from MemberPress Registration form
  *
@@ -577,6 +576,31 @@ function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
 }
 
 add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 100 );
+
+/**
+ * Prevent MemberPress registration when nickname(username) format is not valid
+ * 
+ * @since BuddyBoss 1.7.7
+ *
+ * @param array $errors
+ * @return array $errors
+ */
+function bp_core_validate_nickname_mepr_signup( $errors ) {
+	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
+		$nickname   = '';
+		if ( isset( $_POST['user_login'] ) ) {
+		$nickname = sanitize_text_field( $_POST['user_login'] );
+		}
+		$field_id   = bp_xprofile_nickname_field_id();
+		$message    = bp_xprofile_validate_nickname_value( '', $field_id, $nickname, '' );
+		if ( ! empty( $message ) ) {
+		$errors['user_login'] =  $message;
+		}
+	}
+	return $errors;
+}
+  
+add_filter( 'mepr-validate-signup', 'bp_core_validate_nickname_mepr_signup' );
 
 /**
  * Include plugin when plugin is activated
