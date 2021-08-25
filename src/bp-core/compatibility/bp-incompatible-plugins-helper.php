@@ -154,6 +154,30 @@ function bp_helper_plugins_loaded_callback() {
 
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
+
+	if ( in_array( 'translatepress-multilingual/index.php', $bp_plugins, true ) && is_multisite() ) {
+
+		/**
+		 * Exclude translatepress lang slug from URL path for only multisite
+		 * Fix for the issue: #2835
+		 *
+		 * @param string $path
+		 * @return string $path
+		 */
+		function bb_core_multisite_multilang_translatepress_exclude_lang_slug( $path ) {
+			if( ! is_admin() ) {
+				$tp_settings = get_option( 'trp_settings' );
+				if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
+					foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
+					$path = str_replace( $lang_slug . '/', '', $path );
+					}
+				}
+			}
+			return $path;
+		}
+
+		add_filter( 'bp_uri', 'bb_core_multisite_multilang_translatepress_exclude_lang_slug' );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
