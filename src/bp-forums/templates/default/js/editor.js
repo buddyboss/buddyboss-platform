@@ -68,6 +68,18 @@ jQuery( document ).ready(
 							bbp_forum_content.val( jQuery(dummy_element).html() );
 						}
 					);
+
+					element.addEventListener( 'paste', function ( event ) {
+						// Get user's pasted data.
+						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+							data = clipboardData.getData( 'text/plain' );
+
+						// Insert the filtered content.
+						document.execCommand( 'insertHTML', false, data );
+
+						// Prevent the standard paste behavior.
+						event.preventDefault();
+					} );
 				});
 
 				//Add Click event to show / hide text formatting Toolbar
@@ -151,6 +163,18 @@ jQuery( document ).ready(
 							bbp_reply_content.val( jQuery(dummy_element).html() );
 						}
 					);
+
+					element.addEventListener( 'paste', function ( event ) {
+						// Get user's pasted data.
+						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+							data = clipboardData.getData( 'text/plain' );
+
+						// Insert the filtered content.
+						document.execCommand( 'insertHTML', false, data );
+
+						// Prevent the standard paste behavior.
+						event.preventDefault();
+					} );
 
 					//Add Click event to show / hide text formatting Toolbar
 					jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function(e) {
@@ -237,6 +261,18 @@ jQuery( document ).ready(
 						}
 					);
 
+					element.addEventListener( 'paste', function ( event ) {
+						// Get user's pasted data.
+						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+							data = clipboardData.getData( 'text/plain' );
+
+						// Insert the filtered content.
+						document.execCommand( 'insertHTML', false, data );
+
+						// Prevent the standard paste behavior.
+						event.preventDefault();
+					} );
+
 					//Add Click event to show / hide text formatting Toolbar
 					jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
 						e.preventDefault();
@@ -258,6 +294,8 @@ jQuery( document ).ready(
 						medium_editor.toggleClass('active');
 
 					});
+
+
 				});
 			}
 		}
