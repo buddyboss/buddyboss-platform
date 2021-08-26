@@ -719,6 +719,9 @@ EditableController = (function(superClass) {
       this._clearRange();
       return;
     }
+    if (e === undefined || e === null) {
+      return;
+    }
     if (/firefox/i.test(navigator.userAgent)) {
       if ($(range.startContainer).is(this.$inputor)) {
         this._clearRange();
