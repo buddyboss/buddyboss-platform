@@ -339,7 +339,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 17501 ) {
-			bb_update_to_1_7_6();
+			bb_update_to_1_7_7();
 		}
 	}
 
@@ -722,10 +722,13 @@ function bb_update_to_1_7_5() {
 /**
  * Function to update data
  *
- * @since BuddyBoss 1.7.6
+ * @since BuddyBoss 1.7.7
  */
-function bb_update_to_1_7_6() {
-	bp_email_queue()->create_db_table();
+function bb_update_to_1_7_7() {
+	if ( function_exists( 'bp_email_queue' ) ) {
+		// Install email queue table.
+		bp_email_queue()::create_db_table();
+	}
 }
 
 function bp_update_default_doc_extensions() {

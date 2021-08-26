@@ -14,6 +14,11 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_setup_core_email_tokens() {
+
+	if ( function_exists( 'bp_email_queue' ) ) {
+		bp_email_queue();
+	}
+
 	new BP_Email_Tokens();
 }
 add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
@@ -49,4 +54,20 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 	$output = ob_get_clean();
 
 	return $output;
+}
+
+/**
+ * Function to load the instance of the class BP_Email_Queue.
+ *
+ * @since BuddyBoss 1.7.7
+ *
+ * @return null|BP_Email_Queue|void
+ */
+function bp_email_queue() {
+	if ( class_exists( 'BP_Email_Queue' ) ) {
+		global $bp_email_queue;
+		$bp_email_queue = BP_Email_Queue::instance();
+
+		return $bp_email_queue;
+	}
 }
