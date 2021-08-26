@@ -591,7 +591,7 @@ class BBP_Forums_Widget extends WP_Widget {
 			array(
 				'post_type'           => bbp_get_forum_post_type(),
 				// 'post_parent'         => $settings['parent_forum'],
-				'post_parent'         => 0,
+				'post_parent'         => intval( $settings['parent_forum'] ),
 				'post_status'         => bbp_get_public_status_id(),
 				'posts_per_page'      => bbp_get_forums_per_page(),
 				'ignore_sticky_posts' => true,
@@ -629,21 +629,27 @@ class BBP_Forums_Widget extends WP_Widget {
 						?>
 					</span>
 					<?php
-					$r = array(
-						'before'           => '<ul class="bb-sidebar-forums">',
-						'after'            => '</ul>',
-						'link_before'      => '<li class="bbp-sub-forum">',
-						'link_after'       => '</li>',
-						'count_before'     => ' (',
-						'count_after'      => ')',
-						'count_sep'        => ', ',
-						'separator'        => ' ',
-						'forum_id'         => $widget_query->post->ID,
-						'show_topic_count' => false,
-						'show_reply_count' => false,
-					);
 
-					bbp_list_forums( $r );
+					if( $settings['parent_forum'] == 'any' || $settings['parent_forum'] > 0 ) {
+
+						$r = array(
+							'before'           => '<ul class="bb-sidebar-forums">',
+							'after'            => '</ul>',
+							'link_before'      => '<li class="bbp-sub-forum">',
+							'link_after'       => '</li>',
+							'count_before'     => ' (',
+							'count_after'      => ')',
+							'count_sep'        => ', ',
+							'separator'        => ' ',
+							'forum_id'         => $widget_query->post->ID,
+							'show_topic_count' => false,
+							'show_reply_count' => false,
+						);
+	
+						bbp_list_forums( $r );
+						
+					}
+					
 					?>
 				</li>
 
