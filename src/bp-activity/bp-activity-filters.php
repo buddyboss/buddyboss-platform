@@ -2998,6 +2998,7 @@ function bb_activity_media_document_migration( $repair_list ) {
 	  }
 	}
 	$recipients_query .= " OR ( component='groups' AND secondary_item_id=0 )";
+	$recipients_query .= ' ORDER BY id DESC';
 	if ( 1 < (int) $recipients_count_row_data->ids ) {
 	  $recipients_query .= ' LIMIT ' . $offset . ', 2';
 	}
