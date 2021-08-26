@@ -61,7 +61,7 @@ jQuery( document ).ready(
 		// Remove element into the Arrdata array.
 		$tagsSelect.on('select2:unselect', function (e) {
 			var data = e.params.data;
-			jQuery('body #bbp_topic_tags_dropdown option[value='+data.id+']').remove();
+			jQuery('body #bbp_topic_tags_dropdown option[value="'+data.id+'"]').remove();
 			var select_options = jQuery('body #bbp_topic_tags_dropdown option');
 			var tagsArrayData = jQuery.map(select_options ,function(option) {
 				return option.value;
