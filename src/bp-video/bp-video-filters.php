@@ -1611,7 +1611,16 @@ function bp_video_check_download_album_protection() {
 		array(
 			'base'    => $upload_dir['basedir'] . '/bb_videos',
 			'file'    => '.htaccess',
-			'content' => 'deny from all
+			'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
 <IfModule mod_php5.c>
 php_flag engine 0
