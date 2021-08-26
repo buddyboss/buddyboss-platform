@@ -161,6 +161,8 @@ add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty'
 
 add_filter( 'bp_repair_list', 'bb_activity_media_document_migration' );
 
+// Action will backup some tables before start activity migration.
+add_action( 'admin_init', 'bb_backup_table_before_activity_migration' );
 /** Functions *****************************************************************/
 
 /**
@@ -3381,4 +3383,50 @@ function bb_activity_media_document_migration( $repair_list ) {
 		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $activity_table_name . ' WHERE id = %d AND item_id=%s AND type=%s AND ( privacy=%s OR privacy=%s )', $child_id, $main_root_id, 'activity_update', 'media', 'document' ) );
 	  }
 	}
+  }
+  
+  /**
+   * Function will backup table before activity migration.
+   */
+  function bb_backup_table_before_activity_migration() {
+	  global $wpdb;
+	  $table_prefix                   = $wpdb->prefix . 'bp_';
+	  $bb_activity                    = $table_prefix . "activity";
+	  $bb_activity_backup             = $table_prefix . "activity_backup";
+	  $bb_activity_meta               = $table_prefix . "activity_meta";
+	  $bb_activity_meta_backup        = $table_prefix . "activity_meta_backup";
+	  $bb_media                       = $table_prefix . "media";
+	  $bb_media_backup                = $table_prefix . "media_backup";
+	  $bb_media_albums                = $table_prefix . "media_albums";
+	  $bb_media_albums_backup         = $table_prefix . "media_albums_backup";
+	  $bb_document                    = $table_prefix . "document";
+	  $bb_document_backup             = $table_prefix . "document_backup";
+	  $bb_document_folder             = $table_prefix . "document_folder";
+	  $bb_document_folder_backup      = $table_prefix . "document_folder_backup";
+	  $bb_document_meta               = $table_prefix . "document_meta";
+	  $bb_document_meta_backup        = $table_prefix . "document_meta_backup";
+	  $bb_document_folder_meta        = $table_prefix . "document_folder_meta";
+	  $bb_document_folder_meta_backup = $table_prefix . "document_folder_meta_backup";
+	  $bb_posts_meta                  = $wpdb->prefix . "posts";
+	  $bb_posts_backup                = $wpdb->prefix . "posts_backup";
+	  $bb_postmeta_meta               = $wpdb->prefix . "postmeta";
+	  $bb_postmeta_backup             = $wpdb->prefix . "postmeta_backup";
+	  $create_table_array             = array(
+		  $bb_activity             => $bb_activity_backup,
+		  $bb_activity_meta        => $bb_activity_meta_backup,
+		  $bb_media                => $bb_media_backup,
+		  $bb_media_albums         => $bb_media_albums_backup,
+		  $bb_document             => $bb_document_backup,
+		  $bb_document_folder      => $bb_document_folder_backup,
+		  $bb_document_meta        => $bb_document_meta_backup,
+		  $bb_document_folder_meta => $bb_document_folder_meta_backup,
+		  $bb_posts_meta           => $bb_posts_backup,
+		  $bb_postmeta_meta        => $bb_postmeta_backup,
+	  );
+	  require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	  foreach ( $create_table_array as $main_table => $duplicate_table ) {
+		  $sql          = "CREATE TABLE " . $duplicate_table . " LIKE " . $main_table;
+		  dbDelta( $sql );
+		  $wpdb->query( "INSERT INTO " . $duplicate_table . " SELECT * FROM " . $main_table );
+	  }
   }
