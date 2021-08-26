@@ -42,7 +42,7 @@ class BP_Email_Queue {
 	 * @since BuddyBoss 1.7.7
 	 */
 	public function __construct() {
-		add_action( 'bp_init', array( $this, 'bb_email_background_process' ) );
+		add_action( 'bp_init', array( $this, 'bb_email_background_process' ), 52 );
 	}
 
 	/**
