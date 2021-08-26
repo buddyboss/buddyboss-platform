@@ -710,6 +710,9 @@ EditableController = (function(superClass) {
     if (!range.collapsed) {
       return;
     }
+    if (e === undefined || e === null) {
+      return;
+    }
     if (e.which === KEY_CODE.ENTER) {
       ($query = $(range.startContainer).closest('.atwho-query')).contents().unwrap();
       if ($query.is(':empty')) {
@@ -717,9 +720,6 @@ EditableController = (function(superClass) {
       }
       ($query = $(".atwho-query", this.app.document)).text($query.text()).contents().last().unwrap();
       this._clearRange();
-      return;
-    }
-    if (e === undefined || e === null) {
       return;
     }
     if (/firefox/i.test(navigator.userAgent)) {
