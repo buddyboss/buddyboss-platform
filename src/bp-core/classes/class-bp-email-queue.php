@@ -61,16 +61,17 @@ class BP_Email_Queue {
 	 *
 	 * @since BuddyBoss 1.7.7
 	 *
-	 * @param string $email_type Email type.
-	 * @param int    $to         Recipient user IDs.
-	 * @param array  $args       Array of arguments.
+	 * @param string $email_type                    Email type.
+	 * @param string|array|int|WP_User $to          Either an email address, user ID, WP_User object,
+	 *                                              or an array containing the address and name.
+	 * @param array  $args                          Array of arguments.
 	 *
 	 * @return bool|int
 	 */
 	public function add_record( $email_type, $to, $args = array() ) {
 		global $wpdb;
 
-		return $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient_id, arguments, date_created ) VALUES ( %s, %d, %s, %s )", $email_type, $to, maybe_serialize( $args ), bp_core_current_time() ) );
+		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created ) VALUES ( %s, %s, %s, %s )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bp_core_current_time() ) );
 	}
 
 	/**
@@ -118,7 +119,7 @@ class BP_Email_Queue {
 			foreach ( $get_records as $single ) {
 				$item_id    = ! empty( $single->id ) ? $single->id : 0;
 				$email_type = ! empty( $single->email_type ) ? $single->email_type : '';
-				$to         = ! empty( $single->recipient_id ) ? get_userdata( $single->recipient_id ) : 0;
+				$to         = ! empty( $single->recipient ) ? maybe_unserialize( $single->recipient ) : 0;
 				$args       = ! empty( $single->arguments ) ? maybe_unserialize( $single->arguments ) : array();
 				if ( bp_send_email( $email_type, $to, $args ) ) {
 					$this->delete_record( $item_id );
@@ -144,7 +145,7 @@ class BP_Email_Queue {
 		$sql = "CREATE TABLE {$wpdb->prefix}bb_email_queue (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			email_type varchar(200) NOT NULL,
-			recipient_id bigint(20) NOT NULL DEFAULT 0,
+			recipient longtext DEFAULT NULL,
 			arguments longtext DEFAULT NULL,
 			date_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 			PRIMARY KEY  (id)

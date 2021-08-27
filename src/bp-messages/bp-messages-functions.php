@@ -899,26 +899,42 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$group      = bp_messages_get_meta( $id, 'group_id', true );
 		$group_name = bp_get_group_name( groups_get_group( $group ) );
 
-		bp_email_queue()->add_record(
-			'group-message-email',
-			$ud->ID,
-			array(
-				'tokens' => array(
-					'message_id'  => $id,
-					'usermessage' => stripslashes( $message ),
-					'message'     => stripslashes( $message ),
-					'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-					'sender.name' => $sender_name,
-					'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-					'group.name'  => $group_name,
-					'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-				),
-			)
-		);
-
 		if ( function_exists( 'bp_email_queue' ) ) {
+			bp_email_queue()->add_record(
+				'group-message-email',
+				$ud,
+				array(
+					'tokens' => array(
+						'message_id'  => $id,
+						'usermessage' => stripslashes( $message ),
+						'message'     => stripslashes( $message ),
+						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name' => $sender_name,
+						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+						'group.name'  => $group_name,
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
+				)
+			);
 			// call email background process.
 			bp_email_queue()->bb_email_background_process();
+		}else{
+			bp_send_email(
+				'group-message-email',
+				$ud,
+				array(
+					'tokens' => array(
+						'message_id'  => $id,
+						'usermessage' => stripslashes( $message ),
+						'message'     => stripslashes( $message ),
+						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name' => $sender_name,
+						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+						'group.name'  => $group_name,
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
+				)
+			);
 		}
 	}
 
