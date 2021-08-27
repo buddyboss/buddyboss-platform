@@ -203,10 +203,20 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 */
 	public function update_report_button_args( $report_button, $args ) {
 
+		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+
+		if ( empty( $activity->id ) ) {
+			return $report_button;
+		}
+
 		$video_id  = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_id', true );
 		$video_ids = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_ids', true );
 
-		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) ) {
+		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && ! in_array( $activity->type, array(
+				'bbp_forum_create',
+				'bbp_topic_create',
+				'bbp_reply_create'
+			) ) ) {
 			$explode_videos = explode( ',', $video_ids );
 			if ( ! empty( $video_id ) ) {
 				$args['button_attr']['data-bp-content-id']   = $video_id;

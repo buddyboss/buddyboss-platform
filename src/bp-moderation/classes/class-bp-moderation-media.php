@@ -203,10 +203,20 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public function update_report_button_args( $report_button, $args ) {
 
-		$media_id  = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_media_id', true );
-		$media_ids = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_media_ids', true );
+		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
 
-		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) ) {
+		if ( empty( $activity->id ) ) {
+			return $report_button;
+		}
+
+		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && ! in_array( $activity->type, array(
+				'bbp_forum_create',
+				'bbp_topic_create',
+				'bbp_reply_create'
+			) ) ) {
 			$explode_medias = explode( ',', $media_ids );
 			if ( ! empty( $media_id ) ) {
 				$args['button_attr']['data-bp-content-id']   = $media_id;
