@@ -1332,24 +1332,3 @@ function bp_nouveau_ajax_media_move() {
 	}
 
 }
-
-/**
- * Function will remove like and comment button for the media/document activity.
- *
- * @param array $buttons     Array of buttons.
- * @param int   $activity_id Activity ID.
- *
- * @return mixed
- */
-function bp_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
-	$get_activity = new BP_Activity_Activity( $activity_id );
-	if ( ! empty( $get_activity->id )
-	     && ( ( 'activity_update' === $get_activity->type && 'media' === $get_activity->privacy )
-	          || ( 'activity_update' === $get_activity->type && 'document' === $get_activity->privacy ) )
-	) {
-		$buttons['activity_favorite']     = '';
-		$buttons['activity_conversation'] = '';
-	}
-	
-	return $buttons;
-}
