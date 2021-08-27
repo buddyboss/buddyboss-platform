@@ -1684,7 +1684,6 @@ function bp_activity_media_add( $media ) {
 				$activity_id    = $bp_new_activity_comment;
 				$media->privacy = 'comment';
 			} else {
-				$activity_id = bp_activity_post_update( $args );
 				$args = array(
 					'hide_sitewide' => true,
 					'privacy'       => 'media',
@@ -2036,7 +2035,6 @@ function bp_activity_document_add( $document ) {
 				$activity_id       = $bp_new_activity_comment;
 				$document->privacy = 'comment';
 			} else {
-				$activity_id = bp_activity_post_update( $args );
 				$args = array(
 					'hide_sitewide' => true,
 					'privacy'       => 'document',
