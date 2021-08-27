@@ -915,6 +915,11 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 				),
 			)
 		);
+
+		if ( function_exists( 'bp_email_queue' ) ) {
+			// call email background process.
+			bp_email_queue()->bb_email_background_process();
+		}
 	}
 
 	/**

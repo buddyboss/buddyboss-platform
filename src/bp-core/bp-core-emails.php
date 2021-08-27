@@ -14,11 +14,6 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_setup_core_email_tokens() {
-
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue();
-	}
-
 	new BP_Email_Tokens();
 }
 add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
