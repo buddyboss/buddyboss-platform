@@ -231,7 +231,8 @@ function bp_document_activity_comment_entry( $comment_id ) {
 	$activity = new BP_Activity_Activity( $comment->item_id );
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ||
 	     bp_is_active( 'activity' ) && ( buddypress()->activity->id === $activity->component || buddypress()->blogs->id === $activity->component ) ) {
-		$args['privacy'] = array( 'comment' );
+		//$args['privacy'] = array( 'comment' );
+		$args['privacy'] = array( 'comment', 'public', 'grouponly' );
 	}
 
 	if ( ! empty( $document_ids ) && bp_has_document( $args) ) {

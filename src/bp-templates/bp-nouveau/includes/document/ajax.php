@@ -273,7 +273,8 @@ function bp_nouveau_ajax_document_get_activity() {
 	remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_document_activity_description' );
 	add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
-
+	add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+	
 	if ( ! empty( $document_activity ) ) {
 		$args = array(
 			'include'     => $post_id,
