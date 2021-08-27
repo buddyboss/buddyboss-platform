@@ -879,6 +879,10 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 		$options['documents'] = __( 'Documents', 'buddyboss' );
 	}
 
+	if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+		$options['videos'] = __( 'Videos', 'buddyboss' );
+	}
+
 	return array_merge( $controls,
 		array(
 			'group_nav_display' => array(
