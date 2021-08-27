@@ -6192,13 +6192,11 @@ window.bp = window.bp || {};
 			self.showMedia();
 			self.navigationCommands();
 
-			// if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
-			// 	self.getActivity();
-			// } else {
-			// 	self.getMediasDescription();
-			// }
-
-			self.getMediasDescription();
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
+				self.getActivity();
+			} else {
+				self.getMediasDescription();
+			}
 
 			$( '.bb-media-model-wrapper.document' ).hide();
 			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );

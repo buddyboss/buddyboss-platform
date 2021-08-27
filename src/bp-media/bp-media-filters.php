@@ -309,12 +309,11 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
-		'privacy'  => array(),
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_media_support_enabled() ) {
-			$args['privacy'][] = 'comment';
+			$args['privacy'] = array( 'grouponly' );
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-media';
 			}
@@ -332,11 +331,6 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		}
 	}
 
-	$args['privacy'][] = 'comment';
-	if ( ! isset( $args['album_id'] ) ) {
-		$args['album_id'] = 'existing-media';
-	}
-
 	$is_forum_activity = false;
 	if (
 			bp_is_active( 'forums' )
@@ -346,8 +340,6 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
-
-	$args['privacy'] = array_unique( $args['privacy'] );
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
