@@ -6725,7 +6725,7 @@ window.bp = window.bp || {};
 				self.current_document = self.documents[ self.current_document_index ];
 				self.showDocument();
 				// If activity privacy is comment for doc then it will call getDocumentsDescription
-				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document	&& typeof self.current_document.activity_id !== 'undefined'	&& self.current_document.activity_id != 0 && !self.current_document.is_forum	&& activity_id != self.current_document.activity_id && self.current_document.privacy !== 'comment' ) {
+				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && activity_id != self.current_document.activity_id && self.current_document.privacy !== 'comment' ) {
 					self.getDocumentsActivity();
 				} else {
 					self.getDocumentsDescription();
