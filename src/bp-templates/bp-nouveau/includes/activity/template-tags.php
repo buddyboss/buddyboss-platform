@@ -427,6 +427,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 	$activity_id    = bp_get_activity_id();
 	$activity_type  = bp_get_activity_type();
+	$activity_privacy  = bp_get_activity_privacy();
 	$parent_element = '';
 	$button_element = 'a';
 
@@ -492,23 +493,25 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				'link_attr'      => bp_get_activity_unfavorite_link(),
 			);
 		}
-
-		$buttons['activity_favorite'] = array(
-			'id'                => 'activity_favorite',
-			'position'          => 4,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $fav_args['button_element'],
-			'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $fav_args['link_text'] ) ),
-			'button_attr'       => array(
-				$key           => $fav_args['link_attr'],
-				'class'        => $fav_args['link_class'],
-				// 'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
-				'aria-pressed' => $fav_args['aria-pressed'],
-			),
-		);
+		
+		if ( 'media' !== $activity_privacy ) {
+			$buttons['activity_favorite'] = array(
+				'id'                => 'activity_favorite',
+				'position'          => 4,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $fav_args['button_element'],
+				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $fav_args['link_text'] ) ),
+				'button_attr'       => array(
+					$key           => $fav_args['link_attr'],
+					'class'        => $fav_args['link_class'],
+					// 'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
+					'aria-pressed' => $fav_args['aria-pressed'],
+				),
+			);
+		}
 	}
 
 	/*
@@ -552,33 +555,34 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		* no matter the previous activity had less.
 		*/
 	} else {
-		$buttons['activity_conversation'] = array(
-			'id'                => 'activity_conversation',
-			'position'          => 5,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'id'            => 'acomment-comment-' . $activity_id,
-				'class'         => 'button acomment-reply bp-primary-action',
-				// 'data-bp-tooltip' => __( 'Comment', 'buddyboss' ),
-				'aria-expanded' => 'false',
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-				__( 'Comment', 'buddyboss' ),
-				__( 'Comment', 'buddyboss' )
-			),
-		);
-
-		// If button element set add href link to data-attr.
-		if ( 'button' === $button_element ) {
-			$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_comment_link();
-		} else {
-			$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_comment_link();
-			$buttons['activity_conversation']['button_attr']['role'] = 'button';
+		if ( 'media' !== $activity_privacy ) {
+			$buttons['activity_conversation'] = array(
+				'id'                => 'activity_conversation',
+				'position'          => 5,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'            => 'acomment-comment-' . $activity_id,
+					'class'         => 'button acomment-reply bp-primary-action',
+					// 'data-bp-tooltip' => __( 'Comment', 'buddyboss' ),
+					'aria-expanded' => 'false',
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+					__( 'Comment', 'buddyboss' ),
+					__( 'Comment', 'buddyboss' )
+				),
+			);
+			// If button element set add href link to data-attr.
+			if ( 'button' === $button_element ) {
+				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_comment_link();
+			} else {
+				$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_comment_link();
+				$buttons['activity_conversation']['button_attr']['role'] = 'button';
+			}
 		}
 	}
 

@@ -317,7 +317,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 	     bp_is_active( 'activity' ) && ( buddypress()->activity->id === $activity->component || buddypress()->blogs->id === $activity->component )  ) {
 		if ( bp_is_group_media_support_enabled() ) {
 			//$args['privacy'] = array( 'grouponly' );
-			$args['privacy'] = array( 'comment' );
+			$args['privacy'] = array( 'comment', 'public', 'grouponly' );
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-media';
 			}
