@@ -1727,16 +1727,16 @@ function bp_activity_media_add( $media ) {
 			}
 		} else {
 			if ( $parent_activity_id ) {
-
-				// save media activity id in media
-				$media->activity_id = $parent_activity_id;
-				$media->save();
-
 				// If the media posted in activity comment then set the activity id to comment id.
 				if ( ! empty( $bp_new_activity_comment ) ) {
 					$parent_activity_id = $bp_new_activity_comment;
 					$media->privacy     = 'comment';
 				}
+				
+				// save media activity id in media
+				$media->activity_id = $parent_activity_id;
+				$media->save();
+				
 				// save parent activity id in attachment meta
 				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
 			}
