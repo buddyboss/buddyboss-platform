@@ -141,7 +141,11 @@ function bp_member_invite_submit() {
 		 */
 		add_filter( 'bp_email_get_salutation', '__return_false' );
 		// Send invitation email.
-		bp_send_email( 'invites-member-invite', $email, $args );
+		bp_email_queue()->add_record( 'invites-member-invite', $email, $args );
+		if ( function_exists( 'bp_email_queue' ) ) {
+			// call email background process.
+			bp_email_queue()->bb_email_background_process();
+		}
 
 		$insert_post_args = array(
 			'post_author'  => $bp->loggedin_user->id,
