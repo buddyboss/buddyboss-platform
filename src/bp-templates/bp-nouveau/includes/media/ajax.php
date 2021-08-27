@@ -1087,14 +1087,17 @@ function bp_nouveau_ajax_media_get_media_description() {
 		$remove_comment_btn = false;
 
 		$activity = new BP_Activity_Activity( $media->activity_id );
-		if (
-			! empty( $activity->id ) &&
-			(
-				( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $activity->secondary_item_id ) ) ||
-				in_array( $activity->privacy, array( 'media', 'document' ), true )
-			)
-		) {
-			$remove_comment_btn = true;
+		if ( ! empty( $activity->id ) ) {
+			$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+			if (
+				! empty( $get_activity->id ) &&
+				(
+					( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
+					||	in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+				)
+			) {
+				$remove_comment_btn = true;
+			}
 		}
 
 		if ( true === $remove_comment_btn ) {
