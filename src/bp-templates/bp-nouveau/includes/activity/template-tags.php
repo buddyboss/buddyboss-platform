@@ -2020,7 +2020,10 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
  * @return mixed
  */
 function bp_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
-	$buttons['activity_favorite'] = '';
-	$buttons['activity_conversation'] = '';
+	$get_activity = new BP_Activity_Activity( $activity_id );
+	if ( ! empty( $get_activity->id ) && 'activity_update' === $get_activity->type && 'media' === $get_activity->privacy ) {
+		$buttons['activity_favorite']     = '';
+		$buttons['activity_conversation'] = '';
+	}
 	return $buttons;
 }
