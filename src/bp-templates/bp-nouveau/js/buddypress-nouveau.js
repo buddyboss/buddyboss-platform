@@ -312,7 +312,7 @@ window.bp = window.bp || {};
 		hideSingleUrl: function () {
 			var _findtext = $( this ).find( '.activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
 			var _url = '',
-				_newString = '',
+				NewString = '',
 				startIndex = '',
 				_is_exist = 0;
 			if ( 0 <= _findtext.indexOf( 'http://' ) ) {
@@ -335,46 +335,46 @@ window.bp = window.bp || {};
 				}
 
 				if ( _url !== '' ) {
-					_newString = $.trim( _findtext.replace( _url, '' ) );
+					NewString = $.trim( _findtext.replace( _url, '' ) );
 				}
-				if ( 0 <= _newString.length ) {
+				if ( 0 <= NewString.length ) {
 					if ( ( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length || $( this ).hasClass( 'wp-link-embed' ) ) || $( this ).find( 'iframe' ) ) {
-						var _mainObj = $( this );
-						var _previewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
-                        if( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ){
-                            _previewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
-                        }else if(  $( this ).find( '.bb-video-wrapper' ).length > 0 ){
-                            _previewElem = $( this ).find( '.bb-video-wrapper' );
-                        }else{
-                            _previewElem = $( this ).find( 'iframe' ).parent();
-                        }
-                        var _linkCount = 0;
-                        _previewElem.siblings().each(function(){
-                            if( $( this ).find( 'a' ).length > 0 ){
-                                _linkCount = parseFloat( _linkCount ) + parseFloat( $( this ).find( 'a' ).length );
-                            }
-                        });
-                        _previewElem.siblings().each(function(){
-                            var _cloneobj = $( this ).clone(true);
-                            var _only_txt = _cloneobj.text().replace(/(<([^>]+)>)/ig,'').replace(/([a-z]+\:\/+)([^\/\s]+)([a-z0-9\-@\^=%&;\/~\+]*)[\?]?([^ \#\r\n]*)#?([^ \#\r\n]*)/mig, '');
-                            if( _linkCount == 1 ){
-                                if( _mainObj.find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ){
-                                    if( $( this ).find( 'a' ).length > 0 ){
-                                        if( $.trim( _only_txt ) === '' && $( this ).find( 'a' ).length == 1 ){
-                                            $( this ).hide();
-                                        }else{
-                                            $( this ).find( 'a' ).hide();
-                                        }
-                                    }
-                                }else{
-                                    if( $.trim( _only_txt ) === '' && $( this ).find( 'a' ).length == 1 ){
-                                        $( this ).hide();
-                                    }else{
-                                        $( this ).find( 'a' ).hide();
-                                    }
-                                }
-                            }
-                        });
+						var MainObj     = $( this );
+						var PreviewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
+						if ( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ) {
+							PreviewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
+						} else if (  $( this ).find( '.bb-video-wrapper' ).length > 0 ) {
+							PreviewElem = $( this ).find( '.bb-video-wrapper' );
+						} else {
+							PreviewElem = $( this ).find( 'iframe' ).parent();
+						}
+						var LinkCount = 0;
+						PreviewElem.siblings().each(
+							function(){
+								if ( $( this ).find( 'a' ).length > 0 ) {
+									LinkCount = parseFloat( LinkCount ) + parseFloat( $( this ).find( 'a' ).length );
+								}
+								var Cloneobj = $( this ).clone( true );
+								var Only_txt = Cloneobj.text().replace( /(<([^>]+)>)/ig,'' ).replace( /([a-z]+\:\/+)([^\/\s]+)([a-z0-9\-@\^=%&;\/~\+]*)[\?]?([^ \#\r\n]*)#?([^ \#\r\n]*)/mig, '' );
+								if ( LinkCount == 1 ) {
+									if ( MainObj.find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ) {
+										if ( $( this ).find( 'a' ).length > 0 ) {
+											if ( $.trim( Only_txt ) === '' && $( this ).find( 'a' ).length == 1 ) {
+												$( this ).hide();
+											} else {
+												$( this ).find( 'a' ).hide();
+											}
+										}
+									} else {
+										if ( $.trim( Only_txt ) === '' && $( this ).find( 'a' ).length == 1 ) {
+											$( this ).hide();
+										} else {
+											$( this ).find( 'a' ).hide();
+										}
+									}
+								}
+							}
+						);
 					}
 				}
 			}
