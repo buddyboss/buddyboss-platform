@@ -2747,18 +2747,11 @@ window.bp = window.bp || {};
 					var gif_box = $targetEl.parents( '#whats-new-form' ).find( '#whats-new-attachments .activity-attached-gif-container' );
 					if ( gif_box.length && $.trim( gif_box.html() ) !== '' ) {
 						this.$self.addClass( 'open' );
+					} else {
+						this.$self.removeClass( 'open' );
 					}
 
 					this.$gifPickerEl.removeClass( 'open' );
-				}
-
-				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
-
-					if( $targetEl.parent('#activity-gif-button').length == 0 && ! $targetEl.parent('.gif-search-query').length && ! $targetEl.parent('.gif-media-search-dropdown').length && ! $targetEl.parent('.gif-media-search').length && ! $targetEl.parent('.gif-search-content').length ) {
-						if ( $( '#activity-gif-button' ).hasClass( 'open' ) ) {
-							$( '#activity-gif-button' ).removeClass( 'open' );
-						}
-					}
 				}
 
 			},
