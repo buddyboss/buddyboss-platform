@@ -6192,12 +6192,6 @@ window.bp = window.bp || {};
 			self.showMedia();
 			self.navigationCommands();
 
-			// if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
-			// 	self.getActivity();
-			// } else {
-			// 	self.getMediasDescription();
-			// }
-
 			self.getMediasDescription();
 
 			$( '.bb-media-model-wrapper.document' ).hide();
@@ -6263,12 +6257,6 @@ window.bp = window.bp || {};
 			self.setCurrentDocument( id );
 			self.showDocument();
 			self.navigationDocumentCommands();
-
-			// if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum ) {
-			// 	self.getDocumentsActivity();
-			// } else {
-			// 	self.getDocumentsDescription();
-			// }
 			
 			self.getDocumentsDescription();
 
@@ -6667,11 +6655,6 @@ window.bp = window.bp || {};
 				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
-				// if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && activity_id != self.current_media.activity_id ) {
-				// 	self.getActivity();
-				// } else {
-				// 	self.getMediasDescription();
-				// }
 				self.getMediasDescription();
 			} else {
 				self.nextLink.hide();
@@ -6687,11 +6670,6 @@ window.bp = window.bp || {};
 				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
-				// if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && activity_id != self.current_media.activity_id ) {
-				// 	self.getActivity();
-				// } else {
-				// 	self.getMediasDescription();
-				// }
 				self.getMediasDescription();
 			} else {
 				self.previousLink.hide();
@@ -6708,11 +6686,6 @@ window.bp = window.bp || {};
 				activity_id = self.current_document.activity_id;
 				self.current_document = self.documents[ self.current_document_index ];
 				self.showDocument();
-				// if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && activity_id != self.current_document.activity_id ) {
-				// 	self.getDocumentsActivity();
-				// } else {
-				// 	self.getDocumentsDescription();
-				// }
 				self.getDocumentsDescription();
 			} else {
 				self.nextDocumentLink.hide();
@@ -6728,11 +6701,6 @@ window.bp = window.bp || {};
 				activity_id = self.current_document.activity_id;
 				self.current_document = self.documents[ self.current_document_index ];
 				self.showDocument();
-				// if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && activity_id != self.current_document.activity_id ) {
-				// 	self.getDocumentsActivity();
-				// } else {
-				// 	self.getDocumentsDescription();
-				// }
 				self.getDocumentsDescription();
 			} else {
 				self.previousDocumentLink.hide();
