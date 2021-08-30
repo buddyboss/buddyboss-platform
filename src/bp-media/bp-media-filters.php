@@ -2551,6 +2551,9 @@ function bp_media_check_download_album_protection() {
 	Require all denied
 </IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>
