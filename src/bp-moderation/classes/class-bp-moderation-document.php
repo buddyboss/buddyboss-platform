@@ -203,10 +203,20 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 */
 	public function update_report_button_args( $report_button, $args ) {
 
-		$document_id  = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_document_ids', true );
+		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
 
-		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) ) {
+		if ( empty( $activity->id ) ) {
+			return $report_button;
+		}
+
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && ! in_array( $activity->type, array(
+				'bbp_forum_create',
+				'bbp_topic_create',
+				'bbp_reply_create'
+			) ) ) {
 			$explode_documents = explode( ',', $document_ids );
 			if ( ! empty( $document_id ) ) {
 				$args['button_attr']['data-bp-content-id']   = $document_id;
