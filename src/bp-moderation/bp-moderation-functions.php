@@ -1024,6 +1024,7 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
 		);
 		// call email background process.
 		bp_email_queue()->bb_email_background_process();
+
 		return true;
 	} else {
 		return bp_send_email(
