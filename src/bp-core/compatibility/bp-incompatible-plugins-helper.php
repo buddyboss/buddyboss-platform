@@ -569,13 +569,13 @@ add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_p
  *
  * @since BuddyBoss 1.1.9
  */
-function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
+function bb_core_add_support_mepr_signup_map_user_fields( $txn ) {
 	if ( ! empty( $txn->user_id ) ) {
 		bp_core_map_user_registration( $txn->user_id, true );
 	}
 }
 
-add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 100 );
+add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 100 );
 
 /**
  * Prevent MemberPress registration when nickname(username) format is not valid
@@ -585,7 +585,7 @@ add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 10
  * @param array $errors
  * @return array $errors
  */
-function bp_core_validate_nickname_mepr_signup( $errors ) {
+function bb_core_validate_nickname_mepr_signup( $errors ) {
 	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
 		$nickname   = '';
 		if ( isset( $_POST['user_login'] ) ) {
@@ -600,7 +600,7 @@ function bp_core_validate_nickname_mepr_signup( $errors ) {
 	return $errors;
 }
   
-add_filter( 'mepr-validate-signup', 'bp_core_validate_nickname_mepr_signup' );
+add_filter( 'mepr-validate-signup', 'bb_core_validate_nickname_mepr_signup' );
 
 /**
  * Include plugin when plugin is activated
