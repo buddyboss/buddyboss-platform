@@ -78,7 +78,7 @@ add_filter( 'bb_ajax_activity_update_privacy', 'bb_document_update_video_symlink
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
 add_filter( 'query_vars', 'bb_setup_query_document_preview' );
-add_action( 'template_include', 'bb_setup_template_for_document_preview' );
+add_action( 'template_include', 'bb_setup_template_for_document_preview', PHP_INT_MAX );
 
 /**
  * Clear a user's symlinks document when attachment document delete.

@@ -84,7 +84,7 @@ add_filter( 'bp_get_activity_entry_css_class', 'bp_video_activity_entry_css_clas
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
 add_filter( 'query_vars', 'bb_setup_query_media_preview' );
-add_action( 'template_include', 'bb_setup_template_for_media_preview' );
+add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_MAX );
 
 /**
  * Add Media items for search
