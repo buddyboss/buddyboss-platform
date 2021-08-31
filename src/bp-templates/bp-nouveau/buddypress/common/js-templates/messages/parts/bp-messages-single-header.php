@@ -169,7 +169,7 @@
 								<div class="bb-report-type-pagination">
 									<p class="page-data" data-thread-id="{{data.id}}">
 										<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
-										   class="load_more_rl button small"
+										   class="load_more_rl button small outline"
 										   data-thread-id="{{data.id}}"
 										   data-tp="{{data.recipients.total_pages}}"
 										   data-tc="{{data.recipients.count}}"

@@ -8265,8 +8265,12 @@ body .bp-messages-user-threads {
 
 .bb-report-type-pagination .page-data {
   display: block;
-  margin: 0 auto;
+  margin: 20px auto 0;
   text-align: center;
+}
+
+.bb-report-type-pagination .page-data #load_more_rl {
+  min-width: 140px;
 }
 
 .bb-report-type-pagination .page-data #load_more_rl.loading:after {
