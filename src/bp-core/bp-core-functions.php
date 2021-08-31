@@ -6099,10 +6099,6 @@ function bb_restricate_rss_feed() {
  * @since BuddyBoss x.x.x
  */
 function bb_restricate_rest_api() {
-	// This will disable woocommerce endpoints.
-	if ( class_exists( 'woocommerce' ) ) {
-		remove_action( 'rest_api_init', array( WC()->api, 'register_rest_routes' ), 10 );
-	}
 	// This will disable all rest api endpoints.
 	add_filter( 'rest_endpoints', 'bb_remove_all_endpoints' );
 }
