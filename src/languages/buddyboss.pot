@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.7.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-08-30 12:41:32+00:00\n"
+"POT-Creation-Date: 2021-08-31 11:17:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -844,12 +844,12 @@ msgstr ""
 msgid "%1$s replied to one of your activity comments"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:420
+#: bp-activity/bp-activity-notifications.php:437
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:580
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:421
+#: bp-activity/bp-activity-notifications.php:438
 #: bp-blogs/bp-blogs-template.php:1163
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
@@ -866,7 +866,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:422
+#: bp-activity/bp-activity-notifications.php:439
 #: bp-blogs/bp-blogs-template.php:1171
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
@@ -883,14 +883,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:431
+#: bp-activity/bp-activity-notifications.php:448
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:588
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:435
-#: bp-activity/bp-activity-notifications.php:453 bp-forums/groups.php:1554
+#: bp-activity/bp-activity-notifications.php:452
+#: bp-activity/bp-activity-notifications.php:470 bp-forums/groups.php:1554
 #: bp-forums/groups.php:1576 bp-friends/bp-friends-notifications.php:274
 #: bp-friends/bp-friends-notifications.php:290
 #: bp-groups/bp-groups-notifications.php:1242
@@ -903,8 +903,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:441
-#: bp-activity/bp-activity-notifications.php:459 bp-forums/groups.php:1563
+#: bp-activity/bp-activity-notifications.php:458
+#: bp-activity/bp-activity-notifications.php:476 bp-forums/groups.php:1563
 #: bp-forums/groups.php:1585 bp-friends/bp-friends-notifications.php:280
 #: bp-friends/bp-friends-notifications.php:296
 #: bp-groups/bp-groups-notifications.php:1248
@@ -917,7 +917,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:449
+#: bp-activity/bp-activity-notifications.php:466
 #: bp-core/gdpr/class-bp-settings-export.php:155
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:603
 msgid "A member replies to an update or comment you've posted"
@@ -2538,7 +2538,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:288
 #: bp-core/bp-core-functions.php:788
-#: bp-core/classes/class-bp-core-login-widget.php:125
+#: bp-core/classes/class-bp-core-login-widget.php:127
 #: bp-forums/common/widgets.php:124 bp-members/bp-members-adminbar.php:69
 msgid "Register"
 msgstr ""
@@ -5614,7 +5614,7 @@ msgid "Delete Account"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3028
-#: bp-core/classes/class-bp-core-login-widget.php:121
+#: bp-core/classes/class-bp-core-login-widget.php:122
 #: bp-core/deprecated/buddypress/2.1.php:189 bp-forums/common/widgets.php:91
 #: bp-forums/common/widgets.php:112 bp-members/bp-members-adminbar.php:59
 #: bp-templates/bp-nouveau/buddypress/members/activate.php:30
@@ -7510,7 +7510,7 @@ msgstr ""
 msgid "Remember Me"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-login-widget.php:192
+#: bp-core/classes/class-bp-core-login-widget.php:194
 #: bp-core/classes/class-bp-core-network-posts-widget.php:213
 #: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
 #: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
