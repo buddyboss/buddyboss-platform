@@ -1101,7 +1101,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 		}
 
 		if ( true === $remove_comment_btn ) {
-			add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 		}
 
 		$args = array(
@@ -1122,7 +1122,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 		ob_end_clean();
 
 		if ( true === $remove_comment_btn ) {
-			remove_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			remove_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 		}
 
 		remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );

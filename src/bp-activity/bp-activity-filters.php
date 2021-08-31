@@ -2963,8 +2963,9 @@ function bp_activity_edit_update_video( $video_ids ) {
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
+ * @since BuddyBoss 1.7.7
  */
-function bp_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
+function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
 	$get_activity = new BP_Activity_Activity( $activity_id );
 	if ( ! empty( $get_activity->id )
 	     && ( ( 'activity_update' === $get_activity->type && 'media' === $get_activity->privacy )
