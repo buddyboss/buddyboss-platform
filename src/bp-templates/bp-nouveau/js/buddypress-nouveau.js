@@ -290,95 +290,16 @@ window.bp = window.bp || {};
 			 */
 			method = method || 'reset';
 			if ( 'append' === method ) {
-				$( selector ).append( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+				$( selector ).append( content );
 			} else if ( 'prepend' === method ) {
-				$( selector ).prepend( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+				$( selector ).prepend( content );
 			} else {
-				$( selector ).html( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+				$( selector ).html( content );
 			}
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bp-suggestions' ).bp_mentions( bp.mentions.users );
 			}
-		},
-		/**
-		 * [hideSingleUrl description]
-		 *
-		 * @param  {[type]} event [description]
-		 * @param  {[type]} request [description]
-		 * @param  {[type]} settings [description]
-		 * @return {[type]}       [description]
-		 */
-		hideSingleUrl: function () {
-			var _findtext = $( this ).find( '.activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
-			var _url = '',
-				NewString = '',
-				startIndex = '',
-				_is_exist = 0;
-			if ( 0 <= _findtext.indexOf( 'http://' ) ) {
-				startIndex = _findtext.indexOf( 'http://' );
-				_is_exist = 1;
-			} else if ( 0 <= _findtext.indexOf( 'https://' ) ) {
-				startIndex = _findtext.indexOf( 'https://' );
-				_is_exist = 1;
-			} else if ( 0 <= _findtext.indexOf( 'www.' ) ) {
-				startIndex = _findtext.indexOf( 'www' );
-				_is_exist = 1;
-			}
-			if ( 1 === _is_exist ) {
-				for ( var i = startIndex; i < _findtext.length; i++ ) {
-					if ( _findtext[ i ] === ' ' || _findtext[ i ] === '\n' ) {
-						break;
-					} else {
-						_url += _findtext[ i ];
-					}
-				}
-
-				if ( _url !== '' ) {
-					NewString = $.trim( _findtext.replace( _url, '' ) );
-				}
-				if ( 0 <= NewString.length ) {
-					if ( ( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length || $( this ).hasClass( 'wp-link-embed' ) ) || $( this ).find( 'iframe' ) ) {
-						var MainObj     = $( this );
-						var PreviewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
-						if ( $( this ).find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ) {
-							PreviewElem = $( this ).find( '.activity-inner > .activity-link-preview-container' );
-						} else if (  $( this ).find( '.bb-video-wrapper' ).length > 0 ) {
-							PreviewElem = $( this ).find( '.bb-video-wrapper' );
-						} else {
-							PreviewElem = $( this ).find( 'iframe' ).parent();
-						}
-						var LinkCount = 0;
-						PreviewElem.siblings().each(
-							function(){
-								if ( $( this ).find( 'a' ).length > 0 ) {
-									LinkCount = parseFloat( LinkCount ) + parseFloat( $( this ).find( 'a' ).length );
-								}
-								var Cloneobj = $( this ).clone( true );
-								var Only_txt = Cloneobj.text().replace( /(<([^>]+)>)/ig,'' ).replace( /([a-z]+\:\/+)([^\/\s]+)([a-z0-9\-@\^=%&;\/~\+]*)[\?]?([^ \#\r\n]*)#?([^ \#\r\n]*)/mig, '' );
-								if ( LinkCount == 1 ) {
-									if ( MainObj.find( '.activity-inner > .activity-link-preview-container ' ).length > 0 ) {
-										if ( $( this ).find( 'a' ).length > 0 ) {
-											if ( $.trim( Only_txt ) === '' && $( this ).find( 'a' ).length == 1 ) {
-												$( this ).hide();
-											} else {
-												$( this ).find( 'a' ).hide();
-											}
-										}
-									} else {
-										if ( $.trim( Only_txt ) === '' && $( this ).find( 'a' ).length == 1 ) {
-											$( this ).hide();
-										} else {
-											$( this ).find( 'a' ).hide();
-										}
-									}
-								}
-							}
-						);
-					}
-				}
-			}
-
 		},
 		/**
 		 * [objectRequest description]
