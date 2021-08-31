@@ -1093,7 +1093,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 				! empty( $get_activity->id ) &&
 				(
 					( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-					||	in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+					|| in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
 				)
 			) {
 				$remove_comment_btn = true;
@@ -1150,61 +1150,61 @@ function bp_nouveau_ajax_media_get_media_description() {
 		);
 
 		ob_start();
-
 		if ( $can_view ) {
 			?>
-            <li class="activity activity_update activity-item mini ">
-                <div class="bp-activity-head">
-                    <div class="activity-avatar item-avatar">
-                        <a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
-                    </div>
+			<li class="activity activity_update activity-item mini ">
+				<div class="bp-activity-head">
+					<div class="activity-avatar item-avatar">
+						<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
+					</div>
 
-                    <div class="activity-header">
-                        <p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $display_name; ?></a> <?php echo __( 'uploaded an image', 'buddyboss' ); ?><a
-                                    href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
-                        <p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
-                    </div>
-                </div>
-                <div class="activity-media-description">
-                    <div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
+					<div class="activity-header">
+						<p>
+							<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded an image', 'buddyboss' ); ?>
+							<a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since">
+						</p>
+						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
+					</div>
+				</div>
+				<div class="activity-media-description">
+					<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
 					<?php
 					if ( $can_edit_btn ) {
 						?>
-                        <a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
-                            <span class="bb-icon-edit-thin"></span>
-                            <span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-                            <span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-                        </a>
+						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
+							<span class="bb-icon-edit-thin"></span>
+							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+						</a>
 
-                        <div class="bp-edit-media-activity-description" style="display: none;">
-                            <div class="innerWrap">
+						<div class="bp-edit-media-activity-description" style="display: none;">
+							<div class="innerWrap">
                                 <textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text"
-                                          placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
-                            </div>
-                            <div class="in-profile description-new-submit">
-                                <input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-                                <input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit"
-                                       value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-                                <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
-                            </div>
-                        </div>
+	                                      placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
+							</div>
+							<div class="in-profile description-new-submit">
+								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
+								<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+								<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+							</div>
+						</div>
 						<?php
 					}
 					?>
-                </div>
+				</div>
 				<?php
 				if ( ! empty( $media_id ) && $can_download_btn ) {
 					$download_url = bp_media_download_link( $attachment_id, $media_id );
 					if ( $download_url ) {
 						?>
 						<a class="download-media" href="<?php echo esc_url( $download_url ); ?>">
-							<?php _e( 'Download', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php
 					}
 				}
 				?>
-            </li>
+			</li>
 			<?php
 			$media_description = ob_get_contents();
 			ob_end_clean();

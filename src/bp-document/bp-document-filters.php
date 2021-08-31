@@ -901,8 +901,9 @@ function bp_document_activity_update_document_privacy( $activity ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
 			if (
-				! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true )
-			     && ( 'comment' !== $document->privacy && ! empty( $document->blog_id ) )
+				! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) &&
+				'comment' !== $document->privacy &&
+				! empty( $document->blog_id )
 			) {
 				$document->privacy = $activity->privacy;
 				$document->save();
