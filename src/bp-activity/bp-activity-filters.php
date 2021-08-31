@@ -2970,10 +2970,10 @@ function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id 
 	$get_activity = new BP_Activity_Activity( $activity_id );
 	if (
 		! empty( $get_activity->id ) &&
-	     (
-	     	( 'activity_update' === $get_activity->type && 'media' === $get_activity->privacy ) ||
-	        ( 'activity_update' === $get_activity->type && 'document' === $get_activity->privacy )
-	     )
+		(
+			( 'activity_update' === $get_activity->type && 'media' === $get_activity->privacy ) ||
+			( 'activity_update' === $get_activity->type && 'document' === $get_activity->privacy )
+		)
 	) {
 		$buttons['activity_favorite']     = '';
 		$buttons['activity_conversation'] = '';
