@@ -1643,11 +1643,12 @@ function bbp_get_dropdown( $args = '' ) {
 function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 
 	if ( bbp_get_topic_post_type() === get_post_type( $post->ID ) || bbp_get_reply_post_type() === get_post_type( $post->ID ) ) {
-		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ), 'buddyboss' );
+		$content = $post->post_content;
+		$content = add_filter('bbp_reply_attributes_meta_box_discussion_reply_title_filter',$content);
+		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $content), 8, '...' ), 'buddyboss' );
 	}
-
 	return $title;
-}
+	}
 
 /**
  * Output the required hidden fields when creating/editing a forum
