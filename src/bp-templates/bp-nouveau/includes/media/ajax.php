@@ -1166,7 +1166,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 					<?php
 					if ( $can_edit_btn ) {
 						?>
-						<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
+						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
 							<span class="bb-icon-edit-thin"></span>
 							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
