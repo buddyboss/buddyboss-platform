@@ -2963,6 +2963,7 @@ function bp_activity_edit_update_video( $video_ids ) {
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
+ * 
  * @since BuddyBoss 1.7.7
  */
 function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
