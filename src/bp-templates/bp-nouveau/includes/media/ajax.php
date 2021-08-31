@@ -1131,17 +1131,15 @@ function bp_nouveau_ajax_media_get_media_description() {
 	}
 
 	if ( empty( trim( $media_description ) ) ) {
-		$content = get_post_field( 'post_content', $attachment_id );
-
+		$content          = get_post_field( 'post_content', $attachment_id );
 		$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
 		$can_download_btn = true === (bool) $media_privacy['can_download'];
 		$can_edit_btn     = true === (bool) $media_privacy['can_edit'];
 		$can_view         = true === (bool) $media_privacy['can_view'];
-
-		$user_domain  = bp_core_get_user_domain( $media->user_id );
-		$display_name = bp_core_get_user_displayname( $media->user_id );
-		$time_since   = bp_core_time_since( $media->date_created );
-		$avatar       = bp_core_fetch_avatar(
+		$user_domain      = bp_core_get_user_domain( $media->user_id );
+		$display_name     = bp_core_get_user_displayname( $media->user_id );
+		$time_since       = bp_core_time_since( $media->date_created );
+		$avatar           = bp_core_fetch_avatar(
 			array(
 				'item_id' => $media->user_id,
 				'object'  => 'user',
@@ -1159,10 +1157,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 					</div>
 
 					<div class="activity-header">
-						<p>
-							<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded an image', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since">
-						</p>
+						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 					</div>
 				</div>
@@ -1180,7 +1175,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
                                 <textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text"
-	                                      placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
+                                          placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
 								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">

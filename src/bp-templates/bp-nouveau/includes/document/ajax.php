@@ -370,7 +370,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 				! empty( $get_activity->id ) &&
 				(
 					( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-					||	in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+					|| in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
 				)
 			) {
 				$remove_comment_btn = true;
@@ -413,11 +413,10 @@ function bp_nouveau_ajax_document_get_document_description() {
 		$can_download_btn = true === (bool) $document_privacy['can_download'];
 		$can_edit_btn     = true === (bool) $document_privacy['can_edit'];
 		$can_view         = true === (bool) $document_privacy['can_view'];
-		
-		$user_domain  = bp_core_get_user_domain( $document->user_id );
-		$display_name = bp_core_get_user_displayname( $document->user_id );
-		$time_since   = bp_core_time_since( $document->date_created );
-		$avatar       = bp_core_fetch_avatar(
+		$user_domain      = bp_core_get_user_domain( $document->user_id );
+		$display_name     = bp_core_get_user_displayname( $document->user_id );
+		$time_since       = bp_core_time_since( $document->date_created );
+		$avatar           = bp_core_fetch_avatar(
 			array(
 				'item_id' => $document->user_id,
 				'object'  => 'user',
@@ -435,10 +434,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 					</div>
 
 					<div class="activity-header">
-						<p>
-							<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded a document', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since">
-						</p>
+						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded a document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 					</div>
 				</div>
@@ -456,7 +452,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
 								<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text"
-									      placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
+                                          placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
 								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
