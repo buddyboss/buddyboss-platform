@@ -451,8 +451,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
-								<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text"
-									      placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
+								<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
 								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
