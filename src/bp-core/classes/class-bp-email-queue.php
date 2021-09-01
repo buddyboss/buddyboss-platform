@@ -37,6 +37,94 @@ class BP_Email_Queue {
 	}
 
 	/**
+	 * Background Process for adding email queue record.
+	 *
+	 * @param array $recipients Recipients
+	 *
+	 * @param int $id Message id
+	 *
+	 * @param string $sender_name Sender name
+	 *
+	 * @param string $message Message content
+	 *
+	 * @param int $thread_id Thread id
+	 *
+	 * @param string $subject Subject
+	 *
+	 * @since BuddyBoss 1.7.7
+	 */
+	public function bb_email_group_message_add_record( $recipients, $id, $sender_name, $message, $thread_id, $subject ) {
+		if ( ! empty( $recipients ) ) {
+			global $bp_background_updater;
+			$recipients_chunk = array_chunk( $recipients, 20 );
+
+			foreach ( $recipients_chunk as $key => $single_chunk ) {
+				$bp_background_updater->push_to_queue(
+					array(
+						'callback' => array( $this, 'bb_email_queue_add_record_cron' ),
+						'args'     => array( $single_chunk, $id, $sender_name, $message, $thread_id, $subject ),
+					)
+				);
+			}
+
+			$bp_background_updater->save()->schedule_event();
+		}
+	}
+
+	/**
+	 * Callback function of background process for adding email record
+	 *
+	 * @param array $recipients Recipients
+	 *
+	 * @param int $id Message id
+	 *
+	 * @param string $sender_name Sender name
+	 *
+	 * @param string $message Message content
+	 *
+	 * @param int $thread_id Thread id
+	 *
+	 * @param string $subject Subject
+	 *
+	 * @since BuddyBoss 1.7.7
+	 */
+	public function bb_email_queue_add_record_cron( $recipients, $id, $sender_name, $message, $thread_id, $subject ) {
+		$group      = bp_messages_get_meta( $id, 'group_id', true );
+		$group_name = bp_get_group_name( groups_get_group( $group ) );
+
+		if ( ! empty( $recipients ) ) {
+			foreach ( $recipients as $recipient ) {
+
+				$unsubscribe_args = array(
+					'user_id'           => $recipient->user_id,
+					'notification_type' => 'group-message-email',
+				);
+
+				$ud = get_userdata( $recipient->user_id );
+
+				$this->add_record(
+					'group-message-email',
+					$ud,
+					array(
+						'tokens' => array(
+							'message_id'  => $id,
+							'usermessage' => stripslashes( $message ),
+							'message'     => stripslashes( $message ),
+							'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+							'sender.name' => $sender_name,
+							'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+							'group.name'  => $group_name,
+							'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						),
+					)
+				);
+				// call email background process.
+				$this->bb_email_background_process();
+			}
+		}
+	}
+
+	/**
 	 * Background Process.
 	 *
 	 * @since BuddyBoss 1.7.7
