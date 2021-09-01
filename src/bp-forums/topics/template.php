@@ -144,9 +144,9 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 			// Page or single post.
 		} elseif ( is_page() || is_single() ) {
 			if ( 'forums' === bbp_show_on_root() ) {
-				$base = bbp_get_forums_url();
-			} elseif ( 'topics' === bbp_show_on_root() ) {
 				$base = bbp_get_topics_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
 			} else {
 				$base = get_permalink();
 			}
@@ -162,17 +162,17 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 			// Topic archive.
 		} elseif ( bbp_is_topic_archive() ) {
 			if ( 'forums' === bbp_show_on_root() ) {
-				$base = bbp_get_forums_url();
-			} elseif ( 'topics' === bbp_show_on_root() ) {
 				$base = bbp_get_topics_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
 			}
 
 			// Default.
 		} else {
 			if ( 'forums' === bbp_show_on_root() ) {
-				$base = bbp_get_forums_url();
-			} elseif ( 'topics' === bbp_show_on_root() ) {
 				$base = bbp_get_topics_url();
+			} elseif ( 'topics' === bbp_show_on_root() ) {
+				$base = bbp_get_forums_url();
 			} else {
 				$base = get_permalink( $forum_id );
 			}
