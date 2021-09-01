@@ -721,6 +721,11 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		'check_for_duplicate'
 	);
 
+	// If reply/topic content is NULL then skip checking duplicate post
+	if( empty( $r['post_content'] ) ){
+		return true;
+	}
+
 	// Check for anonymous post
 	if ( empty( $r['post_author'] ) && ( ! empty( $r['anonymous_data'] ) && ! empty( $r['anonymous_data']['bbp_anonymous_email'] ) ) ) {
 		$clauses = get_meta_sql(
