@@ -3425,10 +3425,11 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 	 * @param int    $media_id       Media ID.
 	 * @param int    $attachment_id  Attachment ID.
 	 * @param string $size           Preview size.
+     * @param bool   $do_symlink     display symlink or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size );
+	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size, $do_symlink );
 }
 
 /**
