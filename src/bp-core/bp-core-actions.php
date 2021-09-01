@@ -328,7 +328,7 @@ function bb_media_symlink_validate() {
 add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
 
 /**
- * Function will remove default WordPress and WooCommerce api endpoint.
+ * Function will remove BuddyBoss API endpoint.
  * Also, remove feeds url.
  *
  * @since BuddyBoss x.x.x
