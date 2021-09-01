@@ -1288,3 +1288,24 @@ function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id
 }
 
 add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
+
+/**
+ * Fix Elementor conflict for forum parent field.
+ * Remove the Page Attributes meta box from forum edit page
+ * since Element's page attributes parent field is conflicting with forum attributes patent field
+ *
+ * @return void
+ *
+ * @since 1.7.6
+ */
+function bbp_remove_page_attributes_metabox_for_forum() {
+
+	// Check if elementor is exists.
+	if ( class_exists( '\Elementor\Plugin' ) ) {
+		// Remove the page attribute meta box for forum screen.
+		remove_meta_box( 'pageparentdiv' , 'forum' , 'side' );
+	}
+
+}
+
+add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
