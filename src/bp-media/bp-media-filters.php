@@ -1569,8 +1569,9 @@ function bp_media_activity_update_media_privacy( $activity ) {
 			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
 			if (
-				! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true )
-				&& ( 'comment' !== $media->privacy && ! empty( $media->blog_id ) )
+				! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) &&
+				'comment' !== $media->privacy &&
+				! empty( $media->blog_id )
 			) {
 				$media->privacy = $activity->privacy;
 				$media->save();

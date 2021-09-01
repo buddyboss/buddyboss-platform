@@ -2052,7 +2052,7 @@ function bp_activity_document_add( $document ) {
 			
 			// Check when new activity coment is empty then set privacy comment - 2121.
 			if ( ! empty( $bp_new_activity_comment ) ) {
-				$activity_id     = $bp_new_activity_comment;
+				$activity_id        = $bp_new_activity_comment;
 				$document->privacy  = 'comment';
 				$document->album_id = 0;
 			} else {
@@ -2078,7 +2078,7 @@ function bp_activity_document_add( $document ) {
 					$activity_id = bp_activity_post_update( $args );
 				}
 			}
-			
+
 			if ( $activity_id ) {
 
 				// save document activity id in document.
@@ -2112,7 +2112,7 @@ function bp_activity_document_add( $document ) {
 				// If the document posted in activity comment then set the activity id to comment id.- 2121.
 				if ( ! empty( $bp_new_activity_comment ) ) {
 					$parent_activity_id = $bp_new_activity_comment;
-					$document->privacy     = 'comment';
+					$document->privacy  = 'comment';
 				}
 				
 				// save document activity id in document.
@@ -2991,12 +2991,17 @@ function bb_activity_delete_link_review_attachment( $activities ) {
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
+ * 
+ * @since BuddyBoss 1.7.7
  */
-function bp_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
+function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
 	$get_activity = new BP_Activity_Activity( $activity_id );
-	if ( ! empty( $get_activity->id )
-	     && ( ( 'activity_update' === $get_activity->type && 'media' === $get_activity->privacy )
-	          || ( 'activity_update' === $get_activity->type && 'document' === $get_activity->privacy ) )
+	if (
+		! empty( $get_activity->id ) &&
+		(
+			( 'activity_update' === $get_activity->type && 'media' === $get_activity->privacy ) ||
+			( 'activity_update' === $get_activity->type && 'document' === $get_activity->privacy )
+		)
 	) {
 		$buttons['activity_favorite']     = '';
 		$buttons['activity_conversation'] = '';

@@ -370,7 +370,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 				! empty( $get_activity->id ) &&
 				(
 					( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-					||	in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+					|| in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
 				)
 			) {
 				$remove_comment_btn = true;
@@ -378,7 +378,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 		}
 		
 		if ( true === $remove_comment_btn ) {
-			add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 		}
 		
 		$args = array(
@@ -399,7 +399,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 		ob_end_clean();
 		
 		if ( true === $remove_comment_btn ) {
-			remove_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			remove_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 		}
 		
 		remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
@@ -413,11 +413,10 @@ function bp_nouveau_ajax_document_get_document_description() {
 		$can_download_btn = true === (bool) $document_privacy['can_download'];
 		$can_edit_btn     = true === (bool) $document_privacy['can_edit'];
 		$can_view         = true === (bool) $document_privacy['can_view'];
-		
-		$user_domain  = bp_core_get_user_domain( $document->user_id );
-		$display_name = bp_core_get_user_displayname( $document->user_id );
-		$time_since   = bp_core_time_since( $document->date_created );
-		$avatar       = bp_core_fetch_avatar(
+		$user_domain      = bp_core_get_user_domain( $document->user_id );
+		$display_name     = bp_core_get_user_displayname( $document->user_id );
+		$time_since       = bp_core_time_since( $document->date_created );
+		$avatar           = bp_core_fetch_avatar(
 			array(
 				'item_id' => $document->user_id,
 				'object'  => 'user',
@@ -426,9 +425,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 		);
 		
 		ob_start();
-		
 		if ( $can_view ) {
-			
 			?>
 			<li class="activity activity_update activity-item mini ">
 				<div class="bp-activity-head">
@@ -437,7 +434,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 					</div>
 
 					<div class="activity-header">
-						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $display_name; ?></a> <?php echo __( 'uploaded a document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded a document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 					</div>
 				</div>
@@ -446,19 +443,18 @@ function bp_nouveau_ajax_document_get_document_description() {
 					<?php
 					if ( $can_edit_btn ) {
 						?>
-						<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-							href="#">
+						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
 							<span class="bb-icon-edit-thin"></span>
-							<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-							<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						</a>
 
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
-								<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
+								<textarea id="add-activity-description" title="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_attr_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
-								<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
 								<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_attr_e( 'Done Editing', 'buddyboss' ); ?>">
 								<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>">
 							</div>
@@ -473,7 +469,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 					if ( $download_url ) {
 						?>
 						<a class="download-document" href="<?php echo esc_url( $download_url ); ?>">
-							<?php _e( 'Download', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php
 					}
