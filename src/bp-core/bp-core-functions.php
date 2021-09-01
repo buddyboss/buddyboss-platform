@@ -4936,7 +4936,12 @@ function bp_core_parse_url( $url ) {
 	} else {
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get( $url );
+		$response = wp_safe_remote_get(
+			$url,
+			array(
+				'user-agent' => '', // Default value being blocked by Cloudflare
+			)
+		);
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty
@@ -6059,9 +6064,9 @@ function bb_moderation_bg_update_moderation_data() {
 
 /**
  * Get all admin users.
- * 
+ *
  * @since BuddyBoss 1.7.6
- * 
+ *
  * @return array
  */
 function bb_get_all_admin_users() {
@@ -6077,7 +6082,6 @@ function bb_get_all_admin_users() {
 	}
 	return $users;
 }
-
 
 /**
  * Check the symlink function was disabled by server or not.
