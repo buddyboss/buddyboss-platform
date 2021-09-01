@@ -326,17 +326,37 @@ endif;
 												if ( ! empty( $group->fields ) ) :
 													if ( 1 === $group->id ) {
 														$signup_fields = bp_nouveau_get_signup_fields( 'account_details' );
-														$final_fields  = array_merge( $signup_fields, $group->fields );
+
+														// Convert signup fields array to object.
+														$signup_fields_object = array_map( function ( $input_array ) {
+															return (object) $input_array;
+														}, $signup_fields );
+
+														// Add extra keys and values to handle it later.
+														if ( ! empty( $signup_fields_object ) ) {
+															foreach ( $signup_fields_object as $key => $signup_fields_object_ite ) {
+																$signup_fields_object_ite->id   = $key;
+																$signup_fields_object_ite->name = $signup_fields_object_ite->label;
+															}
+														}
+
+														// Merge signup fields and xprofile fields.
+														$final_fields  = array_merge( $signup_fields_object, $group->fields );
 														$group->fields = $final_fields;
 													}
+
 													$xprofile_order = get_option( 'bp_xprofile_fields_order' );
-													$rt_fileds      = array();
 
 													if ( ! empty( $xprofile_order ) ) {
-														foreach ( $xprofile_order as $forder ) {
-															$rt_fileds[ $forder ] = $group->fields[ $forder ];
+														$reorder_array = array();
+														foreach ( $xprofile_order as $order ) {
+															foreach ( $final_fields as $final_field ) {
+																if ( $order == $final_field->id ) {
+																	$reorder_array[ $order ] = $final_field;
+																}
+															}
 														}
-														$group->fields = $rt_fileds;
+														$group->fields = $reorder_array;
 													}
 
 													foreach ( $group->fields as $key => $field ) {
@@ -372,7 +392,7 @@ endif;
                                                                       class="textbox primary_field sortable core">
                                                                 <legend>
                                                                         <span>
-                                                                            <span class="field-name"><?php echo esc_html( $field['label'] ); ?></span>
+                                                                            <span class="field-name"><?php echo esc_html( $field->label ); ?></span>
                                                                             <span class="bp-signup-field-label"><?php esc_html_e( '(Signup)', 'buddyboss' ); ?></span>
                                                                             <span class="bp-required-field-label"><?php esc_html_e( '(required)', 'buddyboss' ); ?></span>
                                                                         </span>
