@@ -36,7 +36,7 @@
 				data-tc="{{data.recipients.count}}"
 				data-pp="{{data.recipients.per_page}}"
 				data-cp="2"
-				data-action="bp_view_more"><?php esc_html_e( 'View More Members', 'buddyboss' ); ?></a>
+				data-action="bp_view_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 			<# } #>
 			<dd>
 				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
