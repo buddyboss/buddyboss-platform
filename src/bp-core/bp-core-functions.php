@@ -6129,10 +6129,15 @@ function bb_remove_all_endpoints( $endpoints ) {
 		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
 	) );
 	
+	// You can add if you want to allow buddyboss-app and appboss API using filter.
+	// Here, we just allow platform API.
+	$bb_endpoints = apply_filters( 'bb_registered_endpoints', array(
+		'buddyboss',
+	) );
+	
 	foreach ( $endpoints as $endpoint => $details ) {
-		if ( strpos( $endpoint, 'buddyboss' ) !== false ||
-		     strpos( $endpoint, 'buddyboss-app' ) !== false ||
-		     strpos( $endpoint, 'appboss' ) !== false ) {
+		$flag = bb_allow_platform_api_endpoint( $bb_endpoints, $endpoint );
+		if ( true === $flag ) {
 			if ( ! in_array( $endpoint, $exclude_endpoints, true ) ) {
 				unset( $endpoints[ $endpoint ] );
 			}
@@ -6140,4 +6145,22 @@ function bb_remove_all_endpoints( $endpoints ) {
 	}
 
 	return $endpoints;
+}
+
+/**
+ * Function will check string exists in endpoint. If yes then based on that return flag true.
+ *
+ * @param $bb_endpoints Which endpoints slug allow. Like - buddyboss, buddyboss-app and appboss.
+ * @param $endpoint     All registered endpoint will check with $bb_endpoints.
+ *
+ * @return bool
+ */
+function bb_allow_platform_api_endpoint( $bb_endpoints, $endpoint ) {
+	$flag = false;
+	foreach ( $bb_endpoints as $bb_endpoint ) {
+		if ( strpos( $endpoint, $bb_endpoint ) !== false) {
+			$flag = true;
+		}
+	}
+	return $flag;
 }
