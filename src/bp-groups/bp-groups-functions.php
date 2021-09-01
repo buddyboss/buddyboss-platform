@@ -3612,6 +3612,12 @@ function bp_group_get_group_type_key( $post_id ) {
  * @return array Group types
  */
 function bp_get_active_group_types( $args = array() ) {
+
+	if ( ! bp_disable_group_type_creation() ) {
+		return array();
+	}
+
+	static $group_cache = array();
 	$bp_active_group_types = array();
 
 	$args = bp_parse_args( $args, array(
@@ -3623,6 +3629,12 @@ function bp_get_active_group_types( $args = array() ) {
         'fields'         => 'ids'
     ), 'group_types' );
 
+	$group_cache_key = 'bp_get_active_group_types_' . md5( serialize( $args ) );
+
+	if ( isset( $group_cache[ $group_cache_key ] ) ) {
+		return $group_cache[ $group_cache_key ];
+	}
+
     $bp_active_group_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_group_types_query->have_posts() ) {
@@ -3630,7 +3642,10 @@ function bp_get_active_group_types( $args = array() ) {
 	}
 	wp_reset_postdata();
 
-	return apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
+	$bp_active_group_types           = apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
+	$group_cache[ $group_cache_key ] = $bp_active_group_types;
+
+	return $bp_active_group_types;
 }
 
 if ( true === bp_disable_group_type_creation() ) {
