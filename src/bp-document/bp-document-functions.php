@@ -1213,27 +1213,24 @@ function folders_check_folder_access( $folder_id ) {
  */
 function bp_document_delete_orphaned_attachments() {
 
-	$orphaned_attachment_args = array(
-		'post_type'      => 'attachment',
-		'post_status'    => 'inherit',
-		'fields'         => 'ids',
-		'posts_per_page' => - 1,
-		'meta_query'     => array(
-			array(
-				'key'     => 'bp_document_saved',
-				'value'   => '0',
-				'compare' => '=',
-			),
-		),
-	);
+	global $wpdb;
 
-	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
+	/**
+	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
+	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
+	 * all the media from Media Library.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 */
+	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_document_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
+	$data  = $wpdb->get_col( $query );
 
-	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach ( $orphaned_attachment_query->posts as $a_id ) {
+	if ( ! empty( $data ) ) {
+		foreach ( $data as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
+
 }
 
 /**
