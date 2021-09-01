@@ -797,6 +797,11 @@ class BP_Groups_Member {
 			$sql['where'][] = "m.group_id = g.id AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
 		}
 
+		// If hide subgroups option is checked from Group hierarchies settings
+		if ( ( bp_is_groups_directory() || bp_is_user_groups() ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+			$sql['where'][] = "g.parent_id = 0";
+		}
+
 		/**
 		 * Filters the Where SQL statement.
 		 *
