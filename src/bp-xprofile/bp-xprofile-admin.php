@@ -326,7 +326,12 @@ endif;
 												if ( ! empty( $group->fields ) ) :
 													if ( 1 === $group->id ) {
 														$signup_fields = bp_nouveau_get_signup_fields( 'account_details' );
-
+														if ( $signup_fields['signup_email_confirm'] ) {
+															unset( $signup_fields['signup_email_confirm'] );
+														}
+														if ( $signup_fields['signup_password_confirm'] ) {
+															unset( $signup_fields['signup_password_confirm'] );
+														}
 														// Convert signup fields array to object.
 														$signup_fields_object = array_map( function ( $input_array ) {
 															return (object) $input_array;
@@ -348,15 +353,13 @@ endif;
 													$xprofile_order = get_option( 'bp_xprofile_fields_order' );
 
 													if ( ! empty( $xprofile_order ) ) {
-														$reorder_array = array();
-														foreach ( $xprofile_order as $order ) {
-															foreach ( $final_fields as $final_field ) {
-																if ( $order == $final_field->id ) {
-																	$reorder_array[ $order ] = $final_field;
-																}
+														$order_fields = array();
+														if ( ! empty( $group->fields ) ) {
+															foreach ( $group->fields as $field ) {
+																$order_fields[ $field->id ] = $field;
 															}
 														}
-														$group->fields = $reorder_array;
+														$group->fields = array_replace( array_flip( $xprofile_order ), $order_fields );
 													}
 
 													foreach ( $group->fields as $key => $field ) {
