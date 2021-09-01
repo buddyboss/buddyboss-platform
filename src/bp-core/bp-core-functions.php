@@ -6064,9 +6064,9 @@ function bb_moderation_bg_update_moderation_data() {
 
 /**
  * Get all admin users.
- * 
+ *
  * @since BuddyBoss 1.7.6
- * 
+ *
  * @return array
  */
 function bb_get_all_admin_users() {
