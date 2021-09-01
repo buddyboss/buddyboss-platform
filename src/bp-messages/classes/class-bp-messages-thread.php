@@ -1079,6 +1079,12 @@ class BP_Messages_Thread {
 		$sql['where']  = "WHERE {$where_sql} {$meta_query_sql['where']}";
 		$sql['misc']   = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
+		//Remove group messages.
+		if ( ! bp_is_active('groups') ) {
+			$sql['from'] .= " LEFT JOIN {$bp->messages->table_name_meta} mm ON mm.message_id = m.id ";
+			$sql['where'] .= " AND ( mm.meta_key IS NULL ) ";
+		}
+
 		/**
 		 * Filters the Where SQL statement.
 		 *
@@ -1653,7 +1659,7 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && - 1 !== $r['per_page'] ) {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
-		
+
 		/**
 		 * Filters the Where SQL statement.
 		 *
@@ -1679,7 +1685,7 @@ class BP_Messages_Thread {
 		 * @param string $sql From SQL statement.
 		 */
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
-        
+
 		$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
 		/**
