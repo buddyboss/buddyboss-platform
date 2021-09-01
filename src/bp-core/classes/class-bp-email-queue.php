@@ -48,7 +48,7 @@ class BP_Email_Queue {
 			$bp_background_updater->push_to_queue(
 				array(
 					'callback' => array( $this, 'bb_email_queue_cron_cb' ),
-					'args'     => array( $get_records ),
+					'args'     => array(),
 				)
 			);
 
@@ -111,10 +111,9 @@ class BP_Email_Queue {
 	 * Email queue cron callback.
 	 *
 	 * @since BuddyBoss 1.7.7
-	 *
-	 * @param array $get_records Array of email records.
 	 */
-	public function bb_email_queue_cron_cb( $get_records ) {
+	public function bb_email_queue_cron_cb() {
+		$get_records = $this->get_records();
 		if ( isset( $get_records ) && ! empty( $get_records ) ) {
 			foreach ( $get_records as $single ) {
 				$item_id    = ! empty( $single->id ) ? $single->id : 0;
