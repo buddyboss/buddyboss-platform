@@ -125,7 +125,7 @@ window.bp = window.bp || {};
 		draftPostAlert: function() {
 			var hasDraft = this.postForm.$el.hasClass( 'bp-activity-has-draft' );
 			if ( hasDraft ){
-				alert( 'You have a draft post, publish the draft post first in order to edit any activity.' );
+				alert( BP_Nouveau.activity.params.errors.validate_draft_post );
 			}
 			return hasDraft;
 		},

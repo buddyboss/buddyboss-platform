@@ -86,8 +86,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'excluded_hosts'   => array(),
 		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
 		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'errors'           => array(
-			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' )
+		'errors' => array(
+			'empty_post_update'   => __( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
+			'validate_draft_post' => __( 'You have a draft post, publish the draft post first in order to edit any activity.', 'buddyboss' ),
 		),
 	);
 
