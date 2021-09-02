@@ -754,6 +754,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 				$this->search_results['all']['total_match_count'] = $all_items_count;
 			}
+
+			$this->search_results = apply_filters( 'bp_search_query_final_results', $this->search_results, $this );
 		}
 
 		/**
