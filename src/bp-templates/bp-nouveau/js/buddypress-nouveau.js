@@ -316,7 +316,7 @@ window.bp = window.bp || {};
 		hideSingleUrl: function () {
 			var _findtext  = $( this ).find( '.activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
 			var _url       = '',
-				_newString = '',
+				newString = '',
 				startIndex = '',
 				_is_exist  = 0;
 			if ( 0 <= _findtext.indexOf( 'http://' ) ) {
@@ -342,7 +342,7 @@ window.bp = window.bp || {};
 					newString = $.trim( _findtext.replace( _url, '' ) );
 				}
 
-				if ( $.trim(newString).length === 0 && $( this ).find( 'iframe' ).length !== 0 && _url !== '' ) {
+				if ( $.trim( newString ).length === 0 && $( this ).find( 'iframe' ).length !== 0 && _url !== '' ) {
 					$( this ).find( '.activity-inner > p:first' ).hide();
 				}
 			}
