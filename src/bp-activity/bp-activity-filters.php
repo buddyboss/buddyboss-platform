@@ -134,14 +134,17 @@ add_action( 'bp_activity_after_save', 'bp_activity_update_comment_privacy', 3 );
 add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
 
 add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
+add_action( 'bp_media_add', 'bb_activity_update_description', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_edit_update_media', 10 );
 
 add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
+add_action( 'bp_video_add', 'bb_activity_update_description', 9 );
 add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
 add_filter( 'bp_video_add_handler', 'bp_activity_edit_update_video', 10 );
 
 add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+add_action( 'bp_document_add', 'bb_activity_update_description', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
@@ -516,14 +519,14 @@ function bp_activity_make_nofollow_filter( $text ) {
 	return preg_replace_callback( '|<a (.+?)>|i', 'bp_activity_make_nofollow_filter_callback', $text );
 }
 
-	/**
-	 * Add rel=nofollow to a link.
-	 *
-	 * @since BuddyPress 1.2.0
-	 *
-	 * @param array $matches Items matched by preg_replace_callback() in bp_activity_make_nofollow_filter().
-	 * @return string $text Link with rel=nofollow added.
-	 */
+/**
+ * Add rel=nofollow to a link.
+ *
+ * @since BuddyPress 1.2.0
+ *
+ * @param array $matches Items matched by preg_replace_callback() in bp_activity_make_nofollow_filter().
+ * @return string $text Link with rel=nofollow added.
+ */
 function bp_activity_make_nofollow_filter_callback( $matches ) {
 	$text = $matches[1];
 	$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'" ), '', $text );
@@ -2926,4 +2929,41 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 			}
 		}
 	}
+}
+
+/**
+ * Add activity description to activity media/document/video
+ *
+ * @param $media
+ */
+function bb_activity_update_description( $media ) {
+	
+	if( ! isset( $_POST ) || ! isset( $_POST['action'] ) || isset( $_POST['edit'] ) ) {
+		return false;
+	}
+
+	if( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
+		return false;
+	}
+
+	if ( empty( $media ) || ! isset( $media->attachment_id ) || empty( $media->attachment_id ) ) {
+		return false;
+	}
+
+	$attachment_id 		= $media->attachment_id;
+	$activity_content 	= filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+
+	/**
+	 * Filters the new activity content for current activity item.
+	 *
+	 * @param string $activity_content Activity content posted by user.
+	 */
+	$activity_content = apply_filters( 'bb_activity_new_media_content', $activity_content );
+
+	$attachment 		= array(
+		'ID' 			=> $attachment_id,
+		'post_content' 	=> $activity_content
+	);
+	
+	wp_update_post( $attachment );
 }

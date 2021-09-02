@@ -599,33 +599,33 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:589
-#: bp-activity/bp-activity-filters.php:2390
-#: bp-activity/bp-activity-filters.php:2423
+#: bp-activity/bp-activity-filters.php:592
+#: bp-activity/bp-activity-filters.php:2393
+#: bp-activity/bp-activity-filters.php:2426
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:593
-#: bp-activity/bp-activity-filters.php:2364
-#: bp-activity/bp-activity-filters.php:2388
-#: bp-activity/bp-activity-filters.php:2421
+#: bp-activity/bp-activity-filters.php:596
+#: bp-activity/bp-activity-filters.php:2367
+#: bp-activity/bp-activity-filters.php:2391
+#: bp-activity/bp-activity-filters.php:2424
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:649
+#: bp-activity/bp-activity-filters.php:652
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:907
+#: bp-activity/bp-activity-filters.php:910
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1692
-#: bp-activity/bp-activity-filters.php:1881
-#: bp-activity/bp-activity-filters.php:2031
-#: bp-activity/bp-activity-filters.php:2219
-#: bp-activity/bp-activity-filters.php:2626
-#: bp-activity/bp-activity-filters.php:2832
+#: bp-activity/bp-activity-filters.php:1695
+#: bp-activity/bp-activity-filters.php:1884
+#: bp-activity/bp-activity-filters.php:2034
+#: bp-activity/bp-activity-filters.php:2222
+#: bp-activity/bp-activity-filters.php:2629
+#: bp-activity/bp-activity-filters.php:2835
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1706
 #: cli/components/activity.php:763
 #. translators: 1. User Link. 2. Group link.
