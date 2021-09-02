@@ -912,8 +912,6 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			continue;
 		}
 
-		$all_recipients[] = $recipient;
-
 		$unsubscribe_args = array(
 			'user_id'           => $recipient->user_id,
 			'notification_type' => 'group-message-email',
@@ -922,7 +920,25 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$group      = bp_messages_get_meta( $id, 'group_id', true );
 		$group_name = bp_get_group_name( groups_get_group( $group ) );
 
-		if ( ! function_exists( 'bp_email_queue' ) ) {
+		if ( function_exists( 'bp_email_queue' ) ) {
+			$all_recipients[] = array(
+				'email_type' => 'group-message-email',
+				'recipient'  => $ud,
+				'arguments'  => array(
+					'tokens' => array(
+						'message_id'  => $id,
+						'usermessage' => stripslashes( $message ),
+						'message'     => stripslashes( $message ),
+						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name' => $sender_name,
+						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+						'group.name'  => $group_name,
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
+				),
+			);
+
+		} else {
 			bp_send_email(
 				'group-message-email',
 				$ud,
@@ -942,8 +958,12 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		}
 	}
 
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->bb_email_group_message_add_record( $all_recipients, $id, $sender_name, $message, $thread_id, $subject );
+	if ( function_exists( 'bp_email_queue' ) && ! empty( $all_recipients ) ) {
+		// Added bulk data into email queue.
+		bp_email_queue()->add_bulk_record( $all_recipients );
+
+		// call email background process.
+		bp_email_queue()->bb_email_background_process();
 	}
 
 	/**

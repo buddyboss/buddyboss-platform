@@ -37,108 +37,27 @@ class BP_Email_Queue {
 	}
 
 	/**
-	 * Background Process for adding email queue record.
-	 *
-	 * @param array $recipients Recipients
-	 *
-	 * @param int $id Message id
-	 *
-	 * @param string $sender_name Sender name
-	 *
-	 * @param string $message Message content
-	 *
-	 * @param int $thread_id Thread id
-	 *
-	 * @param string $subject Subject
-	 *
-	 * @since BuddyBoss 1.7.7
-	 */
-	public function bb_email_group_message_add_record( $recipients, $id, $sender_name, $message, $thread_id, $subject ) {
-		if ( ! empty( $recipients ) ) {
-			global $bp_background_updater;
-			$recipients_chunk = array_chunk( $recipients, 20 );
-
-			foreach ( $recipients_chunk as $key => $single_chunk ) {
-				$bp_background_updater->push_to_queue(
-					array(
-						'callback' => array( $this, 'bb_email_queue_add_record_cron' ),
-						'args'     => array( $single_chunk, $id, $sender_name, $message, $thread_id, $subject ),
-					)
-				);
-			}
-
-			$bp_background_updater->save()->schedule_event();
-		}
-	}
-
-	/**
-	 * Callback function of background process for adding email record
-	 *
-	 * @param array $recipients Recipients
-	 *
-	 * @param int $id Message id
-	 *
-	 * @param string $sender_name Sender name
-	 *
-	 * @param string $message Message content
-	 *
-	 * @param int $thread_id Thread id
-	 *
-	 * @param string $subject Subject
-	 *
-	 * @since BuddyBoss 1.7.7
-	 */
-	public function bb_email_queue_add_record_cron( $recipients, $id, $sender_name, $message, $thread_id, $subject ) {
-		$group      = bp_messages_get_meta( $id, 'group_id', true );
-		$group_name = bp_get_group_name( groups_get_group( $group ) );
-
-		if ( ! empty( $recipients ) ) {
-			foreach ( $recipients as $recipient ) {
-
-				$unsubscribe_args = array(
-					'user_id'           => $recipient->user_id,
-					'notification_type' => 'group-message-email',
-				);
-
-				$ud = get_userdata( $recipient->user_id );
-
-				$this->add_record(
-					'group-message-email',
-					$ud,
-					array(
-						'tokens' => array(
-							'message_id'  => $id,
-							'usermessage' => stripslashes( $message ),
-							'message'     => stripslashes( $message ),
-							'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-							'sender.name' => $sender_name,
-							'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-							'group.name'  => $group_name,
-							'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-						),
-					)
-				);
-				// call email background process.
-				$this->bb_email_background_process();
-			}
-		}
-	}
-
-	/**
 	 * Background Process.
 	 *
 	 * @since BuddyBoss 1.7.7
 	 */
 	public function bb_email_background_process() {
+		global $wpdb;
+		$table_name  = $wpdb->prefix . 'bb_email_queue';
 		$get_records = $this->get_records();
 		if ( ! empty( $get_records ) ) {
 			global $bp_background_updater;
 			$bp_background_updater->push_to_queue(
 				array(
 					'callback' => array( $this, 'bb_email_queue_cron_cb' ),
-					'args'     => array(),
+					'args'     => array( $get_records ),
 				)
 			);
+
+			foreach ( $get_records as $record ) {
+				//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->update( $table_name, array( 'scheduled' => true ), array( 'id' => $record['id'] ) );
+			}
 
 			$bp_background_updater->save()->schedule_event();
 		}
@@ -149,17 +68,41 @@ class BP_Email_Queue {
 	 *
 	 * @since BuddyBoss 1.7.7
 	 *
-	 * @param string $email_type                    Email type.
+	 * @param string                   $email_type  Email type.
 	 * @param string|array|int|WP_User $to          Either an email address, user ID, WP_User object,
 	 *                                              or an array containing the address and name.
-	 * @param array  $args                          Array of arguments.
+	 * @param array                    $args        Array of arguments.
 	 *
-	 * @return bool|int
+	 * @return void
 	 */
 	public function add_record( $email_type, $to, $args = array() ) {
 		global $wpdb;
 
-		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created ) VALUES ( %s, %s, %s, %s )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bp_core_current_time() ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES ( %s, %s, %s, %s, %d )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bp_core_current_time(), false ) );
+	}
+
+	/**
+	 * Add multiple email queue records.
+	 *
+	 * @param array $data Array of data for emails.
+	 */
+	public function add_bulk_record( $data = array() ) {
+		global $wpdb;
+		if ( empty( $data ) ) {
+			return;
+		}
+
+		$place_holders = array();
+
+		foreach ( $data as $item ) {
+			// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
+			$place_holders[] = $wpdb->prepare( "( %s, %s, %s, %s, %d )", $item['email_type'], maybe_serialize( $item['recipient'] ), maybe_serialize( $item['arguments'] ), bp_core_current_time(), 0 );
+		}
+
+		$sql = "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES " . implode( ', ', $place_holders );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( $sql );
 	}
 
 	/**
@@ -185,33 +128,44 @@ class BP_Email_Queue {
 	 * @param int    $limit        Number of records needs to fetch.
 	 * @param string $order_column Column name for order by.
 	 * @param string $order        Fetch order asc/desc.
+	 * @param string $scheduled    Scheduled or not.
 	 *
 	 * @return null|array|object
 	 */
-	public function get_records( $limit = 20, $order_column = 'id', $order = 'ASC' ) {
+	public function get_records( $limit = 20, $order_column = 'id', $order = 'ASC', $scheduled = 0 ) {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue ORDER BY {$order_column} {$order} LIMIT %d", $limit ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue WHERE scheduled = '0' ORDER BY {$order_column} {$order} LIMIT %d", $limit ), ARRAY_A );
 	}
 
 	/**
 	 * Email queue cron callback.
 	 *
+	 * @param array $get_records Array of data for emails.
+	 *
 	 * @since BuddyBoss 1.7.7
 	 */
-	public function bb_email_queue_cron_cb() {
-		$get_records = $this->get_records();
-		if ( isset( $get_records ) && ! empty( $get_records ) ) {
+	public function bb_email_queue_cron_cb( $get_records ) {
+		if ( ! empty( $get_records ) ) {
 			foreach ( $get_records as $single ) {
-				$item_id    = ! empty( $single->id ) ? $single->id : 0;
-				$email_type = ! empty( $single->email_type ) ? $single->email_type : '';
-				$to         = ! empty( $single->recipient ) ? maybe_unserialize( $single->recipient ) : 0;
-				$args       = ! empty( $single->arguments ) ? maybe_unserialize( $single->arguments ) : array();
-				if ( bp_send_email( $email_type, $to, $args ) ) {
-					$this->delete_record( $item_id );
+				$item_id    = ! empty( $single['id'] ) ? $single['id'] : 0;
+				$email_type = ! empty( $single['email_type'] ) ? $single['email_type'] : '';
+				$to         = ! empty( $single['recipient'] ) ? maybe_unserialize( $single['recipient'] ) : 0;
+				$args       = ! empty( $single['arguments'] ) ? maybe_unserialize( $single['arguments'] ) : array();
+
+				if ( ! empty( $email_type ) && ! empty( $to ) ) {
+					$check = bp_send_email( $email_type, $to, $args );
+					if ( $check ) {
+						$this->delete_record( $item_id );
+					}
 				}
 			}
+		}
+
+		$remain_records = $this->get_records();
+		if ( ! empty( $remain_records ) ) {
+			$this->bb_email_background_process();
 		}
 	}
 
@@ -232,9 +186,10 @@ class BP_Email_Queue {
 		$sql = "CREATE TABLE {$wpdb->prefix}bb_email_queue (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			email_type varchar(200) NOT NULL,
-			recipient longtext DEFAULT NULL,
-			arguments longtext DEFAULT NULL,
+			recipient longtext NOT NULL,
+			arguments longtext NOT NULL,
 			date_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			scheduled tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY  (id)
 		) $charset_collate;";
 
