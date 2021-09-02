@@ -332,6 +332,7 @@ endif;
 														if ( $signup_fields['signup_password_confirm'] ) {
 															unset( $signup_fields['signup_password_confirm'] );
 														}
+
 														// Convert signup fields array to object.
 														$signup_fields_object = array_map( function ( $input_array ) {
 															return (object) $input_array;
