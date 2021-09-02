@@ -100,7 +100,7 @@ class BpGroupCourses extends BP_Group_Extension {
 	protected function prepareComponentOptions() {
 		$tabName     = apply_filters( 'bp_ld_sync/courses_group_tab_name', $this->tabLabel() );
 		$tabSlug     = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
-		$tabPosition = apply_filters( 'bp_ld_sync/courses_group_tab_position', 15 );
+		$tabPosition = apply_filters( 'bp_ld_sync/courses_group_tab_position', 40 );
 		// learndash_is_group_leader_user
 
 		return array(

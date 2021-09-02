@@ -415,4 +415,12 @@ body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent p.warning {
 		width: auto;
 	}
 }
+
+#avatar-crop-pane > img {
+	float: right;
+}
+
+html[dir="rtl"] #avatar-crop-pane > img {
+	float: left;
+}
 /* stylelint-enable */
