@@ -173,7 +173,9 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			);
 
 			$forum_id_in   = implode( ',', $forum_ids );
-			
+			if ( empty( $forum_id_in ) ) {
+				$forum_id_in = 0;
+			}
 			$where   = array();
 			$where[] = '1=1';
 			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
