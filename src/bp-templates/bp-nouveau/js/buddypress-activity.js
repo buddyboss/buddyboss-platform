@@ -1019,13 +1019,13 @@ window.bp = window.bp || {};
 				if ( ce.length > 0 ) {
 					var div_editor = ce.get( 0 );
 
-					if ( $.inArray( $(div_editor).attr( 'id' ), self.InitiatedCommentForms ) == -1 ) {
+					if ( $.inArray( $(div_editor).attr( 'id' ), self.InitiatedCommentForms ) == -1 ) {//Check if Comment form has already paste event initiated
 						div_editor.addEventListener( 'paste', function ( e ) {
 							e.preventDefault();
 							var text = e.clipboardData.getData( 'text/plain' );
 							document.execCommand( 'insertText', false, text );
 						} );
-						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) ); 
+						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
 					}
 				}
 
