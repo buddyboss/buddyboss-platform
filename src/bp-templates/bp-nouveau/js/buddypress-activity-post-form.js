@@ -76,42 +76,38 @@ window.bp = window.bp || {};
 			this.postFormPlaceholder.inject( '#bp-nouveau-activity-form-placeholder' );
 		},
 		// Function will check contents are in the draft or not before edit any other activity.
-		checkDraftContentInPostForm: function( postContent ) {
+		checkDraftContentInPostForm: function( postContent, attachmentLength = '' ) {
 			var hasDraft = false;
-			if ( postContent && undefined !== postContent ) {
+			// Check gif attached or not in post form.
+			if ( ! $.isEmptyObject( bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.model.attributes.gif_data ) ) {
+				attachmentLength = bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.model.attributes.gif_data;
+			}
+			if ( ( postContent && undefined !== postContent ) || attachmentLength ) {
 				hasDraft = true;
 			} else {
 				hasDraft = false;
 			}
+
 			this.toggleDraftClass( hasDraft );
+
+			if ( hasDraft ) {
+				return;
+			}
 		},
 		// Function will check attachments are in the draft or not before edit any other activity.
 		checkDraftAttachments: function() {
 			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
-
-			var hasDraft, attachmentLength;
+			var attachmentLength;
 			if ( bp.Nouveau.Activity.postForm['dropzone'] ) { // check dropzone open or not.
 				// Check media/document/video attached or not in post form.
 				attachmentLength = bp.Nouveau.Activity.postForm.dropzone.files.length;
-			} else if ( ! $.isEmptyObject( bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.model.attributes.gif_data ) ) {
-				// Check gif attached or not in post form.
-				attachmentLength = bp.Nouveau.Activity.postForm.activityAttachments.activityAttachedGifPreview.model.attributes.gif_data;
 			}
 			// Get activity content.
 			var getActivityContent = window.activity_editor.getContent();
-			if ( getActivityContent || attachmentLength ) {
-				hasDraft = true;
-			} else {
-				hasDraft = false;
-			}
-			
-			this.toggleDraftClass( hasDraft );
-			
-			if ( hasDraft ) {
-				return;
-			}
+
+			this.checkDraftContentInPostForm( getActivityContent, attachmentLength );
 		},
 
 		toggleDraftClass: function( hasDraft ) {
