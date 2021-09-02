@@ -839,6 +839,17 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			<?php endif; ?>
 
 			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php _e( 'Extended Profile', 'buddyboss' ); ?></a>
+			<?php
+			/**
+			 * User profile navigation tab.
+			 *
+			 * @since BuddyBoss x.x.x
+			 *
+			 * @param object|null $user   User to create profile navigation for.
+			 * @param string      $active Which profile to highlight.
+			 */
+			do_action( 'bb_members_admin_user_profile_nav', $user, $active );
+			?>
 		</h2>
 
 			<?php
