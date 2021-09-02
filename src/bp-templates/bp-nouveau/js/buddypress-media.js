@@ -6235,6 +6235,13 @@ window.bp = window.bp || {};
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
 							$( window ).scroll();
+							setTimeout(
+								function () { // Waiting to load dummy image
+									bp.Nouveau.reportPopUp();
+									bp.Nouveau.reportedPopup();
+								},
+								10
+							);
 						} else {
 							$( '.bb-media-info-section.media' ).hide();
 						}
@@ -6897,6 +6904,13 @@ window.bp = window.bp || {};
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
 							$( window ).scroll();
+							setTimeout(
+								function () { // Waiting to load dummy image
+									bp.Nouveau.reportPopUp();
+									bp.Nouveau.reportedPopup();
+								},
+								10
+							);
 						} else {
 							$( '.bb-media-info-section.document' ).hide();
 						}
