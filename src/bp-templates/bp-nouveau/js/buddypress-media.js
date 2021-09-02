@@ -4386,7 +4386,10 @@ window.bp = window.bp || {};
 			if ( content_tab === 'bp-dropzone-content' ) {
 				current_popup.find( '.bb-field-steps-1' ).show();
 				current_popup.find( '#bb-media-privacy' ).show();
-				current_popup.find( '.bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder' ).hide();
+				current_popup.find( '.bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, #bb-media-privacy' ).hide();
+			}
+			if( content_tab === 'bp-existing-media-content' ) {
+				current_popup.find( '.bb-field-uploader-actions' ).hide();
 			}
 			jQuery( window ).scroll();
 		},
@@ -4396,6 +4399,9 @@ window.bp = window.bp || {};
 
 			this.openUploader( event );
 			$( '#bp-media-create-album' ).show();
+			if( $( 'body' ).hasClass( 'directory' ) ) {
+				$( '#bp-media-uploader' ).hide();
+			}
 		},
 
 		openCreateFolderModal: function ( event ) {
