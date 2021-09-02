@@ -6065,7 +6065,7 @@ function bb_moderation_bg_update_moderation_data() {
 /**
  * Function will restrict RSS feed.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss 1.7.7
  */
 function bb_restricate_rss_feed() {
 	// This will disable default feeds.
@@ -6096,7 +6096,7 @@ function bb_restricate_rss_feed() {
 /**
  * Function will restrict REST API.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss 1.7.7
  */
 function bb_restricate_rest_api() {
 	// This will disable all rest api endpoints.
@@ -6106,11 +6106,11 @@ function bb_restricate_rest_api() {
 /**
  * Function will remove all endpoints.
  *
- * @since BuddyBoss x.x.x
- *
- * @param array $endpoints Array of endpoints.
+ * @param array  $endpoints Array of endpoints.
  *
  * @return array $endpoints
+ * 
+ * @since BuddyBoss 1.7.7
  */
 function bb_remove_all_endpoints( $endpoints ) {
 	if ( empty( $endpoints ) ) {
@@ -6154,6 +6154,8 @@ function bb_remove_all_endpoints( $endpoints ) {
  * @param $endpoint     All registered endpoint will check with $bb_endpoints.
  *
  * @return bool
+ * 
+ * @since BuddyBoss 1.7.7
  */
 function bb_allow_platform_api_endpoint( $bb_endpoints, $endpoint ) {
 	$flag = false;
@@ -6163,4 +6165,47 @@ function bb_allow_platform_api_endpoint( $bb_endpoints, $endpoint ) {
 		}
 	}
 	return $flag;
+}
+
+/**	
+ * Get all admin users.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return array
+ */
+function bb_get_all_admin_users() {
+	$args = array(
+		'role'    => 'administrator',
+		'orderby' => 'user_nicename',
+		'order'   => 'ASC',
+		'fields'  => 'id',
+	);
+	$users = get_users( $args );
+	if ( ! empty( $users ) ) {
+		$users = array_map( 'intval', $users );
+	}
+	return $users;
+}
+
+/**
+ * Check the symlink function was disabled by server or not.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return bool
+ */
+function bb_check_server_disabled_symlink() {
+	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
+
+		$disabled = explode( ',', ini_get( 'disable_functions' ) );
+		$disabled = array_map( 'trim', $disabled );
+
+		if ( ! empty( $disabled ) && in_array( 'symlink', $disabled, true ) ) {
+			bp_update_option( 'bp_media_symlink_support', 0 );
+			return true;
+		}
+	}
+
+	return false;
 }
