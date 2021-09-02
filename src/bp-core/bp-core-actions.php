@@ -334,7 +334,7 @@ add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
  * Function will remove BuddyBoss API endpoint.
  * Also, remove feeds url.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss 1.7.7
  */
 function bb_removes_endpoints_and_feeds() {
 	if ( is_user_logged_in() ) {
