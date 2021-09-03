@@ -4813,3 +4813,62 @@ function bb_document_delete_older_symlinks() {
 	return $list;
 }
 bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks' );
+
+
+/**
+ * Get list of privacy based on user and group.
+ *
+ * @param int    $user_id  User ID.
+ * @param int    $group_id Group ID.
+ * @param string $scope    Scope query parameter.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.7.7
+ */
+function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
+	
+	$privacy = array( 'public' );
+	
+	if ( is_user_logged_in() ) {
+		// User filtering.
+		$user_id = (int) ( empty( $user_id ) ? ( bp_displayed_user_id() ? bp_displayed_user_id() : false ) : $user_id );
+		
+		$privacy[] = 'loggedin';
+		
+		if ( bp_is_my_profile() || $user_id === bp_loggedin_user_id() ) {
+			$privacy[] = 'onlyme';
+			
+			if ( bp_is_active( 'friends' ) ) {
+				$privacy[] = 'friends';
+			}
+		}
+		
+		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
+			
+			// get the login user id.
+			$current_user_id = bp_loggedin_user_id();
+			
+			// check if the login user is friends of the display user
+			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+			
+			/**
+			 * check if the login user is friends of the display user
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend ) {
+				$privacy[] = 'friends';
+			}
+		}
+	}
+	
+	if (
+		bp_is_group()
+		|| ( bp_is_active( 'groups' ) && ! empty( $group_id ) )
+		|| ( ! empty( $scope ) && 'groups' === $scope )
+	) {
+		$privacy = array( 'grouponly' );
+	}
+	
+	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}
