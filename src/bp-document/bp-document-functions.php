@@ -3371,6 +3371,9 @@ function bp_document_is_activity_comment_document( $document ) {
 		$activity = new BP_Activity_Activity( $document_activity_id );
 
 		if ( $activity ) {
+			if ( 'activity_comment' === $activity->type ) {
+				$is_comment_document = true;
+			}
 			if ( $activity->secondary_item_id ) {
 				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if ( $load_parent_activity ) {
