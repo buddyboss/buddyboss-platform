@@ -380,19 +380,7 @@ window.bp = window.bp || {};
 		var opts = $.extend(true, {}, suggestionsDefaults, mentionsDefaults, options);
 		return $.fn.atwho.call(this, opts);
 	};
-	
-	$(document).ready(function () {
-		// Reset counter for textbox character length.
-		localStorage.setItem('charCount', 0);
-		$(document).on('focus', BP_Mentions_Options.selectors.join(','), function () {
-			if (typeof ( bp ) === 'undefined') {
-				return;
-			}
-			$(this).bp_mentions(bp.mentions.users);
-			$(this).data('bp_mentions_activated', true);
-		});
-	});
-	
+
 	bp.mentions.tinyMCEinit = function () {
 		if (typeof window.tinyMCE === 'undefined' || window.tinyMCE.activeEditor === null || typeof window.tinyMCE.activeEditor === 'undefined') {
 			return;
