@@ -826,8 +826,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			if ( 'BuddyPress' === $active ) {
 				$bp_active = ' nav-tab-active';
-			}
-			?>
+			}?>
 
 		<h2 id="profile-nav" class="nav-tab-wrapper">
 			<?php
