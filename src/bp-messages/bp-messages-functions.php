@@ -794,6 +794,8 @@ function messages_notification_new_message( $raw_args = array() ) {
 		$message = '';
 	}
 
+	$all_recipients = array();
+
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
 		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
@@ -812,10 +814,10 @@ function messages_notification_new_message( $raw_args = array() ) {
 		);
 
 		if ( function_exists( 'bp_email_queue' ) ) {
-			bp_email_queue()->add_record(
-				'messages-unread',
-				$ud,
-				array(
+			$all_recipients[] = array(
+				'email_type' => 'messages-unread',
+				'recipient'  => $ud,
+				'arguments'  => array(
 					'tokens' => array(
 						'message_id'  => $id,
 						'usermessage' => stripslashes( $message ),
@@ -824,10 +826,9 @@ function messages_notification_new_message( $raw_args = array() ) {
 						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
 						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
-				)
+				),
 			);
-			// call email background process.
-			bp_email_queue()->bb_email_background_process();
+
 		} else {
 			bp_send_email(
 				'messages-unread',
@@ -844,6 +845,14 @@ function messages_notification_new_message( $raw_args = array() ) {
 				)
 			);
 		}
+	}
+
+	if ( function_exists( 'bp_email_queue' ) && ! empty( $all_recipients ) ) {
+		// Added bulk data into email queue.
+		bp_email_queue()->add_bulk_record( $all_recipients );
+
+		// call email background process.
+		bp_email_queue()->bb_email_background_process();
 	}
 
 	/**
