@@ -221,15 +221,49 @@ function bp_document_activity_append_document( $content, $activity ) {
 function bp_document_activity_comment_entry( $comment_id ) {
 
 	$document_ids = bp_activity_get_meta( $comment_id, 'bp_document_ids', true );
-
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
-
+	
+	if ( empty( $document_ids ) ) {
+		return;
+	}
+	
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
+	
+	$args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'user_id'  => false,
+		'privacy'  => array(),
+	);
+	
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_document_support_enabled() ) {
+			$args['privacy'][] = 'comment';
+			$args['privacy'][] = 'grouponly';
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-document';
+			}
+		} else {
+			$args['privacy']  = array( '0' );
+			$args['album_id'] = 'existing-document';
+		}
+	} else {
+		$args['privacy'] = bp_document_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( ! bp_is_group_document_support_enabled() ) {
+			$args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_document_support_enabled() ) {
+			$args['album_id'] = 'existing-document';
+		}
+	}
+	
+	$args['privacy'][] = 'comment';
+	if ( ! isset( $args['album_id'] ) ) {
+		$args['album_id'] = 'existing-document';
+	}
+	
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
