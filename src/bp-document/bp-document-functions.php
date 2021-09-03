@@ -4832,11 +4832,7 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	
 	if ( is_user_logged_in() ) {
 		// User filtering.
-		$user_id = (int) (
-		empty( $user_id )
-			? ( bp_displayed_user_id() ? bp_displayed_user_id() : false )
-			: $user_id
-		);
+		$user_id = (int) ( empty( $user_id ) ? ( bp_displayed_user_id() ? bp_displayed_user_id() : false ) : $user_id );
 		
 		$privacy[] = 'loggedin';
 		
