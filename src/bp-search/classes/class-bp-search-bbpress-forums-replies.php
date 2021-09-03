@@ -72,6 +72,14 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 				$group_memberships = array_unique( $group_memberships );
 			}
 
+			if ( current_user_can( 'read_hidden_forums' ) ) {
+				$post_status = array( "'publish'", "'private'", "'hidden'" );
+			} elseif ( current_user_can( 'read_private_forums' ) ) {
+				$post_status = array( "'publish'", "'private'" );
+			} else {
+				$post_status = array( "'publish'" );
+			}
+
 			$group_query = '';
 			if ( ! empty( $group_memberships ) ) {
 				$in = array_map(
@@ -83,15 +91,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 				$in = implode( '', $in );
 
-				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) AND ';
-			}
-
-			if ( current_user_can( 'read_hidden_forums' ) ) {
-				$post_status = array( "'publish'", "'private'", "'hidden'" );
-			} elseif ( current_user_can( 'read_private_forums' ) ) {
-				$post_status = array( "'publish'", "'private'" );
-			} else {
-				$post_status = array( "'publish'" );
+				$group_query = ' ( pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) OR pm.meta_value IN( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key != \'_bbp_group_ids\' and post_id in ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' AND post_status IN (' . join( ',', $post_status ) . ') ) ) ) AND ';
 			}
 
 			$where   = array();
