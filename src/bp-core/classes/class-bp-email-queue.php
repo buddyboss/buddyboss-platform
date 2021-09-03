@@ -140,6 +140,21 @@ class BP_Email_Queue {
 	}
 
 	/**
+	 * Email queue get single record
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param int $id Email record id.
+	 *
+	 * @return array|object|void|null
+	 */
+	public function get_single_record( $id ) {
+		global $wpdb;
+
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}bb_email_queue  WHERE id = %d", $id ) );
+	}
+
+	/**
 	 * Email queue cron callback.
 	 *
 	 * @param array $get_records Array of data for emails.
@@ -154,7 +169,7 @@ class BP_Email_Queue {
 				$to         = ! empty( $single['recipient'] ) ? maybe_unserialize( $single['recipient'] ) : 0;
 				$args       = ! empty( $single['arguments'] ) ? maybe_unserialize( $single['arguments'] ) : array();
 
-				if ( ! empty( $email_type ) && ! empty( $to ) ) {
+				if ( $this->get_single_record( $item_id ) && ! empty( $email_type ) && ! empty( $to ) ) {
 					$check = bp_send_email( $email_type, $to, $args );
 					if ( $check ) {
 						$this->delete_record( $item_id );
