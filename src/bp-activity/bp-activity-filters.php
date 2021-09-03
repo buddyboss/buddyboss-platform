@@ -2978,6 +2978,9 @@ function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id 
 	) {
 		$buttons['activity_favorite']     = '';
 		$buttons['activity_conversation'] = '';
+		$buttons['activity_report']       = '';
+		$buttons['activity_edit']       = '';
+		$buttons['activity_delete']       = '';
 	}
 	return $buttons;
 }
