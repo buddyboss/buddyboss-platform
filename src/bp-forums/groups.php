@@ -359,14 +359,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id   = 0;
 			$group_id   = ! empty( $group_id ) ? $group_id : bp_get_current_group_id();
 
-			// update current forum id groups meta data
-			$current_forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
-			if ( ! empty( $current_forum_ids ) ) {
-				foreach ( $current_forum_ids as $f_id ) {
-					bbp_update_forum_group_ids( $f_id, array() );
-				}
-			}
-
 			// Keymasters have the ability to reconfigure forums
 			if ( bbp_is_user_keymaster() ) {
 				$forum_ids = ! empty( $_POST['bbp_group_forum_id'] ) ? (array) (int) $_POST['bbp_group_forum_id'] : array();
@@ -395,15 +387,16 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// No support for multiple forums yet
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
 
-				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
-				$forum_id    = $valid_forum ? $forum_id : 0;
-				$forum_ids   = $valid_forum ? $forum_ids : array();
-				$edit_forum  = $valid_forum ? $edit_forum : false;
+				// $valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
+				// $forum_id    = $valid_forum ? $forum_id : 0;
+				// $forum_ids   = $valid_forum ? $forum_ids : array();
+				// $edit_forum  = $valid_forum ? $edit_forum : false;
 			}
 
+			$this->update_forum_group_ids( $group_id, $forum_id );
 			// Update the group ID and forum ID relationships
 			bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
-			bbp_update_forum_group_ids( $forum_id, (array) $group_id );
+
 
 			// Update the group forum setting
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
@@ -428,7 +421,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// Create the initial forum
 				$forum_id = bbp_insert_forum(
 					array(
-						'post_parent'  => bbp_get_group_forums_root_id(),
 						'post_title'   => $group->name,
 						'post_content' => $group->description,
 						'post_status'  => $status,
@@ -460,6 +452,74 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			if ( ! is_admin() ) {
 				bp_core_redirect( trailingslashit( bp_get_group_permalink( buddypress()->groups->current_group ) . '/admin/' . $this->slug ) );
 			}
+		}
+
+		public function update_forum_group_ids( $group_id, $forum_id ) {
+			$group_id = filter_var( $group_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+			$forum_id = filter_var( $forum_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+
+			if ( empty( $group_id ) ) {
+				return false;
+			}
+
+			$gf_ids = bbp_get_group_forum_ids( $group_id );
+			$gf_id  = ! empty( $gf_ids ) ? current( $gf_ids ) : false;
+
+			if ( empty( $forum_id ) ) {
+
+				// Group is not associate with any forum.
+				if ( empty( $gf_id ) ) {
+					return false;
+				}
+
+				$group_ids = bbp_get_forum_group_ids( $gf_id );
+
+				if ( empty( $group_ids ) || ! in_array( $group_id, $group_ids, true ) ) {
+					return false;
+				}
+
+				$group_ids = array_flip( $group_ids );
+				unset( $group_ids[ $group_id ] );
+				$group_ids = array_flip( $group_ids );
+
+				bbp_update_forum_group_ids( $gf_id, $group_ids );
+
+				return true;
+			}
+
+			if ( ! empty( $forum_id ) ) {
+				$group_ids = bbp_get_forum_group_ids( $forum_id );
+
+				if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+					return true;
+				}
+
+				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
+
+				if ( empty( $valid_forum ) ) {
+					return false;
+				}
+
+				$group_ids[] = $group_id;
+
+				bbp_update_forum_group_ids( $forum_id, $group_ids );
+
+				if ( $gf_id !== $forum_id ) {
+					$group_ids = bbp_get_forum_group_ids( $gf_id );
+
+					if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+						$group_ids = array_flip( $group_ids );
+						unset( $group_ids[ $group_id ] );
+						$group_ids = array_flip( $group_ids );
+
+						bbp_update_forum_group_ids( $gf_id, $group_ids );
+					}
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
