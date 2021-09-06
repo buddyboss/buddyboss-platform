@@ -645,6 +645,7 @@ class BuddyPress {
 			'BP_Email_Delivery'                            => 'core',
 			'BP_Email_Recipient'                           => 'core',
 			'BP_Email'                                     => 'core',
+			'BP_Email_Queue'                               => 'core',
 			'BP_Embed'                                     => 'core',
 			'BP_Media_Extractor'                           => 'core',
 			'BP_Members_Suggestions'                       => 'core',

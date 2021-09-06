@@ -720,6 +720,18 @@ function bb_update_to_1_7_5() {
 
 }
 
+/**
+ * Function to update data
+ *
+ * @since BuddyBoss 1.7.7
+ */
+function bb_update_to_1_7_7() {
+	if ( function_exists( 'bp_email_queue' ) ) {
+		// Install email queue table.
+		bp_email_queue()::create_db_table();
+	}
+}
+
 function bp_update_default_doc_extensions() {
 
 	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());

@@ -50,3 +50,19 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 
 	return $output;
 }
+
+/**
+ * Function to load the instance of the class BP_Email_Queue.
+ *
+ * @since BuddyBoss 1.7.7
+ *
+ * @return null|BP_Email_Queue|void
+ */
+function bp_email_queue() {
+	if ( class_exists( 'BP_Email_Queue' ) ) {
+		global $bp_email_queue;
+		$bp_email_queue = BP_Email_Queue::instance();
+
+		return $bp_email_queue;
+	}
+}

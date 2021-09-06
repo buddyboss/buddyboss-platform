@@ -1207,7 +1207,13 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		}
 
 		// Send notification email.
-		bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
+		if ( function_exists( 'bp_email_queue' ) ) {
+			bp_email_queue()->add_record( 'bbp-new-forum-reply', (int) $user_id, $args );
+			// call email background process.
+			bp_email_queue()->bb_email_background_process();
+		} else {
+			bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
+		}
 	}
 
 	do_action( 'bbp_post_notify_subscribers', $reply_id, $topic_id, $user_ids );
@@ -1336,7 +1342,13 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		}
 
 		// Send notification email.
-		bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $args );
+		if ( function_exists( 'bp_email_queue' ) ) {
+			bp_email_queue()->add_record( 'bbp-new-forum-topic', (int) $user_id, $args );
+			// call email background process.
+			bp_email_queue()->bb_email_background_process();
+		} else {
+			bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $args );
+		}
 	}
 
 	do_action( 'bbp_post_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
