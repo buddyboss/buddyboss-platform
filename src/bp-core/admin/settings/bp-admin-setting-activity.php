@@ -67,7 +67,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 
 		$bp->active_components = $active_components;
-		bp_core_install( $bp->active_components );
+		
+		// Unset media from components list
+		// Just to prevent override the Symbolic link settings
+		unset( $active_components['media'] );
+		bp_core_install( $active_components );
+
 		bp_core_add_page_mappings( $bp->active_components );
 		bp_update_option( 'bp-active-components', $bp->active_components );
 
