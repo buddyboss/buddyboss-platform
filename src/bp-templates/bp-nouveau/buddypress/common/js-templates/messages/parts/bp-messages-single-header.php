@@ -26,18 +26,19 @@
                                 <# if( other_recipients[i].user_link ) { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } else { #>{{other_recipients[i].user_name}}<# } #><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #><?php _e( ',', 'buddyboss' ); ?><# } #>
                         </span>
                     <# } #>
+					<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
+						<a href="javascript:void(0);" id="view_more_members" class="view_more_members view_more_members_cls"
+							data-thread-id="{{data.id}}"
+							data-tp="{{data.recipients.total_pages}}"
+							data-tc="{{data.recipients.count}}"
+							data-pp="{{data.recipients.per_page}}"
+							data-cp="2"
+							data-action="bp_view_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<# } #>
 
 				<# } #>
 			</dt>
-			<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
-			<a href="javascript:void(0);" id="view_more_members" class="view_more_members view_more_members_cls"
-				data-thread-id="{{data.id}}"
-				data-tp="{{data.recipients.total_pages}}"
-				data-tc="{{data.recipients.count}}"
-				data-pp="{{data.recipients.per_page}}"
-				data-cp="2"
-				data-action="bp_view_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-			<# } #>
+
 			<dd>
 				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
 			</dd>
