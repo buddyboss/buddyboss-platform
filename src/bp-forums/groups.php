@@ -386,13 +386,14 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 				// No support for multiple forums yet
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
+				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
 
-				// $valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
-				// $forum_id    = $valid_forum ? $forum_id : 0;
-				// $forum_ids   = $valid_forum ? $forum_ids : array();
-				// $edit_forum  = $valid_forum ? $edit_forum : false;
+				if ( empty( $valid_forum ) ) {
+					return false;
+				}
 			}
 
+			// Update the Forum ID and Group ID relationships
 			$this->update_forum_group_ids( $group_id, $forum_id );
 			// Update the group ID and forum ID relationships
 			bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
@@ -488,16 +489,15 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			if ( ! empty( $forum_id ) ) {
-				$group_ids = bbp_get_forum_group_ids( $forum_id );
-
-				if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
-					return true;
-				}
-
+				$group_ids   = bbp_get_forum_group_ids( $forum_id );
 				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
 
 				if ( empty( $valid_forum ) ) {
 					return false;
+				}
+
+				if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+					return true;
 				}
 
 				$group_ids[] = $group_id;
@@ -1836,6 +1836,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return string
 		 */
 		public function disabled_forum_dropdown_options( $attr_output, $object, $args ) {
+			return $attr_output;
 			if ( empty( $object->ID ) || empty( $args ) ) {
 				return $attr_output;
 			}
