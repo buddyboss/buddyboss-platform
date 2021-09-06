@@ -257,9 +257,9 @@ if ( class_exists( 'Walker' ) ) :
 			 * @since BuddyBoss 1.7.7
 			 *
 			 * @param string $attribute Option attribute.
-			 * @param array  $args   Dropdown arguments.
-			 * @param int    $depth  Depth of post in reference to parent posts.
-			 * @param string $output Used to append additional content.
+			 * @param array  $args      Dropdown arguments.
+			 * @param int    $depth     Depth of post in reference to parent posts.
+			 * @param string $output    Used to append additional content.
 			 */
 			$output .= apply_filters( 'bb_walker_dropdown_option_attr', '', $object, $args, $depth, $output );
 
