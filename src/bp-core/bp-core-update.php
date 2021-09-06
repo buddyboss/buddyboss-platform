@@ -1194,7 +1194,7 @@ function bb_update_to_1_5_6() {
 	bp_core_install_moderation_emails();
 }
 
-/** 
+/**
  * Add new video support to document extensions.
  *
  * @since BuddyBoss 1.7.0
