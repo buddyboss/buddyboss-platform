@@ -256,7 +256,7 @@ if ( class_exists( 'Walker' ) ) :
 			 *
 			 * @since BuddyBoss 1.7.7
 			 *
-			 * @param object $object Post data.
+			 * @param string $attribute Option attribute.
 			 * @param array  $args   Dropdown arguments.
 			 * @param int    $depth  Depth of post in reference to parent posts.
 			 * @param string $output Used to append additional content.
