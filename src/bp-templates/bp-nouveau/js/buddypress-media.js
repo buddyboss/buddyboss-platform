@@ -6221,6 +6221,12 @@ window.bp = window.bp || {};
 			if ( self.activity_ajax != false ) {
 				self.activity_ajax.abort();
 			}
+			
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
+			if ( on_page_activity_comments.length ) {
+				self.current_media.parent_activity_comments = true;
+				on_page_activity_comments.html( '' );
+			}
 
 			self.activity_ajax = $.ajax(
 				{
@@ -6862,6 +6868,12 @@ window.bp = window.bp || {};
 
 			if ( self.activity_ajax != false ) {
 				self.activity_ajax.abort();
+			}
+			
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
+			if ( on_page_activity_comments.length ) {
+				self.current_document.parent_activity_comments = true;
+				on_page_activity_comments.html( '' );
 			}
 
 			self.activity_ajax = $.ajax(
