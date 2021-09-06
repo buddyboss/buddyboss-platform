@@ -53,6 +53,9 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 			return;
 		}
 
+		// Update report button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
+
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
@@ -137,6 +140,27 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Function to modify the button args
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_args( $args, $item_id ) {
+		$document = new BP_Document( $item_id );
+
+		// Remove report button if forum is group forums.
+		if ( ! empty( $document->id ) && ! empty( $document->privacy ) && 'comment' === $document->privacy ) {
+			return array();
+		}
+
+		return $args;
 	}
 
 	/**
