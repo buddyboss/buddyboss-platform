@@ -693,7 +693,6 @@ function bp_update_to_1_7_0() {
 
 /**
  * Flush rewrite rule after update.
- * Update routine.
  *
  * @since BuddyBoss 1.7.2
  */
@@ -722,10 +721,36 @@ function bb_update_to_1_7_5() {
 
 /**
  * Function to update data
+ * - Updated .htaccess file for bb files protection.
+ * - created new table for bp email queue.
  *
  * @since BuddyBoss 1.7.7
  */
 function bb_update_to_1_7_7() {
+	$upload_dir        = wp_get_upload_dir();
+	$media_htaccess    = $upload_dir['basedir'] . '/bb_medias/.htaccess';
+	$document_htaccess = $upload_dir['basedir'] . '/bb_documents/.htaccess';
+	$video_htaccess    = $upload_dir['basedir'] . '/bb_videos/.htaccess';
+
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	if ( file_exists( $media_htaccess ) ) {
+		$wp_files_system->delete( $media_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $document_htaccess ) ) {
+		$wp_files_system->delete( $document_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $video_htaccess ) ) {
+		$wp_files_system->delete( $video_htaccess, false, 'f' );
+	}
+
 	if ( function_exists( 'bp_email_queue' ) ) {
 		// Install email queue table.
 		bp_email_queue()::create_db_table();
@@ -1337,4 +1362,3 @@ function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
 		}
 	}
 }
-
