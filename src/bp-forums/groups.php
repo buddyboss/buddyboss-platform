@@ -359,14 +359,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$forum_id   = 0;
 			$group_id   = ! empty( $group_id ) ? $group_id : bp_get_current_group_id();
 
-			// update current forum id groups meta data
-			$current_forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
-			if ( ! empty( $current_forum_ids ) ) {
-				foreach ( $current_forum_ids as $f_id ) {
-					bbp_update_forum_group_ids( $f_id, array() );
-				}
-			}
-
 			// Keymasters have the ability to reconfigure forums
 			if ( bbp_is_user_keymaster() ) {
 				$forum_ids = ! empty( $_POST['bbp_group_forum_id'] ) ? (array) (int) $_POST['bbp_group_forum_id'] : array();
@@ -378,6 +370,14 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Normalize group forum relationships now
 			if ( ! empty( $forum_ids ) ) {
+
+				// No support for multiple forums yet.
+				$forum_id    = (int) ( ! empty( $forum_ids ) && is_array( $forum_ids ) ? current( $forum_ids ) : $forum_ids );
+				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
+
+				if ( empty( $valid_forum ) ) {
+					return;
+				}
 
 				// Loop through forums, and make sure they exist
 				foreach ( $forum_ids as $forum_id ) {
@@ -394,16 +394,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 				// No support for multiple forums yet
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
-
-				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
-				$forum_id    = $valid_forum ? $forum_id : 0;
-				$forum_ids   = $valid_forum ? $forum_ids : array();
-				$edit_forum  = $valid_forum ? $edit_forum : false;
 			}
 
+			// Update the forum ID and group ID relationships.
+			$this->update_forum_group_ids( $group_id, $forum_id );
 			// Update the group ID and forum ID relationships
 			bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
-			bbp_update_forum_group_ids( $forum_id, (array) $group_id );
 
 			// Update the group forum setting
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
@@ -428,7 +424,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// Create the initial forum
 				$forum_id = bbp_insert_forum(
 					array(
-						'post_parent'  => bbp_get_group_forums_root_id(),
 						'post_title'   => $group->name,
 						'post_content' => $group->description,
 						'post_status'  => $status,
@@ -1602,9 +1597,89 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/**
+		 * Update forum meta with its associate group ids.
+		 *
+		 * @since BuddyBoss 1.7.7
+		 *
+		 * @param int $group_id Group id.
+		 * @param int $forum_id Forum id.
+		 *
+		 * @return bool
+		 */
+		public function update_forum_group_ids( $group_id, $forum_id ) {
+			$group_id = filter_var( $group_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+			$forum_id = filter_var( $forum_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+
+			if ( empty( $group_id ) ) {
+				return false;
+			}
+
+			$gf_ids = bbp_get_group_forum_ids( $group_id );
+			$gf_id  = ! empty( $gf_ids ) ? current( $gf_ids ) : false;
+
+			// Remove relation with group from forum meta.
+			if ( empty( $forum_id ) ) {
+
+				// Group is not associated with any forum.
+				if ( empty( $gf_id ) ) {
+					return false;
+				}
+
+				$group_ids = bbp_get_forum_group_ids( $gf_id );
+
+				if ( empty( $group_ids ) || ! in_array( $group_id, $group_ids, true ) ) {
+					return false;
+				}
+
+				$group_ids = array_flip( $group_ids );
+				unset( $group_ids[ $group_id ] );
+				$group_ids = array_flip( $group_ids );
+
+				bbp_update_forum_group_ids( $gf_id, $group_ids );
+
+				return true;
+			}
+
+			// Create relations with groups from forum meta.
+			if ( ! empty( $forum_id ) ) {
+				$group_ids   = bbp_get_forum_group_ids( $forum_id );
+				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
+
+				if ( empty( $valid_forum ) ) {
+					return false;
+				}
+
+				if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+					return true;
+				}
+
+				$group_ids[] = $group_id;
+
+				bbp_update_forum_group_ids( $forum_id, $group_ids );
+
+				// When a group switches from one forum to another forum.
+				if ( $gf_id !== $forum_id ) {
+					$group_ids = bbp_get_forum_group_ids( $gf_id );
+
+					if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+						$group_ids = array_flip( $group_ids );
+						unset( $group_ids[ $group_id ] );
+						$group_ids = array_flip( $group_ids );
+
+						bbp_update_forum_group_ids( $gf_id, $group_ids );
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
 		 * Ensure that forum content associated with a BuddyBoss group can only be viewed via the group URL.
 		 *
-		 * @since BuddyBoss 1.7.6
+		 * @since BuddyBoss 1.7.7
 		 *
 		 * @return void
 		 */
@@ -1661,8 +1736,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bp_core_redirect( $redirect_to );
 				}
 
-				$group_ids      = bb_get_child_forum_group_ids( $forum->ID );
-				$this->forum_id = ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ? $forum->ID : false;
+				$this->forum_id = $this->forum_associate_with_current_group( $group_id, $forum->ID ) ? $forum->ID : false;
 			}
 
 			if ( bp_is_group_forum_topic() ) {
@@ -1682,15 +1756,49 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
-				$group_ids      = bb_get_child_forum_group_ids( $topic_forum_id );
-				$this->forum_id = ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ? $topic_forum_id : false;
+				$this->forum_id = $this->forum_associate_with_current_group( $group_id, $topic_forum_id ) ? $topic_forum_id : false;
 			}
+		}
+
+		/**
+		 * Get the relation with forum and group.
+		 *
+		 * @since BuddyBoss 1.7.7
+		 *
+		 * @param int $group_id Group id.
+		 * @param int $forum_id Forum id.
+		 *
+		 * @return bool
+		 */
+		public function forum_associate_with_current_group( $group_id, $forum_id ) {
+			$group_id = filter_var( $group_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+			$forum_id = filter_var( $forum_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+
+			if ( empty( $forum_id ) || empty( $group_id ) ) {
+				return false;
+			}
+
+			$forum_ids = get_post_ancestors( $forum_id );
+			$gf_ids    = bbp_get_group_forum_ids( $group_id );
+
+			// Set the parameter forum_id in the parents array as its first element.
+			array_unshift( $forum_ids, $forum_id );
+
+			if ( ! empty( $forum_ids ) ) {
+				foreach ( $forum_ids as $forum_id ) {
+					if ( ! empty( $forum_ids ) && in_array( $forum_id, $gf_ids, true ) ) {
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		/**
 		 * Get forum page uri from action variables.
 		 *
-		 * @since BuddyBoss 1.7.6
+		 * @since BuddyBoss 1.7.7
 		 *
 		 * @uses bp_action_variables() URL query parameter.
 		 *
@@ -1719,7 +1827,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Exclude the forum if the forum type is category.
 		 * Exclude the forum if the forum is child forum.
 		 *
-		 * @since BuddyBoss 1.7.6
+		 * @since BuddyBoss 1.7.7
 		 *
 		 * @param array $forum_id  Fourm ids.
 		 * @param int   $group_id  Group id.
@@ -1764,7 +1872,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Disabled dropdown options for forum.
 		 *
-		 * @since BuddyBoss 1.7.6
+		 * @since BuddyBoss 1.7.7
 		 *
 		 * @param string $attr_output Default attributes.
 		 * @param object $object      Froum post data.
@@ -1776,6 +1884,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return string
 		 */
 		public function disabled_forum_dropdown_options( $attr_output, $object, $args ) {
+
 			if ( empty( $object->ID ) || empty( $args ) ) {
 				return $attr_output;
 			}
