@@ -2885,7 +2885,7 @@ function bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
 /**
  * Get group ID's for a child forum.
  *
- * @since BuddyBoss 1.7.6
+ * @since BuddyBoss 1.7.7
  *
  * @param int $forum_id Forum id.
  *
