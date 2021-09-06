@@ -371,6 +371,14 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Normalize group forum relationships now
 			if ( ! empty( $forum_ids ) ) {
 
+				// No support for multiple forums yet.
+				$forum_id    = (int) ( ! empty( $forum_ids ) && is_array( $forum_ids ) ? current( $forum_ids ) : $forum_ids );
+				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
+
+				if ( empty( $valid_forum ) ) {
+					return;
+				}
+
 				// Loop through forums, and make sure they exist
 				foreach ( $forum_ids as $forum_id ) {
 
@@ -385,12 +393,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 
 				// No support for multiple forums yet
-				$forum_id    = (int) ( is_array( $forum_ids ) ? $forum_ids[0]: $forum_ids );
-				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
-
-				if ( empty( $valid_forum ) ) {
-					return;
-				}
+				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0]: $forum_ids );
 			}
 
 			// Update the Forum ID and Group ID relationships.
@@ -1881,7 +1884,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @return string
 		 */
 		public function disabled_forum_dropdown_options( $attr_output, $object, $args ) {
-			return $attr_output;
+
 			if ( empty( $object->ID ) || empty( $args ) ) {
 				return $attr_output;
 			}
