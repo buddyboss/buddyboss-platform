@@ -803,6 +803,8 @@ function messages_notification_new_message( $raw_args = array() ) {
 		$message = '';
 	}
 
+	$all_recipients = array();
+
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
 		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
@@ -820,20 +822,46 @@ function messages_notification_new_message( $raw_args = array() ) {
 			'notification_type' => 'messages-unread',
 		);
 
-		bp_send_email(
-			'messages-unread',
-			$ud,
-			array(
-				'tokens' => array(
-					'message_id'  => $id,
-					'usermessage' => stripslashes( $message ),
-					'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-					'sender.name' => $sender_name,
-					'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-					'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+		if ( function_exists( 'bp_email_queue' ) ) {
+			$all_recipients[] = array(
+				'email_type' => 'messages-unread',
+				'recipient'  => $ud,
+				'arguments'  => array(
+					'tokens' => array(
+						'message_id'  => $id,
+						'usermessage' => stripslashes( $message ),
+						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name' => $sender_name,
+						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
 				),
-			)
-		);
+			);
+
+		} else {
+			bp_send_email(
+				'messages-unread',
+				$ud,
+				array(
+					'tokens' => array(
+						'message_id'  => $id,
+						'usermessage' => stripslashes( $message ),
+						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name' => $sender_name,
+						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
+				)
+			);
+		}
+	}
+
+	if ( function_exists( 'bp_email_queue' ) && ! empty( $all_recipients ) ) {
+		// Added bulk data into email queue.
+		bp_email_queue()->add_bulk_record( $all_recipients );
+
+		// call email background process.
+		bp_email_queue()->bb_email_background_process();
 	}
 
 	/**
@@ -888,6 +916,8 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$message = '';
 	}
 
+	$all_recipients = array();
+
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
 		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
@@ -912,22 +942,50 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		}
 		$group_name = bp_get_group_name( groups_get_group( $group ) );
 
-		bp_send_email(
-			'group-message-email',
-			$ud,
-			array(
-				'tokens' => array(
-					'message_id'  => $id,
-					'usermessage' => stripslashes( $message ),
-					'message'     => stripslashes( $message ),
-					'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-					'sender.name' => $sender_name,
-					'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-					'group.name'  => $group_name,
-					'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+		if ( function_exists( 'bp_email_queue' ) ) {
+			$all_recipients[] = array(
+				'email_type' => 'group-message-email',
+				'recipient'  => $ud,
+				'arguments'  => array(
+					'tokens' => array(
+						'message_id'  => $id,
+						'usermessage' => stripslashes( $message ),
+						'message'     => stripslashes( $message ),
+						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name' => $sender_name,
+						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+						'group.name'  => $group_name,
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
 				),
-			)
-		);
+			);
+
+		} else {
+			bp_send_email(
+				'group-message-email',
+				$ud,
+				array(
+					'tokens' => array(
+						'message_id'  => $id,
+						'usermessage' => stripslashes( $message ),
+						'message'     => stripslashes( $message ),
+						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.name' => $sender_name,
+						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+						'group.name'  => $group_name,
+						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					),
+				)
+			);
+		}
+	}
+
+	if ( function_exists( 'bp_email_queue' ) && ! empty( $all_recipients ) ) {
+		// Added bulk data into email queue.
+		bp_email_queue()->add_bulk_record( $all_recipients );
+
+		// call email background process.
+		bp_email_queue()->bb_email_background_process();
 	}
 
 	/**

@@ -4099,7 +4099,13 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 			),
 		);
 
-		bp_send_email( $email_type, $receiver_user_id, $args );
+		if ( function_exists( 'bp_email_queue' ) ) {
+			bp_email_queue()->add_record( $email_type, $receiver_user_id, $args );
+			// call email background process.
+			bp_email_queue()->bb_email_background_process();
+		} else {
+			bp_send_email( $email_type, $receiver_user_id, $args );
+		}
 	}
 
 	/**
@@ -4165,7 +4171,13 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 				),
 			);
 
-			bp_send_email( 'activity-comment', $original_activity->user_id, $args );
+			if ( function_exists( 'bp_email_queue' ) ) {
+				bp_email_queue()->add_record( 'activity-comment', $original_activity->user_id, $args );
+				// call email background process.
+				bp_email_queue()->bb_email_background_process();
+			} else {
+				bp_send_email( 'activity-comment', $original_activity->user_id, $args );
+			}
 		}
 
 		/**
@@ -4213,7 +4225,13 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 				),
 			);
 
-			bp_send_email( 'activity-comment-author', $parent_comment->user_id, $args );
+			if ( function_exists( 'bp_email_queue' ) ) {
+				bp_email_queue()->add_record( 'activity-comment-author', $parent_comment->user_id, $args );
+				// call email background process.
+				bp_email_queue()->bb_email_background_process();
+			} else {
+				bp_send_email( 'activity-comment-author', $parent_comment->user_id, $args );
+			}
 		}
 
 		/**
