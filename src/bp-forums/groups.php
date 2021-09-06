@@ -385,19 +385,18 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 
 				// No support for multiple forums yet
-				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
+				$forum_id    = (int) ( is_array( $forum_ids ) ? $forum_ids[0]: $forum_ids );
 				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
 
 				if ( empty( $valid_forum ) ) {
-					return false;
+					return;
 				}
 			}
 
-			// Update the Forum ID and Group ID relationships
+			// Update the Forum ID and Group ID relationships.
 			$this->update_forum_group_ids( $group_id, $forum_id );
 			// Update the group ID and forum ID relationships
 			bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
-
 
 			// Update the group forum setting
 			$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
@@ -455,6 +454,16 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 		}
 
+		/**
+		 * Update forum meta with its associate group ids.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 *
+		 * @param int $group_id Group id.
+		 * @param int $forum_id Forum id.
+		 *
+		 * @return array
+		 */
 		public function update_forum_group_ids( $group_id, $forum_id ) {
 			$group_id = filter_var( $group_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
 			$forum_id = filter_var( $forum_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
@@ -466,9 +475,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$gf_ids = bbp_get_group_forum_ids( $group_id );
 			$gf_id  = ! empty( $gf_ids ) ? current( $gf_ids ) : false;
 
+			// Remove relation with group from forum meta.
 			if ( empty( $forum_id ) ) {
 
-				// Group is not associate with any forum.
+				// Group is not associated with any forum.
 				if ( empty( $gf_id ) ) {
 					return false;
 				}
@@ -488,6 +498,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return true;
 			}
 
+			// Create relations with groups from forum meta.
 			if ( ! empty( $forum_id ) ) {
 				$group_ids   = bbp_get_forum_group_ids( $forum_id );
 				$valid_forum = $this->forum_can_associate_with_group( $forum_id, $group_id );
@@ -504,6 +515,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 				bbp_update_forum_group_ids( $forum_id, $group_ids );
 
+				// When a group switches from one forum to another forum.
 				if ( $gf_id !== $forum_id ) {
 					$group_ids = bbp_get_forum_group_ids( $gf_id );
 
@@ -1721,8 +1733,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					bp_core_redirect( $redirect_to );
 				}
 
-				$group_ids      = bb_get_child_forum_group_ids( $forum->ID );
-				$this->forum_id = ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ? $forum->ID : false;
+				$this->forum_id = $this->forum_associate_with_current_group( $group_id, $forum->ID ) ? $forum->ID : false;
 			}
 
 			if ( bp_is_group_forum_topic() ) {
@@ -1742,9 +1753,43 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				}
 
 				$topic_forum_id = bbp_get_topic_forum_id( $topic->ID );
-				$group_ids      = bb_get_child_forum_group_ids( $topic_forum_id );
-				$this->forum_id = ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ? $topic_forum_id : false;
+				$this->forum_id = $this->forum_associate_with_current_group( $group_id, $topic_forum_id ) ? $topic_forum_id : false;
 			}
+		}
+
+		/**
+		 * Get the relation with forum and group.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 *
+		 * @param int $group_id Group id.
+		 * @param int $forum_id Forum id.
+		 *
+		 * @return array
+		 */
+		public function forum_associate_with_current_group( $group_id, $forum_id ) {
+			$group_id = filter_var( $group_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+			$forum_id = filter_var( $forum_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+
+			if ( empty( $forum_id ) || empty( $group_id ) ) {
+				return false;
+			}
+
+			$forum_ids = get_post_ancestors( $forum_id );
+			$gf_ids    = bbp_get_group_forum_ids( $group_id );
+
+			// Set the parameter forum_id in the parents array as its first element.
+			array_unshift( $forum_ids, $forum_id );
+
+			if ( ! empty( $forum_ids ) ) {
+				foreach ( $forum_ids as $forum_id ) {
+					if ( ! empty( $forum_ids ) && in_array( $forum_id, $gf_ids, true ) ) {
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		/**
