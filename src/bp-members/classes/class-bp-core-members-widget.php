@@ -172,7 +172,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 								<?php elseif ( 'active' == $settings['member_default'] ) : ?>
                                     <span class="activity"
                                           data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
-								<?php else : ?>
+								<?php elseif ( bp_is_active( 'friends' ) ) : ?>
                                     <span class="activity"><?php bp_member_total_friend_count(); ?></span>
 								<?php endif; ?>
                             </div>

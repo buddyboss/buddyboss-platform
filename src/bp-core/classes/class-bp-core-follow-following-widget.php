@@ -39,7 +39,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 
 		// do not do anything if user isn't logged in
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
 			return;
 		}
 
@@ -98,11 +98,11 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 
-		// show the users the logged-in user is following
+		// show the users the logged-in user is following.
 		if ( bp_has_members(
 			array(
 				'include'         => $following,
-				'max'             => $instance['max_users'],
+				'per_page'        => $instance['max_users'],
 				'populate_extras' => false,
 			)
 		) ) {
@@ -126,7 +126,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 				<?php endwhile; ?>
 			</div>
 			<?php if ( $following_count_number > $instance['max_users'] && $show_more ) { ?>
-				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>#following" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+				<div class="more-block more-following"><a href="<?php bp_members_directory_permalink(); ?>#following" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
 			<?php echo $args['after_widget']; ?>
