@@ -422,51 +422,54 @@ window.bp = window.bp || {};
 						$.each( response.data.recipients.members, function ( index, item ) {
 							if ( '' !== item ) {
 								if ( 'bp_load_more' === bpAction ) {
-									var cloneUserItemWrap = $( '.user-item-wrp:last' ).clone();
-									cloneUserItemWrap.attr( 'id', 'user-' + item.id );
-									cloneUserItemWrap.find( '.user-avatar img' ).attr( 'src', item.avatar );
-									cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
-									cloneUserItemWrap.find( '.user-name' ).html( item.user_name );
-									if ( true === item.is_blocked ) {
-										cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce');
-										cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Blocked' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).removeClass( 'block-member' ).addClass( 'blocked-member disabled' );
-									} else if ( false !== item.can_be_blocked ) {
-										cloneUserItemWrap.find( '.user-actions a.button' ).removeClass( 'blocked-member disabled' ).addClass( 'block-member' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
-									}
-									$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
-									
-									// When click on block button then need to open popup
-									if ( $( '.report-content, .block-member' ).length > 0 ) {
-										$( '.report-content, .block-member' ).magnificPopup(
-											{
-												type: 'inline',
-												midClick: true,
-												callbacks: {
-													open: function () {
-														var contentId   = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-id' );
-														var contentType = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-type' );
-														var nonce       = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-nonce' );
-														var reportType  = cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'reported_type' );
-														if ( 'undefined' !== typeof reportType ) {
-															var mf_content = $( '#content-report' );
-															mf_content.find( '.bp-reported-type' ).text( reportType );
-														}
-														if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
-															$( document ).find( '.bp-report-form-err' ).empty();
-															this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+									// Exclude blocked member from block member list - #2875
+									if ( true !== item.is_blocked ) {
+										var cloneUserItemWrap = $('.user-item-wrp:last').clone();
+										cloneUserItemWrap.attr('id', 'user-' + item.id);
+										cloneUserItemWrap.find('.user-avatar img').attr('src', item.avatar);
+										cloneUserItemWrap.find('.user-avatar img').attr('alt', item.user_name);
+										cloneUserItemWrap.find('.user-name').html(item.user_name);
+										if (true === item.is_blocked) {
+											cloneUserItemWrap.find('.user-actions .block-member').removeAttr('data-bp-content-id');
+											cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-content-type');
+											cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-nonce');
+											cloneUserItemWrap.find('.user-actions .block-member').html('Blocked');
+											cloneUserItemWrap.find('.user-actions .block-member').removeClass('block-member').addClass('blocked-member disabled');
+										} else if (false !== item.can_be_blocked) {
+											cloneUserItemWrap.find('.user-actions a.button').removeClass('blocked-member disabled').addClass('block-member');
+											cloneUserItemWrap.find('.user-actions .block-member').attr('id', 'report-content-' + moderation_type + '-' + item.id);
+											cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-content-id', item.id);
+											cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-content-type', moderation_type);
+											cloneUserItemWrap.find('.user-actions .block-member').attr('data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce);
+											cloneUserItemWrap.find('.user-actions .block-member').html('Block');
+										}
+										$('.user-item-wrp:last').after(cloneUserItemWrap);
+										
+										// When click on block button then need to open popup
+										if ($('.report-content, .block-member').length > 0) {
+											$('.report-content, .block-member').magnificPopup(
+												{
+													type: 'inline',
+													midClick: true,
+													callbacks: {
+														open: function () {
+															var contentId = cloneUserItemWrap.find('.user-actions .block-member').data('bp-content-id');
+															var contentType = cloneUserItemWrap.find('.user-actions .block-member').data('bp-content-type');
+															var nonce = cloneUserItemWrap.find('.user-actions .block-member').data('bp-nonce');
+															var reportType = cloneUserItemWrap.find('.user-actions .block-member').attr('reported_type');
+															if ('undefined' !== typeof reportType) {
+																var mf_content = $('#content-report');
+																mf_content.find('.bp-reported-type').text(reportType);
+															}
+															if ('undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce) {
+																$(document).find('.bp-report-form-err').empty();
+																this.setFormValues({ contentId: contentId, contentType: contentType, nonce: nonce });
+															}
 														}
 													}
 												}
-											}
-										);
+											);
+										}
 									}
 								}
 								if ( 'bp_view_more' === bpAction ) {

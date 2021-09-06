@@ -144,7 +144,8 @@
 								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 							</header>
 							<div class="bb-report-type-wrp">
-								<# _.reject(other_recipients, function(item) { #>
+								<!-- // Exclude blocked member from block member list - #2875 -->
+								<# _.reject(other_recipients, function(item) { if ( true !== item.is_blocked ) { #>
 								<div class="user-item-wrp" id="user-{{item.id}}">
 									<div class="user-avatar">
 										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
@@ -164,7 +165,7 @@
                                         <# } #>
 									</div>
 								</div>
-								<# }); #>
+								<# } }); #>
 							</div>
 							<# if ( 1 < data.recipients.total_pages ) { #>
 								<div class="bb-report-type-pagination">

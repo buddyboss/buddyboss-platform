@@ -2628,21 +2628,19 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 	}
 
 	// Get all admin ids.
-	$adminstrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-
-	$args = array();
-	if ( isset( $post_data['action'] ) && 'bp_load_more' === $post_data['action'] ) {
-		$args['exclude_admin_user'] = $adminstrator_ids;
-	}
-	$args['page'] = (int) $post_data['page_no'];
-	$thread       = new BP_Messages_Thread();
-	$results      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
-
+	$administrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+	$args              = array();
+	$args['page']      = (int) $post_data['page_no'];
+	$thread            = new BP_Messages_Thread();
+	$results           = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
 	if ( is_array( $results ) ) {
 		$count          = 1;
 		$recipients_arr = array();
 		foreach ( $results as $recipient ) {
-			if ( (int) $recipient->user_id !== $user_id ) {
+			// Exclude blocked member from block member list - #2875
+			if ( (int) $recipient->user_id !== $user_id ||
+			     ( ! empty( $administrator_ids ) && ! in_array( (int) $recipient->user_id, $administrator_ids, true ) )
+			) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$recipients_arr['members'][ $count ] = array(
 						'avatar'     => esc_url(
@@ -2665,7 +2663,7 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 					);
 					if ( bp_is_active( 'moderation' ) ) {
 						$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-						$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $adminstrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 					}
 					$count ++;
 				}
