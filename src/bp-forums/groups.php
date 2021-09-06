@@ -1604,7 +1604,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @param int $group_id Group id.
 		 * @param int $forum_id Forum id.
 		 *
-		 * @return array
+		 * @return bool
 		 */
 		public function update_forum_group_ids( $group_id, $forum_id ) {
 			$group_id = filter_var( $group_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
@@ -1768,7 +1768,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * @param int $group_id Group id.
 		 * @param int $forum_id Forum id.
 		 *
-		 * @return array
+		 * @return bool
 		 */
 		public function forum_associate_with_current_group( $group_id, $forum_id ) {
 			$group_id = filter_var( $group_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
