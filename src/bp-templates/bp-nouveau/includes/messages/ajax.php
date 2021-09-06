@@ -837,10 +837,33 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	while ( bp_message_threads() ) :
 		bp_message_thread();
 
-		if ( '' === trim( wp_strip_all_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ) {
+		/**
+		 * Filter to validate message content.
+		 *
+		 * @param bool   $validated_content True if message is not valid, false otherwise.
+		 * @param string $content           Content of the message.
+		 * @param array  $id             	ID Message ID.
+		 *
+		 * @return bool True if message is not valid, false otherwise.
+		 */
+		$validated_content = (bool) apply_filters( 'bb_get_messages_message_validated_content', ! empty( bp_get_message_thread_content() ) && strlen( trim( wp_strip_all_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ), bp_get_message_thread_content(), bp_get_the_thread_message_id() );
+
+		if ( ! $validated_content ) {
 			foreach ( $messages_template->thread->messages as $message ) {
 				$content = trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
-				if ( '' !== $content ) {
+
+				/**
+				 * Filter to validate message content.
+				 *
+				 * @param bool   $validated_content True if message is not valid, false otherwise.
+				 * @param string $content           Content of the message.
+				 * @param array  $id             	ID Message ID.
+				 *
+				 * @return bool True if message is not valid, false otherwise.
+				 */
+				$validated_content = (bool) apply_filters( 'bb_get_messages_message_validated_content', ! empty( $content ) && strlen( $content ), $content, $message->id );
+
+				if ( ! $validated_content ) {
 
 					$messages_template->thread->last_message_id      = $message->id;
 					$messages_template->thread->thread_id            = $message->thread_id;

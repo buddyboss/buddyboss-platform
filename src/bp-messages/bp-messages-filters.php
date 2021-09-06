@@ -95,6 +95,9 @@ add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
 
+add_filter( 'bp_messages_message_validated_content', 'bb_check_is_message_content_empty', 10, 3 );
+add_filter( 'bb_get_messages_message_validated_content', 'bb_check_is_get_message_content_empty', 10, 3 );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -725,6 +728,77 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 		$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_admin_user'] ) .' )';
 	}
 	return $where_conditions;
+}
+
+/**
+ * Function will check content empty or not for the media, document and gif.
+ * If content will empty then return true and allow empty content in DB for the media, document and gif.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $post              Request object.
+ *
+ * @return bool
+ */
+function bb_check_is_message_content_empty( $validated_content, $content, $post ) {
+	if ( ( empty( $post['content'] ) || empty( $post['message_content'] ) ) && ( isset( $post['gif_data'] ) || isset( $post['media'] ) || isset( $post['document'] ) || isset( $post['video'] ) ) ) {
+		return true;
+	} elseif ( ! empty( $post['content'] ) || ! empty( $post['message_content'] ) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Function will check content empty or not for the media, document and gif.
+ * If content will empty then return true and allow empty content in DB for the media, document and gif.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $id                Message ID.
+ *
+ * @return bool
+ */
+function bb_check_is_get_message_content_empty( $validated_content, $content = '', $message_id ) {
+
+	if ( ! empty( $content ) ) {
+		return true;
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+
+		if ( empty( $content ) && ! empty( $media_ids ) ) {
+			return true;
+		}
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+
+		if ( empty( $content ) && ! empty( $video_ids ) ) {
+			return true;
+		}
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+
+		if ( empty( $content ) && ! empty( $document_ids ) ) {
+			return true;
+		}
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+		$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
+
+		if ( empty( $content ) && ! empty( $gif_data ) ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
