@@ -78,6 +78,10 @@ class BP_Email_Queue {
 	public function add_record( $email_type, $to, $args = array() ) {
 		global $wpdb;
 
+		if ( is_int( $to ) && get_user_by( 'id', $to ) ) {
+			$to = get_userdata( $to );
+		}
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES ( %s, %s, %s, %s, %d )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bp_core_current_time(), false ) );
 	}
