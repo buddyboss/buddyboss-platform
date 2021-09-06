@@ -396,7 +396,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
 			}
 
-			// Update the Forum ID and Group ID relationships.
+			// Update the forum ID and group ID relationships.
 			$this->update_forum_group_ids( $group_id, $forum_id );
 			// Update the group ID and forum ID relationships
 			bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
