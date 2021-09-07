@@ -1054,10 +1054,10 @@ function bbp_check_for_blacklist( $anonymous_data = false, $author_id = 0, $titl
  *
  * @return array HTML tags
  */
-function bbp_get_forum_allow_tags() {
+function bbp_get_forum_email_notifications_allow_tages() {
 	$forum_allow_html_tags = '<br>,<em>,<i>,<ul>,<ol>,<li>,<a>,<p>,<img>,<abbr>,<span>,<b>,<h1>,<h2>,<h3>,<h4>,<h5>,<h6>,<i>,<u>,<blockquote>';
 
-	return apply_filters( 'bbp_get_forum_allow_tags', $forum_allow_html_tags );
+	return apply_filters( 'bbp_get_forum_email_notifications_allow_tages', $forum_allow_html_tags );
 }
 
 /**
@@ -1171,7 +1171,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
-	$reply_content = strip_tags( bbp_get_reply_content( $reply_id ), bbp_get_forum_allow_tags() );
+	$reply_content = strip_tags( bbp_get_reply_content( $reply_id ), bbp_get_forum_email_notifications_allow_tages() );
 	$reply_url     = bbp_get_reply_url( $reply_id );
 
 	$forum_title = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
@@ -1302,7 +1302,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
-	$topic_content = strip_tags( bbp_get_topic_content( $topic_id ), bbp_get_forum_allow_tags() );
+	$topic_content = strip_tags( bbp_get_topic_content( $topic_id ), bbp_get_forum_email_notifications_allow_tages() );
 	$topic_url     = get_permalink( $topic_id );
 	$forum_title   = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
 	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
