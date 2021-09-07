@@ -94,7 +94,7 @@ add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_
 add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
-add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -722,20 +722,19 @@ function bp_messages_admin_repair_unread_messages_count() {
  */
 function bp_recipients_recipient_get_where_conditions_callback( $where_conditions, $r ) {
 	if ( ! empty( $r['exclude_admin_user'] ) ) {
-		$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_admin_user'] ) . ' )';
+		$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_admin_user'] ) .' )';
 	}
 	return $where_conditions;
 }
 
 /**
  * Add nonce for the moderation when click on block member button.
- * 
- * @param  array $params Get params.
- * 
- * @return array $params Return params.
  *
- * @since BuddyBoss 1.7.8
+ * @param $params Get params.
+ *
+ * @return $params Return params.
  */
+add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
 function bp_core_get_js_strings_callback(  $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	return $params;
