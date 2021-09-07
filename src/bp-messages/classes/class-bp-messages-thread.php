@@ -199,11 +199,13 @@ class BP_Messages_Thread {
 		foreach ( (array) $this->messages as $key => $message ) {
 			$this->sender_ids[ $message->sender_id ] = $message->sender_id;
 		}
-
 		$args['per_page'] = bb_messages_recipients_per_page();
 		// Fetch the recipients.
 		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
-
+		// Fetch the recipients for moderated members list for block member screen in messages.
+		$args['moderated_recipients'] = true;
+		$this->moderated_recipients   = $this->get_pagination_recipients( $this->thread_id, $args );
+		
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
 			$this->unread_count = $this->recipients[ $r['user_id'] ]->unread_count;
@@ -1804,7 +1806,26 @@ class BP_Messages_Thread {
 				'count_total'     => true,
 			)
 		);
-
+		
+		// for blocked member when open popup in the message.
+		if ( isset( $r['moderated_recipients'] ) && true === $r['moderated_recipients'] ) {
+			$bp_get_moderation_data = bp_moderation_get( array( 'in_types' => 'user' ) );
+			$bp_blocked_user_ids    = array();
+			if ( ! empty( $bp_get_moderation_data ) && isset( $bp_get_moderation_data['moderations'] ) ) {
+				foreach ( $bp_get_moderation_data['moderations'] as $moderation ) {
+					$bp_blocked_user_ids[] = $moderation->item_id;
+				}
+			}
+			$administrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+			$exclude_users = array();
+			if ( ! empty( $bp_blocked_user_ids ) ) {
+				$exclude_users = array_merge( $administrator_ids, $bp_blocked_user_ids );
+			}
+			if ( ! empty( $exclude_users ) ) {
+				$r['exclude_admin_user'] = $exclude_users;
+			}
+		}
+		
 		$results    = self::get( $r );
 		$recipients = array();
 
@@ -1815,8 +1836,12 @@ class BP_Messages_Thread {
 		}
 
 		if ( isset( $results['total'] ) ) {
-			// Fetch the recipients count.
-			$this->total_recipients_count = $results['total'];
+			// Fetch the recipients count
+			if ( isset( $r['moderated_recipients'] ) && true === $r['moderated_recipients'] ) {
+				$this->total_moderated_recipients_count = $results['total'];
+			} else {
+				$this->total_recipients_count = $results['total'];
+			}
 		}
 
 		/**

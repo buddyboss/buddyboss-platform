@@ -1,6 +1,6 @@
 <script type="text/html" id="tmpl-bp-messages-single-header">
-	<#    var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
-	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
+	<#    var other_recipients = _.reject(data.recipients.all_recipients.members, function(item) {    return item.is_you;    });
+	var current_user = _.find(data.recipients.all_recipients.members, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
 
@@ -26,12 +26,12 @@
                                 <# if( other_recipients[i].user_link ) { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } else { #>{{other_recipients[i].user_name}}<# } #><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #><?php _e( ',', 'buddyboss' ); ?><# } #>
                         </span>
                     <# } #>
-					<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
+					<# if ( ! data.is_group_thread && data.recipients.all_recipients.count > data.recipients.all_recipients.current_count ) { #>
 						<a href="javascript:void(0);" id="view_more_members" class="view_more_members view_more_members_cls"
 							data-thread-id="{{data.id}}"
-							data-tp="{{data.recipients.total_pages}}"
-							data-tc="{{data.recipients.count}}"
-							data-pp="{{data.recipients.per_page}}"
+							data-tp="{{data.recipients.all_recipients.total_pages}}"
+							data-tc="{{data.recipients.all_recipients.count}}"
+							data-pp="{{data.recipients.all_recipients.per_page}}"
 							data-cp="2"
 							data-action="bp_view_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 					<# } #>
@@ -145,7 +145,7 @@
 							</header>
 							<div class="bb-report-type-wrp">
 								<!-- // Exclude blocked member from block member list - #2875 -->
-								<# _.reject(other_recipients, function(item) { if ( true !== item.is_blocked ) { #>
+								<# _.reject(data.recipients.moderated_recipients.members, function(item) { if ( true !== item.is_blocked ) { #>
 								<div class="user-item-wrp" id="user-{{item.id}}">
 									<div class="user-avatar">
 										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
@@ -167,15 +167,15 @@
 								</div>
 								<# } }); #>
 							</div>
-							<# if ( 1 < data.recipients.total_pages ) { #>
+							<# if ( 1 < data.recipients.moderated_recipients.total_pages ) { #>
 								<div class="bb-report-type-pagination">
 									<p class="page-data" data-thread-id="{{data.id}}">
 										<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
 										   class="load_more_rl button small outline"
 										   data-thread-id="{{data.id}}"
-										   data-tp="{{data.recipients.total_pages}}"
-										   data-tc="{{data.recipients.count}}"
-										   data-pp="{{data.recipients.per_page}}"
+										   data-tp="{{data.recipients.moderated_recipients.total_pages}}"
+										   data-tc="{{data.recipients.moderated_recipients.count}}"
+										   data-pp="{{data.recipients.moderated_recipients.per_page}}"
 										   data-cp="2" data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 									</p>
 								</div>
