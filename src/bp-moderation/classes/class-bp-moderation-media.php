@@ -156,7 +156,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		$media = new BP_Media($item_id);
 
 		// Remove report button if forum is group forums.
-		if ( ! empty( $media->id ) && ! empty( $media->privacy ) && 'comment' === $media->privacy ) {
+		if ( ! empty( $media->id ) && ! empty( $media->privacy ) && in_array( $media->privacy, array( 'comment', 'forums' ), true ) ) {
 			return array();
 		}
 
