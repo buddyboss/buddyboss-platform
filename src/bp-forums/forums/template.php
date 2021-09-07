@@ -884,6 +884,9 @@ function bbp_list_forums( $args = '' ) {
 				$counts = $r['count_before'] . implode( $r['count_sep'], $count ) . $r['count_after'];
 			}
 
+			// Change the style of link tag.
+			$r['link_before'] = apply_filters( 'bb_forum_link_custom_attr', $r['link_before'], $title );
+
 			// Build this sub forums link
 			$output .= $r['link_before'] . '<a href="' . esc_url( $permalink ) . '" class="bbp-forum-link">' . $title . $counts . '</a>' . $show_sep . $r['link_after'];
 		}
