@@ -855,7 +855,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			 */
 			do_action( 'bb_members_admin_user_profile_nav', $user, $active ); 
 			?>
-	</h2>
+		</h2>
 
 			<?php
 		}
