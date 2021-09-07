@@ -156,10 +156,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		$document = new BP_Document( $item_id );
 
 		// Remove report button if forum is group forums.
-		if ( ! empty( $document->id ) && ! empty( $document->privacy ) && in_array( $document->privacy, array(
-				'comment',
-				'forums'
-			) ) ) {
+		if ( ! empty( $document->id ) && ! empty( $document->privacy ) && in_array( $document->privacy, array( 'comment', 'forums' ), true ) ) {
 			return array();
 		}
 
