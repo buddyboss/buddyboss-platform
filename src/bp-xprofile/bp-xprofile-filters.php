@@ -72,6 +72,10 @@ add_filter( 'xprofile_field_field_order_before_save', 'absint' );
 add_filter( 'xprofile_field_option_order_before_save', 'absint' );
 add_filter( 'xprofile_field_can_delete_before_save', 'absint' );
 
+// Un slash field value.
+add_filter( 'xprofile_field_name_before_save', 'wp_unslash', 99 );
+add_filter( 'xprofile_field_description_before_save', 'wp_unslash', 99 );
+
 // Save field options.
 add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_options' );
 add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_default' );
