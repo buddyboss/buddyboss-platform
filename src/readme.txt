@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8
 Requires PHP: 5.6.20
-Stable tag: 1.7.5
+Stable tag: 1.7.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,34 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.6 =
+* Profiles - Fixed change password critical issue
+* Forums - Fixed issue with discussion tags not getting saved on update
+* Activity - Fixed forum discussion activity > quick reply > upload media access control issue
+* Activity - Fixed activity permission issue when group privacy changes from Public to Private and vice versa
+* Activity - Fixed URL preview attachment deletion issue on deleting activity
+* Activity - Fixed activity comment more options dropdown UI issue
+* Media - Fixed video issue on specific servers by handling symbolic link file extension
+* Media - Fixed photos directory create album popup UI issue
+* Media - Fixed profile upload photos minor UI issue
+* Media - Fixed video thumbnail issue for iPhone device
+* Media - Small code enhancement to check if symlink function disabled on the server
+* Messages - Fixed message thread performance issue by not loading all members at once
+* Connections - Fixed members widget issue when connection component disabled
+* Member Access Controls - Fixed notification email issue getting sent to the suspended members
+* Network Search - Fixed members count in search results when profile type set to hidden
+* Registration - Fixed forgot password issue when Group component disabled
+* Widgets - Fixed 'Members I am Following' and 'Members Following Me' widget settings issue
+* Coding Standards - Improved SQL queries
+* Coding Standards - Small improvement to escape attribute in the network search template
+* Elementor - Fixed Elementor conflict with forums parent option in admin
+* REST API - Fixed long thread performance issue in messages endpoint
+* REST API - Fixed messages thread members performance issue in API
+* Compatibility - Fixed 'WP Offload Media' plugin PDF document preview not generated issue
+* Compatibility - Fixed 'WP Offload Media' plugin general compatibility issues
+* Compatibility - Fixed 'Events Manager' plugin conflict
+* Compatibility - Fixed 'ACF Frontend Pro' plugin critical issue
 
 = 1.7.5 =
 * Moderation - Added moderation support for the Video module
