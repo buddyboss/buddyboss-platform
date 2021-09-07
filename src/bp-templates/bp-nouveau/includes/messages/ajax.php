@@ -837,12 +837,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	while ( bp_message_threads() ) :
 		bp_message_thread();
 
-		$content 			= '';
+		$content 		= '';
 		$validated_content 	= false;
 
 		foreach ( $messages_template->thread->messages as $message ) {
 			$content = trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
-
 			/**
 			 * Filter to validate message content.
 			 *
@@ -855,7 +854,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$validated_content = (bool) apply_filters( 'bb_get_messages_message_validated_content', ! empty( $content ) && strlen( $content ), $content, $message->id );
 
 			if ( ! $validated_content ) {
-
 				$messages_template->thread->last_message_id      = $message->id;
 				$messages_template->thread->thread_id            = $message->thread_id;
 				$messages_template->thread->last_message_subject = $message->subject;
