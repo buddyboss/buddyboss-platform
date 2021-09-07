@@ -156,7 +156,10 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		$video = new BP_Video( $item_id );
 
 		// Remove report button if forum is group forums.
-		if ( ! empty( $video->id ) && ! empty( $video->privacy ) && ( 'comment' === $video->privacy || 'forums' === $video->privacy ) ) {
+		if ( ! empty( $video->id ) && ! empty( $video->privacy ) && in_array( $video->privacy, array(
+				'comment',
+				'forums'
+			) ) ) {
 			return array();
 		}
 
