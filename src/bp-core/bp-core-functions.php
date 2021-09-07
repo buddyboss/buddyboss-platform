@@ -5244,7 +5244,6 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 		$user_id 		= get_current_user_id();
 	}
 
-	$user_id            = get_current_user_id();
 	$steps_options      = bp_core_profile_completion_steps_options();
 	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
 	$profile_photo_type = array();
