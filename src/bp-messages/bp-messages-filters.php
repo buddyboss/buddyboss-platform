@@ -698,7 +698,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -715,9 +715,9 @@ function bp_messages_admin_repair_unread_messages_count() {
 
 /**
  * Exclude current user and admin user when we open blocked member list.
- * 
+ *
  * @since BuddyBoss 1.7.6
- * 
+ *
  * @return string Exclude admin users from message block list.
  */
 function bp_recipients_recipient_get_where_conditions_callback( $where_conditions, $r ) {
@@ -729,9 +729,9 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 
 /**
  * Add nonce for the moderation when click on block member button.
- * 
+ *
  * @param $params Get params.
- * 
+ *
  * @return $params Return params.
  */
 add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
