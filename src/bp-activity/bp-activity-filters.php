@@ -2965,7 +2965,7 @@ function bp_activity_edit_update_video( $video_ids ) {
  *
  * @return mixed
  * 
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss 1.7.8
  */
 function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
 	$buttons['activity_favorite']      = '';

@@ -4824,7 +4824,7 @@ bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss 1.7.8
  */
 function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	
