@@ -54,7 +54,7 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 /**
  * Function to load the instance of the class BP_Email_Queue.
  *
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss 1.7.8
  *
  * @return null|BP_Email_Queue|void
  */
