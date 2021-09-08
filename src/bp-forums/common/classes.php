@@ -254,9 +254,10 @@ if ( class_exists( 'Walker' ) ) :
 			 * Add extra attributes for dropdown options.
 			 * Default value empty.
 			 *
-			 * @since BuddyBoss 1.7.7
+			 * @since BuddyBoss 1.7.8
 			 *
 			 * @param string $attribute Option attribute.
+			 * @param object $object    Post data.
 			 * @param array  $args      Dropdown arguments.
 			 * @param int    $depth     Depth of post in reference to parent posts.
 			 * @param string $output    Used to append additional content.
