@@ -339,7 +339,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 17701 ) {
-			bb_update_to_1_7_7();
+			bb_update_to_1_7_8();
 		}
 	}
 
@@ -1274,14 +1274,14 @@ function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
 }
 
 /**
- * 1.7.7 update routine.
+ * 1.7.8 update routine.
  * Update forum meta with its associated group id.
  *
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss 1.7.8
  *
  * @return void
  */
-function bb_update_to_1_7_7() {
+function bb_update_to_1_7_8() {
 	// Return, when group or forum component deactive.
 	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
 		return;
