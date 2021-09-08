@@ -1772,7 +1772,7 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1834,7 +1834,7 @@ function bp_media_admin_repair_media() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1872,7 +1872,7 @@ function bp_media_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -2392,7 +2392,7 @@ function bp_media_activity_after_email_content( $activity ) {
 		$media_ids  = explode( ',', $media_ids );
 		$photo_text = sprintf(
 			_n( '%s photo', '%s photos', count( $media_ids ), 'buddyboss' ),
-			number_format_i18n( count( $media_ids ) )
+			bp_core_number_format( count( $media_ids ) )
 		);
 		$content    = sprintf(
 		/* translator: 1. Activity link, 2. Activity photo count */

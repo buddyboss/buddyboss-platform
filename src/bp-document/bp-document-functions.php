@@ -3314,12 +3314,12 @@ function bp_document_size_format( $bytes, $decimals = 0 ) {
 
 	if ( 0 === $bytes ) {
 		/* translators: Memory unit for byte. */
-		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
+		return bp_core_number_format( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
 	}
 
 	foreach ( $quant as $unit => $mag ) {
 		if ( doubleval( $bytes ) >= $mag ) {
-			return number_format_i18n( $bytes / $mag, $decimals ) . ' ' . $unit;
+			return bp_core_number_format( $bytes / $mag, $decimals ) . ' ' . $unit;
 		}
 	}
 
