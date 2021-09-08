@@ -645,11 +645,6 @@ function bbp_get_reply_content( $reply_id = 0 ) {
 
 	$content = get_post_field( 'post_content', $reply_id );
 
-	// If user was deleted, mark content as deleted.
-	if ( false === bp_core_get_core_userdata( bbp_get_reply_author_id( $reply_id ) ) ) {
-		$content = esc_html__( 'This reply was deleted.', 'buddyboss' );
-	}
-
 	return apply_filters( 'bbp_get_reply_content', $content, $reply_id );
 }
 
@@ -1174,12 +1169,6 @@ function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 		// Fall back to user login
 		if ( empty( $author_name ) ) {
 			$author_name = get_the_author_meta( 'user_login', $author_id );
-		}
-
-		// Try to get user data
-		$user_data = get_userdata( $author_id );
-		if ( empty( $author_name ) && empty( $user_data ) ) {
-			$author_name = __( 'Deleted User', 'buddyboss' );
 		}
 
 		// User does not have an account

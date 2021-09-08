@@ -1890,6 +1890,49 @@ function bbp_untrash_reply( $reply_id = 0 ) {
 	do_action( 'bbp_untrash_reply', $reply_id );
 }
 
+/**
+ * Completely remove a user's reply data.
+ *
+ * @param int $user_id ID of the user whose reply is being deleted.
+ * @return bool
+ */
+function bb_replies_remove_all_user_data( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	$replies_query_var 		= array(
+		'post_type' 		=> bbp_get_reply_post_type(),
+		'posts_per_page' 	=> -1,
+		'orderby' 			=> 'date',
+		'order' 			=> 'DESC',
+		'author' 			=> $user_id,
+		'post_status' 		=> array(
+			bbp_get_public_status_id(),
+			bbp_get_closed_status_id(),
+			bbp_get_spam_status_id(),
+			bbp_get_trash_status_id(),
+		)
+	);
+
+	if ( bbp_has_replies( $replies_query_var ) ) {
+		while ( bbp_replies() ) {
+			bbp_the_reply();
+			wp_delete_post( bbp_get_reply_id(), true );
+		}
+	}
+
+	/**
+	 * Fires after the removal of all of a user's reply data.
+	 *
+	 * @param int $user_id ID of the user being deleted.
+	 */
+	do_action( 'bb_replies_remove_all_user_data', $user_id );
+}
+add_action( 'wpmu_delete_user', 'bb_replies_remove_all_user_data' );
+add_action( 'delete_user', 'bb_replies_remove_all_user_data' );
+
 /** After Delete/Trash/Untrash ************************************************/
 
 /**
