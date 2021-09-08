@@ -95,6 +95,8 @@ add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
 
+add_action( 'messages_message_sent', 'bb_messages_save_group_data' );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -738,4 +740,86 @@ add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 )
 function bp_core_get_js_strings_callback(  $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	return $params;
+}
+
+/**
+ * Save group message meta.
+ *
+ * @since BuddyBoss 1.7.7
+ *
+ * @todo Need to update the version.
+ *
+ * @param $message Passed by reference.
+ */
+function bb_messages_save_group_data( &$message ) {	
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
+
+	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id.
+	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual.
+	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private.
+	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list.
+	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply.
+
+	if ( '' === $message_meta_users_list && isset( $group ) && '' !== $group ) {
+		$args = array(
+			'per_page'            => 99999999999999,
+			'group'               => $group,
+			'exclude'             => array( bp_loggedin_user_id() ),
+			'exclude_admins_mods' => false,
+		);
+
+		$group_members           = groups_get_group_members( $args );
+		$members                 = wp_list_pluck( $group_members['members'], 'ID' );
+		$message_meta_users_list = implode( ',', $members );
+	}
+
+	if ( isset( $group ) && '' !== $group ) {
+		$thread_key = 'group_message_thread_id_' . $message->thread_id;
+		bp_messages_update_meta( $message->id, 'group_id', $group );
+		bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+		bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+		bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
+		bp_messages_update_meta( $message->id, $thread_key, $group );
+		bp_messages_update_meta( $message->id, 'message_from', 'group' );
+		bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
+		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
+		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
+	} else {
+
+		$args = array(
+			'thread_id' => $message->thread_id,
+			'per_page'  => 99999999999999,
+		);
+
+		if ( bp_thread_has_messages( $args ) ) {
+			while ( bp_thread_messages() ) :
+				bp_thread_the_message();
+
+				$message_id    = bp_get_the_thread_message_id();
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true );
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true );
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true );
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true );
+
+				if ( $group ) {
+					break;
+				}
+			endwhile;
+		}
+
+		if ( $group ) {
+			$thread_key = 'group_message_thread_id_' . $message->thread_id;
+			bp_messages_update_meta( $message->id, 'group_id', $group );
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+			bp_messages_update_meta( $message->id, $thread_key, $group );
+			bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
+			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
+			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
+		}
+	}
 }
