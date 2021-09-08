@@ -1575,7 +1575,7 @@ function bp_document_admin_repair_document() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 				'status'  => 'running',
@@ -1783,7 +1783,7 @@ function bp_document_activity_after_email_content( $activity ) {
 		$document_ids = explode( ',', $document_ids );
 		$document_text = sprintf(
 		        _n( '%s document', '%s documents', count( $document_ids) , 'buddyboss' ),
-                number_format_i18n( count( $document_ids ) )
+			bp_core_number_format( count( $document_ids ) )
         );
 		$content   = sprintf(
 	    	/* translator: 1. Activity link, 2. Activity document count */
