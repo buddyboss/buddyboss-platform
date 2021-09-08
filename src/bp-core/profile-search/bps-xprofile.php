@@ -88,7 +88,7 @@ function bp_ps_xprofile_search( $f ) {
 	);
 	$sql['select']            = "SELECT user_id FROM {$bp->profile->table_name_data}";
 
-	$sql['where']['field_id'] = $wpdb->prepare( "field_id in (SELECT id FROM {$bp->profile->table_name_fields} where 1 and group_id IN(SELECT group_id FROM {$bp->profile->table_name_fields} where 1 and id = %d))", $f->id );
+	$sql['where']['field_id'] = $wpdb->prepare( "field_id IN(SELECT id FROM {$bp->profile->table_name_fields} where 1 and group_id IN(SELECT group_id FROM {$bp->profile->table_name_fields} where 1 and id = %d))", $f->id );
 
 	switch ( $filter ) {
 		case 'integer_range':
