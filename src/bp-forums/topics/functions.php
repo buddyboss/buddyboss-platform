@@ -744,7 +744,6 @@ function bbp_edit_topic_handler( $action = '' ) {
 			'post_parent'  => $forum_id,
 			'post_author'  => $topic_author,
 			'post_type'    => bbp_get_topic_post_type(),
-			'tax_input'    => $terms,
 		)
 	);
 
@@ -766,6 +765,26 @@ function bbp_edit_topic_handler( $action = '' ) {
 	/** No Errors */
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
+
+		// update tags
+		$get_term_ids = array();
+
+		if ( ! empty ( $terms[ bbp_get_topic_tag_tax_id() ] ) ) {
+			foreach ( $terms[ bbp_get_topic_tag_tax_id() ] as $term_name ) {
+				$args['name']     = $term_name;
+				$args['slug']     = $term_name;
+				$args['taxonomy'] = bbp_get_topic_tag_tax_id();
+
+				$term_info = wp_insert_term( $term_name, bbp_get_topic_tag_tax_id(), $args );
+				if ( ! empty( $term_info ) && ! is_wp_error( $term_info ) ) {
+					$get_term_ids[] = $term_info['term_id'];
+				}
+			}
+		}
+
+		if ( ! empty( $get_term_ids ) ) {
+			bp_set_object_terms( $topic_id, $get_term_ids, bbp_get_topic_tag_tax_id(), true );
+		}
 
 		// Update counts, etc..
 		do_action( 'bbp_edit_topic', $topic_id, $forum_id, $anonymous_data, $topic_author, true /* Is edit */ );
