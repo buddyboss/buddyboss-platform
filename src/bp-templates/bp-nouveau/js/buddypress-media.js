@@ -6330,7 +6330,7 @@ window.bp = window.bp || {};
 					html = activity_meta.html();
 					classes = activity_meta.attr( 'class' );
 					activity_meta.remove();
-					activity_meta = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-meta' );
+					activity_meta = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] > .activity-meta' );
 					if ( activity_meta.length ) {
 						activity_meta.html( html );
 						activity_meta.attr( 'class', classes );
@@ -6371,7 +6371,7 @@ window.bp = window.bp || {};
 					html = activity_meta.html();
 					classes = activity_meta.attr( 'class' );
 					activity_meta.remove();
-					activity_meta = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-meta' );
+					activity_meta = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] > .activity-meta' );
 					if ( activity_meta.length ) {
 						activity_meta.html( html );
 						activity_meta.attr( 'class', classes );
