@@ -180,9 +180,9 @@ add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
 function bb_core_allow_activity_page_content_restriction_memberpress() {
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
-		remove_filter('mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3);
+		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
 	}
-	
+
 }
 add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
 
