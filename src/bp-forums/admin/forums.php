@@ -670,7 +670,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		 * Permission for forum parent, If not then return the current parent.
 		 * You can not make the forum a child forum when it's associated with any group.
 		 *
-		 * @since BuddyBoss 1.7.7
+		 * @since BuddyBoss 1.7.8
 		 *
 		 * @param init  $post_parent post parent.
 		 * @param init  $post_ID     post ID.
