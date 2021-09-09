@@ -1995,62 +1995,6 @@ function bp_nouveau_ajax_groups_send_message() {
 }
 
 /**
- * Create New Group Message.
- *
- * @param array|string $args         {
- *                                   Array of arguments.
- *
- * @type int           $sender_id    Optional. ID of the user who is sending the
- *                                 message. Default: ID of the logged-in user.
- * @type int           $thread_id    Optional. ID of the parent thread. Leave blank to
- *                                 create a new thread for the message.
- * @type array         $recipients   IDs or usernames of message recipients. If this
- *                                 is an existing thread, it is unnecessary to pass a $recipients
- *                                 argument - existing thread recipients will be assumed.
- * @type string        $subject      Optional. Subject line for the message. For
- *                                 existing threads, the existing subject will be used. For new
- *                                 threads, 'No Subject' will be used if no $subject is provided.
- * @type string        $content      Content of the message. Cannot be empty.
- * @type string        $date_sent    Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
- * @type bool          $is_hidden    Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
- * @type bool          $mark_visible Optional. Whether to mark thread visible to all other participants. Default: false.
- * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
- * }
- *
- * @return int|bool|WP_Error ID of the message thread on success, false on failure.
- */
-function bp_groups_messages_new_message( $args = '' ) {
-	$send = '';
-	remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-	add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-
-	$r = bp_parse_args(
-		$args,
-		array(
-			'sender_id'     => bp_loggedin_user_id(),
-			'thread_id'     => false,   // False for a new message, thread id for a reply to a thread.
-			'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
-			'subject'       => false,
-			'content'       => false,
-			'date_sent'     => bp_core_current_time(),
-			'append_thread' => false,
-			'is_hidden'     => false,
-			'mark_visible'  => false,
-			'group_thread'  => true,
-			'error_type'    => 'wp_error',
-		),
-		'bp_groups_messages_new_message'
-	);
-
-	// Attempt to send the message.
-	$send = messages_new_message( $r );
-	remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-	add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-	return $send;
-}
-
-/**
  * Check group message has been successfully sent or not.
  *
  * @param mixed  $send int|bool|WP_Error
