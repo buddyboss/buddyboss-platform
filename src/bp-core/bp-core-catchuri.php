@@ -1165,7 +1165,7 @@ function bp_private_network_template_redirect() {
 		 *
 		 * @return bool true if woocommerce registration is enable.
 		 */
-		$is_enable_wc_registration = apply_filters( 'bb_is_enable_woocommerce_myaccount_registration', false, $id );
+		$is_enable_3rd_party_registration = apply_filters( 'bb_is_enable_3rd_party_registration', false, $id );
 
 		if ( ! $enable_private_network ) {
 
@@ -1245,7 +1245,7 @@ function bp_private_network_template_redirect() {
 							$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
-								if ( $is_enable_wc_registration ) {
+								if ( $is_enable_3rd_party_registration ) {
 
 									$redirect_url  = is_ssl() ? 'https://' : 'http://';
 									$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1298,7 +1298,7 @@ function bp_private_network_template_redirect() {
 
 						$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						if ( $actual_link !== wc_lostpassword_url() ) {
-							if ( $is_enable_wc_registration ) {
+							if ( $is_enable_3rd_party_registration ) {
 
 								$redirect_url  = is_ssl() ? 'https://' : 'http://';
 								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1339,7 +1339,7 @@ function bp_private_network_template_redirect() {
 					$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
-						if ( $is_enable_wc_registration ) {
+						if ( $is_enable_3rd_party_registration ) {
 
 							$redirect_url  = is_ssl() ? 'https://' : 'http://';
 							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';

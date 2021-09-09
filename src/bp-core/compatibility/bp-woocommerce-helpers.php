@@ -47,7 +47,7 @@ class BB_Woocommerce_Plugin_Compatibility {
 	 */
 	public function compatibility_init() {
 
-		add_filter( 'bb_is_enable_woocommerce_myaccount_registration', array( $this, 'bb_check_woocommerce_enable_myaccount_registration' ), 9, 2 );
+		add_filter( 'bb_is_enable_3rd_party_registration', array( $this, 'bb_check_woocommerce_enable_myaccount_registration' ), 9, 2 );
 	}
 
 	/**
