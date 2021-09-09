@@ -154,6 +154,15 @@ function bp_helper_plugins_loaded_callback() {
 
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
+
+	/**
+	 * Include filters when Woocommerce plugin is activated
+	 *
+	 * Support Woocommerce
+	 */
+	if ( class_exists( 'WooCommerce' ) ) {
+		require buddypress()->compatibility_dir . '/bp-woocommerce-helpers.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
