@@ -885,7 +885,7 @@ function bbp_list_forums( $args = '' ) {
 			}
 
 			// Change the style of link tag.
-			$r['link_before'] = apply_filters( 'bb_forum_link_custom_attr', $r['link_before'], $title );
+			$r = apply_filters( 'bb_forum_link_custom_attr', $r, $title );
 
 			// Build this sub forums link
 			$output .= $r['link_before'] . '<a href="' . esc_url( $permalink ) . '" class="bbp-forum-link">' . $title . $counts . '</a>' . $show_sep . $r['link_after'];
