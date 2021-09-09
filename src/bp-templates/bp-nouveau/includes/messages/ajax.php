@@ -2116,46 +2116,46 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 	
 	// Created a new object for Exclude admins and blocked members for block member list in the message.
-	if ( is_array( $thread_template->thread->moderated_recipients ) ) {
-		$recipients_key         = 'moderated_recipients';
-		// Get the total number of recipients in the current thread.
-		$blocked_recipients_count = bb_get_thread_total_moderated_recipients_count();
-		$count                    = 1;
-		$admins                   = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-		foreach ( $thread_template->thread->moderated_recipients as $recipient ) {
-			if ( empty( $recipient->is_deleted ) ) {
-				$thread->thread['recipients'][$recipients_key]['members'][ $count ] = array(
-					'avatar'     => esc_url(
-						bp_core_fetch_avatar(
-							array(
-								'item_id' => $recipient->user_id,
-								'object'  => 'user',
-								'type'    => 'thumb',
-								'width'   => BP_AVATAR_THUMB_WIDTH,
-								'height'  => BP_AVATAR_THUMB_HEIGHT,
-								'html'    => false,
+	if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+		if ( is_array( $thread_template->thread->moderated_recipients ) ) {
+			$recipients_key = 'moderated_recipients';
+			// Get the total number of recipients in the current thread.
+			$blocked_recipients_count = bb_get_thread_total_moderated_recipients_count();
+			$count                    = 1;
+			$admins                   = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+			foreach ( $thread_template->thread->moderated_recipients as $recipient ) {
+				if ( empty( $recipient->is_deleted ) ) {
+					$thread->thread['recipients'][ $recipients_key ]['members'][ $count ] = array(
+						'avatar'     => esc_url(
+							bp_core_fetch_avatar(
+								array(
+									'item_id' => $recipient->user_id,
+									'object'  => 'user',
+									'type'    => 'thumb',
+									'width'   => BP_AVATAR_THUMB_WIDTH,
+									'height'  => BP_AVATAR_THUMB_HEIGHT,
+									'html'    => false,
+								)
 							)
-						)
-					),
-					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-					'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
-					'id'         => $recipient->user_id,
-				);
-				
-				if ( bp_is_active( 'moderation' ) ) {
-					$thread->thread['recipients'][$recipients_key]['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-					$thread->thread['recipients'][$recipients_key]['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						),
+						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
+						'id'         => $recipient->user_id,
+					);
+					if ( bp_is_active( 'moderation' ) ) {
+						$thread->thread['recipients'][ $recipients_key ]['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+						$thread->thread['recipients'][ $recipients_key ]['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					}
+					$count ++;
 				}
-				
-				$count ++;
 			}
+			$thread->thread['recipients'][ $recipients_key ]['count']         = $blocked_recipients_count;
+			$thread->thread['recipients'][ $recipients_key ]['current_count'] = count( $thread->thread['recipients'][ $recipients_key ]['members'] );
+			$thread->thread['recipients'][ $recipients_key ]['per_page']      = bb_messages_recipients_per_page();
+			$thread->thread['recipients'][ $recipients_key ]['total_pages']   = ceil( (int) $blocked_recipients_count / (int) bb_messages_recipients_per_page() );
 		}
-		$thread->thread['recipients'][$recipients_key]['count']         = $blocked_recipients_count;
-		$thread->thread['recipients'][$recipients_key]['current_count'] = count( $thread->thread['recipients'][$recipients_key]['members'] );
-		$thread->thread['recipients'][$recipients_key]['per_page']      = bb_messages_recipients_per_page();
-		$thread->thread['recipients'][$recipients_key]['total_pages']   = ceil( (int) $blocked_recipients_count / (int) bb_messages_recipients_per_page() );
 	}
 
 	$thread->messages = array();

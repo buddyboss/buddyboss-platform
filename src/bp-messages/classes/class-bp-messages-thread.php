@@ -1808,20 +1808,16 @@ class BP_Messages_Thread {
 		);
 		
 		// Exclude admins and blocked members for block member list in the message.
-		if ( isset( $r['moderated_recipients'] ) && true === $r['moderated_recipients'] ) {
-			$bp_get_moderation_data = bp_moderation_get( array( 'in_types' => 'user' ) );
-			$bp_blocked_user_ids    = array();
-			if ( ! empty( $bp_get_moderation_data ) && isset( $bp_get_moderation_data['moderations'] ) ) {
-				foreach ( $bp_get_moderation_data['moderations'] as $moderation ) {
-					$bp_blocked_user_ids[] = $moderation->item_id;
+		if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+			if ( isset( $r['moderated_recipients'] ) && true === $r['moderated_recipients'] ) {
+				$bp_blocked_user_ids = bp_moderation_get_hidden_user_ids();
+				$administrator_ids   = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+				if ( ! empty( $bp_blocked_user_ids ) ) {
+					$administrator_ids = array_merge( $administrator_ids, $bp_blocked_user_ids );
 				}
-			}
-			$administrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-			if ( ! empty( $bp_blocked_user_ids ) ) {
-				$administrator_ids = array_merge( $administrator_ids, $bp_blocked_user_ids );
-			}
-			if ( ! empty( $administrator_ids ) ) {
-				$r['exclude_admin_user'] = $administrator_ids;
+				if ( ! empty( $administrator_ids ) ) {
+					$r['exclude_admin_user'] = $administrator_ids;
+				}
 			}
 		}
 		
