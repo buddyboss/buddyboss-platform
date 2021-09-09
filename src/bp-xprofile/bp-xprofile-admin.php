@@ -347,8 +347,8 @@ endif;
 														}
 
 														// Merge signup fields and xprofile fields.
-														$final_fields  = array_merge( $signup_fields_object, $group->fields );
-														$group->fields = $final_fields;
+														$merged_xprofile_fields = array_merge( $signup_fields_object, $group->fields );
+														$group->fields          = $merged_xprofile_fields;
 													}
 
 													$xprofile_order = get_option( 'bp_xprofile_fields_order' );
