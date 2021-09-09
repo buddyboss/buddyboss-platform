@@ -391,7 +391,6 @@ function bbp_new_topic_handler( $action = '' ) {
 
 		// update tags.
 		if ( isset( $terms ) && isset( $terms[ bbp_get_topic_tag_tax_id() ] ) && ! empty ( $terms[ bbp_get_topic_tag_tax_id() ] ) ) {
-
 			$term_ids  = array();
 			$all_terms = (array) $terms[ bbp_get_topic_tag_tax_id() ];
 
@@ -787,23 +786,42 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
 
-		// update tags.
-		if ( isset( $terms ) && isset( $terms[ bbp_get_topic_tag_tax_id() ] ) && ! empty ( $terms[ bbp_get_topic_tag_tax_id() ] ) ) {
+		// remove deleted terms.
+		$all_terms      = (array) $terms[ bbp_get_topic_tag_tax_id() ];
+		$existing_terms = bbp_get_topic_tag_names( $topic_id );
 
-			$term_ids       = array();
-			$all_terms      = (array) $terms[ bbp_get_topic_tag_tax_id() ];
-			$existing_terms = explode( ',', bbp_get_topic_tag_names( $topic_id, ',' ) );
+		if ( ! empty( $existing_terms ) ) {
+			$deleted_terms  = array();
+			$existing_terms = explode( ',', $existing_terms );
+			$existing_terms = array_map( function ( $single ) {
+				return trim( $single );
+			}, $existing_terms );
+
+			$deleted_terms = array_diff( $existing_terms, $all_terms );
+
+			if ( ! empty( $deleted_terms ) ) {
+				$deleted_terms = array_map( function ( $single ) {
+					$get_term = get_term_by( 'name', $single, bbp_get_topic_tag_tax_id() );
+					if ( ! empty( $get_term->slug ) ) {
+						return $get_term->slug;
+					}
+				}, $deleted_terms );
+				wp_remove_object_terms( $topic_id, $deleted_terms, bbp_get_topic_tag_tax_id() );
+			}
+		}
+
+		// update tags.
+		if ( ! empty ( $all_terms ) ) {
+			$term_ids = array();
 
 			foreach ( $all_terms as $term_name ) {
-				if ( ! in_array( $term_name, $existing_terms ) ) {
-					$args['name']     = $term_name;
-					$args['slug']     = $term_name;
-					$args['taxonomy'] = bbp_get_topic_tag_tax_id();
+				$args['name']     = $term_name;
+				$args['slug']     = $term_name;
+				$args['taxonomy'] = bbp_get_topic_tag_tax_id();
 
-					$term_info = wp_insert_term( $term_name, bbp_get_topic_tag_tax_id(), $args );
-					if ( ! empty( $term_info ) && ! is_wp_error( $term_info ) ) {
-						$term_ids[] = $term_info['term_id'];
-					}
+				$term_info = wp_insert_term( $term_name, bbp_get_topic_tag_tax_id(), $args );
+				if ( ! empty( $term_info ) && ! is_wp_error( $term_info ) ) {
+					$term_ids[] = $term_info['term_id'];
 				}
 			}
 
