@@ -467,7 +467,7 @@ class BP_Messages_Message {
 	}
 
 	/**
-	 * Get existsing threads which matches the recipients
+	 * Get existing threads which matches the recipients
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
