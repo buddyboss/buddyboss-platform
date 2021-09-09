@@ -202,9 +202,12 @@ class BP_Messages_Thread {
 		$args['per_page'] = bb_messages_recipients_per_page();
 		// Fetch the recipients.
 		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
-		// Fetch the recipients for moderated members list for block member screen in messages.
-		$args['moderated_recipients'] = true;
-		$this->moderated_recipients   = $this->get_pagination_recipients( $this->thread_id, $args );
+		
+		if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+			// Fetch the recipients for moderated members list for block member screen in messages.
+			$args['moderated_recipients'] = true;
+			$this->moderated_recipients   = $this->get_pagination_recipients( $this->thread_id, $args );
+		}
 		
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
