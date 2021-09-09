@@ -1738,13 +1738,10 @@ function bp_nouveau_ajax_groups_send_message() {
 				),
 			);
 
-			$thread_loop_message_member = $member;
-			$thread_loop_message_sent   = false;
+			$thread_loop_message_sent = false;
 
 			// Find existing thread which are private.
 			if ( ! empty( $all_threads ) ) {
-
-				$thread_id = 0;
 
 				$member_thread_id = 0;
 
@@ -1752,17 +1749,11 @@ function bp_nouveau_ajax_groups_send_message() {
 
 					// get the thread recipients.
 					$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
-					$previous_thread_recipients = array();
-
-					// Store thread recipients to $previous_ids array.
-					foreach ( $thread_recipients as $thread_recipient ) {
-						if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
-							$previous_thread_recipients[] = $thread_recipient->user_id;
-						}
-					}
+					$recipients_user_ids        = ( ! empty( $thread_recipients ) ? wp_parse_id_list( array_column( json_decode( wp_json_encode( $thread_recipients ), true ), 'user_id' ) ) : array() );
+					$previous_thread_recipients = ( ! empty( $recipients_user_ids ) ? array_diff( $recipients_user_ids, array( (int) bp_loggedin_user_id() ) ) : array() );
 
 					$current_recipients   = array();
-					$current_recipients[] = $thread_loop_message_member;
+					$current_recipients[] = $member;
 					$member_arr           = array();
 
 					// Store current recipients to $members array.
@@ -1770,8 +1761,8 @@ function bp_nouveau_ajax_groups_send_message() {
 						$member_arr[] = (int) $single_recipients;
 					}
 
-                    // check both previous and current recipients are same.
-                    $is_recipient_match = ( $previous_thread_recipients == $member_arr );
+					// check both previous and current recipients are same.
+					$is_recipient_match = empty( array_diff( $previous_thread_recipients, $member_arr ) );
 
 					// If recipients are matched.
 					if (
@@ -1808,14 +1799,8 @@ function bp_nouveau_ajax_groups_send_message() {
 							if ( $is_active_recipient ) {
 								// get the thread recipients.
 								$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( (int) $thread->thread_id );
-								$previous_thread_recipients = array();
-
-								// Store thread recipients to $previous_ids array.
-								foreach ( $thread_recipients as $thread_recipient ) {
-									if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
-										$previous_thread_recipients[] = $thread_recipient->user_id;
-									}
-								}
+								$recipients_user_ids        = ( ! empty( $thread_recipients ) ? wp_parse_id_list( array_column( json_decode( wp_json_encode( $thread_recipients ), true ), 'user_id' ) ) : array() );
+								$previous_thread_recipients = ( ! empty( $recipients_user_ids ) ? array_diff( $recipients_user_ids, array( (int) bp_loggedin_user_id() ) ) : array() );
 
 								$current_recipients = array();
 								if ( is_array( $member ) ) {
@@ -1835,7 +1820,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 								// check both previous and current recipients are same.
-								$is_recipient_match = ( $previous_thread_recipients == $compare_members );
+								$is_recipient_match = empty( array_diff( $previous_thread_recipients, $compare_members ) );
 
 								// If recipients are matched.
 								if (
@@ -1846,9 +1831,8 @@ function bp_nouveau_ajax_groups_send_message() {
 									)
 								) {
 									// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-									$existing_thread  = (int) $thread->thread_id;
+									$existing_thread = (int) $thread->thread_id;
 								}
-
 							}
 						}
 
@@ -1913,14 +1897,8 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							// get the thread recipients.
 							$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( (int) $thread->thread_id );
-							$previous_thread_recipients = array();
-
-							// Store thread recipients to $previous_ids array.
-							foreach ( $thread_recipients as $thread_recipient ) {
-								if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
-									$previous_thread_recipients[] = $thread_recipient->user_id;
-								}
-							}
+							$recipients_user_ids        = ( ! empty( $thread_recipients ) ? wp_parse_id_list( array_column( json_decode( wp_json_encode( $thread_recipients ), true ), 'user_id' ) ) : array() );
+							$previous_thread_recipients = ( ! empty( $recipients_user_ids ) ? array_diff( $recipients_user_ids, array( (int) bp_loggedin_user_id() ) ) : array() );
 
 							$current_recipients = array();
 							if ( is_array( $member ) ) {
@@ -1940,7 +1918,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 							// check both previous and current recipients are same.
-							$is_recipient_match = ( $previous_thread_recipients == $compare_members );
+							$is_recipient_match = empty( array_diff( $previous_thread_recipients, $compare_members ) );
 
 							// If recipients are matched.
 							if (
@@ -1951,9 +1929,8 @@ function bp_nouveau_ajax_groups_send_message() {
 								)
 							) {
 								// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-								$existing_thread  = (int) $thread->thread_id;
+								$existing_thread = (int) $thread->thread_id;
 							}
-
 						}
 					}
 
