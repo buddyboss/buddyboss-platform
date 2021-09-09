@@ -318,14 +318,32 @@ class BP_Messages_Box_Template {
 		$this->thread      = $this->next_thread();
 
 		if ( ! bp_is_current_action( 'notices' ) ) {
-			$last_message_index = 0;
-			// $this->thread->messages = array_reverse( (array) $this->thread->messages );
+			
+			foreach ( $this->thread->messages as $message ) {
+				$message_content 					= trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
 
-			$this->thread->last_message_id      = $this->thread->messages[ $last_message_index ]->id;
-			$this->thread->last_message_date    = $this->thread->messages[ $last_message_index ]->date_sent;
-			$this->thread->last_sender_id       = $this->thread->messages[ $last_message_index ]->sender_id;
-			$this->thread->last_message_subject = $this->thread->messages[ $last_message_index ]->subject;
-			$this->thread->last_message_content = $this->thread->messages[ $last_message_index ]->message;
+				$this->thread->last_message_id      = $message->id;
+				$this->thread->last_message_date    = $message->date_sent;
+				$this->thread->last_sender_id       = $message->sender_id;
+				$this->thread->last_message_subject = $message->subject;
+				$this->thread->last_message_content = $message->message;
+				$this->thread->thread_id 			= $message->thread_id;
+	
+				/**
+				 * Filter to validate message content.
+				 *
+				 * @param bool   $validated_content True if message is not valid, false otherwise.
+				 * @param string $content           Content of the message.
+				 * @param array  $id             	ID Message ID.
+				 *
+				 * @return bool True if message is not valid, false otherwise.
+				 */
+				$validated_content = (bool) apply_filters( 'bb_get_messages_message_validated_content', ! empty( $message_content ) && strlen( $message_content ), $message_content, $message->id );
+	
+				if ( $validated_content ) {
+					break;
+				}
+			}
 		}
 
 		// Loop has just started.

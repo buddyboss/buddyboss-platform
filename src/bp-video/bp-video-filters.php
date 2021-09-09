@@ -71,6 +71,8 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
 add_action( 'template_include', 'bb_setup_template_for_video_preview' );
 
+add_filter( 'bb_get_messages_message_validated_content', 'bb_check_is_get_message_content_validate_with_video', 3, 3 );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -1786,4 +1788,30 @@ function bb_setup_template_for_video_preview( $template ) {
 	}
 
 	return $template;
+}
+
+/**
+ * Function will check content empty or not for the video.
+ * If content will empty then return true and allow empty content in DB for the video.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $id                Message ID.
+ *
+ * @return bool
+ */
+function bb_check_is_get_message_content_validate_with_video( $validated_content, $content = '', $message_id ) {
+	if ( ! empty( $content ) ) {
+		return true;
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+
+		if ( empty( $content ) && ! empty( $video_ids ) ) {
+			return true;
+		}
+	}
+
+	return $validated_content;
 }

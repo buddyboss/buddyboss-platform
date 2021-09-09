@@ -80,6 +80,8 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
 add_filter( 'query_vars', 'bb_setup_query_document_preview' );
 add_action( 'template_include', 'bb_setup_template_for_document_preview' );
 
+add_filter( 'bb_get_messages_message_validated_content', 'bb_check_is_get_message_content_validate_with_document', 4, 3 );
+
 /**
  * Clear a user's symlinks document when attachment document delete.
  *
@@ -1936,4 +1938,30 @@ function bb_setup_template_for_document_preview( $template ) {
 	}
 
 	return $template;
+}
+
+/**
+ * Function will check content empty or not for the document.
+ * If content will empty then return true and allow empty content in DB for the document.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $id                Message ID.
+ *
+ * @return bool
+ */
+function bb_check_is_get_message_content_validate_with_document( $validated_content, $content = '', $message_id ) {
+	if ( ! empty( $content ) ) {
+		return true;
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+
+		if ( empty( $content ) && ! empty( $document_ids ) ) {
+			return true;
+		}
+	}
+
+	return $validated_content;
 }
