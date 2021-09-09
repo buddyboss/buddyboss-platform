@@ -2691,10 +2691,6 @@ function bb_setup_template_for_media_preview( $template ) {
  * @return bool
  */
 function bb_check_is_get_message_content_validate_with_media( $validated_content, $content = '', $message_id ) {
-	if ( ! empty( $content ) ) {
-		return true;
-	}
-
 	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 

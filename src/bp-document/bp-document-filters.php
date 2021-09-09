@@ -1951,10 +1951,6 @@ function bb_setup_template_for_document_preview( $template ) {
  * @return bool
  */
 function bb_check_is_get_message_content_validate_with_document( $validated_content, $content = '', $message_id ) {
-	if ( ! empty( $content ) ) {
-		return true;
-	}
-
 	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 

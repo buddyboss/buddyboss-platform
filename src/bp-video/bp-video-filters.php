@@ -1801,10 +1801,6 @@ function bb_setup_template_for_video_preview( $template ) {
  * @return bool
  */
 function bb_check_is_get_message_content_validate_with_video( $validated_content, $content = '', $message_id ) {
-	if ( ! empty( $content ) ) {
-		return true;
-	}
-
 	if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
 		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
 
