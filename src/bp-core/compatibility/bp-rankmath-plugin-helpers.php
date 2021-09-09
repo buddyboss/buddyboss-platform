@@ -23,7 +23,7 @@ class BP_RankMath_Title implements IPaper {
 	 * @return string
 	 */
 	public function title() {
-		if ( bp_is_user() ) {
+		if ( bp_is_user() && bp_is_current_component('xprofile') ) {
 			$title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
 			if ( empty( $title ) ) {
 				$title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
@@ -91,10 +91,7 @@ function bp_helper_rankmath_group_page_support( $title ) {
 		return;
 	}
 
-	if (
-		bp_is_active( 'groups' ) && ! empty( buddypress()->groups->current_group )
-		|| bp_is_user()
-	) {
+	if ( bp_is_active( 'groups' ) && ! empty( buddypress()->groups->current_group ) || bp_is_current_component('groups') ) {
 		$group_page = new BP_RankMath_Title();
 		$title      = $group_page->title();
 	}
