@@ -2071,7 +2071,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'message_from'                    => $message_from,
 		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
 	);
-
+	
+	// Created a new object for all members which display on message header.
 	if ( is_array( $thread_template->thread->recipients ) ) {
 		$recipients_key   = 'all_recipients';
 		// Get the total number of recipients in the current thread.
@@ -2114,6 +2115,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$thread->thread['recipients'][$recipients_key]['total_pages']   = ceil( (int) $recipients_count / (int) bb_messages_recipients_per_page() );
 	}
 	
+	// Created a new object for Exclude admins and blocked members for block member list in the message.
 	if ( is_array( $thread_template->thread->moderated_recipients ) ) {
 		$recipients_key         = 'moderated_recipients';
 		// Get the total number of recipients in the current thread.

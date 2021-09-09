@@ -1807,7 +1807,7 @@ class BP_Messages_Thread {
 			)
 		);
 		
-		// for blocked member when open popup in the message.
+		// Exclude admins and blocked members for block member list in the message.
 		if ( isset( $r['moderated_recipients'] ) && true === $r['moderated_recipients'] ) {
 			$bp_get_moderation_data = bp_moderation_get( array( 'in_types' => 'user' ) );
 			$bp_blocked_user_ids    = array();
@@ -1817,12 +1817,11 @@ class BP_Messages_Thread {
 				}
 			}
 			$administrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-			$exclude_users = array();
 			if ( ! empty( $bp_blocked_user_ids ) ) {
-				$exclude_users = array_merge( $administrator_ids, $bp_blocked_user_ids );
+				$administrator_ids = array_merge( $administrator_ids, $bp_blocked_user_ids );
 			}
-			if ( ! empty( $exclude_users ) ) {
-				$r['exclude_admin_user'] = $exclude_users;
+			if ( ! empty( $administrator_ids ) ) {
+				$r['exclude_admin_user'] = $administrator_ids;
 			}
 		}
 		
