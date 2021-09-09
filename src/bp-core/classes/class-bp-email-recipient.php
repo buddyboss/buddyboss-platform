@@ -90,8 +90,8 @@ class BP_Email_Recipient {
 				$address = current( $email_or_user );
 			} else {
 				$address = key( $email_or_user );
-				$user_id = get_user_by( 'email', $address )->ID;
-				$name    = wp_specialchars_decode( bp_core_get_user_displayname( $user_id ), ENT_QUOTES );
+				$user    = get_user_by( 'email', $address );
+				$name    = $user ? wp_specialchars_decode( bp_core_get_user_displayname( $user->ID ), ENT_QUOTES ) : $address;
 			}
 		}
 
