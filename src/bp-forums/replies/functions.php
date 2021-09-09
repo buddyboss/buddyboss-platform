@@ -433,7 +433,29 @@ function bbp_new_reply_handler( $action = '' ) {
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+		if ( ! empty( $terms ) ) {
+
+			$term_ids = array();
+
+			if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+				$terms = explode( ',', $terms );
+			}
+
+			foreach ( $terms as $term_name ) {
+				$args['name']     = $term_name;
+				$args['slug']     = $term_name;
+				$args['taxonomy'] = bbp_get_topic_tag_tax_id();
+
+				$term_info = wp_insert_term( $term_name, bbp_get_topic_tag_tax_id(), $args );
+				if ( ! empty( $term_info ) && ! is_wp_error( $term_info ) ) {
+					$term_ids[] = $term_info['term_id'];
+				}
+			}
+
+			if ( ! empty( $term_ids ) ) {
+				$terms = bp_set_object_terms( $topic_id, $term_ids, bbp_get_topic_tag_tax_id(), true );
+			}
+		}
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
