@@ -1706,8 +1706,27 @@ function bp_nouveau_ajax_groups_send_message() {
 			}
 		}
 
-		// Else "Private Reply (BCC)" selected.
+    // Else "Private Reply (BCC)" selected.
 	} else {
+
+		$threads = BP_Messages_Thread::get_threads_for_user(
+			array(
+				'user_id'    => bp_loggedin_user_id(),
+				'box'        => 'inbox',
+				'type'       => 'all',
+				'limit'      => false,
+				'fields'     => 'ids',
+				'meta_query' => array(
+					array(
+						'key'     => 'group_message_type',
+						'value'   => 'open',
+						'compare' => '!=',
+					),
+				),
+			)
+		);
+
+		$all_threads = ( isset( $threads['threads'] ) ? $threads['threads'] : array() );
 
 		// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
 		foreach ( $members as $member ) {
@@ -1723,66 +1742,53 @@ function bp_nouveau_ajax_groups_send_message() {
 			$thread_loop_message_sent   = false;
 
 			// Find existing thread which are private.
-			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+			if ( ! empty( $all_threads ) ) {
 
 				$thread_id = 0;
 
 				$member_thread_id = 0;
 
-				while ( bp_message_threads() ) {
-					bp_message_thread();
+				foreach ( $all_threads as $thread_id ) {
 
-					$thread_id = bp_get_message_thread_id();
+					// get the thread recipients.
+					$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+					$previous_thread_recipients = array();
 
-					if ( $thread_id ) {
-						// get the thread recipients.
-						$thread                     = new BP_Messages_Thread( $thread_id );
-						$thread_recipients          = $thread->get_recipients();
-						$previous_thread_recipients = array();
-
-						// Store thread recipients to $previous_ids array.
-						foreach ( $thread_recipients as $thread_recipient ) {
-							if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
-								$previous_thread_recipients[] = $thread_recipient->user_id;
-							}
+					// Store thread recipients to $previous_ids array.
+					foreach ( $thread_recipients as $thread_recipient ) {
+						if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+							$previous_thread_recipients[] = $thread_recipient->user_id;
 						}
+					}
 
-						$current_recipients   = array();
-						$current_recipients[] = $thread_loop_message_member;
-						$member_arr           = array();
+					$current_recipients   = array();
+					$current_recipients[] = $thread_loop_message_member;
+					$member_arr           = array();
 
-						// Store current recipients to $members array.
-						foreach ( $current_recipients as $single_recipients ) {
-							$member_arr[] = (int) $single_recipients;
-						}
+					// Store current recipients to $members array.
+					foreach ( $current_recipients as $single_recipients ) {
+						$member_arr[] = (int) $single_recipients;
+					}
 
-						$first_message = BP_Messages_Thread::get_first_message( $thread_id );
-						$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
-						$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+                    // check both previous and current recipients are same.
+                    $is_recipient_match = ( $previous_thread_recipients == $member_arr );
 
-						// check both previous and current recipients are same.
-						$is_recipient_match = ( $previous_thread_recipients == $member_arr );
+					// If recipients are matched.
+					if (
+						$is_recipient_match &&
+						(
+							'all' !== $message_user ||
+							( 'all' === $message_user && 'open' !== $message_type )
+						)
+					) {
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						$_POST['message_thread_type'] = 'reply';
+						$member_thread_id             = $thread_id;
 
-						// If recipients are matched.
-						if ( $is_recipient_match && 'all' !== $message_user ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-							$_POST['message_thread_type'] = 'reply';
-							$member_thread_id             = $thread_id;
+						$thread_loop_message_sent = true;
 
-							$thread_loop_message_sent = true;
-
-							// If recipients then break the loop and go ahead because we don't need to check other threads.
-							break;
-						} elseif ( $is_recipient_match && 'all' === $message_user && 'open' !== $message_type ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-							$_POST['message_thread_type'] = 'reply';
-							$member_thread_id             = $thread_id;
-
-							$thread_loop_message_sent = true;
-
-							// If recipients then break the loop and go ahead because we don't need to check other threads.
-							break;
-						}
+						// If recipients then break the loop and go ahead because we don't need to check other threads.
+						break;
 					}
 				}
 
@@ -1801,8 +1807,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							if ( $is_active_recipient ) {
 								// get the thread recipients.
-								$thread                     = new BP_Messages_Thread( $thread->thread_id );
-								$thread_recipients          = $thread->get_recipients();
+								$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( (int) $thread->thread_id );
 								$previous_thread_recipients = array();
 
 								// Store thread recipients to $previous_ids array.
@@ -1818,11 +1823,11 @@ function bp_nouveau_ajax_groups_send_message() {
 								} else {
 									$current_recipients[] = $member;
 								}
-								$members = array();
+								$compare_members = array();
 
 								// Store current recipients to $members array.
 								foreach ( $current_recipients as $single_recipients ) {
-									$members[] = (int) $single_recipients;
+									$compare_members[] = (int) $single_recipients;
 								}
 
 								$first_message = BP_Messages_Thread::get_first_message( $thread->thread_id );
@@ -1830,14 +1835,20 @@ function bp_nouveau_ajax_groups_send_message() {
 								$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 								// check both previous and current recipients are same.
-								$is_recipient_match = ( $previous_thread_recipients == $members );
+								$is_recipient_match = ( $previous_thread_recipients == $compare_members );
 
 								// If recipients are matched.
-								if ( $is_recipient_match && 'all' !== $message_user ) {
-									$existing_thread = (int) $thread->thread_id;
-								} elseif ( $is_recipient_match && 'all' === $message_user && 'open' !== $message_type ) {
-									$existing_thread = (int) $thread->thread_id;
+								if (
+									$is_recipient_match &&
+									(
+										'all' !== $message_user ||
+										( 'all' === $message_user && 'open' !== $message_type )
+									)
+								) {
+									// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+									$existing_thread  = (int) $thread->thread_id;
 								}
+
 							}
 						}
 
@@ -1901,8 +1912,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						if ( $is_active_recipient ) {
 
 							// get the thread recipients.
-							$thread                     = new BP_Messages_Thread( $thread->thread_id );
-							$thread_recipients          = $thread->get_recipients();
+							$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( (int) $thread->thread_id );
 							$previous_thread_recipients = array();
 
 							// Store thread recipients to $previous_ids array.
@@ -1918,11 +1928,11 @@ function bp_nouveau_ajax_groups_send_message() {
 							} else {
 								$current_recipients[] = $member;
 							}
-							$members = array();
+							$compare_members = array();
 
 							// Store current recipients to $members array.
 							foreach ( $current_recipients as $single_recipients ) {
-								$members[] = (int) $single_recipients;
+								$compare_members[] = (int) $single_recipients;
 							}
 
 							$first_message = BP_Messages_Thread::get_first_message( $thread->thread_id );
@@ -1930,14 +1940,20 @@ function bp_nouveau_ajax_groups_send_message() {
 							$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 							// check both previous and current recipients are same.
-							$is_recipient_match = ( $previous_thread_recipients == $members );
+							$is_recipient_match = ( $previous_thread_recipients == $compare_members );
 
 							// If recipients are matched.
-							if ( $is_recipient_match && 'all' !== $message_user ) {
-								$existing_thread = (int) $thread->thread_id;
-							} elseif ( $is_recipient_match && 'all' === $message_user && 'open' !== $message_type ) {
-								$existing_thread = (int) $thread->thread_id;
+							if (
+								$is_recipient_match &&
+								(
+									'all' !== $message_user ||
+									( 'all' === $message_user && 'open' !== $message_type )
+								)
+							) {
+								// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+								$existing_thread  = (int) $thread->thread_id;
 							}
+
 						}
 					}
 

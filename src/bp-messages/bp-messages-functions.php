@@ -133,6 +133,8 @@ function messages_new_message( $args = '' ) {
 	// If we have a thread ID...
 	if ( ! empty( $r['thread_id'] ) ) {
 
+		return;
+
 		// ...use the existing recipients
 		$thread              = new BP_Messages_Thread( $r['thread_id'] );
 		$message->recipients = $thread->get_recipients();
@@ -193,6 +195,7 @@ function messages_new_message( $args = '' ) {
 
 		// ...otherwise use the recipients passed
 	} else {
+
 
 		// Bail if no recipients.
 		if ( empty( $r['recipients'] ) ) {
