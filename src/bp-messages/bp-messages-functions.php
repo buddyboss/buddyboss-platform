@@ -174,26 +174,17 @@ function messages_new_message( $args = '' ) {
 					$is_group_thread = true;
 				}
 			} elseif ( ! empty( $group ) && ! bp_is_active( 'groups' ) && $group > 0 ) {
-				$prefix             = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-				$groups_meta_table  = $prefix . 'bp_groups_groupmeta';
-				$thread_id          = (int) $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$groups_meta_table} WHERE meta_key = %s AND group_id = %d", 'group_message_thread', $group ) ); // db call ok; no-cache ok;
+				$prefix            = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_meta_table = $prefix . 'bp_groups_groupmeta';
+				$thread_id         = (int) $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$groups_meta_table} WHERE meta_key = %s AND group_id = %d", 'group_message_thread', $group ) ); // db call ok; no-cache ok;
 				if ( (int) $r['thread_id'] === $thread_id ) {
 					$is_group_thread = true;
 				}
 			}
 		}
 
-		// Check user can send the reply.
-		if ( ! $is_group_thread ) {
-			$has_access = bb_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
-			if ( is_wp_error( $has_access ) ) {
-				return $has_access;
-			}
-		}
-
 		// ...otherwise use the recipients passed
 	} else {
-
 
 		// Bail if no recipients.
 		if ( empty( $r['recipients'] ) ) {
@@ -1232,4 +1223,121 @@ function bb_messages_is_group_thread( $thread_id ) {
  */
 function bb_messages_recipients_per_page() {
 	return apply_filters( 'bb_messages_recipients_per_page', 20 );
+}
+
+/**
+ * Send bulk group message to the members.
+ *
+ * @param array   $post_data       Post data.
+ * @param array   $members         Array of Member ids.
+ * @param integer $current_user_id Currently logged-in user id.
+ * @param string  $content         Message content text.
+ *
+ * @return bool|int|void|WP_Error
+ */
+function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '' ) {
+	// setup post data into $_POST.
+	$_POST = $post_data;
+
+	if ( empty( $members ) ) {
+		return;
+	}
+
+	// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
+	foreach ( $members as $member ) {
+
+		$member_check     = array();
+		$member_check[]   = $member;
+		$member_check[]   = $current_user_id;
+		$previous_threads = BP_Messages_Message::get_existing_threads( $member_check, $current_user_id );
+		$existing_thread  = 0;
+		$member_thread_id = 0;
+
+		if ( $previous_threads ) {
+			foreach ( $previous_threads as $thread ) {
+
+				$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, $current_user_id );
+
+				if ( $is_active_recipient ) {
+
+					// get the thread recipients.
+					$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( (int) $thread->thread_id );
+					$recipients_user_ids        = ( ! empty( $thread_recipients ) ? wp_parse_id_list( array_column( json_decode( wp_json_encode( $thread_recipients ), true ), 'user_id' ) ) : array() );
+					$previous_thread_recipients = ( ! empty( $recipients_user_ids ) ? array_diff( $recipients_user_ids, array( (int) $current_user_id ) ) : array() );
+
+					$current_recipients = array();
+					if ( is_array( $member ) ) {
+						$current_recipients = $member;
+					} else {
+						$current_recipients[] = $member;
+					}
+					$compare_members = array();
+
+					// Store current recipients to $members array.
+					foreach ( $current_recipients as $single_recipients ) {
+						$compare_members[] = (int) $single_recipients;
+					}
+
+					$first_message = BP_Messages_Thread::get_first_message( $thread->thread_id );
+					$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
+					$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+
+					// check both previous and current recipients are same.
+					$is_recipient_match = empty( array_diff( $previous_thread_recipients, $compare_members ) );
+
+					// If recipients are matched.
+					if (
+						$is_recipient_match &&
+						(
+							'all' !== $message_user ||
+							( 'all' === $message_user && 'open' !== $message_type )
+						)
+					) {
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						$existing_thread = (int) $thread->thread_id;
+					}
+				}
+			}
+
+			if ( $existing_thread > 0 ) {
+				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+				$_POST['message_thread_type'] = 'reply';
+
+				$member_thread_id = $existing_thread;
+			} else {
+				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+				$_POST['message_thread_type'] = 'new';
+			}
+		} else {
+			// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+			$_POST['message_thread_type'] = 'new';
+		}
+
+		/**
+		 * Create Message based on the `message_thread_type` and `member_thread_id`.
+		 */
+		if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
+			$message_args = array(
+				'sender_id'           => $current_user_id,
+				'recipients'          => $member,
+				'subject'             => wp_trim_words( $content, messages_get_default_subject_length() ),
+				'content'             => $content,
+				'is_hidden'           => true,
+				'append_thread'       => false,
+				'message_thread_type' => 'new',
+			);
+		} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $member_thread_id ) ) {
+			$message_args = array(
+				'sender_id'           => $current_user_id,
+				'thread_id'           => $member_thread_id,
+				'subject'             => wp_trim_words( $content, messages_get_default_subject_length() ),
+				'content'             => $content,
+				'mark_visible'        => true,
+				'message_thread_type' => 'reply',
+				'error_type'          => 'wp_error',
+			);
+		}
+
+		return bp_groups_messages_new_message( $message_args );
+	}
 }

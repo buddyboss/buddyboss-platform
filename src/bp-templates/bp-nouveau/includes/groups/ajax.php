@@ -1052,7 +1052,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
  */
 function bp_nouveau_ajax_groups_send_message() {
 
-	global $wpdb, $bp;
+	global $wpdb, $bp, $bp_background_updater;
 
 	if ( false === bp_disable_group_messages() ) {
 		return;
@@ -1709,103 +1709,24 @@ function bp_nouveau_ajax_groups_send_message() {
     // Else "Private Reply (BCC)" selected.
 	} else {
 
-		// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
-		foreach ( $members as $member ) {
-
-			$member_check     = array();
-			$member_check[]   = $member;
-			$member_check[]   = bp_loggedin_user_id();
-			$previous_threads = BP_Messages_Message::get_existing_threads( $member_check, bp_loggedin_user_id() );
-			$existing_thread  = 0;
-			$member_thread_id = 0;
-
-			if ( $previous_threads ) {
-				foreach ( $previous_threads as $thread ) {
-
-					$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
-
-					if ( $is_active_recipient ) {
-
-						// get the thread recipients.
-						$thread_recipients          = BP_Messages_Thread::get_recipients_for_thread( (int) $thread->thread_id );
-						$recipients_user_ids        = ( ! empty( $thread_recipients ) ? wp_parse_id_list( array_column( json_decode( wp_json_encode( $thread_recipients ), true ), 'user_id' ) ) : array() );
-						$previous_thread_recipients = ( ! empty( $recipients_user_ids ) ? array_diff( $recipients_user_ids, array( (int) bp_loggedin_user_id() ) ) : array() );
-
-						$current_recipients = array();
-						if ( is_array( $member ) ) {
-							$current_recipients = $member;
-						} else {
-							$current_recipients[] = $member;
-						}
-						$compare_members = array();
-
-						// Store current recipients to $members array.
-						foreach ( $current_recipients as $single_recipients ) {
-							$compare_members[] = (int) $single_recipients;
-						}
-
-						$first_message = BP_Messages_Thread::get_first_message( $thread->thread_id );
-						$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
-						$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-
-						// check both previous and current recipients are same.
-						$is_recipient_match = empty( array_diff( $previous_thread_recipients, $compare_members ) );
-
-						// If recipients are matched.
-						if (
-							$is_recipient_match &&
-							(
-								'all' !== $message_user ||
-								( 'all' === $message_user && 'open' !== $message_type )
+		if ( ! empty( $members ) ) {
+			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
+				$chunk_members = array_chunk( $members, 20 );
+				if ( ! empty( $chunk_members ) ) {
+					foreach ( $chunk_members as $key => $members ) {
+						$bp_background_updater->push_to_queue(
+							array(
+								'callback' => 'bb_send_group_message_background',
+								'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content ),
 							)
-						) {
-							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-							$existing_thread = (int) $thread->thread_id;
-						}
+						);
 					}
+					$bp_background_updater->save()->schedule_event();
 				}
 
-				if ( $existing_thread > 0 ) {
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-					$_POST['message_thread_type'] = 'reply';
-
-					$member_thread_id = $existing_thread;
-				} else {
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-					$_POST['message_thread_type'] = 'new';
-				}
+				$message = true;
 			} else {
-				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-				$_POST['message_thread_type'] = 'new';
-			}
-
-			error_log( print_r( $_POST['message_thread_type'], 1 ) );
-
-			/**
-			 * Create Message based on the `message_thread_type` and `member_thread_id`.
-			 */
-			if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
-				$message = bp_groups_messages_new_message(
-					array(
-						'recipients'    => $member,
-						'subject'       => wp_trim_words( $content, messages_get_default_subject_length() ),
-						'content'       => $content,
-						'error_type'    => 'wp_error',
-						'is_hidden'     => true,
-						'append_thread' => false,
-					)
-				);
-			} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $member_thread_id ) ) {
-				$message = bp_groups_messages_new_message(
-					array(
-						'thread_id'    => $member_thread_id,
-						'subject'      => wp_trim_words( $content, messages_get_default_subject_length() ),
-						'content'      => $content,
-						'date_sent'    => $date_sent = bp_core_current_time(),
-						'mark_visible' => true,
-						'error_type'   => 'wp_error',
-					)
-				);
+				bb_send_group_message_background( $_POST, $members, bp_loggedin_user_id(), $content );
 			}
 		}
 
