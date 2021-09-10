@@ -322,9 +322,8 @@ endif;
 							</legend>
 
 												<?php
-
 												if ( ! empty( $group->fields ) ) :
-													if ( 1 === $group->id ) {
+													if ( bp_xprofile_base_group_id() === $group->id ) {
 														$signup_fields = bp_nouveau_get_signup_fields( 'account_details' );
 														if ( $signup_fields['signup_email_confirm'] ) {
 															unset( $signup_fields['signup_email_confirm'] );
@@ -349,18 +348,18 @@ endif;
 														// Merge signup fields and xprofile fields.
 														$merged_xprofile_fields = array_merge( $signup_fields_object, $group->fields );
 														$group->fields          = $merged_xprofile_fields;
-													}
 
-													$xprofile_order = get_option( 'bp_xprofile_fields_order' );
+														$xprofile_order = get_option( 'bp_xprofile_fields_order' );
 
-													if ( ! empty( $xprofile_order ) ) {
-														$order_fields = array();
-														if ( ! empty( $group->fields ) ) {
-															foreach ( $group->fields as $field ) {
-																$order_fields[ $field->id ] = $field;
+														if ( ! empty( $xprofile_order ) ) {
+															$order_fields = array();
+															if ( ! empty( $group->fields ) ) {
+																foreach ( $group->fields as $field ) {
+																	$order_fields[ $field->id ] = $field;
+																}
 															}
+															$group->fields = array_replace( array_flip( $xprofile_order ), $order_fields );
 														}
-														$group->fields = array_replace( array_flip( $xprofile_order ), $order_fields );
 													}
 
 													foreach ( $group->fields as $key => $field ) {
