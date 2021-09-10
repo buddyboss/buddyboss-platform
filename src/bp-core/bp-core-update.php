@@ -338,7 +338,7 @@ function bp_version_updater() {
 			bb_update_to_1_7_5();
 		}
 
-		if ( $raw_db_version < 17701 ) {
+		if ( $raw_db_version < 17801 ) {
 			bb_update_to_1_7_8();
 		}
 	}
@@ -724,9 +724,14 @@ function bb_update_to_1_7_5() {
  * - Updated .htaccess file for bb files protection.
  * - created new table for bp email queue.
  *
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss 1.7.8
  */
-function bb_update_to_1_7_7() {
+function bb_update_to_1_7_8() {
+	if ( function_exists( 'bb_email_queue' )  ) {
+		// Install email queue table.
+		bb_email_queue()::create_db_table();
+	}
+
 	$upload_dir        = wp_get_upload_dir();
 	$media_htaccess    = $upload_dir['basedir'] . '/bb_medias/.htaccess';
 	$document_htaccess = $upload_dir['basedir'] . '/bb_documents/.htaccess';
@@ -749,11 +754,6 @@ function bb_update_to_1_7_7() {
 
 	if ( file_exists( $video_htaccess ) ) {
 		$wp_files_system->delete( $video_htaccess, false, 'f' );
-	}
-
-	if ( function_exists( 'bp_email_queue' ) ) {
-		// Install email queue table.
-		bp_email_queue()::create_db_table();
 	}
 
 	// Return, when group or forum component deactive.

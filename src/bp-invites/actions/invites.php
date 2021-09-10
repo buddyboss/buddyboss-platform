@@ -141,10 +141,10 @@ function bp_member_invite_submit() {
 		 */
 		add_filter( 'bp_email_get_salutation', '__return_false' );
 		// Send invitation email.
-		if ( function_exists( 'bp_email_queue' ) ) {
-			bp_email_queue()->add_record( 'invites-member-invite', $email, $args );
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+			bb_email_queue()->add_record( 'invites-member-invite', $email, $args );
 			// call email background process.
-			bp_email_queue()->bb_email_background_process();
+			bb_email_queue()->bb_email_background_process();
 		} else {
 			bp_send_email( 'invites-member-invite', $email, $args );
 		}

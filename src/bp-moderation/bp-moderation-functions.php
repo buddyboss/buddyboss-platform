@@ -1009,8 +1009,8 @@ function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_member_suspend_email( $email, $tokens ) {
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record(
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		bb_email_queue()->add_record(
 			'user-moderation-email',
 			$email,
 			array(
@@ -1023,7 +1023,7 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
 			)
 		);
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 
 		return true;
 	} else {
@@ -1053,8 +1053,8 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_content_hide_email( $email, $tokens ) {
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record(
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		bb_email_queue()->add_record(
 			'content-moderation-email',
 			$email,
 			array(
@@ -1068,7 +1068,7 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 			)
 		);
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 
 		return true;
 	} else {
