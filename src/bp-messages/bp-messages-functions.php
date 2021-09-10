@@ -822,7 +822,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 			'notification_type' => 'messages-unread',
 		);
 
-		if ( function_exists( 'bp_email_queue' ) ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 			$all_recipients[] = array(
 				'email_type' => 'messages-unread',
 				'recipient'  => $ud,
@@ -856,12 +856,12 @@ function messages_notification_new_message( $raw_args = array() ) {
 		}
 	}
 
-	if ( function_exists( 'bp_email_queue' ) && ! empty( $all_recipients ) ) {
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && ! empty( $all_recipients ) ) {
 		// Added bulk data into email queue.
-		bp_email_queue()->add_bulk_record( $all_recipients );
+		bb_email_queue()->add_bulk_record( $all_recipients );
 
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	}
 
 	/**
@@ -942,7 +942,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		}
 		$group_name = bp_get_group_name( groups_get_group( $group ) );
 
-		if ( function_exists( 'bp_email_queue' ) ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 			$all_recipients[] = array(
 				'email_type' => 'group-message-email',
 				'recipient'  => $ud,
@@ -980,12 +980,12 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		}
 	}
 
-	if ( function_exists( 'bp_email_queue' ) && ! empty( $all_recipients ) ) {
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && ! empty( $all_recipients ) ) {
 		// Added bulk data into email queue.
-		bp_email_queue()->add_bulk_record( $all_recipients );
+		bb_email_queue()->add_bulk_record( $all_recipients );
 
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	}
 
 	/**
