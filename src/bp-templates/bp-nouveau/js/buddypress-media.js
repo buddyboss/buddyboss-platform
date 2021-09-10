@@ -4386,7 +4386,10 @@ window.bp = window.bp || {};
 			if ( content_tab === 'bp-dropzone-content' ) {
 				current_popup.find( '.bb-field-steps-1' ).show();
 				current_popup.find( '#bb-media-privacy' ).show();
-				current_popup.find( '.bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder' ).hide();
+				current_popup.find( '.bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, #bb-media-privacy' ).hide();
+			}
+			if( content_tab === 'bp-existing-media-content' ) {
+				current_popup.find( '.bb-field-uploader-actions' ).hide();
 			}
 			jQuery( window ).scroll();
 		},
@@ -4396,6 +4399,9 @@ window.bp = window.bp || {};
 
 			this.openUploader( event );
 			$( '#bp-media-create-album' ).show();
+			if( $( 'body' ).hasClass( 'directory' ) ) {
+				$( '#bp-media-uploader' ).hide();
+			}
 		},
 
 		openCreateFolderModal: function ( event ) {
@@ -6600,7 +6606,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				if ( 'mov' === self.current_document.extension ) {
+				if ( 'mov' === self.current_document.extension || 'm4v' === self.current_document.extension ) {
 					document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/mp4" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
 				} else {
 					document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
@@ -6808,7 +6814,7 @@ window.bp = window.bp || {};
 										bp.Nouveau.reportPopUp();
 										bp.Nouveau.reportedPopup();
 									},
-									1000
+									10
 								);
 							}
 						}
@@ -6862,7 +6868,7 @@ window.bp = window.bp || {};
 										bp.Nouveau.reportPopUp();
 										bp.Nouveau.reportedPopup();
 									},
-									1000
+									10
 								);
 							}
 						}
