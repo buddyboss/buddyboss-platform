@@ -1726,7 +1726,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 				$message = true;
 			} else {
-				bb_send_group_message_background( $_POST, $members, bp_loggedin_user_id(), $content );
+				$message = bb_send_group_message_background( $_POST, $members, bp_loggedin_user_id(), $content );
 			}
 		}
 
