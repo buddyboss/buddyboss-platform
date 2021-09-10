@@ -109,7 +109,7 @@ function bp_settings_action_general() {
 							'verify.url'     => esc_url( $verify_link ),
 						),
 					);
-					if ( function_exists( 'bb_is_email_queue' ) ) {
+					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 						bb_email_queue()->add_record( 'settings-verify-email-change', bp_displayed_user_id(), $args );
 						// call email background process.
 						bb_email_queue()->bb_email_background_process();

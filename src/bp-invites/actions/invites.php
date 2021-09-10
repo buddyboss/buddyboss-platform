@@ -141,7 +141,7 @@ function bp_member_invite_submit() {
 		 */
 		add_filter( 'bp_email_get_salutation', '__return_false' );
 		// Send invitation email.
-		if ( function_exists( 'bb_is_email_queue' ) ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 			bb_email_queue()->add_record( 'invites-member-invite', $email, $args );
 			// call email background process.
 			bb_email_queue()->bb_email_background_process();

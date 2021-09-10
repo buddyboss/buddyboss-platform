@@ -729,7 +729,7 @@ function bb_update_to_1_7_5() {
  * @since BuddyBoss 1.7.8
  */
 function bb_update_to_1_7_8() {
-	if ( function_exists( 'bb_is_email_queue' ) ) {
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 		// Install email queue table.
 		bb_email_queue()::create_db_table();
 	}

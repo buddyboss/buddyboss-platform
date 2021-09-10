@@ -1009,7 +1009,7 @@ function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_member_suspend_email( $email, $tokens ) {
-	if ( function_exists( 'bb_is_email_queue' ) ) {
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 		bb_email_queue()->add_record(
 			'user-moderation-email',
 			$email,
@@ -1053,7 +1053,7 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_content_hide_email( $email, $tokens ) {
-	if ( function_exists( 'bb_is_email_queue' ) ) {
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 		bb_email_queue()->add_record(
 			'content-moderation-email',
 			$email,

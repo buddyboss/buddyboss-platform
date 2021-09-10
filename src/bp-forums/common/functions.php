@@ -1207,7 +1207,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		}
 
 		// Send notification email.
-		if ( function_exists( 'bb_is_email_queue' ) ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 			bb_email_queue()->add_record( 'bbp-new-forum-reply', (int) $user_id, $args );
 			// call email background process.
 			bb_email_queue()->bb_email_background_process();
@@ -1342,7 +1342,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		}
 
 		// Send notification email.
-		if ( function_exists( 'bb_is_email_queue' ) ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 			bb_email_queue()->add_record( 'bbp-new-forum-topic', (int) $user_id, $args );
 			// call email background process.
 			bb_email_queue()->bb_email_background_process();

@@ -37,7 +37,7 @@ function bp_core_install( $active_components = false ) {
 		}
 	}
 
-	if ( function_exists( 'bb_is_email_queue' ) ) {
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
 		// Install email queue table.
 		bb_email_queue()::create_db_table();
 	}
