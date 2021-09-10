@@ -6198,6 +6198,8 @@ window.bp = window.bp || {};
 			self.showMedia();
 			self.navigationCommands();
 
+			self.getParentActivityHtml( target );
+			
 			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
 				self.getActivity();
 			} else {
@@ -6215,6 +6217,20 @@ window.bp = window.bp || {};
 			self.is_open_media = true;
 
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
+		},
+		
+		getParentActivityHtml: function ( target ) {
+			var parentActivityId = $('#hidden_parent_id').val();
+			var parentActivityIdBasedOnTarget = target.closest('.bb-media-model-wrapper').find('#bb-media-model-container .activity-list li.activity-item').data('bp-activity-id');
+			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdBasedOnTarget ) ) {
+				var mainParentActivityData = $( '#bb-media-model-container [data-bp-activity-id="' + parentActivityId + '"]' );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-state' ).html( $( mainParentActivityData ).find( '.activity-state' ).html() );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-meta' ).html( $( mainParentActivityData ).find( '.activity-meta' ).html() );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-comments' ).html( $( mainParentActivityData ).find( '.activity-comments' ).html() );
+				if ( $('#hidden_parent_id').length ) {
+					$( '#hidden_parent_id' ).remove();
+				}
+			}
 		},
 
 		getMediasDescription: function () {
@@ -6267,6 +6283,7 @@ window.bp = window.bp || {};
 			self.setCurrentDocument( id );
 			self.showDocument();
 			self.navigationDocumentCommands();
+			self.getParentActivityHtml( target );
 
 			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum ) {
 				self.getDocumentsActivity();
@@ -6394,6 +6411,7 @@ window.bp = window.bp || {};
 			self.resetRemoveActivityCommentsData();
 
 			self.current_media = false;
+			self.getParentActivityHtml( $( event.currentTarget ) );
 		},
 
 		closeDocumentTheatre: function ( event ) {
@@ -6408,6 +6426,7 @@ window.bp = window.bp || {};
 			self.resetRemoveActivityCommentsData();
 
 			self.current_document = false;
+			self.getParentActivityHtml( $( event.currentTarget ) );
 		},
 
 		setMedias: function ( target ) {
@@ -6792,6 +6811,9 @@ window.bp = window.bp || {};
 					self.current_media.parent_activity_comments = true;
 					on_page_activity_comments.html( '' );
 				}
+				if ( true === self.current_media.parent_activity_comments ) {
+					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_media.activity_id + '" id="hidden_parent_id"/>' );
+				}
 
 				self.activity_ajax = $.ajax(
 					{
@@ -6845,6 +6867,9 @@ window.bp = window.bp || {};
 				if ( on_page_activity_comments.length ) {
 					self.current_document.parent_activity_comments = true;
 					on_page_activity_comments.html( '' );
+				}
+				if ( true === self.current_document.parent_activity_comments ) {
+					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_document.activity_id + '" id="hidden_parent_id"/>' );
 				}
 
 				self.activity_ajax = $.ajax(

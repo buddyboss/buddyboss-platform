@@ -2215,6 +2215,7 @@ window.bp = window.bp || {};
 			self.setCurrentVideo( id );
 			self.showVideo();
 			self.navigationCommands();
+			self.getParentActivityHtml( target );
 
 			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
 				self.getActivity();
@@ -2228,6 +2229,20 @@ window.bp = window.bp || {};
 			self.is_open_video = true;
 
 			// document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
+		},
+		
+		getParentActivityHtml: function ( target ) {
+			var parentActivityId = $('#hidden_parent_id').val();
+			var parentActivityIdBasedOnTarget = target.closest('.bb-media-model-wrapper').find('#bb-media-model-container .activity-list li.activity-item').data('bp-activity-id');
+			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdBasedOnTarget ) ) {
+				var mainParentActivityData = $( '#bb-media-model-container [data-bp-activity-id="' + parentActivityId + '"]' );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-state' ).html( $( mainParentActivityData ).find( '.activity-state' ).html() );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-meta' ).html( $( mainParentActivityData ).find( '.activity-meta' ).html() );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-comments' ).html( $( mainParentActivityData ).find( '.activity-comments' ).html() );
+				if ( $('#hidden_parent_id').length ) {
+					$( '#hidden_parent_id' ).remove();
+				}
+			}
 		},
 
 		getVideosDescription: function () {
@@ -2470,6 +2485,9 @@ window.bp = window.bp || {};
 					on_page_activity_comments.html( '' );
 				}
 
+				if ( true === self.current_video.parent_activity_comments ) {
+					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_video.activity_id + '" id="hidden_parent_id"/>' );
+				}
 				self.activity_ajax = $.ajax(
 					{
 						type: 'POST',
