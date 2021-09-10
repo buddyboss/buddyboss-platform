@@ -28,7 +28,7 @@
 
 					<?php /***** Basic Account Details ******/ ?>
 
-					<?php bp_nouveau_signup_form(); ?>
+					<?php $signup_fields = bp_nouveau_get_signup_fields( 'account_details' ); ?>
 
 				</div><!-- #basic-details-section -->
 
