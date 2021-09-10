@@ -58,11 +58,19 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
  *
  * @return null|BP_Email_Queue|void
  */
-function bp_email_queue() {
+function bb_email_queue() {
 	if ( class_exists( 'BP_Email_Queue' ) ) {
-		global $bp_email_queue;
-		$bp_email_queue = BP_Email_Queue::instance();
-
-		return $bp_email_queue;
+		return BP_Email_Queue::instance();
 	}
+}
+
+/**
+ * Function to check if bb_email_queue() and cron enabled
+ *
+ * @since BuddyBoss 1.7.8
+ *
+ * @return bool
+ */
+function bb_is_email_queue() {
+	return function_exists( 'bb_email_queue' ) && apply_filters( 'bb_is_email_queue', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
 }

@@ -2311,10 +2311,10 @@ function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $use
 		$to = array( array( $user_email => $user_login ) );
 	}
 
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record( 'core-user-registration', $to, $args );
+	if ( function_exists( 'bb_is_email_queue' ) ) {
+		bb_email_queue()->add_record( 'core-user-registration', $to, $args );
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	} else {
 		bp_send_email( 'core-user-registration', $to, $args );
 	}

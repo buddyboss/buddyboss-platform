@@ -109,10 +109,10 @@ function bp_settings_action_general() {
 							'verify.url'     => esc_url( $verify_link ),
 						),
 					);
-					if ( function_exists( 'bp_email_queue' ) ) {
-						bp_email_queue()->add_record( 'settings-verify-email-change', bp_displayed_user_id(), $args );
+					if ( function_exists( 'bb_is_email_queue' ) ) {
+						bb_email_queue()->add_record( 'settings-verify-email-change', bp_displayed_user_id(), $args );
 						// call email background process.
-						bp_email_queue()->bb_email_background_process();
+						bb_email_queue()->bb_email_background_process();
 					} else {
 						bp_send_email( 'settings-verify-email-change', bp_displayed_user_id(), $args );
 					}
@@ -179,7 +179,7 @@ function bp_settings_action_general() {
 		// Clear cached data, so that the changed settings take effect
 		// on the current page load.
 		clean_user_cache( bp_displayed_user_id() );
-		
+
 		if ( ( false === $email_error ) && ( false === $pass_error ) && ( wp_update_user( $update_user ) ) ) {
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
 		}

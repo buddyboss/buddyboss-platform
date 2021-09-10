@@ -90,10 +90,10 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 				'unsubscribe'  => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 			),
 		);
-		if ( function_exists( 'bp_email_queue' ) ) {
-			bp_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
+		if ( function_exists( 'bb_is_email_queue' ) ) {
+			bb_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
 			// call email background process.
-			bp_email_queue()->bb_email_background_process();
+			bb_email_queue()->bb_email_background_process();
 		} else {
 			bp_send_email( 'groups-details-updated', (int) $user_id, $args );
 		}
@@ -175,10 +175,10 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 			'unsubscribe'          => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record( 'groups-membership-request', (int) $admin_id, $args );
+	if ( function_exists( 'bb_is_email_queue' ) ) {
+		bb_email_queue()->add_record( 'groups-membership-request', (int) $admin_id, $args );
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	} else {
 		bp_send_email( 'groups-membership-request', (int) $admin_id, $args );
 	}
@@ -237,10 +237,10 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 
 		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
-		if ( function_exists( 'bp_email_queue' ) ) {
-			bp_email_queue()->add_record( 'groups-membership-request-accepted', (int) $requesting_user_id, $args );
+		if ( function_exists( 'bb_is_email_queue' ) ) {
+			bb_email_queue()->add_record( 'groups-membership-request-accepted', (int) $requesting_user_id, $args );
 			// call email background process.
-			bp_email_queue()->bb_email_background_process();
+			bb_email_queue()->bb_email_background_process();
 		} else {
 			bp_send_email( 'groups-membership-request-accepted', (int) $requesting_user_id, $args );
 		}
@@ -254,10 +254,10 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 
 		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
-		if ( function_exists( 'bp_email_queue' ) ) {
-			bp_email_queue()->add_record( 'groups-membership-request-rejected', (int) $requesting_user_id, $args );
+		if ( function_exists( 'bb_is_email_queue' ) ) {
+			bb_email_queue()->add_record( 'groups-membership-request-rejected', (int) $requesting_user_id, $args );
 			// call email background process.
-			bp_email_queue()->bb_email_background_process();
+			bb_email_queue()->bb_email_background_process();
 		} else {
 			bp_send_email( 'groups-membership-request-rejected', (int) $requesting_user_id, $args );
 		}
@@ -319,10 +319,10 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 			'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record( 'groups-member-promoted', (int) $user_id, $args );
+	if ( function_exists( 'bb_is_email_queue' ) ) {
+		bb_email_queue()->add_record( 'groups-member-promoted', (int) $user_id, $args );
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	} else {
 		bp_send_email( 'groups-member-promoted', (int) $user_id, $args );
 	}
@@ -399,10 +399,10 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 			'unsubscribe'     => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record( 'groups-invitation', (int) $invited_user_id, $args );
+	if ( function_exists( 'bb_is_email_queue' ) ) {
+		bb_email_queue()->add_record( 'groups-invitation', (int) $invited_user_id, $args );
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	} else {
 		bp_send_email( 'groups-invitation', (int) $invited_user_id, $args );
 	}

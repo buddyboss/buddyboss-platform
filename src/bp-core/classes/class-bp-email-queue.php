@@ -174,10 +174,8 @@ class BP_Email_Queue {
 				$args       = ! empty( $single['arguments'] ) ? maybe_unserialize( $single['arguments'] ) : array();
 
 				if ( $this->get_single_record( $item_id ) && ! empty( $email_type ) && ! empty( $to ) ) {
-					$check = bp_send_email( $email_type, $to, $args );
-					if ( $check ) {
-						$this->delete_record( $item_id );
-					}
+					bp_send_email( $email_type, $to, $args );
+					$this->delete_record( $item_id );
 				}
 			}
 		}
