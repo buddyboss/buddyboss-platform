@@ -433,33 +433,13 @@ function bbp_new_reply_handler( $action = '' ) {
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		if ( ! empty( $terms ) ) {
-			$term_ids = array();
-
-			if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
-				$terms = explode( ',', $terms );
-			} else {
-				$terms = (array) $terms;
-			}
-
-			foreach ( $terms as $term_name ) {
-				$args['name']     = $term_name;
-				$args['slug']     = $term_name;
-				$args['taxonomy'] = bbp_get_topic_tag_tax_id();
-
-				$term_info = get_term_by( 'name', $term_name, bbp_get_topic_tag_tax_id(), ARRAY_A );
-				if ( ! $term_info ) {
-					$term_info = wp_insert_term( $term_name, bbp_get_topic_tag_tax_id(), $args );
-				}
-				if ( ! empty( $term_info ) && ! is_wp_error( $term_info ) ) {
-					$term_ids[] = $term_info['term_id'];
-				}
-			}
-
-			if ( ! empty( $term_ids ) ) {
-				$terms = bp_set_object_terms( $topic_id, $term_ids, bbp_get_topic_tag_tax_id(), true );
-			}
+		$topic_taxonomy = bbp_get_topic_tag_tax_id();
+		if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+			$terms = explode( ',', $terms );
+		} else {
+			$terms = (array) $terms;
 		}
+		$terms = bb_add_topic_tags( $terms, $topic_id, $topic_taxonomy );
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
@@ -807,57 +787,15 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Just in time manipulation of reply terms before being edited
 	$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
-	// remove deleted terms
+	// update terms
+	$topic_taxonomy = bbp_get_topic_tag_tax_id();
+	if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+		$terms = explode( ',', $terms );
+	} else {
+		$terms = (array) $terms;
+	}
 	$existing_terms = bbp_get_topic_tag_names( $topic_id );
-
-	if ( ! empty( $existing_terms ) ) {
-		$existing_terms = explode( ',', $existing_terms );
-		$existing_terms = array_map( function ( $single ) {
-			return trim( $single );
-		}, $existing_terms );
-
-		$terms_array   = explode( ',', $terms );
-		$deleted_terms = array_diff( $existing_terms, $terms_array );
-
-		if ( ! empty( $deleted_terms ) ) {
-			$deleted_terms = array_map( function ( $single ) {
-				$get_term = get_term_by( 'name', $single, bbp_get_topic_tag_tax_id() );
-				if ( ! empty( $get_term->slug ) ) {
-					return $get_term->slug;
-				}
-			}, $deleted_terms );
-			wp_remove_object_terms( $topic_id, $deleted_terms, bbp_get_topic_tag_tax_id() );
-		}
-	}
-
-	// Insert terms
-	if ( ! empty( $terms ) ) {
-		$term_ids = array();
-
-		if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
-			$terms = explode( ',', $terms );
-		} else {
-			$terms = (array) $terms;
-		}
-
-		foreach ( $terms as $term_name ) {
-			$args['name']     = $term_name;
-			$args['slug']     = $term_name;
-			$args['taxonomy'] = bbp_get_topic_tag_tax_id();
-
-			$term_info = get_term_by( 'name', $term_name, bbp_get_topic_tag_tax_id(), ARRAY_A );
-			if ( ! $term_info ) {
-				$term_info = wp_insert_term( $term_name, bbp_get_topic_tag_tax_id(), $args );
-			}
-			if ( ! empty( $term_info ) && ! is_wp_error( $term_info ) ) {
-				$term_ids[] = $term_info['term_id'];
-			}
-		}
-
-		if ( ! empty( $term_ids ) ) {
-			$terms = bp_set_object_terms( $topic_id, $term_ids, bbp_get_topic_tag_tax_id(), true );
-		}
-	}
+	$terms = bb_add_topic_tags( $terms, $topic_id, $topic_taxonomy, $existing_terms );
 
 	// Term error
 	if ( is_wp_error( $terms ) ) {
