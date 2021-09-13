@@ -510,10 +510,10 @@ function bp_core_activation_signup_blog_notification( $domain, $path, $title, $u
 		),
 	);
 
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		bb_email_queue()->add_record( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	} else {
 		bp_send_email( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
 	}
@@ -579,10 +579,10 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 		),
 	);
 
-	if ( function_exists( 'bp_email_queue' ) ) {
-		bp_email_queue()->add_record( 'core-user-registration', array( array( $user_email => $user ) ), $args );
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		bb_email_queue()->add_record( 'core-user-registration', array( array( $user_email => $user ) ), $args );
 		// call email background process.
-		bp_email_queue()->bb_email_background_process();
+		bb_email_queue()->bb_email_background_process();
 	} else {
 		bp_send_email( 'core-user-registration', array( array( $user_email => $user ) ), $args );
 	}
