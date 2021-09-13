@@ -1634,6 +1634,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$group_ids = array_flip( $group_ids );
 				unset( $group_ids[ $group_id ] );
 				$group_ids = array_flip( $group_ids );
+				$group_ids = array_values( $group_ids );
 
 				bbp_update_forum_group_ids( $gf_id, $group_ids );
 
@@ -1665,6 +1666,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						$group_ids = array_flip( $group_ids );
 						unset( $group_ids[ $group_id ] );
 						$group_ids = array_flip( $group_ids );
+						$group_ids = array_values( $group_ids );
 
 						bbp_update_forum_group_ids( $gf_id, $group_ids );
 					}
