@@ -2232,14 +2232,14 @@ window.bp = window.bp || {};
 		},
 		
 		getParentActivityHtml: function ( target ) {
-			var parentActivityId = $('#hidden_parent_id').val();
-			var parentActivityIdBasedOnTarget = target.closest('.bb-media-model-wrapper').find('#bb-media-model-container .activity-list li.activity-item').data('bp-activity-id');
-			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdBasedOnTarget ) ) {
+			var parentActivityId         = $( '#hidden_parent_id' ).val();
+			var parentActivityIdForModel = target.closest( '.bb-media-model-wrapper' ).find( '#bb-media-model-container .activity-list li.activity-item' ).data( 'bp-activity-id' );
+			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdForModel ) ) {
 				var mainParentActivityData = $( '#bb-media-model-container [data-bp-activity-id="' + parentActivityId + '"]' );
 				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-state' ).html( $( mainParentActivityData ).find( '.activity-state' ).html() );
 				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-meta' ).html( $( mainParentActivityData ).find( '.activity-meta' ).html() );
 				$( '[data-bp-activity-id="' + parentActivityId + '"] .activity-comments' ).html( $( mainParentActivityData ).find( '.activity-comments' ).html() );
-				if ( $('#hidden_parent_id').length ) {
+				if ( $( '#hidden_parent_id' ).length ) {
 					$( '#hidden_parent_id' ).remove();
 				}
 			}
