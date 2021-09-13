@@ -6399,8 +6399,13 @@ window.bp = window.bp || {};
 
 		closeTheatre: function ( event ) {
 			event.preventDefault();
-			var self = this;
-
+			var self   = this;
+			var target = $( event.currentTarget );
+			
+			if ( $( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'video-theatre' ) ) {
+				return false;
+			}
+			
 			$('.bb-media-model-wrapper.media .bb-media-section').find('img').attr('src', '');
 			if( $('.bb-media-model-wrapper.video .bb-media-section').find('video').length ){
 				$('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('src', '');
@@ -6411,7 +6416,7 @@ window.bp = window.bp || {};
 			self.resetRemoveActivityCommentsData();
 
 			self.current_media = false;
-			self.getParentActivityHtml( $( event.currentTarget ) );
+			self.getParentActivityHtml( target );
 		},
 
 		closeDocumentTheatre: function ( event ) {
