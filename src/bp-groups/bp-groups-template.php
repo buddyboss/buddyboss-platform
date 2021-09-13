@@ -4207,11 +4207,11 @@ function bp_group_join_button( $group = false ) {
 			}
 
 			if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
-				$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re an %s', 'buddyboss' ), get_group_role_label( $group->id, 'organizer_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
+				$button_text = apply_filters( 'bp_group_organizer_label_text', bb_group_btn_label_text_make_grammatical( get_group_role_label( $group->id, 'organizer_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) );
 			} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
-				$button_text = apply_filters( 'bp_group_moderator_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
+				$button_text = apply_filters( 'bp_group_moderator_label_text', bb_group_btn_label_text_make_grammatical( get_group_role_label( $group->id, 'moderator_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) ) );
 			} else {
-				$button_text = apply_filters( 'bp_group_member_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'member_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
+				$button_text = apply_filters( 'bp_group_member_label_text', bb_group_btn_label_text_make_grammatical( get_group_role_label( $group->id, 'member_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) ) );
 			}
 
 			// Setup button attributes.
@@ -4367,6 +4367,28 @@ function bp_group_join_button( $group = false ) {
 		 */
 		return bp_get_button( apply_filters( 'bp_get_group_join_button', $button, $group ) );
 	}
+
+if ( ! function_exists( 'bb_group_btn_label_text_make_grammatical' ) ) {
+	/**
+	 * Make Correct grammaticle group label.
+	 *
+	 * @param string $full_text  Label of Group User type.
+	 * @param int    $group_id   Group Id
+	 * @param string $label_text Label of Group User type
+	 * @return string
+	 */
+	function bb_group_btn_label_text_make_grammatical( $full_text, $group_id, $label_text ) {
+		$is_an = preg_match( "/^[aeiou]/i", trim( strtolower( $label_text ) ) );
+
+		if ( $is_an ) {
+			$full_text = apply_filters( 'bb_group_btn_label_text_make_grammatical', sprintf( __( "You're an %s", 'buddyboss' ), $label_text ), $group_id, $label_text );
+		} else {
+			$full_text = apply_filters( 'bb_group_btn_label_text_make_grammatical', sprintf( __( "You're a %s", 'buddyboss' ), $label_text ), $group_id, $label_text );
+		}
+
+		return $full_text;
+	}
+}
 
 /**
  * Output the Create a Group button.
