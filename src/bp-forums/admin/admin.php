@@ -460,8 +460,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					array(
 						'parent' => 'wp-logo',
 						'id'     => 'bbp-about',
-						'title'  => esc_html__( 'About Forums', 'buddyboss' ),
-						'href'   => add_query_arg( array( 'page' => 'bbp-about' ), admin_url( 'index.php' ) ),
+						'title'  => esc_html__( 'About BuddyBoss', 'buddyboss' ),
+						'href'   => add_query_arg( array( 'hello' => 'buddyboss' ), admin_url( 'index.php' ) ),
 					)
 				);
 			}
