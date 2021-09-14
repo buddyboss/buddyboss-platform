@@ -390,8 +390,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
 
 		// update tags.
-		$topic_taxonomy = bbp_get_topic_tag_tax_id();
-		bb_add_topic_tags( (array) $terms[ $topic_taxonomy ], $topic_id, $topic_taxonomy );
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id() );
 
 		/** Trash Check */
 
@@ -770,9 +769,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
 
 		// update tags.
-		$topic_taxonomy = bbp_get_topic_tag_tax_id();
-		$existing_terms = bbp_get_topic_tag_names( $topic_id );
-		bb_add_topic_tags( (array) $terms[ $topic_taxonomy ], $topic_id, $topic_taxonomy, $existing_terms );
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 		// Update counts, etc..
 		do_action( 'bbp_edit_topic', $topic_id, $forum_id, $anonymous_data, $topic_author, true /* Is edit */ );
