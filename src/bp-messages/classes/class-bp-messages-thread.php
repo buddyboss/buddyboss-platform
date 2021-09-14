@@ -203,12 +203,6 @@ class BP_Messages_Thread {
 		// Fetch the recipients.
 		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
 		
-		if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-			// Fetch the recipients for moderated members list for block member screen in messages.
-			$args['moderated_recipients'] = true;
-			$this->moderated_recipients   = $this->get_pagination_recipients( $this->thread_id, $args );
-		}
-		
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
 			$this->unread_count = $this->recipients[ $r['user_id'] ]->unread_count;
@@ -1836,10 +1830,9 @@ class BP_Messages_Thread {
 		if ( isset( $results['total'] ) ) {
 			// Fetch the recipients count
 			if ( isset( $r['moderated_recipients'] ) && true === $r['moderated_recipients'] ) {
-				$this->total_moderated_recipients_count = $results['total'];
-			} else {
-				$this->total_recipients_count = $results['total'];
+				$recipients[ 'count' ] = $results['total'];
 			}
+			$this->total_recipients_count = $results['total'];
 		}
 
 		/**

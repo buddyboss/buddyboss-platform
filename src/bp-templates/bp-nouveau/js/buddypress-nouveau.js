@@ -2198,11 +2198,55 @@ window.bp = window.bp || {};
 					}
 				);
 
+				// $( '.mass-block-member' ).magnificPopup(
+				// 	{
+				// 		type: 'inline',
+				// 		midClick: true,
+				// 		callbacks: {
+				// 			change: function () {
+				// 				var _self = this;
+				// 				setTimeout(
+				// 					function () {
+				// 						var contentId   = _self.currItem.el.data( 'bp-content-id' );
+				// 						var contentType = _self.currItem.el.data( 'bp-content-type' );
+				// 						var nonce       = _self.currItem.el.data( 'bp-nonce' );
+				// 						if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				// 							_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+				// 						}
+				// 					},
+				// 					1
+				// 				);
+				// 			}
+				// 		}
+				// 	}
+				// );
+				
 				$( '.mass-block-member' ).magnificPopup(
 					{
-						type: 'inline',
+						type: 'ajax',
+						ajax: {
+							settings: {
+								url: BP_Nouveau.ajaxurl,
+								method: "POST",
+								data: {
+									action: 'messages_moderated_recipient_list',
+									post_data: {
+										'page_no': 1,
+										'thread_id': 17,
+										'action': '',
+										'moderated_recipients': true
+									},
+								},
+							},
+							cursor: 'mfp-ajax-cur',
+							tError: '<a href="%url%">The content</a> could not be loaded.'
+						},
 						midClick: true,
 						callbacks: {
+							parseAjax: function (ajaxResponse) {
+							},
+							ajaxContentAdded: function() {
+							},
 							change: function () {
 								var _self = this;
 								setTimeout(
