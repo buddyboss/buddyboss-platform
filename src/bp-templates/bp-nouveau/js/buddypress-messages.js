@@ -394,12 +394,12 @@ window.bp = window.bp || {};
 			if ( $( '#load_more_rl' ).length ) {
 				$( '#load_more_rl' ).removeClass( 'load_more_rl' );
 			}
-			var $this = $( this );
-			var bpAction = $this.attr( 'data-action' );
-			var threadId = parseInt( $this.attr( 'data-thread-id' ) );
+			var $this       = $( this );
+			var bpAction    = $this.attr( 'data-action' );
+			var threadId    = parseInt( $this.attr( 'data-thread-id' ) );
 			var currentPage = parseInt( $this.attr( 'data-cp' ) );
-			var totalPages = parseInt( $this.attr( 'data-tp' ) );
-			var postData = {
+			var totalPages  = parseInt( $this.attr( 'data-tp' ) );
+			var postData    = {
 				'page_no': currentPage,
 				'thread_id': threadId,
 				'action': bpAction
@@ -417,7 +417,7 @@ window.bp = window.bp || {};
 				success: function ( response ) {
 					if ( response.success && response.data && '' !== response.data.content ) {
 						var moderation_type = response.data.recipients.moderation_type;
-						var memberData = response.data.recipients.members;
+						var memberData      = response.data.recipients.members;
 						if ( memberData ) {
 							$.each( memberData, function ( index, item ) {
 								if ( '' !== item ) {

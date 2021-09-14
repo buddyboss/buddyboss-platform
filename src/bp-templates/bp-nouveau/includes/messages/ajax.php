@@ -2679,6 +2679,9 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 	);
 }
 
+/**
+ * Function which get moderated recepient list when click on block a member in the message screen.
+ */
 function bb_nouveau_ajax_moderated_recipient_list() {
 	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
@@ -2729,14 +2732,15 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 													)
 												)
 											);
+											$user_name      = bp_core_get_user_displayname( $recipient->user_id );
 											$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 											?>
 											<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
 												<div class="user-avatar">
-													<img src="<?php echo $avatar; ?>" alt="<?php esc_html_e( bp_core_get_user_displayname( $recipient->user_id ) ); ?>">
+													<img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>">
 												</div>
 												<div class="user-name">
-													<?php esc_html_e( bp_core_get_user_displayname( $recipient->user_id ) ); ?>
+													<?php echo esc_html( $user_name ); ?>
 												</div>
 												<div class="user-actions">
 													<?php
@@ -2746,13 +2750,13 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 															<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
 														</a>
 														<?php
-													} else if ( false !== $can_be_blocked ) {
+													} elseif ( false !== $can_be_blocked ) {
+														$bp_moderation_type = BP_Moderation_Members::$moderation_type;
 														?>
-														<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
-															href="#block-member"
-															class="block-member button small"
+														<a id="report-content-<?php echo esc_attr( $bp_moderation_type ); ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
+															href="#block-member" class="block-member button small"
 															data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
-															data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>"
+															data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
 															data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
 															<?php esc_html_e( 'Block', 'buddyboss' ); ?>
 														</a>
@@ -2768,20 +2772,23 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 							}
 							?>
 						</div>
-						<div class="bb-report-type-pagination">
-							<p class="page-data" data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>">
-								<a href="javascript:void(0);"
-									name="load_more_rl"
-									id="load_more_rl"
-									class="load_more_rl button small outline"
-									data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>"
-									data-tp="<?php echo esc_attr( ceil( (int) $results['count'] / (int) bb_messages_recipients_per_page() ) ); ?>"
-									data-tc="<?php echo esc_attr( $results['count'] ); ?>"
-									data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>"
-									data-cp="2"
-									data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-							</p>
-						</div>
+						<?php
+						if ( 1 < $results['count'] ) {
+							?>
+							<div class="bb-report-type-pagination">
+								<p class="page-data" data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>">
+									<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl" class="load_more_rl button small outline"
+										data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>"
+										data-tp="<?php echo esc_attr( ceil( (int) $results['count'] / (int) bb_messages_recipients_per_page() ) ); ?>"
+										data-tc="<?php echo esc_attr( $results['count'] ); ?>"
+										data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
+										data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?>
+									</a>
+								</p>
+							</div>
+							<?php
+						}
+						?>
 					</div>
 				</div>
 			</div>

@@ -2204,7 +2204,7 @@ window.bp = window.bp || {};
 						ajax: {
 							settings: {
 								url: BP_Nouveau.ajaxurl,
-								method: "POST",
+								method: 'POST',
 							},
 							cursor: 'mfp-ajax-cur',
 							tError: '<a href="%url%">The content</a> could not be loaded.'
