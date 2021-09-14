@@ -4372,13 +4372,15 @@ if ( ! function_exists( 'bb_group_btn_label_text_make_grammatical' ) ) {
 	/**
 	 * Make Correct grammaticle group label.
 	 *
+	 * @since BuddyBoss X.X.X
+	 *
 	 * @param string $full_text  Label of Group User type.
 	 * @param int    $group_id   Group Id
 	 * @param string $label_text Label of Group User type
 	 * @return string
 	 */
 	function bb_group_btn_label_text_make_grammatical( $full_text, $group_id, $label_text ) {
-		$is_an = preg_match( "/^[aeiou]/i", trim( strtolower( $label_text ) ) );
+		$is_an = apply_filters( 'bb_group_btn_label_text_make_grammatical_regex', preg_match( "/^[aeiou]/i", trim( strtolower( $label_text ) ) ) );
 
 		if ( $is_an ) {
 			$full_text = apply_filters( 'bb_group_btn_label_text_make_grammatical', sprintf( __( "You're an %s", 'buddyboss' ), $label_text ), $group_id, $label_text );
