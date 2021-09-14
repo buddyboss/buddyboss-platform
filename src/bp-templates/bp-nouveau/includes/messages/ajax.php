@@ -2733,10 +2733,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 											?>
 											<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
 												<div class="user-avatar">
-													<img src="<?php echo $avatar; ?>" alt="<?php echo bp_core_get_user_displayname( $recipient->user_id ); ?>">
+													<img src="<?php echo $avatar; ?>" alt="<?php esc_html_e( bp_core_get_user_displayname( $recipient->user_id ) ); ?>">
 												</div>
 												<div class="user-name">
-													<?php echo bp_core_get_user_displayname( $recipient->user_id ); ?>
+													<?php esc_html_e( bp_core_get_user_displayname( $recipient->user_id ) ); ?>
 												</div>
 												<div class="user-actions">
 													<?php
@@ -2748,10 +2748,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 														<?php
 													} else if ( false !== $can_be_blocked ) {
 														?>
-														<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-<?php echo $recipient->user_id; ?>"
+														<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
 															href="#block-member"
 															class="block-member button small"
-															data-bp-content-id="<?php echo $recipient->user_id; ?>"
+															data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
 															data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>"
 															data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
 															<?php esc_html_e( 'Block', 'buddyboss' ); ?>
@@ -2769,15 +2769,15 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 							?>
 						</div>
 						<div class="bb-report-type-pagination">
-							<p class="page-data" data-thread-id="<?php echo $post_data['thread_id']; ?>">
+							<p class="page-data" data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>">
 								<a href="javascript:void(0);"
 									name="load_more_rl"
 									id="load_more_rl"
 									class="load_more_rl button small outline"
-									data-thread-id="<?php echo $post_data['thread_id']; ?>"
-									data-tp="<?php echo ceil( (int) $results['count'] / (int) bb_messages_recipients_per_page() ); ?>"
-									data-tc="<?php echo $results['count']; ?>"
-									data-pp="<?php echo bb_messages_recipients_per_page(); ?>"
+									data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>"
+									data-tp="<?php echo esc_attr( ceil( (int) $results['count'] / (int) bb_messages_recipients_per_page() ) ); ?>"
+									data-tc="<?php echo esc_attr( $results['count'] ); ?>"
+									data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>"
 									data-cp="2"
 									data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 							</p>
