@@ -2217,13 +2217,9 @@ window.bp = window.bp || {};
 									post_data: {
 										'page_no'             : this.st.el.attr('data-cp'),
 										'thread_id'           : this.st.el.attr('data-thread-id'),
-										'moderated_recipients': true
+										'moderated_recipients': true,
 									},
 								}
-							},
-							parseAjax: function (ajaxResponse) {
-							},
-							ajaxContentAdded: function() {
 							},
 							change: function () {
 								var _self = this;
@@ -2238,6 +2234,15 @@ window.bp = window.bp || {};
 									},
 									1
 								);
+							},
+							updateStatus: function(data) {
+								console.log('Status changed', data);
+								data.text = '';
+								return false;
+							},
+							parseAjax: function (mfpResponse) {
+							},
+							ajaxContentAdded: function() {
 							}
 						}
 					}

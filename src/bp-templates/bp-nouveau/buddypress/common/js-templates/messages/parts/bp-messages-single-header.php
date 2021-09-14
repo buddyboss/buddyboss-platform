@@ -103,7 +103,7 @@
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 								<# if ( other_recipients.length > 1 ) { #>
 								<li class="report_thread">
-									<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+									<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 								</li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_blocked ) { #>
 	                                <li class="reported_thread">
@@ -134,58 +134,5 @@
 			}
 			?>
 		</div>
-		<?php /* if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-			?>
-			<div id="mass-user-block-list" class="mass-user-block-list moderation-popup mfp-hide">
-				<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-					<div class="modal-wrapper">
-						<div class="modal-container">
-							<header class="bb-model-header">
-								<h4><?php esc_html_e( 'Block a Member?', 'buddyboss' ); ?></h4>
-								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
-							</header>
-							<div class="bb-report-type-wrp">
-								<!-- // Exclude blocked member from block member list - #2875 -->
-								<# _.reject(data.recipients.members, function(item) { if ( true !== item.is_blocked ) { #>
-								<div class="user-item-wrp" id="user-{{item.id}}">
-									<div class="user-avatar">
-										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
-									</div>
-									<div class="user-name">
-										{{item.user_name}}
-									</div>
-									<div class="user-actions">
-                                        <# if ( true === item.is_blocked ) { #>
-                                            <a id="reported-user" class="blocked-member button small disabled">
-                                                <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
-                                            </a>
-                                        <# } else if ( false !== item.can_be_blocked ) { #>
-                                            <a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
-                                                <?php esc_html_e( 'Block', 'buddyboss' ); ?>
-                                            </a>
-                                        <# } #>
-									</div>
-								</div>
-								<# } }); #>
-							</div>
-							<# if ( 1 < data.recipients.total_pages ) { #>
-								<div class="bb-report-type-pagination">
-									<p class="page-data" data-thread-id="{{data.id}}">
-										<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
-										   class="load_more_rl button small outline"
-										   data-thread-id="{{data.id}}"
-										   data-tp="{{data.recipients.total_pages}}"
-										   data-tc="{{data.recipients.count}}"
-										   data-pp="{{data.recipients.per_page}}"
-										   data-cp="2" data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-									</p>
-								</div>
-							<# } #>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php }
-		*/ ?>
 	</header>
 </script>

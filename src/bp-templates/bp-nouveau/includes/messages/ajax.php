@@ -2731,7 +2731,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 											);
 											$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 											?>
-											<div class="user-item-wrp" id="user-<?php echo $recipient->user_id; ?>">
+											<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
 												<div class="user-avatar">
 													<img src="<?php echo $avatar; ?>" alt="<?php echo bp_core_get_user_displayname( $recipient->user_id ); ?>">
 												</div>
