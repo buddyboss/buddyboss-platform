@@ -351,12 +351,16 @@ function groups_edit_base_group_details( $args = array() ) {
  * @param int|bool    $parent_id Parent group ID.
  * @param string|bool $media_status Optional. Who is allowed to manage media
  *                                   to the group. 'members', 'mods', or 'admins'.
+ * @param string|bool $document_status Optional. Who is allowed to manage document
+ *                                   to the group. 'members', 'mods', or 'admins'.
+ * @param string|bool $video_status Optional. Who is allowed to manage video
+ *                                   to the group. 'members', 'mods', or 'admins'.
  * @param string|bool $album_status Optional. Who is allowed to manage albums if media is enabled with album support.
  *                                   to the group. 'members', 'mods', or 'admins'.
  *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $album_status = false, $message_status = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $video_status = false, $album_status = false, $message_status = false ) {
 
 	$group               = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -365,8 +369,24 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	 * Before we potentially switch the group status, if it has been changed to public
 	 * from private and there are outstanding membership requests, auto-accept those requests.
 	 */
-	if ( 'private' == $group->status && 'public' == $status ) {
+	if ( 'private' == $group->status && 'public' === $status ) {
 		groups_accept_all_pending_membership_requests( $group->id );
+	}
+
+	/**
+	 * Before we potentially switch the group status, if it has been changed to private
+	 * from public and there are existing activity feed, change feed status private. ( hide_sitewide = 1 )
+	 */
+	if ( 'public' === $group->status && ( 'private' === $status || 'hidden' === $status ) ) {
+		groups_change_all_activity_feed_status( $group->id, 1 );
+	}
+
+	/**
+	 * Before we potentially switch the group status, if it has been changed to public
+	 * from private and there are existing activity feed, change feed status public. ( hide_sitewide = 0 )
+	 */
+	if ( ( 'private' === $group->status || 'hidden' === $group->status ) && 'public' === $status ) {
+		groups_change_all_activity_feed_status( $group->id, 0 );
 	}
 
 	// Now update the status.
@@ -399,6 +419,11 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the document status.
 	if ( $document_status ) {
 		groups_update_groupmeta( $group->id, 'document_status', $document_status );
+	}
+
+	// Set the video status.
+	if ( $video_status ) {
+		groups_update_groupmeta( $group->id, 'video_status', $video_status );
 	}
 
 	// Set the album status.
@@ -869,6 +894,7 @@ function groups_get_groups( $args = '' ) {
 		'order'              => 'DESC',         // 'ASC' or 'DESC'
 		'orderby'            => 'date_created', // date_created, last_activity, total_member_count, name, random, meta_id.
 		'user_id'            => false,          // Pass a user_id to limit to only groups that this user is a member of.
+		'creator_id'         => false,          // Pass a creator_id to limit to only groups which created by creator_id.
 		'include'            => false,          // Only include these specific groups (group_ids).
 		'exclude'            => false,          // Do not include these specific groups (group_ids).
 		'parent_id'          => null,           // Get groups that are children of the specified group(s).
@@ -886,6 +912,7 @@ function groups_get_groups( $args = '' ) {
 		'update_meta_cache'  => true,           // Pre-fetch groupmeta for queried groups.
 		'update_admin_cache' => false,
 		'fields'             => 'all',          // Return BP_Groups_Group objects or a list of ids.
+		'moderation_query'   => 'false',        // Remove moderation query.
 	);
 
 	$r = bp_parse_args( $args, $defaults, 'groups_get_groups' );
@@ -894,6 +921,7 @@ function groups_get_groups( $args = '' ) {
 		array(
 			'type'               => $r['type'],
 			'user_id'            => $r['user_id'],
+			'creator_id'         => $r['creator_id'],
 			'include'            => $r['include'],
 			'exclude'            => $r['exclude'],
 			'slug'               => $r['slug'],
@@ -913,6 +941,7 @@ function groups_get_groups( $args = '' ) {
 			'order'              => $r['order'],
 			'orderby'            => $r['orderby'],
 			'fields'             => $r['fields'],
+			'moderation_query'   => $r['moderation_query'],
 		)
 	);
 
@@ -1463,6 +1492,10 @@ function groups_can_user_manage_media( $user_id, $group_id ) {
 		return false;
 	}
 
+	if ( ! bp_is_active( 'media' ) || ! bp_is_group_media_support_enabled() ) {
+		return false;
+	}
+
 	// Site admins always have access.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		return true;
@@ -1500,6 +1533,10 @@ function groups_can_user_manage_albums( $user_id, $group_id ) {
 	$is_allowed = false;
 
 	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( ! bp_is_active( 'media' ) || ! bp_is_group_albums_support_enabled() ) {
 		return false;
 	}
 
@@ -2632,6 +2669,41 @@ function groups_get_membership_requested_user_ids( $group_id = 0 ) {
 }
 
 /**
+ * Change all activity feed status for a group.
+ *
+ * @since BuddyPress 1.7.6
+ *
+ * @param int $group_id ID of the group.
+ * @param int $status ( 1 = private, 0 = public )
+ *
+ * @return bool True on success, false on failure.
+ */
+function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
+	global $wpdb, $bp;
+
+	//bail if no group_id
+	if ( $group_id === 0 ) {
+		return false;
+	}
+
+	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups' AND privacy = 'public' ", $status, $group_id );
+	if ( false === $wpdb->query( $q ) ) {
+		return false;
+	}
+
+	/**
+	 * Fires after makeing all activity feed status to private to a group.
+	 *
+	 * @since BuddyPress 1.7.6
+	 *
+	 * @param int $group_id ID of the group.
+	 */
+	do_action( 'groups_change_all_activity_feed_status', $status, $group_id );
+
+	return true;
+}
+
+/**
  * Accept all pending membership requests to a group.
  *
  * @since BuddyPress 1.0.2
@@ -3365,7 +3437,7 @@ function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 		return '';
 	}
 
-	//Get invitation by id
+	//Get invitation by id.
 	$member = new BP_Invitation( $invite_id );
 
 	$message  = $member->content;
@@ -3543,14 +3615,15 @@ function bp_get_active_group_types( $args = array() ) {
 	$bp_active_group_types = array();
 
 	$args = bp_parse_args( $args, array(
-		'posts_per_page' => - 1,
-		'post_type'      => bp_groups_get_group_type_post_type(),
-		'orderby'        => 'menu_order',
-		'order'          => 'ASC',
-		'fields'         => 'ids'
-	), 'group_types' );
+        'posts_per_page' => - 1,
+        'post_type'      => bp_groups_get_group_type_post_type(),
+        'post_status'    => 'publish',
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+        'fields'         => 'ids'
+    ), 'group_types' );
 
-	$bp_active_group_types_query = new \WP_Query( $args );
+    $bp_active_group_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_group_types_query->have_posts() ) {
 		$bp_active_group_types = $bp_active_group_types_query->posts;
@@ -4094,6 +4167,10 @@ function groups_can_user_manage_document( $user_id, $group_id ) {
 		return false;
 	}
 
+	if ( ! bp_is_active( 'document' ) || ! bp_is_group_document_support_enabled() ) {
+		return false;
+	}
+
 	// Site admins always have access.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		return true;
@@ -4276,3 +4353,87 @@ function bp_groups_reset_cover_image_position( $group_id ) {
 
 add_action( 'groups_cover_image_uploaded', 'bp_groups_reset_cover_image_position', 10, 1 );
 add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position', 10, 1 );
+
+/**
+ * Check whether a user is allowed to manage video in a given group.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_video( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( ! bp_is_active( 'video' ) || ! bp_is_group_video_support_enabled() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status   = bp_group_get_video_status( $group_id );
+	$is_admin = groups_is_user_admin( $user_id, $group_id );
+	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' === $status ) {
+		$is_allowed = true;
+	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' === $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
+ * Check whether a user is allowed to manage video albums in a given group.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_video_albums( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status   = bp_group_get_album_status( $group_id );
+	$is_admin = groups_is_user_admin( $user_id, $group_id );
+	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' === $status ) {
+		$is_allowed = true;
+	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' === $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}

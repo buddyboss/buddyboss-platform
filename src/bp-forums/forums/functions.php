@@ -116,34 +116,34 @@ function bbp_insert_forum( $forum_data = array(), $forum_meta = array() ) {
  */
 function bbp_new_forum_handler( $action = '' ) {
 
-	// Bail if action is not bbp-new-forum
+	// Bail if action is not bbp-new-forum.
 	if ( 'bbp-new-forum' !== $action ) {
 		return;
 	}
 
-	// Nonce check
+	// Nonce check.
 	if ( ! bbp_verify_nonce_request( 'bbp-new-forum' ) ) {
 		bbp_add_error( 'bbp_new_forum_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 		return;
 	}
 
-	// Define local variable(s)
+	// Define local variable(s).
 	$view_all        = $anonymous_data = false;
 	$forum_parent_id = $forum_author = 0;
 	$forum_title     = $forum_content = '';
 
 	/** Forum Author */
 
-	// User cannot create forums
+	// User cannot create forums.
 	if ( ! current_user_can( 'publish_forums' ) ) {
 		bbp_add_error( 'bbp_forum_permissions', __( '<strong>ERROR</strong>: You do not have permission to create new forums.', 'buddyboss' ) );
 		return;
 	}
 
-	// Forum author is current user
+	// Forum author is current user.
 	$forum_author = bbp_get_current_user_id();
 
-	// Remove kses filters from title and content for capable users and if the nonce is verified
+	// Remove kses filters from title and content for capable users and if the nonce is verified.
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_forum'] ) && wp_create_nonce( 'bbp-unfiltered-html-forum_new' ) === $_POST['_bbp_unfiltered_html_forum'] ) {
 		remove_filter( 'bbp_new_forum_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_forum_pre_content', 'bbp_encode_bad', 10 );
@@ -156,10 +156,10 @@ function bbp_new_forum_handler( $action = '' ) {
 		$forum_title = esc_attr( strip_tags( $_POST['bbp_forum_title'] ) );
 	}
 
-	// Filter and sanitize
+	// Filter and sanitize.
 	$forum_title = apply_filters( 'bbp_new_forum_pre_title', $forum_title );
 
-	// No forum title
+	// No forum title.
 	if ( empty( $forum_title ) ) {
 		bbp_add_error( 'bbp_forum_title', __( '<strong>ERROR</strong>: Your forum needs a title.', 'buddyboss' ) );
 	}
@@ -170,37 +170,37 @@ function bbp_new_forum_handler( $action = '' ) {
 		$forum_content = $_POST['bbp_forum_content'];
 	}
 
-	// Filter and sanitize
+	// Filter and sanitize.
 	$forum_content = apply_filters( 'bbp_new_forum_pre_content', $forum_content );
 
 	/** Forum Parent */
 
-	// Forum parent was passed (the norm)
+	// Forum parent was passed (the norm).
 	if ( ! empty( $_POST['bbp_forum_parent_id'] ) ) {
 		$forum_parent_id = bbp_get_forum_id( $_POST['bbp_forum_parent_id'] );
 	}
 
-	// Filter and sanitize
+	// Filter and sanitize.
 	$forum_parent_id = apply_filters( 'bbp_new_forum_pre_parent_id', $forum_parent_id );
 
 	if ( ! empty( $forum_parent_id ) ) {
 
-		// Forum is a category
+		// Forum is a category.
 		if ( bbp_is_forum_category( $forum_parent_id ) ) {
 			bbp_add_error( 'bbp_new_forum_forum_category', __( 'This forum is a category. No forums can be created in this forum.', 'buddyboss' ) );
 		}
 
-		// Forum is closed and user cannot access
+		// Forum is closed and user cannot access.
 		if ( bbp_is_forum_closed( $forum_parent_id ) && ! current_user_can( 'edit_forum', $forum_parent_id ) ) {
 			bbp_add_error( 'bbp_new_forum_forum_closed', __( 'This forum has been closed to new forums.', 'buddyboss' ) );
 		}
 
-		// Forum is private and user cannot access
+		// Forum is private and user cannot access.
 		if ( bbp_is_forum_private( $forum_parent_id ) && ! current_user_can( 'read_private_forums' ) ) {
 			bbp_add_error( 'bbp_new_forum_forum_private', __( 'This forum is private and you do not have the capability to read or create new forums in it.', 'buddyboss' ) );
 		}
 
-		// Forum is hidden and user cannot access
+		// Forum is hidden and user cannot access.
 		if ( bbp_is_forum_hidden( $forum_parent_id ) && ! current_user_can( 'read_hidden_forums' ) ) {
 			bbp_add_error( 'bbp_new_forum_forum_hidden', __( 'This forum is hidden and you do not have the capability to read or create new forums in it.', 'buddyboss' ) );
 		}
@@ -242,7 +242,7 @@ function bbp_new_forum_handler( $action = '' ) {
 
 	do_action( 'bbp_new_forum_pre_extras', $forum_parent_id );
 
-	// Bail if errors
+	// Bail if errors.
 	if ( bbp_has_errors() ) {
 		return;
 	}
@@ -250,7 +250,7 @@ function bbp_new_forum_handler( $action = '' ) {
 	/** No Errors */
 
 	// Add the content of the form to $forum_data as an array
-	// Just in time manipulation of forum data before being created
+	// Just in time manipulation of forum data before being created.
 	$forum_data = apply_filters(
 		'bbp_new_forum_pre_insert',
 		array(
@@ -264,7 +264,7 @@ function bbp_new_forum_handler( $action = '' ) {
 		)
 	);
 
-	// Insert forum
+	// Insert forum.
 	$forum_id = wp_insert_post( $forum_data );
 
 	/** No Errors */
@@ -274,23 +274,23 @@ function bbp_new_forum_handler( $action = '' ) {
 		/** Trash Check */
 
 		// If the forum is trash, or the forum_status is switched to
-		// trash, trash it properly
+		// trash, trash it properly.
 		if ( ( get_post_field( 'post_status', $forum_id ) === bbp_get_trash_status_id() ) || ( $forum_data['post_status'] === bbp_get_trash_status_id() ) ) {
 
-			// Trash the reply
+			// Trash the reply.
 			wp_trash_post( $forum_id );
 
-			// Force view=all
+			// Force view=all.
 			$view_all = true;
 		}
 
 		/** Spam Check */
 
-		// If reply or forum are spam, officially spam this reply
+		// If reply or forum are spam, officially spam this reply.
 		if ( $forum_data['post_status'] === bbp_get_spam_status_id() ) {
 			add_post_meta( $forum_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
 
-			// Force view=all
+			// Force view=all.
 			$view_all = true;
 		}
 
@@ -316,37 +316,37 @@ function bbp_new_forum_handler( $action = '' ) {
 
 		/** Redirect */
 
-		// Redirect to
+		// Redirect to.
 		$redirect_to = bbp_get_redirect_to();
 
-		// Get the forum URL
+		// Get the forum URL.
 		$redirect_url = bbp_get_forum_permalink( $forum_id, $redirect_to );
 
 		// Add view all?
 		if ( bbp_get_view_all() || ! empty( $view_all ) ) {
 
-			// User can moderate, so redirect to forum with view all set
+			// User can moderate, so redirect to forum with view all set.
 			if ( current_user_can( 'moderate' ) ) {
 				$redirect_url = bbp_add_view_all( $redirect_url );
 
-				// User cannot moderate, so redirect to forum
+				// User cannot moderate, so redirect to forum.
 			} else {
 				$redirect_url = bbp_get_forum_permalink( $forum_id );
 			}
 		}
 
-		// Allow to be filtered
+		// Allow to be filtered.
 		$redirect_url = apply_filters( 'bbp_new_forum_redirect_to', $redirect_url, $redirect_to );
 
 		/** Successful Save */
 
-		// Redirect back to new forum
+		// Redirect back to new forum.
 		wp_safe_redirect( $redirect_url );
 
-		// For good measure
+		// For good measure.
 		exit();
 
-		// Errors
+		// Errors.
 	} else {
 		$append_error = ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) ? $forum_id->get_error_message() . ' ' : '';
 		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:' . $append_error, 'buddyboss' ) );

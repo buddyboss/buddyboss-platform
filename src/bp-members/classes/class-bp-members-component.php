@@ -261,6 +261,10 @@ class BP_Members_Component extends BP_Component {
 			$default_tab = 'documents';
 		}
 
+		if ( 'video' === $default_tab ) {
+			$default_tab = 'videos';
+		}
+
 		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 		/** Canonical Component Stack ****************************************
@@ -297,6 +301,16 @@ class BP_Members_Component extends BP_Component {
 			// redirected to the root of the spammer's profile page.  this occurs by
 			// by removing the component in the canonical stack.
 			if ( bp_is_user_spammer( bp_displayed_user_id() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+				unset( $bp->canonical_stack['component'] );
+			}
+
+			// If we're on a suspender's profile page, only users with the 'bp_moderate' cap
+			// can view subpages on the spammer's profile.
+			//
+			// users without the cap trying to access a spammer's subnav page will get
+			// redirected to the root of the suspender's profile page.  this occurs by
+			// by removing the component in the canonical stack.
+			if ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( bp_displayed_user_id() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 				unset( $bp->canonical_stack['component'] );
 			}
 		}
@@ -490,6 +504,7 @@ class BP_Members_Component extends BP_Component {
 			'BP_REST_Components_Endpoint',
 			'BP_REST_Settings_Endpoint',
 			'BP_REST_Members_Endpoint',
+			'BP_REST_Members_Permissions_Endpoint',
 			'BP_REST_Members_Actions_Endpoint',
 			'BP_REST_Members_Details_Endpoint',
 			'BP_REST_Attachments_Member_Avatar_Endpoint',

@@ -14,9 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * If there is no raw DB version, we infer that this is the first installation.
  *
- * @since BuddyPress 1.7.0
- *
  * @return bool True if this is a fresh BP install, otherwise false.
+ * @since BuddyPress 1.7.0
  */
 function bp_is_install() {
 	return ! bp_get_db_version_raw();
@@ -29,9 +28,8 @@ function bp_is_install() {
  * number stored in the database. If the registered version is greater, it's
  * an update.
  *
- * @since BuddyPress 1.6.0
- *
  * @return bool True if update, otherwise false.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_update() {
 
@@ -49,10 +47,10 @@ function bp_is_update() {
 /**
  * Determine whether BuddyPress is in the process of being activated.
  *
- * @since BuddyPress 1.6.0
- *
  * @param string $basename BuddyPress basename.
+ *
  * @return bool True if activating BuddyPress, false if not.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_activation( $basename = '' ) {
 	$bp     = buddypress();
@@ -93,10 +91,10 @@ function bp_is_activation( $basename = '' ) {
 /**
  * Determine whether BuddyPress is in the process of being deactivated.
  *
- * @since BuddyPress 1.6.0
- *
  * @param string $basename BuddyPress basename.
+ *
  * @return bool True if deactivating BuddyPress, false if not.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_deactivation( $basename = '' ) {
 	$bp     = buddypress();
@@ -178,9 +176,9 @@ function bp_version_updater() {
 	/**
 	 * Filters the default components to activate for a new install.
 	 *
-	 * @since BuddyPress 1.7.0
-	 *
 	 * @param array $value Array of default components to activate.
+	 *
+	 * @since BuddyPress 1.7.0
 	 */
 	$default_components = apply_filters(
 		'bp_new_install_default_components',
@@ -316,6 +314,28 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 16201 ) {
 			bp_update_to_1_5_1();
+		}
+
+		if ( $raw_db_version < 16301 ) {
+			bp_update_to_1_5_5();
+		}
+
+		if ( $raw_db_version < 16401 ) {
+			bb_update_to_1_5_6();
+		}
+
+		// Version 1.7.0.
+		if ( $raw_db_version < 16601 ) {
+			bp_update_to_1_7_0();
+		}
+
+		// Version 1.7.2.
+		if ( $raw_db_version < 16901 ) {
+			bb_update_to_1_7_2();
+		}
+
+		if ( $raw_db_version < 17401 ) {
+			bb_update_to_1_7_5();
 		}
 	}
 
@@ -632,13 +652,13 @@ function bp_update_to_1_4_0() {
  */
 function bp_update_to_1_4_3() {
 	global $wpdb;
-	$bp = buddypress();
-	$squery = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
+	$bp      = buddypress();
+	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
 	$records = $wpdb->get_col( $squery );
 	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
 		$records = reset( $records );
-		if ( !empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ")";
+		if ( ! empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ')';
 			$wpdb->query( $update_query );
 		}
 	}
@@ -657,44 +677,79 @@ function bp_update_to_1_5_1() {
 	}
 }
 
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_update_to_1_7_0() {
+	bp_core_install_media();
+	bb_core_enable_default_symlink_support();
+}
+
+/**
+ * Flush rewrite rule after update.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_update_to_1_7_2() {
+	flush_rewrite_rules();
+	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
+}
+
+/**
+ * Function to update data
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_update_to_1_7_5() {
+	global $bp_background_updater;
+
+	$bp_background_updater->push_to_queue(
+		array(
+			'callback' => 'bb_moderation_bg_update_moderation_data',
+			'args'     => array(),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+}
+
 function bp_update_default_doc_extensions() {
 
 	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
 
-//	$changed_array = array(
-//		'bb_doc_52'   => array(
-//			'description' => '7z Archive XYZ',
-//		)
-//	);
-//
-//
-//	if ( !empty( $changed_array ) ) {
-//		foreach ( $changed_array as $k => $v ) {
-//			if ( array_key_exists( $k, $get_extensions ) ) {
-//				$extension = $get_extensions[$k];
-//				$get_extensions[$k] = array_replace( $extension, $v );
-//			} else {
-//				// For newly add key.
-//				$get_extensions[$k] = $v;
-//			}
-//		}
-//	}
-//
-//	$removed_array = array(
-//		'bb_doc_51'
-//	);
-//
-//	if ( !empty( $removed_array ) ) {
-//		foreach (  $removed_array as $key ) {
-//			unset( $get_extensions[$key] );
-//		}
-//
-//	}
-
-
+	//	$changed_array = array(
+	//		'bb_doc_52'   => array(
+	//			'description' => '7z Archive XYZ',
+	//		)
+	//	);
+	//
+	//
+	//	if ( !empty( $changed_array ) ) {
+	//		foreach ( $changed_array as $k => $v ) {
+	//			if ( array_key_exists( $k, $get_extensions ) ) {
+	//				$extension = $get_extensions[$k];
+	//				$get_extensions[$k] = array_replace( $extension, $v );
+	//			} else {
+	//				// For newly add key.
+	//				$get_extensions[$k] = $v;
+	//			}
+	//		}
+	//	}
+	//
+	//	$removed_array = array(
+	//		'bb_doc_51'
+	//	);
+	//
+	//	if ( !empty( $removed_array ) ) {
+	//		foreach (  $removed_array as $key ) {
+	//			unset( $get_extensions[$key] );
+	//		}
+	//
+	//	}
 
 	//bp_update_option( 'bp_document_extensions_support', $get_extensions );
-
 }
 
 
@@ -706,7 +761,7 @@ function bp_update_default_doc_extensions() {
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
 
-	// Fix current forums media privacy to 'forums'
+	// Fix current forums media privacy to 'forums'.
 	bp_core_fix_forums_media();
 }
 
@@ -893,7 +948,7 @@ function bp_add_activation_redirect() {
 				$slug    = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
-				bp_update_option( '_bbp_root_slug', $slug );
+				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 
 			}
 
@@ -1108,5 +1163,108 @@ function bb_update_to_1_3_5() {
 
 	if ( bp_is_active( 'groups' ) ) {
 		bp_groups_migrate_invitations();
+	}
+}
+
+/**
+ * Fix message media showing in group photos tab.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_update_to_1_5_5() {
+
+	global $wpdb;
+	$bp = buddypress();
+
+	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )", 'message' ) );
+}
+
+/**
+ * Create Moderation emails.
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bb_update_to_1_5_6() {
+	bp_core_install_moderation_emails();
+}
+
+/**
+ * Add new video support to document extensions.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+add_filter(
+	'bp_media_allowed_document_type',
+	function ( $extensions ) {
+		$changed_array = array(
+			'bb_doc_77' => array(
+				'extension'   => '.mp4',
+				'mime_type'   => 'video/mp4',
+				'description' => __( 'MP4', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_78' => array(
+				'extension'   => '.webm',
+				'mime_type'   => 'video/webm',
+				'description' => __( 'WebM', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_79' => array(
+				'extension'   => '.ogg',
+				'mime_type'   => 'video/ogg',
+				'description' => __( 'Ogg', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_80' => array(
+				'extension'   => '.mov',
+				'mime_type'   => 'video/quicktime',
+				'description' => __( 'Quicktime', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+		);
+
+		$extensions = array_merge( $extensions, $changed_array );
+
+		return $extensions;
+	}
+);
+
+/**
+ * Migration for activity setting feed comments.
+ * Enable all custom post type comments when the default post type comments are enable.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @uses bb_feed_post_types()                    Get all post types.
+ * @uses bb_post_type_feed_option_name()         Option key for individual post type.
+ * @uses bb_post_type_feed_comment_option_name() Option key for individual post type comment.
+ * @uses bp_is_post_type_feed_enable()           Checks if post type feed is enabled.
+ *
+ * @return void
+ */
+function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
+	$custom_post_types = bb_feed_post_types();
+
+	// Run over all custom post type.
+	foreach ( $custom_post_types as $post_type ) {
+		// Post type option name.
+		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
+
+		// Post type comment option name.
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+
+		if ( bp_is_post_type_feed_enable( $post_type ) ) {
+			bp_update_option( $ptc_opt_name, 1 );
+		}
 	}
 }

@@ -113,9 +113,10 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
+		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => bp_get_directory_title( 'groups' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -182,9 +183,10 @@ class BP_Groups_Theme_Compat {
 
 		$title = __( 'Social Groups', 'buddyboss' );
 
+		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => $title,
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -254,9 +256,10 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
+		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => bp_get_current_group_name(),
 				'post_author'    => 0,
 				'post_date'      => 0,

@@ -2481,7 +2481,7 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_post_object->component_id ) {
-		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', $post->post_content, $post, $post_url, $post->post_type );
+		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', '', $post, $post_url, $post->post_type );
 		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', $post_url, $post_id, $post->post_type );
 	} else {
 		$activity_content      = $post->post_content;
@@ -2784,7 +2784,7 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_comment_object->component_id ) {
-		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( $post_type_comment->comment_content, &$post_type_comment, $comment_link ) );
+		$activity_content      = apply_filters_ref_array( 'bp_blogs_activity_new_comment_content', array( '', &$post_type_comment, $comment_link ) );
 		$activity_primary_link = apply_filters_ref_array( 'bp_blogs_activity_new_comment_primary_link', array( $comment_link, &$post_type_comment ) );
 	} else {
 		$activity_content      = $post_type_comment->comment_content;
@@ -2975,6 +2975,7 @@ function bp_activity_new_comment( $args = '' ) {
 			'primary_link'      => '',
 			'skip_notification' => false,
 			'error_type'        => 'bool',
+			'skip_error'        => true,
 		)
 	);
 
@@ -2988,8 +2989,12 @@ function bp_activity_new_comment( $args = '' ) {
 	// Default error message.
 	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
 
+	// Filter to skip comment content check for comment notification.
+	$check_empty_content = apply_filters( 'bp_has_activity_comment_content', true );
+
 	// Bail if missing necessary data.
-	if ( empty( $r['content'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+	if ( ( $check_empty_content && ( empty( $r['content'] ) && false === $r['skip_error'] ) ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+
 		$error = new WP_Error( 'missing_data', $feedback );
 
 		if ( 'wp_error' === $r['error_type'] ) {
@@ -3764,7 +3769,7 @@ function bp_activity_create_summary( $content, $activity ) {
 	);
 
 	// Get the WP_Post object if this activity type is a blog post.
-	if ( $activity['type'] === 'new_blog_post' ) {
+	if ( 'new_blog_post' === $activity['type'] ) {
 		$content = get_post( $activity['secondary_item_id'] );
 	}
 
@@ -4449,7 +4454,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	if ( ! post_type_supports( $post->post_type, 'buddypress-activity' ) ) {
 		return;
 	}
-
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 	/**
 	 * Fires before post type transition catch in activity
 	 *
@@ -4539,6 +4548,11 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		 */
 		do_action( 'bp_activity_post_type_transition_status_' . $post->post_type, $post, $new_status, $old_status );
 	}
+	/**
+	 * When enabled sync comment option from activity section then comment was going empty when
+	 * reply from blog or custom post types.
+	 */
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 }
 add_action( 'transition_post_status', 'bp_activity_catch_transition_post_type_status', 10, 3 );
 
@@ -4954,11 +4968,12 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		// get the excerpt first of post.
 		$excerpt = get_the_excerpt( $post->ID );
 
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
 		$content = ( $excerpt ) ?: $post->post_content;
 
 		// If content not empty.
 		if ( ! empty( $content ) ) {
+
 			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
 
 			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
@@ -4968,6 +4983,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
 				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
 			}
+
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
 				$activity->content = apply_filters(
@@ -5005,12 +5021,12 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
 }
-add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+//add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
 
 
 /**
@@ -5067,7 +5083,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 		// get the excerpt first of post.
 		$excerpt = get_the_excerpt( $post->ID );
 
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
 		$content = ( $excerpt ) ?: $post->post_content;
 
 		// If content not empty.
@@ -5109,12 +5125,12 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
 }
-add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+//add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
 
 /**
  * AJAX endpoint for link preview URL parser.
@@ -5351,6 +5367,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 		$new_scope = (array) $scope;
 	}
 
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() && bp_is_relevant_feed_enabled() ) {
+		$key = array_search( 'public', $new_scope, true );
+		if ( is_array( $new_scope ) && false !== $key ) {
+			unset( $new_scope[ $key ] );
+			if ( bp_is_active( 'forums' ) ) {
+				$new_scope[] = 'forums';
+			}
+		}
+	}
+
 	/**
 	 * Filter to update default scope.
 	 *
@@ -5359,7 +5385,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
 
 	return implode( ',', $new_scope );
-
 }
 
 /**
@@ -5440,4 +5465,230 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'privacy'          => $activity->privacy,
 		)
 	);
+}
+
+/**
+ * Return the link to report activity
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args Arguments
+ *
+ * @return string Link for a report a activity
+ */
+function bp_activity_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'id'                => 'activity_report',
+			'component'         => 'moderation',
+			'position'          => 10,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_get_activity_id(),
+				'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Filter Activity report link
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	return apply_filters( 'bp_activity_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}
+
+/**
+ * Return the link to report activity activity
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param array $args Arguments
+ *
+ * @return string Link for a report a activity comment
+ */
+function bp_activity_comment_get_report_link( $args = array() ) {
+
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'id'                => 'activity_comment_report',
+			'component'         => 'moderation',
+			'position'          => 10,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_get_activity_comment_id(),
+				'data-bp-content-type' => BP_Moderation_Activity_Comment::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Filter Activity comment report link
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}
+
+/**
+ * This function will give the activity hierarchy
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bb_get_activity_hierarchy( $activity_id ) {
+
+	global $wpdb, $bp;
+
+	$activity_table = $bp->activity->table_name;
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$activity_query = $wpdb->prepare( "SELECT c.id FROM ( SELECT @r AS _id, (SELECT @r := secondary_item_id FROM {$activity_table} WHERE id = _id) AS secondary_item_id, @l := @l + 1 AS level FROM (SELECT @r := %d, @l := 0) vars, {$activity_table} m WHERE @r <> 0) d JOIN {$activity_table} c ON d._id = c.id ORDER BY d.level ASC", $activity_id );
+
+	$data = $wpdb->get_results( $activity_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	return array_filter( $data );
+}
+
+/**
+ * Is it blog post activity.
+ *
+ * @param object $activity Blog post activity data.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return bool
+ */
+function bb_activity_blog_post_acivity( $activity ) {
+	if ( ( 'blogs' === $activity->component ) && ! empty( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$blog_post = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * This function will give the topic id from topic activity.
+ * - Used in Rest API
+ *
+ * @param object $activity Topic activity data.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return int
+ */
+function bb_activity_topic_id( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// When the activity type does not match with the topic.
+	if ( 'bbp_topic_create' !== $activity->type ) {
+		return false;
+	}
+
+	$topic_id = false;
+
+	// Set topic id when activity component is not groups.
+	if ( 'bbpress' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->item_id;
+	}
+
+	// Set topic id when activity component is groups.
+	if ( 'groups' === $activity->component ) {
+		// Set topic id when activity type topic.
+		$topic_id = $activity->secondary_item_id;
+	}
+
+	return $topic_id;
+}
+
+/**
+ * This function will give the reply topic id from reply activity.
+ * - Used in Rest API
+ *
+ * @param object $activity Reply activity data.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return int
+ */
+function bb_activity_reply_topic_id( $activity ) {
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// When the activity type does not match with the topic.
+	if ( 'bbp_reply_create' !== $activity->type ) {
+		return false;
+	}
+
+	$topic_id = false;
+
+	// Set topic id when activity component is not groups.
+	if ( 'bbpress' === $activity->component ) {
+		// Set topic id when activity type reply.
+		$topic_id = bbp_get_reply_topic_id( $activity->item_id );
+	}
+
+	// Set topic id when activity component is groups.
+	if ( 'groups' === $activity->component ) {
+		// Set topic id when activity type reply.
+		$topic_id = bbp_get_reply_topic_id( $activity->secondary_item_id );
+	}
+
+	return $topic_id;
+}
+
+/**
+ * Is it topic comment activity.
+ * - Used in Rest API
+ *
+ * @param int $activity_id Activity id.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return bool
+ */
+function bb_acivity_is_topic_comment( $activity_id ) {
+	$item_activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $item_activity ) ) {
+		return false;
+	}
+
+	// Get the current action name.
+	$action_name = $item_activity->type;
+
+	// Setup the array of possibly disabled actions.
+	$disabled_actions = array(
+		'bbp_topic_create',
+		'bbp_reply_create',
+	);
+
+	// Comment is disabled for discussion and reply discussion.
+	if ( in_array( $action_name, $disabled_actions, true ) ) {
+		return true;
+	}
+
+	return false;
 }

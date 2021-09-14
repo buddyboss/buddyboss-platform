@@ -132,6 +132,13 @@ window.bp = window.bp || {};
 								'background-image': 'none'
 							 }
 						);
+
+						$( '.group-create #header-cover-image' ).css(
+							{
+								'display': 'none'
+							 }
+						);
+
 					} else {
 						$( '#header-cover-image' ).css(
 							{
@@ -139,6 +146,9 @@ window.bp = window.bp || {};
 							}
 						);
 					}
+
+					$( '#header-cover-image .header-cover-img' ).remove();
+					$( '#header-cover-image  .position-change-cover-image').remove();
 
 						// Reset the has_cover_image bp_param
 						BP_Uploader.settings.defaults.multipart_params.bp_params.has_cover_image = false;
@@ -264,9 +274,32 @@ window.bp = window.bp || {};
 						$( '.bp-cover-image-status' ).append( '<p class="warning">' + BP_Uploader.strings.cover_image_warnings.dimensions + '</p>' );
 					}
 
+					// Update the header of the page and reset the position
+					if( $( '#header-cover-image .header-cover-img' ).length ) {
+						$( '#header-cover-image .header-cover-img' ).prop( 'src', model.get( 'url' ) );
+					} else {
+						$( '#header-cover-image' ).prepend( '<img src="'+ model.get( 'url' ) +'" class="header-cover-img" />');
+					}
+
+					if( $('#header-cover-image .header-cover-reposition-wrap .guillotine-window img').length ) {
+						var reposition_img = $('#header-cover-image .header-cover-reposition-wrap .guillotine-window img');
+						$('#header-cover-image .header-cover-reposition-wrap .guillotine-window').remove();
+						$('#header-cover-image .header-cover-reposition-wrap').append( reposition_img );
+					}
+					
+					$( '#header-cover-image .header-cover-reposition-wrap img').prop( 'src', model.get( 'url' ) );
+					$( '#header-cover-image' ).removeClass( 'has-position' ).find( '.header-cover-img' ).removeAttr( 'data-top' ).removeAttr( 'style' );
+
 
 					// Add the delete view
 					bp.CoverImage.deleteView();
+
+					$( '.group-create #header-cover-image' ).css(
+						{
+							'background-image': 'url( ' + model.get( 'url' ) + ' )',
+							'display': 'block'
+						}
+					);
 
 					/**
 					 * Set the Attachment object
