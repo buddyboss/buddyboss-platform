@@ -53,12 +53,15 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return;
 		}
 
-		// Update report button.
-		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
-
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
@@ -72,7 +75,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public static function get_permalink( $media_id ) {
 		$media = new BP_Media( $media_id );
-		return wp_get_attachment_url( $media->attachment_id );
+		return bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image-medium' );
 	}
 
 	/**
@@ -127,31 +130,6 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to modify button sub item
-	 *
-	 * @since BuddyBoss 1.5.6
-	 *
-	 * @param int $item_id Item id.
-	 *
-	 * @return array
-	 */
-	public function update_button_sub_items( $item_id ) {
-		$media = new BP_Media( $item_id );
-
-		if ( empty( $media->id ) ) {
-			return array();
-		}
-
-		$sub_items = array();
-		if ( bp_is_active( 'activity' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) && ! empty( $media->activity_id ) ) {
-			$sub_items['id']   = $media->activity_id;
-			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
-		}
-
-		return $sub_items;
-	}
-
-	/**
 	 * Filter to check the media is valid or not.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -173,5 +151,33 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+		return esc_html__( 'Report Photo', 'buddyboss' );
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+		return esc_html__( 'Photo', 'buddyboss' );
 	}
 }

@@ -99,6 +99,15 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	if ( ! empty( $_POST['video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
+		if ( ! $can_send_video ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'You don\'t have access to send the video. ', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
+		}
+	}
+
 	if ( ! empty( $_POST['gif_data'] ) ) {
 		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
@@ -132,6 +141,15 @@ function messages_new_message( $args = '' ) {
 		// not alone. If they are alone, let them talk to themselves.
 		if ( isset( $message->recipients[ $r['sender_id'] ] ) && ( count( $message->recipients ) > 1 ) ) {
 			unset( $message->recipients[ $r['sender_id'] ] );
+		}
+
+		// Filter out the suspended recipients.
+		if ( function_exists( 'bp_moderation_is_user_suspended' ) && count( $message->recipients ) > 0 ) {
+			foreach ( $message->recipients as $key => $recipient ) {
+				if ( bp_moderation_is_user_suspended( $key ) ) {
+					unset( $message->recipients[ $key ] );
+				}
+			}
 		}
 
 		// Set a default reply subject if none was sent.
@@ -1146,4 +1164,15 @@ function bb_messages_is_group_thread( $thread_id ) {
 	}
 
 	return $is_group_message_thread;
+}
+
+/**
+ * Recipients per page list.
+ *
+ * @return int $per_page Return per page for recipients.
+ *
+ * @since BuddyBoss 1.7.6
+ */
+function bb_messages_recipients_per_page() {
+	return apply_filters( 'bb_messages_recipients_per_page', 20 );
 }

@@ -239,6 +239,25 @@ class Cache {
 		}
 	}
 
+	/**
+	 * Purge cache by user id
+	 *
+	 * @param integer $user_id Cache user id.
+	 * @param string  $group_name Cache group name.
+	 */
+	public function purge_by_user_id( $user_id, $group_name = '' ) {
+		global $wpdb;
+
+		if ( ! empty( $group_name ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s AND cache_group  LIKE %s", $user_id, '%' . $group_name . '%' ) );
+
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s", $user_id ) );
+		}
+	}
+
 
 	/**
 	 * Purge cache by endpoint

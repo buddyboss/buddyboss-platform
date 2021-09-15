@@ -508,3 +508,13 @@
 .bb-icon-book-open:before { content: '\e9d7'; }
 .bb-icon-speech:before { content: '\e9d8'; }
 .bb-icon-checkmark-full:before { content: '\e9d9'; }
+.bb-icon-video-album:before { content: '\e9da'; }
+.bb-icon-video-albums:before { content: '\e9db'; }
+.bb-icon-video-alt:before { content: '\e9dc'; }
+.bb-icon-video-next:before { content: '\e9dd'; }
+.bb-icon-rounded-telegram:before { content: '\e9de'; }
+.bb-icon-rounded-tiktok:before { content: '\e9df'; }
+.bb-icon-rounded-clubhouse:before { content: '\e9e0'; }
+.bb-icon-attach-fill:before { content: '\e9e1'; }
+.bb-icon-camera-fill:before { content: '\e9e2'; }
+.bb-icon-video-fill:before { content: '\e9e3'; }

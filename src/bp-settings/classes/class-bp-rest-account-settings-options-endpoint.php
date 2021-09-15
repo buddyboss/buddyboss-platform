@@ -153,28 +153,27 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$nav    = $request->get_param( 'nav' );
 
-		$nav = $request->get_param( 'nav' );
-
-		if ( true === $retval && empty( $nav ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_setting_nav',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
+			if ( empty( $nav ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_setting_nav',
+					__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		/**
@@ -262,7 +261,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		$retval = array(
 			'error'   => ( isset( $updated['error'] ) ? $updated['error'] : false ),
-			'success' => ( empty( $updated['error'] ) ? __( 'Your settings has been successfully updated.','buddyboss' ) : false ),
+			'success' => ( empty( $updated['error'] ) ? __( 'Your settings has been successfully updated.', 'buddyboss' ) : false ),
 			'notices' => ( isset( $updated['notice'] ) ? $updated['notice'] : false ),
 			'data'    => $data,
 		);
@@ -291,28 +290,27 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$nav    = $request->get_param( 'nav' );
 
-		$nav = $request->get_param( 'nav' );
-
-		if ( true === $retval && empty( $nav ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_setting_nav',
-				__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
+			if ( empty( $nav ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_setting_nav',
+					__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		/**
@@ -715,7 +713,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 				$fields_groups[] = array(
 					'name'        => 'notification_group_messages_new_message',
-					'label'       => __( 'Group Message', 'buddyboss' ),
+					'label'       => __( 'A group sends you a new message', 'buddyboss' ),
 					'field'       => 'radio',
 					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
 					'options'     => array(
@@ -728,6 +726,44 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			$fields_groups = apply_filters( 'bp_rest_account_settings_notifications_groups', $fields_groups );
 			$fields        = array_merge( $fields, $fields_groups );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$fields_forums[] = array(
+				'name'        => '',
+				'label'       => '',
+				'field'       => '',
+				'value'       => '',
+				'options'     => array(),
+				'group_label' => __( 'Forums', 'buddyboss' ),
+			);
+
+			$fields_forums[] = array(
+				'name'        => 'notification_forums_following_reply',
+				'label'       => __( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
+				'options'     => array(
+					'yes' => 'Yes',
+					'no'  => 'No',
+				),
+				'group_label' => '',
+			);
+
+			$fields_forums[] = array(
+				'name'        => 'notification_forums_following_topic',
+				'label'       => __( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
+				'options'     => array(
+					'yes' => 'Yes',
+					'no'  => 'No',
+				),
+				'group_label' => '',
+			);
+
+			$fields_forums = apply_filters( 'bp_rest_account_settings_notifications_forums', $fields_forums );
+			$fields        = array_merge( $fields, $fields_forums );
 		}
 
 		if ( bp_is_active( 'friends' ) ) {
