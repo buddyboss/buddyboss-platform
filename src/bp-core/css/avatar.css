@@ -314,6 +314,10 @@ div.bp-avatar-nav {
 	margin-right: 20px;
 }
 
+.bp-profile-wrapper .bp-profile-content .profile.change-avatar #avatar-upload-form {
+	opacity: 0;
+}
+
 @media screen and (max-width: 480px) {
 
 	#bp-webcam-avatar .avatar-crop-management #avatar-crop-actions,
@@ -410,5 +414,13 @@ body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent p.warning {
 		max-width: none;
 		width: auto;
 	}
+}
+
+#avatar-crop-pane > img {
+	float: left;
+}
+
+html[dir="rtl"] #avatar-crop-pane > img {
+	float: right;
 }
 /* stylelint-enable */

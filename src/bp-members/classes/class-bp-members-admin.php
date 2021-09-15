@@ -189,6 +189,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			// Process changes to profile type.
 			add_action( 'bp_members_admin_load', array( $this, 'process_member_type_update' ) );
 
+			// Process changes to user suspend
+			add_action( 'bp_members_admin_load', array( $this, 'process_user_suspend_update' ) );
+
 		// Set Cookie to reset the previous layout stored in browser storage.
 		add_action( 'update_option_bp-profile-layout-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
 		add_action( 'update_option_bp-profile-layout-default-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
@@ -786,6 +789,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 *
 		 * @param object|null $user   User to create profile navigation for.
 		 * @param string      $active Which profile to highlight.
+		 *
 		 * @return string|null
 		 */
 		public function profile_nav( $user = null, $active = 'WordPress' ) {
@@ -1223,7 +1227,14 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						<div class="misc-pub-section" id="comment-status-radio">
 							<label class="approved"><input type="radio" name="user_status" value="ham" <?php checked( $is_spammer, false ); ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></label><br />
-							<label class="spam"><input type="radio" name="user_status" value="spam" <?php checked( $is_spammer, true ); ?>><?php esc_html_e( 'Spammer', 'buddyboss' ); ?></label>
+
+							<?php
+							if ( bp_is_active( 'moderation' ) ) {
+								$is_suspend = bp_moderation_is_user_suspended( $user->ID );
+								?>
+								<label class="suspend"><input type="radio" name="user_status" id="user_status" value="suspend" <?php checked( $is_suspend, true ); ?>><?php esc_html_e( 'Suspend', 'buddyboss' ); ?></label>
+								<?php
+							} ?>
 						</div>
 
 					<?php endif; ?>
@@ -1264,7 +1275,20 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-		<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<?php
+		}
+
+		/**
+		 * Render the fallback metabox in case a user has been marked as a suspended.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param WP_User|null $user The WP_User object to be edited.
+		 */
+		public function user_admin_suspended_metabox( $user = null ) {
+			?>
+			<p><?php printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1465,6 +1489,38 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 		}
 
+
+		/**
+		 * Process changes from the profile type metabox.
+		 *
+		 * @since BuddyBoss 1.5.6
+ 		 *
+ 		 * @param string $doaction
+		 */
+		public function process_user_suspend_update( $doaction = '' ) {
+
+			if ( 'update' === $doaction ) {
+
+				$user_id = $this->get_user_id();
+
+				check_admin_referer( 'edit-bp-profile_' . $user_id );
+
+				// Permission check.
+				if ( ! bp_current_user_can( 'bp_moderate' ) && $user_id != bp_loggedin_user_id() ) {
+					return;
+				}
+
+				// profile type string must either reference a valid profile type, or be empty.
+				$is_suspend = stripslashes( $_POST['user_status'] );
+
+				if ( ! empty( $is_suspend ) && 'suspend' === $is_suspend ) {
+					BP_Suspend_Member::suspend_user( $user_id );
+				} elseif ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( $user_id ) ) {
+					BP_Suspend_Member::unsuspend_user( $user_id );
+				}
+			}
+		}
+
 		/**
 		 * Add a link to Profile in Users listing row actions.
 		 *
@@ -1472,6 +1528,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 *
 		 * @param array|string $actions WordPress row actions (edit, delete).
 		 * @param object|null  $user    The object for the user row.
+		 *
 		 * @return null|string|array Merged actions.
 		 */
 		public function row_actions( $actions = '', $user = null ) {
@@ -1542,6 +1599,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @param string $profile_link Profile Link for admin bar.
 		 * @param string $url          Profile URL.
 		 * @param int    $user_id      User ID.
+		 *
 		 * @return string
 		 */
 		public function filter_adminbar_profile_link( $profile_link = '', $url = '', $user_id = 0 ) {
@@ -1570,6 +1628,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @param int    $value     Value for signup option.
 		 * @param string $option    Value for the option key.
 		 * @param int    $new_value Value for the saved option.
+		 *
 		 * @return int The pagination preferences.
 		 */
 		public function signup_screen_options( $value = 0, $option = '', $new_value = 0 ) {
@@ -1595,6 +1654,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @since BuddyPress 2.0.0
 		 *
 		 * @param WP_User_Query|null $query The users query.
+		 *
 		 * @return WP_User_Query|null The users query without the signups.
 		 */
 		public function remove_signups_from_user_query( $query = null ) {
@@ -1637,6 +1697,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $views WP List Table views.
+		 *
 		 * @return array The views with the signup view added.
 		 */
 		public function signup_filter_view( $views = array() ) {
@@ -1673,6 +1734,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 *
 		 * @param string $class    The name of the class to use.
 		 * @param string $required The parent class.
+		 *
 		 * @return WP_List_Table|null The List table.
 		 */
 		public static function get_list_table_class( $class = '', $required = '' ) {
@@ -2743,6 +2805,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @since BuddyPress 2.8.0
 		 *
 		 * @param string|array $value Field value.
+		 *
 		 * @return string
 		 */
 		protected function format_xprofile_field_for_display( $value ) {

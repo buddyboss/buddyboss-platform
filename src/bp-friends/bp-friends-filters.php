@@ -117,6 +117,75 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 add_filter( 'bp_media_set_friends_scope_args', 'bp_friends_filter_media_scope', 10, 2 );
 
 /**
+ * Set up video arguments for use with the 'friends' scope.
+ *
+ * For details on the syntax, see {@link BP_Video_Query}.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	// Determine friends of user.
+	$friends = friends_get_friend_user_ids( $user_id );
+	if ( empty( $friends ) ) {
+		$friends = array( 0 );
+	}
+
+	if ( bp_loggedin_user_id() !== (int) $user_id ) {
+		array_push( $friends, bp_loggedin_user_id() );
+	}
+
+	if ( ! bp_is_profile_video_support_enabled() ) {
+		$friends = array( 0 );
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'user_id',
+			'compare' => 'IN',
+			'value'   => (array) $friends,
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'friends',
+		),
+	);
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$retval[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	return $retval;
+}
+add_filter( 'bp_video_set_friends_scope_args', 'bp_friends_filter_video_scope', 10, 2 );
+
+/**
  * Set up media arguments for use with the 'friends' scope.
  *
  * For details on the syntax, see {@link BP_Media_Query}.

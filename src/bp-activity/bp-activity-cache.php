@@ -146,7 +146,11 @@ add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
 function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 	if ( ! empty( $ids ) ) {
 		foreach ( $ids as $id ) {
-			wp_cache_delete( $id, 'bp_activity_follow' );
+			if ( is_object( $id ) && isset( $id->id ) ) {
+				wp_cache_delete( $id->id, 'bp_activity_follow' );
+			} else {
+				wp_cache_delete( $id, 'bp_activity_follow' );
+			}
 		}
 	}
 }
