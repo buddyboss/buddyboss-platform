@@ -171,6 +171,18 @@ function bb_wp_offload_media_compatibility_helper() {
 add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
 
 /**
+ * Helper functions for the offload media compatibility.
+ */
+function bb_seo_press_compatibility_helper() {
+
+	if ( (bool) bp_get_option( 'seopress_activated' ) ) {
+		require buddypress()->compatibility_dir . '/bp-seopress-helpers.php';
+    }
+
+}
+add_action( 'plugin_loaded', 'bb_seo_press_compatibility_helper', 9999 );
+
+/**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
  *
  * @since BuddyBoss 1.1.9
