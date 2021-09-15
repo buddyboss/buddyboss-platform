@@ -488,13 +488,13 @@ window.bp = window.bp || {};
 		
 		messageBlockMember: function ( e ) {
 			e.preventDefault();
-			var contentId = $( this ).data( 'bp-content-id' );
+			var contentId   = $( this ).data( 'bp-content-id' );
 			var contentType = $( this ).data( 'bp-content-type' );
-			var nonce = $( this ).data( 'bp-nonce' );
+			var nonce       = $( this ).data( 'bp-nonce' );
 			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 				$( document ).find( '.bp-report-form-err' ).empty();
 				var blockedPopup = $( this ).attr( 'href' );
-				var mf_content = $( blockedPopup );
+				var mf_content   = $( blockedPopup );
 				mf_content.find( '.bp-content-id' ).val( contentId );
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
