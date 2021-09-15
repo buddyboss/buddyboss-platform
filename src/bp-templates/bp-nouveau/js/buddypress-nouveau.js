@@ -2173,7 +2173,7 @@ window.bp = window.bp || {};
 			}
 		},
 		reportPopUp: function () {
-			if ( $( '.report-content, .block-member, .mass-block-member' ).length > 0 ) {
+			if ( $( '.report-content, .block-member' ).length > 0 ) {
 				var _this = this;
 				$( '.report-content, .block-member' ).magnificPopup(
 					{
@@ -2193,56 +2193,6 @@ window.bp = window.bp || {};
 									$( document ).find( '.bp-report-form-err' ).empty();
 									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
 								}
-							}
-						}
-					}
-				);
-				
-				$( '.mass-block-member' ).magnificPopup(
-					{
-						type: 'ajax',
-						ajax: {
-							settings: {
-								url: BP_Nouveau.ajaxurl,
-								method: 'POST',
-							},
-							cursor: 'mfp-ajax-cur',
-							tError: '<a href="%url%">The content</a> could not be loaded.'
-						},
-						midClick: true,
-						callbacks: {
-							elementParse: function() {
-								this.st.ajax.settings.data = {
-									action: 'messages_moderated_recipient_list',
-									post_data: {
-										'page_no'             : this.st.el.attr('data-cp'),
-										'thread_id'           : this.st.el.attr('data-thread-id'),
-										'moderated_recipients': true,
-									},
-								}
-							},
-							change: function () {
-								var _self = this;
-								setTimeout(
-									function () {
-										var contentId   = _self.currItem.el.data( 'bp-content-id' );
-										var contentType = _self.currItem.el.data( 'bp-content-type' );
-										var nonce       = _self.currItem.el.data( 'bp-nonce' );
-										if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
-											_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
-										}
-									},
-									1
-								);
-							},
-							updateStatus: function(data) {
-								console.log('Status changed', data);
-								data.text = '';
-								return false;
-							},
-							parseAjax: function (mfpResponse) {
-							},
-							ajaxContentAdded: function() {
 							}
 						}
 					}

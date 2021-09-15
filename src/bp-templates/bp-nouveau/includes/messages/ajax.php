@@ -2797,5 +2797,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	}
 	$html .= ob_get_contents();
 	ob_end_clean();
-	echo $html;
+	wp_send_json_success(
+		array(
+			'content' => $html,
+			'type'       => 'success',
+		)
+	);
 }

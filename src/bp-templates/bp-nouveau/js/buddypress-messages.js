@@ -177,6 +177,8 @@ window.bp = window.bp || {};
 			 */
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 			$( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
+			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member', this.messageModeratorMemberList );
+			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 
 		},
 
@@ -442,32 +444,6 @@ window.bp = window.bp || {};
 											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
 										}
 										$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
-										
-										// When click on block button then need to open popup
-										if ( $( '.report-content, .block-member' ).length > 0 ) {
-											$( '.report-content, .block-member' ).magnificPopup(
-												{
-													type: 'inline',
-													midClick: true,
-													callbacks: {
-														open: function () {
-															var contentId = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-id' );
-															var contentType = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-type' );
-															var nonce = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-nonce' );
-															var reportType = cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'reported_type' );
-															if ( 'undefined' !== typeof reportType ) {
-																var mf_content = $( '#content-report' );
-																mf_content.find( '.bp-reported-type' ).text( reportType );
-															}
-															if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
-																$( document ).find( '.bp-report-form-err' ).empty();
-																this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
-															}
-														}
-													}
-												}
-											);
-										}
 									}
 									if ( 'bp_view_more' === bpAction ) {
 										var oldSpanTagTextNode = document.createTextNode( ', ' );
@@ -509,11 +485,60 @@ window.bp = window.bp || {};
 			} );
 			return false;
 		},
-		setFormValues: function ( data ) {
-			var mf_content = $( '.mfp-content' );
-			mf_content.find( '.bp-content-id' ).val( data.contentId );
-			mf_content.find( '.bp-content-type' ).val( data.contentType );
-			mf_content.find( '.bp-nonce' ).val( data.nonce );
+		
+		messageBlockMember: function ( e ) {
+			e.preventDefault();
+			var contentId = $( this ).data( 'bp-content-id' );
+			var contentType = $( this ).data( 'bp-content-type' );
+			var nonce = $( this ).data( 'bp-nonce' );
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				var blockedPopup = $( this ).attr( 'href' );
+				var mf_content = $( blockedPopup );
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			$( '#mass-user-block-list a.block-member' ).magnificPopup(
+				{
+					items: {
+						src: '#block-member',
+						type: 'inline'
+					},
+				}
+			).magnificPopup( 'open' );
+		},
+		
+		messageModeratorMemberList: function ( e ) {
+			e.preventDefault();
+			var postData = {
+				'page_no': $( this ).attr( 'data-cp' ),
+				'thread_id': $( this ).attr( 'data-thread-id' ),
+				'action': '',
+				'moderated_recipients': true,
+			};
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'messages_moderated_recipient_list',
+						post_data: postData,
+					},
+					success: function ( response ) {
+						if ( response.success && response.data && '' !== response.data.content ) {
+							$( '.mass-block-member' ).magnificPopup(
+								{
+									items: {
+										src: response.data.content,
+										type: 'inline'
+									},
+								}
+							).magnificPopup( 'open' );
+						}
+					},
+				}
+			);
 		},
 	};
 
