@@ -244,7 +244,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	/**
 	 * Function to update activity report button arguments.
 	 *
-	 * @since BuddyBoss 1.7.6
+	 * @since BuddyBoss 1.7.7
 	 *
 	 * @param array $report_button Activity report button
 	 * @param array $args          Arguments
