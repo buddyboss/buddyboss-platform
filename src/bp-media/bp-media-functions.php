@@ -3638,8 +3638,6 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$attach_id      = $document->attachment_id;
 	}
 
-
-
 	if ( 'comment' === $media_privacy && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 		$hierarchy = bb_get_activity_hierarchy( $activity_id );
 		if ( ! empty( $hierarchy ) ) {
