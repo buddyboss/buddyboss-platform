@@ -176,11 +176,24 @@ add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
 function bb_seo_press_compatibility_helper() {
 
 	if ( (bool) bp_get_option( 'seopress_activated' ) ) {
-		require buddypress()->compatibility_dir . '/bp-seopress-helpers.php';
+		if (
+			(
+				! empty( get_query_var( 'bb-media-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-player' ) ) ||
+				! empty( get_query_var( 'bb-video-thumb-preview' ) ) ||
+				! empty( get_query_var( 'bb-video-preview' ) )
+			)
+			&&
+			(
+				function_exists( 'seopress_redirections_enabled' ) &&
+				'yes' === seopress_redirections_enabled() ) ) {
+			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
+		}
     }
 
 }
-add_action( 'plugin_loaded', 'bb_seo_press_compatibility_helper', 9999 );
+add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
