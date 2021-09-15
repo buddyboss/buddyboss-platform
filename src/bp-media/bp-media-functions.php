@@ -3572,11 +3572,12 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 /**
  * Function which return the access based on the current user.
  *
- * @param int    $id   Media|Document|Video|Folder|Album id.
- * @param string $type Media|Document|Video|Folder|Album type.
- * @param int    $id   Media|Document|Video attachment id.
+ * @param int    $id            Media|Document|Video|Folder|Album id.
+ * @param string $type          Media|Document|Video|Folder|Album type.
+ * @param int    $attachment_id Media|Document|Video attachment id.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss X.X.X
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 
