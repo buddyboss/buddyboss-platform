@@ -69,7 +69,7 @@ add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
-add_action( 'template_include', 'bb_setup_template_for_video_preview' );
+add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_MAX );
 
 /**
  * Add video theatre template for activity pages.
