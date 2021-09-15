@@ -192,9 +192,10 @@ function bb_seo_press_compatibility_helper() {
 				'yes' === seopress_redirections_enabled() ) ) {
 			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
 		}
-    }
+	}
 
 }
+
 add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
