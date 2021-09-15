@@ -171,7 +171,9 @@ function bb_wp_offload_media_compatibility_helper() {
 add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
 
 /**
- * Helper functions for the offload media compatibility.
+ * Fix the media, video & document display compatibility issue.
+ *
+ * @since BuddyBoss X.X.X
  */
 function bb_seo_press_compatibility_helper() {
 
