@@ -189,7 +189,9 @@ function bb_seo_press_compatibility_helper() {
 			&&
 			(
 				function_exists( 'seopress_redirections_enabled' ) &&
-				'yes' === seopress_redirections_enabled() ) ) {
+				'yes' === seopress_redirections_enabled()
+            )
+        ) {
 			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
 		}
 	}
