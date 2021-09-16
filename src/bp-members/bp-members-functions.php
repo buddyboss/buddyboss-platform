@@ -1945,6 +1945,7 @@ function bp_core_activate_signup( $key ) {
 	} else {
 		$signups = BP_Signup::get(
 			array(
+				'exclude_active' => false,
 				'activation_key' => $key,
 			)
 		);
@@ -3352,15 +3353,28 @@ function bp_member_type_by_type( $type_id ) {
  * @return array Member types
  */
 function bp_get_active_member_types( $args = array() ) {
+
+	if ( ! bp_member_type_enable_disable() ) {
+	    return array();
+	}
+
+	static $cache = array();
 	$bp_active_member_types = array();
 
 	$args = bp_parse_args( $args, array(
 		'posts_per_page' => - 1,
 		'post_type'      => bp_get_member_type_post_type(),
+		'post_status'    => 'publish',
 		'orderby'        => 'menu_order',
 		'order'          => 'ASC',
 		'fields'         => 'ids'
 	), 'member_types' );
+
+	$cache_key = 'bp_get_active_member_types_' . md5( serialize( $args ) );
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
 
 	$bp_active_member_types_query = new \WP_Query( $args );
 
@@ -3369,7 +3383,10 @@ function bp_get_active_member_types( $args = array() ) {
 	}
 	wp_reset_postdata();
 
-	return apply_filters( 'bp_get_active_member_types', $bp_active_member_types );
+	$bp_active_member_types = apply_filters( 'bp_get_active_member_types', $bp_active_member_types );
+	$cache[ $cache_key ]    = $bp_active_member_types;
+
+	return $bp_active_member_types;
 }
 
 /**
@@ -4659,11 +4676,17 @@ add_action( 'bp_before_register_page', 'bp_register_page_content' );
  *
  * @since BuddyBoss 1.5.6
  *
- * @param array $args Arguments
+ * @param array $args Arguments.
  *
- * @return string Link for a report a Member
+ * @return string|false Link for a report a Member.
  */
 function bp_member_get_report_link( $args = array() ) {
+
+	// Restricted Report link for admin user.
+	$displayed_user_roles = bb_get_member_roles( bp_displayed_user_id() );
+	if ( in_array( 'administrator', $displayed_user_roles, true ) ) {
+		return false;
+	}
 
 	$args = wp_parse_args(
 		$args,
@@ -4680,17 +4703,40 @@ function bp_member_get_report_link( $args = array() ) {
 	);
 
 	/**
-	 * Restricted Report link for admin user.
-	 */
-	$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
-	if ( in_array( $args['button_attr']['data-bp-content-id'], $admins, true ) ) {
-		return array();
-	}
-
-	/**
 	 * Filter to update Member report link
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
 	return apply_filters( 'bp_member_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}
+
+/**
+ * Get member roles.
+ *
+ * @param int $user_id User ID.
+ *
+ * @return array|false List of user roles or false otherwise.
+ */
+function bb_get_member_roles( $user_id = 0 ) {
+
+	// Default return value.
+	$roles = array();
+
+	// Bail if cannot query the user.
+	if ( ! class_exists( 'WP_User' ) || empty( $user_id ) ) {
+		return $roles;
+	}
+
+	// User ID.
+	$user = new WP_User( $user_id );
+	if ( isset( $user->roles ) ) {
+		$roles = (array) $user->roles;
+	}
+
+	// Super admin.
+	if ( is_multisite() && is_super_admin( $user_id ) ) {
+		$roles[] = 'super_admin';
+	}
+
+	return $roles;
 }

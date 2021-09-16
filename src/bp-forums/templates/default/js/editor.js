@@ -23,7 +23,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: true,
+								cleanPastedHTML: false,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -50,6 +50,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -67,6 +68,18 @@ jQuery( document ).ready(
 							bbp_forum_content.val( jQuery(dummy_element).html() );
 						}
 					);
+
+					element.addEventListener( 'paste', function ( event ) {
+						// Get user's pasted data.
+						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+							data = clipboardData.getData( 'text/plain' );
+
+						// Insert the filtered content.
+						document.execCommand( 'insertHTML', false, data );
+
+						// Prevent the standard paste behavior.
+						event.preventDefault();
+					} );
 				});
 
 				//Add Click event to show / hide text formatting Toolbar
@@ -105,7 +118,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: true,
+								cleanPastedHTML: false,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -132,6 +145,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -149,6 +163,18 @@ jQuery( document ).ready(
 							bbp_reply_content.val( jQuery(dummy_element).html() );
 						}
 					);
+
+					element.addEventListener( 'paste', function ( event ) {
+						// Get user's pasted data.
+						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+							data = clipboardData.getData( 'text/plain' );
+
+						// Insert the filtered content.
+						document.execCommand( 'insertHTML', false, data );
+
+						// Prevent the standard paste behavior.
+						event.preventDefault();
+					} );
 
 					//Add Click event to show / hide text formatting Toolbar
 					jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function(e) {
@@ -187,7 +213,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: true,
+								cleanPastedHTML: false,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -216,6 +242,7 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
 							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -233,6 +260,18 @@ jQuery( document ).ready(
 							bbp_topic_content.val( jQuery(dummy_element).html() );
 						}
 					);
+
+					element.addEventListener( 'paste', function ( event ) {
+						// Get user's pasted data.
+						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+							data = clipboardData.getData( 'text/plain' );
+
+						// Insert the filtered content.
+						document.execCommand( 'insertHTML', false, data );
+
+						// Prevent the standard paste behavior.
+						event.preventDefault();
+					} );
 
 					//Add Click event to show / hide text formatting Toolbar
 					jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
@@ -255,6 +294,8 @@ jQuery( document ).ready(
 						medium_editor.toggleClass('active');
 
 					});
+
+
 				});
 			}
 		}

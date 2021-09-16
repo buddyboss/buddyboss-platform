@@ -78,6 +78,10 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			: sprintf( __( "%s is Following", 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 
+		if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
+			$show_more = true;
+		}
+
 		// Remove the filter.
 		if ( $filter ) {
 			remove_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
@@ -94,7 +98,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 
-		// show the users the logged-in user is following
+		// show the users the logged-in user is following.
 		if ( bp_has_members(
 			array(
 				'include'         => $following,
@@ -121,7 +125,6 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 					</div>
 				<?php endwhile; ?>
 			</div>
-
 			<?php
 			if ( $following_count_number > $instance['max_users'] ) {
 				if ( bp_is_my_profile() || ! bp_is_user() ) { ?>
