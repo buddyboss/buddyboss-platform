@@ -1507,7 +1507,7 @@ function bp_activity_get_user_mentionname( $user_id ) {
 		if ( bp_is_username_compatibility_mode() ) {
 			$mentionname = str_replace( ' ', '-', $userdata->user_login );
 		} else {
-			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
+			$mentionname = $userdata->user_nicename;
 		}
 	}
 

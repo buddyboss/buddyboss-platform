@@ -41,16 +41,17 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
-	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
-
 	if ( bp_is_user_media() ||
 		 bp_is_single_album() ||
 		 bp_is_media_directory() ||
+		 bp_is_document_directory() ||
+		 bp_is_video_directory() ||
 		 bp_is_activity_component() ||
 		 bp_is_group_activity() ||
 		 bp_is_group_media() ||
 		 bp_is_group_albums() ||
 		 bp_is_group_document() ||
+		 bp_is_group_video() ||
 		 bp_is_group_folders() ||
 		 bp_is_group_messages() ||
 		 bp_is_messages_component()
@@ -182,7 +183,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'unselect'             => __( 'Unselect', 'buddyboss' ),
 		'selectall'            => __( 'Select All', 'buddyboss' ),
 		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'      => __( 'Sorry, no photos were found', 'buddyboss' ),
+		'no_photos_found'      => ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
 		'upload'               => __( 'Upload', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
@@ -226,12 +227,12 @@ function bp_nouveau_get_media_directory_nav_items() {
 		);
 	}
 
-	if ( is_user_logged_in() && bp_is_group_media_support_enabled() ) {
+	if ( is_user_logged_in() && bp_is_group_media_support_enabled() && bp_is_active( 'groups' ) ) {
 		$nav_items['group'] = array(
 			'component' => 'media',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-media/',
+			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/groups-media/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
 			'count'     => bp_media_get_user_total_group_media_count(),
 			'position'  => 15,
@@ -246,30 +247,6 @@ function bp_nouveau_get_media_directory_nav_items() {
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
-}
-
-function bp_media_download_file( $attachment_id, $type = 'media' ) {
-
-	// Add action to prevent issues in IE.
-	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
-
-	if ( 'media' === $type ) {
-
-		$the_file = wp_get_attachment_url( $attachment_id );
-
-		if ( ! $the_file ) {
-			return;
-		}
-
-		// clean the file url.
-		$file_url = stripslashes( trim( $the_file ) );
-
-		// get filename.
-		$file_name = basename( $the_file );
-
-		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
-	}
-
 }
 
 /**
