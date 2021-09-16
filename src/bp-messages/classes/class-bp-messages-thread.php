@@ -1815,7 +1815,6 @@ class BP_Messages_Thread {
 			$r['exclude_admin_user'] = array_unique( $r['exclude_admin_user'] );
 		}
 		$results    = self::get( $r );
-		error_log( $thread_id . ' => ' . $results['total'] );
 		$recipients = array();
 
 		if ( ! empty( $results['recipients'] ) ) {
