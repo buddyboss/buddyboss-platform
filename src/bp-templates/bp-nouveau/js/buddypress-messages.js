@@ -488,13 +488,13 @@ window.bp = window.bp || {};
 		
 		messageBlockMember: function ( e ) {
 			e.preventDefault();
-			var contentId   = $( this ).data( 'bp-content-id' );
-			var contentType = $( this ).data( 'bp-content-type' );
-			var nonce       = $( this ).data( 'bp-nonce' );
+			var contentId    = $( this ).data( 'bp-content-id' );
+			var contentType  = $( this ).data( 'bp-content-type' );
+			var nonce        = $( this ).data( 'bp-nonce' );
+			var currentHref  = $( this ).attr( 'href' );
 			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 				$( document ).find( '.bp-report-form-err' ).empty();
-				var blockedPopup = $( this ).attr( 'href' );
-				var mf_content   = $( blockedPopup );
+				var mf_content   = $( currentHref );
 				mf_content.find( '.bp-content-id' ).val( contentId );
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
@@ -502,7 +502,7 @@ window.bp = window.bp || {};
 			$( '#mass-user-block-list a.block-member' ).magnificPopup(
 				{
 					items: {
-						src: '#block-member',
+						src: currentHref,
 						type: 'inline'
 					},
 				}
@@ -960,7 +960,8 @@ window.bp = window.bp || {};
 		{
 			template  : bp.template( 'bp-messages-editor' ),
 			events: {
-				'input #message_content': 'focusEditorOnChange'
+				'input #message_content': 'focusEditorOnChange',
+				'paste': 'handlePaste',
 			},
 
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
@@ -972,6 +973,18 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+			},
+
+			handlePaste: function ( event ) {
+				// Get user's pasted data.
+				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+					data = clipboardData.getData( 'text/plain' );
+
+				// Insert the filtered content.
+				document.execCommand( 'insertHTML', false, data );
+
+				// Prevent the standard paste behavior.
+				event.preventDefault();
 			},
 
 			initialize: function() {
@@ -996,7 +1009,7 @@ window.bp = window.bp || {};
 							},
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: true,
+								cleanPastedHTML: false,
 								cleanReplacements: [
 								[new RegExp( /<div/gi ), '<p'],
 								[new RegExp( /<\/div/gi ), '</p'],
