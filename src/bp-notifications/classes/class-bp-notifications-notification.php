@@ -86,10 +86,6 @@ class BP_Notifications_Notification {
 
 	/**
 	 * Columns in the notifications table.
-	 *
-	 * @since 9.1.0
-	 * @access public
-	 * @var array
 	 */
 	public static $columns = array(
 		'id',
@@ -425,8 +421,7 @@ class BP_Notifications_Notification {
 
 		// Order by.
 		if ( ! empty( $args['order_by'] ) ) {
-			$order_by               = implode( ', ', (array) $args['order_by'] );
-			$conditions['order_by'] = "{$order_by}";
+			// Added security patch for SQL Injections vulnerability
 			$order_by_clean = array();
 			foreach ( (array) $args['order_by'] as $key => $value ) {
 				if ( in_array( $value, self::$columns, true ) ) {

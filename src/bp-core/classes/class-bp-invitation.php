@@ -134,10 +134,6 @@ class BP_Invitation {
 
 	/**
 	 * Columns in the invitations table.
-	 *
-	 * @since 9.0.0
-	 * @access public
-	 * @var array
 	 */
 	public static $columns = array(
 		'id',
@@ -506,8 +502,7 @@ class BP_Invitation {
 
 		// Order by
 		if ( ! empty( $args['order_by'] ) ) {
-			$order_by               = implode( ', ', (array) $args['order_by'] );
-			$conditions['order_by'] = "{$order_by}";
+			// Added security patch for SQL Injections vulnerability
 			$order_by_clean = array();
 			foreach ( (array) $args['order_by'] as $key => $value ) {
 				if ( in_array( $value, self::$columns, true ) ) {
