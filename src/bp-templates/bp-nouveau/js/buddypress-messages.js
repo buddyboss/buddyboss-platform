@@ -404,7 +404,7 @@ window.bp = window.bp || {};
 			var postData    = {
 				'page_no': currentPage,
 				'thread_id': threadId,
-				'action': bpAction
+				'moderated_recipients': 'bp_load_more' === bpAction ? true : false,
 			};
 			$.ajax( {
 				type: 'POST',
@@ -514,7 +514,6 @@ window.bp = window.bp || {};
 			var postData = {
 				'page_no': $( this ).attr( 'data-cp' ),
 				'thread_id': $( this ).attr( 'data-thread-id' ),
-				'action': '',
 				'moderated_recipients': true,
 			};
 			$.ajax(

@@ -2626,14 +2626,12 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 	}
 
 	// Get all admin ids.
-	$administrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-	$args              = array();
-	if ( isset( $post_data['action'] ) && 'bp_load_more' === $post_data['action'] ) {
-		$args['moderated_recipients'] = true;
-	}
-	$args['page'] = (int) $post_data['page_no'];
-	$thread       = new BP_Messages_Thread();
-	$results      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$administrator_ids            = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+	$args                         = array();
+	$args['moderated_recipients'] = isset( $post_data['moderated_recipients'] ) ? (bool) $post_data['moderated_recipients'] : false;
+	$args['page']                 = (int) $post_data['page_no'];
+	$thread                       = new BP_Messages_Thread();
+	$results                      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
 	if ( is_array( $results ) ) {
 		$count          = 1;
 		$recipients_arr = array();
@@ -2694,15 +2692,13 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 		wp_send_json_error( $response );
 	}
 	// Get all admin ids.
-	$administrator_ids = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-	$args              = array();
-	if ( isset( $post_data['moderated_recipients'] ) && true === (bool) $post_data['moderated_recipients'] ) {
-		$args['moderated_recipients'] = true;
-	}
-	$args['page'] = (int) $post_data['page_no'];
-	$thread       = new BP_Messages_Thread();
-	$results      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
-	$html         = '';
+	$administrator_ids            = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+	$args                         = array();
+	$args['moderated_recipients'] = isset( $post_data['moderated_recipients'] ) ? (bool) $post_data['moderated_recipients'] : false;
+	$args['page']                 = (int) $post_data['page_no'];
+	$thread                       = new BP_Messages_Thread();
+	$results                      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$html                         = '';
 	ob_start();
 	if ( is_array( $results ) ) {
 		?>
