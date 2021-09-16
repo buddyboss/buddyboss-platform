@@ -309,16 +309,8 @@ function bp_core_get_userid_from_nickname( $nickname ) {
 		return false;
 	}
 
-	$users = get_users(
-		array(
-			'meta_key'    => 'nickname',
-			'meta_value'  => $nickname,
-			'number'      => 1,
-			'count_total' => false,
-		)
-	);
-
-	$user = $users ? $users[0] : null;
+	// Get member from subsite on multisite env.
+	$user = get_user_by( 'slug', $nickname );
 
 	return apply_filters( 'bp_core_get_userid_from_nickname', ! empty( $user->ID ) ? $user->ID : null, $nickname );
 }
