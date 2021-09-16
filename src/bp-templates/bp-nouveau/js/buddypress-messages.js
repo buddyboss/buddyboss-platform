@@ -404,7 +404,8 @@ window.bp = window.bp || {};
 			var postData    = {
 				'page_no': currentPage,
 				'thread_id': threadId,
-				'moderated_recipients': 'bp_load_more' === bpAction ? true : false,
+				'exclude_current_user': true,
+				'exclude_moderated_members': 'bp_load_more' === bpAction ? true : false,
 			};
 			$.ajax( {
 				type: 'POST',
@@ -514,7 +515,8 @@ window.bp = window.bp || {};
 			var postData = {
 				'page_no': $( this ).attr( 'data-cp' ),
 				'thread_id': $( this ).attr( 'data-thread-id' ),
-				'moderated_recipients': true,
+				'exclude_moderated_members': true,
+				'exclude_current_user': true,
 			};
 			$.ajax(
 				{

@@ -1803,23 +1803,13 @@ class BP_Messages_Thread {
 				'count_total'     => true,
 			)
 		);
-		
-		// Exclude admins and blocked members for block member list in the message.
-		$user_id                 = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
-		$r['exclude_admin_user'] = array( $user_id );
-		if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-			if ( isset( $r['moderated_recipients'] ) && true === (bool) $r['moderated_recipients'] ) {
-				$bp_blocked_user_ids = bp_moderation_get_hidden_user_ids();
-				$administrator_ids   = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-				if ( ! empty( $bp_blocked_user_ids ) ) {
-					$administrator_ids = array_merge( $administrator_ids, $bp_blocked_user_ids );
-				}
-				if ( ! empty( $administrator_ids ) ) {
-					$r['exclude_admin_user'] = $administrator_ids;
-				}
-			}
+
+		if ( isset( $r['exclude_current_user'] ) && true === (bool) $r['exclude_current_user'] ) {
+			// Exclude admins users list in the message.
+			$user_id                 = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+			$r['exclude_admin_user'] = array( $user_id );
 		}
-		
+
 		$results    = self::get( $r );
 		$recipients = array();
 
@@ -1830,10 +1820,6 @@ class BP_Messages_Thread {
 		}
 
 		if ( isset( $results['total'] ) ) {
-			// Fetch the recipients count
-			if ( isset( $r['moderated_recipients'] ) && true === (bool) $r['moderated_recipients'] ) {
-				$recipients[ 'count' ] = $results['total'];
-			}
 			$this->total_recipients_count = $results['total'];
 		}
 

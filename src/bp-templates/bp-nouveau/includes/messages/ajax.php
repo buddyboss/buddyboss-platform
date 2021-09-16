@@ -1817,7 +1817,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'type'     => 'info',
 	);
 
-	bp_get_thread( array( 'thread_id' => $thread_id ) );
+	bp_get_thread(
+		array(
+			'thread_id'            => $thread_id,
+			'exclude_current_user' => true,
+		)
+	);
 
 	$thread = new stdClass();
 
@@ -1941,9 +1946,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	// Simulate the loop.
 	$args = array(
-		'thread_id' => $thread_id,
-		'per_page'  => isset( $post['per_page'] ) && $post['per_page'] ? $post['per_page'] : 10,
-		'before'    => isset( $post['before'] ) && $post['before'] ? $post['before'] : null,
+		'thread_id'            => $thread_id,
+		'per_page'             => isset( $post['per_page'] ) && $post['per_page'] ? $post['per_page'] : 10,
+		'before'               => isset( $post['before'] ) && $post['before'] ? $post['before'] : null,
+		'exclude_current_user' => true,
 	);
 
 	if ( ! bp_thread_has_messages( $args ) ) {
@@ -2078,7 +2084,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'message_from'                    => $message_from,
 		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
 	);
-	
+
 	if ( is_array( $thread_template->thread->recipients ) ) {
 		// Get the total number of recipients in the current thread.
 		$recipients_count = bb_get_thread_total_recipients_count();
@@ -2626,12 +2632,13 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 	}
 
 	// Get all admin ids.
-	$administrator_ids            = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-	$args                         = array();
-	$args['moderated_recipients'] = filter_var( $post_data['moderated_recipients'], FILTER_VALIDATE_BOOLEAN );
-	$args['page']                 = (int) $post_data['page_no'];
-	$thread                       = new BP_Messages_Thread();
-	$results                      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$administrator_ids                 = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+	$args                              = array();
+	$args['exclude_moderated_members'] = filter_var( $post_data['exclude_moderated_members'], FILTER_VALIDATE_BOOLEAN );
+	$args['exclude_current_user']      = filter_var( $post_data['exclude_current_user'], FILTER_VALIDATE_BOOLEAN );
+	$args['page']                      = (int) $post_data['page_no'];
+	$thread                            = new BP_Messages_Thread( false );
+	$results                           = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
 	if ( is_array( $results ) ) {
 		$count          = 1;
 		$recipients_arr = array();
@@ -2692,13 +2699,14 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 		wp_send_json_error( $response );
 	}
 	// Get all admin ids.
-	$administrator_ids            = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-	$args                         = array();
-	$args['moderated_recipients'] = (bool) $post_data['moderated_recipients'];
-	$args['page']                 = (int) $post_data['page_no'];
-	$thread                       = new BP_Messages_Thread();
-	$results                      = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
-	$html                         = '';
+	$administrator_ids                 = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+	$args                              = array();
+	$args['exclude_moderated_members'] = filter_var( $post_data['exclude_moderated_members'], FILTER_VALIDATE_BOOLEAN );
+	$args['exclude_current_user']      = filter_var( $post_data['exclude_current_user'], FILTER_VALIDATE_BOOLEAN );
+	$args['page']                      = (int) $post_data['page_no'];
+	$thread                            = new BP_Messages_Thread( false );
+	$results                           = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$html                              = '';
 	ob_start();
 	if ( is_array( $results ) ) {
 		?>
@@ -2769,14 +2777,14 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 							?>
 						</div>
 						<?php
-						if ( 1 < $results['count'] ) {
+						if ( 1 < $thread->total_recipients_count ) {
 							?>
 							<div class="bb-report-type-pagination">
 								<p class="page-data" data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>">
 									<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl" class="load_more_rl button small outline"
 										data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>"
-										data-tp="<?php echo esc_attr( ceil( (int) $results['count'] / (int) bb_messages_recipients_per_page() ) ); ?>"
-										data-tc="<?php echo esc_attr( $results['count'] ); ?>"
+										data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
+										data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
 										data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
 										data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?>
 									</a>
