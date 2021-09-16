@@ -2843,6 +2843,13 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 	if ( ! is_user_logged_in() ) {
 		return false;
 	}
+	
+	/**
+	 * Actions to perform before start getting video
+	 *
+	 * @param int|object $document_id_or_object Video id or object.
+	 */
+	do_action( 'bb_document_before_get_document', $document_id );
 
 	if ( 'folder' === $type ) {
 
@@ -2942,6 +2949,13 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			}
 		}
 	}
+
+	/**
+	 * Actions to perform after getting document
+	 *
+	 * @param int|object $document_id_or_object Document id or object.
+	 */
+	do_action( 'bb_document_after_get_document', $document_id );
 }
 
 /**
@@ -4153,7 +4167,15 @@ function bp_document_get_extension_description( $extension ) {
  */
 function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-document-image-preview-activity-image', $generate = true ) {
 	$attachment_url = '';
-	$extension      = bp_document_extension( $attachment_id );
+	
+	/**
+	 * Actions to perform before start getting document
+	 *
+	 * @param int|object $document_id_or_object Document id or object.
+	 */
+   	do_action( 'bb_document_before_get_document', $document_id );
+
+	$extension = bp_document_extension( $attachment_id );
 
 	/**
 	 * Filter here to allow/disallow document symlinks.
@@ -4307,7 +4329,16 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id, $do_symlink );
+	$attachment_url = apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id, $do_symlink );
+
+    /**
+     * Actions to perform after getting document
+     *
+     * @param int|object $document_id_or_object Document id or object.
+     */
+    do_action( 'bb_document_after_get_document', $document_id );
+
+	return $attachment_url;
 }
 
 /**

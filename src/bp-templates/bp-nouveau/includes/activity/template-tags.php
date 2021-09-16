@@ -1016,6 +1016,13 @@ function bp_nouveau_activity_privacy() {
 				$media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
 				$media    = new BP_Media( $media_id );
 
+				/**
+				 * Actions to perform before start getting media
+				 *
+				 * @param int|object $media_id_or_object Media file id or object.
+				 */
+				do_action( 'bb_media_before_get_media', $media );
+
 				if ( ! empty( $media ) ) {
 					$privacy  = $media->privacy;
 					$group_id = $media->group_id;
@@ -1030,11 +1037,26 @@ function bp_nouveau_activity_privacy() {
 						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
 					}
 				}
+
+				/**
+				 * Actions to perform after getting media
+				 *
+				 * @param int|object $media_id_or_object Media file id or object.
+				 */
+				do_action( 'bb_media_after_get_media', $media );
 			}
 
 			if ( $document_activity ) {
 				$document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
 				$document    = new BP_Document( $document_id );
+
+				/**
+				 * Actions to perform before start getting document
+				 *
+				 * @param int|object $document_id_or_object Document id or object.
+				 */
+				do_action( 'bb_document_before_get_document', $document );
+
 				if ( ! empty( $document ) ) {
 					$privacy   = $document->privacy;
 					$group_id  = $document->group_id;
@@ -1050,11 +1072,25 @@ function bp_nouveau_activity_privacy() {
 						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
 					}
 				}
+
+				/**
+				 * Actions to perform after getting document
+				 *
+				 * @param int|object $document_id_or_object Document id or object.
+				 */
+				do_action( 'bb_document_after_get_document', $document );
 			}
 
 			if ( $video_activity ) {
 				$video_id = BP_Video::get_activity_video_id( bp_get_activity_id() );
 				$video    = new BP_Video( $video_id );
+			
+				/**
+				 * Actions to perform before start getting video
+				 *
+				 * @param int|object $video_id_or_object Video id or object.
+				 */
+				do_action( 'bb_video_before_get_video', $video );
 
 				if ( ! empty( $video ) ) {
 					$privacy  = $video->privacy;
@@ -1070,6 +1106,13 @@ function bp_nouveau_activity_privacy() {
 						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
 					}
 				}
+				
+				/**
+				 * Actions to perform after getting video
+				 *
+				 * @param int|object $video_id_or_object Video id or object.
+				 */
+				do_action( 'bb_video_after_get_video', $video );
 			}
 
 			$activity_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );

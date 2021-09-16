@@ -80,6 +80,12 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
 add_filter( 'query_vars', 'bb_setup_query_document_preview' );
 add_action( 'template_include', 'bb_setup_template_for_document_preview' );
 
+// Switch to current document file site if site is multisite
+add_action( 'bb_document_before_generate_document_previews', 'bb_document_switch_blog_site' );
+add_action( 'bb_document_before_get_document', 'bb_document_switch_blog_site' );
+add_action( 'bb_document_after_generate_document_previews', 'bb_document_restore_current_blog_site' );
+add_action( 'bb_document_after_get_document', 'bb_document_restore_current_blog_site' );
+
 /**
  * Clear a user's symlinks document when attachment document delete.
  *
@@ -857,7 +863,23 @@ function bp_document_download_url_file() {
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {
+			$document_id 	  = filter_input( INPUT_GET, 'document_file', FILTER_VALIDATE_INT );
+	
+			/**
+			 * Actions to perform before start getting document
+			 *
+			 * @param int|object $document_id_or_object Document id or object.
+			 */
+			do_action( 'bb_document_before_get_document', $document_id );
+
 			bp_document_download_file( $_GET['attachment'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
+
+			/**
+			 * Actions to perform after getting document
+			 *
+			 * @param int|object $document_id_or_object Document id or object.
+			 */
+			do_action( 'bb_document_after_get_document', $document_id );
 		} else {
 			wp_safe_redirect( site_url() );
 			exit;
@@ -1936,4 +1958,32 @@ function bb_setup_template_for_document_preview( $template ) {
 	}
 
 	return $template;
+}
+
+/**
+ * Switch to current document site if site is multisite
+ *
+ * @param int|object $document_id_or_object Document id or object.
+ *
+ */
+function bb_document_switch_blog_site( $document_id_or_object ) {
+	if ( ! $document_id_or_object instanceof BP_Document && is_numeric( $document_id_or_object ) ) {
+		$document_id_or_object = new BP_Document( $document_id_or_object );
+	}
+
+	if ( is_multisite() && isset( $document_id_or_object->blog_id ) && ! empty( $document_id_or_object->blog_id ) ) {
+		switch_to_blog( $document_id_or_object->blog_id );
+	}
+}
+
+/**
+ * Restore to current site if site is multisite
+ *
+ * @param int|object $document_id_or_object Document id or object.
+ *
+ */
+function bb_document_restore_current_blog_site( $document_id_or_object ) {
+	if ( is_multisite() ) {
+		restore_current_blog();
+	}
 }

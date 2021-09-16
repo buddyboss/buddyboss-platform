@@ -2457,7 +2457,23 @@ function bp_media_download_url_file() {
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {
+			$media_id 		  = filter_input( INPUT_GET, 'media_file', FILTER_VALIDATE_INT );
+
+			/**
+			 * Actions to perform before start getting media
+			 *
+			 * @param int|object $media_id_or_object Media file id or object.
+			 */
+			do_action( 'bb_media_before_get_media', $media_id );
+
 			bp_media_download_file( $_GET['attachment_id'], $_GET['media_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
+
+			/**
+			 * Actions to perform after getting media
+			 *
+			 * @param int|object $media_id_or_object Media file id or object.
+			 */
+			do_action( 'bb_media_after_get_media', $media_id );
 		} else {
 			wp_safe_redirect( site_url() );
 		}
@@ -3363,6 +3379,13 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 	$attachment_url = '';
 
 	/**
+	 * Actions to perform before start getting media
+	 *
+	 * @param int|object $media_id_or_object Media file id or object.
+	 */
+	do_action( 'bb_media_before_get_media', $media_id );
+
+	/**
 	 * Filter here to allow/disallow media symlinks.
 	 *
 	 * @param bool   $do_symlink    Default true.
@@ -3427,7 +3450,16 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size, $do_symlink );
+	$attachment_url = apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size, $do_symlink );
+
+	/**
+	 * Actions to perform after getting media
+	 *
+	 * @param int|object $media_id_or_object Media file id or object.
+	 */
+	do_action( 'bb_media_after_get_media', $media_id );
+
+	return $attachment_url;
 }
 
 /**

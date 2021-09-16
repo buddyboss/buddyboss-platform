@@ -604,6 +604,13 @@ class BP_Video {
 				$video->group_id      = (int) $video->group_id;
 				$video->menu_order    = (int) $video->menu_order;
 			}
+			
+			/**
+			 * Actions to perform before start getting video
+			 *
+			 * @param int|object $video_id_or_object Video id or object.
+			 */
+			do_action( 'bb_video_before_get_video', $video );
 
 			$file_url = wp_get_attachment_url( $video->attachment_id );
 			$filetype = wp_check_filetype( $file_url );
@@ -612,11 +619,8 @@ class BP_Video {
 				$path = parse_url( $file_url, PHP_URL_PATH );
 				$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 			}
-			// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
-			// https://stackoverflow.com/a/44858204.
-			if ( in_array( $ext, array( 'mov', 'm4v' ), true ) ) {
-				$ext = 'mp4';
-			}
+			
+			$ext 	  = apply_filters( 'bb_video_file_extension', $ext, $file_url );
 
 			// fetch video thumbnail attachment data.
 			$attachment_data                             = new stdClass();
@@ -689,6 +693,13 @@ class BP_Video {
 			$video->visibility = $visibility;
 			$video->video_link = bb_video_get_symlink( $video );
 			$videos[]          = $video;
+
+			/**
+			 * Actions to perform after getting video
+			 *
+			 * @param int|object $video_id_or_object Video id or object.
+			 */
+			do_action( 'bb_video_after_get_video', $video );
 		}
 
 		// Then fetch user data.
@@ -1071,7 +1082,16 @@ class BP_Video {
 		if ( ! empty( $attachment_ids ) ) {
 
 			// Loop through attachment ids and attempt to delete.
-			foreach ( $attachment_ids as $attachment_id ) {
+			foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
+
+				$video_id = isset( $video_ids[$attachment_key] ) ? $video_ids[$attachment_key] : 0;
+	
+				/**
+				 * Actions to perform before start getting video
+				 *
+				 * @param int|object $video_id_or_object Video id or object.
+				 */
+				do_action( 'bb_video_before_get_video', $video_id );
 
 				if ( bp_is_active( 'activity' ) ) {
 					$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
@@ -1112,6 +1132,13 @@ class BP_Video {
 				if ( empty( $from ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
+
+				/**
+				 * Actions to perform after getting video
+				 *
+				 * @param int|object $video_id_or_object Video id or object.
+				 */
+				do_action( 'bb_video_after_get_video', $video_id );
 			}
 		}
 

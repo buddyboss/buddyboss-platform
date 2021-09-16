@@ -1161,7 +1161,16 @@ class BP_Media {
 		if ( ! empty( $attachment_ids ) ) {
 
 			// Loop through attachment ids and attempt to delete.
-			foreach ( $attachment_ids as $attachment_id ) {
+			foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
+
+				$media_id = isset( $media_ids[$attachment_key] ) ? $media_ids[$attachment_key] : 0;
+
+				/**
+				 * Actions to perform before start getting media
+				 *
+				 * @param int|object $media_id_or_object Media file id or object.
+				 */
+				do_action( 'bb_media_before_get_media', $media_id );
 
 				if ( bp_is_active( 'activity' ) ) {
 					$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
@@ -1183,6 +1192,13 @@ class BP_Media {
 				if ( empty( $from ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
+
+				/**
+				 * Actions to perform after getting media
+				 *
+				 * @param int|object $media_id_or_object Media file id or object.
+				 */
+				do_action( 'bb_media_after_get_media', $media_id );
 			}
 		}
 

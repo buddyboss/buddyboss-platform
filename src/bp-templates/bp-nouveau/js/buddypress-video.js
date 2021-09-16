@@ -890,6 +890,8 @@ window.bp = window.bp || {};
 					'sending',
 					function ( file, xhr, formData ) {
 						formData.append( 'action', 'video_thumbnail_upload' );
+						formData.append( 'video_id', videoId );
+						formData.append( 'attachment_id', videoAttachmentId );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 					}
 				);

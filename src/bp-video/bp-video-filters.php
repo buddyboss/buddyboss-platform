@@ -71,6 +71,14 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
 add_action( 'template_include', 'bb_setup_template_for_video_preview' );
 
+// Switch to current media file site if site is multisite
+add_action( 'bb_try_before_video_background_create_thumbnail', 'bb_video_switch_blog_site' );
+add_action( 'bb_video_before_get_video', 'bb_video_switch_blog_site' );
+add_action( 'bb_try_after_video_background_create_thumbnail', 'bb_video_restore_current_blog_site' );
+add_action( 'bb_video_after_get_video', 'bb_video_restore_current_blog_site' );
+
+add_filter( 'bb_video_file_extension', 'bb_video_check_video_file_extension', 1, 2 );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -1676,6 +1684,14 @@ function bb_video_update_video_symlink( $response, $post_data ) {
 			$count     = count( $video_ids );
 			if ( 1 === $count ) {
 				$video    = new BP_Video( (int) current( $video_ids ) );
+	
+				/**
+				 * Actions to perform before start getting video
+				 *
+				 * @param int|object $video_id_or_object Video id or object.
+				 */
+				do_action( 'bb_video_before_get_video', $video );
+
 				$file_url = wp_get_attachment_url( $video->attachment_id );
 				$filetype = wp_check_filetype( $file_url );
 				$ext      = $filetype['ext'];
@@ -1684,12 +1700,21 @@ function bb_video_update_video_symlink( $response, $post_data ) {
 					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 				}
 
+				$ext 	  = apply_filters( 'bb_video_file_extension', $ext, $file_url );
+
 				$symlink                       = bb_video_get_symlink( (int) current( $video_ids ) );
 				$response['video_symlink']     = $symlink;
 				$response['video_extension']   = 'video/' . $ext;
 				$response['video_id']          = (int) current( $video_ids );
 				$response['video_link_update'] = true;
 				$response['video_js_id']       = 'video-' . (int) current( $video_ids ) . '_html5_api';
+
+				/**
+				 * Actions to perform after getting video
+				 *
+				 * @param int|object $video_id_or_object Video id or object.
+				 */
+				do_action( 'bb_video_after_get_video', $video );
 			}
 		}
 	}
@@ -1786,4 +1811,50 @@ function bb_setup_template_for_video_preview( $template ) {
 	}
 
 	return $template;
+}
+
+/**
+ * Video file extension check and return mp4 if have file extension mov/m4v.
+ *
+ * @param string $file_extension Video file extension.
+ * @param string $file 			 Video file url.
+ *
+ * @return string
+ */
+function bb_video_check_video_file_extension( $file_extension, $file ){
+	// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
+	// https://stackoverflow.com/a/44858204.
+	if ( in_array( $file_extension, array( 'mov', 'm4v' ), true ) ) {
+		$file_extension = 'mp4';
+	}
+
+	return $file_extension;
+}
+
+/**
+ * Switch to current video file site if site is multisite
+ *
+ * @param int|object $video_id_or_object Video id or object.
+ *
+ */
+function bb_video_switch_blog_site( $video_id_or_object ) {
+	if ( ! $video_id_or_object instanceof BP_Video && is_numeric( $video_id_or_object ) ) {
+		$video_id_or_object = new BP_Video( $video_id_or_object );
+	}
+
+	if ( is_multisite() && isset( $video_id_or_object->blog_id ) && ! empty( $video_id_or_object->blog_id ) ) {
+		switch_to_blog( $video_id_or_object->blog_id );
+	}
+}
+
+/**
+ * Restore to current site if site is multisite
+ *
+ * @param int|object $video_id_or_object Video id or object.
+ *
+ */
+function bb_video_restore_current_blog_site( $video_id_or_object ) {
+	if ( is_multisite() ) {
+		restore_current_blog();
+	}
 }

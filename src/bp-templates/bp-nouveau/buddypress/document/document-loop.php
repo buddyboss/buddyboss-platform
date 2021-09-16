@@ -81,7 +81,21 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 	while ( bp_document() ) :
 		bp_the_document();
 
+		/**
+		 * Actions to perform before start getting document
+		 *
+		 * @param int|object $document_id_or_object Document id or object.
+		 */
+		do_action( 'bb_document_before_get_document', bp_get_document_id() );
+
 		bp_get_template_part( 'document/document-entry' );
+
+		/**
+		 * Actions to perform after getting document
+		 *
+		 * @param int|object $document_id_or_object Document id or object.
+		 */
+		do_action( 'bb_document_after_get_document', bp_get_document_id() );
 	endwhile;
 	if ( bp_document_has_more_items() ) :
 		?>

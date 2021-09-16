@@ -2236,7 +2236,22 @@ function bp_video_download_url_file() {
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
 		}
 		if ( $can_download_btn ) {
+			
+			/**
+			 * Actions to perform before start getting video
+			 *
+			 * @param int|object $video_id_or_object Video id or object.
+			 */
+			do_action( 'bb_video_before_get_video', $video_file );
+
 			bp_video_download_file( $attachment_id, $video_type ); // phpcs:ignore WordPress.Security.NonceVerification
+
+			/**
+			 * Actions to perform after getting video
+			 *
+			 * @param int|object $video_id_or_object Video id or object.
+			 */
+			do_action( 'bb_video_after_get_video', $video_file );
 		} else {
 			wp_safe_redirect( site_url() );
 		}
@@ -3778,6 +3793,13 @@ function bb_video_get_symlink( $video, $generate = true ) {
 		return;
 	}
 
+    /**
+     * Actions to perform before start getting video
+     *
+     * @param int|object $video_id_or_object Video id or object.
+     */
+    do_action( 'bb_video_before_get_video', $video );
+
 	$attachment_url = '';
 	$video_id       = $video->id;
 	$attachment_id  = $video->attachment_id;
@@ -3859,7 +3881,16 @@ function bb_video_get_symlink( $video, $generate = true ) {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id, $do_symlink );
+	$attachment_url = apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id, $do_symlink );
+
+    /**
+     * Actions to perform after getting video
+     *
+     * @param int|object $video_id_or_object Video id or object.
+     */
+    do_action( 'bb_video_after_get_video', $video );
+
+	return $attachment_url;
 }
 
 /**
@@ -3934,6 +3965,14 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 
 	$attachment_urls           = array();
 	$video                     = new BP_Video( $video_id );
+	
+	/**
+     * Actions to perform before start getting video
+     *
+     * @param int|object $video_id_or_object Video id or object.
+     */
+    do_action( 'bb_video_before_get_video', $video );
+
 	$auto_generated_thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
 	$preview_thumbnail_id      = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 
@@ -3981,6 +4020,13 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 			'dropzone'      => true,
 		);
 	}
+
+    /**
+     * Actions to perform after getting video
+     *
+     * @param int|object $video_id_or_object Video id or object.
+     */
+    do_action( 'bb_video_after_get_video', $video );
 
 	return $attachment_urls;
 }

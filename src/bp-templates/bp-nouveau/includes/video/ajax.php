@@ -251,16 +251,32 @@ function bp_nouveau_ajax_video_thumbnail_upload() {
 	}
 
 	// Use default nonce.
-	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
-	$check = 'bp_nouveau_video';
+	$nonce 					= filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$video_attachment_id 	= filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
+	$video_id 				= filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
+	$check 					= 'bp_nouveau_video';
 
 	// Nonce check!
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
 		wp_send_json_error( $response, 500 );
 	}
+			
+	/**
+	 * Actions to perform before start getting video
+	 *
+	 * @param int|object $video_id_or_object Video id or object.
+	 */
+	do_action( 'bb_video_before_get_video', $video_id );
 
 	// Upload file.
 	$result = bp_video_thumbnail_upload();
+
+	/**
+	 * Actions to perform after getting video
+	 *
+	 * @param int|object $video_id_or_object Video id or object.
+	 */
+	do_action( 'bb_video_after_get_video', $video_id );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -1417,6 +1433,13 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 	if ( ! $video ) {
 		wp_send_json_error( $response );
 	}
+			
+	/**
+	 * Actions to perform before start getting video
+	 *
+	 * @param int|object $video_id_or_object Video id or object.
+	 */
+	do_action( 'bb_video_before_get_video', $video );
 
 	$auto_generated_thumbnails = bb_video_get_auto_generated_preview_ids( $attachment_id );
 	$preview_thumbnail_id      = bb_get_video_thumb_id( $attachment_id );
@@ -1467,11 +1490,20 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 		}
 	}
 
+	$ffmpeg_generated = get_post_meta( $attachment_id, 'bb_ffmpeg_preview_generated', true );
+
+	/**
+	 * Actions to perform after getting video
+	 *
+	 * @param int|object $video_id_or_object Video id or object.
+	 */
+	do_action( 'bb_video_after_get_video', $video );
+
 	wp_send_json_success(
 		array(
 			'default_images'   => $default_images,
 			'dropzone_edit'    => $dropzone_arr,
-			'ffmpeg_generated' => get_post_meta( $attachment_id, 'bb_ffmpeg_preview_generated', true ),
+			'ffmpeg_generated' => $ffmpeg_generated,
 		)
 	);
 
@@ -1508,6 +1540,14 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$video_attachment_id       = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_id                  = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$pre_selected_id           = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
+
+	/**
+     * Actions to perform before start getting video
+     *
+     * @param int|object $video_id_or_object Video id or object.
+     */
+    do_action( 'bb_video_before_get_video', $video_id );
+
 	$auto_generated_thumbnails = bb_video_get_auto_generated_preview_ids( $video_attachment_id );
 	$old_thumbnail_id          = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 
@@ -1537,6 +1577,13 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	if ( empty( $thumbnail_url ) ) {
 		$thumbnail_url = bb_get_video_default_placeholder_image();
 	}
+
+	/**
+	 * Actions to perform after getting video
+	 *
+	 * @param int|object $video_id_or_object Video id or object.
+	 */
+	do_action( 'bb_video_after_get_video', $video_id );
 
 	wp_send_json_success(
 		array(
@@ -1580,6 +1627,13 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	$video_id            = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$attachment_id       = filter_input( INPUT_POST, 'attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
+	
+	/**
+	 * Actions to perform before start getting video
+	 *
+	 * @param int|object $video_id_or_object Video id or object.
+	 */
+	do_action( 'bb_video_before_get_video', $video_id );
 
 	if ( ! empty( $attachment_id ) && ! empty( $video_attachment_id ) ) {
 		$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
@@ -1607,6 +1661,13 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	if ( empty( $thumbnail_url ) ) {
 		$thumbnail_url = bb_get_video_default_placeholder_image();
 	}
+
+	/**
+	 * Actions to perform after getting video
+	 *
+	 * @param int|object $video_id_or_object Video id or object.
+	 */
+	do_action( 'bb_video_after_get_video', $video_id );
 
 	wp_send_json_success(
 		array(

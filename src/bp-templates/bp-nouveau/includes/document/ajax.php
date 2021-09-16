@@ -946,6 +946,13 @@ function bp_nouveau_ajax_document_update_file_name() {
 	$title                  = filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING );
 	$type                   = filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING );
 
+    /**
+     * Actions to perform before start getting document
+     *
+     * @param int|object $document_id_or_object Document id or object.
+     */
+    do_action( 'bb_document_before_get_document', $document_id );
+
 	if ( 'document' === $type ) {
 		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
 			wp_send_json_error( $response );
@@ -960,6 +967,13 @@ function bp_nouveau_ajax_document_update_file_name() {
 		}
 
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
+
+		/**
+		 * Actions to perform after getting document
+		 *
+		 * @param int|object $document_id_or_object Document id or object.
+		 */
+		do_action( 'bb_document_after_get_document', $document_id );
 
 		if ( isset( $document['document_id'] ) && $document['document_id'] > 0 ) {
 			wp_send_json_success(
@@ -1002,6 +1016,13 @@ function bp_nouveau_ajax_document_update_file_name() {
 			'document_id' => $document_id,
 			'title'       => $title,
 		);
+
+		/**
+		 * Actions to perform after getting document
+		 *
+		 * @param int|object $document_id_or_object Document id or object.
+		 */
+		do_action( 'bb_document_after_get_document', $document_id );
 
 		if ( $folder > 0 ) {
 			wp_send_json_success(

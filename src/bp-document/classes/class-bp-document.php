@@ -1659,10 +1659,25 @@ class BP_Document {
 
 		// Delete preview attachment.
 		foreach ( $document_ids as $document_delete ) {
+
+			/**
+			 * Actions to perform before start getting video
+			 *
+			 * @param int|object $document_id_or_object Video id or object.
+			 */
+			do_action( 'bb_document_before_get_document', $document_delete );
+
 			$preview_id = bp_document_get_meta( $document_delete, 'preview_attachment_id', true );
 			if ( $preview_id ) {
 				wp_delete_attachment( $preview_id, true );
 			}
+
+			/**
+			 * Actions to perform after getting document
+			 *
+			 * @param int|object $document_id_or_object Document id or object.
+			 */
+			do_action( 'bb_document_after_get_document', $document_delete );
 		}
 
 		// Delete meta.
@@ -1675,7 +1690,16 @@ class BP_Document {
 		if ( ! empty( $attachment_ids ) ) {
 
 			// Loop through attachment ids and attempt to delete.
-			foreach ( $attachment_ids as $attachment_id ) {
+			foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
+
+				$document_id = isset( $document_ids[$attachment_key] ) ? $document_ids[$attachment_key] : 0;
+
+				/**
+				 * Actions to perform before start getting video
+				 *
+				 * @param int|object $document_id_or_object Video id or object.
+				 */
+				do_action( 'bb_document_before_get_document', $document_id );
 
 				if ( bp_is_active( 'activity' ) ) {
 					$parent_activity_id = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
@@ -1697,6 +1721,13 @@ class BP_Document {
 				if ( empty( $from ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
+
+				/**
+				 * Actions to perform after getting document
+				 *
+				 * @param int|object $document_id_or_object Document id or object.
+				 */
+				do_action( 'bb_document_after_get_document', $document_id );
 			}
 		}
 
@@ -1944,7 +1975,7 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.7.0.1
 		 */
-		do_action( 'bb_document_before_generate_document_previews' );
+		do_action( 'bb_document_before_generate_document_previews', array( &$this ) );
 
 		bp_document_generate_document_previews( $this->attachment_id );
 
@@ -1953,7 +1984,7 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.7.0.1
 		 */
-		do_action( 'bb_document_after_generate_document_previews' );
+		do_action( 'bb_document_after_generate_document_previews', array( &$this ) );
 
 		// Update folder modified date.
 		$folder = (int) $this->folder_id;

@@ -6,6 +6,13 @@
  * @package BuddyBoss\Core
  */
 
+/**
+ * Actions to perform before start getting document
+ *
+ * @param int|object $document_id_or_object Document id or object.
+ */
+do_action( 'bb_document_before_get_document', bp_get_document_id() );
+
 $attachment_id     = bp_get_document_attachment_id();
 $extension         = bp_get_document_extension();
 $svg_icon          = bp_document_svg_icon( $extension, $attachment_id );
@@ -97,3 +104,12 @@ $video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
 
 </div> <!-- .bb-activity-media-elem -->
+
+<?php
+
+/**
+ * Actions to perform after getting document
+ *
+ * @param int|object $document_id_or_object Document id or object.
+ */
+do_action( 'bb_document_after_get_document', bp_get_document_id() );

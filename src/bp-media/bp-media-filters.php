@@ -86,6 +86,10 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
 add_filter( 'query_vars', 'bb_setup_query_media_preview' );
 add_action( 'template_include', 'bb_setup_template_for_media_preview' );
 
+// Switch to current media file site if site is multisite
+add_action( 'bb_media_before_get_media', 'bb_media_switch_blog_site' );
+add_action( 'bb_media_after_get_media', 'bb_media_restore_current_blog_site' );
+
 /**
  * Add Media items for search
  */
@@ -2676,4 +2680,32 @@ function bb_setup_template_for_media_preview( $template ) {
 	do_action( 'bb_setup_template_for_media_preview' );
 
 	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
+}
+
+/**
+ * Switch to current media file site if site is multisite
+ *
+ * @param int|object $media_id_or_object Media id or object.
+ *
+ */
+function bb_media_switch_blog_site( $media_id_or_object ) {
+	if ( ! $media_id_or_object instanceof BP_Media && is_numeric( $media_id_or_object ) ) {
+		$media_id_or_object = new BP_Media( $media_id_or_object );
+	}
+
+	if ( is_multisite() && isset( $media_id_or_object->blog_id ) && ! empty( $media_id_or_object->blog_id ) ) {
+		switch_to_blog( $media_id_or_object->blog_id );
+	}
+}
+
+/**
+ * Restore to current site if site is multisite
+ *
+ * @param int|object $media_id_or_object Media id or object.
+ *
+ */
+function bb_media_restore_current_blog_site( $media_id_or_object ) {
+	if ( is_multisite() ) {
+		restore_current_blog();
+	}
 }
