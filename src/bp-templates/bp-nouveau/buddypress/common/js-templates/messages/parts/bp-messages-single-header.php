@@ -134,5 +134,18 @@
 			}
 			?>
 		</div>
+		<div id="mass-user-block-list" class="mass-user-block-list moderation-popup mfp-hide">
+			<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+				<div class="modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><?php esc_html_e( 'Block a Member?', 'buddyboss' ); ?></h4>
+							<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
+						</header>
+						<div id="moderated_user_list"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</header>
 </script>

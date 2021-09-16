@@ -2685,7 +2685,11 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 }
 
 /**
- * Function which get moderated recepient list when click on block a member in the message screen.
+ * Function which get moderated recipients list when click on block a member in the message screen.
+ *
+ * @since BuddyBoss 1.7.8
+ *
+ * @return string|Object A JSON object containing html with success data.
  */
 function bb_nouveau_ajax_moderated_recipient_list() {
 	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
@@ -2711,93 +2715,82 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	ob_start();
 	if ( is_array( $results ) ) {
 		?>
-		<div id="mass-user-block-list" class="mass-user-block-list moderation-popup">
-			<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-				<div class="modal-wrapper">
-					<div class="modal-container">
-						<header class="bb-model-header">
-							<h4><?php esc_html_e( 'Block a Member?', 'buddyboss' ); ?></h4>
-							<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
-						</header>
-						<div class="bb-report-type-wrp">
-							<?php
-							foreach ( $results as $recipient ) {
-								if ( isset( $recipient->user_id ) ) {
-									if ( (int) $recipient->user_id !== $user_id ) {
-										if ( empty( $recipient->is_deleted ) ) {
-											$avatar         = esc_url(
-												bp_core_fetch_avatar(
-													array(
-														'item_id' => $recipient->user_id,
-														'object'  => 'user',
-														'type'    => 'thumb',
-														'width'   => BP_AVATAR_THUMB_WIDTH,
-														'height'  => BP_AVATAR_THUMB_HEIGHT,
-														'html'    => false,
-													)
-												)
-											);
-											$user_name      = bp_core_get_user_displayname( $recipient->user_id );
-											$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
-											?>
-											<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
-												<div class="user-avatar">
-													<img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>">
-												</div>
-												<div class="user-name">
-													<?php echo esc_html( $user_name ); ?>
-												</div>
-												<div class="user-actions">
-													<?php
-													if ( true === bp_moderation_is_user_blocked( $recipient->user_id ) ) {
-														?>
-														<a id="reported-user" class="blocked-member button small disabled">
-															<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
-														</a>
-														<?php
-													} elseif ( false !== $can_be_blocked ) {
-														$bp_moderation_type = BP_Moderation_Members::$moderation_type;
-														?>
-														<a id="report-content-<?php echo esc_attr( $bp_moderation_type ); ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
-															href="#block-member" class="block-member button small"
-															data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
-															data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
-															data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
-															<?php esc_html_e( 'Block', 'buddyboss' ); ?>
-														</a>
-														<?php
-													}
-													?>
-												</div>
-											</div>
-											<?php
-										}
+		<div class="bb-report-type-wrp">
+			<?php
+			foreach ( $results as $recipient ) {
+				if ( isset( $recipient->user_id ) ) {
+					if ( (int) $recipient->user_id !== $user_id ) {
+						if ( empty( $recipient->is_deleted ) ) {
+							$avatar         = esc_url(
+								bp_core_fetch_avatar(
+									array(
+										'item_id' => $recipient->user_id,
+										'object'  => 'user',
+										'type'    => 'thumb',
+										'width'   => BP_AVATAR_THUMB_WIDTH,
+										'height'  => BP_AVATAR_THUMB_HEIGHT,
+										'html'    => false,
+									)
+								)
+							);
+							$user_name      = bp_core_get_user_displayname( $recipient->user_id );
+							$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+							?>
+							<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
+								<div class="user-avatar">
+									<img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>">
+								</div>
+								<div class="user-name">
+									<?php echo esc_html( $user_name ); ?>
+								</div>
+								<div class="user-actions">
+									<?php
+									if ( true === bp_moderation_is_user_blocked( $recipient->user_id ) ) {
+										?>
+										<a id="reported-user" class="blocked-member button small disabled">
+											<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
+										</a>
+										<?php
+									} elseif ( false !== $can_be_blocked ) {
+										$bp_moderation_type = BP_Moderation_Members::$moderation_type;
+										?>
+										<a id="report-content-<?php echo esc_attr( $bp_moderation_type ); ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
+											href="#block-member" class="block-member button small"
+											data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
+											data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
+											data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+											<?php esc_html_e( 'Block', 'buddyboss' ); ?>
+										</a>
+										<?php
 									}
-								}
-							}
-							?>
-						</div>
-						<?php
-						if ( 1 < $thread->total_recipients_count ) {
-							?>
-							<div class="bb-report-type-pagination">
-								<p class="page-data" data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>">
-									<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl" class="load_more_rl button small outline"
-										data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>"
-										data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
-										data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
-										data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
-										data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?>
-									</a>
-								</p>
+									?>
+								</div>
 							</div>
 							<?php
 						}
-						?>
-					</div>
-				</div>
-			</div>
+					}
+				}
+			}
+			?>
 		</div>
+		<?php
+		if ( 1 < $thread->total_recipients_count ) {
+			?>
+			<div class="bb-report-type-pagination">
+				<p class="page-data"
+					data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>">
+					<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl" class="load_more_rl button small outline"
+						data-thread-id="<?php echo esc_attr( $post_data['thread_id'] ); ?>"
+						data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
+						data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
+						data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
+						data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?>
+					</a>
+				</p>
+			</div>
+			<?php
+		}
+		?>
 		<?php
 	}
 	$html .= ob_get_contents();

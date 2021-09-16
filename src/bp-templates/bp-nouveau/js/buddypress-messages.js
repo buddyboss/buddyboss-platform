@@ -179,6 +179,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
 			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member', this.messageModeratorMemberList );
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
+			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 
 		},
 
@@ -518,6 +519,7 @@ window.bp = window.bp || {};
 				'exclude_current_user': true,
 				'exclude_moderated_members': true,
 			};
+			var currentHref = $( this ).attr( 'href' );
 			$.ajax(
 				{
 					type: 'POST',
@@ -526,21 +528,28 @@ window.bp = window.bp || {};
 						action: 'messages_moderated_recipient_list',
 						post_data: postData,
 					},
+					beforeSend: function () {
+						$( '.mass-block-member' ).magnificPopup(
+							{
+								items: {
+									src: currentHref,
+									type: 'inline'
+								},
+							}
+						).magnificPopup( 'open' );
+					},
 					success: function ( response ) {
 						if ( response.success && response.data && '' !== response.data.content ) {
-							$( '.mass-block-member' ).magnificPopup(
-								{
-									items: {
-										src: response.data.content,
-										type: 'inline'
-									},
-								}
-							).magnificPopup( 'open' );
+							$( '#mass-user-block-list #moderated_user_list' ).html( response.data.content );
 						}
 					},
 				}
 			);
 		},
+		
+		clearModeratedMessageList: function ( e ) {
+			$( '#moderated_user_list' ).html( '' );
+		}
 	};
 
 	bp.Models.Message = Backbone.Model.extend(
