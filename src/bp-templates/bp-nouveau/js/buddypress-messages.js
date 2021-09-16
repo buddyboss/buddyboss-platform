@@ -515,8 +515,8 @@ window.bp = window.bp || {};
 			var postData = {
 				'page_no': $( this ).attr( 'data-cp' ),
 				'thread_id': $( this ).attr( 'data-thread-id' ),
-				'exclude_moderated_members': true,
 				'exclude_current_user': true,
+				'exclude_moderated_members': true,
 			};
 			$.ajax(
 				{

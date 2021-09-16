@@ -1806,11 +1806,16 @@ class BP_Messages_Thread {
 
 		if ( isset( $r['exclude_current_user'] ) && true === (bool) $r['exclude_current_user'] ) {
 			// Exclude admins users list in the message.
-			$user_id                 = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
-			$r['exclude_admin_user'] = array( $user_id );
+			$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+			if ( ! empty( $r['exclude_admin_user'] ) ) {
+				$r['exclude_admin_user'] = array_merge( $r['exclude_admin_user'], array( $user_id ) );
+			} else {
+				$r['exclude_admin_user'] = array( $user_id );
+			}
+			$r['exclude_admin_user'] = array_unique( $r['exclude_admin_user'] );
 		}
-
 		$results    = self::get( $r );
+		error_log( $thread_id . ' => ' . $results['total'] );
 		$recipients = array();
 
 		if ( ! empty( $results['recipients'] ) ) {
