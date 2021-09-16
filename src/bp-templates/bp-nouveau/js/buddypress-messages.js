@@ -540,15 +540,15 @@ window.bp = window.bp || {};
 					},
 					success: function ( response ) {
 						if ( response.success && response.data && '' !== response.data.content ) {
-							$( '#mass-user-block-list #moderated_user_list' ).html( response.data.content );
+							$( '#mass-user-block-list #moderated_user_list' ).html( response.data.content ).addClass('is_not_empty');
 						}
 					},
 				}
 			);
 		},
 		
-		clearModeratedMessageList: function ( e ) {
-			$( '#moderated_user_list' ).html( '' );
+		clearModeratedMessageList: function () {
+			$( '#moderated_user_list' ).html( '' ).removeClass('is_not_empty');
 		}
 	};
 
