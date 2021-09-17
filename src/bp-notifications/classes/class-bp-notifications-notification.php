@@ -410,8 +410,8 @@ class BP_Notifications_Notification {
 			// Added security patch for SQL Injections vulnerability
 			global $wpdb;
 			$order_by_clean = array();
-			$table = $wpdb->prefix . 'bp_notifications';
-			$columns = $wpdb->get_col("DESC {$table}", 0);
+			$table          = $wpdb->prefix . 'bp_notifications';
+			$columns        = $wpdb->get_col( "DESC {$table}", 0 );
 			foreach ( (array) $args['order_by'] as $key => $value ) {
 				if ( in_array( $value, $columns, true ) ) {
 					$order_by_clean[] = $value;
