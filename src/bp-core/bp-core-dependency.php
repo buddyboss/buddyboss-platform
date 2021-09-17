@@ -535,7 +535,9 @@ function bp_add_permastructs() {
 function bp_init_background_updater() {
 	global $bp_background_updater;
 
-	include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+	if ( ! class_exists( 'BP_Background_Updater' ) ) {
+		include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+	}
 	$bp_background_updater = new BP_Background_Updater();
 
 	/**
