@@ -46,8 +46,8 @@ class BP_Email_Queue {
 		$table_name  = $wpdb->prefix . 'bb_email_queue';
 		$get_records = $this->get_records();
 		if ( ! empty( $get_records ) ) {
-			global $bp_background_updater;
-			$bp_background_updater->push_to_queue(
+			$bb_email_background_updater = new BP_Background_Updater();
+			$bb_email_background_updater->push_to_queue(
 				array(
 					'callback' => array( $this, 'bb_email_queue_cron_cb' ),
 					'args'     => array( $get_records ),
@@ -59,7 +59,7 @@ class BP_Email_Queue {
 				$wpdb->update( $table_name, array( 'scheduled' => true ), array( 'id' => $record['id'] ) );
 			}
 
-			$bp_background_updater->save()->schedule_event();
+			$bb_email_background_updater->save()->schedule_event();
 		}
 	}
 
