@@ -30,7 +30,7 @@
 				foreach ( $signup_fields as $key => $signup_field ) {
 					ob_start();
 					$account_signup_fields[ $key ]['id'] = $key;
-					bp_nouveau_get_signup_form_html( array( $signup_field ), 'account_details' );
+					bp_nouveau_get_signup_form_html( array( $key => $signup_field ), 'account_details' );
 					$account_signup_fields[ $key ]['html'] .= ob_get_clean();
 				}
 			}
@@ -99,10 +99,10 @@
 					foreach ( $merged_signup_fields as $order_signup_field ) {
 						echo $order_signup_field['html'];
 						if ( 'signup_email' === $order_signup_field['id'] && array_key_exists( 'signup_email_confirm', $signup_fields ) ) {
-							bp_nouveau_get_signup_form_html( array( $signup_fields['signup_email_confirm'] ), 'account_details' );
+							bp_nouveau_get_signup_form_html( array( 'signup_email_confirm' => $signup_fields['signup_email_confirm'] ), 'account_details' );
 						}
 						if ( 'signup_password' === $order_signup_field['id'] && array_key_exists( 'signup_password_confirm', $signup_fields ) ) {
-							bp_nouveau_get_signup_form_html( array( $signup_fields['signup_password_confirm'] ), 'account_details' );
+							bp_nouveau_get_signup_form_html( array( 'signup_password_confirm' => $signup_fields['signup_password_confirm'] ), 'account_details' );
 						}
 					}
 				}
