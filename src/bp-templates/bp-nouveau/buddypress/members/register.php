@@ -30,7 +30,19 @@
 
 					<?php
 
-					$signup_fields            = bp_nouveau_get_signup_fields( 'account_details' );
+					// Account signup fields.
+					$signup_fields         = bp_nouveau_get_signup_fields( 'account_details' );
+					$account_signup_fields = array();
+					if ( ! empty( $signup_fields ) ) {
+						foreach ( $signup_fields as $key => $signup_field ) {
+							ob_start();
+							$account_signup_fields[ $key ]['id'] = $key;
+							bp_nouveau_get_signup_form_html( array( $signup_field ), 'account_details' );
+							$account_signup_fields[ $key ]['html'] .= ob_get_clean();
+						}
+					}
+
+					// Xprofile signup fields.
 					$profile_signup_fields    = array();
 					$profile_signup_field_ids = '';
 					if ( bp_is_active( 'xprofile' ) && bp_nouveau_base_account_has_xprofile() ) {
@@ -53,10 +65,25 @@
                                     </fieldset>
                                 </div>
 								<?php
-								$profile_signup_fields[ bp_get_the_profile_field_id() ] .= ob_get_clean();
+								$profile_signup_fields[ bp_get_the_profile_field_id() ]['id']   = bp_get_the_profile_field_id();
+								$profile_signup_fields[ bp_get_the_profile_field_id() ]['html'] .= ob_get_clean();
 							endwhile;
 							$profile_signup_field_ids = bp_get_the_profile_field_ids();
 						endwhile;
+					}
+
+					// Merge account and xprofile signup fields.
+					$merged_signup_fields = array_merge( $account_signup_fields, $profile_signup_fields );
+					$xprofile_order       = get_option( 'bp_xprofile_fields_order' );
+
+					if ( ! empty( $xprofile_order ) ) {
+						$order_signup_fields = array();
+						if ( ! empty( $merged_signup_fields ) ) {
+							foreach ( $merged_signup_fields as $field ) {
+								$order_signup_fields[ $field['id'] ] = $field;
+							}
+						}
+						$order_signup_fields = array_replace( array_flip( $xprofile_order ), $order_signup_fields );
 					}
 					?>
 				</div><!-- #basic-details-section -->
@@ -70,29 +97,15 @@
 					<?php bp_nouveau_signup_hook( 'before', 'signup_profile' ); ?>
 
                     <div class="register-section extended-profile" id="profile-details-section">
-						<?php /* Use the profile field loop to render input fields for the 'base' profile field group */ ?>
-						<?php while ( bp_profile_groups() ) : bp_the_profile_group(); ?>
-							<?php while ( bp_profile_fields() ) : bp_the_profile_field();
-								if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-									if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
-										continue;
-									}
-								}
-								?>
-
-                                <div<?php bp_field_css_class( 'editfield' );bp_field_data_attribute(); ?>>
-                                    <fieldset>
-										<?php
-										$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
-										$field_type->edit_field_html();
-
-										?>
-                                    </fieldset>
-                                </div>
-							<?php endwhile; ?>
-                            <input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids"
-                                   value="<?php bp_the_profile_field_ids(); ?>"/>
-						<?php endwhile; ?>
+						<?php
+						if ( ! empty( $order_signup_fields ) ) {
+							foreach ( $order_signup_fields as $order_signup_field ) {
+								echo $order_signup_field['html'];
+							}
+						}
+						?>
+                        <input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids"
+                               value="<?php echo esc_attr( $profile_signup_field_ids ); ?>"/>
 						<?php bp_nouveau_signup_hook( '', 'signup_profile' ); ?>
                     </div><!-- #profile-details-section -->
 
