@@ -5852,6 +5852,49 @@ define({ "api": [
     "groupTitle": "Media"
   },
   {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/media/move",
+    "title": "Move Medias",
+    "name": "MoveBBPhotos",
+    "group": "Media",
+    "description": "<p>Move Medias into the albums.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "media_ids",
+            "description": "<p>Media specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "album_id",
+            "description": "<p>A unique numeric ID for the Media Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-media/classes/class-bp-rest-media-details-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
     "type": "PATCH",
     "url": "/wp-json/buddyboss/v1/media/albums/:id",
     "title": "Update Album",
