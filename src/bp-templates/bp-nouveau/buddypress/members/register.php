@@ -83,7 +83,7 @@
 								$order_signup_fields[ $field['id'] ] = $field;
 							}
 						}
-						$order_signup_fields = array_replace( array_flip( $xprofile_order ), $order_signup_fields );
+						$merged_signup_fields = array_replace( array_flip( $xprofile_order ), $order_signup_fields );
 					}
 					?>
 				</div><!-- #basic-details-section -->
@@ -98,8 +98,8 @@
 
                     <div class="register-section extended-profile" id="profile-details-section">
 						<?php
-						if ( ! empty( $order_signup_fields ) ) {
-							foreach ( $order_signup_fields as $order_signup_field ) {
+						if ( ! empty( $merged_signup_fields ) ) {
+							foreach ( $merged_signup_fields as $order_signup_field ) {
 								echo $order_signup_field['html'];
 							}
 						}
