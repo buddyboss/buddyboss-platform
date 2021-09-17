@@ -94,7 +94,7 @@ add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_
 add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
-
+add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -730,11 +730,16 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 /**
  * Add nonce for the moderation when click on block member button.
  *
+<<<<<<< HEAD
  * @param $params Get params.
  *
  * @return $params Return params.
+=======
+ * @param  array $params Get params.
+ *
+ * @return array $params Return params.
+>>>>>>> fix/2875
  */
-add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
 function bp_core_get_js_strings_callback(  $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	return $params;
