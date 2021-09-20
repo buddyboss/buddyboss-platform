@@ -798,7 +798,7 @@ class BP_Groups_Member {
 		}
 
 		// If hide subgroups option is checked from Group hierarchies settings
-		if ( ( bp_is_groups_directory() || bp_is_user_groups() ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+		if ( bp_is_groups_directory() && ! bp_is_user_groups() && true === (bool) bp_enable_group_hide_subgroups() ) {
 			$sql['where'][] = "g.parent_id = 0";
 		}
 
