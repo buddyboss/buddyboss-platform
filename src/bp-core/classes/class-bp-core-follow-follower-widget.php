@@ -39,7 +39,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 
 		// do not do anything if user isn't logged in
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
 			return;
 		}
 
@@ -98,11 +98,11 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 
-		// show the users the logged-in user is follower
+		// show the users the logged-in user is follower.
 		if ( bp_has_members(
 			array(
 				'include'         => $follower,
-				'max'             => $instance['max_users'],
+				'per_page'        => $instance['max_users'],
 				'populate_extras' => false,
 			)
 		) ) {

@@ -1,7 +1,6 @@
 <script type="text/html" id="tmpl-bp-messages-single-header">
-	<#    var other_recipients = _.reject(data.recipients, function(item) {    return item.is_you;    });
-
-	var current_user = _.find(data.recipients, function(item) {    return item.is_you == true;    });
+	<#    var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
+	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
 
@@ -30,6 +29,15 @@
 
 				<# } #>
 			</dt>
+			<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
+			<a href="javascript:void(0);" id="view_more_members" class="view_more_members view_more_members_cls"
+				data-thread-id="{{data.id}}"
+				data-tp="{{data.recipients.total_pages}}"
+				data-tc="{{data.recipients.count}}"
+				data-pp="{{data.recipients.per_page}}"
+				data-cp="2"
+				data-action="bp_view_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			<# } #>
 			<dd>
 				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
 			</dd>
@@ -135,11 +143,8 @@
 								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 							</header>
 							<div class="bb-report-type-wrp">
-								<# _.reject(other_recipients, function(item) {
-	                            if( false == item.can_be_blocked ) {
-	                                return false;
-	                            } #>
-								<div class="user-item-wrp">
+								<# _.reject(other_recipients, function(item) { #>
+								<div class="user-item-wrp" id="user-{{item.id}}">
 									<div class="user-avatar">
 										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
 									</div>
@@ -147,19 +152,32 @@
 										{{item.user_name}}
 									</div>
 									<div class="user-actions">
-	                                    <# if ( true === item.is_blocked ) { #>
-	                                        <a id="reported-user" class="blocked-member button small disabled">
-	                                            <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
-	                                        </a>
-	                                    <# } else{ #>
-	                                        <a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
-	                                            <?php esc_html_e( 'Block', 'buddyboss' ); ?>
-	                                        </a>
-	                                    <# } #>
+                                        <# if ( true === item.is_blocked ) { #>
+                                            <a id="reported-user" class="blocked-member button small disabled">
+                                                <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
+                                            </a>
+                                        <# } else if ( false !== item.can_be_blocked ) { #>
+                                            <a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+                                                <?php esc_html_e( 'Block', 'buddyboss' ); ?>
+                                            </a>
+                                        <# } #>
 									</div>
 								</div>
 								<# }); #>
 							</div>
+							<# if ( 1 < data.recipients.total_pages ) { #>
+								<div class="bb-report-type-pagination">
+									<p class="page-data" data-thread-id="{{data.id}}">
+										<a href="javascript:void(0);" name="load_more_rl" id="load_more_rl"
+										   class="load_more_rl button small outline"
+										   data-thread-id="{{data.id}}"
+										   data-tp="{{data.recipients.total_pages}}"
+										   data-tc="{{data.recipients.count}}"
+										   data-pp="{{data.recipients.per_page}}"
+										   data-cp="2" data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+									</p>
+								</div>
+							<# } #>
 						</div>
 					</div>
 				</div>

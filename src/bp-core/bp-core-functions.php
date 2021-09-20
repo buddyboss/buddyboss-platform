@@ -5622,6 +5622,22 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 					chdir( 'wp-content/' . $sym_path );
 					if ( empty( $file['path'] ) ) {
 						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+						if ( 'document' === $type ) {
+							$is_image         = wp_attachment_is_image( $attachment_id );
+							$img_url          = get_attached_file( $attachment_id );
+							$meta             = wp_get_attachment_metadata( $attachment_id );
+							$img_url_basename = wp_basename( $img_url );
+							$upl_dir          = wp_get_upload_dir();
+
+							if ( ! $is_image ) {
+								if ( ! empty( $meta['sizes'][$size] ) ) {
+									$img_url = str_replace( $img_url_basename, $meta['sizes'][$size]['file'], $img_url );
+								} else {
+									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
+								}
+							}
+							$file['path'] = str_replace( trailingslashit( $upl_dir['basedir'] ), '', $img_url );
+						}
 					}
 					$output_file_src = '../../' . $file['path'];
 					if ( file_exists( $output_file_src ) ) {
@@ -5636,15 +5652,8 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 }
 
 function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
-	$url        = explode( '/', $preview_attachment_path );
-	$search_key = array_search( 'uploads', $url, true );
-	if ( is_array( $url ) && ! empty( $url ) && false !== $search_key ) {
-		$url            = array_slice( array_filter( $url ), $search_key );
-		$url            = implode( '/', $url );
-		$attachment_url = trailingslashit( $upload_directory['baseurl'] ) . $url;
-	} else {
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-	}
+
+	$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 
 	return str_replace( 'uploads/uploads', 'uploads', $attachment_url );
 }
@@ -5673,24 +5682,26 @@ function bb_core_scaled_attachment_path( $attachment_id ) {
  * Check is device is IOS.
  *
  * @return bool
+ *
+ * @since BuddyBoss 1.7.0
  */
 function bb_check_ios_device() {
 
-	if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		return false;
-	}
-
 	$is_ios = false;
-
-	$ipod   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$iphone = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$ipad   = stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$ipod   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$iphone = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$ipad   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 	if ( $ipod || $iphone || $ipad ) {
 		$is_ios = true;
 	}
 
-	return $is_ios;
+	/**
+	 * Filter for the check if it's ios devices or not.
+	 *
+	 * @since BuddyBoss 1.7.0.1
+	 */
+	return apply_filters( 'bb_check_ios_device', $is_ios );
 }
 
 /**
@@ -5763,7 +5774,7 @@ function bb_core_enable_default_symlink_support() {
 				unlink( $attachment_path );
 
 				if ( bb_enable_symlinks() ) {
-					bb_media_symlink_validate( 0, 1 );
+					wp_delete_attachment( $attachment_id, true );
 					return;
 				}
 
@@ -5795,7 +5806,7 @@ function bb_core_enable_default_symlink_support() {
 				}
 			}
 		}
-		wp_delete_post( $attachment_id, true );
+		wp_delete_attachment( $attachment_id, true );
 	}
 }
 
@@ -5831,4 +5842,265 @@ function bb_core_upload_dummy_attachment() {
 	}
 
 	return $attachment_id;
+}
+
+/**
+ * Function which will return the browser useragent, name, version, platform and pattern.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_core_get_browser() {
+
+	$u_agent  = $_SERVER['HTTP_USER_AGENT'];
+	$bname    = 'Unknown';
+	$platform = 'Unknown';
+	$version  = "";
+
+	//First get the platform?
+	if ( preg_match( '/linux/i', $u_agent ) ) {
+		$platform = 'linux';
+	} elseif ( preg_match( '/macintosh|mac os x/i', $u_agent ) ) {
+		$platform = 'mac';
+	} elseif ( preg_match( '/windows|win32/i', $u_agent ) ) {
+		$platform = 'windows';
+	}
+
+	// Next get the name of the useragent yes seperately and for good reason
+	if ( preg_match( '/MSIE/i', $u_agent ) && ! preg_match( '/Opera/i', $u_agent ) ) {
+		$bname = 'Internet Explorer';
+		$ub    = "MSIE";
+	} elseif ( preg_match( '/Firefox/i', $u_agent ) ) {
+		$bname = 'Mozilla Firefox';
+		$ub    = "Firefox";
+	} elseif ( preg_match( '/Chrome/i', $u_agent ) ) {
+		$bname = 'Google Chrome';
+		$ub    = "Chrome";
+	} elseif ( preg_match( '/Safari/i', $u_agent ) ) {
+		$bname = 'Apple Safari';
+		$ub    = "Safari";
+	} elseif ( preg_match( '/Opera/i', $u_agent ) ) {
+		$bname = 'Opera';
+		$ub    = "Opera";
+	} elseif ( preg_match( '/Netscape/i', $u_agent ) ) {
+		$bname = 'Netscape';
+		$ub    = "Netscape";
+	}
+
+	// finally get the correct version number
+	$known   = array( 'Version', $ub, 'other' );
+	$pattern = '#(?<browser>' . join( '|', $known ) .
+	           ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+	if ( ! preg_match_all( $pattern, $u_agent, $matches ) ) {
+		// we have no matching number just continue
+	}
+
+	// see how many we have
+	$i = count( $matches['browser'] );
+	if ( $i != 1 ) {
+		//we will have two since we are not using 'other' argument yet
+		//see if version is before or after the name
+		if ( strripos( $u_agent, "Version" ) < strripos( $u_agent, $ub ) ) {
+			$version = $matches['version'][0];
+		} else {
+			$version = $matches['version'][1];
+		}
+	} else {
+		$version = $matches['version'][0];
+	}
+
+	// check if we have a number
+	if ( $version == null || $version == "" ) {
+		$version = "?";
+	}
+
+	return array(
+		'userAgent' => $u_agent,
+		'name'      => $bname,
+		'version'   => $version,
+		'platform'  => $platform,
+		'pattern'   => $pattern
+	);
+}
+
+/**
+ * Function to check if media record is exist.
+ *
+ * @param int    $id   media id
+ * @param string $type media type
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return null|array|object|void
+ */
+function bb_moderation_get_media_record_by_id( $id, $type ) {
+	global $wpdb;
+
+	$record         = array();
+	$media_table    = "{$wpdb->prefix}bp_media";
+	$document_table = "{$wpdb->prefix}bp_document";
+
+	if ( in_array( $type, array( 'media', 'video' ) ) ) {
+		$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
+		$record    = $wpdb->get_row( $media_sql );
+	}
+
+	if ( 'document' === $type ) {
+		$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
+		$record       = $wpdb->get_row( $document_sql );
+	}
+
+	return $record;
+}
+
+/**
+ * Function to check if suspend record is exist.
+ *
+ * @param int $id id
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return null|array|object|void
+ */
+function bb_moderation_suspend_record_exist( $id ) {
+	global $wpdb;
+
+	$record = array();
+
+	if ( ! $id ) {
+		return $record;
+	}
+
+	$suspend_table = "{$wpdb->prefix}bp_suspend";
+
+	$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
+	$record             = $wpdb->get_row( $suspend_record_sql );
+
+	return $record;
+}
+
+/**
+ * Function to update suspend data.
+ *
+ * @param object $moderated_activities suspend records
+ * @param int    $offset               pagination object
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return int|mixed
+ */
+function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 ) {
+	global $wpdb;
+
+	$suspend_table = "{$wpdb->prefix}bp_suspend";
+
+	if ( ! empty( $moderated_activities ) ) {
+		foreach ( $moderated_activities as $moderated_activity ) {
+			if ( in_array( $moderated_activity->item_type, array( 'media', 'video' ) ) ) {
+				$media_results = bb_moderation_get_media_record_by_id( $moderated_activity->item_id, $moderated_activity->item_type );
+				if ( ! empty( $media_results ) ) {
+					$suspend_record = bb_moderation_suspend_record_exist( $media_results->activity_id );
+					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $suspend_record->item_id,
+							'item_type' => $suspend_record->item_type,
+						), array( 'id' => $moderated_activity->id ) );
+
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $moderated_activity->item_id,
+							'item_type' => $moderated_activity->item_type,
+						), array( 'id' => $suspend_record->id ) );
+					}
+				}
+			}
+
+			if ( 'document' === $moderated_activity->item_type ) {
+				$document_results = bb_moderation_get_media_record_by_id( $moderated_activity->item_id, 'document' );
+				if ( ! empty( $document_results ) ) {
+					$suspend_record = bb_moderation_suspend_record_exist( $document_results->activity_id );
+					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $suspend_record->item_id,
+							'item_type' => $suspend_record->item_type,
+						), array( 'id' => $moderated_activity->id ) );
+
+						$wpdb->update( $suspend_table, array(
+							'item_id'   => $moderated_activity->item_id,
+							'item_type' => $moderated_activity->item_type,
+						), array( 'id' => $suspend_record->id ) );
+					}
+				}
+			}
+			$offset ++;
+		}
+	}
+
+	return $offset;
+}
+
+/**
+ * Function to update moderation data on plugin update.
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return int|mixed|void
+ */
+function bb_moderation_bg_update_moderation_data() {
+	global $wpdb;
+	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$table_exists  = (bool) $wpdb->get_results( "DESCRIBE {$suspend_table}" );
+
+	if ( ! $table_exists ) {
+		return;
+	}
+
+	$moderated_activities = $wpdb->get_results( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC" );
+
+	if ( ! empty( $moderated_activities ) ) {
+		bb_moderation_update_suspend_data( $moderated_activities, 0 );
+	}
+}
+
+/**
+ * Get all admin users.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return array
+ */
+function bb_get_all_admin_users() {
+	$args = array(
+		'role'    => 'administrator',
+		'orderby' => 'user_nicename',
+		'order'   => 'ASC',
+		'fields'  => 'id',
+	);
+	$users = get_users( $args );
+	if ( ! empty( $users ) ) {
+		$users = array_map( 'intval', $users );
+	}
+	return $users;
+}
+
+/**
+ * Check the symlink function was disabled by server or not.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return bool
+ */
+function bb_check_server_disabled_symlink() {
+	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
+
+		$disabled = explode( ',', ini_get( 'disable_functions' ) );
+		$disabled = array_map( 'trim', $disabled );
+
+		if ( ! empty( $disabled ) && in_array( 'symlink', $disabled, true ) ) {
+			bp_update_option( 'bp_media_symlink_support', 0 );
+			return true;
+		}
+	}
+
+	return false;
 }

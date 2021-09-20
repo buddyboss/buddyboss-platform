@@ -634,7 +634,6 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
-						'error_type'    => 'wp_error',
 					)
 				);
 
@@ -1214,27 +1213,24 @@ function folders_check_folder_access( $folder_id ) {
  */
 function bp_document_delete_orphaned_attachments() {
 
-	$orphaned_attachment_args = array(
-		'post_type'      => 'attachment',
-		'post_status'    => 'inherit',
-		'fields'         => 'ids',
-		'posts_per_page' => - 1,
-		'meta_query'     => array(
-			array(
-				'key'     => 'bp_document_saved',
-				'value'   => '0',
-				'compare' => '=',
-			),
-		),
-	);
+	global $wpdb;
 
-	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
+	/**
+	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
+	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
+	 * all the media from Media Library.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 */
+	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_document_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
+	$data  = $wpdb->get_col( $query );
 
-	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach ( $orphaned_attachment_query->posts as $a_id ) {
+	if ( ! empty( $data ) ) {
+		foreach ( $data as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
+
 }
 
 /**
@@ -3726,9 +3722,25 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 
 				$file = image_get_intermediate_size( $attachment_id, $size );
 
-				if ( false === $file ) {
+				if ( false === $file && 'pdf' !== $extension ) {
 					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					$file = image_get_intermediate_size( $attachment_id, $size );
+				} elseif ( false === $file && 'pdf' === $extension ) {
+					bp_document_generate_document_previews( $attachment_id );
+					$file = image_get_intermediate_size( $attachment_id, $size );
+				}
+
+				// If the given size is not found then use the full image.
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'full' );
+				}
+
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'original' );
+				}
+
+				if ( false === $file ) {
+					$file = image_get_intermediate_size( $attachment_id, 'thumbnail' );
 				}
 
 				$attached_file_info = pathinfo( $attached_file );
@@ -3984,14 +3996,17 @@ function bp_document_set_time_limits( $time_limit ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
-	$cnt         = 0;
-	$num_updates = 0;
-	$num_fails   = 0;
-	$time        = 0;
+
+	$cnt          = 0;
+	$num_updates  = 0;
+	$num_fails    = 0;
+	$attempt_time = 0;
 
 	if ( $ids ) {
-		$time = microtime( true );
-		$cnt  = count( $ids );
+
+		$attempt_time = microtime( true );
+		$cnt          = count( $ids );
+
 		bp_document_set_time_limits( max( $cnt * 20, 300 ) );
 
 		foreach ( $ids as $idx => $id ) {
@@ -4041,9 +4056,9 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 				}
 			}
 		}
-		$time = round( microtime( true ) - $time, 1 );
+		$attempt_time = round( microtime( true ) - $attempt_time, 1 );
 	}
-	return array( $cnt, $num_updates, $num_fails, $time );
+	return array( $cnt, $num_updates, $num_fails, $attempt_time );
 }
 
 /**
@@ -4162,8 +4177,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
 			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-				$group_object    = groups_get_group( $document->group_id );
-				$group_status    = bp_get_group_status( $group_object );
+				$group_object            = groups_get_group( $document->group_id );
+				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $document->privacy . $size );
 			}
 
@@ -4175,14 +4190,41 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			} else {
 				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 			}
+
+			/**
+			 * Filter for the after thumb symlink generate.
+			 *
+			 * @param string $attachment_url Attachment URL.
+			 * @param object $document       Document Object.
+			 *
+			 * @since BuddyBoss 1.7.0.1
+			 */
+			$attachment_url = apply_filters( 'bb_document_after_get_preview_url_symlink', $attachment_url, $document );
+
 		} elseif ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) && ! bb_enable_symlinks() ) {
 
 			$file          = image_get_intermediate_size( $attachment_id, $size );
 			$attached_file = get_attached_file( $attachment_id );
 
-			if ( false === $file ) {
+			if ( false === $file && 'pdf' !== $extension ) {
 				bb_document_regenerate_attachment_thumbnails( $attachment_id );
 				$file = image_get_intermediate_size( $attachment_id, $size );
+			} elseif ( false === $file && 'pdf' === $extension ) {
+				bp_document_generate_document_previews( $attachment_id );
+				$file = image_get_intermediate_size( $attachment_id, $size );
+			}
+
+			// If the given size is not found then use the full image.
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'full' );
+			}
+
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'original' );
+			}
+
+			if ( false === $file ) {
+				$file = image_get_intermediate_size( $attachment_id, 'thumbnail' );
 			}
 
 			$attached_file_info = pathinfo( $attached_file );
@@ -4193,9 +4235,13 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
-			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) ) {
+			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' !== $extension ) {
 				// Regenerate attachment thumbnails.
 				bb_document_regenerate_attachment_thumbnails( $attachment_id );
+				$file      = image_get_intermediate_size( $attachment_id, $size );
+				$file_path = $file_path . '/' . $file['file'];
+			} elseif ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' === $extension ) {
+				bp_document_generate_document_previews( $attachment_id );
 				$file      = image_get_intermediate_size( $attachment_id, $size );
 				$file_path = $file_path . '/' . $file['file'];
 			}
@@ -4204,7 +4250,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 
 				$document_id    = 'forbidden_' . $document_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ) . '&size=' . $size;
+				$attachment_url = home_url( '/' ) . 'bb-document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id ) . '/' . $size;
 
 			} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
 				$output_file_src = get_attached_file( $attachment_id );
@@ -4218,7 +4264,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 					if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) ) {
 						$document_id    = 'forbidden_' . $document_id;
 						$attachment_id  = 'forbidden_' . $attachment_id;
-						$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+						$attachment_url = home_url( '/' ) . 'bb-document-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
 					}
 				}
 			}
@@ -4229,8 +4275,13 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$upload_directory        = wp_get_upload_dir();
 			$document_symlinks_path  = bp_document_symlink_path();
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
+			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+				$group_object    = groups_get_group( $document->group_id );
+				$group_status    = bp_get_group_status( $group_object );
+				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
+			}
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
-				bp_document_create_symlinks( $document, $size );
+				bp_document_create_symlinks( $document, '' );
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 		} elseif ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && ! bb_enable_symlinks() ) {
@@ -4239,7 +4290,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$attachment_id        = 'forbidden_' . $attachment_id;
 			$output_file_src      = get_attached_file( $passed_attachment_id );
 			if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+				$attachment_url = home_url( '/' ) . 'bb-document-player/' . base64_encode( $attachment_id ) . '/' . base64_encode( $document_id );
 			}
 		}
 	}
@@ -4252,10 +4303,11 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 	 * @param string $extension      Extension.
 	 * @param string $size           Size.
 	 * @param int    $attachment_id  Attachment id.
+	 * @param bool   $do_symlink     display symlink or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id );
+	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id, $do_symlink );
 }
 
 /**
@@ -4318,20 +4370,8 @@ function bp_document_mirror_text( $attachment_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_get_preview_audio_url( $document_id, $attachment_id, $extension ) {
-	$attachment_url = '';
 
-	if ( ! empty( $attachment_id ) && ! empty( $document_id ) && in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$document = new BP_Document( $document_id );
-
-		$upload_directory       = wp_get_upload_dir();
-		$document_symlinks_path = bp_document_symlink_path();
-
-		$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
-		if ( ! file_exists( $preview_attachment_path ) ) {
-			bp_document_create_symlinks( $document );
-		}
-		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
-	}
+	$attachment_url = bp_document_get_preview_url( $document_id, $attachment_id, '', true );
 
 	/**
 	 * Filter url here to audio url.
@@ -4440,7 +4480,7 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 		if ( bb_enable_symlinks() ) {
 
 			if ( bb_check_ios_device() ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( 'forbidden_' . $attachment_id ) . '&id1=' . base64_encode( 'forbidden_' . $document_id );
+				$attachment_url = home_url( '/' ) . 'bb-document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
 			} else {
 
 				// Get videos previews symlink directory path.
@@ -4481,10 +4521,20 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 					}
 
 					$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_path );
+
+					/**
+					 * Filter for the after document video symlink generate.
+					 *
+					 * @param string $attachment_url Attachment URL.
+					 * @param object $document       Document Object.
+					 *
+					 * @since BuddyBoss 1.7.0.1
+					 */
+					$attachment_url = apply_filters( 'bb_document_after_video_get_symlink', $attachment_url, $document );
 				}
 			}
 		} else {
-			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( 'forbidden_' . $attachment_id ) . '&id1=' . base64_encode( 'forbidden_' . $document_id );
+			$attachment_url = home_url( '/' ) . 'bb-document-player/' . base64_encode( 'forbidden_' . $attachment_id ) . '/' . base64_encode( 'forbidden_' . $document_id );
 		}
 	}
 

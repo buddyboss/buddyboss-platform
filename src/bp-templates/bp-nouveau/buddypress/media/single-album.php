@@ -70,7 +70,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							}
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit ) {
+						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit && bb_user_can_create_video() ) {
 							?>
 							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 							<?php
