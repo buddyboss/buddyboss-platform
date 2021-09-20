@@ -32,7 +32,6 @@ function bp_media_upload() {
 	 * Fires before the media upload handler.
 	 *
 	 * @since BuddyBoss 1.7.0
-	 *
 	 */
 	do_action( 'bb_before_media_upload_handler' );
 
@@ -42,7 +41,6 @@ function bp_media_upload() {
 	 * Fires after the media upload handler.
 	 *
 	 * @since BuddyBoss 1.7.0
-	 *
 	 */
 	do_action( 'bb_after_media_upload_handler' );
 
@@ -147,7 +145,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size(),
+				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss' ), bp_media_file_upload_max_size() ),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
 				'',
@@ -1253,15 +1251,14 @@ function albums_check_album_access( $album_id ) {
  */
 function bp_media_delete_orphaned_attachments() {
 
-
 	global $wpdb;
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
 	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
 	 * all the media from Media Library.
-     *
-     * @since BuddyBoss 1.7.6
+	 *
+	 * @since BuddyBoss 1.7.6
 	 */
 	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_media_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
 	$data  = $wpdb->get_col( $query );
@@ -1610,9 +1607,9 @@ function bp_media_import_buddyboss_media_tables() {
  */
 function bp_media_import_buddyboss_forum_media() {
 
-    if ( ! bp_is_active( 'forums' ) ) {
-        return;
-    }
+	if ( ! bp_is_active( 'forums' ) ) {
+		return;
+	}
 
 	$forums_done = get_option( 'bp_media_import_forums_done', 0 );
 
@@ -2484,9 +2481,9 @@ function bp_media_ie_nocache_headers_fix( $headers ) {
 
 function bp_media_get_forum_id( $media_id ) {
 
-    if ( ! bp_is_active( 'forums' ) ) {
-        return;
-    }
+	if ( ! bp_is_active( 'forums' ) ) {
+		return;
+	}
 
 	$forum_id           = 0;
 	$forums_media_query = new WP_Query(
@@ -2615,7 +2612,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 	$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 	if ( $group_id > 0 ) {
 		$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-    }
+	}
 
 	// db call ok; no-cache ok;
 	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
@@ -3412,7 +3409,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
 				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
-            }
+			}
 		}
 	}
 
@@ -3423,7 +3420,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 	 * @param int    $media_id       Media ID.
 	 * @param int    $attachment_id  Attachment ID.
 	 * @param string $size           Preview size.
-     * @param bool   $do_symlink     display symlink or not.
+	 * @param bool   $do_symlink     display symlink or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
@@ -3691,15 +3688,15 @@ function bb_media_user_can_access( $id, $type ) {
 					$can_add      = true;
 					$can_delete   = true;
 					// Use can only do the thing if the user is admin OR status will be a members.
-					if ( 'photo' === $type && ( $is_admin  || 'members' === bp_group_get_media_status( $media_group_id ) ) ) {
+					if ( 'photo' === $type && ( $is_admin || 'members' === bp_group_get_media_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
-					if ( 'document' === $type && ( $is_admin  || 'members' === bp_group_get_document_status( $media_group_id) ) ) {
+					if ( 'document' === $type && ( $is_admin || 'members' === bp_group_get_document_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
-					if ( 'video' === $type && ( $is_admin  || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
+					if ( 'video' === $type && ( $is_admin || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
 						$can_edit = true;
-                    }
+					}
 					$can_move = true;
 				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_view     = true;
