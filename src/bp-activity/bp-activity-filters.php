@@ -115,6 +115,7 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
+add_action( 'bp_activity_after_delete', 'bb_activity_delete_link_review_attachment', 10, 1 );
 
 /* Actions *******************************************************************/
 
@@ -2905,4 +2906,24 @@ function bp_activity_edit_update_video( $video_ids ) {
 	}
 
 	return $video_ids;
+}
+
+/**
+ * Action to delete link preview attachment.
+ *
+ * @param array $activities Array of activities.
+ *
+ * @since 1.7.6
+ */
+function bb_activity_delete_link_review_attachment( $activities ) {
+	$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+
+	if ( ! empty( $activity_ids ) ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$link_preview_meta = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+			if ( ! empty( $link_preview_meta ) && ! empty( $link_preview_meta['attachment_id'] ) ) {
+				wp_delete_attachment( $link_preview_meta['attachment_id'], true );
+			}
+		}
+	}
 }
