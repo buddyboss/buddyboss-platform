@@ -294,6 +294,8 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 		update_post_meta( $attachment->ID, 'bp_video_upload', 1 );
 		update_post_meta( $attachment->ID, 'bp_video_saved', '0' );
 
+		bb_bunny_upload_video( $attachment );
+
 		return $attachment;
 	}
 
@@ -4362,3 +4364,97 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 
 	return $attachment_url;
 }
+
+function bb_bunny_video_create_object( $attachment ) {
+
+	$curl = curl_init();
+
+	curl_setopt_array( $curl, [
+		CURLOPT_URL            => "http://video.bunnycdn.com/library/12967/videos",
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_ENCODING       => '',
+		CURLOPT_MAXREDIRS      => 10,
+		CURLOPT_TIMEOUT        => 60000,
+		CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+		CURLOPT_CUSTOMREQUEST  => 'POST',
+		CURLOPT_POSTFIELDS     => json_encode( array( 'title' => get_the_title( $attachment ) )),
+		CURLOPT_HTTPHEADER     => [
+			"AccessKey: 121d581c-2083-4fe7-9a89788a9c2f-68f8-4261",
+			"Content-Type: application/*+json"
+		],
+	] );
+
+	$response = curl_exec( $curl );
+	$err      = curl_error( $curl );
+	$status   = curl_errno( $curl );
+
+	curl_close( $curl );
+
+	if ( $err ) {
+		return new WP_Error( 'error_uploading', $err, array( 'status' => $status ) );
+	} else {
+        return $response;
+	}
+
+}
+
+function bb_bunny_upload_video( $attachment ) {
+
+	$response       = bb_bunny_video_create_object( $attachment );
+	$err            = '';
+	$bunny_response = json_decode( $response );
+	$bunny_vid_id   = $bunny_response->guid;
+	$file           = get_attached_file( $attachment->ID );
+
+    $fileStream = fopen( $file, 'r' ) or die( "Unable to open file!" );
+	$dataLength = filesize( $file );
+	$key        = '121d581c-2083-4fe7-9a89788a9c2f-68f8-4261';
+
+	// Initialize and configure curl
+	$curl = curl_init();
+	curl_setopt_array(
+		$curl,
+		array(
+			CURLOPT_CUSTOMREQUEST  => 'PUT',
+			CURLOPT_URL            => "http://video.bunnycdn.com/library/12967/videos/$bunny_vid_id",
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_TIMEOUT        => 60000,
+			CURLOPT_FOLLOWLOCATION => 0,
+			CURLOPT_FAILONERROR    => 0,
+			CURLOPT_SSL_VERIFYPEER => 1,
+			CURLOPT_VERBOSE        => 0,
+			CURLOPT_INFILE         => $fileStream,
+			CURLOPT_INFILESIZE     => $dataLength,
+			CURLOPT_UPLOAD         => 1,
+			CURLOPT_HTTPHEADER     => array(
+				'AccessKey: ' . $key
+			)
+		)
+	);
+
+	// Send the request
+	$response  = curl_exec( $curl );
+	$http_code = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
+	$err       = curl_error( $curl );
+	$status    = curl_errno( $curl );
+
+	// Cleanup
+	curl_close( $curl );
+	fclose( $fileStream );
+
+
+	if ( $err ) {
+		return new WP_Error( 'error_uploading', $err, array( 'status' => $status ) );
+	} else {
+
+	}
+
+}
+
+add_action( 'init', function () {
+
+	$data = file_get_contents("php://input");
+	$events = json_decode($data, true);
+
+	error_log( print_r( $events, 1 ) );
+});
