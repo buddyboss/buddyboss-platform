@@ -55,12 +55,12 @@ jQuery( document ).ready(
 
 				// Add element into the Arrdata array.
 				jQuery( element ).on( 'select2:select', function ( e ) {
-					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
-					var tagsArrayData = jQuery.map( select_options, function ( option ) {
-						return option.value;
-					} );
-					var tags = tagsArrayData.join( ',' );
-					jQuery( 'body #bbp_topic_tags' ).val( tags );
+					var select_options = jQuery('body #bbp_topic_tags_dropdown option');
+					var tagsArrayData = jQuery.map(select_options, function (option) {
+						return option.text;
+					});
+					var tags = tagsArrayData.join(',');
+					jQuery('body #bbp_topic_tags').val(tags);
 
 					jQuery( 'body .select2-search__field' ).trigger( 'click' );
 					jQuery( 'body .select2-search__field' ).trigger( 'click' );
@@ -69,18 +69,18 @@ jQuery( document ).ready(
 				// Remove element into the Arrdata array.
 				jQuery( element ).on( 'select2:unselect', function ( e ) {
 					var data = e.params.data;
-					jQuery( 'body #bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
-					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
-					var tagsArrayData = jQuery.map( select_options, function ( option ) {
-						return option.value;
-					} );
-					tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
+					jQuery('body #bbp_topic_tags_dropdown option[value="'+data.id+'"]').remove();
+					var select_options = jQuery('body #bbp_topic_tags_dropdown option');
+					var tagsArrayData = jQuery.map(select_options, function (option) {
+						return option.text;
+					});
+					tagsArrayData = jQuery.grep(tagsArrayData, function (value) {
 						return value !== data.id;
-					} );
-					var tags = tagsArrayData.join( ',' );
-					jQuery( 'body #bbp_topic_tags' ).val( tags );
-					if ( tags.length === 0 ) {
-						jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
+					});
+					var tags = tagsArrayData.join(',');
+					jQuery('body #bbp_topic_tags').val(tags);
+					if (tags.length === 0) {
+						jQuery(window).scrollTop(jQuery(window).scrollTop() + 1);
 					}
 				} );
 			} );
