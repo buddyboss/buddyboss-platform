@@ -339,9 +339,9 @@ endif;
 
 														// Add extra keys and values to handle it later.
 														if ( ! empty( $signup_fields_object ) ) {
-															foreach ( $signup_fields_object as $key => $signup_fields_object_ite ) {
-																$signup_fields_object_ite->id   = $key;
-																$signup_fields_object_ite->name = $signup_fields_object_ite->label;
+															foreach ( $signup_fields_object as $key => $signup_fields_object_item ) {
+																$signup_fields_object_item->id   = $key;
+																$signup_fields_object_item->name = $signup_fields_object_item->label;
 															}
 														}
 
