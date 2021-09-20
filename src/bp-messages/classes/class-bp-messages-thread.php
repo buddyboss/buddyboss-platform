@@ -1462,7 +1462,7 @@ class BP_Messages_Thread {
 	public static function get_recipient_links( $recipients ) {
 
 		if ( count( $recipients ) >= 5 ) {
-			return sprintf( __( '%s Recipients', 'buddyboss' ), number_format_i18n( count( $recipients ) ) );
+			return sprintf( __( '%s Recipients', 'buddyboss' ), bp_core_number_format( count( $recipients ) ) );
 		}
 
 		$recipient_links = array();
@@ -1653,7 +1653,7 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && - 1 !== $r['per_page'] ) {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
-		
+
 		/**
 		 * Filters the Where SQL statement.
 		 *
@@ -1679,7 +1679,7 @@ class BP_Messages_Thread {
 		 * @param string $sql From SQL statement.
 		 */
 		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
-        
+
 		$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
 		/**

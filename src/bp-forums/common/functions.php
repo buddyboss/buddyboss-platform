@@ -536,9 +536,9 @@ function bbp_get_statistics( $args = '' ) {
 			$topic_count_hidden = $topics['private'] + $topics['spammed'] + $topics['trashed'];
 
 			// Generate the hidden topic count's title attribute
-			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), number_format_i18n( $topics['private'] ) ) : '';
-			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), number_format_i18n( $topics['spammed'] ) ) : '';
-			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), number_format_i18n( $topics['trashed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['private'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['spammed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['trashed'] ) ) : '';
 
 			// Compile the hidden topic title
 			$hidden_topic_title = implode( ' | ', array_filter( $topic_titles ) );
@@ -571,9 +571,9 @@ function bbp_get_statistics( $args = '' ) {
 			$reply_count_hidden = $replies['private'] + $replies['spammed'] + $replies['trashed'];
 
 			// Generate the hidden topic count's title attribute
-			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), number_format_i18n( $replies['private'] ) ) : '';
-			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), number_format_i18n( $replies['spammed'] ) ) : '';
-			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), number_format_i18n( $replies['trashed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['private'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['spammed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['trashed'] ) ) : '';
 
 			// Compile the hidden replies title
 			$hidden_reply_title = implode( ' | ', array_filter( $reply_titles ) );
