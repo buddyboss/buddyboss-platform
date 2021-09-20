@@ -722,7 +722,7 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 	);
 
 	// If reply/topic content is NULL then skip checking duplicate post
-	if( empty( $r['post_content'] ) ){
+	if ( empty( $r['post_content'] ) ) {
 		return true;
 	}
 
