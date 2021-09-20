@@ -118,7 +118,7 @@ class Core {
 		$this->my_courses_name          = sprintf( __( 'My %s', 'buddyboss' ), $this->course_name );
 		$this->create_courses_name      = sprintf( __( 'Create a %s', 'buddyboss' ), $this->course_name );
 		$this->create_courses_slug      = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
-		$this->course_slug              = apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting('LearnDash_Settings_Section_Permalinks', 'courses' ) );
+		$this->course_slug              = bb_learndash_profile_courses_slug();
 		$this->my_courses_slug          = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
 		$this->course_access            = bp_core_can_edit_settings();
 		$this->certificates_enables     = bp_core_learndash_certificates_enables();

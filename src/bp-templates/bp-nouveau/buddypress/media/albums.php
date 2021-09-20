@@ -6,7 +6,7 @@
  */
 ?>
 
-<?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) { ?>
+<?php if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>
 
 	<div class="bb-media-actions-wrap album-actions-wrap">
 		<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></h2>

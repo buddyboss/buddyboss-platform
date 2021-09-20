@@ -312,6 +312,7 @@ class BP_Media {
 				'album_id'     => false,           // Album ID.
 				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'count_total'  => false,           // Whether or not to use count_total.
+				'video'        => false,            // Whether to include videos.
 			)
 		);
 
@@ -357,7 +358,7 @@ class BP_Media {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
 
@@ -400,9 +401,9 @@ class BP_Media {
 		}
 
 		// existing-media check to query media which has no albums assigned.
-		if ( ! empty( $r['album_id'] ) && 'existing-media' != $r['album_id'] ) {
+		if ( ! empty( $r['album_id'] ) && 'existing-media' !== $r['album_id'] ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
-		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' == $r['album_id'] ) {
+		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' === $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
@@ -417,6 +418,10 @@ class BP_Media {
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+		}
+
+		if ( ! $r['video'] ) {
+			$where_conditions['type'] = "m.type = 'photo'";
 		}
 
 		/**
@@ -439,8 +444,8 @@ class BP_Media {
 		// Join the where conditions together.
 		if ( ! empty( $scope_query['sql'] ) ) {
 			$where_sql = 'WHERE ' .
-			             ( ! empty( $where_conditions ) ? '( ' . join( ' AND ', $where_conditions ) . ' ) AND ' : '' )  .
-			             ' ( ' . $scope_query['sql'] . ' )';
+						 ( ! empty( $where_conditions ) ? '( ' . join( ' AND ', $where_conditions ) . ' ) AND ' : '' ) .
+						 ' ( ' . $scope_query['sql'] . ' )';
 		} else {
 			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
 		}
@@ -467,6 +472,10 @@ class BP_Media {
 			'total'          => null,
 			'has_more_items' => null,
 		);
+
+		if ( $r['video'] ) {
+			$retval['total_video'] = null;
+		}
 
 		// Query first for media IDs.
 		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
@@ -550,6 +559,40 @@ class BP_Media {
 			}
 
 			$retval['total'] = $total_medias;
+
+			if ( $r['video'] ) {
+
+				$where_sql .= " AND m.type = 'video'";
+
+				/**
+				 * Filters the total video MySQL statement.
+				 *
+				 * @since BuddyBoss 1.5.8
+				 *
+				 * @param string $value     MySQL statement used to query for total medias.
+				 * @param string $where_sql MySQL WHERE statement portion.
+				 * @param string $sort      Sort direction for query.
+				 */
+				$total_videos_sql = apply_filters( 'bp_media_total_videos_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
+				$cached           = bp_core_get_incremented_cache( $total_videos_sql, $cache_group );
+				if ( false === $cached ) {
+					$total_videos = $wpdb->get_var( $total_videos_sql );
+					bp_core_set_incremented_cache( $total_videos_sql, $cache_group, $total_videos );
+				} else {
+					$total_videos = $cached;
+				}
+
+				if ( ! empty( $r['max'] ) ) {
+					if ( (int) $total_videos > (int) $r['max'] ) {
+						$total_videos = $r['max'];
+					}
+				}
+
+				$retval['total_video'] = $total_videos;
+				$retval['total']       = $retval['total'] - $total_videos;
+			} else {
+				$retval['total_video'] = null;
+			}
 		}
 
 		return $retval;
@@ -574,7 +617,7 @@ class BP_Media {
 		// Get BuddyPress.
 		$bp = buddypress();
 
-		// Media Privacy array
+		// Media Privacy array.
 		$media_privacy = bp_media_get_visibility_levels();
 
 		$medias       = array();
@@ -610,16 +653,78 @@ class BP_Media {
 				$media->menu_order    = (int) $media->menu_order;
 			}
 
-			// fetch attachment data
-			$attachment_data                 = new stdClass();
-			$attachment_data->full           = wp_get_attachment_image_url( $media->attachment_id, 'full' );
-			$attachment_data->thumb          = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );
-			$attachment_data->activity_thumb = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
-			$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
-			$media->attachment_data          = $attachment_data;
+			// fetch attachment data.
+			$attachment_data                              = new stdClass();
+			$activity_thumb                               = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' );
+			$media_album_cover_thumb                      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image-medium' );
+			$media_photos_page_thumb                      = $media_album_cover_thumb;
+			$media_theatre_popup                          = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' );
+			$attachment_data->full                        = $activity_thumb;
+			$attachment_data->thumb                       = $activity_thumb;
+			$attachment_data->media_album_cover           = $media_album_cover_thumb;
+			$attachment_data->media_photos_directory_page = $media_photos_page_thumb;
+			$attachment_data->media_theatre_popup         = $media_theatre_popup;
+			$attachment_data->activity_thumb              = $activity_thumb;
+			$attachment_data->meta                        = self::attachment_meta( $media->attachment_id );
+			$media->attachment_data                       = $attachment_data;
 
+			if( $media->type == 'video' && function_exists( 'bb_video_get_thumb_url' ) ) {
+				$get_video_thumb_ids = get_post_meta( $media->attachment_id, 'video_preview_thumbnails', true );
+				$get_video_thumb_id  = get_post_meta( $media->attachment_id, 'bp_video_preview_thumbnail_id', true );
+
+				$attachment_data->mime_type        = get_post_mime_type( $media->attachment_id );
+				$length_formatted                  = wp_get_attachment_metadata( $media->attachment_id );
+				$attachment_data->length_formatted = isset( $length_formatted['length_formatted'] ) ? $length_formatted['length_formatted'] : '0:00';
+				$default_image                     = bb_get_video_default_placeholder_image();
+
+				if ( $get_video_thumb_id ) {
+					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+					$video_directory_page_thumb                  = $video_user_profile_thumb;
+					$video_album_cover_thumb                     = $video_user_profile_thumb;
+					$video_add_thumbnail_thumb                   = $video_album_cover_thumb;
+					$video_popup_thumb                           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-poster-popup-image' );
+					$video_activity_thumb                        = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-activity-image' );
+					$attachment_data->full                       = $video_popup_thumb;
+					$attachment_data->thumb                      = $video_album_cover_thumb;
+					$attachment_data->activity_thumb             = $video_activity_thumb;
+					$attachment_data->video_user_profile_thumb   = $video_user_profile_thumb;
+					$attachment_data->video_directory_page_thumb = $video_directory_page_thumb;
+					$attachment_data->video_album_cover_thumb    = $video_album_cover_thumb;
+					$attachment_data->media_album_cover          = $video_album_cover_thumb;
+					$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
+					$attachment_data->video_popup_thumb          = $video_popup_thumb;
+					$attachment_data->video_activity_thumb       = $video_activity_thumb;
+					$attachment_data->thumb_meta                 = wp_get_attachment_metadata( $get_video_thumb_id );
+				} elseif ( isset( $get_video_thumb_ids['default_images'] ) && ! empty( $get_video_thumb_ids['default_images'] ) ) {
+					$get_video_thumb_id                          = current( $get_video_thumb_ids['default_images'] );
+					$video_user_profile_thumb                    = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+					$video_directory_page_thumb                  = $video_user_profile_thumb;
+					$video_album_cover_thumb                     = $video_user_profile_thumb;
+					$video_add_thumbnail_thumb                   = $video_album_cover_thumb;
+					$video_popup_thumb                           = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-poster-popup-image' );
+					$video_activity_thumb                        = bb_video_get_thumb_url( $media->id, $get_video_thumb_id, 'bb-video-activity-image' );
+					$attachment_data->full                       = $video_popup_thumb;
+					$attachment_data->thumb                      = $video_album_cover_thumb;
+					$attachment_data->activity_thumb             = $video_activity_thumb;
+					$attachment_data->video_user_profile_thumb   = $video_user_profile_thumb;
+					$attachment_data->video_directory_page_thumb = $video_directory_page_thumb;
+					$attachment_data->media_album_cover          = $video_album_cover_thumb;
+					$attachment_data->video_album_cover_thumb    = $video_album_cover_thumb;
+					$attachment_data->video_add_thumbnail_thumb  = $video_add_thumbnail_thumb;
+					$attachment_data->video_popup_thumb          = $video_popup_thumb;
+					$attachment_data->video_activity_thumb       = $video_activity_thumb;
+					$attachment_data->thumb_meta                 = wp_get_attachment_metadata( $get_video_thumb_id );
+				} else {
+					$attachment_data->full           = $default_image;
+					$attachment_data->thumb          = $default_image;
+					$attachment_data->activity_thumb = $default_image;
+					$attachment_data->thumb_meta     = $default_image;
+				}
+
+				$media->attachment_data = $attachment_data;
+			}
 			$group_name = '';
-			if ( bp_is_active( 'groups') && $media->group_id > 0 ) {
+			if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
 				$group      = groups_get_group( $media->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
@@ -629,8 +734,18 @@ class BP_Media {
 					$visibility = ucfirst( $status );
 				}
 			} else {
-				$visibility       = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
+				$media_privacy = bp_media_get_visibility_levels();
+				if ( 'friends' === $media->privacy && bp_loggedin_user_id() !== (int) $media->user_id ) {
+					$visibility = esc_html__( 'Connections', 'buddyboss' );
+				} elseif ( 'message' === $media->privacy ) {
+					$visibility = esc_html__( 'Message', 'buddyboss' );
+				} elseif ( 'forums' === $media->privacy ) {
+					$visibility = esc_html__( 'Forums', 'buddyboss' );
+				} else {
+					$visibility = ( isset( $media_privacy[ $media->privacy ] ) ) ? ucfirst( $media_privacy[ $media->privacy ] ) : '';
+				}
 			}
+
 			$media->group_name = $group_name;
 			$media->visibility = $visibility;
 
@@ -659,6 +774,45 @@ class BP_Media {
 		}
 
 		return $medias;
+	}
+
+	/**
+	 * Get attachment meta.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 *
+	 * @return array
+	 * @since BuddyBoss 1.5.7
+	 */
+	protected static function attachment_meta( $attachment_id ) {
+		$metadata = wp_get_attachment_metadata( $attachment_id );
+
+		if ( ! $metadata ) {
+			return $metadata;
+		}
+
+		$meta = array(
+			'width'  => $metadata['width'],
+			'height' => $metadata['height'],
+			'sizes'  => array(),
+		);
+
+		if ( isset( $metadata['sizes']['bb-media-activity-image'] ) ) {
+			$meta['sizes']['bb-media-activity-image'] = $metadata['sizes']['bb-media-activity-image'];
+		}
+
+		if ( isset( $metadata['sizes']['bb-media-photos-album-directory-image'] ) ) {
+			$meta['sizes']['bb-media-photos-album-directory-image'] = $metadata['sizes']['bb-media-photos-album-directory-image'];
+		}
+		if ( isset( $metadata['sizes']['bb-media-photos-album-directory-image-medium'] ) ) {
+			$meta['sizes']['bb-media-photos-album-directory-image-medium'] = $metadata['sizes']['bb-media-photos-album-directory-image-medium'];
+		}
+
+		if ( isset( $metadata['sizes']['bb-media-photos-popup-image'] ) ) {
+			$meta['sizes']['bb-media-photos-popup-image'] = $metadata['sizes']['bb-media-photos-popup-image'];
+		}
+
+		return $meta;
 	}
 
 	/**
@@ -882,7 +1036,7 @@ class BP_Media {
 	 * @string    $privacy           Optional. The privacy to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
-	 * @param bool $from Context of deletion from. ex. attachment, activity etc.
+	 * @param bool  $from Context of deletion from. ex. attachment, activity etc.
 	 *
 	 * @return array|bool An array of deleted media IDs on success, false on failure.
 	 */
@@ -1032,7 +1186,7 @@ class BP_Media {
 			}
 		}
 
-		// delete related activity
+		// delete related activity.
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
 
 			foreach ( $activity_ids as $activity_id ) {
@@ -1050,12 +1204,14 @@ class BP_Media {
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 
-					// Deleting an activity.
+						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete( array(
+						if ( 'activity' !== $from && bp_activity_delete(
+							array(
 								'id'      => $activity->id,
 								'user_id' => $activity->user_id,
-							) ) ) {
+							)
+						) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
@@ -1106,7 +1262,9 @@ class BP_Media {
 		// Where conditions.
 		$where_conditions = array();
 
-		$where_conditions['group_sql'] = $wpdb->prepare( 'm.group_id = %s', $group_id );
+		$where_conditions['group_sql']         = $wpdb->prepare( 'm.group_id = %s', $group_id );
+		$where_conditions['group_media_count'] = $wpdb->prepare( 'm.type = %s', 'photo' );
+		$where_conditions['group_privacy']     = $wpdb->prepare( 'm.privacy = %s', 'grouponly' );
 
 		/**
 		 * Filters the MySQL WHERE conditions for the Media items get method.
@@ -1207,7 +1365,7 @@ class BP_Media {
 		}
 
 		if ( empty( $activity_media_id ) ) {
-			$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+			$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id} AND m.type = 'photo' " );
 
 			if ( bp_is_active( 'activity' ) ) {
 				$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );

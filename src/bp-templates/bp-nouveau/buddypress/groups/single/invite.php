@@ -11,17 +11,17 @@ switch ( bp_get_group_current_invite_tab() ) :
 		bp_get_template_part( 'groups/single/invite/send-invites' );
 		break;
 
-	// Send Invites
+	// Send Invites.
 	case 'send-invites':
 		bp_get_template_part( 'groups/single/invite/send-invites' );
 		break;
 
-	// Group Invitations
+	// Group Invitations.
 	case 'pending-invites':
 		bp_get_template_part( 'groups/single/invite/pending-invites' );
 		break;
 
-	// Any other
+	// Any other.
 	default:
 		bp_get_template_part( 'groups/single/plugins' );
 		break;
