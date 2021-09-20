@@ -100,9 +100,10 @@ class BP_Activity_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
+		$activity_page_id = bp_core_get_directory_page_id( 'activity' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $activity_page_id ) ? $activity_page_id : 0,
 				'post_title'     => bp_get_directory_title( 'activity' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -165,9 +166,10 @@ class BP_Activity_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
+		$activity_page_id = bp_core_get_directory_page_id( 'activity' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $activity_page_id ) ? $activity_page_id : 0,
 				'post_title'     => __( 'News Feed', 'buddyboss' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
