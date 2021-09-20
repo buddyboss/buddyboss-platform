@@ -110,7 +110,7 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
-			
+
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1827,7 +1827,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread = new stdClass();
 
 	$recipients = (array) $thread_template->thread->recipients;
-	
+
 	// Strip the sender from the recipient list, and unset them if they are
 	// not alone. If they are alone, let them talk to themselves.
 	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
@@ -2775,7 +2775,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 			?>
 		</div>
 		<?php
-		if ( 1 < $thread->total_recipients_count ) {
+		if ( 1 < $thread->total_recipients_count && $thread->total_recipients_count > bb_messages_recipients_per_page() ) {
 			?>
 			<div class="bb-report-type-pagination">
 				<p class="page-data"
