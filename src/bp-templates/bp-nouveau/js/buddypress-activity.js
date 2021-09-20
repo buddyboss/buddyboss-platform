@@ -72,6 +72,7 @@ window.bp = window.bp || {};
 				this.dropzone_options = {
 					url                 : BP_Nouveau.ajaxurl,
 					timeout             : 3 * 60 * 60 * 1000,
+					dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
 					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
 					acceptedFiles       : 'image/*',
 					autoProcessQueue    : true,
@@ -1177,7 +1178,7 @@ window.bp = window.bp || {};
 											activity_comments.append( '<ul></ul>' );
 										}
 									}
-									
+
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 									$( form ).find( '.ac-input' ).first().html( '' );
 
