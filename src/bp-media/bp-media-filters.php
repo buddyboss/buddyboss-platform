@@ -84,7 +84,7 @@ add_filter( 'bp_get_activity_entry_css_class', 'bp_video_activity_entry_css_clas
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
 add_filter( 'query_vars', 'bb_setup_query_media_preview' );
-add_action( 'template_include', 'bb_setup_template_for_media_preview' );
+add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_MAX );
 
 /**
  * Add Media items for search
@@ -2540,8 +2540,20 @@ function bp_media_check_download_album_protection() {
 		array(
 			'base'    => $upload_dir['basedir'] . '/bb_medias',
 			'file'    => '.htaccess',
-			'content' => 'deny from all
+			'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>
