@@ -2242,3 +2242,22 @@ function bp_embed_message_cache( $cache, $id, $cachekey ) {
 function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
 	bp_messages_update_meta( $id, $cachekey, $cache );
 }
+
+/**
+ * Get the total number of recipients in the current thread.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return int Return total recipients count.
+ */
+function bb_get_thread_total_recipients_count() {
+	global $thread_template;
+	/**
+	 * Filters the total number of recipients in a thread.
+	 *
+	 * @since 1.7.6
+	 *
+	 * @param int $count Total recipients number.
+	 */
+	return (int) apply_filters( 'bb_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
+}

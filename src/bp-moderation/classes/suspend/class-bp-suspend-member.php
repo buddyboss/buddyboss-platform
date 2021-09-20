@@ -51,7 +51,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
-
+		
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -177,12 +177,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $where_conditions Member Where sql.
-	 * @param array $args             Query arguments.
+	 * @param array  $where_conditions Member Where sql.
+	 * @param string $column_name      Column name.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions, $args = array() ) {
+	public function update_where_sql( $where_conditions, $column_name ) {
 
 		$where                  = array();
 		$where['suspend_where'] = $this->exclude_where_query();
