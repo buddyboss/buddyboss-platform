@@ -1192,7 +1192,7 @@ function bp_core_xprofile_update_field_order( $field ) {
 
 	$xprofile_order = get_option( 'bp_xprofile_fields_order' );
 
-	if ( empty( $xprofile_order ) || empty( $field->id ) ) {
+	if ( empty( $xprofile_order ) || empty( $field->id ) || empty( $field->group_id ) || bp_xprofile_base_group_id() !== $field->group_id ) {
 		return;
 	}
 
