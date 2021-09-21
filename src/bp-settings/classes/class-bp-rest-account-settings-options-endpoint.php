@@ -153,28 +153,27 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$nav    = $request->get_param( 'nav' );
 
-		$nav = $request->get_param( 'nav' );
-
-		if ( true === $retval && empty( $nav ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_setting_nav',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
+			if ( empty( $nav ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_setting_nav',
+					__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		/**
@@ -291,28 +290,27 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to see the account settings options.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$nav    = $request->get_param( 'nav' );
 
-		$nav = $request->get_param( 'nav' );
-
-		if ( true === $retval && empty( $nav ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_setting_nav',
-				__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
+			if ( empty( $nav ) ) {
+				return new WP_Error(
+					'bp_rest_invalid_setting_nav',
+					__( 'Sorry, you are not allowed to update the account settings options.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		/**

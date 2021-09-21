@@ -828,6 +828,34 @@ function bp_enable_private_network( $default = false ) {
  *              items, otherwise false.
  */
 function bp_disable_blogforum_comments( $default = false ) {
+	global $activities_template;
+
+	// When here is not activity.
+	if ( empty( $activities_template->activity ) ) {
+		return $default;
+	}
+	
+	if ( empty(  $activities_template->activity->component ) ) {
+		return $default;
+	}
+
+	if ( 'blogs' !== $activities_template->activity->component ) {
+		return $default;
+	}
+
+	$post = get_post( $activities_template->activity->secondary_item_id );
+
+	if ( ! isset( $post->post_type ) ) {
+		return $default;
+	}
+
+	// Does not allow comment for WooCommerce product.
+	if ( 'product' === $post->post_type ) {
+		return true;
+	}
+
+	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
+	$disable = (bool) bb_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
 	/**
 	 * Filters whether or not blog and forum activity feed comments are disabled.
@@ -836,7 +864,31 @@ function bp_disable_blogforum_comments( $default = false ) {
 	 *
 	 * @param bool $value Whether or not blog and forum activity feed comments are disabled.
 	 */
-	return (bool) apply_filters( 'bp_disable_blogforum_comments', (bool) bp_get_option( 'bp-disable-blogforum-comments', $default ) );
+	return (bool) apply_filters( 'bp_disable_blogforum_comments', $disable );
+}
+
+/**
+ * Describe the activity comment is enable or not for custom post type.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ * @param bool $default   Optional. Fallback value if not found in the database.
+ *                        Default: false.
+ * @return bool True if activity comments are enable for blog and forum
+ *              items, otherwise false.
+ */
+function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
+	$option_name = bb_post_type_feed_comment_option_name( $post_type );
+
+	/**
+	 * Filters whether or not custom post type feed comments are enable.
+	 *
+	 * @since BuddyBoss 1.7.2
+	 *
+	 * @param bool $value Whether or not custom post type activity feed comments are enable.
+	 */
+	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
 }
 
 /**
@@ -1289,7 +1341,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether post type feed enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( 'bp-feed-custom-post-type-' . $post_type, $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ) );
 }
 
 /**
@@ -1774,4 +1826,94 @@ function bp_rest_enable_private_network() {
 	 * @param bool $value Whether private REST APIs is enabled.
 	 */
 	return apply_filters( 'bp_rest_enable_private_network', $retval );
+}
+
+/**
+ * Is the symlink is enabled in Media, Document & Video?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the symlink is enabled in Media, Document & Video enable,
+ *              otherwise false.
+ */
+function bb_enable_symlinks( $default = false ) {
+
+	/**
+	 * Filters whether or not the symlink is enabled in Media, Document & Video.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
+	 */
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
+}
+
+/**
+ * Option name for custom post type.
+ * From the activity settings whether any custom post enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bb_post_type_feed_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type;
+}
+
+/**
+ * Option name for custom post type comments.
+ * From the activity settings whether any custom post comments are enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bb_post_type_feed_comment_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type . '-comments';
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return array.
+ */
+function bb_feed_post_types() {
+	// Get all active custom post type.
+	$post_types = get_post_types( array( 'public' => true ) );
+
+	// Exclude BP CPT.
+	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+
+	$bp_excluded_cpt = array();
+
+	foreach ( $post_types as $post_type ) {
+		// Exclude all the custom post type which is already in BuddyPress Activity support.
+		if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
+			continue;
+		}
+
+		$bp_excluded_cpt[] = $post_type;
+	}
+
+	return $bp_excluded_cpt;
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return array.
+ */
+function bb_feed_not_allowed_comment_post_types() {
+	// Exclude BP CPT.
+	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 }

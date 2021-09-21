@@ -285,7 +285,11 @@ function bbp_new_reply_handler( $action = '' ) {
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 	// No reply content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) ) && empty( $_POST['bbp_media'] ) && empty( $_POST['bbp_media_gif'] ) && empty( $_POST['bbp_document'] )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+		 && empty( $_POST['bbp_media'] )
+		 && empty( $_POST['bbp_video'] )
+		 && empty( $_POST['bbp_media_gif'] )
+		 && empty( $_POST['bbp_document'] )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -305,6 +309,13 @@ function bbp_new_reply_handler( $action = '' ) {
 		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_document ) {
 			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_video ) {
+			bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss' ) );
 		}
 	}
 
@@ -666,8 +677,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
-	// No reply content
-	if ( empty( $reply_content ) ) {
+	// No reply content.
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+	     && empty( $_POST['bbp_media'] )
+	     && empty( $_POST['bbp_video'] )
+	     && empty( $_POST['bbp_media_gif'] )
+	     && empty( $_POST['bbp_document'] )
+	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
 
@@ -764,6 +780,25 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Just in time manipulation of reply terms before being edited
 	$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
+
+	// remove deleted terms
+	$existing_terms = bbp_get_topic_tag_names( $topic_id );
+
+	if ( ! empty( $existing_terms ) ) {
+		$deleted_terms  = array();
+		$existing_terms = explode( ',', $existing_terms );
+		$existing_terms = array_map( function ( $single ) {
+			return trim( $single );
+		}, $existing_terms );
+
+		if ( ! empty( $terms ) ) {
+			$terms_array   = explode( ',', $terms );
+			$deleted_terms = array_diff( $existing_terms, $terms_array );
+		}
+		if ( ! empty( $deleted_terms ) ) {
+			wp_remove_object_terms( $topic_id, $deleted_terms, bbp_get_topic_tag_tax_id() );
+		}
+	}
 
 	// Insert terms
 	$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );

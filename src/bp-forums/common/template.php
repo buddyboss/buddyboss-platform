@@ -804,6 +804,30 @@ function bbp_is_single_user_replies() {
 }
 
 /**
+ * Check if current page is a user engagements page
+ *
+ * @since 2.6.0 bbPress (r6320)
+ *
+ * @return bool True if it's a user's replies page, false if not
+ */
+function bbp_is_single_user_engagements() {
+
+	// Assume false.
+	$retval = false;
+
+	// Get the main query global.
+	$wp_query = bbp_get_wp_query();
+
+	// Check query.
+	if ( ! empty( $wp_query->bbp_is_single_user_engagements ) && ( true === $wp_query->bbp_is_single_user_engagements ) ) {
+		$retval = true;
+	}
+
+	// Filter & return.
+	return (bool) apply_filters( 'bbp_is_single_user_engagements', $retval );
+}
+
+/**
  * Check if current page is a view page
  *
  * @since bbPress (r2789)
@@ -1752,7 +1776,7 @@ function bbp_reply_form_fields() {
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-edit-reply" />
 		<input type="hidden" name="bbp_redirect_page_to" id="bbp_redirect_page_to" value="<?php echo intval( $forum_redirect_to ); ?>" />
-	
+
 		<?php
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			wp_nonce_field( 'bbp-unfiltered-html-reply_' . bbp_get_reply_id(), '_bbp_unfiltered_html_reply', false );}

@@ -119,16 +119,16 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
+		if ( bp_is_active( 'groups' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -197,6 +197,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_loggedin_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
+		remove_action( 'bp_init', 'bb_moderation_load', 1 );
 		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		remove_action( 'bp_init', 'bp_register_post_types', 2 );
 		remove_action( 'bp_init', 'bp_setup_title', 8 );
@@ -217,6 +218,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		do_action( 'bp_ld_sync/init' ); // We should remove when platform load learndash extention on bp_init.
 		do_action( 'bp_actions' );
 
+		add_action( 'bp_init', 'bb_moderation_load', 1 );
 		add_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		add_action( 'bp_init', 'bp_register_post_types', 2 );
 		add_action( 'bp_init', 'bp_setup_title', 8 );
