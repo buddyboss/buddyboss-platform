@@ -294,7 +294,7 @@ class BP_Groups_Member {
 		if ( ! empty( $this->id ) ) {
 			$sql = $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET inviter_id = %d, is_admin = %d, is_mod = %d, is_banned = %d, user_title = %s, is_confirmed = %d, comments = %s, invite_sent = %d WHERE id = %d", $this->inviter_id, $this->is_admin, $this->is_mod, $this->is_banned, $this->user_title, $this->is_confirmed, $this->comments, $this->invite_sent, $this->id );
 		} else {
-			if( ! is_admin() ){
+			if ( ! is_admin() ) {
 				return false;
 			}
 			// Ensure that user is not already a member of the group before inserting.
