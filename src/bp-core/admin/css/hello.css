@@ -142,7 +142,7 @@ TABLE OF CONTENTS:
 #bp-hello-container {
   position: fixed;
   top: 0;
-  bottom: 0;
+  bottom: 80px;
   z-index: 99999;
 }
 
@@ -279,8 +279,6 @@ TABLE OF CONTENTS:
  */
 .bp-hello-content {
   background-color: white;
-  max-height: calc(100vh - 200px);
-  overflow: auto;
 }
 
 .bp-hello-buddyboss-app .bp-hello-content {
@@ -322,14 +320,12 @@ TABLE OF CONTENTS:
   }
   #bp-hello-container {
     position: fixed;
-    top: 50%;
+    top: 60px;
     left: var(--bp-hello-container-size);
     right: var(--bp-hello-container-size);
-    bottom: initial;
+    bottom: 23px;
     z-index: 9999;
     border-radius: 3px;
-    max-height: calc(100% - 90px);
-    transform: translateY(-50%);
   }
   #bp-hello-container .bp-hello-header h1 {
     line-height: inherit;
@@ -364,7 +360,7 @@ TABLE OF CONTENTS:
     position: fixed;
     left: var(--bp-hello-container-size);
     right: var(--bp-hello-container-size);
-    bottom: initial;
+    bottom: 23px;
     z-index: 10000;
     height: auto;
     max-height: inherit;
