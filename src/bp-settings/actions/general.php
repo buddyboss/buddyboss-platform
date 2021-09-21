@@ -173,6 +173,8 @@ function bp_settings_action_general() {
 
 		// Clear cached data, so that the changed settings take effect
 		// on the current page load.
+		clean_user_cache( bp_displayed_user_id() );
+		
 		if ( ( false === $email_error ) && ( false === $pass_error ) && ( wp_update_user( $update_user ) ) ) {
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
 		}
