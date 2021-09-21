@@ -793,7 +793,11 @@ function xprofile_ajax_reorder_fields() {
 			$reorder[ $position ] = $field_id;
 		}
 	}
-	update_option( 'bp_xprofile_fields_order', $reorder, false );
+
+	// Update field order only for the signup group fields.
+	if ( ! empty( $_POST['field_group_id'] ) && bp_xprofile_base_group_id() === (int) $_POST['field_group_id'] ) {
+		update_option( 'bp_xprofile_fields_order', $reorder, false );
+	}
 }
 add_action( 'wp_ajax_xprofile_reorder_fields', 'xprofile_ajax_reorder_fields' );
 
