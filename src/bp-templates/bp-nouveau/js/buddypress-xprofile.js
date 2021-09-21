@@ -30,7 +30,7 @@ window.bp = window.bp || {};
 				var name_split = ( field_name ? field_name.split('_') : '' );
 				var arrayContainsVisibility = (name_split.indexOf('visibility') > -1);
                 if ( $.trim( field_val ) !== '' && ! arrayContainsVisibility ) {
-                    if( field.is( 'select' ) ){
+                    if ( field.is( 'select' ) ) {
                         title = $.trim( field.find('option:selected').text() );
                         return false;
                     }
