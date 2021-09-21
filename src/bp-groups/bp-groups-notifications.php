@@ -68,6 +68,14 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 	}
 
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
+
+	// check if it has enough recipients to use batch emails.
+	if ( function_exists( 'bb_email_queue_min_count' ) && bb_email_queue_min_count() <= count( (array) $user_ids ) ) {
+		$min_count_recipients = true;
+	} else {
+		$min_count_recipients = false;
+	}
+
 	foreach ( (array) $user_ids as $user_id ) {
 
 		// Continue if member opted out of receiving this email.
@@ -90,7 +98,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 				'unsubscribe'  => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 			),
 		);
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			bb_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
 			// call email background process.
 			bb_email_queue()->bb_email_background_process();

@@ -83,5 +83,5 @@ function bb_is_email_queue() {
  * @since BuddyBoss 1.7.9
  */
 function bb_email_queue_min_count() {
-	return apply_filters( 'bb_email_queue_min_count', 20 );
+	return (int) apply_filters( 'bb_email_queue_min_count', 20 );
 }

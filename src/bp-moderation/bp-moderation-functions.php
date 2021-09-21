@@ -1009,37 +1009,18 @@ function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_member_suspend_email( $email, $tokens ) {
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
-		bb_email_queue()->add_record(
-			'user-moderation-email',
-			$email,
-			array(
-				'tokens' => array(
-					'user.name'    => $tokens['user_name'],
-					'timesblocked' => $tokens['times_blocked'],
-					'user.link'    => $tokens['member_link'],
-					'reportlink'   => $tokens['report_link'],
-				),
-			)
-		);
-		// call email background process.
-		bb_email_queue()->bb_email_background_process();
-
-		return true;
-	} else {
-		return bp_send_email(
-			'user-moderation-email',
-			$email,
-			array(
-				'tokens' => array(
-					'user.name'    => $tokens['user_name'],
-					'timesblocked' => $tokens['times_blocked'],
-					'user.link'    => $tokens['member_link'],
-					'reportlink'   => $tokens['report_link'],
-				),
-			)
-		);
-	}
+	return bp_send_email(
+		'user-moderation-email',
+		$email,
+		array(
+			'tokens' => array(
+				'user.name'    => $tokens['user_name'],
+				'timesblocked' => $tokens['times_blocked'],
+				'user.link'    => $tokens['member_link'],
+				'reportlink'   => $tokens['report_link'],
+			),
+		)
+	);
 }
 
 /**
@@ -1053,39 +1034,19 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_content_hide_email( $email, $tokens ) {
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
-		bb_email_queue()->add_record(
-			'content-moderation-email',
-			$email,
-			array(
-				'tokens' => array(
-					'content.type'  => $tokens['content_type'],
-					'content.owner' => $tokens['content_owner'],
-					'timesreported' => $tokens['content_timesreported'],
-					'content.link'  => $tokens['content_link'],
-					'reportlink'    => $tokens['content_reportlink'],
-				),
-			)
-		);
-		// call email background process.
-		bb_email_queue()->bb_email_background_process();
-
-		return true;
-	} else {
-		return bp_send_email(
-			'content-moderation-email',
-			$email,
-			array(
-				'tokens' => array(
-					'content.type'  => $tokens['content_type'],
-					'content.owner' => $tokens['content_owner'],
-					'timesreported' => $tokens['content_timesreported'],
-					'content.link'  => $tokens['content_link'],
-					'reportlink'    => $tokens['content_reportlink'],
-				),
-			)
-		);
-	}
+	return bp_send_email(
+		'content-moderation-email',
+		$email,
+		array(
+			'tokens' => array(
+				'content.type'  => $tokens['content_type'],
+				'content.owner' => $tokens['content_owner'],
+				'timesreported' => $tokens['content_timesreported'],
+				'content.link'  => $tokens['content_link'],
+				'reportlink'    => $tokens['content_reportlink'],
+			),
+		)
+	);
 }
 
 /**

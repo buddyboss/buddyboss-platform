@@ -1193,6 +1193,13 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 	do_action( 'bbp_pre_notify_subscribers', $reply_id, $topic_id, $user_ids );
 
+	// check if it has enough recipients to use batch emails.
+	if ( function_exists( 'bb_email_queue_min_count' ) && bb_email_queue_min_count() <= count( (array) $user_ids ) ) {
+		$min_count_recipients = true;
+	} else {
+		$min_count_recipients = false;
+	}
+
 	// Loop through users
 	foreach ( (array) $user_ids as $user_id ) {
 
@@ -1207,7 +1214,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		}
 
 		// Send notification email.
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			bb_email_queue()->add_record( 'bbp-new-forum-reply', (int) $user_id, $args );
 			// call email background process.
 			bb_email_queue()->bb_email_background_process();
@@ -1328,6 +1335,13 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	do_action( 'bbp_pre_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
+	// check if it has enough recipients to use batch emails.
+	if ( function_exists( 'bb_email_queue_min_count' ) && bb_email_queue_min_count() <= count( (array) $user_ids ) ) {
+		$min_count_recipients = true;
+	} else {
+		$min_count_recipients = false;
+	}
+
 	// Loop through users
 	foreach ( (array) $user_ids as $user_id ) {
 
@@ -1342,7 +1356,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		}
 
 		// Send notification email.
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			bb_email_queue()->add_record( 'bbp-new-forum-topic', (int) $user_id, $args );
 			// call email background process.
 			bb_email_queue()->bb_email_background_process();
