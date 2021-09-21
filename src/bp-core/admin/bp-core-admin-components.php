@@ -69,8 +69,9 @@ function bp_core_admin_components_options() {
 	// Merge optional and required together.
 	$all_components = $required_components + $optional_components;
 
-	// We are not displaying document component in listing it's automatically active if media component is active.
+	// We are not displaying document & video component in listing it's automatically active if media component is active.
 	unset( $all_components['document'] );
+	unset( $all_components['video'] );
 
 	// If this is an upgrade from before BuddyPress 1.5, we'll have to convert
 	// deactivated components into activated ones.
@@ -114,12 +115,16 @@ function bp_core_admin_components_options() {
 			break;
 		case 'active':
 			foreach ( array_keys( $active_components ) as $component ) {
-				$current_components[ $component ] = $all_components[ $component ];
+				if ( isset( $all_components[ $component ] ) ) {
+					$current_components[ $component ] = $all_components[ $component ];
+				}
 			}
 			break;
 		case 'inactive':
 			foreach ( $inactive_components as $component ) {
-				$current_components[ $component ] = $all_components[ $component ];
+				if ( isset( $all_components[ $component ] ) ) {
+					$current_components[ $component ] = $all_components[ $component ];
+				}
 			}
 			break;
 		case 'mustuse':
@@ -533,8 +538,8 @@ function bp_core_admin_components_settings_handler() {
 			$page_id = wp_insert_post( $new_page );
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-			$slug = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			$slug    = get_page_uri( $page_id );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}
 
@@ -643,8 +648,8 @@ function bp_core_admin_components_activation_handler() {
 			$page_id = wp_insert_post( $new_page );
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-			$slug = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			$slug    = get_page_uri( $page_id );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}
 

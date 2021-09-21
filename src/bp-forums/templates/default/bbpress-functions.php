@@ -4,7 +4,7 @@
  * Functions of Forums' Default theme
  *
  * @package BuddyBoss\BBP_Theme_Compat
- * @since bbPress (r3732)
+ * @since   bbPress (r3732)
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 	 * can copy these files into your theme without needing to merge anything
 	 * together; Forums should safely handle the rest.
 	 *
-	 * @see BBP_Theme_Compat() for more.
+	 * @see   BBP_Theme_Compat() for more.
 	 *
 	 * @since bbPress (r3732)
 	 */
@@ -37,8 +37,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses BBP_Default::setup_globals()
-		 * @uses BBP_Default::setup_actions()
+		 * @uses  BBP_Default::setup_globals()
+		 * @uses  BBP_Default::setup_actions()
 		 */
 		public function __construct( $properties = array() ) {
 
@@ -62,11 +62,11 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		/**
 		 * Setup the theme hooks
 		 *
-		 * @since bbPress (r3732)
+		 * @since  bbPress (r3732)
 		 * @access private
 		 *
-		 * @uses add_filter() To add various filters
-		 * @uses add_action() To add various actions
+		 * @uses   add_filter() To add various filters
+		 * @uses   add_action() To add various actions
 		 */
 		private function setup_actions() {
 
@@ -103,8 +103,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function before_main_content() {
 			?>
 
-		<div id="bbp-container">
-			<div id="bbp-content" role="main">
+			<div id="bbp-container">
+				<div id="bbp-content" role="main">
 
 			<?php
 		}
@@ -118,8 +118,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function after_main_content() {
 			?>
 
-			</div><!-- #bbp-content -->
-		</div><!-- #bbp-container -->
+				</div><!-- #bbp-content -->
+			</div><!-- #bbp-container -->
 
 			<?php
 		}
@@ -129,16 +129,30 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses bbp_is_single_forum() To check if it's the forum page
-		 * @uses bbp_is_single_topic() To check if it's the topic page
-		 * @uses bbp_thread_replies() To check if threaded replies are enabled
-		 * @uses bbp_is_single_user_edit() To check if it's the profile edit page
-		 * @uses wp_enqueue_script() To enqueue the scripts
+		 * @uses  bbp_is_single_forum() To check if it's the forum page
+		 * @uses  bbp_is_single_topic() To check if it's the topic page
+		 * @uses  bbp_thread_replies() To check if threaded replies are enabled
+		 * @uses  bbp_is_single_user_edit() To check if it's the profile edit page
+		 * @uses  wp_enqueue_script() To enqueue the scripts
 		 */
 		public function enqueue_scripts() {
 
 			if ( ! is_bbpress() ) {
-				return false;
+
+				if ( ! bp_is_active( 'groups' ) ) {
+					return false;
+				}
+
+				// Only filter if group forums are active.
+			   if ( ! bbp_is_group_forums_active() ) {
+					return false;
+			   }
+
+			   // Only filter for single group forum topics.
+			   if ( ! bp_is_group_single() && ! bp_is_group_forum_topic() && ! bp_is_group_forum_topic_edit() && ! bbp_is_reply_edit() ) {
+					return false;
+			   }
+
 			}
 
 			// Setup scripts array.
@@ -226,13 +240,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			if ( bp_is_active( 'media' ) ) {
 
 				$gif = false;
-				if ( bp_is_forums_gif_support_enabled() ) {
+				if ( bp_is_forums_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) {
 					wp_enqueue_script( 'giphy' );
 					$gif = true;
 				}
 
 				$emoji = false;
-				if ( bp_is_forums_emoji_support_enabled() ) {
+				if ( bp_is_forums_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() ) {
 					wp_enqueue_script( 'emojionearea' );
 					wp_enqueue_style( 'emojionearea' );
 					$emoji = true;
@@ -270,7 +284,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			if ( is_admin() ) {
 				if (
 					! get_current_screen() ||
-					! in_array( get_current_screen()->base, array( 'page', 'post' ) ) ||
+					! in_array( get_current_screen()->base, array( 'page', 'post' ), true ) ||
 					! post_type_supports( get_current_screen()->post_type, 'editor' ) ) {
 					return;
 				}
@@ -358,6 +372,44 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
+					$video_ids = get_post_meta( bbp_get_topic_id(), 'bp_video_ids', true );
+
+					if ( ! empty( $video_ids ) && bp_has_video(
+						array(
+							'include'  => $video_ids,
+							'order_by' => 'menu_order',
+							'sort'     => 'ASC',
+						)
+					) ) {
+						$params['topic_edit_video'] = array();
+						$index                      = 0;
+						while ( bp_video() ) {
+							bp_the_video();
+
+							$get_existing = get_post_meta( bp_get_video_attachment_id(), 'bp_video_preview_thumbnail_id', true );
+							$thumb        = '';
+							if ( $get_existing ) {
+								$file  = get_attached_file( $get_existing );
+								$type  = pathinfo( $file, PATHINFO_EXTENSION );
+								$data  = file_get_contents( $file ); // phpcs:ignore
+								$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+							}
+
+							$size                         = filesize( get_attached_file( bp_get_video_attachment_id() ) );
+							$params['topic_edit_video'][] = array(
+								'id'            => bp_get_video_id(),
+								'attachment_id' => bp_get_video_attachment_id(),
+								'name'          => basename( get_attached_file( bp_get_video_attachment_id() ) ),
+								'type'          => 'video',
+								'thumb'         => $thumb,
+								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
+								'size'          => $size,
+								'menu_order'    => $index,
+							);
+							$index ++;
+						}
+					}
+
 					$media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
 
 					if ( ! empty( $media_ids ) && bp_has_media(
@@ -387,7 +439,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = ( is_int( $gif_data['still'] )) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
 						$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 						$params['topic_edit_gif_data'] = array(
@@ -431,6 +483,44 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
+					$video_ids = get_post_meta( bbp_get_reply_id(), 'bp_video_ids', true );
+
+					if ( ! empty( $video_ids ) && bp_has_video(
+						array(
+							'include'  => $video_ids,
+							'order_by' => 'menu_order',
+							'sort'     => 'ASC',
+						)
+					) ) {
+						$params['reply_edit_video'] = array();
+						$index                      = 0;
+						while ( bp_video() ) {
+							bp_the_video();
+
+							$get_existing = get_post_meta( bp_get_video_attachment_id(), 'bp_video_preview_thumbnail_id', true );
+							$thumb        = '';
+							if ( $get_existing ) {
+								$file  = get_attached_file( $get_existing );
+								$type  = pathinfo( $file, PATHINFO_EXTENSION );
+								$data  = file_get_contents( $file ); // phpcs:ignore
+								$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+							}
+
+							$size                         = filesize( get_attached_file( bp_get_video_attachment_id() ) );
+							$params['reply_edit_video'][] = array(
+								'id'            => bp_get_video_id(),
+								'attachment_id' => bp_get_video_attachment_id(),
+								'name'          => basename( get_attached_file( bp_get_video_attachment_id() ) ),
+								'type'          => 'video',
+								'thumb'         => $thumb,
+								'size'          => $size,
+								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
+								'menu_order'    => $index,
+							);
+							$index ++;
+						}
+					}
+
 					$media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
 
 					if ( ! empty( $media_ids ) && bp_has_media(
@@ -460,7 +550,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = ( is_int( $gif_data['still'] )) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
 						$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 						$params['reply_edit_gif_data'] = array(
@@ -504,6 +594,44 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
+					$video_ids = get_post_meta( bbp_get_forum_id(), 'bp_video_ids', true );
+
+					if ( ! empty( $video_ids ) && bp_has_video(
+						array(
+							'include'  => $video_ids,
+							'order_by' => 'menu_order',
+							'sort'     => 'ASC',
+						)
+					) ) {
+						$params['forum_edit_video'] = array();
+						$index                      = 0;
+						while ( bp_video() ) {
+							bp_the_video();
+
+							$get_existing = get_post_meta( bp_get_video_attachment_id(), 'bp_video_preview_thumbnail_id', true );
+							$thumb        = '';
+							if ( $get_existing ) {
+								$file  = get_attached_file( $get_existing );
+								$type  = pathinfo( $file, PATHINFO_EXTENSION );
+								$data  = file_get_contents( $file ); // phpcs:ignore
+								$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+							}
+
+							$size                         = filesize( get_attached_file( bp_get_video_attachment_id() ) );
+							$params['forum_edit_video'][] = array(
+								'id'            => bp_get_video_id(),
+								'attachment_id' => bp_get_video_attachment_id(),
+								'name'          => basename( get_attached_file( bp_get_video_attachment_id() ) ),
+								'type'          => 'video',
+								'thumb'         => $thumb,
+								'size'          => $size,
+								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
+								'menu_order'    => $index,
+							);
+							$index ++;
+						}
+					}
+
 					$media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
 
 					if ( ! empty( $media_ids ) && bp_has_media(
@@ -533,7 +661,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_forum_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = ( is_int( $gif_data['still'] )) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
 						$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 						$params['forum_edit_gif_data'] = array(
@@ -550,9 +678,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			/**
 			 * Filters core JavaScript strings for internationalization before AJAX usage.
 			 *
-			 * @since BuddyBoss 1.1.6
-			 *
 			 * @param array $params Array of key/value pairs for AJAX usage.
+			 *
+			 * @since BuddyBoss 1.1.6
 			 */
 			wp_localize_script( 'bp-nouveau', 'BP_Forums_Nouveau', $result );
 		}
@@ -613,16 +741,16 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r5155)
 		 *
-		 * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
-		 * @uses bbp_is_user_logged_in() To check if user is logged in
-		 * @uses bbp_get_current_user_id() To get the current user id
-		 * @uses current_user_can() To check if the current user can edit the user
-		 * @uses bbp_get_forum() To get the forum
-		 * @uses wp_verify_nonce() To verify the nonce
-		 * @uses bbp_is_user_subscribed() To check if the forum is in user's subscriptions
-		 * @uses bbp_remove_user_subscriptions() To remove the forum from user's subscriptions
-		 * @uses bbp_add_user_subscriptions() To add the forum from user's subscriptions
-		 * @uses bbp_ajax_response() To return JSON
+		 * @uses  bbp_is_subscriptions_active() To check if the subscriptions are active
+		 * @uses  bbp_is_user_logged_in() To check if user is logged in
+		 * @uses  bbp_get_current_user_id() To get the current user id
+		 * @uses  current_user_can() To check if the current user can edit the user
+		 * @uses  bbp_get_forum() To get the forum
+		 * @uses  wp_verify_nonce() To verify the nonce
+		 * @uses  bbp_is_user_subscribed() To check if the forum is in user's subscriptions
+		 * @uses  bbp_remove_user_subscriptions() To remove the forum from user's subscriptions
+		 * @uses  bbp_add_user_subscriptions() To add the forum from user's subscriptions
+		 * @uses  bbp_ajax_response() To return JSON
 		 */
 		public function ajax_forum_subscription() {
 
@@ -681,16 +809,16 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses bbp_is_favorites_active() To check if favorites are active
-		 * @uses bbp_is_user_logged_in() To check if user is logged in
-		 * @uses bbp_get_current_user_id() To get the current user id
-		 * @uses current_user_can() To check if the current user can edit the user
-		 * @uses bbp_get_topic() To get the topic
-		 * @uses wp_verify_nonce() To verify the nonce & check the referer
-		 * @uses bbp_is_user_favorite() To check if the topic is user's favorite
-		 * @uses bbp_remove_user_favorite() To remove the topic from user's favorites
-		 * @uses bbp_add_user_favorite() To add the topic from user's favorites
-		 * @uses bbp_ajax_response() To return JSON
+		 * @uses  bbp_is_favorites_active() To check if favorites are active
+		 * @uses  bbp_is_user_logged_in() To check if user is logged in
+		 * @uses  bbp_get_current_user_id() To get the current user id
+		 * @uses  current_user_can() To check if the current user can edit the user
+		 * @uses  bbp_get_topic() To get the topic
+		 * @uses  wp_verify_nonce() To verify the nonce & check the referer
+		 * @uses  bbp_is_user_favorite() To check if the topic is user's favorite
+		 * @uses  bbp_remove_user_favorite() To remove the topic from user's favorites
+		 * @uses  bbp_add_user_favorite() To add the topic from user's favorites
+		 * @uses  bbp_ajax_response() To return JSON
 		 */
 		public function ajax_favorite() {
 
@@ -749,16 +877,16 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
-		 * @uses bbp_is_user_logged_in() To check if user is logged in
-		 * @uses bbp_get_current_user_id() To get the current user id
-		 * @uses current_user_can() To check if the current user can edit the user
-		 * @uses bbp_get_topic() To get the topic
-		 * @uses wp_verify_nonce() To verify the nonce
-		 * @uses bbp_is_user_subscribed() To check if the topic is in user's subscriptions
-		 * @uses bbp_remove_user_subscriptions() To remove the topic from user's subscriptions
-		 * @uses bbp_add_user_subscriptions() To add the topic from user's subscriptions
-		 * @uses bbp_ajax_response() To return JSON
+		 * @uses  bbp_is_subscriptions_active() To check if the subscriptions are active
+		 * @uses  bbp_is_user_logged_in() To check if user is logged in
+		 * @uses  bbp_get_current_user_id() To get the current user id
+		 * @uses  current_user_can() To check if the current user can edit the user
+		 * @uses  bbp_get_topic() To get the topic
+		 * @uses  wp_verify_nonce() To verify the nonce
+		 * @uses  bbp_is_user_subscribed() To check if the topic is in user's subscriptions
+		 * @uses  bbp_remove_user_subscriptions() To remove the topic from user's subscriptions
+		 * @uses  bbp_add_user_subscriptions() To add the topic from user's subscriptions
+		 * @uses  bbp_ajax_response() To return JSON
 		 */
 		public function ajax_subscription() {
 
