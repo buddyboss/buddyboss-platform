@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8
+Tested up to: 5.8.1
 Requires PHP: 5.6.20
-Stable tag: 1.7.6
+Stable tag: 1.7.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,25 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.7.1 =
+* Activity - Fixed @mention not working critical issue
+
+= 1.7.7 =
+* Profiles - Fixed wrong 'Nickname' after migrating from BuddyPress 
+* Forums - Fixed discussion pagination issue on Forums directory
+* Forums - Fixed forum discussion invalid count to make it consistent
+* Activity - Fixed post form GIF highlight UI issue on close
+* Activity - Fixed URL preview empty markup issue
+* Activity - Fixed duplicate queries issue to improve performance
+* Media - Fixed .htaccess Apache 2.4 and OpenLiteSpeed compatibility issue
+* Moderation - Improved reporting based on the content in the Activity feed
+* Notifications - Fixed duplicate notifications issue on blog post reply on a comment
+* Text Editor - Fixed HTML copy-paste issue
+* Elementor - Fixed media preview compatibility issue with Elementor Pro
+* REST API - Provided endpoint to move Photos/Videos into Album
+* REST API - Fixed activity comment invalid data in response
+* REST API - Added API support for moderation improvements
 
 = 1.7.6 =
 * Profiles - Fixed change password critical issue
