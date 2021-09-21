@@ -537,10 +537,6 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			// If the Super Admin want to skip confirmation email.
 			if ( isset( $_POST['noconfirmation'] ) && is_super_admin() ) {
 				return false;
-
-				// WordPress will manage the signup process.
-			} else {
-				return $user;
 			}
 
 			/*
