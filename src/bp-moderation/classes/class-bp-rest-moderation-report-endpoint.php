@@ -192,16 +192,16 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Please login to view blocked members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -273,7 +273,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Content already reported.', 'buddyboss' ),
+				__( 'Sorry, Already reported this item.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -288,7 +288,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( empty( $report->id ) || empty( $report->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_report_error',
-				__( 'Something went wrong. Please try again.', 'buddyboss' ),
+				__( 'Sorry, something goes wrong please try again.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -323,28 +323,28 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to report a moderation.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to report a moderation.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		$content_type = $request['item_type'];
+			$content_type = $request['item_type'];
 
-		if ( true === $retval && ! bp_moderation_user_can( (int) $request['item_id'], $content_type ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_item',
-				__( 'Sorry, you are not allowed to report this item.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! bp_moderation_user_can( (int) $request['item_id'], $content_type ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_item',
+					__( 'Sorry, you are not allowed to report this item.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -416,6 +416,23 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$report_links  = $this->prepare_report_link( $report->item_id, $report->item_type );
 		$request_links = $this->prepare_report_link( $request['item_id'], $request['item_type'] );
 
+		if ( 'media' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+			$media = new BP_Media( $request['item_id'] );
+			if ( ! empty( $media->activity_id ) ) {
+				$report_links = $this->prepare_report_link( $media->activity_id, BP_Suspend_Activity::$type );
+			}
+		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+			$document = new BP_Document( $request['item_id'] );
+			if ( ! empty( $document->activity_id ) ) {
+				$report_links = $this->prepare_report_link( $document->activity_id, BP_Suspend_Activity::$type );
+			}
+		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+			$video = new BP_Video( $request['item_id'] );
+			if ( ! empty( $video->activity_id ) ) {
+				$report_links = $this->prepare_report_link( $video->activity_id, BP_Suspend_Activity::$type );
+			}
+		}
+
 		$links = array_merge( (array) $report_links, (array) $request_links );
 
 		/**
@@ -465,38 +482,44 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 				);
 				break;
 			case BP_Suspend_Forum_Topic::$type:
-				$links['forum'] = array(
+				$links['topic'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/topics/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
 			case BP_Suspend_Forum_Reply::$type:
-				$links['forum'] = array(
+				$links['reply'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/reply/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
 			case BP_Suspend_Media::$type:
-				$links['forum'] = array(
+				$links['media'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/media/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
 			case BP_Suspend_Album::$type:
-				$links['forum'] = array(
+				$links['albums'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/media/albums/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
 			case BP_Suspend_Document::$type:
-				$links['forum'] = array(
+				$links['document'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/document/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
 			case BP_Suspend_Folder::$type:
-				$links['forum'] = array(
+				$links['folder'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/document/folder/' . $item_id ),
+					'embeddable' => true,
+				);
+				break;
+			case BP_Suspend_Video::$type:
+				$links['video'] = array(
+					'href'       => rest_url( '/' . $this->namespace . '/video/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
@@ -674,7 +697,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 				),
 				'user_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported member ID.', 'buddyboss' ),
+					'description' => __( 'Reported user ID.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),

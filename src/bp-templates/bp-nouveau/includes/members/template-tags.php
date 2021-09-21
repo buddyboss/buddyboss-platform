@@ -137,14 +137,7 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 	}
 
 	$members_buttons = bp_nouveau_get_members_buttons( $args );
-
-	$order = bp_nouveau_get_user_profile_actions();
-
-	uksort( $members_buttons, function ( $key1, $key2 ) use ( $order ) {
-		return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
-	} );
-
-	$output = join( ' ', $members_buttons );
+	$output          = join( ' ', array_slice( $members_buttons, 0, 3 ) );
 
 	/**
 	 * On the member's header we need to reset the group button's global
@@ -173,6 +166,58 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 			'classes' => false,
 		);
 	}
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
+ * Output the action buttons for the displayed user profile
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
+	$bp_nouveau = bp_nouveau();
+
+	if ( bp_is_user() ) {
+		$args['type'] = 'profile';
+	} else {
+		$args['type'] = 'header'; // we have no real need for this 'type' on header actions.
+	}
+
+	$members_buttons = bp_nouveau_get_members_buttons( $args );
+	$output          = join( ' ', array_slice( $members_buttons, 3 ) );
+
+	/**
+	 * On the member's header we need to reset the group button's global
+	 * once displayed as the friends component will use the member's loop
+	 */
+	if ( ! empty( $bp_nouveau->members->member_buttons ) ) {
+		unset( $bp_nouveau->members->member_buttons );
+	}
+
+	ob_start();
+	/**
+	 * Fires in the member header actions section.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 */
+	do_action( 'bp_member_header_bubble_actions' );
+	$output .= ob_get_clean();
+
+	if ( ! $output ) {
+		return;
+	}
+
+	if ( ! $args ) {
+		$args = array(
+			'container_id' => 'item-bubble-buttons',
+			'classes'      => false,
+		);
+	}
+
+	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-menu-dots-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -306,7 +351,8 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 							'class'           => 'button accept',
 							'rel'             => '',
 						),
-					), 'reject_friendship' => array(
+					),
+					'reject_friendship' => array(
 						'id'                => 'reject_friendship',
 						'position'          => 15,
 						'component'         => 'friends',
@@ -353,19 +399,21 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					$button_args = bp_nouveau()->members->button_args;
 
 					$buttons['member_friendship'] = array(
-						'id'                => 'member_friendship',
-						'position'          => 5,
-						'component'         => $button_args['component'],
-						'must_be_logged_in' => $button_args['must_be_logged_in'],
-						'block_self'        => $button_args['block_self'],
-						'parent_element'    => $parent_element,
-						'link_text'         => $button_args['link_text'],
-						'parent_attr'       => array(
+						'id'                  => 'member_friendship',
+						'position'            => 5,
+						'component'           => $button_args['component'],
+						'key'                 => $button_args['id'],
+						'must_be_logged_in'   => $button_args['must_be_logged_in'],
+						'block_self'          => $button_args['block_self'],
+						'potential_friend_id' => $button_args['potential_friend_id'],
+						'parent_element'      => $parent_element,
+						'link_text'           => $button_args['link_text'],
+						'parent_attr'         => array(
 							'id'    => $button_args['wrapper_id'],
 							'class' => $parent_class . ' ' . $button_args['wrapper_class'],
 						),
-						'button_element'    => $button_element,
-						'button_attr'       => array(
+						'button_element'      => $button_element,
+						'button_attr'         => array(
 							'id'    => $button_args['link_id'],
 							'class' => $button_args['link_class'],
 							'rel'   => $button_args['link_rel'],
@@ -514,25 +562,26 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					 * Hardcode the use of anchor elements if button arg passed in for other elements.
 					 */
 					$buttons['private_message'] = array(
-						'id'                => $button_args['id'],
-						'position'          => 25,
-						'component'         => $button_args['component'],
-						'must_be_logged_in' => $button_args['must_be_logged_in'],
-						'block_self'        => $button_args['block_self'],
-						'parent_element'    => $parent_element,
-						'button_element'    => 'a',
-						'link_text'         => $button_args['link_text'],
-						'parent_attr'       => array(
+						'id'                       => $button_args['id'],
+						'position'                 => 25,
+						'component'                => $button_args['component'],
+						'must_be_logged_in'        => $button_args['must_be_logged_in'],
+						'message_receiver_user_id' => $button_args['message_receiver_user_id'],
+						'block_self'               => $button_args['block_self'],
+						'parent_element'           => $parent_element,
+						'button_element'           => 'a',
+						'link_text'                => $button_args['link_text'],
+						'parent_attr'              => array(
 							'id'    => $button_args['wrapper_id'],
 							'class' => $parent_class,
 						),
-						'button_attr'       => array(
+						'button_attr'              => array(
 							'href'  => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ) ),
 							'id'    => false,
 							'class' => $button_args['link_class'],
 							'rel'   => '',
 							'title' => '',
-							),
+						),
 					);
 
 					unset( bp_nouveau()->members->button_args );
@@ -595,7 +644,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 			unset( bp_nouveau()->members->button_args );
 		}
 
-		if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+		if ( is_user_logged_in() && bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
 			$buttons['member_report'] = bp_member_get_report_link(
 				array(
 					'parent_element' => $parent_element,
@@ -652,6 +701,12 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		 * @param string $type    Whether we're displaying a members loop or a user's page
 		 */
 		do_action_ref_array( 'bp_nouveau_return_members_buttons', array( &$return, $user_id, $type ) );
+
+		$order = bp_nouveau_get_user_profile_actions();
+
+		uksort( $return, function ( $key1, $key2 ) use ( $order ) {
+			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+		} );
 
 		return $return;
 	}
@@ -780,6 +835,8 @@ function bp_nouveau_member_template_part() {
 			$template = 'media';
 		} elseif ( bp_is_user_document() ) {
 			$template = 'document';
+		} elseif ( bp_is_user_video() ) {
+			$template = 'video';
 		}
 
 		bp_nouveau_member_get_template_part( $template );

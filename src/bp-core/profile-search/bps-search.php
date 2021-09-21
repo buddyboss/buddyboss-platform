@@ -326,6 +326,11 @@ function bp_ps_search( $request, $users = null ) {
 	$copied_arr = array();
 
 	foreach ( $fields as $f ) {
+		// Disable search for some individual field.
+		if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
+			continue;
+		}
+		
 		if ( ! isset( $f->filter ) ) {
 			continue;
 		}

@@ -135,16 +135,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Members component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'members' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Members component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
+		if ( bp_is_active( 'members' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -178,6 +178,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$retval = array();
 		global $bp;
 		$tmp_bp = $bp;
+
+		$logged_user_id = get_current_user_id();
 
 		$current_user_id = $request->get_param( 'id' );
 		if ( empty( $current_user_id ) ) {
@@ -228,6 +230,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 
+		remove_action( 'bp_init', 'bb_moderation_load', 1 );
 		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		remove_action( 'bp_init', 'bp_register_post_types', 2 );
 		remove_action( 'bp_init', 'bp_setup_title', 8 );
@@ -245,6 +248,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		do_action( 'bp_init' );
 
+		add_action( 'bp_init', 'bb_moderation_load', 1 );
 		add_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		add_action( 'bp_init', 'bp_register_post_types', 2 );
 		add_action( 'bp_init', 'bp_setup_title', 8 );
@@ -275,11 +279,18 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'profile'  => 'xprofile',
 		);
 
-		if ( ! empty( $navs->get_primary( array( 'show_for_displayed_user' => true ) ) ) ) {
-			foreach ( $navs->get_primary( array( 'show_for_displayed_user' => true ) ) as $nav ) {
+		$args = array();
+
+		if ( ! ( ! empty( $logged_user_id ) && (int) $logged_user_id === (int) $current_user_id ) ) {
+			$args = array( 'show_for_displayed_user' => true );
+		}
+
+		if ( ! empty( $navs->get_primary( $args ) ) ) {
+			foreach ( $navs->get_primary( $args ) as $nav ) {
 
 				$name = $nav['name'];
 				$id   = $nav['slug'];
+				$link = $nav['link'];
 
 				$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
 				if ( is_array( $hidden_tabs )
@@ -301,6 +312,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					'id'                      => $id,
 					'title'                   => $name,
 					'default'                 => false,
+					'link'                    => $link,
 					'count'                   => ( $this->bp_rest_nav_has_count( $nav ) ? $this->bp_rest_get_nav_count( $nav ) : '' ),
 					'show_for_displayed_user' => $nav['show_for_displayed_user'],
 					'children'                => array(),
@@ -324,6 +336,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 						$sub_nav  = array(
 							'id'              => $s_nav['slug'],
 							'title'           => $sub_name,
+							'link'            => $s_nav['link'],
 							'count'           => ( $this->bp_rest_nav_has_count( $s_nav ) ? $this->bp_rest_get_nav_count( $s_nav ) : '' ),
 							'position'        => $s_nav['position'],
 							'user_has_access' => $s_nav['user_has_access'],
@@ -370,7 +383,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -455,16 +468,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_profile_dropdown_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
