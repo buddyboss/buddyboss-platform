@@ -195,8 +195,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'postUpdateButton'    => __( 'Post Update', 'buddyboss' ),
 		'updatePostButton'    => __( 'Update Post', 'buddyboss' ),
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
-		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
-		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
+		'commentLabel'        => _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ),
+		'commentsLabel'       => _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ),
 		'loadingMore'         => __( 'Loading...', 'buddyboss' ),
 	);
 
