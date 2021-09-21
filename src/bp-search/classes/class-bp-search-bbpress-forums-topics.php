@@ -177,10 +177,10 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
-            if ( ! empty( $forum_ids ) ) {
+			if ( ! empty( $forum_ids ) ) {
 				$forum_id_in = implode( ',', $forum_ids );
-			    $where[]     = " pm.meta_value IN ( $forum_id_in ) ";
-            }
+				$where[]     = " pm.meta_value IN ( $forum_id_in ) ";
+			}
 
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
