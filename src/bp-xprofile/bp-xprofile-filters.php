@@ -117,6 +117,8 @@ add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name
 // Repair repeater field repeated in admin side.
 add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
 
+add_action( 'xprofile_fields_deleted_field', 'bp_core_xprofile_update_field_order' ); // On field deleted in wp-admin > profile.
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1176,5 +1178,28 @@ function bb_xprofile_repeater_field_repair_callback() {
 			'status'  => 1,
 			'message' => __( 'Field update complete!', 'buddyboss' ),
 		);
+	}
+}
+
+/**
+ * Update the field order when deleting the xprofile field.
+ *
+ * @param BP_XProfile_Field $field field object.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bp_core_xprofile_update_field_order( $field ) {
+
+	$xprofile_order = get_option( 'bp_xprofile_fields_order' );
+
+	if ( empty( $xprofile_order ) || empty( $field->id ) ) {
+		return;
+	}
+
+	$xprofile_field_position = array_search( $field->id, $xprofile_order );
+
+	if ( ! empty( $xprofile_field_position ) ) {
+		unset( $xprofile_order[ $xprofile_field_position ] );
+		update_option( 'bp_xprofile_fields_order', $xprofile_order );
 	}
 }
