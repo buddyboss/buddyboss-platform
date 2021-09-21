@@ -161,7 +161,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Woocommerce
 	 */
 	if ( class_exists( 'WooCommerce' ) ) {
-		require buddypress()->compatibility_dir . '/bp-woocommerce-helpers.php';
+		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
 	}
 }
 

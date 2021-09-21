@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_Woocommerce_Plugin_Compatibility Class
+ * BB_Woocommerce_Helpers Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  */
-class BB_Woocommerce_Plugin_Compatibility {
+class BB_Woocommerce_Helpers {
 
 	/**
 	 * The single instance of the class.
@@ -20,7 +20,7 @@ class BB_Woocommerce_Plugin_Compatibility {
 	private static $instance = null;
 
 	/**
-	 * BB_Woocommerce_Plugin_Compatibility constructor.
+	 * BB_Woocommerce_Helpers constructor.
 	 */
 	public function __construct() {
 
@@ -47,11 +47,13 @@ class BB_Woocommerce_Plugin_Compatibility {
 	 */
 	public function compatibility_init() {
 
-		add_filter( 'bb_is_enable_3rd_party_registration', array( $this, 'bb_check_woocommerce_enable_myaccount_registration' ), 9, 2 );
+		add_filter( 'bb_is_enable_custom_registration', array( $this, 'bb_check_woocommerce_enable_myaccount_registration' ), 9, 2 );
 	}
 
 	/**
 	 * Function to set the true if woocommerce registration is enable otherwise return default value.
+	 * 
+	 * @since BuddyBoss 1.7.9
 	 *
 	 * @param bool   $validate      default false.
 	 * @param int    $page_id 		current page id.
@@ -77,4 +79,4 @@ class BB_Woocommerce_Plugin_Compatibility {
 	}
 }
 
-BB_Woocommerce_Plugin_Compatibility::instance();
+BB_Woocommerce_Helpers::instance();
