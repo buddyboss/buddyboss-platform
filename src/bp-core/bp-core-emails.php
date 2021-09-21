@@ -54,7 +54,7 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 /**
  * Function to load the instance of the class BP_Email_Queue.
  *
- * @since BuddyBoss 1.7.8
+ * @since BuddyBoss 1.7.9
  *
  * @return null|BP_Email_Queue|void
  */
@@ -67,10 +67,21 @@ function bb_email_queue() {
 /**
  * Function to check if bb_email_queue() and cron enabled
  *
- * @since BuddyBoss 1.7.8
+ * @since BuddyBoss 1.7.9
  *
  * @return bool
  */
 function bb_is_email_queue() {
 	return function_exists( 'bb_email_queue' ) && class_exists( 'BP_Background_Updater' ) && apply_filters( 'bb_is_email_queue', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
+}
+
+/**
+ * Function to return minimum count of emails.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bb_email_queue_min_count() {
+	return apply_filters( 'bb_email_queue_min_count', 20 );
 }
