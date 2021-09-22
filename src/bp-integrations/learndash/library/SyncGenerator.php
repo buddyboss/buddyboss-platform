@@ -845,7 +845,7 @@ class SyncGenerator {
 					'group_id'    => $groupId,
 					'creator_id'  => $ldGroup->post_author,
 					'name'        => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
-					'status'      => $settings->get( 'learndash.default_bp_privacy' ),
+					//'status'      => $settings->get( 'learndash.default_bp_privacy' ),
 					'description' => $ldGroup->post_content,
 					'slug'        => $ldGroup->post_name,
 				)
