@@ -2101,7 +2101,7 @@ window.bp = window.bp || {};
 										},
 										paste: {
 											forcePlainText: false,
-											cleanPastedHTML: true,
+											cleanPastedHTML: false,
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
@@ -2745,6 +2745,8 @@ window.bp = window.bp || {};
 					var gif_box = $targetEl.parents( '#whats-new-form' ).find( '#whats-new-attachments .activity-attached-gif-container' );
 					if ( gif_box.length && $.trim( gif_box.html() ) !== '' ) {
 						this.$self.addClass( 'open' );
+					} else {
+						this.$self.removeClass( 'open' );
 					}
 
 					this.$gifPickerEl.removeClass( 'open' );
