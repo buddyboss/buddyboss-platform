@@ -58,26 +58,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support TranslatePress on Multisite
 	 */
 	if ( in_array( 'translatepress-multilingual/index.php', $bp_plugins ) && ! is_admin() && is_multisite() ) {
-		
-		/**
-		 * Remove lang code from URL slug
-		 *
-		 * @since BuddyBoss 1.7.8
-		 *
-		 * @param string $path
-		 * @return string $path
-		 */
-		function bb_multilang_multisite_translatepress_support( $path ) {
-			$tp_settings = get_option( 'trp_settings' );
-			if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
-				foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
-					$path = str_replace( $lang_slug . '/', '', $path );
-				}
-			}
-			return $path;
-		}
-		add_filter( 'bp_uri', 'bb_multilang_multisite_translatepress_support' );
-
+		require trailingslashit( buddypress()->compatibility_dir ) . 'bb-translatepress-helpers.php';
 	}
 
 	/**

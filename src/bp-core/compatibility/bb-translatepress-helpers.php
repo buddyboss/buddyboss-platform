@@ -1,0 +1,79 @@
+<?php
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * BB_TranslatePress_Plugin_Compatibility Class
+ *
+ * This class handles compatibility code for third party plugins used in conjunction with Platform
+ *
+ * @since BuddyBoss 1.7.8
+ */
+class BB_TranslatePress_Plugin_Compatibility {
+
+    /**
+	 * The single instance of the class.
+	 *
+	 * @var self
+	 *
+	 * @since BuddyBoss 1.7.8
+	 */
+	private static $instance = null;
+
+	/**
+	 * BB_TranslatePress_Plugin_Compatibility constructor.
+	 */
+	public function __construct() {
+		$this->compatibility_init();
+	}
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss 1.7.8
+	 *
+	 * @return Controller|null
+	 */
+	public static function instance() {
+
+		if ( null === self::$instance ) {
+			$class_name     = __CLASS__;
+			self::$instance = new $class_name();
+		}
+
+		return self::$instance;
+	}
+
+    /**
+	 * Register the compatibility hooks for the plugin.
+	 */
+	public function compatibility_init() {
+        add_filter( 'bp_uri', array( $this, 'remove_langcode_from_url' ), PHP_INT_MAX );
+	}
+
+    /**
+     * Remove lang code from URL slug
+     *
+     * @since BuddyBoss 1.7.8
+     *
+     * @param string $path
+     * @return string $path
+     */
+    public function remove_langcode_from_url( $path ) {
+
+        $tp_settings = get_option( 'trp_settings' );
+        if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
+            foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
+                $path = str_replace( $lang_slug . '/', '', $path );
+            }
+        }
+        return $path;
+
+    }
+
+}
+
+BB_TranslatePress_Plugin_Compatibility::instance();
