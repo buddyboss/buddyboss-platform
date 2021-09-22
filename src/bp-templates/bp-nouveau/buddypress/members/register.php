@@ -94,26 +94,29 @@
 			<?php bp_nouveau_signup_hook( 'before', 'account_details' ); ?>
 
             <div class="register-section extended-profile" id="profile-details-section">
-				<?php
-				if ( ! empty( $merged_signup_fields ) ) {
-					foreach ( $merged_signup_fields as $order_signup_field ) {
-						echo $order_signup_field['html'];
-						if ( 'signup_email' === $order_signup_field['id'] && array_key_exists( 'signup_email_confirm', $signup_fields ) ) {
-							bp_nouveau_get_signup_form_html( array( 'signup_email_confirm' => $signup_fields['signup_email_confirm'] ), 'account_details' );
-						}
-						if ( 'signup_password' === $order_signup_field['id'] && array_key_exists( 'signup_password_confirm', $signup_fields ) ) {
-							bp_nouveau_get_signup_form_html( array( 'signup_password_confirm' => $signup_fields['signup_password_confirm'] ), 'account_details' );
-						}
-					}
-				}
-				?>
-                <input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids"
-                       value="<?php echo esc_attr( $profile_signup_field_ids ); ?>"/>
-				<?php bp_nouveau_signup_hook( '', 'signup_profile' ); ?>
+
+                <?php if ( ! empty( $merged_signup_fields ) ) {
+			        foreach ( $merged_signup_fields as $order_signup_field ) {
+				        echo $order_signup_field['html'];
+				        if ( 'signup_email' === $order_signup_field['id'] && array_key_exists( 'signup_email_confirm', $signup_fields ) ) {
+					        bp_nouveau_get_signup_form_html( array( 'signup_email_confirm' => $signup_fields['signup_email_confirm'] ), 'account_details' );
+				        }
+				        if ( 'signup_password' === $order_signup_field['id'] && array_key_exists( 'signup_password_confirm', $signup_fields ) ) {
+					        bp_nouveau_get_signup_form_html( array( 'signup_password_confirm' => $signup_fields['signup_password_confirm'] ), 'account_details' );
+				        }
+			        }
+		        }
+
+		        if ( bp_is_active( 'xprofile' ) && bp_nouveau_base_account_has_xprofile() ) : ?>
+                    <input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids"
+                           value="<?php echo esc_attr( $profile_signup_field_ids ); ?>"/>
+			        <?php bp_nouveau_signup_hook( '', 'signup_profile' );
+		        endif; ?>
             </div><!-- #profile-details-section -->
 
+            <?php bp_nouveau_signup_hook( 'after', 'account_details' ); ?>
+
 	        <?php if ( bp_is_active( 'xprofile' ) && bp_nouveau_base_account_has_xprofile() ) : ?>
-		        <?php bp_nouveau_signup_hook( 'after', 'account_details' ); ?>
 		        <?php bp_nouveau_signup_hook( 'after', 'signup_profile' ); ?>
 	        <?php endif; ?>
 
