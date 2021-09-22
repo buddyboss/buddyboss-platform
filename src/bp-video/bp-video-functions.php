@@ -294,7 +294,7 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 		update_post_meta( $attachment->ID, 'bp_video_upload', 1 );
 		update_post_meta( $attachment->ID, 'bp_video_saved', '0' );
 
-		bb_bunny_upload_video( $attachment );
+		//bb_bunny_upload_video( $attachment );
 
 		return $attachment;
 	}
@@ -4384,11 +4384,18 @@ function bb_bunny_video_create_object( $attachment ) {
 		],
 	] );
 
-	$response = curl_exec( $curl );
-	$err      = curl_error( $curl );
-	$status   = curl_errno( $curl );
+	$response  = curl_exec( $curl );
+	$err       = curl_error( $curl );
+	$status    = curl_errno( $curl );
+	$http_code = curl_getinfo( $curl );
+
+	update_post_meta( $attachment->ID, 'bunny_create_vid_object', $response );
 
 	curl_close( $curl );
+
+
+	error_log( 'Create Video Object' );
+	error_log( print_r( $http_code, 1 ) );
 
 	if ( $err ) {
 		return new WP_Error( 'error_uploading', $err, array( 'status' => $status ) );
@@ -4409,6 +4416,8 @@ function bb_bunny_upload_video( $attachment ) {
     $fileStream = fopen( $file, 'r' ) or die( "Unable to open file!" );
 	$dataLength = filesize( $file );
 	$key        = '121d581c-2083-4fe7-9a89788a9c2f-68f8-4261';
+
+	update_post_meta( $attachment->ID, 'bunny_vid_id', $bunny_vid_id );
 
 	// Initialize and configure curl
 	$curl = curl_init();
@@ -4434,9 +4443,15 @@ function bb_bunny_upload_video( $attachment ) {
 
 	// Send the request
 	$response  = curl_exec( $curl );
-	$http_code = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
+	$http_code = curl_getinfo( $curl );
 	$err       = curl_error( $curl );
 	$status    = curl_errno( $curl );
+
+	update_post_meta( $attachment->ID, 'bunny_upload_vid_object', $http_code );
+	update_post_meta( $attachment->ID, 'bunny_vid_id', $bunny_vid_id );
+
+    error_log( 'Upload Video' );
+    error_log( print_r( $http_code, 1 ) );
 
 	// Cleanup
 	curl_close( $curl );
@@ -4451,10 +4466,10 @@ function bb_bunny_upload_video( $attachment ) {
 
 }
 
-add_action( 'init', function () {
-
-	$data = file_get_contents("php://input");
-	$events = json_decode($data, true);
-
-	error_log( print_r( $events, 1 ) );
-});
+//add_action( 'init', function () {
+//
+//	$data = file_get_contents("php://input");
+//	$events = json_decode($data, true);
+//
+//	error_log( print_r( $events, 1 ) );
+//});
