@@ -2510,27 +2510,36 @@ window.bp = window.bp || {};
 
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
-							var mediaCloseEvent = new Event( 'activity_media_close' );
-							document.dispatchEvent( mediaCloseEvent );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+								var mediaCloseEvent = new Event( 'activity_media_close' );
+								document.dispatchEvent( mediaCloseEvent );
+							}
+							$( '#whats-new-toolbar .post-media.media-support' ).hide();
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
 						// check document is enable in groups or not.
 						if ( BP_Nouveau.media.group_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
-							var documentCloseEvent = new Event( 'activity_document_close' );
-							document.dispatchEvent( documentCloseEvent );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+								var documentCloseEvent = new Event( 'activity_document_close' );
+								document.dispatchEvent( documentCloseEvent );
+							}
+							$( '#whats-new-toolbar .post-media.document-support' ).hide();
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).show();
 						}
 
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.group_video === false ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
-							var videoCloseEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( videoCloseEvent );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+								var videoCloseEvent = new Event( 'activity_video_close' );
+								document.dispatchEvent( videoCloseEvent );
+							}
+							$( '#whats-new-toolbar .post-media.video-support' ).hide();
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
@@ -2539,7 +2548,7 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.gif.groups === false ) {
 							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
 							var gifCloseEvent = new Event( 'activity_gif_close' );
-							document.dispatchEvent( gifCloseEvent );
+							document.dispatchEvent( gifCloseEvent );							
 						} else {
 							$( '#whats-new-toolbar .post-gif' ).show();
 						}
@@ -2555,27 +2564,36 @@ window.bp = window.bp || {};
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
-							var event = new Event( 'activity_media_close' );
-							document.dispatchEvent( event );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+								var event = new Event( 'activity_media_close' );
+								document.dispatchEvent( event );
+							}
+							$( '#whats-new-toolbar .post-media.media-support' ).hide();
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
 						// check document is enable in profile or not.
 						if ( BP_Nouveau.media.profile_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
-							var documentEvent = new Event( 'activity_document_close' );
-							document.dispatchEvent( documentEvent );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+								var documentEvent = new Event( 'activity_document_close' );
+								document.dispatchEvent( documentEvent );
+							}
+							$( '#whats-new-toolbar .post-media.document-support' ).hide();
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).show();
 						}
 
 						// check video is enable in profile or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
-							var videoEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( videoEvent );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+								var videoEvent = new Event( 'activity_video_close' );
+								document.dispatchEvent( videoEvent );
+							}
+							$( '#whats-new-toolbar .post-video.video-support' ).hide();
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
@@ -2598,6 +2616,8 @@ window.bp = window.bp || {};
 						}
 					}
 					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+					$( '#show-toolbar-button' ).removeClass( 'active' );										
+					$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
 				}
 			}
 		}
@@ -3222,7 +3242,7 @@ window.bp = window.bp || {};
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );
-				$( 'medium-editor-action' ).removeClass( 'medium-editor-button-active' );
+				$( '.medium-editor-action' ).removeClass( 'medium-editor-button-active' );
 				$( '.medium-editor-toolbar-actions' ).show();
 				$( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
 				$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
@@ -3637,7 +3657,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-emoji' ).show();
 						}
 					}
-					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );																																																		
 				}
 			}
 		}
