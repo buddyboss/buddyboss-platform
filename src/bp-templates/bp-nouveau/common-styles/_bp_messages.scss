@@ -39,6 +39,10 @@
 		dd {
 			margin-left: 0;
 		}
+
+		#view_more_members {
+			font-size: 13px;
+		}
 	}
 
 	time {
@@ -1132,5 +1136,28 @@ body .bp-messages-user-threads {
 
 	.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
 		left: 10px;
+	}
+}
+
+.bb-report-type-pagination .page-data {
+	display: block;
+	margin: 20px auto 0;
+	text-align: center;
+
+	#load_more_rl {
+		min-width: 140px;
+
+		&.loading:after {
+			content: "\e838";
+			font-family: "bb-icons";/* stylelint-disable-line */
+			font-size: 18px;
+			line-height: 1;
+			margin-left: 10px;
+			text-align: center;
+			display: inline-block;
+			-webkit-animation: spin 3s infinite linear;
+			animation: spin 3s infinite linear;
+			vertical-align: middle;
+		}
 	}
 }

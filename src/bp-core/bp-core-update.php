@@ -333,6 +333,14 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16901 ) {
 			bb_update_to_1_7_2();
 		}
+
+		if ( $raw_db_version < 17401 ) {
+			bb_update_to_1_7_5();
+		}
+
+		if ( $raw_db_version < 17701 ) {
+			bb_update_to_1_7_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -691,6 +699,56 @@ function bp_update_to_1_7_0() {
 function bb_update_to_1_7_2() {
 	flush_rewrite_rules();
 	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
+}
+
+/**
+ * Function to update data
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_update_to_1_7_5() {
+	global $bp_background_updater;
+
+	$bp_background_updater->push_to_queue(
+		array(
+			'callback' => 'bb_moderation_bg_update_moderation_data',
+			'args'     => array(),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+}
+
+/**
+ * Function to update data
+ * - Updated .htaccess file for bb files protection.
+ *
+ * @since BuddyBoss 1.7.7
+ */
+function bb_update_to_1_7_7() {
+	$upload_dir        = wp_get_upload_dir();
+	$media_htaccess    = $upload_dir['basedir'] . '/bb_medias/.htaccess';
+	$document_htaccess = $upload_dir['basedir'] . '/bb_documents/.htaccess';
+	$video_htaccess    = $upload_dir['basedir'] . '/bb_videos/.htaccess';
+
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	if ( file_exists( $media_htaccess ) ) {
+		$wp_files_system->delete( $media_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $document_htaccess ) ) {
+		$wp_files_system->delete( $document_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $video_htaccess ) ) {
+		$wp_files_system->delete( $video_htaccess, false, 'f' );
+	}
 }
 
 function bp_update_default_doc_extensions() {

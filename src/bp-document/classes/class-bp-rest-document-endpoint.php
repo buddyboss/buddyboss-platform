@@ -2297,7 +2297,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
-			$retval[] = $this->document_get_prepare_response( $document, array( 'support' => 'activity' ) );
+			$retval[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $document, array( 'support' => 'activity' ) )
+			);
 		}
 
 		return $retval;
@@ -2571,7 +2573,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
-			$retval[] = $this->document_get_prepare_response( $document, array( 'support' => 'message' ) );
+			$retval[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $document, array( 'support' => 'message' ) )
+			);
 		}
 
 		return $retval;
@@ -2728,7 +2732,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
-			$retval[] = $this->document_get_prepare_response( $document, array( 'support' => 'forums' ) );
+			$retval[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $document, array( 'support' => 'forums' ) )
+			);
 		}
 
 		return $retval;

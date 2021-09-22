@@ -253,52 +253,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $button_text;
 		}
 
-		$media_id     = bp_activity_get_meta( $comment->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $comment->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $comment->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $comment->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $comment->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $comment->id, 'bp_video_ids', true );
-
-		if ( ! empty( $media_id ) || ! empty( $media_ids ) ) {
-			if ( ! empty( $media_id ) ) {
-				$button_text = esc_html__( 'Report Photo', 'buddyboss' );
-			}
-			if ( ! empty( $media_ids ) ) {
-				$exploded_media = explode( ',', $media_ids );
-				if ( 1 < count( $exploded_media ) ) {
-					$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-				} else {
-					$button_text = esc_html__( 'Report Photo', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $document_id ) || ! empty( $document_ids ) ) {
-			if ( ! empty( $document_id ) ) {
-				$button_text = esc_html__( 'Report Document', 'buddyboss' );
-			}
-			if ( ! empty( $document_ids ) ) {
-				$exploded_document = explode( ',', $document_ids );
-				if ( 1 < count( $exploded_document ) ) {
-					$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-				} else {
-					$button_text = esc_html__( 'Report Document', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $video_id ) || ! empty( $video_ids ) ) {
-			if ( ! empty( $video_id ) ) {
-				$button_text = esc_html__( 'Report Video', 'buddyboss' );
-			}
-			if ( ! empty( $video_ids ) ) {
-				$exploded_video = explode( ',', $video_ids );
-				if ( 1 < count( $exploded_video ) ) {
-					$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-				} else {
-					$button_text = esc_html__( 'Report Video', 'buddyboss' );
-				}
-			}
-		} else {
-			$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-		}
+		$button_text = esc_html__( 'Report Comment', 'buddyboss' );
 
 		return $button_text;
 	}
@@ -320,52 +275,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $content_type;
 		}
 
-		$media_id     = bp_activity_get_meta( $comment->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $comment->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $comment->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $comment->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $comment->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $comment->id, 'bp_video_ids', true );
-
-		if ( ! empty( $media_id ) || ! empty( $media_ids ) ) {
-			if ( ! empty( $media_id ) ) {
-				$content_type = esc_html__( 'Photo', 'buddyboss' );
-			}
-			if ( ! empty( $media_ids ) ) {
-				$exploded_media = explode( ',', $media_ids );
-				if ( 1 < count( $exploded_media ) ) {
-					$content_type = esc_html__( 'Comment', 'buddyboss' );
-				} else {
-					$content_type = esc_html__( 'Photo', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $document_id ) || ! empty( $document_ids ) ) {
-			if ( ! empty( $document_id ) ) {
-				$content_type = esc_html__( 'Document', 'buddyboss' );
-			}
-			if ( ! empty( $document_ids ) ) {
-				$exploded_document = explode( ',', $document_ids );
-				if ( 1 < count( $exploded_document ) ) {
-					$content_type = esc_html__( 'Comment', 'buddyboss' );
-				} else {
-					$content_type = esc_html__( 'Document', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $video_id ) || ! empty( $video_ids ) ) {
-			if ( ! empty( $video_id ) ) {
-				$content_type = esc_html__( 'Video', 'buddyboss' );
-			}
-			if ( ! empty( $video_ids ) ) {
-				$exploded_video = explode( ',', $video_ids );
-				if ( 1 < count( $exploded_video ) ) {
-					$content_type = esc_html__( 'Comment', 'buddyboss' );
-				} else {
-					$content_type = esc_html__( 'Video', 'buddyboss' );
-				}
-			}
-		} else {
-			$content_type = esc_html__( 'Comment', 'buddyboss' );
-		}
+		$content_type = esc_html__( 'Comment', 'buddyboss' );
 
 		return $content_type;
 	}

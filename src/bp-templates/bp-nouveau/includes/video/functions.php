@@ -202,7 +202,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 		);
 	}
 
-	if ( is_user_logged_in() && bp_is_group_video_support_enabled() ) {
+	if ( is_user_logged_in() && bp_is_group_video_support_enabled() && bp_is_active( 'groups' ) ) {
 		$nav_items['group'] = array(
 			'component' => 'video',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
@@ -335,17 +335,4 @@ function bp_video_allowed_video_type() {
 	$extension_lists = apply_filters( 'bp_video_allowed_video_type', $extension_lists );
 
 	return $extension_lists;
-}
-
-/**
- * Function get video popup buttons.
- *
- * @param array $buttons Buttons array.
- *
- * @return array $buttons Buttons array.
- * @since BuddyBoss 1.7.0
- */
-function bp_video_activity_entry_buttons( $buttons ) {
-	unset( $buttons['activity_report'] );
-	return $buttons;
 }

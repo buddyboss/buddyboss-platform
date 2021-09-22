@@ -78,7 +78,7 @@ add_filter( 'bb_ajax_activity_update_privacy', 'bb_document_update_video_symlink
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
 add_filter( 'query_vars', 'bb_setup_query_document_preview' );
-add_action( 'template_include', 'bb_setup_template_for_document_preview' );
+add_action( 'template_include', 'bb_setup_template_for_document_preview', PHP_INT_MAX );
 
 /**
  * Clear a user's symlinks document when attachment document delete.
@@ -317,8 +317,23 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 
-	$documents = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$actions   = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$documents           = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$documents           = ! empty( $documents ) ? $documents : array();
+	$actions             = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$moderated_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+
+	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_documents ) ) {
+		$moderated_documents = explode( ',', $moderated_documents );
+		foreach ( $moderated_documents as $document_id ) {
+			if ( bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+				$bp_document                = new BP_Document( $document_id );
+				$documents[]['document_id'] = $document_id;
+				$documents[]['folder_id']   = $bp_document->folder_id;
+				$documents[]['group_id']    = $bp_document->group_id;
+				$documents[]['menu_order']  = $bp_document->menu_order;
+			}
+		}
+	}
 
 	if ( ! isset( $documents ) || empty( $documents ) ) {
 
@@ -374,14 +389,17 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 			$old_document_ids = explode( ',', $old_document_ids );
 			if ( ! empty( $old_document_ids ) ) {
 
-				// This is hack to update/delete parent activity if new media added in edit.
-				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
-
 				foreach ( $old_document_ids as $document_id ) {
+					if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) && ! in_array( $document_id, $document_ids ) ) {
+						$document_ids[] = $document_id;
+					}
 					if ( ! in_array( $document_id, $document_ids ) ) {
 						bp_document_delete( array( 'id' => $document_id ) );
 					}
 				}
+
+				// This is hack to update/delete parent activity if new media added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
 			}
 		}
 		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $document_ids ) );
@@ -925,9 +943,20 @@ function bp_document_check_download_folder_protection() {
 			array(
 					'base'    => $upload_dir['basedir'] . '/bb_documents',
 					'file'    => '.htaccess',
-					'content' => 'deny from all
+					'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
 
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>
@@ -1751,6 +1780,9 @@ function bp_document_get_edit_activity_data( $activity ) {
 			$document_ids = explode( ',', $document_ids );
 
 			foreach( $document_ids as $document_id ) {
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+					continue;
+				}
 				$document = new BP_Document( $document_id );
 
 				$size = 0;
