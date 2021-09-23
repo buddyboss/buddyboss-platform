@@ -17,8 +17,8 @@
 						<span class="dashicons dashicons-search" aria-hidden="true"></span>
 						<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 					</button>
-					<label for="group-media-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Photos…', 'buddyboss' ); ?></label>
-					<input id="group-media-search" name="media_search" type="search" placeholder="<?php esc_attr_e( 'Search Photos…', 'buddyboss' ); ?>">
+					<label for="group-media-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Albums...', 'buddyboss' ); ?></label>
+					<input id="group-media-search" name="media_search" type="search" placeholder="<?php esc_attr_e( 'Search Albums...', 'buddyboss' ); ?>">
 				</form>
 			</div> <!-- .media-search-form -->
 			<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
