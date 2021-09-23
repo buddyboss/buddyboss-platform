@@ -889,13 +889,7 @@ function friends_notification_new_request( $friendship_id, $initiator_id, $frien
 			'unsubscribe'         => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
-		bb_email_queue()->add_record( 'friends-request', $friend_id, $args );
-		// call email background process.
-		bb_email_queue()->bb_email_background_process();
-	} else {
-		bp_send_email( 'friends-request', $friend_id, $args );
-	}
+	bp_send_email( 'friends-request', $friend_id, $args );
 }
 add_action( 'friends_friendship_requested', 'friends_notification_new_request', 10, 3 );
 
@@ -931,12 +925,6 @@ function friends_notification_accepted_request( $friendship_id, $initiator_id, $
 			'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
-		bb_email_queue()->add_record( 'friends-request-accepted', $initiator_id, $args );
-		// call email background process.
-		bb_email_queue()->bb_email_background_process();
-	} else {
-		bp_send_email( 'friends-request-accepted', $initiator_id, $args );
-	}
+	bp_send_email( 'friends-request-accepted', $initiator_id, $args );
 }
 add_action( 'friends_friendship_accepted', 'friends_notification_accepted_request', 10, 3 );
