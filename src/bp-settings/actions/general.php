@@ -109,13 +109,7 @@ function bp_settings_action_general() {
 							'verify.url'     => esc_url( $verify_link ),
 						),
 					);
-					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
-						bb_email_queue()->add_record( 'settings-verify-email-change', bp_displayed_user_id(), $args );
-						// call email background process.
-						bb_email_queue()->bb_email_background_process();
-					} else {
-						bp_send_email( 'settings-verify-email-change', bp_displayed_user_id(), $args );
-					}
+					bp_send_email( 'settings-verify-email-change', bp_displayed_user_id(), $args );
 					// We mark that the change has taken place so as to ensure a
 					// success message, even though verification is still required.
 					$_POST['email'] = $update_user->user_email;

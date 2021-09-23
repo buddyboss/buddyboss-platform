@@ -805,6 +805,9 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 	$all_recipients = array();
 
+	// check if it has enough recipients to use batch emails.
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
+
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
 		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
@@ -822,7 +825,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 			'notification_type' => 'messages-unread',
 		);
 
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			$all_recipients[] = array(
 				'email_type' => 'messages-unread',
 				'recipient'  => $ud,
@@ -918,6 +921,9 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 	$all_recipients = array();
 
+	// check if it has enough recipients to use batch emails.
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
+
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
 		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
@@ -942,7 +948,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		}
 		$group_name = bp_get_group_name( groups_get_group( $group ) );
 
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			$all_recipients[] = array(
 				'email_type' => 'group-message-email',
 				'recipient'  => $ud,

@@ -80,6 +80,10 @@ function bp_member_invite_submit() {
 		}
 	}
 	$query_string = array();
+
+	// check if it has enough recipients to use batch emails.
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
+
 	foreach ( $invite_correct_array as $key => $value ) {
 
 		if ( true === bp_disable_invite_member_email_subject() ) {
@@ -141,7 +145,7 @@ function bp_member_invite_submit() {
 		 */
 		add_filter( 'bp_email_get_salutation', '__return_false' );
 		// Send invitation email.
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			bb_email_queue()->add_record( 'invites-member-invite', $email, $args );
 			// call email background process.
 			bb_email_queue()->bb_email_background_process();
