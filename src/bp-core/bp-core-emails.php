@@ -76,12 +76,21 @@ function bb_is_email_queue() {
 }
 
 /**
- * Function to return minimum count of emails.
+ * Check if there is enough recipients to use batch emails.
  *
- * @return mixed|void
+ * @param array $recipients User IDs of recipients.
+ *
+ * @return bool
  *
  * @since BuddyBoss 1.7.9
  */
-function bb_email_queue_min_count() {
-	return (int) apply_filters( 'bb_email_queue_min_count', 20 );
+function bb_email_queue_has_min_count( $recipients ) {
+	$min_recipients = false;
+	$min_count      = (int) apply_filters( 'bb_email_queue_min_count', 20 );
+
+	if ( $min_count < count( (array) $recipients ) ) {
+		$min_recipients = true;
+	}
+
+	return $min_recipients;
 }

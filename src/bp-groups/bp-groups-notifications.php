@@ -70,11 +70,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
 
 	// check if it has enough recipients to use batch emails.
-	if ( function_exists( 'bb_email_queue_min_count' ) && bb_email_queue_min_count() <= count( (array) $user_ids ) ) {
-		$min_count_recipients = true;
-	} else {
-		$min_count_recipients = false;
-	}
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
 
 	foreach ( (array) $user_ids as $user_id ) {
 

@@ -82,11 +82,7 @@ function bp_member_invite_submit() {
 	$query_string = array();
 
 	// check if it has enough recipients to use batch emails.
-	if ( function_exists( 'bb_email_queue_min_count' ) && bb_email_queue_min_count() <= count( $invite_correct_array ) ) {
-		$min_count_recipients = true;
-	} else {
-		$min_count_recipients = false;
-	}
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
 
 	foreach ( $invite_correct_array as $key => $value ) {
 

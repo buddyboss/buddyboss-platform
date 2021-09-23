@@ -806,11 +806,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 	$all_recipients = array();
 
 	// check if it has enough recipients to use batch emails.
-	if ( function_exists( 'bb_email_queue_min_count' ) && bb_email_queue_min_count() <= count( $recipients ) ) {
-		$min_count_recipients = true;
-	} else {
-		$min_count_recipients = false;
-	}
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
 
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
@@ -926,11 +922,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	$all_recipients = array();
 
 	// check if it has enough recipients to use batch emails.
-	if ( function_exists( 'bb_email_queue_min_count' ) && bb_email_queue_min_count() <= count( $recipients ) ) {
-		$min_count_recipients = true;
-	} else {
-		$min_count_recipients = false;
-	}
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
 
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
