@@ -6242,6 +6242,10 @@ window.bp = window.bp || {};
 				on_page_activity_comments.html( '' );
 			}
 
+			if ( true === self.current_media.parent_activity_comments ) {
+				$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_media.activity_id + '" id="hidden_parent_id"/>' );
+			}
+
 			self.activity_ajax = $.ajax(
 				{
 					type: 'POST',
@@ -6908,6 +6912,10 @@ window.bp = window.bp || {};
 			if ( on_page_activity_comments.length ) {
 				self.current_document.parent_activity_comments = true;
 				on_page_activity_comments.html( '' );
+			}
+
+			if ( true === self.current_document.parent_activity_comments ) {
+				$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_document.activity_id + '" id="hidden_parent_id"/>' );
 			}
 
 			self.activity_ajax = $.ajax(
