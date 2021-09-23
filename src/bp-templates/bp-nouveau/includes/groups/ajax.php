@@ -1595,14 +1595,14 @@ function bp_nouveau_ajax_groups_send_message() {
 						if ( $existing_thread > 0 ) {
 							$individual_thread_id = $existing_thread;
 
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
 						} else {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
 						}
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
 				}
