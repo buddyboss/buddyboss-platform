@@ -17522,7 +17522,8 @@ div.dropzone .dz-preview .dz-filename {
     width: 100%;
     margin-bottom: 15px;
   }
-  .bb-media-actions-wrap.has-search-form .bb-media-actions .bb-add-media {
+  .bb-media-actions-wrap.has-search-form .bb-media-actions .bb-add-media,
+  .bb-media-actions-wrap.has-search-form .bb-media-actions .bb-create-album {
     width: 100%;
   }
 }
