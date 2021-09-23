@@ -17460,6 +17460,73 @@ div.dropzone .dz-preview .dz-filename {
   font-size: 16px;
 }
 
+.bb-media-actions-wrap.has-search-form .bb-media-actions {
+  display: flex;
+  align-items: center;
+}
+
+.bb-media-actions-wrap.has-search-form .bb-media-actions .media-search-form {
+  margin-right: 15px;
+  position: relative;
+}
+
+.bb-media-actions-wrap.has-search-form .bb-media-actions .media-search-form > form {
+  border-radius: 100px;
+}
+
+.bb-media-actions-wrap.has-search-form .bb-media-actions .media-search-form:after {
+  content: "\e81f";
+  font-family: bb-icons;
+  display: inline-block;
+  color: #4d5c6d;
+  opacity: 0.4;
+  position: absolute;
+  left: 10px;
+  top: 9px;
+  line-height: 1;
+  font-size: 16px;
+}
+
+.bb-media-actions-wrap.has-search-form .bb-media-actions .media-search-form #group-media-search {
+  height: auto;
+  outline: 0;
+  background-image: none;
+  padding: 6px 10px 6px 32px;
+  font-size: 14px;
+}
+
+.bb-media-actions-wrap.has-search-form .bb-media-actions .media-search-form .nouveau-search-submit {
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+  padding: 0;
+  width: 31px;
+}
+
+@media screen and (max-width: 1220px) {
+  .bb-media-actions-wrap.has-search-form {
+    flex-flow: column;
+  }
+  .bb-media-actions-wrap.has-search-form > .bb-title {
+    margin: 0 0 1.6875rem !important;
+  }
+  .bb-media-actions-wrap.has-search-form .bb-media-actions {
+    flex-flow: column;
+  }
+  .bb-media-actions-wrap.has-search-form .bb-media-actions .media-search-form {
+    width: 100%;
+    margin: 0;
+  }
+  .bb-media-actions-wrap.has-search-form .bb-media-actions .media-search-form form {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .bb-media-actions-wrap.has-search-form .bb-media-actions .bb-add-media {
+    width: 100%;
+  }
+}
+
 .bp-document-listing {
   display: flex;
 }

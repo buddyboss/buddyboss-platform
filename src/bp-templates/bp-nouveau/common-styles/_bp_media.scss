@@ -3547,6 +3547,83 @@ div.dropzone .dz-preview {
 	}
 }
 
+.bb-media-actions-wrap.has-search-form  {
+
+	.bb-media-actions {
+		display: flex;
+		align-items: center;
+
+		.media-search-form {
+			margin-right: 15px;
+			position: relative;
+			
+			> form {
+				border-radius: 100px;
+			}
+
+			&:after {
+				content: "\e81f";
+				font-family: bb-icons;
+				display: inline-block;
+				color: #4d5c6d;
+				opacity: 0.4;
+				position: absolute;
+				left: 10px;
+				top: 9px;
+				line-height: 1;
+				font-size: 16px;
+			}
+
+			#group-media-search {
+				height: auto;
+				outline: 0;
+				background-image: none;
+				padding: 6px 10px 6px 32px;
+				font-size: 14px;
+			}
+
+			.nouveau-search-submit {
+				position: absolute;
+				left: 0;
+				opacity: 0;
+				z-index: 1;
+				padding: 0;
+				width: 31px;
+			}
+		}
+	}
+
+	@media screen and (max-width: 1220px) {
+		flex-flow: column;
+
+		> .bb-title {
+			margin: 0 0 1.6875rem !important;
+		}
+
+		.bb-media-actions {
+			flex-flow: column;
+
+			.media-search-form {
+				width: 100%;
+				margin: 0;
+
+				form {
+					width: 100%;
+					margin-bottom: 15px;
+				}
+
+			}
+
+			.bb-add-media {
+				width: 100%;
+			}
+
+		}
+
+	}
+
+}
+
 .bp-document-listing {
 	display: flex;
 
