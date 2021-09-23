@@ -1164,32 +1164,32 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		// Check Membership Access.
 		$not_access_list = array();
+
+		// Check if force friendship is enabled and check recipients.
+		$not_friends = array();
+
 		foreach ( $members as $member ) {
-			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+
+            $can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
 			if ( ! $can_send_group_message ) {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
+
+			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+                if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+                    $not_friends[] = bp_core_get_user_displayname( $member );
+                }
+			}
+
 		}
 
 		if ( ! empty( $not_access_list ) ) {
-
 			$response['feedback'] = sprintf(
 				'%1$s <strong>%2$s</strong>',
 				( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
 				implode( ', ', $not_access_list )
 			);
-
 			wp_send_json_error( $response );
-		}
-
-		// Check if force friendship is enabled and check recipients.
-        $not_friends = array();
-		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-			foreach ( $members as $member ) {
-				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-					$not_friends[] = bp_core_get_user_displayname( $member );
-				}
-			}
 		}
 
 		if ( ! empty( $not_friends ) ) {
@@ -1257,7 +1257,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
 
 						if ( $is_deleted ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
 						}
 					}
@@ -1272,7 +1272,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$group_thread_id              = $group_thread;
 			} else {
 
-				// Backward compatibility when we dont store thread_id in group meta.
+				// Backward compatibility when we don't store thread_id in group meta.
 				$meta = array(
 					array(
 						'key'     => 'group_id',
@@ -1378,7 +1378,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				bp_groups_messages_validate_message( $new_reply );
 			}
 
-			// "Individual Members" Selected.
+        // "Individual Members" Selected.
 		} else {
 			$meta = array(
 				array(
