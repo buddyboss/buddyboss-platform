@@ -2228,33 +2228,40 @@ window.bp = window.bp || {};
 				} else {
 					this.model.set( 'selected', true );
 					var model_attributes = this.model.attributes;
-
+					
 					// check media is enable in groups or not.
 					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
-						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
-						var mediaCloseEvent = new Event( 'activity_media_close' );
-						document.dispatchEvent( mediaCloseEvent );
+						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
+							var mediaCloseEvent = new Event( 'activity_media_close' );
+							document.dispatchEvent( mediaCloseEvent );
+						}
 					} else {
 						$( '#whats-new-toolbar .post-media.media-support' ).show();
 					}
 
 					// check document is enable in groups or not.
 					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
-						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
-						var documentCloseEvent = new Event( 'activity_document_close' );
-						document.dispatchEvent( documentCloseEvent );
+						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
+							var documentCloseEvent = new Event( 'activity_document_close' );
+							document.dispatchEvent( documentCloseEvent );
+						}
 					} else {
 						$( '#whats-new-toolbar .post-media.document-support' ).show();
 					}
 
 					// check video is enable in groups or not.
 					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
-						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
-						var videoCloseEvent = new Event( 'activity_video_close' );
-						document.dispatchEvent( videoCloseEvent );
+						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
+							var videoCloseEvent = new Event( 'activity_video_close' );
+							document.dispatchEvent( videoCloseEvent );
+						}
 					} else {
 						$( '#whats-new-toolbar .post-video.video-support' ).show();
 					}
+					
 				}
 			}
 		}
