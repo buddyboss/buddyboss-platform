@@ -173,7 +173,7 @@ add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
 /**
  * Fix the media, video & document display compatibility issue.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss 1.7.9
  */
 function bb_seo_press_compatibility_helper() {
 
