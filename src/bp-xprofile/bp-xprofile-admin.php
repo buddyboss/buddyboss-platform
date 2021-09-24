@@ -363,6 +363,12 @@ endif;
 													}
 
 													foreach ( $group->fields as $key => $field ) {
+
+														// Bail if the field group is signup and fields is not an object type.
+														if ( bp_xprofile_base_group_id() === $group->id && ! is_object( $field ) ) {
+															continue;
+														}
+
 														if ( $field instanceof BP_XProfile_Field ) {
 															if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
 																if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && $field->id === bp_get_xprofile_member_type_field_id() ) {
