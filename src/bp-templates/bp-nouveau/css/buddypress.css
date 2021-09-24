@@ -15341,6 +15341,10 @@ ul.bb-albums-list .load-more {
   background: none transparent;
 }
 
+.bb-album-list-item .album-action-wrap a.item-action_more i {
+  filter: none !important;
+}
+
 .bb-album-cover-wrap {
   position: relative;
 }

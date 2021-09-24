@@ -1324,6 +1324,11 @@ ul.bb-albums-list {
 	.album-action-wrap a {
 		padding: 0;
 		background: none transparent;
+
+		&.item-action_more i {
+			filter: none !important;
+		}
+
 	}
 
 }
