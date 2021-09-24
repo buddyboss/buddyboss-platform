@@ -27,5 +27,17 @@
 				</div>
 			</div>
 		</a>
+		<div class="album-action-wrap item-action-wrap">
+			<a href="#" class="album-action_more item-action_more" data-balloon-pos="up" data-balloon="More actions">
+				<i class="bb-icon-menu-dots-v"></i>
+			</a>
+			<div class="album-action_list item-action_list">
+				<ul>
+					<li class="delete_file">
+						<a class="album-file-delete" data-video-id="896" data-parent-activity-id="196307" data-item-activity-id="196307" data-item-from="video" data-item-id="896" data-type="video" href="#">Delete</a>
+					</li>
+				</ul>
+			</div><!-- .album-action_list -->
+		</div><!-- .album-action-wrap -->
 	</div>
 </li>
