@@ -15349,6 +15349,25 @@ ul.bb-albums-list .load-more {
   filter: none;
 }
 
+.bb-albums-list .bb-album-list-item .bb-album-cover-wrap:after {
+  content: " ";
+  position: absolute;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 3px;
+  width: 100%;
+  height: 100%;
+  right: 0;
+  top: 0;
+  transition: 0.3s all;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-albums-list .bb-album-list-item .bb-album-cover-wrap:hover:after, .bb-albums-list .bb-album-list-item .bb-album-cover-wrap.is-visible:after {
+  opacity: 1;
+  visibility: visible;
+}
+
 .bb-albums-list .bb-album-list-item .bb-album-cover-wrap.is-visible .album-action-wrap {
   opacity: 1;
   visibility: visible;
