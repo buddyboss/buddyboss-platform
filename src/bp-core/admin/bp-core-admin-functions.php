@@ -1816,7 +1816,7 @@ function bp_member_type_permissions_metabox( $post ) {
         <tr>
             <td colspan="2">
 		        <?php
-		        $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // enabled by default
+		        $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // enabled by default.
 		        ?>
                 <input type='checkbox' name='bp-member-type[enable_search_remove]' value='1'
 			        <?php
@@ -1826,7 +1826,7 @@ function bp_member_type_permissions_metabox( $post ) {
 			        );
 			        ?>
                 />
-		        <?php _e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
+		        <?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
             </td>
         </tr>
         </tbody>
