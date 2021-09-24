@@ -78,6 +78,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Add fix for WPML redirect issue
+		 *
 		 * @since BuddyBoss 1.4.0
 		 *
 		 * @param array $q
@@ -102,6 +103,8 @@ function bp_helper_plugins_loaded_callback() {
 					$q->set( 'page_id', $bp_pages->groups->id );
 				} elseif ( 'documents' === $bp_current_component && isset( $bp_pages->document->id ) ) {
 					$q->set( 'page_id', $bp_pages->document->id );
+				} elseif ( 'videos' === $bp_current_component && isset( $bp_pages->video->id ) ) {
+					$q->set( 'page_id', $bp_pages->video->id );
 				} else {
 					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
 					if ( $page_id ) {
@@ -151,16 +154,28 @@ function bp_helper_plugins_loaded_callback() {
 
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
-}
 
+}
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
+
+/**
+ * Helper functions for the offload media compatibility.
+ */
+function bb_wp_offload_media_compatibility_helper() {
+
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+		require buddypress()->compatibility_dir . '/bp-wp-offload-media-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
  *
  * @since BuddyBoss 1.1.9
  *
- * @param int $user_id Register member user id
+ * @param int $user_id Register member user id.
  */
 function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
 	$user_id = empty( $user_id ) ? bp_loggedin_user_id() : $user_id;
@@ -298,7 +313,6 @@ function bp_core_update_group_fields_id_in_db() {
 		add_site_option( 'bp-xprofile-field-ids-updated', 1 );
 	}
 }
-
 add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
 
 /**
@@ -308,8 +322,8 @@ add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db
  *
  * @since 1.1.7
  *
- * @param array $taxonomies Taxonomies which are registered for the requested object or object type
- * @param array $post_type Post type
+ * @param array $taxonomies Taxonomies which are registered for the requested object or object type.
+ * @param array $post_type  Post type.
  *
  * @return array Return the names or objects of the taxonomies which are registered for the requested object or object type
  */
@@ -328,12 +342,12 @@ function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post
  */
 function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
 
-	// check for BuddyPress plugin
+	// check for BuddyPress plugin.
 	if ( 'buddypress' === $section_slug ) {
 		$section_notice = '';
 	}
 
-	// check for bbPress plugin
+	// check for bbPress plugin.
 	if ( 'bbpress' === $section_slug ) {
 		$section_notice = '';
 		if ( empty( bp_is_active( 'forums' ) ) ) {
@@ -348,9 +362,7 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 	return $section_notice;
 
 }
-
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
-
 
 /**
  * Update the BuddyBoss Platform Fields when user register from MemberPress Registration form
@@ -364,7 +376,6 @@ function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
 		bp_core_map_user_registration( $txn->user_id, true );
 	}
 }
-
 add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 100 );
 
 /**
@@ -445,25 +456,25 @@ function bp_core_memberpress_the_content( $content ) {
 
 		if (
 			bp_is_groups_component()
-			&& !empty( $page_ids['groups'] )
+			&& ! empty( $page_ids['groups'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['groups'] );
-		} else if (
+		} elseif (
 			bp_is_media_component()
-			&& !empty( $page_ids['media'] )
+			&& ! empty( $page_ids['media'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['media'] );
-		} else if (
+		} elseif (
 			bp_is_members_component()
-			&& !empty( $page_ids['members'] )
+			&& ! empty( $page_ids['members'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['members'] );
-		} else if (
+		} elseif (
 			bp_is_activity_component()
-			&& !empty( $page_ids['activity'] )
+			&& ! empty( $page_ids['activity'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['activity'] );
@@ -478,14 +489,13 @@ add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
  * Fix Medium Editor version conflict with user blog plugin
  *
  * @since BuddyBoss 1.3.4
- *
  */
 function bp_remove_user_blog_disable_medium_editor_js() {
 	if ( bp_is_activity_directory() || bp_is_user_activity() || bp_is_group_activity() ) {
-		wp_dequeue_script('buddyboss-bower-medium-editor');
+		wp_dequeue_script( 'buddyboss-bower-medium-editor' );
 	}
 }
-add_action('wp_enqueue_scripts', 'bp_remove_user_blog_disable_medium_editor_js', 100);
+add_action( 'wp_enqueue_scripts', 'bp_remove_user_blog_disable_medium_editor_js', 100 );
 
 /**
  * Removed WC filter to the settings page when its active.
@@ -505,7 +515,7 @@ add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
  *
  * @since BuddyBoss 1.5.0
  *
- * @param boolean $bool Boolean to return
+ * @param boolean $bool Boolean to return.
  *
  * @return boolean
  */
@@ -551,7 +561,7 @@ function bp_get_forum_page_id() {
  *
  * @since BuddyBoss 1.5.8
  *
- * @param string $title        Default SEO title 
+ * @param string $title        Default SEO title
  * @param object $presentation Collection data for presentation
  *
  * @return string.
@@ -762,15 +772,15 @@ add_action( 'delete_post', 'bb_learndash_delete_group' );
 /**
  * Add the 'group_leader' role for Learndash group author.
  * When learndash group status change form trash to draft.
- * 
+ *
  * @since BuddyBoss 1.6.3
- * 
+ *
  * @param int $post_id LearnDash group id.
- * 
+ *
  * @uses learndash_is_admin_user() Is the author has administrator role.
  * @uses bb_learndash_role_add()   Add group author role as 'group_leade'.
- * 
- * @return void 
+ *
+ * @return void
  */
 function bb_learndash_untrash_group( $post_id ) {
 	// Is Learndash active or not.
@@ -795,7 +805,7 @@ function bb_learndash_untrash_group( $post_id ) {
 	}
 
 	$author = $ldgroup->post_author;
-	
+
 	// When the group author has administrator role.
 	if ( learndash_is_admin_user( $author ) ) {
 		return;
@@ -808,11 +818,11 @@ add_action( 'untrash_post', 'bb_learndash_untrash_group' );
 
 /**
  * Add user role as 'group_leader'
- * 
+ *
  * @since BuddyBoss 1.6.3
- * 
+ *
  * @param int $user_id Update user id.
- * 
+ *
  * @return void
  */
 function bb_learndash_role_add( $user_id, $before ) {
@@ -829,3 +839,172 @@ function bb_learndash_role_add( $user_id, $before ) {
 	$user->promoteAsGroupLeader( $user_id, 'admin' );
 }
 add_action( 'profile_update', 'bb_learndash_role_add', 10, 2 );
+
+
+
+
+
+/**
+ * Function to set the false to use the default media symlink instead use the WP Stateless media URL of media.
+ *
+ * @param bool   $can           default true.
+ * @param int    $id            media/document/video id.
+ * @param int    $attachment_id attachment id.
+ * @param string $size          preview size.
+ *
+ * @return bool true if the offload media used.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$can = false;
+	}
+
+	return $can;
+}
+
+add_filter( 'bb_media_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_document_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_create_thumb_symlinks', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url Attachment url.
+ * @param int    $video_id       Video id.
+ * @param int    $attachment_id  Attachment id.
+ *
+ * @return string $attachment_url Attachment URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id ) {
+
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$attachment_url = wp_get_attachment_url( $attachment_id );
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bb_video_get_symlink', 'bp_video_wp_stateless_get_video_url', PHP_INT_MAX, 3 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url Attachment url.
+ * @param int    $video_id       Video id.
+ * @param string $size           size of the media.
+ * @param int    $attachment_id  Attachment id.
+ *
+ * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$get_metadata = wp_get_attachment_metadata( $attachment_id );
+		if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+			$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+		} else {
+			$attachment_url = wp_get_attachment_url( $attachment_id );
+		}
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bb_video_get_thumb_url', 'bp_video_wp_stateless_get_thumb_preview_url', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url attachment url.
+ * @param int    $media_id       media id.
+ * @param int    $attachment_id  attachment id.
+ * @param string $size           size of the media.
+ *
+ * @return false|mixed|string return the original media URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$media          = new BP_Media( $media_id );
+		$attachment_url = wp_get_attachment_url( $media->attachment_id );
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bp_media_get_preview_image_url', 'bp_media_wp_stateless_get_preview_url', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url attachment url.
+ * @param int    $document_id    media id.
+ * @param string $extension      extension.
+ * @param string $size           size of the media.
+ * @param int    $attachment_id  attachment id.
+ *
+ * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
+
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+
+		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+			$get_metadata = wp_get_attachment_metadata( $attachment_id );
+			if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+				$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+			} else {
+				$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+			}
+
+			if ( ! $attachment_url ) {
+				bp_document_generate_document_previews( $attachment_id );
+				if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+				} else {
+					$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+				}
+			}
+		}
+
+		if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+			if ( ! empty( $attachment_id ) && ! empty( $document_id ) ) {
+				$attachment_url = wp_get_attachment_url( $attachment_id );
+			}
+		}
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
+
+/**
+ * Fix Elementor conflict for forum parent field.
+ * Remove the Page Attributes meta box from forum edit page
+ * since Element's page attributes parent field is conflicting with forum attributes patent field
+ *
+ * @return void
+ *
+ * @since 1.7.6
+ */
+function bbp_remove_page_attributes_metabox_for_forum() {
+
+	// Check if elementor is exists.
+	if ( class_exists( '\Elementor\Plugin' ) ) {
+		// Remove the page attribute meta box for forum screen.
+		remove_meta_box( 'pageparentdiv' , 'forum' , 'side' );
+	}
+
+}
+
+add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );

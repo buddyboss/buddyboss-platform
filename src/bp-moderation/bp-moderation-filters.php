@@ -9,38 +9,49 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-new BP_Core_Suspend();
-new BP_Moderation_Members();
-new BP_Moderation_Comment();
+/**
+ * Load Moderation component after plugin loaded.
+ */
+function bb_moderation_load() {
+	new BP_Core_Suspend();
+	new BP_Moderation_Members();
+	new BP_Moderation_Comment();
 
-if ( bp_is_active( 'activity' ) ) {
-	new BP_Moderation_Activity();
-	new BP_Moderation_Activity_Comment();
+	if ( bp_is_active( 'activity' ) ) {
+		new BP_Moderation_Activity();
+		new BP_Moderation_Activity_Comment();
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		new BP_Moderation_Groups();
+	}
+
+	if ( bp_is_active( 'forums' ) ) {
+		new BP_Moderation_Forums();
+		new BP_Moderation_Forum_Topics();
+		new BP_Moderation_Forum_Replies();
+	}
+
+	if ( bp_is_active( 'document' ) ) {
+		new BP_Moderation_Folder();
+		new BP_Moderation_Document();
+	}
+
+	if ( bp_is_active( 'media' ) ) {
+		new BP_Moderation_Album();
+		new BP_Moderation_Media();
+	}
+
+	if ( bp_is_active( 'video' ) ) {
+		new BP_Moderation_Video();
+	}
+
+	if ( bp_is_active( 'messages' ) ) {
+		new BP_Moderation_Message();
+	}
 }
 
-if ( bp_is_active( 'groups' ) ) {
-	new BP_Moderation_Groups();
-}
-
-if ( bp_is_active( 'forums' ) ) {
-	new BP_Moderation_Forums();
-	new BP_Moderation_Forum_Topics();
-	new BP_Moderation_Forum_Replies();
-}
-
-if ( bp_is_active( 'document' ) ) {
-	new BP_Moderation_Folder();
-	new BP_Moderation_Document();
-}
-
-if ( bp_is_active( 'media' ) ) {
-	new BP_Moderation_Album();
-	new BP_Moderation_Media();
-}
-
-if ( bp_is_active( 'messages' ) ) {
-	new BP_Moderation_Message();
-}
+add_action( 'bp_init', 'bb_moderation_load', 1 );
 
 /**
  * Update modebypass Param
@@ -372,7 +383,7 @@ function bp_moderation_content_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_can_report( $item_id, $item_type, 'hide' == $sub_action );
+	$user_can = bp_moderation_can_report( $item_id, $item_type, ( 'hide' === $sub_action ) ) || current_user_can( 'administrator' );
 	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
@@ -438,7 +449,7 @@ function bp_moderation_user_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_can_report( $item_id, $item_type, 'suspend' == $sub_action );
+	$user_can = bp_moderation_can_report( $item_id, $item_type );
 	if (  ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
@@ -476,11 +487,14 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  */
 function bb_moderation_content_report_popup() {
 
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/content-report-form.php" ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/content-report-form.php";
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/content-report-form.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
 	}
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/block-member-form.php' ) ) {
 		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
+	}
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php';
 	}
 }
 
@@ -587,3 +601,56 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+
+/**
+ * Add moderation repair list.
+ *
+ * @param array $repair_list
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return array Repair list items.
+ */
+function bb_moderation_migrate_old_data( $repair_list ) {
+	$repair_list[] = array(
+		'bp-repair-moderation-data',
+		__( 'Repair moderation data.', 'buddyboss' ),
+		'bb_moderation_admin_repair_old_moderation_data',
+	);
+
+	return $repair_list;
+}
+
+add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
+
+/**
+ * Function to admin repair tool for fix moderation data.
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return array
+ */
+function bb_moderation_admin_repair_old_moderation_data() {
+	global $wpdb;
+	$suspend_table            = "{$wpdb->prefix}bp_suspend";
+	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$sql_offset               = $offset - 1;
+	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
+	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
+
+	if ( ! empty( $moderated_activities ) ) {
+		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
+		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Moderation update complete!', 'buddyboss' ),
+		);
+	}
+}

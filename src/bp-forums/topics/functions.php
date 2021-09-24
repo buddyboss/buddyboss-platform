@@ -195,7 +195,12 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) ) && empty( $_POST['bbp_media'] ) && empty( $_POST['bbp_document'] ) && empty( $_POST['bbp_media_gif'] ) ) {
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+		 && empty( $_POST['bbp_media'] )
+		 && empty( $_POST['bbp_document'] )
+		 && empty( $_POST['bbp_video'] )
+		 && empty( $_POST['bbp_media_gif'] )
+	) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
 
@@ -278,6 +283,13 @@ function bbp_new_topic_handler( $action = '' ) {
 		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0 );
 		if ( ! $can_send_document ) {
 			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_video ) {
+			bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss' ) );
 		}
 	}
 
@@ -645,8 +657,12 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	// No topic content.
-	if ( empty( $topic_content ) ) {
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+	     && empty( $_POST['bbp_media'] )
+	     && empty( $_POST['bbp_document'] )
+	     && empty( $_POST['bbp_video'] )
+	     && empty( $_POST['bbp_media_gif'] )
+	) {
 		bbp_add_error( 'bbp_edit_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
 
@@ -2080,20 +2096,25 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 /**
  * Return an associative array of available topic statuses
  *
- * @since bbPress (r5059)
+ * @since 2.4.0 bbPress (r5059)
+ *
+ * @param int $topic_id   Optional. Topic id.
  *
  * @return array
  */
-function bbp_get_topic_statuses() {
-	return apply_filters(
+function bbp_get_topic_statuses( $topic_id = 0 ) {
+
+	// Filter & return.
+	return (array) apply_filters(
 		'bbp_get_topic_statuses',
 		array(
-			bbp_get_public_status_id()  => __( 'Open', 'buddyboss' ),
-			bbp_get_closed_status_id()  => __( 'Closed', 'buddyboss' ),
-			bbp_get_spam_status_id()    => __( 'Spam', 'buddyboss' ),
-			bbp_get_trash_status_id()   => __( 'Trash', 'buddyboss' ),
-			bbp_get_pending_status_id() => __( 'Pending', 'buddyboss' ),
-		)
+			bbp_get_public_status_id()  => _x( 'Open', 'Open the topic', 'buddyboss' ),
+			bbp_get_closed_status_id()  => _x( 'Closed', 'Close the topic', 'buddyboss' ),
+			bbp_get_spam_status_id()    => _x( 'Spam', 'Spam the topic', 'buddyboss' ),
+			bbp_get_trash_status_id()   => _x( 'Trash', 'Trash the topic', 'buddyboss' ),
+			bbp_get_pending_status_id() => _x( 'Pending', 'Unapprove the topic', 'buddyboss' ),
+		),
+		$topic_id
 	);
 }
 
