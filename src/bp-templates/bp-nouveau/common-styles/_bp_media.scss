@@ -1321,12 +1321,21 @@ ul.bb-albums-list {
 		top: 0;
 	}
 
-	.album-action-wrap a {
-		padding: 0;
-		background: none transparent;
-
-		&.item-action_more i {
-			filter: none !important;
+	.bb-albums-list & {
+		
+		.album-action-wrap {
+			top: 15px;
+	
+			a {
+				padding: 0;
+				background: none transparent;
+		
+				&.item-action_more i {
+					filter: none;
+				}
+		
+			}
+	
 		}
 
 	}

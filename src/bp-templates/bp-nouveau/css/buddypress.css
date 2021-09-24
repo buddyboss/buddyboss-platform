@@ -15336,13 +15336,17 @@ ul.bb-albums-list .load-more {
   top: 0;
 }
 
-.bb-album-list-item .album-action-wrap a {
+.bb-albums-list .bb-album-list-item .album-action-wrap {
+  top: 15px;
+}
+
+.bb-albums-list .bb-album-list-item .album-action-wrap a {
   padding: 0;
   background: none transparent;
 }
 
-.bb-album-list-item .album-action-wrap a.item-action_more i {
-  filter: none !important;
+.bb-albums-list .bb-album-list-item .album-action-wrap a.item-action_more i {
+  filter: none;
 }
 
 .bb-album-cover-wrap {
