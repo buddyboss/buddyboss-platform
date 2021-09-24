@@ -1338,6 +1338,25 @@ ul.bb-albums-list {
 	
 		}
 
+		.bb-album-cover-wrap.is-visible .album-action-wrap {
+			opacity: 1;
+			visibility: visible;
+
+			.album-action_list {
+				opacity: 1;
+				visibility: visible;
+				width: 178px;
+
+				li {
+					width: 100%;
+					flex: 100%;
+					max-width: 100%;
+				}
+
+			}
+
+		}
+
 	}
 
 }

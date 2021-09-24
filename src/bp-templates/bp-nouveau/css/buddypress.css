@@ -15349,6 +15349,23 @@ ul.bb-albums-list .load-more {
   filter: none;
 }
 
+.bb-albums-list .bb-album-list-item .bb-album-cover-wrap.is-visible .album-action-wrap {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-albums-list .bb-album-list-item .bb-album-cover-wrap.is-visible .album-action-wrap .album-action_list {
+  opacity: 1;
+  visibility: visible;
+  width: 178px;
+}
+
+.bb-albums-list .bb-album-list-item .bb-album-cover-wrap.is-visible .album-action-wrap .album-action_list li {
+  width: 100%;
+  flex: 100%;
+  max-width: 100%;
+}
+
 .bb-album-cover-wrap {
   position: relative;
 }
