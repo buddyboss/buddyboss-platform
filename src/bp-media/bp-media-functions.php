@@ -2453,7 +2453,7 @@ function bp_media_download_link( $attachment_id, $media_id ) {
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['media_type'] ) {
-			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo' ); // phpcs:ignore WordPress.Security.NonceVerification
+			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {
@@ -3008,6 +3008,9 @@ function bp_media_is_activity_comment_photo( $photo ) {
 		$activity = new BP_Activity_Activity( $photo_activity_id );
 
 		if ( $activity ) {
+			if ( 'activity_comment' === $activity->type ) {
+				$is_comment_photo = true;
+			}
 			if ( $activity->secondary_item_id ) {
 				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if ( $load_parent_activity ) {
@@ -3572,12 +3575,14 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 /**
  * Function which return the access based on the current user.
  *
- * @param int    $id       Media|Document|Video|Folder|Album id.
- * @param string $type     Media|Document|Video|Folder|Album type.
+ * @param int    $id            Media|Document|Video|Folder|Album id.
+ * @param string $type          Media|Document|Video|Folder|Album type.
+ * @param int    $attachment_id Media|Document|Video attachment id.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss X.X.X
  */
-function bb_media_user_can_access( $id, $type ) {
+function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 
 	$can_view        = false;
 	$can_download    = false;
@@ -3595,6 +3600,7 @@ function bb_media_user_can_access( $id, $type ) {
 	$forum_id        = 0;
 	$thread_id       = 0;
 	$activity_id     = 0;
+	$attach_id       = 0;
 
 	if ( 'album' === $type ) {
 		$album          = new BP_Media_Album( $id );
@@ -3614,6 +3620,7 @@ function bb_media_user_can_access( $id, $type ) {
 		$forum_id       = bp_media_get_forum_id( $id );
 		$thread_id      = bp_media_get_thread_id( $id );
 		$activity_id    = $photo->activity_id;
+		$attach_id      = $photo->attachment_id;
 	} elseif ( 'video' === $type ) {
 		$video          = new BP_Video( $id );
 		$media_user_id  = (int) $video->user_id;
@@ -3622,6 +3629,7 @@ function bb_media_user_can_access( $id, $type ) {
 		$forum_id       = bp_video_get_forum_id( $id );
 		$thread_id      = bp_video_get_thread_id( $id );
 		$activity_id    = $video->activity_id;
+		$attach_id      = $video->attachment_id;
 	} elseif ( 'document' === $type ) {
 		$document       = new BP_Document( $id );
 		$media_user_id  = (int) $document->user_id;
@@ -3630,6 +3638,7 @@ function bb_media_user_can_access( $id, $type ) {
 		$forum_id       = bp_document_get_forum_id( $id );
 		$thread_id      = bp_document_get_thread_id( $id );
 		$activity_id    = $document->activity_id;
+		$attach_id      = $document->attachment_id;
 	}
 
 	if ( 'comment' === $media_privacy && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
@@ -3843,6 +3852,15 @@ function bb_media_user_can_access( $id, $type ) {
 				}
 			}
 			break;
+	}
+
+	if ( ! empty( $attachment_id ) && $attachment_id > 0 && $attach_id > 0 && (int) $attachment_id !== $attach_id ) {
+		$can_view     = false;
+		$can_download = false;
+		$can_add      = false;
+		$can_edit     = false;
+		$can_delete   = false;
+		$can_move     = false;
 	}
 
 	$data['can_view']     = $can_view;

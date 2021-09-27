@@ -43,7 +43,7 @@ function bb_moderation_load() {
 	}
 
 	if ( bp_is_active( 'video' ) ) {
-		new BP_Moderation_Video();
+		 new BP_Moderation_Video();
 	}
 
 	if ( bp_is_active( 'messages' ) ) {
@@ -640,7 +640,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
 
 	if ( ! empty( $moderated_activities ) ) {
 		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
-		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',

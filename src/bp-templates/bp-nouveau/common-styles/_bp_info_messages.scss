@@ -69,12 +69,20 @@
 	@include box-shadow( 0 1px 1px 1px rgba(0, 0, 0, 0.1) );
 	color: $light-text-plus;
 
-	margin: 10px 0;
+	margin: 10px 0 20px 0;
 	position: relative;
 
 	p {
 		margin: 0;
 		padding: 10px 5px;
+	}
+
+	.bp-errors {
+
+		p + p {
+			padding-top: 0;
+		}
+
 	}
 
 	span.bp-icon {

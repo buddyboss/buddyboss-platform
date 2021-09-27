@@ -39,7 +39,7 @@ if ( ! empty( $member_types ) ) {
 				<span><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="member-type-order-by" data-bp-member-type-filter="members">
+				<select id="member-type-order-by" data-bp-member-type-filter="members" data-bp-member-type-object="<?php echo bp_current_component(); ?>">
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $member_types as $member_type_id ) {
 						$type_name        = bp_get_member_type_key( $member_type_id );

@@ -8,6 +8,7 @@ $admin_enrolled         = LearnDash_Settings_Section::get_section_setting( 'Lear
 $user_course_has_access = sfwd_lms_has_access( get_the_ID(), $current_user_id );
 $course_price           = trim( learndash_get_course_meta_setting( get_the_ID(), 'course_price' ) );
 $course_price_type      = learndash_get_course_meta_setting( get_the_ID(), 'course_price_type' );
+$course_pricing         = learndash_get_course_price( get_the_ID() );
 $paypal_settings        = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Section_PayPal' );
 $completed              = 0;
 $total                  = false;

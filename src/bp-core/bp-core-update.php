@@ -338,8 +338,8 @@ function bp_version_updater() {
 			bb_update_to_1_7_5();
 		}
 
-		if ( $raw_db_version < 17701 ) {
-			bb_update_to_1_7_7();
+		if ( $raw_db_version < 17801 ) {
+			bb_update_to_1_7_8();
 		}
 	}
 
@@ -722,10 +722,17 @@ function bb_update_to_1_7_5() {
 /**
  * Function to update data
  * - Updated .htaccess file for bb files protection.
+ * - created new table for bp email queue.
+ * - Update forum meta with its associated group id.
  *
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss 1.7.8
  */
-function bb_update_to_1_7_7() {
+function bb_update_to_1_7_8() {
+	if ( function_exists( 'bb_email_queue' )  ) {
+		// Install email queue table.
+		bb_email_queue()::create_db_table();
+	}
+
 	$upload_dir        = wp_get_upload_dir();
 	$media_htaccess    = $upload_dir['basedir'] . '/bb_medias/.htaccess';
 	$document_htaccess = $upload_dir['basedir'] . '/bb_documents/.htaccess';
@@ -748,6 +755,58 @@ function bb_update_to_1_7_7() {
 
 	if ( file_exists( $video_htaccess ) ) {
 		$wp_files_system->delete( $video_htaccess, false, 'f' );
+	}
+
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Get all forum associated groups.
+	$group_data = groups_get_groups(
+		array(
+			'per_page'   => -1,
+			'fields'     => 'ids',
+			'status'     => array( 'public', 'private', 'hidden' ),
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'forum_id',
+					'value'   => 'a:0:{}',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'forum_id',
+					'value'   => '',
+					'compare' => '!=',
+				),
+			),
+		)
+	);
+
+	$groups = empty( $group_data['groups'] ) ? array() : $group_data['groups'];
+
+	if ( ! empty( $groups ) ) {
+		foreach ( $groups as $group_id ) {
+			$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+
+			if ( empty( $forum_ids ) ) {
+				continue;
+			}
+
+			// Group never contains multiple forums.
+			$forum_id  = current( $forum_ids );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = empty( $group_ids ) ? array() : $group_ids;
+
+			if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+				continue;
+			}
+
+			$group_ids[] = $group_id;
+
+			bbp_update_forum_group_ids( $forum_id, $group_ids );
+		}
 	}
 }
 

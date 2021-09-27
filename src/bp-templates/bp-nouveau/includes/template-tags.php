@@ -401,6 +401,11 @@ function bp_nouveau_pagination( $position ) {
 		$pagination_type = 'groups';
 	}
 
+	if ( 'followers' === $pagination_type || 'following' === $pagination_type ) {
+		$pagination_type = 'members';
+	}
+
+
 	switch ( $pagination_type ) {
 		case 'blogs':
 			$pag_count   = bp_get_blogs_pagination_count();
@@ -558,6 +563,8 @@ function bp_nouveau_get_loop_classes() {
 		 */
 		'members_group'   => true,
 		'members_friends' => true,
+		'followers'       => true,
+		'following'       => true,
 	);
 
 	// Only the available components supports custom layouts.
@@ -1305,7 +1312,7 @@ function bp_nouveau_nav_has_count() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_count() {
-	echo esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
+	echo esc_html( bp_core_number_format( bp_nouveau_get_nav_count() ) );
 }
 
 	/**
@@ -1348,7 +1355,7 @@ function bp_nouveau_get_nav_count() {
 		if ( false !== $span ) {
 			$count_start = strpos( $nav_item->name, '>', $span ) + 1;
 			$count_end   = strpos( $nav_item->name, '<', $count_start );
-			$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
+			$count       = number_format_i18n( (int) substr( $nav_item->name, $count_start, $count_end - $count_start ) );
 		}
 	}
 
@@ -2052,6 +2059,12 @@ function bp_nouveau_current_object() {
 		$component['members_order_by'] = 'members-order-by';
 		$component['object']           = bp_current_component();
 		$component['data_filter']      = bp_current_component();
+
+		if ( 'following' === bp_current_component() ) {
+			$component['data_filter'] = 'members_following';
+		} elseif ( 'followers' === bp_current_component() ) {
+			$component['data_filter'] = 'members_followers';
+		}
 	}
 
 	return $component;
