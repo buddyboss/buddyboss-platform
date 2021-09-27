@@ -223,11 +223,11 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			// SQL query for getting all nested child forum id from parent forum id.
 			$sql = "SELECT ID
 				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
-					  ( SELECT @pv := %d ) initialisation
-				WHERE FIND_IN_SET( post_parent, @pv )
-				AND   LENGTH( @pv := CONCAT(@pv, ',', ID ) )";
+					  ( SELECT @pv := %d, @pvv := %d ) initialisation
+				WHERE FIND_IN_SET( post_parent, @pvv )
+				AND   LENGTH( @pvv := CONCAT(@pv, ',', ID ) )";
 
-			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id ) );
+			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id, $forum_id ) );
 
 			return $child_forum_ids;
 		}
