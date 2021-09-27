@@ -2384,6 +2384,13 @@ function bp_media_default_scope( $scope ) {
 	// Remove all unwanted scope.
 	$new_scope = array_intersect( $allowed_scopes, $new_scope );
 
+	if ( bp_loggedin_user_id() && bp_is_media_directory() && bp_is_relevant_feed_enabled() ) {
+		$key = array_search( 'groups', $new_scope, true );
+		if ( is_array( $new_scope ) && false !== $key ) {
+			unset( $new_scope[ $key ] );
+		}
+	}
+
 	/**
 	 * Filter to update default scope.
 	 *
