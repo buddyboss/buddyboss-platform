@@ -1389,13 +1389,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 				),
 				'can_join'           => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Check current user can join or request access.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_post'           => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Check current user can post activity or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
